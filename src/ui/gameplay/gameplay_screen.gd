@@ -100,6 +100,8 @@ func load_level_path(path: String, seed_value: int = 1001) -> bool:
 	title_label.text = String(parsed.get("title", "Hidden Display"))
 	hint_label.text = String(parsed.get("hint", "Swipe a sigil."))
 	board_state = BoardState.from_level(parsed, seed_value)
+	if board_view.has_method("set_visual_profile"):
+		board_view.set_visual_profile(String(parsed.get("visual_profile", "curio_boutique_opening")))
 	board_view.set_board(board_state)
 	_configure_teaching_move(parsed)
 	_pending_win = false
