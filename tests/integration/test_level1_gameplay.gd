@@ -61,7 +61,7 @@ func _run() -> void:
 		if board_view.has_method("teaching_contract"):
 			var teaching: Dictionary = board_view.teaching_contract()
 			_expect(bool(teaching.get("active", false)), "Level 1 authored teaching move must activate the board cue")
-			_expect(teaching.get("from", Vector2i(-1, -1)) == Vector2i(1, 4), "teaching cue must start on authored Moon sigil")
+			_expect(teaching.get("from", Vector2i(-1, -1)) == Vector2i(1, 4), "teaching cue must start on the authored global special tile")
 			_expect(teaching.get("to", Vector2i(-1, -1)) == Vector2i(2, 4), "teaching cue must end on authored destination")
 			_expect(str(teaching.get("language", "")) == "ritual_thread", "teaching cue must use House-native ritual-thread language")
 		if board_view.has_method("motion_contract"):
