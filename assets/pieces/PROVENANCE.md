@@ -12,7 +12,13 @@ Status: AKILTA first-party original art-direction candidates for the Curio Bouti
 | `key` | Witchlight potion flask | `potion.svg` |
 | `leaf` | Gilded pentagram sigil | `pentagram.svg` |
 
-The five gameplay IDs are retained for deterministic level data compatibility. Cat, candle, and skull SVGs remain supporting first-party world symbols until their gameplay-family expansion is validated separately. Player-facing art metadata must describe the rendered symbol, not the historical/internal family name.
+The five gameplay IDs are retained for deterministic level data compatibility. Cat, candle, and skull SVGs are used through level-specific visual profiles while the five logical gameplay family IDs remain stable. This preserves deterministic puzzle rules while varying the actual North Star symbols by chapter. Player-facing art metadata must describe the rendered symbol, not the historical/internal family name.
+
+## Level-specific visual profiles
+
+- `curio_boutique_opening`: moonstone crescent, thorn rose, crow, potion flask, pentagram.
+- `sealed_display`: moonstone crescent, thorn rose, black cat, candle, skull.
+- `thornlight_arrangement`: moonstone crescent, black cat, crow, potion flask, candle.
 
 ## Supporting world symbols
 
