@@ -8,15 +8,15 @@ const PieceVisuals = preload("res://src/match3/presentation/piece_visuals.gd")
 const PieceAssetLoader = preload("res://src/match3/presentation/piece_asset_loader.gd")
 const KENNEY_FRAME_PATH := "res://assets/candidate/third_party/kenney/fantasy-ui-borders/frame-024.png"
 
-const INK := Color("#100D12")
-const VELVET := Color("#17131B")
-const PLUM := Color("#241A27")
-const GLASS := Color("#2E2432")
-const RAISED := Color("#382C3D")
-const BONE := Color("#F1E8DD")
-const MIST := Color("#D9CDD5")
-const GOLD := Color("#D8B56A")
-const LILAC := Color("#BFA5D8")
+const INK := Color("#080C15")
+const VELVET := Color("#101320")
+const PLUM := Color("#251529")
+const GLASS := Color("#202033")
+const RAISED := Color("#302038")
+const BONE := Color("#F4E5D3")
+const MIST := Color("#D8C6C3")
+const GOLD := Color("#D5AD70")
+const LILAC := Color("#9F78C0")
 
 # Timings are an AKILTA-owned trace-driven adaptation of the permissive donor's
 # animator-hook idea. The donor runtime and demo art are not dependencies.
@@ -667,7 +667,7 @@ func _draw_cell(rect: Rect2, pos: Vector2i) -> void:
 func _cell_box(radius: float) -> StyleBoxFlat:
 	var box := StyleBoxFlat.new()
 	box.bg_color = Color("#2A2230")
-	box.border_color = Color(0.851, 0.71, 0.416, 0.12)
+	box.border_color = Color(0.835, 0.678, 0.439, 0.24)
 	box.set_border_width_all(1)
 	box.set_corner_radius_all(int(maxf(6.0, radius * 0.52)))
 	return box
