@@ -9,11 +9,11 @@ const AMBIENT_PATH := "res://assets/audio/music/curio_house_ambient.ogg"
 const CHIME_PATH := "res://assets/audio/sfx/ritual_chime.wav"
 
 const FEEDBACK := {
-	"match": {"pitch": 0.92, "gain_db": -26.0},
-	"special": {"pitch": 1.02, "gain_db": -19.0},
-	"win": {"pitch": 1.05, "gain_db": -15.0},
-	"fail": {"pitch": 0.82, "gain_db": -23.0},
-	"retry": {"pitch": 0.90, "gain_db": -23.0},
+	"match": {"pitch": 0.92, "gain_db": -30.0},
+	"special": {"pitch": 1.02, "gain_db": -23.0},
+	"win": {"pitch": 1.05, "gain_db": -19.0},
+	"fail": {"pitch": 0.82, "gain_db": -27.0},
+	"retry": {"pitch": 0.90, "gain_db": -27.0},
 }
 
 var music_player: AudioStreamPlayer
@@ -69,7 +69,7 @@ func start_ambient() -> bool:
 	if _ambient_stream == null:
 		return false
 	music_player.stream = _ambient_stream
-	music_player.volume_db = -23.0
+	music_player.volume_db = -28.0
 	if not music_player.playing:
 		music_player.play()
 	return true
@@ -97,7 +97,7 @@ func request_feedback(kind: String) -> bool:
 		match_player.stream = _soft_match_stream
 		var variation: float = float([0.94, 1.0, 1.035][int(_feedback_counts[kind]) % 3])
 		match_player.pitch_scale = variation
-		match_player.volume_db = -13.0
+		match_player.volume_db = -20.0
 		match_player.play()
 		return true
 	sfx_player.stream = _chime_stream
