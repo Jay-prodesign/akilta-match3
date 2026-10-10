@@ -6,6 +6,7 @@ signal chapter_requested(chapter_id: String)
 
 func _ready() -> void:
 	var layout := VBoxContainer.new()
+	layout.name = "Layout"
 	layout.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	layout.offset_left = 28
 	layout.offset_right = -28
