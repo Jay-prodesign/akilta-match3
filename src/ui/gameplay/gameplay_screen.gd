@@ -150,6 +150,8 @@ func attempt_swap(from: Vector2i, to: Vector2i):
 		return null
 	if board_view.has_method("is_motion_active") and bool(board_view.is_motion_active()):
 		return null
+	if board_view.has_method("snapshot_before_move"):
+		board_view.snapshot_before_move()
 	last_trace = MoveResolver.try_swap(board_state, from, to)
 	board_view.set_board(board_state)
 	var motion_started := false
