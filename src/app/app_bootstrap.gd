@@ -157,7 +157,7 @@ func show_feature_preview(feature: String) -> bool:
 	layout.offset_right = -18
 	layout.offset_bottom = -20
 	layout.add_theme_constant_override("separation", 16)
-	layout.alignment = BoxContainer.ALIGNMENT_BEGINNING
+	layout.alignment = BoxContainer.ALIGNMENT_BEGIN
 	overlay.add_child(layout)
 	var world_art := TextureRect.new()
 	world_art.name = "WorldBackdrop"
