@@ -59,38 +59,38 @@
       "provenance": "first_party"
     },
     {
-      "id": "gbl.piece.luna_moth",
+      "id": "gbl.piece.crow",
       "class": "piece",
       "scope": "global",
-      "path": "assets/pieces/luna_moth.svg",
+      "path": "assets/pieces/crow.svg",
       "status": "candidate",
       "target": "256x256",
       "format": "svg",
-      "role": "base family / spectral glass",
+      "role": "base family / midnight raven and amber eye",
       "approval": "Founder D-027",
       "provenance": "first_party"
     },
     {
-      "id": "gbl.piece.curio_key",
+      "id": "gbl.piece.potion",
       "class": "piece",
       "scope": "global",
-      "path": "assets/pieces/curio_key.svg",
+      "path": "assets/pieces/potion.svg",
       "status": "candidate",
       "target": "256x256",
       "format": "svg",
-      "role": "base family / antique metal",
+      "role": "base family / emerald alchemical glass",
       "approval": "Founder D-027",
       "provenance": "first_party"
     },
     {
-      "id": "gbl.piece.night_ivy",
+      "id": "gbl.piece.pentagram",
       "class": "piece",
       "scope": "global",
-      "path": "assets/pieces/night_ivy.svg",
+      "path": "assets/pieces/pentagram.svg",
       "status": "candidate",
       "target": "256x256",
       "format": "svg",
-      "role": "base family / lacquered leaf",
+      "role": "base family / gilded arcane pentagram medallion",
       "approval": "Founder D-027",
       "provenance": "first_party"
     },
@@ -218,10 +218,10 @@
       "id": "ch01.world.curio_boutique.stage00",
       "class": "world",
       "scope": "chapter",
-      "path": "assets/world/ch01_curio_boutique/ch01_world_curio_boutique_stage00_bg_v01.webp",
-      "status": "concept",
-      "target": "1080x1200",
-      "format": "webp",
+      "path": "assets/world/ch01_curio_boutique/curio_boutique_moonlit_backdrop.svg",
+      "status": "candidate",
+      "target": "720x1080",
+      "format": "svg",
       "role": "dormant room environment",
       "approval": "Founder D-027",
       "provenance": "first_party_required"
@@ -345,6 +345,38 @@
       "role": "functional UI typography",
       "approval": "Founder D-027",
       "provenance": "OFL-1.1"
+    }    ,{
+      "id": "gbl.piece.black_cat",
+      "class": "piece",
+      "scope": "global",
+      "path": "assets/pieces/black_cat.svg",
+      "status": "candidate",
+      "target": "256x256",
+      "format": "svg",
+      "role": "House companion and collection portrait",
+      "provenance": "first_party"
+    },
+    {
+      "id": "gbl.piece.candle",
+      "class": "piece",
+      "scope": "global",
+      "path": "assets/pieces/candle.svg",
+      "status": "candidate",
+      "target": "256x256",
+      "format": "svg",
+      "role": "ivory candle with gold alchemical seal",
+      "provenance": "first_party"
+    },
+    {
+      "id": "gbl.piece.skull",
+      "class": "piece",
+      "scope": "global",
+      "path": "assets/pieces/skull.svg",
+      "status": "candidate",
+      "target": "256x256",
+      "format": "svg",
+      "role": "ivory skull with dark eye sockets",
+      "provenance": "first_party"
     }
   ]
 }
