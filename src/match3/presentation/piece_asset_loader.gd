@@ -13,6 +13,7 @@ const PATHS := {
 
 static var _textures: Dictionary = {}
 static var _failures: Dictionary = {}
+static var _ornaments: Dictionary = {}
 
 static func texture(family: String) -> Texture2D:
 	if _textures.has(family):
@@ -49,3 +50,20 @@ static func contract() -> Dictionary:
 		"fallback": "owned_procedural_renderer",
 		"families": loaded,
 	}
+
+static func ornament(path: String) -> Texture2D:
+	if _ornaments.has(path):
+		return _ornaments[path]
+	if not FileAccess.file_exists(path):
+		return null
+	var file := FileAccess.open(path, FileAccess.READ)
+	if file == null:
+		return null
+	var svg := file.get_as_text()
+	file.close()
+	var image := Image.new()
+	if image.load_svg_from_string(svg, 1.0) != OK or image.is_empty():
+		return null
+	var texture := ImageTexture.create_from_image(image)
+	_ornaments[path] = texture
+	return texture
