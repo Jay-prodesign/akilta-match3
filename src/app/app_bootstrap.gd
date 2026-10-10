@@ -29,7 +29,8 @@ var _store
 var _current_screen: Node
 var _settings_screen: Node
 var _pending_level_number: int = 0
-const TEST_LEVEL_COUNT := 1
+## Founder explicitly authorized Levels 1–3 to be playable in this review build.
+const TEST_LEVEL_COUNT := 3
 
 @onready var screen_host: Node = $ScreenHost
 
