@@ -1,0 +1,52 @@
+name: P0 Headless Verification
+
+on:
+  push:
+    branches:
+      - p0/bootstrap
+    paths:
+      - "project.godot"
+      - "src/**"
+      - "tests/**"
+      - ".github/workflows/p0-headless.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  bootstrap-red:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Download pinned Godot 4.7.2
+        shell: bash
+        run: |
+          set -euo pipefail
+          curl -L --fail --retry 3             -o godot.zip             "https://github.com/godotengine/godot-builds/releases/download/4.7.2-stable/Godot_v4.7.2-stable_linux.x86_64.zip"
+          echo "cadd3204e728a35d3f13adb7fd0d7902636b79f6b95c40c265eb73b6c35329e4  godot.zip" | sha256sum -c -
+          unzip -q godot.zip
+          mv Godot_v4.7.2-stable_linux.x86_64 godot
+          chmod +x godot
+          ./godot --version
+
+      - name: Verify expected RED bootstrap test
+        shell: bash
+        run: |
+          set +e
+          ./godot --headless --path . -s res://tests/test_runner.gd -- res://tests/unit/test_bootstrap.gd
+          status=$?
+          set -e
+          if [ "$status" -eq 0 ]; then
+            echo "::error::Bootstrap test unexpectedly passed before AppBootstrap exists."
+            exit 1
+          fi
+          echo "Expected RED observed with exit code $status."
+
+      - name: Verify project parses
+        shell: bash
+        run: |
+          ./godot --headless --path . --editor --quit

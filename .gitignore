@@ -1,0 +1,31 @@
+# Godot
+.godot/
+.import/
+export.cfg
+export_presets.cfg
+
+# Local audit / temporary donor work
+.audit/
+.tmp/
+tmp/
+
+# OS / IDE
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+
+# Secrets / local environment
+.env
+.env.*
+!.env.example
+*.keystore
+*.jks
+*.p12
+*.mobileprovision
+*.pem
+*.key
+
+# Build output
+build/
+dist/
