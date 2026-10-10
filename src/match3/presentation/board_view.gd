@@ -870,6 +870,9 @@ func _draw_wax_seal(rect: Rect2, hp: int) -> void:
 	var r := rect.size.x * 0.12
 	draw_circle(c, r * 1.15, Color("#7D3048"))
 	draw_circle(c, r * 0.68, Color("#C7728F"))
+	var skull := PieceAssetLoader.ornament("res://assets/pieces/skull.svg")
+	if skull != null:
+		draw_texture_rect(skull, Rect2(c - Vector2.ONE * r * 1.4, Vector2.ONE * r * 2.8), false)
 	for i in range(max(1, hp)):
 		var y := c.y + (float(i) - float(hp - 1) * 0.5) * 4.0
 		draw_line(Vector2(c.x - r * 0.38, y), Vector2(c.x + r * 0.38, y), INK, 1.5)
