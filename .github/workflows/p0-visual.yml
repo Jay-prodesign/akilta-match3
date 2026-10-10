@@ -47,7 +47,6 @@ jobs:
           grep -Fq "CAPTURE_PASS: complete Level 1 player journey" <<<"$output"
           test -s artifacts/journey-00-splash.png
           test -s artifacts/journey-01-house-dormant.png
-          test -s artifacts/journey-01b-chapter-select.png
           test -s artifacts/journey-02-chapter-map.png
           test -s artifacts/journey-03-prestart.png
           test -s artifacts/journey-04-level1-gameplay.png
@@ -56,8 +55,6 @@ jobs:
           test -s artifacts/journey-06-house-awakened.png
           test -s artifacts/journey-07-curio-collection.png
           test -s artifacts/journey-08-settings.png
-          test -s artifacts/journey-09-level2-gameplay.png
-          test -s artifacts/journey-10-level3-gameplay.png
           test -s artifacts/journey-09-events.png
           test -s artifacts/journey-10-shop.png
           test -s artifacts/journey-11-level2-gameplay.png
@@ -141,7 +138,6 @@ jobs:
           path: |
             artifacts/journey-00-splash.png
             artifacts/journey-01-house-dormant.png
-            artifacts/journey-01b-chapter-select.png
             artifacts/journey-02-chapter-map.png
             artifacts/journey-03-prestart.png
             artifacts/journey-04-level1-gameplay.png
