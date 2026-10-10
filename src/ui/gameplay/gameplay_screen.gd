@@ -44,6 +44,10 @@ func _ready() -> void:
 	if FileAccess.file_exists(default_level_path):
 		load_level_path(default_level_path, default_seed)
 
+func apply_presentation_settings(state: Dictionary) -> void:
+	if board_view != null and board_view.has_method("apply_presentation_settings"):
+		board_view.apply_presentation_settings(state)
+
 func load_level_path(path: String, seed_value: int = 1001) -> bool:
 	if not FileAccess.file_exists(path):
 		return false

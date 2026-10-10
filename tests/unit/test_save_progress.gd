@@ -45,6 +45,29 @@ func _run() -> void:
 	var recovered: Dictionary = store.load_or_default()
 	_expect(int(recovered.get("house_stage", 0)) == 1, "corrupt primary must recover last-known-good save")
 
+	# Saving after a corrupt primary must preserve the validated backup rather
+	# than rotating corrupt bytes into the LKG slot.
+	var recovered_progress = ProgressScript.from_dict(recovered)
+	recovered_progress.house_stage = 2
+	_expect(store.save(recovered_progress.to_dict()), "save after corrupt-primary recovery must succeed")
+	var post_recovery: Dictionary = store.load_or_default()
+	_expect(int(post_recovery.get("house_stage", 0)) == 2, "recovered save must become the new primary")
+
+	# A future-schema primary is preserved and blocks writes so an older build
+	# cannot silently downgrade/overwrite newer player data.
+	var future := recovered_progress.to_dict()
+	future["schema_version"] = 99
+	var future_file := FileAccess.open(TEST_PATH, FileAccess.WRITE)
+	_expect(future_file != null, "test must create future-schema primary")
+	if future_file != null:
+		future_file.store_string(JSON.stringify(future))
+		future_file.close()
+	var fallback: Dictionary = store.load_or_default()
+	_expect(store.is_write_blocked(), "future schema must activate write protection")
+	_expect(not store.save(recovered_progress.to_dict()), "older build must refuse to overwrite future schema")
+	_expect(store.write_blocked_reason == "future_schema", "future-schema refusal must be explicit")
+	_expect(not fallback.is_empty(), "valid backup may still be read while future primary is preserved")
+
 	_cleanup()
 	_finish()
 

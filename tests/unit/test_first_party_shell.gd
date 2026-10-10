@@ -2,6 +2,7 @@ extends SceneTree
 
 const Navigation = preload("res://src/app/navigation_controller.gd")
 const Settings = preload("res://src/settings/user_settings.gd")
+const BoardView = preload("res://src/match3/presentation/board_view.gd")
 const TEST_SETTINGS := "user://match3_first_party_shell_settings.json"
 
 var failures: Array[String] = []
@@ -32,6 +33,14 @@ func _run() -> void:
 	reloaded.load_settings(TEST_SETTINGS)
 	_expect(bool(reloaded.get_value("reduced_motion", false)), "reduced motion must survive reload")
 	_expect(bool(reloaded.get_value("high_contrast", false)), "high contrast must survive reload")
+
+	var board = BoardView.new()
+	board.apply_presentation_settings(reloaded.get_presentation_state())
+	var presentation: Dictionary = board.presentation_settings_contract()
+	_expect(bool(presentation.get("reduced_motion", false)), "reduced motion must reach gameplay presentation")
+	_expect(bool(presentation.get("high_contrast", false)), "high contrast must reach gameplay presentation")
+	_expect(bool(board.motion_contract().get("reduced_motion_supported", false)), "board motion contract must declare reduced-motion support")
+	board.free()
 	_cleanup()
 	_finish()
 

@@ -85,6 +85,8 @@ func start_level(level_number: int = 1) -> bool:
 	screen.set("default_level_path", level_path)
 	screen.set("default_seed", 1000 + level_number)
 	_show_screen(screen)
+	if screen.has_method("apply_presentation_settings"):
+		screen.apply_presentation_settings(user_settings.get_presentation_state())
 	screen.level_won.connect(_on_level_won)
 	return true
 

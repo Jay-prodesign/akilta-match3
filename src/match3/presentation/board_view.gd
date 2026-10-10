@@ -50,6 +50,8 @@ var _motion_active: bool = false
 var _motion_items: Array[Dictionary] = []
 var _reveal_at: Dictionary = {}
 var _candidate_frame_texture: ImageTexture
+var _reduced_motion: bool = false
+var _high_contrast: bool = false
 
 func _ready() -> void:
 	mouse_filter = Control.MOUSE_FILTER_STOP
@@ -73,7 +75,27 @@ func visual_contract() -> Dictionary:
 	return PieceVisuals.contract()
 
 func motion_contract() -> Dictionary:
-	return MOTION_PROFILE.duplicate(true)
+	var contract := MOTION_PROFILE.duplicate(true)
+	contract["reduced_motion_supported"] = true
+	return contract
+
+func apply_presentation_settings(state: Dictionary) -> void:
+	_reduced_motion = bool(state.get("reduced_motion", false))
+	_high_contrast = bool(state.get("high_contrast", false))
+	if _reduced_motion:
+		if _motion_tween != null and _motion_tween.is_valid():
+			_motion_tween.kill()
+		if _feedback_tween != null and _feedback_tween.is_valid():
+			_feedback_tween.kill()
+		_motion_active = false
+		_motion_clock = 1.0
+		_motion_items.clear()
+		_reveal_at.clear()
+		_feedback_strength = 0.0
+	queue_redraw()
+
+func presentation_settings_contract() -> Dictionary:
+	return {"reduced_motion": _reduced_motion, "high_contrast": _high_contrast}
 
 func is_motion_active() -> bool:
 	return _motion_active
@@ -92,6 +114,13 @@ func play_trace(trace) -> bool:
 		_pulse_feedback("reject", 0.32, 0.18)
 
 	_build_motion(trace)
+	if _reduced_motion:
+		_motion_items.clear()
+		_reveal_at.clear()
+		_motion_clock = 1.0
+		_motion_active = false
+		queue_redraw()
+		return false
 	if _motion_items.is_empty():
 		return false
 	if _motion_tween != null and _motion_tween.is_valid():
@@ -353,7 +382,7 @@ func _draw_board_frame(rect: Rect2) -> void:
 	draw_rect(shadow, Color(0.02, 0.015, 0.025, 0.72), true)
 	draw_rect(rect, Color("#18131C"), true)
 	var outer := Color(GOLD)
-	outer.a = 0.34
+	outer.a = 0.62 if _high_contrast else 0.34
 	draw_rect(rect, outer, false, 2.0)
 	var inner := Color(LILAC)
 	inner.a = 0.13
@@ -384,7 +413,7 @@ func _draw_cell(rect: Rect2, pos: Vector2i) -> void:
 	draw_style_box(_cell_box(radius), rect)
 	var inner := rect.grow(-rect.size.x * 0.055)
 	var inner_line := Color(LILAC)
-	inner_line.a = 0.07
+	inner_line.a = 0.20 if _high_contrast else 0.07
 	draw_rect(inner, inner_line, false, 1.0)
 	var inset := rect.grow(-rect.size.x * 0.13)
 	var family: String = String(board_state.get_cell(pos))
