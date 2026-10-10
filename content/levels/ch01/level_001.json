@@ -17,8 +17,8 @@
   "id": "ch01_level_001",
   "chapter": "curio_boutique",
   "visual_profile": "curio_boutique_opening",
-  "piece_set": "north_star_five_family_candidate_v3",
-  "visual_status": "north_star_candidate_v3",
+  "piece_set": "north_star_eight_symbol_candidate_v5",
+  "visual_status": "north_star_eight_symbol_candidate_v5",
   "title": "Moonlit Cabinet",
   "eyebrow": "CURIO BOUTIQUE · FIRST AWAKENING",
   "hint": "Match the moon sigils to wake the first relic.",
@@ -37,15 +37,18 @@
     "rose",
     "moth",
     "key",
-    "leaf"
+    "leaf",
+    "cat",
+    "candle",
+    "skull"
   ],
   "initial_rows": [
     [
       "moon",
       "rose",
-      "moth",
+      "cat",
       "key",
-      "leaf",
+      "candle",
       "moon",
       "rose"
     ],
@@ -56,51 +59,51 @@
       "leaf",
       "moon",
       "rose",
-      "moth"
+      "skull"
     ],
     [
-      "moth",
+      "candle",
       "key",
       "leaf",
       "moon",
-      "rose",
+      "skull",
       "moth",
       "key"
     ],
     [
       "key",
-      "leaf",
+      "skull",
+      "moon",
+      "rose",
+      "moth",
+      "cat",
+      "leaf"
+    ],
+    [
+      "cat",
       "moon",
       "rose",
       "moth",
       "key",
+      "leaf",
+      "candle"
+    ],
+    [
+      "key",
+      "leaf",
+      "skull",
+      "rose",
+      "moth",
+      "cat",
       "leaf"
     ],
     [
       "leaf",
-      "moon",
-      "rose",
-      "moth",
-      "key",
-      "leaf",
-      "moon"
-    ],
-    [
-      "key",
-      "leaf",
-      "moon",
-      "rose",
-      "moth",
-      "key",
-      "leaf"
-    ],
-    [
-      "leaf",
-      "moon",
+      "candle",
       "rose",
       "moon",
       "rose",
-      "leaf",
+      "skull",
       "moth"
     ]
   ],
