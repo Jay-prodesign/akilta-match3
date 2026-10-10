@@ -5,6 +5,7 @@ signal level_won(level_id: String, curio_id: String, house_stage_reward: int)
 
 const BoardState = preload("res://src/match3/domain/board_state.gd")
 const MoveResolver = preload("res://src/match3/domain/move_resolver.gd")
+const KENNEY_DIVIDER_PATH := "res://assets/candidate/third_party/kenney/fantasy-ui-borders/divider-004.png"
 
 @export var default_level_path := "res://content/levels/ch01/level_001.json"
 @export var default_seed := 1001
@@ -33,6 +34,7 @@ var _pending_terminal_result: String = ""
 @onready var result_action: Button = $ResultOverlay/Card/Content/Action
 
 func _ready() -> void:
+	_install_candidate_divider()
 	if board_view.has_signal("swap_requested"):
 		board_view.swap_requested.connect(_on_swap_requested)
 	if board_view.has_signal("trace_motion_finished"):
@@ -165,3 +167,24 @@ func _on_board_trace_motion_finished() -> void:
 	var result := _pending_terminal_result
 	_pending_terminal_result = ""
 	_show_result_if_terminal(result)
+
+
+func _install_candidate_divider() -> void:
+	var layout := get_node_or_null("Layout")
+	if layout == null or layout.get_node_or_null("TitleDivider") != null:
+		return
+	if not FileAccess.file_exists(KENNEY_DIVIDER_PATH):
+		return
+	var image := Image.load_from_file(KENNEY_DIVIDER_PATH)
+	if image == null or image.is_empty():
+		return
+	var divider := TextureRect.new()
+	divider.name = "TitleDivider"
+	divider.custom_minimum_size = Vector2(0, 16)
+	divider.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	divider.modulate = Color(0.851, 0.71, 0.416, 0.52)
+	divider.texture = ImageTexture.create_from_image(image)
+	divider.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+	divider.stretch_mode = TextureRect.STRETCH_SCALE
+	layout.add_child(divider)
+	layout.move_child(divider, min(2, layout.get_child_count() - 1))

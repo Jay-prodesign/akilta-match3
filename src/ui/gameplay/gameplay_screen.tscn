@@ -1,8 +1,7 @@
-[gd_scene load_steps=7 format=3]
+[gd_scene load_steps=6 format=3]
 
 [ext_resource type="Script" path="res://src/ui/gameplay/gameplay_screen.gd" id="1_game"]
 [ext_resource type="Script" path="res://src/match3/presentation/board_view.gd" id="2_board"]
-[ext_resource type="Texture2D" path="res://assets/candidate/third_party/kenney/fantasy-ui-borders/divider-004.png" id="3_divider"]
 
 [sub_resource type="StyleBoxFlat" id="StylePanel"]
 bg_color = Color(0.0902, 0.0745, 0.1059, 0.98)
@@ -81,15 +80,6 @@ theme_override_colors/font_color = Color(0.945, 0.91, 0.866, 1)
 theme_override_font_sizes/font_size = 52
 text = "Moonlit Cabinet"
 horizontal_alignment = 1
-
-[node name="TitleDivider" type="TextureRect" parent="Layout"]
-custom_minimum_size = Vector2(0, 16)
-layout_mode = 2
-mouse_filter = 2
-modulate = Color(0.851, 0.71, 0.416, 0.52)
-texture = ExtResource("3_divider")
-expand_mode = 1
-stretch_mode = 0
 
 [node name="HUD" type="HBoxContainer" parent="Layout"]
 layout_mode = 2

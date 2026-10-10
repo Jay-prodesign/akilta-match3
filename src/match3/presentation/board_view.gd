@@ -5,7 +5,7 @@ signal swap_requested(from: Vector2i, to: Vector2i)
 signal trace_motion_finished
 
 const PieceVisuals = preload("res://src/match3/presentation/piece_visuals.gd")
-const KENNEY_FRAME = preload("res://assets/candidate/third_party/kenney/fantasy-ui-borders/frame-024.png")
+const KENNEY_FRAME_PATH := "res://assets/candidate/third_party/kenney/fantasy-ui-borders/frame-024.png"
 
 const INK := Color("#100D12")
 const VELVET := Color("#17131B")
@@ -49,11 +49,21 @@ var _motion_clock: float = 1.0
 var _motion_active: bool = false
 var _motion_items: Array[Dictionary] = []
 var _reveal_at: Dictionary = {}
+var _candidate_frame_texture: ImageTexture
 
 func _ready() -> void:
 	mouse_filter = Control.MOUSE_FILTER_STOP
 	focus_mode = Control.FOCUS_ALL
+	_load_candidate_frame()
 	queue_redraw()
+
+func _load_candidate_frame() -> void:
+	if not FileAccess.file_exists(KENNEY_FRAME_PATH):
+		return
+	var image := Image.load_from_file(KENNEY_FRAME_PATH)
+	if image == null or image.is_empty():
+		return
+	_candidate_frame_texture = ImageTexture.create_from_image(image)
 
 func set_board(board) -> void:
 	board_state = board
@@ -364,9 +374,10 @@ func _draw_board_frame(rect: Rect2) -> void:
 
 	# CC0 frame geometry is used only as a candidate ornamental primitive;
 	# Curio House color/material identity remains owned by this renderer.
-	var ornament_tint := Color(GOLD)
-	ornament_tint.a = 0.42
-	draw_texture_rect(KENNEY_FRAME, rect.grow(10.0), false, ornament_tint)
+	if _candidate_frame_texture != null:
+		var ornament_tint := Color(GOLD)
+		ornament_tint.a = 0.42
+		draw_texture_rect(_candidate_frame_texture, rect.grow(10.0), false, ornament_tint)
 
 func _draw_cell(rect: Rect2, pos: Vector2i) -> void:
 	var radius := rect.size.x * 0.18
