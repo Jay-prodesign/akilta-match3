@@ -55,8 +55,33 @@ func _run() -> void:
 	_expect(progress != null and int(progress.highest_level_unlocked) == 3, "Level 2 completion must advance progression cursor")
 	var stage2_house = app.current_screen()
 	var stage2_button: Button = stage2_house.get_node("Layout/PlayButton")
-	_expect(stage2_button.disabled, "House must not route into unauthored Level 3")
-	_expect(stage2_button.text == "MORE CURIOS STIR SOON", "unauthored next content must have truthful CTA")
+	_expect(not stage2_button.disabled and stage2_button.text == "ENTER LEVEL 3", "House must expose authored Level 3")
+	stage2_button.emit_signal("pressed")
+	await process_frame
+
+	var level3 = app.current_screen()
+	_expect(level3 != null and str(level3.current_level_id) == "ch01_level_003", "Level 3 CTA must open the authored line-special lesson")
+	var create_trace = level3.attempt_swap(Vector2i(2, 3), Vector2i(2, 4))
+	_expect(create_trace != null and create_trace.accepted, "Level 3 special-creation swipe must be accepted")
+	_expect(create_trace != null and create_trace.event_types().has("special_created"), "Level 3 first move must generate a special")
+	_expect(create_trace != null and str(create_trace.result) == "playing", "creating the Line special must not finish Level 3")
+	_expect(level3.board_state.specials.size() >= 1, "generated Line special must remain on the board")
+	var activate_trace = level3.attempt_swap(Vector2i(3, 3), Vector2i(3, 4))
+	_expect(activate_trace != null and activate_trace.accepted, "Level 3 activation swipe must be accepted")
+	_expect(activate_trace != null and activate_trace.event_types().has("special_triggered"), "Level 3 second move must trigger the generated Line special")
+	_expect(activate_trace != null and str(activate_trace.result) == "won", "Line special must collect the key and win Level 3")
+	_expect(level3.continue_after_win(), "Level 3 win must return to House")
+	await process_frame
+
+	progress = app.get("progress")
+	_expect(int(progress.house_stage) == 3, "Level 3 must awaken House stage 3")
+	_expect(progress.curios.has("thorned_locket"), "Level 3 must grant Thorned Locket")
+	_expect(int(progress.highest_level_unlocked) == 4, "Level 3 completion must advance progression cursor")
+	var stage3_house = app.current_screen()
+	var stage3_button: Button = stage3_house.get_node("Layout/PlayButton")
+	_expect(stage3_button.disabled, "House must not route into unauthored Level 4")
+	_expect(stage3_button.text == "MORE CURIOS STIR SOON", "stage 3 must truthfully stop at current authored content")
+
 	app.queue_free()
 	await process_frame
 	var relaunched = packed.instantiate()
@@ -65,9 +90,10 @@ func _run() -> void:
 	await process_frame
 	var restored = relaunched.get("progress")
 	_expect(str(relaunched.current_route_name()) == "house", "relaunch after progression must return to House")
-	_expect(restored != null and int(restored.house_stage) == 2, "relaunch must preserve House stage 2")
+	_expect(restored != null and int(restored.house_stage) == 3, "relaunch must preserve House stage 3")
 	_expect(restored != null and restored.curios.count("moon_cameo") == 1, "Moon Cameo must remain exactly once")
 	_expect(restored != null and restored.curios.count("moth_reliquary") == 1, "Moth Reliquary must remain exactly once")
+	_expect(restored != null and restored.curios.count("thorned_locket") == 1, "Thorned Locket must remain exactly once")
 	relaunched.queue_free()
 	await process_frame
 	_cleanup()
@@ -87,7 +113,7 @@ func _fail(message: String) -> void:
 
 func _finish() -> void:
 	if failures.is_empty():
-		print("TEST_PASS: real two-level opening journey")
+		print("TEST_PASS: real three-level opening journey")
 		quit(0)
 		return
 	for failure in failures:

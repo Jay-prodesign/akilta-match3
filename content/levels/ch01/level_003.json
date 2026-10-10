@@ -1,0 +1,25 @@
+{
+  "id": "ch01_level_003",
+  "chapter": "curio_boutique",
+  "title": "Thornlight Arrangement",
+  "eyebrow": "CURIO BOUTIQUE · FORM A MOON BEAM",
+  "hint": "Slide the center moon down. Four moons will bind into a line sigil.",
+  "win_title": "THE BEAM FINDS A KEY",
+  "win_detail": "A Thorned Locket slips free from the velvet lining.",
+  "reward_curio": "thorned_locket",
+  "house_stage_reward": 3,
+  "width": 5,
+  "height": 5,
+  "moves": 6,
+  "objective": "collect_family",
+  "objective_family": "key",
+  "objective_target": 1,
+  "families": ["moon", "rose", "moth", "key", "leaf"],
+  "initial_rows": [
+    ["rose", "moth", "key", "leaf", "rose"],
+    ["moth", "key", "leaf", "rose", "moth"],
+    ["key", "leaf", "rose", "moon", "key"],
+    ["rose", "moon", "moon", "key", "leaf"],
+    ["moon", "moon", "rose", "moon", "key"]
+  ]
+}

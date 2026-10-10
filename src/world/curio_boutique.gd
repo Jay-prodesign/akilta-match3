@@ -111,11 +111,17 @@ func _draw_side_shelves(room: Rect2) -> void:
 
 	_draw_bottle(Vector2((left_x0 + left_x1) * 0.5, shelf_y0 - 14.0), CYAN, 0.85)
 	_draw_candle(Vector2(left_x0 + 22.0, shelf_y0 + shelf_gap - 4.0), 0.78)
-	_draw_bottle(Vector2(left_x1 - 20.0, shelf_y0 + shelf_gap * 2.0 - 13.0), ROSE, 0.68)
+	var locket_center := Vector2(left_x1 - 24.0, shelf_y0 + shelf_gap * 2.0 - 19.0)
+	if house_stage >= 3:
+		draw_circle(locket_center, 29.0, Color(0.78, 0.45, 0.56, 0.07))
+		_draw_thorn_locket(locket_center, 20.0, true)
+	else:
+		_draw_thorn_locket(locket_center, 16.0, false)
 
 	_draw_bottle(Vector2((right_x0 + right_x1) * 0.5, shelf_y0 - 14.0), LEAF, 0.75)
 	_draw_candle(Vector2(right_x1 - 22.0, shelf_y0 + shelf_gap - 4.0), 0.88)
-	_draw_moth_frame(Vector2(right_x0 + 28.0, shelf_y0 + shelf_gap * 2.0 - 18.0), 17.0)
+	var moth_center := Vector2(right_x0 + 28.0, shelf_y0 + shelf_gap * 2.0 - 18.0)
+	_draw_moth_frame(moth_center, 20.0 if house_stage >= 2 else 17.0, house_stage >= 2)
 
 func _draw_central_cabinet(room: Rect2) -> void:
 	var cabinet := Rect2(
@@ -184,9 +190,22 @@ func _draw_candle(base: Vector2, scale: float) -> void:
 	draw_colored_polygon(flame, GOLD)
 	draw_circle(base - Vector2(0, h + 4.0 * scale), 13.0 * scale, Color(0.851, 0.71, 0.416, 0.035))
 
-func _draw_moth_frame(center: Vector2, radius: float) -> void:
+func _draw_thorn_locket(center: Vector2, radius: float, active: bool) -> void:
+	var metal: Color = ROSE if active else Color("#5D4C58")
+	var rim: Color = GOLD if active else Color("#4D4450")
+	draw_circle(center, radius * 1.08, Color("#151219"))
+	draw_arc(center, radius, 0.0, TAU, 36, rim, 2.0)
+	draw_circle(center, radius * 0.58, metal.darkened(0.28))
+	draw_arc(center, radius * 0.58, 0.0, TAU, 30, metal, 2.0)
+	for angle in [0.0, PI * 0.5, PI, PI * 1.5]:
+		var direction := Vector2(cos(angle), sin(angle))
+		draw_line(center + direction * radius * 0.68, center + direction * radius * 0.98, metal, 2.0)
+
+func _draw_moth_frame(center: Vector2, radius: float, active: bool = true) -> void:
 	draw_circle(center, radius * 1.15, Color("#151219"))
-	draw_arc(center, radius, 0.0, TAU, 36, GOLD.darkened(0.25), 2.0)
+	var rim: Color = GOLD.darkened(0.25) if active else Color("#4D4450")
+	var wings: Color = CYAN if active else Color("#536066")
+	draw_arc(center, radius, 0.0, TAU, 36, rim, 2.0)
 	var left := PackedVector2Array([
 		center + Vector2(-2, -1),
 		center + Vector2(-radius * 0.65, -radius * 0.35),
@@ -197,8 +216,8 @@ func _draw_moth_frame(center: Vector2, radius: float) -> void:
 		center + Vector2(radius * 0.65, -radius * 0.35),
 		center + Vector2(radius * 0.50, radius * 0.48)
 	])
-	draw_colored_polygon(left, CYAN)
-	draw_colored_polygon(right, CYAN)
+	draw_colored_polygon(left, wings)
+	draw_colored_polygon(right, wings)
 
 func _draw_floor(room: Rect2) -> void:
 	var horizon_y: float = room.position.y + room.size.y * 0.79

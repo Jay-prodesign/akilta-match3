@@ -37,7 +37,9 @@ func _refresh() -> void:
 	headline.text = String(state.get("headline", "The Curio Boutique sleeps."))
 	detail.text = String(state.get("detail", ""))
 	room_view.set_house_state(stage, owned_curios)
-	if stage >= 2:
+	if stage >= 3:
+		curio_label.text = "3 CURIOS · FIRST CABINET SET"
+	elif stage >= 2:
 		curio_label.text = "2 CURIOS · MOON CAMEO + MOTH RELIQUARY"
 	elif stage >= 1:
 		curio_label.text = "CURIO 01 · MOON CAMEO AWAKENED"

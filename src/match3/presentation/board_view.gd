@@ -19,6 +19,9 @@ var board_state
 var _press_position := Vector2.ZERO
 var _pressed_cell := Vector2i(-1, -1)
 var _tracking := false
+var _feedback_strength: float = 0.0
+var _feedback_mode: String = ""
+var _feedback_tween: Tween
 
 func _ready() -> void:
 	mouse_filter = Control.MOUSE_FILTER_STOP
@@ -31,6 +34,34 @@ func set_board(board) -> void:
 
 func visual_contract() -> Dictionary:
 	return PieceVisuals.contract()
+
+func play_trace(trace) -> void:
+	if trace == null:
+		return
+	var types: Array[String] = trace.event_types()
+	if types.has("combo_triggered"):
+		_pulse_feedback("combo", 0.72, 0.44)
+	elif types.has("special_created") or types.has("special_triggered"):
+		_pulse_feedback("special", 0.52, 0.34)
+	elif bool(trace.accepted):
+		_pulse_feedback("match", 0.26, 0.24)
+	else:
+		_pulse_feedback("reject", 0.32, 0.18)
+
+func _pulse_feedback(mode: String, strength: float, duration: float) -> void:
+	if _feedback_tween != null and _feedback_tween.is_valid():
+		_feedback_tween.kill()
+	_feedback_mode = mode
+	_feedback_strength = strength
+	queue_redraw()
+	_feedback_tween = create_tween()
+	_feedback_tween.set_trans(Tween.TRANS_QUAD)
+	_feedback_tween.set_ease(Tween.EASE_OUT)
+	_feedback_tween.tween_method(_set_feedback_strength, strength, 0.0, duration)
+
+func _set_feedback_strength(value: float) -> void:
+	_feedback_strength = value
+	queue_redraw()
 
 func _gui_input(event: InputEvent) -> void:
 	if board_state == null:
@@ -104,6 +135,27 @@ func _draw() -> void:
 				continue
 			var rect := Rect2(origin + Vector2(x, y) * pitch, Vector2.ONE * cell_size)
 			_draw_cell(rect, pos)
+
+	_draw_feedback()
+
+func _draw_feedback() -> void:
+	if _feedback_strength <= 0.001:
+		return
+	var color := Color("#BFA5D8")
+	if _feedback_mode == "combo":
+		color = Color("#D8B56A")
+	elif _feedback_mode == "reject":
+		color = Color("#C7728F")
+	elif _feedback_mode == "match":
+		color = Color("#A9C6C8")
+	color.a = 0.12 * _feedback_strength
+	draw_rect(Rect2(Vector2.ZERO, size), color, true)
+	var edge := color
+	edge.a = 0.9 * _feedback_strength
+	draw_rect(Rect2(Vector2(5, 5), size - Vector2(10, 10)), edge, false, 2.0 + 5.0 * _feedback_strength)
+	if _feedback_mode == "combo" or _feedback_mode == "special":
+		var center := size * 0.5
+		draw_arc(center, minf(size.x, size.y) * (0.10 + 0.05 * _feedback_strength), 0.0, TAU, 48, edge, 2.0 + 3.0 * _feedback_strength)
 
 func _draw_empty_state() -> void:
 	var center := size * 0.5
@@ -207,6 +259,15 @@ func _draw_special_mark(rect: Rect2, kind: String) -> void:
 		draw_line(c + Vector2(-r * 0.7, 0), c + Vector2(r * 0.7, 0), GOLD, 2.0)
 	elif kind == "line_v":
 		draw_line(c + Vector2(0, -r * 0.7), c + Vector2(0, r * 0.7), GOLD, 2.0)
+	elif kind == "global":
+		draw_circle(c, r * 0.30, GOLD)
+		for angle in [0.0, PI * 0.5, PI, PI * 1.5]:
+			draw_line(c + Vector2(cos(angle), sin(angle)) * r * 0.42, c + Vector2(cos(angle), sin(angle)) * r * 0.82, GOLD, 2.0)
+	elif kind == "area":
+		draw_rect(Rect2(c - Vector2.ONE * r * 0.42, Vector2.ONE * r * 0.84), GOLD, false, 2.0)
+	elif kind == "smart":
+		draw_circle(c, r * 0.30, GOLD, false, 2.0)
+		draw_circle(c, r * 0.08, GOLD)
 
 func _draw_wax_seal(rect: Rect2, hp: int) -> void:
 	var c := rect.position + Vector2(rect.size.x * 0.22, rect.size.y * 0.78)

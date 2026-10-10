@@ -70,7 +70,10 @@ func attempt_swap(from: Vector2i, to: Vector2i):
 		return null
 	last_trace = MoveResolver.try_swap(board_state, from, to)
 	board_view.set_board(board_state)
+	if board_view.has_method("play_trace"):
+		board_view.play_trace(last_trace)
 	_refresh_hud()
+	_refresh_move_feedback(last_trace)
 	if last_trace.accepted:
 		_show_result_if_terminal(String(last_trace.result))
 	return last_trace
@@ -89,6 +92,21 @@ func retry_current_level() -> bool:
 
 func _on_swap_requested(from: Vector2i, to: Vector2i) -> void:
 	attempt_swap(from, to)
+
+func _refresh_move_feedback(trace) -> void:
+	if trace == null:
+		return
+	var types: Array[String] = trace.event_types()
+	if types.has("combo_triggered"):
+		hint_label.text = "The relics answer together. The whole cabinet shudders."
+	elif types.has("special_created"):
+		hint_label.text = "A Moon Beam formed. Match it to unleash the whole row."
+	elif types.has("special_triggered"):
+		hint_label.text = "The sigil opens. Follow the chain reaction."
+	elif types.has("shuffle"):
+		hint_label.text = "No path remained. The House rearranged the sigils."
+	elif not bool(trace.accepted):
+		hint_label.text = "Those sigils refuse the arrangement. Try another adjacent swap."
 
 func _refresh_hud() -> void:
 	if board_state == null:

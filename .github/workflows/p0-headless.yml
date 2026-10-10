@@ -149,7 +149,7 @@ jobs:
           if grep -Eq "SCRIPT ERROR:|(^| )ERROR:" <<<"$output"; then exit 1; fi
           grep -Fq "TEST_PASS: first player journey continuity" <<<"$output"
 
-      - name: Run real two-level opening journey
+      - name: Run real three-level opening journey
         shell: bash
         run: |
           set +e
@@ -159,7 +159,7 @@ jobs:
           printf '%s\n' "$output"
           if [ "$status" -ne 0 ]; then exit "$status"; fi
           if grep -Eq "SCRIPT ERROR:|(^| )ERROR:" <<<"$output"; then exit 1; fi
-          grep -Fq "TEST_PASS: real two-level opening journey" <<<"$output"
+          grep -Fq "TEST_PASS: real three-level opening journey" <<<"$output"
 
       - name: Verify project parses cleanly
         shell: bash
