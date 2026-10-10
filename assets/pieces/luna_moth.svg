@@ -9,12 +9,20 @@
 <circle cx="128" cy="126" r="96" fill="#211925" stroke="#bfa5d8" stroke-opacity=".38" stroke-width="3"/>
 <path d="M62 64 Q128 28 194 64" fill="none" stroke="#fff" stroke-opacity=".10" stroke-width="5" stroke-linecap="round"/>
 
-<defs><linearGradient id="wing" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#c9edef"/><stop offset=".45" stop-color="#79adb1"/><stop offset="1" stop-color="#2b5d64"/></linearGradient></defs>
-<path d="M121 118 C101 77 62 67 50 94 C42 114 60 145 105 153 C79 160 67 180 74 194 C86 209 111 188 124 153 Z" fill="url(#wing)" stroke="#d9f1f0" stroke-opacity=".52" stroke-width="3"/>
-<path d="M135 118 C155 77 194 67 206 94 C214 114 196 145 151 153 C177 160 189 180 182 194 C170 209 145 188 132 153 Z" fill="url(#wing)" stroke="#d9f1f0" stroke-opacity=".52" stroke-width="3"/>
-<ellipse cx="128" cy="133" rx="13" ry="48" fill="#c7b06f" stroke="#f1e8dd" stroke-opacity=".35" stroke-width="2"/>
-<circle cx="88" cy="116" r="13" fill="#1a2529" stroke="#d8b56a" stroke-width="3"/><circle cx="168" cy="116" r="13" fill="#1a2529" stroke="#d8b56a" stroke-width="3"/>
-<circle cx="88" cy="116" r="5" fill="#bfa5d8"/><circle cx="168" cy="116" r="5" fill="#bfa5d8"/>
-<path d="M124 89 Q112 67 99 60 M132 89 Q144 67 157 60" fill="none" stroke="#d8b56a" stroke-width="3" stroke-linecap="round"/>
-<circle cx="128" cy="126" r="94" fill="url(#gloss)" opacity=".42"/>
+<defs><linearGradient id="wing" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#d8f1ef"/><stop offset=".38" stop-color="#7aaeb1"/><stop offset="1" stop-color="#315c63"/></linearGradient></defs>
+<!-- Long tapered forewings make the silhouette read as moth, not butterfly. -->
+<path d="M120 122 C106 82 83 58 61 65 C42 71 43 101 61 120 C76 136 96 142 117 143 Z" fill="url(#wing)" stroke="#d9f1f0" stroke-opacity=".58" stroke-width="3"/>
+<path d="M136 122 C150 82 173 58 195 65 C214 71 213 101 195 120 C180 136 160 142 139 143 Z" fill="url(#wing)" stroke="#d9f1f0" stroke-opacity=".58" stroke-width="3"/>
+<path d="M118 142 C93 140 77 151 78 171 C79 188 99 194 121 157 Z" fill="#4f858b" stroke="#c9edef" stroke-opacity=".48" stroke-width="3"/>
+<path d="M138 142 C163 140 179 151 178 171 C177 188 157 194 135 157 Z" fill="#4f858b" stroke="#c9edef" stroke-opacity=".48" stroke-width="3"/>
+<!-- Eyespots and vein lines stay legible at board scale. -->
+<circle cx="80" cy="102" r="15" fill="#1a2529" stroke="#d8b56a" stroke-width="3"/><circle cx="176" cy="102" r="15" fill="#1a2529" stroke="#d8b56a" stroke-width="3"/>
+<circle cx="80" cy="102" r="6" fill="#bfa5d8"/><circle cx="176" cy="102" r="6" fill="#bfa5d8"/>
+<path d="M113 126 L74 84 M143 126 L182 84 M111 139 L88 165 M145 139 L168 165" fill="none" stroke="#e2f1ef" stroke-opacity=".34" stroke-width="3" stroke-linecap="round"/>
+<!-- Segmented body and long hooked antennae. -->
+<ellipse cx="128" cy="133" rx="12" ry="46" fill="#c2a85f" stroke="#f1e8dd" stroke-opacity=".42" stroke-width="2"/>
+<circle cx="128" cy="100" r="11" fill="#7f6a3a"/>
+<path d="M123 99 C112 78 101 68 87 61 C82 58 78 54 76 49 M133 99 C144 78 155 68 169 61 C174 58 178 54 180 49" fill="none" stroke="#d8b56a" stroke-width="4" stroke-linecap="round"/>
+<path d="M116 119 H140 M116 137 H140 M118 154 H138" stroke="#4b3b20" stroke-width="3" stroke-linecap="round"/>
+<circle cx="128" cy="126" r="94" fill="url(#gloss)" opacity=".38"/>
 </svg>
