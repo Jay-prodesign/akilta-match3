@@ -48,6 +48,13 @@ func _run() -> void:
 	if board_view != null:
 		_expect(board_view.has_method("visual_contract"), "BoardView must expose visual_contract")
 		_expect(board_view.has_method("motion_contract"), "BoardView must expose trace-driven motion_contract")
+		_expect(board_view.has_method("teaching_contract"), "BoardView must expose Level 1 teaching contract")
+		if board_view.has_method("teaching_contract"):
+			var teaching: Dictionary = board_view.teaching_contract()
+			_expect(bool(teaching.get("active", false)), "Level 1 authored teaching move must activate the board cue")
+			_expect(teaching.get("from", Vector2i(-1, -1)) == Vector2i(1, 4), "teaching cue must start on authored Moon sigil")
+			_expect(teaching.get("to", Vector2i(-1, -1)) == Vector2i(2, 4), "teaching cue must end on authored destination")
+			_expect(str(teaching.get("language", "")) == "ritual_thread", "teaching cue must use House-native ritual-thread language")
 		if board_view.has_method("motion_contract"):
 			var motion: Dictionary = board_view.motion_contract()
 			_expect(str(motion.get("license", "")) == "MIT", "motion acceleration provenance must record donor license")
@@ -71,6 +78,11 @@ func _run() -> void:
 	_expect(screen.get_node_or_null("Layout/HUD/Objective") != null, "HUD must expose Objective")
 	_expect(screen.get_node_or_null("Layout/HUD/Moves") != null, "HUD must expose Moves")
 	_expect(screen.get_node_or_null("Layout/BoardView") != null, "board must be the dominant gameplay surface")
+
+	var teaching_trace = screen.attempt_swap(Vector2i(1, 4), Vector2i(2, 4))
+	_expect(teaching_trace != null and bool(teaching_trace.accepted), "authored teaching swipe must be accepted")
+	if board_view != null and board_view.has_method("teaching_contract"):
+		_expect(not bool(board_view.teaching_contract().get("active", true)), "teaching cue must disappear after the first accepted swipe")
 
 	screen.queue_free()
 	await process_frame

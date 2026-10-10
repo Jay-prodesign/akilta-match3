@@ -74,6 +74,7 @@ func load_level_path(path: String, seed_value: int = 1001) -> bool:
 	hint_label.text = String(parsed.get("hint", "Swipe a sigil."))
 	board_state = BoardState.from_level(parsed, seed_value)
 	board_view.set_board(board_state)
+	_configure_teaching_move(parsed)
 	_pending_win = false
 	_pending_terminal_result = ""
 	result_overlay.visible = false
@@ -83,6 +84,21 @@ func load_level_path(path: String, seed_value: int = 1001) -> bool:
 		result_ritual.queue_redraw()
 	_refresh_hud()
 	return true
+
+func _configure_teaching_move(level_data: Dictionary) -> void:
+	if not board_view.has_method("set_teaching_move"):
+		return
+	var teaching_moves: Variant = level_data.get("teaching_moves", [])
+	if teaching_moves is Array and not teaching_moves.is_empty():
+		var move: Variant = teaching_moves[0]
+		if move is Array and move.size() >= 4:
+			board_view.set_teaching_move(
+				Vector2i(int(move[0]), int(move[1])),
+				Vector2i(int(move[2]), int(move[3]))
+			)
+			return
+	if board_view.has_method("clear_teaching_move"):
+		board_view.clear_teaching_move()
 
 func attempt_swap(from: Vector2i, to: Vector2i):
 	if board_state == null or result_overlay.visible:
@@ -97,6 +113,8 @@ func attempt_swap(from: Vector2i, to: Vector2i):
 	_refresh_hud()
 	_refresh_move_feedback(last_trace)
 	if last_trace.accepted:
+		if board_view.has_method("clear_teaching_move"):
+			board_view.clear_teaching_move()
 		var feedback_types: Array[String] = last_trace.event_types()
 		if feedback_types.has("combo_triggered") or feedback_types.has("special_triggered") or feedback_types.has("special_created"):
 			haptics.request_special()

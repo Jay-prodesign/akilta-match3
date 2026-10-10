@@ -52,6 +52,11 @@ var _reveal_at: Dictionary = {}
 var _candidate_frame_texture: ImageTexture
 var _reduced_motion: bool = false
 var _high_contrast: bool = false
+var _teaching_from := Vector2i(-1, -1)
+var _teaching_to := Vector2i(-1, -1)
+var _teaching_active := false
+var _teaching_pulse: float = 0.65
+var _teaching_tween: Tween
 
 func _ready() -> void:
 	mouse_filter = Control.MOUSE_FILTER_STOP
@@ -87,11 +92,17 @@ func apply_presentation_settings(state: Dictionary) -> void:
 			_motion_tween.kill()
 		if _feedback_tween != null and _feedback_tween.is_valid():
 			_feedback_tween.kill()
+		if _teaching_tween != null and _teaching_tween.is_valid():
+			_teaching_tween.kill()
+		_teaching_tween = null
+		_teaching_pulse = 0.72
 		_motion_active = false
 		_motion_clock = 1.0
 		_motion_items.clear()
 		_reveal_at.clear()
 		_feedback_strength = 0.0
+	elif _teaching_active and (_teaching_tween == null or not _teaching_tween.is_valid()):
+		_start_teaching_pulse()
 	queue_redraw()
 
 func presentation_settings_contract() -> Dictionary:
@@ -99,6 +110,52 @@ func presentation_settings_contract() -> Dictionary:
 
 func is_motion_active() -> bool:
 	return _motion_active
+
+func set_teaching_move(from: Vector2i, to: Vector2i) -> void:
+	clear_teaching_move()
+	if from.x < 0 or from.y < 0 or to.x < 0 or to.y < 0:
+		return
+	_teaching_from = from
+	_teaching_to = to
+	_teaching_active = true
+	_teaching_pulse = 0.65
+	if not _reduced_motion:
+		_start_teaching_pulse()
+	queue_redraw()
+
+func clear_teaching_move() -> void:
+	_teaching_active = false
+	_teaching_from = Vector2i(-1, -1)
+	_teaching_to = Vector2i(-1, -1)
+	if _teaching_tween != null and _teaching_tween.is_valid():
+		_teaching_tween.kill()
+	_teaching_tween = null
+	_teaching_pulse = 0.65
+	queue_redraw()
+
+func teaching_contract() -> Dictionary:
+	return {
+		"active": _teaching_active,
+		"from": _teaching_from,
+		"to": _teaching_to,
+		"reduced_motion": _reduced_motion,
+		"language": "ritual_thread"
+	}
+
+func _start_teaching_pulse() -> void:
+	if not _teaching_active or _reduced_motion:
+		return
+	if _teaching_tween != null and _teaching_tween.is_valid():
+		_teaching_tween.kill()
+	_teaching_tween = create_tween().set_loops()
+	_teaching_tween.set_trans(Tween.TRANS_SINE)
+	_teaching_tween.set_ease(Tween.EASE_IN_OUT)
+	_teaching_tween.tween_method(_set_teaching_pulse, 0.42, 1.0, 0.72)
+	_teaching_tween.tween_method(_set_teaching_pulse, 1.0, 0.42, 0.72)
+
+func _set_teaching_pulse(value: float) -> void:
+	_teaching_pulse = value
+	queue_redraw()
 
 func play_trace(trace) -> bool:
 	if trace == null:
@@ -335,8 +392,35 @@ func _draw() -> void:
 			var rect := Rect2(origin + Vector2(x, y) * pitch, Vector2.ONE * cell_size)
 			_draw_cell(rect, pos)
 
+	_draw_teaching_cue()
 	_draw_feedback()
 	_draw_motion()
+
+func _draw_teaching_cue() -> void:
+	if not _teaching_active or _motion_active or board_state == null:
+		return
+	if not board_state.in_bounds(_teaching_from) or not board_state.in_bounds(_teaching_to):
+		return
+	var start := _cell_center(_teaching_from)
+	var finish := _cell_center(_teaching_to)
+	var cell_size: float = float(_board_geometry()["cell_size"])
+	var thread := Color(GOLD)
+	thread.a = (0.72 if _high_contrast else 0.46) * _teaching_pulse
+	var glow := Color(LILAC)
+	glow.a = (0.28 if _high_contrast else 0.16) * _teaching_pulse
+
+	# A House-native ritual thread replaces a generic tutorial hand/arrow.
+	draw_line(start, finish, thread, maxf(2.0, cell_size * 0.035))
+	draw_arc(start, cell_size * 0.34, 0.0, TAU, 32, thread, maxf(2.0, cell_size * 0.025))
+	draw_arc(finish, cell_size * 0.40, 0.0, TAU, 32, thread, maxf(2.0, cell_size * 0.030))
+	draw_circle(finish, cell_size * 0.12, glow)
+
+	# Increasing seal-dots communicate direction without importing an arrow icon.
+	for i in range(1, 5):
+		var t := float(i) / 5.0
+		var p := start.lerp(finish, t)
+		var r := cell_size * (0.018 + 0.008 * float(i))
+		draw_circle(p, r, thread)
 
 func _draw_feedback() -> void:
 	if _feedback_strength <= 0.001:
