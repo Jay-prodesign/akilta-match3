@@ -71,6 +71,9 @@ func _run_level(entry: Dictionary) -> void:
 			failures.append("Level %d must grant its authored relic" % number)
 		if screen.result_title.text != String(level_data.get("win_title", "")):
 			failures.append("Level %d win title must match authored content" % number)
+		var reward_art = screen.get_node_or_null("ResultOverlay/Card/Content/RewardRitual")
+		if reward_art == null or str(reward_art.get("relic_id")) != String(entry["reward"]):
+			failures.append("Level %d win ritual must render its authored relic" % number)
 		var relic_label: Label = screen.get_node_or_null("Layout/Awakening/Content/Label")
 		if relic_label == null or relic_label.text != String(entry["relic_label"]):
 			failures.append("Level %d relic progress label must match its reward" % number)
