@@ -121,6 +121,7 @@ func load_level_path(path: String, seed_value: int = 1001) -> bool:
 	result_overlay.visible = false
 	if result_ritual != null:
 		result_ritual.set("mode", "result")
+		result_ritual.set("relic_id", current_reward_curio)
 		result_ritual.set("glow_strength", 0.75)
 		result_ritual.queue_redraw()
 	_refresh_hud()
@@ -288,6 +289,7 @@ func _show_result_if_terminal(result: String) -> void:
 		result_detail.text = current_win_detail
 		if result_ritual != null:
 			result_ritual.set("mode", "result")
+			result_ritual.set("relic_id", current_reward_curio)
 			result_ritual.set("glow_strength", 0.75)
 			result_ritual.queue_redraw()
 		result_action.text = "RETURN TO THE HOUSE"
