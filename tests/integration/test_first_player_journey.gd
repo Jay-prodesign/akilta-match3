@@ -81,7 +81,6 @@ func _run() -> void:
 	_expect(awakened_cameo.visible, "awakened House must display the same shared Moon Cameo component")
 	_expect(String(awakened_cameo.get("mode")) == "house", "House relic must use the shared Moon Cameo house mode")
 
-	var awakened_house = app.current_screen()
 	var collection_button: Button = awakened_house.get_node("Layout/ActionDock/Actions/CollectionButton")
 	collection_button.emit_signal("pressed")
 	await process_frame
