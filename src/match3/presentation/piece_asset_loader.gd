@@ -44,5 +44,6 @@ static func contract() -> Dictionary:
 		"source": "AKILTA first-party original SVG",
 		"status": "art_direction_candidate_v2",
 		"paid_dependency": false,
+		"fallback": "owned_procedural_renderer",
 		"families": loaded,
 	}

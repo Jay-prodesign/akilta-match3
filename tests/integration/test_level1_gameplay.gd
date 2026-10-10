@@ -79,7 +79,7 @@ func _run() -> void:
 				silhouettes[str(descriptor.get("silhouette", ""))] = true
 				motifs[str(descriptor.get("motif", ""))] = true
 				_expect(str(descriptor.get("world_role", "")) == "base_family", "each Level 1 piece must declare its world/gameplay role")
-				_expect(str(descriptor.get("status", "")) == "art_direction_wip", "Level 1 piece visuals must remain explicitly art-direction WIP before completed Level 1 Founder approval")
+				_expect(str(descriptor.get("status", "")) == "first_party_svg_candidate_v2", "Level 1 piece visuals must remain explicitly Founder-unapproved first-party SVG candidates before D-027")
 				_expect(str(descriptor.get("material", "")) != "", "each Level 1 piece must declare a candidate material language")
 			_expect(silhouettes.size() == 5, "piece silhouettes must be unique; hue-only differentiation is forbidden")
 			_expect(motifs.size() == 5, "piece motifs must be unique; hue-only differentiation is forbidden")
