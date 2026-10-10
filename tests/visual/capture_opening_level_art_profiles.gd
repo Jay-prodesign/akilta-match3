@@ -14,13 +14,13 @@ func _capture() -> void:
 		printerr("CAPTURE_FAIL: gameplay scene missing")
 		quit(1)
 		return
-	var screen = packed.instantiate()
-	root.add_child(screen)
-	await process_frame
 	for entry in LEVELS:
 		var level_number := int(entry["number"])
 		var level_path := String(entry["path"])
 		var expected_profile := String(entry["profile"])
+		var screen = packed.instantiate()
+		root.add_child(screen)
+		await process_frame
 		if not screen.load_level_path(level_path, 1000 + level_number):
 			printerr("CAPTURE_FAIL: Level %d could not load" % level_number)
 			screen.queue_free()
