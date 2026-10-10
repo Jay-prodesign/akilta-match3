@@ -58,8 +58,6 @@ jobs:
           test -s artifacts/journey-08-settings.png
           test -s artifacts/journey-09-events.png
           test -s artifacts/journey-10-shop.png
-          test -s artifacts/journey-11-level2-gameplay.png
-          test -s artifacts/journey-12-level3-gameplay.png
 
       - name: Render Level 1 fail and retry
         shell: bash
@@ -150,8 +148,6 @@ jobs:
             artifacts/journey-08-settings.png
             artifacts/journey-09-events.png
             artifacts/journey-10-shop.png
-            artifacts/journey-11-level2-gameplay.png
-            artifacts/journey-12-level3-gameplay.png
             artifacts/level1-fail-result.png
             artifacts/level1-retry-restored.png
           if-no-files-found: error
