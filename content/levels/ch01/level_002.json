@@ -1,10 +1,19 @@
 {
   "schema_version": 1,
-  "content_status": "draft",
+  "content_status": "playtest",
   "validation_seed": 1002,
   "validation_expected_result": "won",
-  "teaching_moves": [[4, 2, 4, 3]],
-  "validation_expect": {"blocker_cleared_min": 2},
+  "teaching_moves": [
+    [
+      4,
+      2,
+      4,
+      3
+    ]
+  ],
+  "validation_expect": {
+    "blocker_cleared_min": 2
+  },
   "id": "ch01_level_002",
   "chapter": "curio_boutique",
   "title": "Sealed Display",
@@ -18,16 +27,63 @@
   "height": 5,
   "moves": 8,
   "objective": "clear_blockers",
-  "families": ["moon", "rose", "moth", "key", "leaf"],
+  "families": [
+    "moon",
+    "rose",
+    "moth",
+    "key",
+    "leaf"
+  ],
   "blockers": [
-    {"x": 2, "y": 1, "type": "wax_seal", "hp": 1},
-    {"x": 4, "y": 1, "type": "wax_seal", "hp": 1}
+    {
+      "x": 2,
+      "y": 1,
+      "type": "wax_seal",
+      "hp": 1
+    },
+    {
+      "x": 4,
+      "y": 1,
+      "type": "wax_seal",
+      "hp": 1
+    }
   ],
   "initial_rows": [
-    ["rose", "moth", "key", "leaf", "moon"],
-    ["moth", "key", "leaf", "rose", "moth"],
-    ["moon", "rose", "moon", "moon", "key"],
-    ["key", "leaf", "rose", "moth", "moon"],
-    ["leaf", "moon", "rose", "key", "moth"]
-  ]
+    [
+      "rose",
+      "moth",
+      "key",
+      "leaf",
+      "moon"
+    ],
+    [
+      "moth",
+      "key",
+      "leaf",
+      "rose",
+      "moth"
+    ],
+    [
+      "moon",
+      "rose",
+      "moon",
+      "moon",
+      "key"
+    ],
+    [
+      "key",
+      "leaf",
+      "rose",
+      "moth",
+      "moon"
+    ],
+    [
+      "leaf",
+      "moon",
+      "rose",
+      "key",
+      "moth"
+    ]
+  ],
+  "visual_status": "north_star_candidate_v3"
 }
