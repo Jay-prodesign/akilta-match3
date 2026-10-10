@@ -110,6 +110,18 @@ func _run() -> void:
 	collection.get_node("Layout/Back").emit_signal("pressed")
 	await process_frame
 	_expect(str(app.current_route_name()) == "house", "collection must return to House")
+	_expect(app.show_feature_preview("Events"), "weekly rituals preview must open from House")
+	await process_frame
+	var events_preview = app.get_node("ScreenHost/FeaturePreview")
+	_expect(events_preview.get_node("FeatureLayout/FeatureTitle").text == "WEEKLY RITUALS", "Events tab must show the North Star weekly rituals screen")
+	events_preview.get_node("FeatureLayout/BackToHouse").emit_signal("pressed")
+	await process_frame
+	_expect(app.show_feature_preview("Shop"), "non-monetized shop preview must open from House")
+	await process_frame
+	var shop_preview = app.get_node("ScreenHost/FeaturePreview")
+	_expect(shop_preview.get_node("FeatureLayout/FeatureTitle").text == "THE CURIO EMPORIUM", "Shop tab must show the North Star emporium screen")
+	shop_preview.get_node("FeatureLayout/BackToHouse").emit_signal("pressed")
+	await process_frame
 
 	app.queue_free()
 	await process_frame
