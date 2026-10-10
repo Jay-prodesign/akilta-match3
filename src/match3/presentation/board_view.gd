@@ -5,6 +5,7 @@ signal swap_requested(from: Vector2i, to: Vector2i)
 signal trace_motion_finished
 
 const PieceVisuals = preload("res://src/match3/presentation/piece_visuals.gd")
+const KENNEY_FRAME = preload("res://assets/candidate/third_party/kenney/fantasy-ui-borders/frame-024.png")
 
 const INK := Color("#100D12")
 const VELVET := Color("#17131B")
@@ -360,6 +361,12 @@ func _draw_board_frame(rect: Rect2) -> void:
 		var sy: float = 1.0 if corner.y == rect.position.y else -1.0
 		draw_line(corner, corner + Vector2(mark * sx, 0), mark_color, 2.0)
 		draw_line(corner, corner + Vector2(0, mark * sy), mark_color, 2.0)
+
+	# CC0 frame geometry is used only as a candidate ornamental primitive;
+	# Curio House color/material identity remains owned by this renderer.
+	var ornament_tint := Color(GOLD)
+	ornament_tint.a = 0.42
+	draw_texture_rect(KENNEY_FRAME, rect.grow(10.0), false, ornament_tint)
 
 func _draw_cell(rect: Rect2, pos: Vector2i) -> void:
 	var radius := rect.size.x * 0.18

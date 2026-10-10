@@ -1,0 +1,21 @@
+Kenney Fantasy UI Borders — selected candidate primitives
+Canonical publisher: Kenney
+Canonical asset page: https://kenney.nl/assets/fantasy-ui-borders
+Canonical license: Creative Commons CC0 1.0
+Pack file count on publisher page: 140
+Publisher release: 2023
+
+Deterministic retrieval mirror:
+repository: shorepine/kenney
+commit: 3694c6879e487c108f55677be7dd2ca75b07cc3b
+
+Selected source files:
+- ui/Fantasy UI Borders/Double/Transparent border/panel-transparent-border-024.png
+  -> frame-024.png
+- ui/Fantasy UI Borders/Double/Divider/divider-004.png
+  -> divider-004.png
+
+Admission status:
+CANDIDATE / ADAPT. These primitives may accelerate board/HUD chrome, but do not define
+Curio House product identity. Color, material, composition and downstream ornamentation
+remain AKILTA-owned. Do not bulk-import the pack without another file-level review.
