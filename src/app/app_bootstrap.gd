@@ -32,6 +32,8 @@ var _pending_level_number: int = 0
 ## Founder explicitly authorized Levels 1–3 to be playable in this review build.
 ## Internal playtest override recorded in D-024 gate candidate: Levels 1–3 only.
 const TEST_LEVEL_COUNT := 3
+# Founder approval gate: do not expose authored Level 2+ until Level 1 is reviewed.
+const FOUNDER_APPROVED_LEVEL_COUNT := 1
 
 @onready var screen_host: Node = $ScreenHost
 
@@ -79,7 +81,7 @@ func show_map() -> bool:
 	if not navigation.go(NavigationScript.Route.MAP):
 		return false
 	var screen: Node = MapScene.instantiate()
-	screen.set("canonical_level_cap", TEST_LEVEL_COUNT)
+	screen.set("canonical_level_cap", FOUNDER_APPROVED_LEVEL_COUNT)
 	_show_screen(screen)
 	screen.set_progress(progress)
 	screen.back_requested.connect(_on_map_back)
@@ -87,7 +89,7 @@ func show_map() -> bool:
 	return true
 
 func show_prestart(level_number: int) -> bool:
-	if level_number < 1 or level_number > TEST_LEVEL_COUNT or navigation.current() != NavigationScript.Route.MAP:
+	if level_number < 1 or level_number > FOUNDER_APPROVED_LEVEL_COUNT or navigation.current() != NavigationScript.Route.MAP:
 		return false
 	if not navigation.go(NavigationScript.Route.PRESTART, {"level": level_number}):
 		return false
@@ -281,7 +283,7 @@ func close_settings() -> bool:
 func _render_house() -> void:
 	var screen: Node = HouseScene.instantiate()
 	_show_screen(screen)
-	screen.set_available_level_count(TEST_LEVEL_COUNT)
+	screen.set_available_level_count(FOUNDER_APPROVED_LEVEL_COUNT)
 	screen.set_progress(progress)
 	screen.collection_requested.connect(show_collection)
 	screen.map_requested.connect(show_chapters)
