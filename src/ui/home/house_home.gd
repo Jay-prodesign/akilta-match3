@@ -57,7 +57,7 @@ func _refresh() -> void:
 		curio_label.text = "DORMANT DISPLAY"
 	collection_button.text = "RELIQUARY · %d / 3" % owned_curios.size()
 	var next_level := int(progress.highest_level_unlocked) if progress != null else 1
-	var has_started := progress != null and not progress.completed_levels.is_empty()
+	var has_started: bool = progress != null and not progress.completed_levels.is_empty()
 	play_button.disabled = next_level > available_level_count or available_level_count < 1
 	if play_button.disabled:
 		play_button.text = "MORE CURIOS STIR SOON"
