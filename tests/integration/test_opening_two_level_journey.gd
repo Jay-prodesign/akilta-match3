@@ -65,7 +65,12 @@ func _run() -> void:
 	_expect(not replay_button.disabled and replay_button.text == "REPLAY LEVEL 1", "House must offer replay while later levels await approval")
 	replay_button.emit_signal("pressed")
 	await process_frame
-	_expect(str(app.current_route_name()) == "map", "replay CTA must reopen the chapter map")
+	_expect(str(app.current_route_name()) == "house", "replay CTA must open chapter selection without changing House navigation state")
+	var replay_chapters = app.current_screen()
+	_expect(str(replay_chapters.name) == "ChapterSelect", "replay CTA must reopen chapter selection")
+	replay_chapters.get_node("Layout/ChapterGrid/CurioBoutiqueButton").emit_signal("pressed")
+	await process_frame
+	_expect(str(app.current_route_name()) == "map", "replayed Curio Boutique selection must open the chapter map")
 	map = app.current_screen()
 	_expect(map.get_level_button(2) != null and map.get_level_button(2).disabled, "Level 2 must remain sealed after Level 1 completion")
 	_expect(map.get_level_button(3) != null and map.get_level_button(3).disabled, "Level 3 must remain sealed after Level 1 completion")
