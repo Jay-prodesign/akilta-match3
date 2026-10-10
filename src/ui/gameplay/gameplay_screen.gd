@@ -389,13 +389,18 @@ func _build_bottom_navigation() -> void:
 	style.set_corner_radius_all(8)
 	panel.add_theme_stylebox_override("panel", style)
 	add_child(panel)
+	var nav_scroll := ScrollContainer.new()
+	nav_scroll.name = "NavigationScroll"
+	nav_scroll.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_AUTO
+	nav_scroll.vertical_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
+	panel.add_child(nav_scroll)
 	var row := HBoxContainer.new()
 	row.add_theme_constant_override("separation", 4)
-	panel.add_child(row)
+	nav_scroll.add_child(row)
 	for item in [{"label":"⌂ HOUSE","id":"house"},{"label":"✦ CURIOS","id":"curios"},{"label":"☾ MAP","id":"map"},{"label":"✧ EVENTS","id":"events"},{"label":"◇ SHOP","id":"shop"},{"label":"⚙ PROFILE","id":"profile"}]:
 		var button := Button.new()
 		button.text = String(item["label"])
-		button.custom_minimum_size = Vector2(0, 46)
+		button.custom_minimum_size = Vector2(96, 46)
 		button.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 		button.add_theme_font_size_override("font_size", 14)
 		button.add_theme_color_override("font_color", Color("#F4E5D3"))
