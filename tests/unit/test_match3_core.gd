@@ -60,7 +60,7 @@ func _fixture_board(seed_value: int):
 
 func _test_invalid_swap_restores_state() -> void:
 	var board = _fixture_board(7)
-	var before := board.signature()
+	var before: String = String(board.signature())
 	var trace = MoveResolver.try_swap(board, Vector2i(0, 1), Vector2i(1, 1))
 	_expect(not trace.accepted, "non-matching adjacent swap must be rejected")
 	_expect(board.signature() == before, "rejected swap must restore exact board state")

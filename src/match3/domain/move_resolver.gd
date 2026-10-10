@@ -12,7 +12,7 @@ static func try_swap(board, from: Vector2i, to: Vector2i):
 		trace.add_event("swap_rejected", {"reason": "not_adjacent"})
 		return trace
 
-	var before := board.signature()
+	var before: String = String(board.signature())
 	board.swap_cells(from, to)
 	var matches := MatchDetector.find_match_cells(board)
 	if matches.is_empty():
