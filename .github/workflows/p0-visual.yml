@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - p0/bootstrap
+      - p0/north-star-level1-gate
     paths:
       - "src/ui/**"
       - "src/match3/presentation/**"
