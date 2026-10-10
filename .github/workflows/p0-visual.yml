@@ -1,6 +1,11 @@
 name: P0 Visual Verification
 
 on:
+  push:
+    branches:
+      - p0/bootstrap
+    paths:
+      - ".github/workflows/p0-visual.yml"
   # Run the full milestone checks deliberately, not on every development commit.
   workflow_dispatch:
 
