@@ -13,7 +13,7 @@ const INK := Color("#100D12")
 
 @export var canonical_level_cap: int = 1
 @export var visible_route_levels: int = 10
-@export var route_width: float = 450.0
+@export var route_width: float = 960.0
 @export var vertical_spacing: float = 126.0
 @export var top_margin: float = 150.0
 @export var bottom_margin: float = 155.0

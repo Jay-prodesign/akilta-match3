@@ -91,8 +91,9 @@ horizontal_scroll_mode = 0
 vertical_scroll_mode = 1
 
 [node name="RouteView" type="Control" parent="Layout/RoutePanel/Scroll"]
-custom_minimum_size = Vector2(450, 1500)
+custom_minimum_size = Vector2(960, 1500)
 layout_mode = 2
+size_flags_horizontal = 3
 mouse_filter = 0
 script = ExtResource("2_route")
 
