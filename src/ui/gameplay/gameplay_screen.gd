@@ -24,6 +24,7 @@ var current_win_title: String = "THE CABINET STIRS"
 var current_win_detail: String = "Something in the Curio Boutique has awakened."
 var _pending_win: bool = false
 var _pending_terminal_result: String = ""
+var _pending_hud_refresh: bool = false
 var haptics = HapticsController.new()
 
 @onready var eyebrow_label: Label = $Layout/Eyebrow
@@ -93,6 +94,7 @@ func load_level_path(path: String, seed_value: int = 1001) -> bool:
 	_configure_teaching_move(parsed)
 	_pending_win = false
 	_pending_terminal_result = ""
+	_pending_hud_refresh = false
 	pause_overlay.visible = false
 	result_overlay.visible = false
 	if result_ritual != null:
@@ -153,7 +155,12 @@ func attempt_swap(from: Vector2i, to: Vector2i):
 	var motion_started := false
 	if board_view.has_method("play_trace"):
 		motion_started = bool(board_view.play_trace(last_trace))
-	_refresh_hud()
+	# Keep objective and move counters in sync with the visible settling board.
+	# The resolver has already advanced state, but the player has not seen it yet.
+	if motion_started:
+		_pending_hud_refresh = true
+	else:
+		_refresh_hud()
 	_refresh_move_feedback(last_trace)
 	if last_trace.accepted:
 		if board_view.has_method("clear_teaching_move"):
@@ -270,6 +277,9 @@ func _on_result_action_pressed() -> void:
 
 
 func _on_board_trace_motion_finished() -> void:
+	if _pending_hud_refresh:
+		_pending_hud_refresh = false
+		_refresh_hud()
 	if _pending_terminal_result == "":
 		return
 	var result := _pending_terminal_result
