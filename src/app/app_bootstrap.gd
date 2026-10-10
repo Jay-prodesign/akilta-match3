@@ -189,9 +189,16 @@ func show_feature_preview(feature: String) -> bool:
 	detail.add_theme_color_override("font_color", Color("#D8C6C3"))
 	detail.add_theme_font_size_override("font_size", 17)
 	layout.add_child(detail)
+	var card_scroll := ScrollContainer.new()
+	card_scroll.name = "FeatureCardScroll"
+	card_scroll.size_flags_vertical = Control.SIZE_EXPAND_FILL
+	card_scroll.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	card_scroll.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
+	layout.add_child(card_scroll)
 	var cards := VBoxContainer.new()
+	cards.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	cards.add_theme_constant_override("separation", 10)
-	layout.add_child(cards)
+	card_scroll.add_child(cards)
 	var entries: Array[Dictionary]
 	if feature.to_lower() == "events":
 		entries = [
@@ -207,7 +214,7 @@ func show_feature_preview(feature: String) -> bool:
 		]
 	for entry in entries:
 		var card := PanelContainer.new()
-		card.custom_minimum_size = Vector2(0, 280)
+		card.custom_minimum_size = Vector2(0, 158)
 		var panel_style := StyleBoxFlat.new()
 		panel_style.bg_color = Color("#171321")
 		panel_style.border_color = Color("#D5AD70", 0.58)
@@ -224,7 +231,7 @@ func show_feature_preview(feature: String) -> bool:
 		row.add_theme_constant_override("separation", 12)
 		card.add_child(row)
 		var art_frame := PanelContainer.new()
-		art_frame.custom_minimum_size = Vector2(104, 104)
+		art_frame.custom_minimum_size = Vector2(76, 76)
 		var art_style := StyleBoxFlat.new()
 		art_style.bg_color = Color("#0E0D19")
 		art_style.border_color = Color("#D5AD70", 0.40)
@@ -234,7 +241,7 @@ func show_feature_preview(feature: String) -> bool:
 		row.add_child(art_frame)
 		var art := TextureRect.new()
 		art.name = "FeatureArtwork"
-		art.custom_minimum_size = Vector2(92, 92)
+		art.custom_minimum_size = Vector2(68, 68)
 		art.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 		art.size_flags_vertical = Control.SIZE_EXPAND_FILL
 		art.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
@@ -256,13 +263,13 @@ func show_feature_preview(feature: String) -> bool:
 		card_body.text = String(entry["body"])
 		card_body.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 		card_body.add_theme_color_override("font_color", Color("#D8C6C3"))
-		card_body.add_theme_font_size_override("font_size", 23)
+		card_body.add_theme_font_size_override("font_size", 16)
 		copy.add_child(card_body)
 		var status := Label.new()
 		status.text = String(entry["status"])
 		status.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 		status.add_theme_color_override("font_color", Color("#BFA5D8"))
-		status.add_theme_font_size_override("font_size", 18)
+		status.add_theme_font_size_override("font_size", 14)
 		copy.add_child(status)
 	var back := Button.new()
 	back.name = "BackToHouse"
