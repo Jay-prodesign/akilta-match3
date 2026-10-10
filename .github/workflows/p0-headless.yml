@@ -64,6 +64,28 @@ jobs:
         run: |
           timeout 30s ./godot --headless --path . -s res://tests/unit/test_specials_objectives.gd
 
+      - name: Verify expected RED playable Level 1 contract
+        shell: bash
+        run: |
+          set +e
+          output=$(timeout 30s ./godot --headless --path . -s res://tests/integration/test_level1_gameplay.gd 2>&1)
+          status=$?
+          set -e
+          printf '%s\n' "$output"
+          if [ "$status" -eq 124 ]; then
+            echo "::error::Level 1 integration test timed out; RED was not proven."
+            exit 1
+          fi
+          if [ "$status" -eq 0 ]; then
+            echo "::error::Level 1 integration test unexpectedly passed before presentation exists."
+            exit 1
+          fi
+          if ! grep -Fq "TEST_FAIL: playable Level 1 surface is missing" <<<"$output"; then
+            echo "::error::Level 1 integration test failed for an unexpected reason."
+            exit 1
+          fi
+          echo "Expected RED confirmed: playable Level 1 surface is missing."
+
       - name: Verify project parses cleanly
         shell: bash
         run: |
