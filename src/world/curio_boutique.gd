@@ -59,18 +59,22 @@ func _draw() -> void:
 	)
 	draw_rect(room, VELVET, true)
 	if _backdrop != null:
+		# The authored environment already contains the architecture, moon window,
+		# shelves and cabinet. Do not stack the old procedural arches over it.
 		draw_texture_rect(_backdrop, room, false)
+		_draw_cat_portrait(room)
+		_draw_candle_props(room)
 	else:
 		_draw_wall_panels(room)
-	_draw_ambient_light(room)
-	_draw_arch(room)
-	_draw_moon_window(room)
-	_draw_wall_frames(room)
-	_draw_cat_portrait(room)
-	_draw_candle_props(room)
-	_draw_side_shelves(room)
-	_draw_central_cabinet(room)
-	_draw_floor(room)
+		_draw_ambient_light(room)
+		_draw_arch(room)
+		_draw_moon_window(room)
+		_draw_wall_frames(room)
+		_draw_cat_portrait(room)
+		_draw_candle_props(room)
+		_draw_side_shelves(room)
+		_draw_central_cabinet(room)
+		_draw_floor(room)
 	if house_stage >= 1:
 		_draw_awakened_sparkles(room)
 
