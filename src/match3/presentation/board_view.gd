@@ -50,7 +50,18 @@ var _motion_tween: Tween
 var _motion_clock: float = 1.0
 var _motion_active: bool = false
 var _motion_items: Array[Dictionary] = []
+var _motion_cascade_count: int = 1
 var _reveal_at: Dictionary = {}
+
+func _cascade_window(cascade: int) -> Vector2:
+	var count := maxi(1, _motion_cascade_count)
+	var segment := 0.88 / float(count)
+	var start := 0.10 + float(maxi(1, cascade) - 1) * segment
+	return Vector2(start, start + segment)
+
+func _cascade_phase(cascade: int, from_fraction: float, to_fraction: float) -> float:
+	var window := _cascade_window(cascade)
+	return _phase_progress(lerpf(window.x, window.y, from_fraction), lerpf(window.x, window.y, to_fraction))
 var _candidate_frame_texture: ImageTexture
 var _reduced_motion: bool = false
 var _high_contrast: bool = false
@@ -87,6 +98,7 @@ func piece_asset_contract() -> Dictionary:
 
 func motion_contract() -> Dictionary:
 	var contract := MOTION_PROFILE.duplicate(true)
+	contract["cascade_sequencing"] = "separate_clear_fall_refill_windows"
 	contract["reduced_motion_supported"] = true
 	return contract
 
@@ -194,14 +206,19 @@ func play_trace(trace) -> bool:
 	_motion_tween = create_tween()
 	_motion_tween.set_trans(Tween.TRANS_QUAD)
 	_motion_tween.set_ease(Tween.EASE_OUT)
-	_motion_tween.tween_method(_set_motion_clock, 0.0, 1.0, float(MOTION_PROFILE["total_duration"]))
+	_motion_tween.tween_method(_set_motion_clock, 0.0, 1.0, maxf(0.82, 0.28 + 0.55 * float(_motion_cascade_count)))
 	_motion_tween.finished.connect(_finish_motion)
 	return true
 
 func _build_motion(trace) -> void:
 	_motion_items.clear()
 	_reveal_at.clear()
+	_motion_cascade_count = 1
 	for event in trace.events:
+		_motion_cascade_count = maxi(_motion_cascade_count, int(event.get("cascade", 1)))
+	for event in trace.events:
+		var cascade := maxi(1, int(event.get("cascade", 1)))
+		var window := _cascade_window(cascade)
 		var event_type := String(event.get("type", ""))
 		match event_type:
 			"swap_accepted":
@@ -233,12 +250,13 @@ func _build_motion(trace) -> void:
 					var clear_pos := _parse_pos(piece.get("at", ""))
 					var clear_family := String(piece.get("family", ""))
 					if clear_family != "":
-						_motion_items.append({"type": "clear", "family": clear_family, "at": clear_pos})
-					_remember_reveal(clear_pos, 0.58)
+						_motion_items.append({"type": "clear", "family": clear_family, "at": clear_pos, "cascade": cascade})
+					_remember_reveal(clear_pos, lerpf(window.x, window.y, 0.96))
 			"special_triggered":
 				_motion_items.append({
 					"type": "special",
 					"kind": String(event.get("kind", "")),
+					"cascade": cascade,
 					"at": _parse_pos(event.get("at", ""))
 				})
 			"special_created":
@@ -246,9 +264,10 @@ func _build_motion(trace) -> void:
 				_motion_items.append({
 					"type": "special_created",
 					"kind": String(event.get("kind", "")),
+					"cascade": cascade,
 					"at": created_pos
 				})
-				_remember_reveal(created_pos, 0.54)
+				_remember_reveal(created_pos, lerpf(window.x, window.y, 0.96))
 			"combo_triggered":
 				_motion_items.append({
 					"type": "combo",
@@ -261,16 +280,17 @@ func _build_motion(trace) -> void:
 					_motion_items.append({
 						"type": "gravity",
 						"family": gravity_family,
+						"cascade": cascade,
 						"from": _parse_pos(event.get("from", "")),
 						"to": gravity_to
 					})
-				_remember_reveal(gravity_to, float(MOTION_PROFILE["gravity_end"]))
+				_remember_reveal(gravity_to, lerpf(window.x, window.y, 0.96))
 			"spawn":
 				var spawn_pos := _parse_pos(event.get("at", ""))
 				var spawn_family := String(event.get("family", ""))
 				if spawn_family != "":
-					_motion_items.append({"type": "spawn", "family": spawn_family, "at": spawn_pos})
-				_remember_reveal(spawn_pos, float(MOTION_PROFILE["spawn_end"]))
+					_motion_items.append({"type": "spawn", "family": spawn_family, "at": spawn_pos, "cascade": cascade})
+				_remember_reveal(spawn_pos, lerpf(window.x, window.y, 0.98))
 			"blocker_damaged", "blocker_cleared":
 				_motion_items.append({
 					"type": "blocker",
@@ -798,7 +818,7 @@ func _draw_motion() -> void:
 				var center := rstart + direction * (0.26 * sin(rp * PI))
 				_draw_motion_piece(center, String(item["family"]), 1.0)
 			"clear":
-				var cp := _phase_progress(float(MOTION_PROFILE["clear_start"]), float(MOTION_PROFILE["clear_end"]))
+				var cp := _cascade_phase(int(item.get("cascade", 1)), 0.06, 0.46)
 				if cp <= 0.0 or cp >= 1.0:
 					continue
 				var ccenter := _cell_center(item["at"])
@@ -807,7 +827,7 @@ func _draw_motion() -> void:
 				clear_color.a = 0.55 * (1.0 - cp)
 				draw_arc(ccenter, float(_board_geometry()["cell_size"]) * (0.18 + cp * 0.34), 0.0, TAU, 28, clear_color, 2.0)
 			"gravity":
-				var gp := _phase_progress(float(MOTION_PROFILE["gravity_start"]), float(MOTION_PROFILE["gravity_end"]))
+				var gp := _cascade_phase(int(item.get("cascade", 1)), 0.42, 0.84)
 				if gp <= 0.0 or gp >= 1.0:
 					continue
 				var gstart := _cell_center(item["from"])
@@ -815,7 +835,7 @@ func _draw_motion() -> void:
 				var geased := 1.0 - pow(1.0 - gp, 3.0)
 				_draw_motion_piece(gstart.lerp(gfinish, geased), String(item["family"]), 1.0)
 			"spawn":
-				var sp := _phase_progress(float(MOTION_PROFILE["spawn_start"]), float(MOTION_PROFILE["spawn_end"]))
+				var sp := _cascade_phase(int(item.get("cascade", 1)), 0.48, 0.98)
 				if sp <= 0.0 or sp >= 1.0:
 					continue
 				var target := _cell_center(item["at"])
@@ -827,7 +847,7 @@ func _draw_motion() -> void:
 			"special":
 				_draw_special_motion(item)
 			"special_created":
-				var create_p := _phase_progress(0.34, 0.62)
+				var create_p := _cascade_phase(int(item.get("cascade", 1)), 0.20, 0.65)
 				if create_p > 0.0 and create_p < 1.0:
 					var create_center := _cell_center(item["at"])
 					var create_color := Color(GOLD)
@@ -868,7 +888,7 @@ func _draw_motion_piece(center: Vector2, family: String, scale_factor: float) ->
 	_draw_piece(_piece_rect(center, scale_factor), family, descriptor)
 
 func _draw_special_motion(item: Dictionary) -> void:
-	var p := _phase_progress(0.10, 0.48)
+	var p := _cascade_phase(int(item.get("cascade", 1)), 0.0, 0.50)
 	if p <= 0.0 or p >= 1.0:
 		return
 	var pos: Vector2i = item["at"]
