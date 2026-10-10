@@ -26,6 +26,25 @@
 - Work units are coherent player outcomes, not micro-features or micro-commits.
 - Broad device/build/evidence regression is milestone-based; critical gameplay/save/runtime invariants get focused checks continuously.
 
+## North Star Acceptance Gates
+
+These gates are milestone acceptance criteria, not repeated Founder approval pauses. A failed gate triggers correction and continued implementation unless the correction would change a Locked Product Decision or cross a True Gate.
+
+1. **Core Fun** — Match-3 remains satisfying without meta/world.
+2. **Dark-Cute Identity** — the product is unmistakably its own dark-alt game, not a gothic palette swap.
+3. **First 60 Seconds** — identity, first move, payoff and House connection arrive quickly without overload.
+4. **World–Gameplay Coherence** — puzzle progress and House/Curio progression feel causally connected; no generic stars-to-renovation loop.
+5. **Player Trust** — difficulty, fail assistance, rewards and monetization remain understandable and non-manipulative.
+6. **Readability & Accessibility** — dark styling never hides gameplay state; piece distinction does not depend on hue alone.
+7. **Originality** — donor/template identity is invisible; world, UI, content and store identity are product-specific.
+8. **Permanence / Continuity** — progression, Curios, rewards and entitlements survive interruption/relaunch without loss or duplication.
+9. **Whole-Product Quality** — gameplay, House, collection, settings, commercial/live and recovery surfaces feel like one complete product.
+10. **Commercial Completeness** — scalable content tooling, analytics, economy/reward integrity, live operations, support and release operations exist before release.
+11. **Content Depth** — mechanics, level archetypes, Curios and chapters sustain novelty beyond the opening levels.
+12. **Desire** — target players should want both the next level and the next world/Curio outcome.
+
+**Final North Star Gate:** Would a dark-alt player plausibly feel this is a polished Match-3 made for their taste rather than a mainstream casual game wearing a gothic skin?
+
 ## Review Focus
 
 1. **Godot version drift:** project must fail clearly if opened/run on an unsupported engine baseline rather than silently changing behavior.
