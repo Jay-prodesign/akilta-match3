@@ -32,7 +32,10 @@
     "rose",
     "moth",
     "key",
-    "leaf"
+    "leaf",
+    "cat",
+    "candle",
+    "skull"
   ],
   "blockers": [
     {
@@ -52,7 +55,7 @@
     [
       "rose",
       "moth",
-      "key",
+      "cat",
       "leaf",
       "moon"
     ],
@@ -60,12 +63,12 @@
       "moth",
       "key",
       "leaf",
-      "rose",
+      "candle",
       "moth"
     ],
     [
       "moon",
-      "rose",
+      "skull",
       "moon",
       "moon",
       "key"
@@ -85,5 +88,6 @@
       "moth"
     ]
   ],
-  "visual_status": "north_star_candidate_v3"
+  "visual_status": "north_star_eight_symbol_candidate_v4",
+  "piece_set": "north_star_eight_symbol_candidate_v4"
 }
