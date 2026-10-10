@@ -1,1 +1,56 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="720" height="1080" viewBox="0 0 720 1080"><defs><linearGradient id="wall" x2="0" y2="1"><stop stop-color="#101324"/><stop offset=".52" stop-color="#301A32"/><stop offset="1" stop-color="#130D1C"/></linearGradient><radialGradient id="moon"><stop stop-color="#DAD7F3"/><stop offset=".55" stop-color="#9E9FC8"/><stop offset="1" stop-color="#384268"/></radialGradient><radialGradient id="light"><stop stop-color="#B78A5B" stop-opacity=".33"/><stop offset="1" stop-color="#B78A5B" stop-opacity="0"/></radialGradient></defs><rect width="720" height="1080" fill="url(#wall)"/><g fill="none" stroke="#B18A69" stroke-opacity=".13" stroke-width="2"><path d="M110 90Q65 135 110 180Q155 135 110 90ZM110 180Q70 218 110 255Q150 218 110 180ZM250 80Q205 125 250 170Q295 125 250 80ZM250 170Q210 208 250 245Q290 208 250 170ZM470 80Q425 125 470 170Q515 125 470 80ZM470 170Q430 208 470 245Q510 208 470 170ZM610 90Q565 135 610 180Q655 135 610 90ZM610 180Q570 218 610 255Q650 218 610 180M110 290Q65 335 110 380Q155 335 110 290ZM610 290Q565 335 610 380Q655 335 610 290ZM110 410Q65 455 110 500Q155 455 110 410ZM610 410Q565 455 610 500Q655 455 610 410"/></g><g fill="#A57969" opacity=".12"><circle cx="110" cy="150" r="5"/><circle cx="250" cy="140" r="5"/><circle cx="470" cy="140" r="5"/><circle cx="610" cy="150" r="5"/></g><path d="M60 1080V300Q60 55 360 42Q660 55 660 300V1080" fill="none" stroke="#0A0914" stroke-width="75"/><path d="M60 1080V300Q60 55 360 42Q660 55 660 300V1080" fill="none" stroke="#AC8051" stroke-opacity=".65" stroke-width="9"/><path d="M85 1060V300Q85 78 360 67Q635 78 635 300V1060" fill="none" stroke="#E3BC77" stroke-opacity=".25" stroke-width="3"/><path d="M255 350V250Q255 132 360 132Q465 132 465 250V350Z" fill="#0A142A" stroke="#A67A52" stroke-width="13"/><circle cx="360" cy="229" r="72" fill="url(#moon)"/><path d="M385 162Q321 189 330 253Q336 289 386 296Q352 267 355 233Q356 190 385 162Z" fill="#F4E9D4" opacity=".7"/><path d="M360 132V350M255 260H465" stroke="#C29C66" stroke-width="7"/><circle cx="360" cy="290" r="200" fill="#8A7BBD" opacity=".05"/><path d="M48 210Q95 280 128 375L108 780Q46 735 22 650Z" fill="#511F43" stroke="#A85E69" stroke-width="4"/><path d="M672 210Q625 280 592 375L612 780Q674 735 698 650Z" fill="#511F43" stroke="#A85E69" stroke-width="4"/><path d="M48 210Q70 450 108 780M672 210Q650 450 612 780" stroke="#B87483" stroke-opacity=".42" stroke-width="9" fill="none"/><g fill="#130F1A" stroke="#B48A52" stroke-width="9"><rect x="76" y="490" width="155" height="340" rx="8"/><rect x="489" y="490" width="155" height="340" rx="8"/></g><g stroke="#9E784B" stroke-width="12"><path d="M76 598h155M76 705h155M489 598h155M489 705h155"/></g><g fill="#352035" stroke="#C39A5D" stroke-width="8"><rect x="251" y="460" width="218" height="405" rx="10"/><path d="M251 500Q360 420 469 500" fill="#1A1020"/></g><rect x="274" y="530" width="172" height="226" rx="8" fill="#1A1323" stroke="#806342" stroke-width="4"/><ellipse cx="360" cy="665" rx="110" ry="160" fill="url(#light)"/><g fill="#9C6848" stroke="#E4BD7A" stroke-width="4"><rect x="115" y="545" width="35" height="48" rx="12"/><rect x="549" y="545" width="35" height="48" rx="12"/></g><g fill="#79A99B" opacity=".7"><rect x="121" y="563" width="23" height="23" rx="6"/><rect x="555" y="563" width="23" height="23" rx="6"/></g><path d="M0 855H720V1080H0Z" fill="#1B121C"/><path d="M0 855H720" stroke="#9B744B" stroke-width="16"/><path d="M0 970Q360 910 720 970" fill="none" stroke="#7D5D4E" stroke-opacity=".3" stroke-width="4"/><g fill="#E8C586" opacity=".65"><circle cx="120" cy="170" r="3"/><circle cx="584" cy="200" r="3"/><circle cx="200" cy="420" r="2"/><circle cx="515" cy="410" r="2"/></g></svg>
+<svg xmlns="http://www.w3.org/2000/svg" width="720" height="1080" viewBox="0 0 720 1080">
+<defs>
+ <linearGradient id="wall" x2="0" y2="1"><stop stop-color="#090D19"/><stop offset=".5" stop-color="#171526"/><stop offset="1" stop-color="#100C18"/></linearGradient>
+ <linearGradient id="wood" x2="0" y2="1"><stop stop-color="#604333"/><stop offset=".35" stop-color="#2A1D25"/><stop offset="1" stop-color="#120F19"/></linearGradient>
+ <linearGradient id="glass" x2="0" y2="1"><stop stop-color="#27385A"/><stop offset="1" stop-color="#10182B"/></linearGradient>
+ <radialGradient id="moon"><stop stop-color="#F4E7D2"/><stop offset=".62" stop-color="#C9C4DA"/><stop offset="1" stop-color="#777EAA"/></radialGradient>
+ <radialGradient id="warm"><stop stop-color="#F2B76B" stop-opacity=".5"/><stop offset="1" stop-color="#D78A48" stop-opacity="0"/></radialGradient>
+ <linearGradient id="metal" x2="1" y2="1"><stop stop-color="#E2C18B"/><stop offset=".5" stop-color="#8F6743"/><stop offset="1" stop-color="#D9B477"/></linearGradient>
+</defs>
+<rect width="720" height="1080" fill="url(#wall)"/>
+<!-- old plaster and vertical paneling -->
+<path d="M0 0H720V1080H0Z" fill="#161322"/>
+<path d="M28 0V1080M692 0V1080M52 0V1080M668 0V1080" stroke="#9A7655" stroke-opacity=".14" stroke-width="3"/>
+<path d="M0 160H720M0 178H720M0 870H720" stroke="#A47D58" stroke-opacity=".17" stroke-width="3"/>
+<!-- moonlit gothic window -->
+<path d="M226 410V218Q226 78 360 58Q494 78 494 218V410Z" fill="#080D19" stroke="url(#metal)" stroke-width="12"/>
+<path d="M245 391V222Q245 99 360 81Q475 99 475 222V391Z" fill="url(#glass)"/>
+<circle cx="361" cy="190" r="73" fill="url(#moon)"/>
+<path d="M383 131Q328 154 335 203Q340 239 385 248Q356 223 358 190Q360 151 383 131Z" fill="#F6E9D6" opacity=".74"/>
+<g stroke="#9D8C86" stroke-opacity=".65" stroke-width="4" fill="none"><path d="M360 82V391M246 282H474M284 130L436 340M436 130L284 340"/></g>
+<!-- distant pointed rooftops outside window -->
+<path d="M245 355L272 303L290 326L320 278L345 327L370 293L398 329L424 289L451 336L475 304V391H245Z" fill="#0B101B"/>
+<g fill="#F1B76C"><rect x="279" y="331" width="7" height="16" rx="2"/><rect x="316" y="310" width="7" height="16" rx="2"/><rect x="393" y="332" width="7" height="16" rx="2"/><rect x="437" y="322" width="7" height="16" rx="2"/></g>
+<!-- hanging brass lanterns -->
+<g stroke="#A77A4C" stroke-width="5" fill="none"><path d="M112 0V95M608 0V95"/><path d="M89 96H135L129 151H95Z"/><path d="M585 96H631L625 151H591Z"/></g>
+<circle cx="112" cy="132" r="85" fill="url(#warm)"/><circle cx="608" cy="132" r="85" fill="url(#warm)"/>
+<path d="M101 106H123L120 142H104Z" fill="#F4C77E"/><path d="M597 106H619L616 142H600Z" fill="#F4C77E"/>
+<!-- tall carved display shelves -->
+<g>
+ <path d="M32 280H199V844H32Z" fill="url(#wood)" stroke="url(#metal)" stroke-width="7"/>
+ <path d="M521 280H688V844H521Z" fill="url(#wood)" stroke="url(#metal)" stroke-width="7"/>
+ <path d="M42 400H189M42 533H189M42 666H189M531 400H678M531 533H678M531 666H678" stroke="#B18A5D" stroke-width="9"/>
+ <path d="M48 292V833M183 292V833M537 292V833M672 292V833" stroke="#080B13" stroke-opacity=".7" stroke-width="5"/>
+</g>
+<!-- books and reliquaries -->
+<g>
+ <g stroke="#C6A16A" stroke-width="2"><rect x="49" y="329" width="19" height="62" rx="2" fill="#582A38"/><rect x="70" y="314" width="23" height="77" rx="2" fill="#243B3A"/><rect x="96" y="340" width="18" height="51" rx="2" fill="#6A4B30"/><rect x="118" y="320" width="27" height="71" rx="2" fill="#282A43"/><rect x="149" y="334" width="30" height="57" rx="2" fill="#4D2639"/></g>
+ <g stroke="#C6A16A" stroke-width="2"><rect x="541" y="327" width="22" height="64" rx="2" fill="#253A37"/><rect x="567" y="310" width="19" height="81" rx="2" fill="#562C3A"/><rect x="590" y="340" width="29" height="51" rx="2" fill="#2B2A44"/><rect x="623" y="318" width="20" height="73" rx="2" fill="#6A4B30"/><rect x="646" y="335" width="25" height="56" rx="2" fill="#263B3A"/></g>
+ <g fill="#D8B77D" stroke="#7C563D" stroke-width="3"><rect x="65" y="447" width="42" height="62" rx="5" fill="#162A34"/><circle cx="86" cy="472" r="11" fill="#B98E5A"/><rect x="132" y="454" width="39" height="55" rx="6" fill="#3A2138"/><path d="M142 468L161 490M161 468L142 490" fill="none"/><rect x="547" y="451" width="39" height="58" rx="5" fill="#213B36"/><path d="M566 462L578 480L566 497L554 480Z" fill="#C0A06B"/><rect x="605" y="442" width="50" height="67" rx="5" fill="#30203B"/><circle cx="630" cy="475" r="14" fill="#9D4A62"/></g>
+</g>
+<!-- central velvet curio table -->
+<ellipse cx="360" cy="874" rx="275" ry="70" fill="#05070E" opacity=".75"/>
+<path d="M139 730Q360 685 581 730L548 905H172Z" fill="url(#wood)" stroke="url(#metal)" stroke-width="8"/>
+<path d="M171 750Q360 716 549 750L529 785Q360 756 191 785Z" fill="#4A2638" stroke="#B18A5D" stroke-width="5"/>
+<path d="M191 786L172 941M529 786L548 941" stroke="#8B6547" stroke-width="18"/>
+<path d="M208 817H512" stroke="#D1AA70" stroke-opacity=".45" stroke-width="3"/>
+<!-- rose vines, leaves and small candles framing the room -->
+<g fill="none" stroke="#40543D" stroke-width="8"><path d="M0 540Q53 495 19 448Q-2 413 23 374M720 545Q667 500 701 448Q722 413 697 374"/><path d="M0 710Q52 681 32 630M720 710Q668 681 688 630"/></g>
+<g fill="#405B42" stroke="#9D8055" stroke-width="2"><path d="M17 454Q-5 427 24 413Q42 438 17 454Z"/><path d="M24 500Q55 473 59 506Q43 524 24 500Z"/><path d="M702 455Q725 427 696 413Q678 438 702 455Z"/><path d="M696 500Q665 473 661 506Q677 524 696 500Z"/></g>
+<g fill="#742D45" stroke="#C18B79" stroke-width="3"><circle cx="25" cy="378" r="17"/><circle cx="48" cy="395" r="12"/><circle cx="695" cy="378" r="17"/><circle cx="672" cy="395" r="12"/></g>
+<g><path d="M77 824H108L104 895H81Z" fill="#D7C3A1" stroke="#9A754F" stroke-width="3"/><path d="M88 822Q92 793 95 822Z" fill="#FFE0A0"/><circle cx="93" cy="816" r="29" fill="url(#warm)"/><path d="M612 824H643L639 895H616Z" fill="#D7C3A1" stroke="#9A754F" stroke-width="3"/><path d="M623 822Q627 793 630 822Z" fill="#FFE0A0"/><circle cx="628" cy="816" r="29" fill="url(#warm)"/></g>
+<!-- floorboards and fine antique frame -->
+<path d="M0 950H720M0 1000H720M0 1050H720" stroke="#8C6749" stroke-opacity=".2" stroke-width="4"/>
+<path d="M14 14H706V1066H14Z" fill="none" stroke="#B78B5C" stroke-opacity=".45" stroke-width="3"/>
+<path d="M23 23H697V1057H23Z" fill="none" stroke="#D7B47D" stroke-opacity=".15" stroke-width="1.5"/>
+</svg>
