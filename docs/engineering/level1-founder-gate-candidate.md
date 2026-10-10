@@ -65,3 +65,8 @@ The visual board used for Founder D-024 review must stay narrow. It should show 
 Do not include shop, events, profile, full chapter map, economy packaging or downstream meta screens on this gate board.
 
 Generic casual completion stars, gem-first reward language and unrelated category shorthand are not accepted as automatic defaults. Any rating/progression symbol shown here must be a clearly labeled House-native candidate and is not locked final iconography.
+
+
+## Founder Override — Internal Three-Level Review Build (2026-10-11)
+
+The founder explicitly requested that Levels 1–3, their prestarts, rewards, House restoration, map/chapter selection and core meta-screen placeholders be implemented and playable together before requesting any playtest or art-direction feedback. Therefore the internal review build is authorized to expose Levels 1–3 and run the complete three-level journey. This is a testing-scope override only: it does not approve final art direction, shipping assets, monetization, or public release. Level 4+ remains sealed, and D-024B visual approval remains pending until the founder reviews the completed integrated build.
