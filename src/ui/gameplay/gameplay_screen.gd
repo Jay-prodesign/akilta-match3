@@ -420,7 +420,6 @@ func _add_booster_button(parent: HBoxContainer, caption: String, art_path: Strin
 	button.add_theme_color_override("font_color", Color("#F4E5D3"))
 	button.icon = PieceAssetLoader.ornament(art_path)
 	button.expand_icon = true
-	button.icon_max_width = 28
 	var box := StyleBoxFlat.new()
 	box.bg_color = Color("#251529")
 	box.border_color = Color("#D5AD70", 0.38)
