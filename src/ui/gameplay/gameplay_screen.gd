@@ -409,7 +409,7 @@ func _build_booster_tray() -> void:
 	panel.add_child(row)
 	_add_booster_button(row, "☾ HINT", "res://assets/pieces/moon_sigil.svg", _use_hint_boost)
 	_add_booster_button(row, "⚗ +3 MOVES", "res://assets/pieces/potion.svg", _use_potion_boost)
-	_add_booster_button(row, "✦ RETRY", "res://assets/pieces/skull.svg", _on_pause_retry)
+	_add_booster_button(row, "✦ RETRY", "res://assets/pieces/skull.svg", _use_retry_boost)
 
 func _add_booster_button(parent: HBoxContainer, caption: String, art_path: String, action: Callable) -> void:
 	var button := Button.new()
@@ -450,3 +450,8 @@ func _use_hint_boost() -> void:
 	board_view.set_teaching_move(move["from"], move["to"])
 	hint_label.text = "Follow the moonlit highlight for a legal match."
 	feedback_requested.emit("match")
+
+func _use_retry_boost() -> void:
+	if board_state == null or result_overlay.visible or pause_overlay.visible:
+		return
+	retry_current_level()
