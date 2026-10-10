@@ -53,6 +53,8 @@ static func _font_from_bytes(path: String) -> FontFile:
 		return null
 	var font := FontFile.new()
 	font.data = bytes
+	if font.data.is_empty():
+		return null
 	return font
 
 static func _apply_recursive(node: Node, stats: Dictionary) -> void:
