@@ -3,6 +3,7 @@ extends SceneTree
 const Navigation = preload("res://src/app/navigation_controller.gd")
 const Settings = preload("res://src/settings/user_settings.gd")
 const BoardView = preload("res://src/match3/presentation/board_view.gd")
+const SplashScene = preload("res://src/ui/splash/splash_screen.tscn")
 const TEST_SETTINGS := "user://match3_first_party_shell_settings.json"
 
 var failures: Array[String] = []
@@ -41,6 +42,14 @@ func _run() -> void:
 	_expect(bool(presentation.get("high_contrast", false)), "high contrast must reach gameplay presentation")
 	_expect(bool(board.motion_contract().get("reduced_motion_supported", false)), "board motion contract must declare reduced-motion support")
 	board.free()
+	var splash = SplashScene.instantiate()
+	root.add_child(splash)
+	await process_frame
+	var splash_art: TextureRect = splash.get_node_or_null("NorthStarSplashArt")
+	_expect(splash_art != null and splash_art.texture != null, "splash must render original North Star castle illustration")
+	_expect(splash.get_node_or_null("Layout/Enter") != null, "splash must provide a working enter control")
+	splash.queue_free()
+	await process_frame
 	_cleanup()
 	_finish()
 
