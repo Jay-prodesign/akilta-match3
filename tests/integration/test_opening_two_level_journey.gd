@@ -39,6 +39,7 @@ func _run() -> void:
 	_expect(level2_button != null and level2_button.disabled, "Level 2 must stay sealed pending Level 1 approval")
 	_expect(level3_button != null and level3_button.disabled, "Level 3 must stay sealed pending Level 1 approval")
 	_expect(not app.show_prestart(2), "direct navigation must not bypass the Level 1 approval gate")
+	_expect(not app.start_level(2), "direct gameplay entry must not bypass the Level 1 approval gate")
 	_expect(str(app.current_route_name()) == "map", "rejected Level 2 navigation must leave the map intact")
 	level1_button.emit_signal("pressed")
 	await process_frame
