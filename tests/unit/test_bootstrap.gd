@@ -18,6 +18,7 @@ func _init() -> void:
 			var bootstrap = bootstrap_script.new()
 			if str(bootstrap.get("environment")) != "development":
 				failures.append("AppBootstrap must default to development environment")
+			bootstrap.free()
 
 	if failures.is_empty():
 		print("TEST_PASS: bootstrap contract")
