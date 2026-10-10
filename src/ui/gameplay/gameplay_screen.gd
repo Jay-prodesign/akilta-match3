@@ -31,6 +31,7 @@ var _pending_hud_refresh: bool = false
 var haptics = HapticsController.new()
 var _potion_used_for_attempt := false
 
+@onready var world_backdrop: TextureRect = $WorldBackdrop
 @onready var eyebrow_label: Label = $Layout/Eyebrow
 @onready var title_label: Label = $Layout/Title
 @onready var board_view = $Layout/BoardView
@@ -54,6 +55,7 @@ var _potion_used_for_attempt := false
 @onready var result_action: Button = $ResultOverlay/Card/Content/Action
 
 func _ready() -> void:
+	world_backdrop.texture = PieceAssetLoader.ornament("res://assets/world/ch01_curio_boutique/curio_boutique_moonlit_backdrop.svg")
 	_install_candidate_divider()
 	_build_top_resource_bar()
 	_build_booster_tray()
