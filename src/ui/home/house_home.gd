@@ -5,6 +5,8 @@ signal play_requested(level_number: int)
 signal collection_requested
 signal map_requested
 signal settings_requested
+signal events_requested
+signal shop_requested
 
 const HouseState = preload("res://src/world/house_state.gd")
 
@@ -21,6 +23,7 @@ var available_level_count: int = 1
 
 func _ready() -> void:
 	play_button.pressed.connect(_on_play_pressed)
+	_build_navigation_dock()
 	collection_button.pressed.connect(func(): collection_requested.emit())
 	settings_button.pressed.connect(func(): settings_requested.emit())
 
@@ -59,3 +62,33 @@ func _refresh() -> void:
 func _on_play_pressed() -> void:
 	if available_level_count >= 1:
 		map_requested.emit()
+
+func _build_navigation_dock() -> void:
+	# Persistent, touch-sized first-party navigation for the playable three-level preview.
+	var dock := HBoxContainer.new()
+	dock.name = "BottomNavigation"
+	dock.add_theme_constant_override("separation", 4)
+	$Layout.add_child(dock)
+	for entry in [
+		{"title": "HOUSE", "action": "house"},
+		{"title": "CURIOS", "action": "curios"},
+		{"title": "MAP", "action": "map"},
+		{"title": "EVENTS", "action": "events"},
+		{"title": "SHOP", "action": "shop"}
+	]:
+		var button := Button.new()
+		button.text = String(entry["title"])
+		button.custom_minimum_size = Vector2(0, 54)
+		button.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		button.add_theme_font_size_override("font_size", 13)
+		var action := String(entry["action"])
+		button.pressed.connect(func(): _navigate_dock(action))
+		dock.add_child(button)
+
+func _navigate_dock(action: String) -> void:
+	match action:
+		"curios": collection_requested.emit()
+		"map": map_requested.emit()
+		"events": events_requested.emit()
+		"shop": shop_requested.emit()
+		"house": _refresh()
