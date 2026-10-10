@@ -195,15 +195,15 @@ func show_feature_preview(feature: String) -> bool:
 	var entries: Array[Dictionary]
 	if feature.to_lower() == "events":
 		entries = [
-			{"icon":"☾", "title":"MOONLIGHT MARKET", "body":"Play levels to gather moon sigils.", "status":"COMING SOON · EVENT RULES NOT ACTIVE"},
-			{"icon":"♜", "title":"THE LOST RELICS", "body":"A raven has spotted a sealed cabinet.", "status":"LOCKED · COMPLETE THE OPENING CHAPTER"},
-			{"icon":"✧", "title":"WEEKLY RITUALS", "body":"Your weekly ritual streak will live here.", "status":"PREVIEW · NO CLAIMABLE REWARDS"}
+			{"icon":"☾", "art":"res://assets/pieces/moon_sigil.svg", "title":"MOONLIGHT MARKET", "body":"Play levels to gather moon sigils.", "status":"COMING SOON · EVENT RULES NOT ACTIVE"},
+			{"icon":"♜", "art":"res://assets/pieces/crow.svg", "title":"THE LOST RELICS", "body":"A raven has spotted a sealed cabinet.", "status":"LOCKED · COMPLETE THE OPENING CHAPTER"},
+			{"icon":"✧", "art":"res://assets/pieces/pentagram.svg", "title":"WEEKLY RITUALS", "body":"Your weekly ritual streak will live here.", "status":"PREVIEW · NO CLAIMABLE REWARDS"}
 		]
 	else:
 		entries = [
-			{"icon":"◉", "title":"COIN SATCHEL", "body":"Soft currency for future House restoration.", "status":"NOT FOR SALE · ECONOMY PREVIEW"},
-			{"icon":"◇", "title":"MOONSTONE GEMS", "body":"Premium currency concept; no payment flow.", "status":"NOT FOR SALE · NO REAL-MONEY PURCHASES"},
-			{"icon":"✦", "title":"STARTER RELIQUARY", "body":"A future bundle of curios and boosters.", "status":"LOCKED · STORE NOT CONNECTED"}
+			{"icon":"◉", "art":"res://assets/pieces/pentagram.svg", "title":"COIN SATCHEL", "body":"Soft currency for future House restoration.", "status":"NOT FOR SALE · ECONOMY PREVIEW"},
+			{"icon":"◇", "art":"res://assets/pieces/potion.svg", "title":"MOONSTONE GEMS", "body":"Premium currency concept; no payment flow.", "status":"NOT FOR SALE · NO REAL-MONEY PURCHASES"},
+			{"icon":"✦", "art":"res://assets/curios/ch01_curio_moth_reliquary.svg", "title":"STARTER RELIQUARY", "body":"A future bundle of curios and boosters.", "status":"LOCKED · STORE NOT CONNECTED"}
 		]
 	for entry in entries:
 		var card := PanelContainer.new()
@@ -223,14 +223,24 @@ func show_feature_preview(feature: String) -> bool:
 		row.size_flags_vertical = Control.SIZE_EXPAND_FILL
 		row.add_theme_constant_override("separation", 12)
 		card.add_child(row)
-		var icon := Label.new()
-		icon.text = String(entry["icon"])
-		icon.custom_minimum_size = Vector2(42, 42)
-		icon.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
-		icon.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-		icon.add_theme_color_override("font_color", Color("#D5AD70"))
-		icon.add_theme_font_size_override("font_size", 30)
-		row.add_child(icon)
+		var art_frame := PanelContainer.new()
+		art_frame.custom_minimum_size = Vector2(104, 104)
+		var art_style := StyleBoxFlat.new()
+		art_style.bg_color = Color("#0E0D19")
+		art_style.border_color = Color("#D5AD70", 0.40)
+		art_style.set_border_width_all(1)
+		art_style.set_corner_radius_all(10)
+		art_frame.add_theme_stylebox_override("panel", art_style)
+		row.add_child(art_frame)
+		var art := TextureRect.new()
+		art.name = "FeatureArtwork"
+		art.custom_minimum_size = Vector2(92, 92)
+		art.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		art.size_flags_vertical = Control.SIZE_EXPAND_FILL
+		art.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+		art.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+		art.texture = PieceAssetLoader.ornament(String(entry.get("art", "")))
+		art_frame.add_child(art)
 		var copy := VBoxContainer.new()
 		copy.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 		copy.size_flags_vertical = Control.SIZE_EXPAND_FILL
