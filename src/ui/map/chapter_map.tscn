@@ -45,98 +45,61 @@ layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
-offset_left = 40.0
-offset_top = 48.0
-offset_right = -40.0
-offset_bottom = -48.0
-theme_override_constants/separation = 16
+offset_left = 30.0
+offset_top = 34.0
+offset_right = -30.0
+offset_bottom = -34.0
+theme_override_constants/separation = 10
 
 [node name="Eyebrow" type="Label" parent="Layout"]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.663, 0.6, 0.659, 1)
-theme_override_font_sizes/font_size = 20
+theme_override_font_sizes/font_size = 18
 text = "THE HOUSE · CHAPTER I"
 horizontal_alignment = 1
 
 [node name="Title" type="Label" parent="Layout"]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.945, 0.91, 0.866, 1)
-theme_override_font_sizes/font_size = 44
+theme_override_font_sizes/font_size = 42
 text = "Curio Boutique"
 horizontal_alignment = 1
 
 [node name="Progress" type="Label" parent="Layout"]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.851, 0.71, 0.416, 1)
-theme_override_font_sizes/font_size = 21
+theme_override_font_sizes/font_size = 18
 text = "CURIO BOUTIQUE · 0 AWAKENINGS"
 horizontal_alignment = 1
 
 [node name="Intro" type="Label" parent="Layout"]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.851, 0.804, 0.835, 1)
-theme_override_font_sizes/font_size = 19
-text = "Wake the first display. Each returned Curio opens another secret in the House."
+theme_override_font_sizes/font_size = 17
+text = "Follow the sealed displays through the Boutique. Only the first cabinet is ready to wake."
 horizontal_alignment = 1
 autowrap_mode = 2
 
 [node name="RoutePanel" type="PanelContainer" parent="Layout"]
-custom_minimum_size = Vector2(0, 720)
 layout_mode = 2
 size_flags_vertical = 3
 theme_override_styles/panel = SubResource("Panel")
 
-[node name="RouteView" type="Control" parent="Layout/RoutePanel"]
+[node name="Scroll" type="ScrollContainer" parent="Layout/RoutePanel"]
+layout_mode = 2
+horizontal_scroll_mode = 0
+vertical_scroll_mode = 1
+
+[node name="RouteView" type="Control" parent="Layout/RoutePanel/Scroll"]
+custom_minimum_size = Vector2(450, 1500)
 layout_mode = 2
 mouse_filter = 0
 script = ExtResource("2_route")
 
-[node name="Level1" type="Button" parent="Layout/RoutePanel/RouteView"]
-offset_right = 126.0
-offset_bottom = 126.0
-text = "1"
-
-[node name="Level2" type="Button" parent="Layout/RoutePanel/RouteView"]
-offset_right = 104.0
-offset_bottom = 104.0
-text = "2"
-disabled = true
-
-[node name="Level3" type="Button" parent="Layout/RoutePanel/RouteView"]
-offset_right = 104.0
-offset_bottom = 104.0
-text = "3"
-disabled = true
-
-[node name="Label1" type="Label" parent="Layout/RoutePanel/RouteView"]
-offset_right = 350.0
-offset_bottom = 58.0
-theme_override_colors/font_color = Color(0.945, 0.91, 0.866, 1)
-theme_override_font_sizes/font_size = 19
-text = "MOONLIT CABINET"
-vertical_alignment = 1
-
-[node name="Label2" type="Label" parent="Layout/RoutePanel/RouteView"]
-offset_right = 350.0
-offset_bottom = 58.0
-theme_override_colors/font_color = Color(0.663, 0.6, 0.659, 1)
-theme_override_font_sizes/font_size = 18
-text = "SEALED DISPLAY"
-horizontal_alignment = 2
-vertical_alignment = 1
-
-[node name="Label3" type="Label" parent="Layout/RoutePanel/RouteView"]
-offset_right = 350.0
-offset_bottom = 58.0
-theme_override_colors/font_color = Color(0.663, 0.6, 0.659, 1)
-theme_override_font_sizes/font_size = 18
-text = "SEALED DISPLAY"
-vertical_alignment = 1
-
 [node name="Back" type="Button" parent="Layout"]
-custom_minimum_size = Vector2(0, 64)
+custom_minimum_size = Vector2(0, 60)
 layout_mode = 2
 theme_override_colors/font_color = Color(0.945, 0.91, 0.866, 1)
-theme_override_font_sizes/font_size = 22
+theme_override_font_sizes/font_size = 20
 theme_override_styles/normal = SubResource("Back")
 text = "BACK TO THE HOUSE"

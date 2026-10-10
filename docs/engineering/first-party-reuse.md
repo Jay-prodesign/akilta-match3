@@ -36,3 +36,8 @@ Level 2+ product routes are sealed until D-027 completed-Level-1 Founder approva
 ## Chapter map adaptation
 
 The Level 1 chapter map now follows the Beach Cocktails first-party separation of route layer, stateful marker layer and product-owned navigation authority. Match-3 uses original Curio Boutique geometry/material language and its own D-027 route cap. Internal governance terms are never displayed in player-facing UI; locked future nodes are expressed in-world as sealed displays.
+
+
+## Route reconciliation
+
+The Curio Boutique map preserves the product contract introduced by the prior ten-node gated route: ten numbered future displays exist in the scrollable chapter path, while only canonical Level 1 is selectable before D-027. The Beach Cocktails route-layer / marker-layer concept is retained through a Match-3-owned custom route painter and dynamically generated stateful nodes. Internal governance terminology is not rendered to players.
