@@ -7,6 +7,8 @@ const BONE := Color("#F1E8DD")
 const PLUM := Color("#2A1C32")
 const INK := Color("#100D12")
 const ROSE := Color("#C66A88")
+const CAMEO_SEALED = preload("res://assets/curios/ch01_curio_moon_cameo_sealed_v01.svg")
+const CAMEO_AWAKENED = preload("res://assets/curios/ch01_curio_moon_cameo_awakened_v01.svg")
 
 @export var mode: String = "prestart"
 @export_range(0.0, 1.0, 0.05) var glow_strength: float = 0.55
@@ -60,6 +62,12 @@ func _draw_cameo_identity(center: Vector2, radius: float, dormant: bool, show_or
 	ring.a = 0.28 if dormant else 0.72
 	draw_arc(center, radius * 1.10, 0.0, TAU, 64, ring, 2.5)
 	draw_arc(center, radius * 0.86, 0.0, TAU, 64, Color(LILAC, 0.16 if dormant else 0.46), 1.8)
+
+	# The same authored Curio master is shared by House, prestart, result and Collection.
+	var cameo_texture: Texture2D = CAMEO_SEALED if dormant or mode == "prestart" else CAMEO_AWAKENED
+	var cameo_rect := Rect2(center - Vector2.ONE * radius * 0.88, Vector2.ONE * radius * 1.76)
+	draw_texture_rect(cameo_texture, cameo_rect, false)
+	return
 
 	# Smoked moonstone cameo.
 	draw_circle(center + Vector2(radius * 0.025, radius * 0.045), radius * 0.76, Color(0, 0, 0, 0.34))
