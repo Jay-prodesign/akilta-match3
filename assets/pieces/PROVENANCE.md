@@ -1,6 +1,6 @@
 # AKILTA Match-3 Core Symbol Set
 
-Status: AKILTA first-party original art-direction candidates for the Curio Boutique opening.
+Status: AKILTA first-party original art-direction candidates for the Curio Boutique opening; eight-symbol v4 set is playtest candidate, not founder-approved final art.
 
 ## Runtime family mapping
 
@@ -11,8 +11,11 @@ Status: AKILTA first-party original art-direction candidates for the Curio Bouti
 | `moth` | Moon Crow | `crow.svg` |
 | `key` | Witchlight potion flask | `potion.svg` |
 | `leaf` | Gilded pentagram sigil | `pentagram.svg` |
+| `cat` | House cat | `black_cat.svg` |
+| `candle` | Witchlight candle | `candle.svg` |
+| `skull` | Curio skull | `skull.svg` |
 
-The gameplay IDs are retained for deterministic level data compatibility. Player-facing art metadata must describe the rendered symbol, not the historical/internal family name.
+The original five gameplay IDs are retained for deterministic level data compatibility; `cat`, `candle`, and `skull` are additional first-party families used in the three opening playtest candidates. Player-facing art metadata must describe the rendered symbol, not the historical/internal family name.
 
 ## Supporting world symbols
 
