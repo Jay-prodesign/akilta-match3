@@ -100,10 +100,10 @@ func _run() -> void:
 	_expect(int(board.objective_progress) >= 6, "winning teaching move must complete the logical Level 1 objective")
 	# HUD intentionally updates after trace-driven animations finish; it must not jump ahead.
 	if board_view != null and board_view.has_method("is_motion_active"):
-		var frames := 0
-		while bool(board_view.is_motion_active()) and frames < 180:
+		var deadline_ms := Time.get_ticks_msec() + 8000
+		while bool(board_view.is_motion_active()) and Time.get_ticks_msec() < deadline_ms:
 			await process_frame
-			frames += 1
+		_expect(not bool(board_view.is_motion_active()), "Level 1 motion must settle within eight seconds")
 	if awakening != null and awakening.has_method("contract"):
 		_expect(int(awakening.contract().get("progress", 0)) >= 6, "reward meter must fully awaken after the visible move resolves")
 	if board_view != null and board_view.has_method("teaching_contract"):
