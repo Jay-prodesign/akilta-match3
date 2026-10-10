@@ -1,6 +1,11 @@
 name: P0 Headless Verification
 
 on:
+  push:
+    branches:
+      - p0/bootstrap
+    paths:
+      - ".github/workflows/p0-headless.yml"
   # Run the full milestone checks deliberately, not on every development commit.
   workflow_dispatch:
 
