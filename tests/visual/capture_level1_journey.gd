@@ -68,7 +68,7 @@ func _capture() -> void:
 		return
 
 	var collection = app.current_screen()
-	var collection_back := collection.get_node_or_null("Layout/Back")
+	var collection_back: Button = collection.get_node_or_null("Layout/Back") as Button
 	if collection_back == null:
 		return _fail(app, "Curio Collection back control missing")
 	collection_back.emit_signal("pressed")
