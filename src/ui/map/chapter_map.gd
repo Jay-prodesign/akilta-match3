@@ -42,6 +42,12 @@ func _refresh() -> void:
 func _focus_frontier() -> void:
 	if scroll == null or route_view == null:
 		return
-	var target: Button = get_level_button(1)
+	# Keep the next playable node visible after returning from a completed level.
+	# The founder approval cap remains authoritative even when save progress is ahead.
+	var frontier: int = 1
+	if progress != null:
+		frontier = int(progress.highest_level_unlocked)
+	frontier = clampi(frontier, 1, max(1, canonical_level_cap))
+	var target: Button = get_level_button(frontier)
 	if target != null:
 		scroll.ensure_control_visible(target)
