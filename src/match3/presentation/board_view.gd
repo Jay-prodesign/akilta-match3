@@ -443,64 +443,157 @@ func _draw_piece(rect: Rect2, family: String, descriptor: Dictionary) -> void:
 	if descriptor.is_empty():
 		return
 	var color: Color = descriptor["color"]
+	var material := String(descriptor.get("material", ""))
 	var c := rect.get_center()
 	var r: float = minf(rect.size.x, rect.size.y) * 0.38
-	var glow := Color(color)
-	glow.a = 0.10
-	draw_circle(c, r * 1.12, glow)
+	_draw_piece_material_backing(c, r, color, material)
 
 	match family:
 		"moon":
-			draw_circle(c, r, color)
-			draw_circle(c + Vector2(r * 0.34, -r * 0.12), r * 0.86, Color("#2A2230"))
-			draw_arc(c + Vector2(-r * 0.06, 0), r * 0.72, PI * 0.58, PI * 1.43, 28, Color(1,1,1,0.18), max(1.0, r * 0.05))
-			draw_circle(c + Vector2(-r * 0.15, r * 0.05), r * 0.10, BONE)
+			_draw_moonstone_piece(c, r, color)
 		"rose":
-			var points := PackedVector2Array()
-			for i in range(8):
-				var angle := TAU * float(i) / 8.0 - PI * 0.5
-				var rr: float = r if i % 2 == 0 else r * 0.72
-				points.append(c + Vector2(cos(angle), sin(angle)) * rr)
-			draw_colored_polygon(points, color)
-			draw_circle(c, r * 0.55, Color(color, 0.15), false, max(1.0, r * 0.05))
-			draw_arc(c, r * 0.43, 0.0, TAU * 1.6, 32, BONE, max(1.5, r * 0.08))
+			_draw_rose_enamel_piece(c, r, color)
 		"moth":
-			draw_circle(c, r * 0.16, BONE)
-			draw_colored_polygon(PackedVector2Array([
-				c + Vector2(-r * 0.10, -r * 0.12),
-				c + Vector2(-r, -r * 0.52),
-				c + Vector2(-r * 0.72, r * 0.58),
-				c + Vector2(-r * 0.08, r * 0.18)
-			]), color)
-			draw_colored_polygon(PackedVector2Array([
-				c + Vector2(r * 0.10, -r * 0.12),
-				c + Vector2(r, -r * 0.52),
-				c + Vector2(r * 0.72, r * 0.58),
-				c + Vector2(r * 0.08, r * 0.18)
-			]), color)
-			draw_circle(c + Vector2(-r * 0.52, -r * 0.04), r * 0.12, INK)
-			draw_circle(c + Vector2(r * 0.52, -r * 0.04), r * 0.12, INK)
-			draw_arc(c, r * 0.82, PI * 1.06, PI * 1.94, 18, Color(1,1,1,0.16), max(1.0, r * 0.04))
+			_draw_spectral_moth_piece(c, r, color)
 		"key":
-			draw_circle(c + Vector2(0, -r * 0.34), r * 0.42, Color(color, 0.10))
-			draw_arc(c + Vector2(0, -r * 0.34), r * 0.30, 0.0, TAU, 32, color, r * 0.18)
-			draw_line(c + Vector2(0, -r * 0.04), c + Vector2(0, r * 0.76), color, r * 0.18)
-			draw_line(c + Vector2(0, r * 0.52), c + Vector2(r * 0.34, r * 0.52), color, r * 0.14)
-			draw_line(c + Vector2(0, r * 0.70), c + Vector2(r * 0.24, r * 0.70), color, r * 0.14)
+			_draw_antique_key_piece(c, r, color)
 		"leaf":
-			var leaf := PackedVector2Array([
-				c + Vector2(0, -r),
-				c + Vector2(r * 0.68, -r * 0.28),
-				c + Vector2(r * 0.50, r * 0.34),
-				c + Vector2(0, r),
-				c + Vector2(-r * 0.50, r * 0.34),
-				c + Vector2(-r * 0.68, -r * 0.28)
-			])
-			draw_colored_polygon(leaf, color)
-			draw_arc(c, r * 0.84, PI * 0.78, PI * 1.26, 16, Color(1,1,1,0.12), max(1.0, r * 0.035))
-			draw_line(c + Vector2(0, -r * 0.72), c + Vector2(0, r * 0.72), BONE, max(1.5, r * 0.07))
-			draw_line(c + Vector2(0, -r * 0.10), c + Vector2(r * 0.34, -r * 0.34), BONE, max(1.0, r * 0.045))
-			draw_line(c + Vector2(0, r * 0.12), c + Vector2(-r * 0.32, r * 0.34), BONE, max(1.0, r * 0.045))
+			_draw_lacquered_leaf_piece(c, r, color)
+
+func _draw_piece_material_backing(c: Vector2, r: float, color: Color, material: String) -> void:
+	var shadow := Color(0.0, 0.0, 0.0, 0.34)
+	draw_circle(c + Vector2(r * 0.05, r * 0.08), r * 1.08, shadow)
+	var aura := Color(color)
+	aura.a = 0.11
+	draw_circle(c, r * 1.12, aura)
+	var bezel := Color("#18131C")
+	draw_circle(c, r * 1.03, bezel)
+	var rim := Color(color.lightened(0.16))
+	rim.a = 0.54
+	draw_arc(c, r * 0.98, 0.0, TAU, 44, rim, maxf(1.2, r * 0.045))
+	var inner := Color("#241C29")
+	if material == "antique_metal":
+		inner = Color("#2D251D")
+	elif material == "spectral_glass":
+		inner = Color("#1B272B")
+	elif material == "lacquered_leaf":
+		inner = Color("#1B261D")
+	elif material == "carved_wine_enamel":
+		inner = Color("#2B1822")
+	draw_circle(c, r * 0.86, inner)
+	var gloss := Color(1, 1, 1, 0.10)
+	draw_arc(c - Vector2(r * 0.06, r * 0.06), r * 0.70, PI * 1.10, PI * 1.62, 18, gloss, maxf(1.0, r * 0.05))
+	var bottom_shade := Color(0, 0, 0, 0.18)
+	draw_arc(c + Vector2(0, r * 0.06), r * 0.72, PI * 0.12, PI * 0.88, 20, bottom_shade, maxf(1.0, r * 0.06))
+
+func _draw_moonstone_piece(c: Vector2, r: float, color: Color) -> void:
+	var moon_c := c - Vector2(r * 0.08, 0)
+	draw_circle(moon_c, r * 0.66, color)
+	var cutout := Color("#241C29")
+	draw_circle(moon_c + Vector2(r * 0.29, -r * 0.10), r * 0.60, cutout)
+	var edge := Color(BONE)
+	edge.a = 0.46
+	draw_arc(moon_c, r * 0.58, PI * 0.61, PI * 1.39, 26, edge, maxf(1.3, r * 0.055))
+	for crater in [
+		Vector2(-0.28, -0.16),
+		Vector2(-0.23, 0.22),
+		Vector2(-0.02, -0.34)
+	]:
+		var cc := moon_c + crater * r
+		draw_circle(cc, r * 0.055, Color(1, 1, 1, 0.14))
+		draw_arc(cc, r * 0.055, 0.0, TAU, 12, Color(0, 0, 0, 0.18), 1.0)
+	draw_circle(moon_c + Vector2(-r * 0.20, r * 0.04), r * 0.075, Color(BONE, 0.92))
+
+func _draw_rose_enamel_piece(c: Vector2, r: float, color: Color) -> void:
+	var outer := PackedVector2Array()
+	for i in range(12):
+		var angle := TAU * float(i) / 12.0 - PI * 0.5
+		var rr: float = r * (0.72 if i % 2 == 0 else 0.54)
+		outer.append(c + Vector2(cos(angle), sin(angle)) * rr)
+	draw_colored_polygon(outer, color.darkened(0.06))
+	var facet := Color(color.lightened(0.18))
+	facet.a = 0.70
+	for i in range(6):
+		var a := TAU * float(i) / 6.0 - PI * 0.5
+		var p := c + Vector2(cos(a), sin(a)) * r * 0.30
+		draw_circle(p, r * 0.21, Color(facet, 0.24))
+		draw_arc(p, r * 0.20, a - 0.65, a + 0.65, 10, facet, maxf(1.0, r * 0.035))
+	var spiral := Color(BONE)
+	spiral.a = 0.78
+	var points := PackedVector2Array()
+	for i in range(30):
+		var t := float(i) / 29.0
+		var a := t * TAU * 1.70
+		var rr := lerpf(r * 0.05, r * 0.38, t)
+		points.append(c + Vector2(cos(a), sin(a)) * rr)
+	draw_polyline(points, spiral, maxf(1.3, r * 0.055), true)
+	draw_arc(c, r * 0.63, 0.0, TAU, 36, Color(0, 0, 0, 0.22), maxf(1.0, r * 0.04))
+
+func _draw_spectral_moth_piece(c: Vector2, r: float, color: Color) -> void:
+	var left := PackedVector2Array([
+		c + Vector2(-r * 0.06, -r * 0.15),
+		c + Vector2(-r * 0.82, -r * 0.48),
+		c + Vector2(-r * 0.72, r * 0.14),
+		c + Vector2(-r * 0.38, r * 0.58),
+		c + Vector2(-r * 0.05, r * 0.17)
+	])
+	var right := PackedVector2Array()
+	for p in left:
+		right.append(c + Vector2(-(p.x - c.x), p.y - c.y))
+	draw_colored_polygon(left, Color(color, 0.82))
+	draw_colored_polygon(right, Color(color, 0.82))
+	var glass_highlight := Color(1, 1, 1, 0.20)
+	draw_polyline(PackedVector2Array([left[1], left[2], left[3]]), glass_highlight, maxf(1.0, r * 0.035))
+	draw_polyline(PackedVector2Array([right[1], right[2], right[3]]), glass_highlight, maxf(1.0, r * 0.035))
+	for side in [-1.0, 1.0]:
+		var eye := c + Vector2(r * 0.44 * side, -r * 0.02)
+		draw_circle(eye, r * 0.13, Color("#172126"))
+		draw_arc(eye, r * 0.13, 0.0, TAU, 18, Color(BONE, 0.55), 1.2)
+		draw_circle(eye, r * 0.045, Color(LILAC, 0.80))
+	draw_line(c + Vector2(0, -r * 0.42), c + Vector2(0, r * 0.46), BONE, maxf(2.0, r * 0.10))
+	draw_circle(c, r * 0.10, Color(BONE, 0.90))
+	draw_line(c + Vector2(-r * 0.03, -r * 0.40), c + Vector2(-r * 0.28, -r * 0.67), Color(BONE, 0.55), 1.3)
+	draw_line(c + Vector2(r * 0.03, -r * 0.40), c + Vector2(r * 0.28, -r * 0.67), Color(BONE, 0.55), 1.3)
+
+func _draw_antique_key_piece(c: Vector2, r: float, color: Color) -> void:
+	var metal_dark := color.darkened(0.34)
+	var metal_light := color.lightened(0.18)
+	var ring_c := c + Vector2(0, -r * 0.28)
+	draw_circle(ring_c, r * 0.34, metal_dark)
+	draw_arc(ring_c, r * 0.29, 0.0, TAU, 30, color, maxf(3.0, r * 0.16))
+	draw_arc(ring_c - Vector2(r * 0.04, r * 0.04), r * 0.21, PI * 1.05, PI * 1.65, 12, metal_light, maxf(1.0, r * 0.045))
+	var shaft_top := c + Vector2(0, -r * 0.02)
+	var shaft_bottom := c + Vector2(0, r * 0.64)
+	draw_line(shaft_top, shaft_bottom, metal_dark, maxf(4.0, r * 0.20))
+	draw_line(shaft_top - Vector2(r * 0.035, 0), shaft_bottom - Vector2(r * 0.035, 0), metal_light, maxf(1.2, r * 0.045))
+	draw_line(shaft_bottom - Vector2(0, r * 0.15), shaft_bottom + Vector2(r * 0.34, -r * 0.15), color, maxf(4.0, r * 0.16))
+	draw_line(shaft_bottom + Vector2(r * 0.16, -r * 0.15), shaft_bottom + Vector2(r * 0.16, r * 0.02), color, maxf(3.0, r * 0.13))
+	draw_circle(c + Vector2(-r * 0.06, r * 0.18), r * 0.035, Color(BONE, 0.70))
+
+func _draw_lacquered_leaf_piece(c: Vector2, r: float, color: Color) -> void:
+	var leaf := PackedVector2Array([
+		c + Vector2(0, -r * 0.78),
+		c + Vector2(r * 0.52, -r * 0.28),
+		c + Vector2(r * 0.43, r * 0.28),
+		c + Vector2(0, r * 0.78),
+		c + Vector2(-r * 0.43, r * 0.28),
+		c + Vector2(-r * 0.52, -r * 0.28)
+	])
+	draw_colored_polygon(leaf, color.darkened(0.06))
+	var lacquer := Color(color.lightened(0.19))
+	lacquer.a = 0.54
+	draw_polyline(PackedVector2Array([leaf[0], leaf[1], leaf[2]]), lacquer, maxf(1.2, r * 0.045))
+	draw_line(c + Vector2(0, -r * 0.60), c + Vector2(0, r * 0.63), Color(BONE, 0.84), maxf(1.7, r * 0.065))
+	for vein in [
+		[Vector2(0, -0.27), Vector2(0.29, -0.43)],
+		[Vector2(0, -0.05), Vector2(-0.31, -0.18)],
+		[Vector2(0, 0.18), Vector2(0.29, 0.06)],
+		[Vector2(0, 0.38), Vector2(-0.24, 0.27)]
+	]:
+		draw_line(c + vein[0] * r, c + vein[1] * r, Color(BONE, 0.56), maxf(1.0, r * 0.035))
+	var dew := c + Vector2(r * 0.18, -r * 0.18)
+	draw_circle(dew, r * 0.075, Color(1, 1, 1, 0.24))
+	draw_circle(dew - Vector2(r * 0.015, r * 0.015), r * 0.025, Color(BONE, 0.88))
 
 func _draw_special_mark(rect: Rect2, kind: String) -> void:
 	var center := rect.get_center()
