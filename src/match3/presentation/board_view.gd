@@ -51,6 +51,8 @@ var _motion_clock: float = 1.0
 var _motion_active: bool = false
 var _motion_items: Array[Dictionary] = []
 var _motion_cascade_count: int = 1
+var _motion_initial_cells: Dictionary = {}
+var _motion_initial_specials: Dictionary = {}
 var _reveal_at: Dictionary = {}
 
 func _cascade_window(cascade: int) -> Vector2:
@@ -175,6 +177,18 @@ func _set_teaching_pulse(value: float) -> void:
 	_teaching_pulse = value
 	queue_redraw()
 
+func snapshot_before_move() -> void:
+	_motion_initial_cells.clear()
+	_motion_initial_specials.clear()
+	if board_state == null:
+		return
+	for y in range(board_state.height):
+		for x in range(board_state.width):
+			var pos := Vector2i(x, y)
+			if not board_state.is_hole(pos):
+				_motion_initial_cells[pos] = String(board_state.get_cell(pos))
+				_motion_initial_specials[pos] = String(board_state.get_special(pos))
+
 func play_trace(trace) -> bool:
 	if trace == null:
 		return false
@@ -190,6 +204,8 @@ func play_trace(trace) -> bool:
 
 	_build_motion(trace)
 	if _reduced_motion:
+		_motion_initial_cells.clear()
+		_motion_initial_specials.clear()
 		_motion_items.clear()
 		_reveal_at.clear()
 		_motion_clock = 1.0
@@ -197,6 +213,7 @@ func play_trace(trace) -> bool:
 		queue_redraw()
 		return false
 	if _motion_items.is_empty():
+		_motion_initial_cells.clear()
 		return false
 	if _motion_tween != null and _motion_tween.is_valid():
 		_motion_tween.kill()
@@ -316,6 +333,8 @@ func _finish_motion() -> void:
 	_motion_active = false
 	_motion_items.clear()
 	_reveal_at.clear()
+	_motion_initial_cells.clear()
+	_motion_initial_specials.clear()
 	queue_redraw()
 	trace_motion_finished.emit()
 
@@ -555,6 +574,12 @@ func _draw_cell(rect: Rect2, pos: Vector2i) -> void:
 	var show_final := not _motion_active or _motion_clock >= reveal_clock
 	if show_final:
 		_draw_piece(inset, family, descriptor)
+	elif _motion_initial_cells.has(pos) and _motion_clock < 0.10:
+		var original_family: String = String(_motion_initial_cells[pos])
+		_draw_piece(inset, original_family, PieceVisuals.descriptor(original_family))
+		var original_special: String = String(_motion_initial_specials.get(pos, ""))
+		if original_special != "":
+			_draw_special_mark(rect, original_special)
 
 		var special: String = String(board_state.get_special(pos))
 		if special != "":
