@@ -146,6 +146,7 @@ func show_feature_preview(feature: String) -> bool:
 	backdrop.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	overlay.add_child(backdrop)
 	var layout := VBoxContainer.new()
+	layout.name = "FeatureLayout"
 	layout.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	layout.offset_left = 18
 	layout.offset_top = 24
@@ -160,6 +161,7 @@ func show_feature_preview(feature: String) -> bool:
 	eyebrow.add_theme_font_size_override("font_size", 13)
 	layout.add_child(eyebrow)
 	var title := Label.new()
+	title.name = "FeatureTitle"
 	title.text = "WEEKLY RITUALS" if feature.to_lower() == "events" else "THE CURIO EMPORIUM"
 	title.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	title.add_theme_color_override("font_color", Color("#F4E5D3"))
@@ -237,6 +239,7 @@ func show_feature_preview(feature: String) -> bool:
 		status.add_theme_font_size_override("font_size", 10)
 		copy.add_child(status)
 	var back := Button.new()
+	back.name = "BackToHouse"
 	back.text = "RETURN TO THE HOUSE"
 	back.custom_minimum_size = Vector2(0, 48)
 	back.add_theme_color_override("font_color", Color("#F4E5D3"))
