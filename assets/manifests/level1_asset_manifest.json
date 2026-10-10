@@ -408,6 +408,16 @@
       "format": "svg",
       "role": "one-use gameplay booster that grants three extra moves",
       "provenance": "first_party"
+    }    ,{
+      "id": "ch01.world.north_star_splash",
+      "class": "world_art",
+      "scope": "chapter",
+      "path": "assets/world/ch01_curio_boutique/north_star_splash.svg",
+      "status": "candidate",
+      "target": "720x1280",
+      "format": "svg",
+      "role": "Moonlit castle splash art with black cat and thorn roses",
+      "provenance": "first_party"
     }
   ]
 }
