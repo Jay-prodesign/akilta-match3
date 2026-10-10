@@ -7,7 +7,7 @@ signal level_requested(level_number: int)
 @export var canonical_level_cap: int = 1
 
 @onready var chapter_progress: Label = $Layout/Progress
-@onready var route_view: Match3ChapterRouteView = $Layout/RoutePanel/RouteView
+@onready var route_view: Control = $Layout/RoutePanel/RouteView
 @onready var back_button: Button = $Layout/Back
 
 var progress
