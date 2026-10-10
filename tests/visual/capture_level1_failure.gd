@@ -70,7 +70,7 @@ func _find_failing_move(level_data: Dictionary) -> Dictionary:
 		for x in range(width):
 			var from := Vector2i(x, y)
 			for delta in [Vector2i.RIGHT, Vector2i.DOWN]:
-				var to := from + delta
+				var to: Vector2i = from + Vector2i(delta)
 				if to.x >= width or to.y >= height:
 					continue
 				var board = BoardState.from_level(level_data, 1001)
