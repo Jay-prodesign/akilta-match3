@@ -159,6 +159,7 @@ func show_feature_preview(feature: String) -> bool:
 	layout.offset_right = -18
 	layout.offset_bottom = -20
 	layout.add_theme_constant_override("separation", 12)
+	layout.alignment = BoxContainer.ALIGNMENT_CENTER
 	overlay.add_child(layout)
 	var eyebrow := Label.new()
 	eyebrow.text = "THE HOUSE OF CURIOS  ·  AKILTA"
@@ -198,7 +199,7 @@ func show_feature_preview(feature: String) -> bool:
 		]
 	for entry in entries:
 		var card := PanelContainer.new()
-		card.custom_minimum_size = Vector2(0, 145)
+		card.custom_minimum_size = Vector2(0, 210)
 		var panel_style := StyleBoxFlat.new()
 		panel_style.bg_color = Color("#171321")
 		panel_style.border_color = Color("#D5AD70", 0.58)
