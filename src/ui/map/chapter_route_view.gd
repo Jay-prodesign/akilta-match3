@@ -72,8 +72,8 @@ func _build_route() -> void:
 		label.size = Vector2(245.0, 54.0)
 		label.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
 		label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-		label.add_theme_font_size_override("font_size", 18 if level_number == 1 else 15)
-		label.add_theme_color_override("font_color", BONE if level_number == 1 else Color(0.58, 0.53, 0.61, 1))
+		label.add_theme_font_size_override("font_size", 19 if level_number == 1 else 16)
+		label.add_theme_color_override("font_color", BONE if level_number == 1 else Color("#B6A6B9"))
 		var on_right := center.x < route_width * 0.5
 		if on_right:
 			label.position = Vector2(center.x + diameter * 0.58, center.y - 27.0)
@@ -142,14 +142,14 @@ func _apply_node_style(button: Button, completed: bool, open: bool) -> void:
 		box.bg_color = Color("#2A1C32")
 		box.border_color = LILAC
 	else:
-		box.bg_color = Color("#151218")
-		box.border_color = Color(0.48, 0.42, 0.50, 0.30)
+		box.bg_color = Color("#211B27")
+		box.border_color = Color("#6E5B70")
 	button.add_theme_stylebox_override("normal", box)
 	button.add_theme_stylebox_override("hover", box)
 	button.add_theme_stylebox_override("pressed", box)
 	button.add_theme_stylebox_override("disabled", box)
 	button.add_theme_color_override("font_color", BONE if open else Color(0.55, 0.50, 0.57, 1))
-	button.add_theme_color_override("font_disabled_color", Color(0.55, 0.50, 0.57, 1))
+	button.add_theme_color_override("font_disabled_color", Color("#B6A6B9"))
 	button.add_theme_font_size_override("font_size", 33 if button.name == "Level1" else 24)
 
 func _draw() -> void:
