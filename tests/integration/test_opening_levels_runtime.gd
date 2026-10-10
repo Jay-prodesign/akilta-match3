@@ -1,0 +1,79 @@
+extends SceneTree
+
+const GameplayScene = preload("res://src/ui/gameplay/gameplay_screen.tscn")
+const LEVELS := [
+	{"number": 2, "path": "res://content/levels/ch01/level_002.json", "reward": "moth_reliquary", "relic_label": "RELIC · MOTH RELIQUARY"},
+	{"number": 3, "path": "res://content/levels/ch01/level_003.json", "reward": "thorned_locket", "relic_label": "RELIC · THORNED LOCKET"}
+]
+var failures: Array[String] = []
+
+func _init() -> void:
+	call_deferred("_run")
+
+func _run() -> void:
+	for entry in LEVELS:
+		await _run_level(entry)
+	if failures.is_empty():
+		print("TEST_PASS: opening Levels 2 and 3 runtime gameplay and reward contracts")
+		quit(0)
+		return
+	for failure in failures:
+		printerr("TEST_FAIL: %s" % failure)
+	quit(1)
+
+func _run_level(entry: Dictionary) -> void:
+	var number := int(entry["number"])
+	var path := String(entry["path"])
+	var file := FileAccess.open(path, FileAccess.READ)
+	if file == null:
+		failures.append("Level %d content file must open" % number)
+		return
+	var level_data: Variant = JSON.parse_string(file.get_as_text())
+	file.close()
+	if not level_data is Dictionary:
+		failures.append("Level %d content must parse" % number)
+		return
+
+	var screen = GameplayScene.instantiate()
+	root.add_child(screen)
+	await process_frame
+	await process_frame
+	if not screen.load_level_path(path, 1000 + number):
+		failures.append("Level %d must load in the actual gameplay screen" % number)
+		screen.queue_free()
+		await process_frame
+		return
+
+	var moves: Array = level_data.get("teaching_moves", [])
+	for raw_move in moves:
+		if not raw_move is Array or raw_move.size() != 4:
+			failures.append("Level %d teaching move must be four coordinates" % number)
+			break
+		var trace = screen.attempt_swap(
+			Vector2i(int(raw_move[0]), int(raw_move[1])),
+			Vector2i(int(raw_move[2]), int(raw_move[3]))
+		)
+		if trace == null or not bool(trace.accepted):
+			failures.append("Level %d authored teaching move must be accepted by runtime" % number)
+			break
+		var board_view = screen.get_node_or_null("Layout/BoardView")
+		if board_view != null and board_view.has_method("is_motion_active") and bool(board_view.is_motion_active()):
+			if board_view.has_signal("trace_motion_finished"):
+				await board_view.trace_motion_finished
+		await process_frame
+		if screen.result_overlay.visible:
+			break
+
+	if not bool(screen.result_overlay.visible):
+		failures.append("Level %d scripted runtime journey must reach its win overlay" % number)
+	else:
+		if String(screen.current_reward_curio) != String(entry["reward"]):
+			failures.append("Level %d must grant its authored relic" % number)
+		if screen.result_title.text != String(level_data.get("win_title", "")):
+			failures.append("Level %d win title must match authored content" % number)
+		var relic_label: Label = screen.get_node_or_null("Layout/Awakening/Content/Label")
+		if relic_label == null or relic_label.text != String(entry["relic_label"]):
+			failures.append("Level %d relic progress label must match its reward" % number)
+
+	screen.queue_free()
+	await process_frame
