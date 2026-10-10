@@ -58,7 +58,7 @@ func _build_route() -> void:
 
 		var button := Button.new()
 		button.name = "Level%d" % level_number
-		var diameter := 122.0 if level_number == 1 else 94.0
+		var diameter := 122.0 if level_number == 1 else 104.0
 		button.position = center - Vector2.ONE * diameter * 0.5
 		button.size = Vector2.ONE * diameter
 		button.focus_mode = Control.FOCUS_ALL
@@ -148,7 +148,7 @@ func _apply_node_style(button: Button, completed: bool, open: bool) -> void:
 	button.add_theme_stylebox_override("hover", box)
 	button.add_theme_stylebox_override("pressed", box)
 	button.add_theme_stylebox_override("disabled", box)
-	button.add_theme_color_override("font_color", BONE if open else Color(0.55, 0.50, 0.57, 1))
+	button.add_theme_color_override("font_color", BONE if open else Color("#A99AAF"))
 	button.add_theme_color_override("font_disabled_color", Color("#B6A6B9"))
 	button.add_theme_font_size_override("font_size", 33 if button.name == "Level1" else 24)
 
