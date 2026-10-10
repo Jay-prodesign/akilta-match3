@@ -7,6 +7,7 @@ on:
       - p0/north-star-level1-gate
     paths:
       - "src/ui/**"
+      - "src/app/**"
       - "src/match3/presentation/**"
       - "content/levels/**"
       - "tests/visual/**"
