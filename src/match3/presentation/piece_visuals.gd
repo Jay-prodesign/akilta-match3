@@ -51,7 +51,37 @@ const CONTRACT := {
 		"material": "gilded_arcane_enamel",
 		"world_role": "base_family",
 		"status": "first_party_svg_candidate_v2"
+	},,
+	"cat": {
+		"color": Color("#24202D"),
+		"silhouette": "black_cat",
+		"motif": "golden_eyes_and_crescent_collar",
+		"value": 0.84,
+		"display_name": "House Cat",
+		"material": "obsidian_enamel",
+		"world_role": "base_family",
+		"status": "first_party_svg_candidate_v2"
 	},
+	"candle": {
+		"color": Color("#E8B86C"),
+		"silhouette": "wax_candle",
+		"motif": "living_flame_and_gilded_seal",
+		"value": 0.61,
+		"display_name": "Witchlight Candle",
+		"material": "ivory_wax_and_warm_gold",
+		"world_role": "base_family",
+		"status": "first_party_svg_candidate_v2"
+	},
+	"skull": {
+		"color": Color("#E7DCC8"),
+		"silhouette": "curio_skull",
+		"motif": "dark_eye_sockets_and_aged_bone",
+		"value": 0.72,
+		"display_name": "Curio Skull",
+		"material": "aged_bone_enamel",
+		"world_role": "base_family",
+		"status": "first_party_svg_candidate_v2"
+	}
 }
 
 static func contract() -> Dictionary:
