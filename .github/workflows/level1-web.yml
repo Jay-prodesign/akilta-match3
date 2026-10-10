@@ -60,7 +60,10 @@ jobs:
           if-no-files-found: error
           retention-days: 14
 
+  # Deployment is optional: GitHub Pages must be enabled in repository settings.
+  # A failed Pages setup must not mark a successful, downloadable Web export as failed.
   deploy:
+    if: ${{ vars.ENABLE_LEVEL1_PAGES == 'true' }}
     needs: export
     runs-on: ubuntu-latest
     timeout-minutes: 10
