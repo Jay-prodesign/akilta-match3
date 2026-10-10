@@ -166,7 +166,7 @@ func show_feature_preview(feature: String) -> bool:
 	world_art.texture = PieceAssetLoader.ornament("res://assets/world/ch01_curio_boutique/curio_boutique_moonlit_backdrop.svg")
 	world_art.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
 	world_art.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_COVERED
-	world_art.modulate = Color(0.88, 0.80, 0.88, 0.20)
+	world_art.modulate = Color(0.88, 0.80, 0.88, 0.30)
 	overlay.add_child(world_art)
 	overlay.move_child(world_art, 1)
 	var eyebrow := Label.new()
