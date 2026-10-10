@@ -54,6 +54,7 @@ var _motion_cascade_count: int = 1
 var _motion_initial_cells: Dictionary = {}
 var _motion_initial_specials: Dictionary = {}
 var _motion_stages: Array[Dictionary] = []
+var _motion_visible_cells: Dictionary = {}
 var _reveal_at: Dictionary = {}
 
 func _motion_stage_cells() -> Dictionary:
@@ -190,6 +191,7 @@ func snapshot_before_move() -> void:
 	_motion_initial_cells.clear()
 	_motion_initial_specials.clear()
 	_motion_stages.clear()
+	_motion_visible_cells.clear()
 	if board_state == null:
 		return
 	for y in range(board_state.height):
@@ -219,6 +221,7 @@ func play_trace(trace) -> bool:
 		_motion_initial_specials.clear()
 		_motion_items.clear()
 		_motion_stages.clear()
+		_motion_visible_cells.clear()
 		_reveal_at.clear()
 		_motion_clock = 1.0
 		_motion_active = false
@@ -388,6 +391,7 @@ func _finish_motion() -> void:
 	_motion_active = false
 	_motion_items.clear()
 	_motion_stages.clear()
+	_motion_visible_cells.clear()
 	_reveal_at.clear()
 	_motion_initial_cells.clear()
 	_motion_initial_specials.clear()
@@ -497,6 +501,7 @@ func _draw() -> void:
 		cell_size * board_state.height + cell_gap * (board_state.height - 1)
 	)
 	_draw_board_frame(Rect2(origin, board_size).grow(board_frame_padding))
+	_motion_visible_cells = _motion_stage_cells() if _motion_active else {}
 
 	for y in range(board_state.height):
 		for x in range(board_state.width):
@@ -616,6 +621,22 @@ func _draw_board_frame(rect: Rect2) -> void:
 		ornament_tint.a = 0.42
 		draw_texture_rect(_candidate_frame_texture, rect.grow(10.0), false, ornament_tint)
 
+func _motion_piece_in_flight(pos: Vector2i) -> bool:
+	for item in _motion_items:
+		var kind := String(item.get("type", ""))
+		if kind == "swap":
+			if _motion_clock < float(MOTION_PROFILE["swap_end"]) and (item["from"] == pos or item["to"] == pos):
+				return true
+		elif kind == "gravity":
+			var p := _cascade_phase(int(item.get("cascade", 1)), 0.42, 0.84)
+			if p > 0.0 and p < 1.0 and (item["from"] == pos or item["to"] == pos):
+				return true
+		elif kind == "spawn":
+			var p := _cascade_phase(int(item.get("cascade", 1)), 0.48, 0.98)
+			if p > 0.0 and p < 1.0 and item["at"] == pos:
+				return true
+	return false
+
 func _draw_cell(rect: Rect2, pos: Vector2i) -> void:
 	var radius := rect.size.x * 0.18
 	draw_style_box(_cell_box(radius), rect)
@@ -627,12 +648,13 @@ func _draw_cell(rect: Rect2, pos: Vector2i) -> void:
 	var family: String = String(board_state.get_cell(pos))
 	var special: String = String(board_state.get_special(pos))
 	if _motion_active and not _motion_initial_cells.is_empty():
-		var stage_cells := _motion_stage_cells()
-		family = String(stage_cells.get(pos, ""))
+		family = String(_motion_visible_cells.get(pos, ""))
 		if _motion_clock < 0.10:
 			special = String(_motion_initial_specials.get(pos, ""))
 		elif _motion_clock < 0.98:
 			special = ""
+	if _motion_active and _motion_piece_in_flight(pos):
+		family = ""
 	var descriptor: Dictionary = PieceVisuals.descriptor(family)
 	if family != "":
 		_draw_piece(inset, family, descriptor)
