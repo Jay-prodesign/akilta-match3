@@ -18,6 +18,8 @@ const FEEDBACK := {
 
 var music_player: AudioStreamPlayer
 var sfx_player: AudioStreamPlayer
+var match_player: AudioStreamPlayer
+var _soft_match_stream: AudioStreamWAV
 var _ambient_stream: AudioStream
 var _chime_stream: AudioStream
 var _play_sink: Callable = Callable()
@@ -25,6 +27,9 @@ var _feedback_counts: Dictionary = {}
 
 func _ready() -> void:
 	_ensure_players()
+	_soft_match_stream = _make_soft_match_stream()
+	if match_player != null:
+		match_player.stream = _soft_match_stream
 	_load_candidates()
 	start_ambient()
 
@@ -34,6 +39,11 @@ func _ensure_players() -> void:
 		music_player.name = "CurioAmbient"
 		music_player.bus = &"Music"
 		add_child(music_player)
+	if match_player == null:
+		match_player = AudioStreamPlayer.new()
+		match_player.name = "SoftMatchTap"
+		match_player.bus = &"SFX"
+		add_child(match_player)
 	if sfx_player == null:
 		sfx_player = AudioStreamPlayer.new()
 		sfx_player.name = "RitualChime"
@@ -82,8 +92,13 @@ func request_feedback(kind: String) -> bool:
 		_play_sink.call(kind, profile.duplicate(true))
 		return true
 	if kind == "match":
-		# The existing bell is unsuitable as a high-frequency match sound.
-		# Keep match feedback silent until the replacement soft-tap asset ships.
+		if _soft_match_stream == null:
+			_soft_match_stream = _make_soft_match_stream()
+		match_player.stream = _soft_match_stream
+		var variation := [0.94, 1.0, 1.035][int(_feedback_counts[kind]) % 3]
+		match_player.pitch_scale = variation
+		match_player.volume_db = -13.0
+		match_player.play()
 		return true
 	sfx_player.stream = _chime_stream
 	sfx_player.pitch_scale = float(profile["pitch"])
@@ -108,3 +123,24 @@ func contract() -> Dictionary:
 		"feedback": FEEDBACK.duplicate(true),
 		"license": "CC0",
 	}
+
+func _make_soft_match_stream() -> AudioStreamWAV:
+	# Short, low-amplitude wooden-glass tap: intentionally gentler than the repeated bell.
+	var rate := 22050
+	var duration := 0.14
+	var count := int(rate * duration)
+	var bytes := PackedByteArray()
+	bytes.resize(count * 2)
+	for i in range(count):
+		var t := float(i) / float(rate)
+		var envelope := (1.0 - exp(-t * 180.0)) * exp(-t * 27.0)
+		var tone := sin(TAU * 620.0 * t) * 0.68 + sin(TAU * 930.0 * t) * 0.22 + sin(TAU * 1240.0 * t) * 0.10
+		var sample := clampf(tone * envelope * 0.16, -1.0, 1.0)
+		bytes.encode_s16(i * 2, int(sample * 32767.0))
+	var stream := AudioStreamWAV.new()
+	stream.format = AudioStreamWAV.FORMAT_16_BITS
+	stream.mix_rate = rate
+	stream.stereo = false
+	stream.data = bytes
+	stream.loop_mode = AudioStreamWAV.LOOP_DISABLED
+	return stream
