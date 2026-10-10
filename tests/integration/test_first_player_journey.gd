@@ -26,7 +26,7 @@ func _run() -> void:
 
 	_expect(str(app.current_route_name()) == "house", "new player must boot into House")
 	var house = app.current_screen()
-	var settings_button: Button = house.get_node("Layout/SettingsButton")
+	var settings_button: Button = house.get_node("Layout/ActionDock/Actions/SettingsButton")
 	settings_button.emit_signal("pressed")
 	await process_frame
 	_expect(app.navigation.is_settings_open(), "House settings must open")
@@ -76,7 +76,7 @@ func _run() -> void:
 	_expect(progress.curios.count("moon_cameo") == 1, "Moon Cameo must persist exactly once")
 
 	var awakened_house = app.current_screen()
-	var collection_button: Button = awakened_house.get_node("Layout/CollectionButton")
+	var collection_button: Button = awakened_house.get_node("Layout/ActionDock/Actions/CollectionButton")
 	collection_button.emit_signal("pressed")
 	await process_frame
 	_expect(str(app.current_route_name()) == "collection", "House Curios control must open collection")

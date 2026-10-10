@@ -1,4 +1,4 @@
-[gd_scene load_steps=7 format=3]
+[gd_scene load_steps=9 format=3]
 
 [ext_resource type="Script" path="res://src/ui/home/house_home.gd" id="1_home"]
 [ext_resource type="Script" path="res://src/world/curio_boutique.gd" id="2_room"]
@@ -41,6 +41,30 @@ border_width_top = 1
 border_width_right = 1
 border_width_bottom = 1
 border_color = Color(0.851, 0.71, 0.416, 0.26)
+corner_radius_top_left = 14
+corner_radius_top_right = 14
+corner_radius_bottom_right = 14
+corner_radius_bottom_left = 14
+
+[sub_resource type="StyleBoxFlat" id="ActionDock"]
+bg_color = Color(0.075, 0.058, 0.09, 0.96)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.851, 0.71, 0.416, 0.18)
+corner_radius_top_left = 18
+corner_radius_top_right = 18
+corner_radius_bottom_right = 18
+corner_radius_bottom_left = 18
+
+[sub_resource type="StyleBoxFlat" id="SecondaryButton"]
+bg_color = Color(0.105, 0.082, 0.12, 1)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.749, 0.647, 0.847, 0.22)
 corner_radius_top_left = 14
 corner_radius_top_right = 14
 corner_radius_bottom_right = 14
@@ -120,18 +144,36 @@ text = "Win a puzzle to wake the first display."
 horizontal_alignment = 1
 autowrap_mode = 2
 
-[node name="CollectionButton" type="Button" parent="Layout"]
-custom_minimum_size = Vector2(0, 50)
+[node name="ActionDock" type="PanelContainer" parent="Layout"]
+custom_minimum_size = Vector2(0, 68)
 layout_mode = 2
-theme_override_colors/font_color = Color(0.851, 0.71, 0.416, 1)
-theme_override_font_sizes/font_size = 19
-text = "CURIOS · 0 / 3"
+theme_override_styles/panel = SubResource("ActionDock")
 
-[node name="SettingsButton" type="Button" parent="Layout"]
-custom_minimum_size = Vector2(0, 50)
+[node name="Actions" type="HBoxContainer" parent="Layout/ActionDock"]
 layout_mode = 2
+theme_override_constants/separation = 10
+alignment = 1
+
+[node name="CollectionButton" type="Button" parent="Layout/ActionDock/Actions"]
+custom_minimum_size = Vector2(0, 52)
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_colors/font_color = Color(0.851, 0.71, 0.416, 1)
+theme_override_font_sizes/font_size = 18
+theme_override_styles/normal = SubResource("SecondaryButton")
+theme_override_styles/hover = SubResource("SecondaryButton")
+theme_override_styles/pressed = SubResource("SecondaryButton")
+text = "RELIQUARY · 0 / 3"
+
+[node name="SettingsButton" type="Button" parent="Layout/ActionDock/Actions"]
+custom_minimum_size = Vector2(0, 52)
+layout_mode = 2
+size_flags_horizontal = 3
 theme_override_colors/font_color = Color(0.851, 0.804, 0.835, 1)
-theme_override_font_sizes/font_size = 19
+theme_override_font_sizes/font_size = 18
+theme_override_styles/normal = SubResource("SecondaryButton")
+theme_override_styles/hover = SubResource("SecondaryButton")
+theme_override_styles/pressed = SubResource("SecondaryButton")
 text = "SETTINGS"
 
 [node name="PlayButton" type="Button" parent="Layout"]

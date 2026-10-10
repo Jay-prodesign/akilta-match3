@@ -12,8 +12,8 @@ const HouseState = preload("res://src/world/house_state.gd")
 @onready var headline: Label = $Layout/Headline
 @onready var detail: Label = $Layout/Detail
 @onready var curio_label: Label = $Layout/CurioChip/Label
-@onready var collection_button: Button = $Layout/CollectionButton
-@onready var settings_button: Button = $Layout/SettingsButton
+@onready var collection_button: Button = $Layout/ActionDock/Actions/CollectionButton
+@onready var settings_button: Button = $Layout/ActionDock/Actions/SettingsButton
 @onready var play_button: Button = $Layout/PlayButton
 
 var progress
@@ -52,7 +52,7 @@ func _refresh() -> void:
 		curio_label.text = "CURIO 01 · MOON CAMEO AWAKENED"
 	else:
 		curio_label.text = "DORMANT DISPLAY"
-	collection_button.text = "CURIOS · %d / 3" % owned_curios.size()
+	collection_button.text = "RELIQUARY · %d / 3" % owned_curios.size()
 	play_button.disabled = available_level_count < 1
 	play_button.text = "OPEN CURIO MAP" if available_level_count >= 1 else "THE MAP IS SEALED"
 
