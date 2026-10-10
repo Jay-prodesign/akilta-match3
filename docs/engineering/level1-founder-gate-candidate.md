@@ -47,3 +47,20 @@ Winning Level 1 awakens the Moon Cameo in the Curio Boutique. The House is persi
 Approval of this gate does not lock final pixels, final brand, all chapter variants, final motion timing, final VFX/audio, shop/event design, or Level 2+ authored content. It approves the reusable visual/gameplay language so those systems can be produced coherently.
 
 Until approval, candidate/procedural visuals remain replaceable and Level 2–3 remain provisional engineering exploration.
+
+
+## Gate Board Scope
+
+The visual board used for Founder D-024 review must stay narrow. It should show only:
+- Level 1 gameplay HUD and board material/cell language;
+- the exact five candidate base families: Moon Sigil, Thorn Rose, Luna Moth, Curio Key, Night Ivy;
+- global, line, area and smart special visual grammar;
+- Wax Seal blocker/objective treatment;
+- Moon Cameo reward;
+- dormant → awakened Curio Boutique connection;
+- compact motion/VFX intent;
+- readability/accessibility comparison.
+
+Do not include shop, events, profile, full chapter map, economy packaging or downstream meta screens on this gate board.
+
+Generic casual completion stars, gem-first reward language and unrelated category shorthand are not accepted as automatic defaults. Any rating/progression symbol shown here must be a clearly labeled House-native candidate and is not locked final iconography.
