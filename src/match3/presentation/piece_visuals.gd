@@ -34,11 +34,11 @@ const CONTRACT := {
 	},
 	"key": {
 		"color": Color("#D8B56A"),
-		"silhouette": "potion_flask",
-		"motif": "emerald_sigillum",
+		"silhouette": "key_relic",
+		"motif": "keyhole",
 		"value": 0.68,
-		"display_name": "Emerald Potion",
-		"material": "alchemical_glass",
+		"display_name": "Curio Key",
+		"material": "antique_metal",
 		"world_role": "base_family",
 		"status": "first_party_svg_candidate_v2"
 	},
