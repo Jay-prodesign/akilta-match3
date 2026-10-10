@@ -262,6 +262,8 @@ func _on_gameplay_navigation_requested(section: String) -> void:
 			show_feature_preview("Events")
 		"shop":
 			show_feature_preview("Shop")
+		"profile":
+			show_settings()
 
 func _install_north_star_backdrop(screen: Node) -> void:
 	if screen == null or not screen is Control:
