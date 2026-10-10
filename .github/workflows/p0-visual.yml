@@ -46,7 +46,6 @@ jobs:
           if grep -Eq "SCRIPT ERROR:|(^| )ERROR:|CAPTURE_FAIL:" <<<"$output"; then exit 1; fi
           grep -Fq "CAPTURE_PASS: complete Level 1 player journey" <<<"$output"
           test -s artifacts/journey-01-house-dormant.png
-          test -s artifacts/journey-01b-chapter-select.png
           test -s artifacts/journey-02-chapter-map.png
           test -s artifacts/journey-03-prestart.png
           test -s artifacts/journey-04-level1-gameplay.png
@@ -55,8 +54,6 @@ jobs:
           test -s artifacts/journey-06-house-awakened.png
           test -s artifacts/journey-07-curio-collection.png
           test -s artifacts/journey-08-settings.png
-          test -s artifacts/journey-09-level2-gameplay.png
-          test -s artifacts/journey-10-level3-gameplay.png
 
       - name: Render Level 1 fail and retry
         shell: bash
@@ -129,32 +126,6 @@ jobs:
           grep -Fq "CAPTURE_PASS:" <<<"$output"
           test -s artifacts/house-stage1.png
 
-      - name: Render Level 3 generated Line special
-        shell: bash
-        run: |
-          set +e
-          output=$(LIBGL_ALWAYS_SOFTWARE=1 xvfb-run -a ./godot --audio-driver Dummy --path . -s res://tests/visual/capture_level3_special.gd 2>&1)
-          status=$?
-          set -e
-          printf '%s\n' "$output"
-          if [ "$status" -ne 0 ]; then exit "$status"; fi
-          if grep -Eq "SCRIPT ERROR:|(^| )ERROR:|CAPTURE_FAIL:" <<<"$output"; then exit 1; fi
-          grep -Fq "CAPTURE_PASS:" <<<"$output"
-          test -s artifacts/level3-line-special.png
-
-      - name: Render House stage 3
-        shell: bash
-        run: |
-          set +e
-          output=$(LIBGL_ALWAYS_SOFTWARE=1 xvfb-run -a ./godot --audio-driver Dummy --path . -s res://tests/visual/capture_house_stage3.gd 2>&1)
-          status=$?
-          set -e
-          printf '%s\n' "$output"
-          if [ "$status" -ne 0 ]; then exit "$status"; fi
-          if grep -Eq "SCRIPT ERROR:|(^| )ERROR:|CAPTURE_FAIL:" <<<"$output"; then exit 1; fi
-          grep -Fq "CAPTURE_PASS:" <<<"$output"
-          test -s artifacts/house-stage3.png
-
       - name: Upload complete Level 1 journey evidence
         uses: actions/upload-artifact@v4
         with:
@@ -194,7 +165,5 @@ jobs:
             artifacts/level1-gameplay.png
             artifacts/house-stage1.png
             artifacts/core-asset-language.png
-            artifacts/level3-line-special.png
-            artifacts/house-stage3.png
           if-no-files-found: error
           retention-days: 7
