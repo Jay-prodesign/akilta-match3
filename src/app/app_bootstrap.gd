@@ -148,7 +148,7 @@ func show_feature_preview(feature: String) -> bool:
 	title.add_theme_font_size_override("font_size", 38)
 	column.add_child(title)
 	var detail := Label.new()
-	detail.text = "THE HOUSE IS PREPARING THIS WING.\\nNo purchases or live events are available in this test build."
+	detail.text = "THE HOUSE IS PREPARING THIS WING.\nNo purchases or live events are available in this test build."
 	detail.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	detail.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	column.add_child(detail)
@@ -203,6 +203,7 @@ func _on_map_back() -> void:
 func _on_prestart_back() -> void:
 	if navigation.go(NavigationScript.Route.MAP, {"via": "prestart_back"}):
 		var screen: Node = MapScene.instantiate()
+		screen.set("canonical_level_cap", TEST_LEVEL_COUNT)
 		_show_screen(screen)
 		screen.set_progress(progress)
 		screen.back_requested.connect(_on_map_back)
