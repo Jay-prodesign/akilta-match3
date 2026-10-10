@@ -1,0 +1,79 @@
+name: P0 Donor Audit
+
+on:
+  push:
+    branches:
+      - p0/bootstrap
+    paths:
+      - "docs/engineering/donor-admission.md"
+      - ".github/workflows/p0-donor-audit.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  donor-audit:
+    runs-on: ubuntu-latest
+    timeout-minutes: 6
+    env:
+      DONOR_SHA: 11945ef6db1703ba3043b1d93563514930e2ab37
+    steps:
+      - name: Checkout product repository
+        uses: actions/checkout@v4
+
+      - name: Download pinned Godot 4.7.2
+        shell: bash
+        run: |
+          set -euo pipefail
+          curl -L --fail --retry 3             -o godot.zip             "https://github.com/godotengine/godot-builds/releases/download/4.7.2-stable/Godot_v4.7.2-stable_linux.x86_64.zip"
+          echo "cadd3204e728a35d3f13adb7fd0d7902636b79f6b95c40c265eb73b6c35329e4  godot.zip" | sha256sum -c -
+          unzip -q godot.zip
+          mv Godot_v4.7.2-stable_linux.x86_64 godot
+          chmod +x godot
+          ./godot --version
+
+      - name: Download exact donor commit into audit workspace
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p .audit
+          curl -L --fail --retry 3             -o .audit/donor.tar.gz             "https://github.com/sempitern0/match3-board/archive/${DONOR_SHA}.tar.gz"
+          tar -xzf .audit/donor.tar.gz -C .audit
+          mv ".audit/match3-board-${DONOR_SHA}" .audit/donor
+          test -f .audit/donor/LICENSE
+          grep -Fq "MIT License" .audit/donor/LICENSE
+
+      - name: Parse donor project on Godot 4.7.2
+        shell: bash
+        run: |
+          set -euo pipefail
+          timeout 60s ./godot --headless --path .audit/donor --editor --quit
+
+      - name: Boot donor demo scene on Godot 4.7.2
+        shell: bash
+        run: |
+          set -euo pipefail
+          timeout 60s ./godot --headless --path .audit/donor             --scene res://addons/ninetailsrabbit.match3_board/demo/demo.tscn             --quit-after 8
+
+      - name: Record architecture signals
+        shell: bash
+        run: |
+          set -euo pipefail
+          board=.audit/donor/addons/ninetailsrabbit.match3_board/src/match3_board.gd
+          generator=.audit/donor/addons/ninetailsrabbit.match3_board/src/modules/piece_generator.gd
+          shuffler=.audit/donor/addons/ninetailsrabbit.match3_board/src/modules/shuffler.gd
+          detector=.audit/donor/addons/ninetailsrabbit.match3_board/src/modules/sequence_detector.gd
+          consumer=.audit/donor/addons/ninetailsrabbit.match3_board/src/modules/sequence_consumer.gd
+
+          grep -Fq "class_name Match3Board extends Node2D" "$board"
+          grep -Fq "rng.randomize()" "$generator"
+          grep -Fq "available_pieces_to_roll.shuffle()" "$generator"
+          grep -Fq "cells.shuffle()" "$shuffler"
+          grep -Fq "await get_tree().process_frame" "$board"
+          test -s "$detector"
+          test -s "$consumer"
+
+          echo "AUDIT_SIGNAL: runtime code is Node2D/tree-coupled."
+          echo "AUDIT_SIGNAL: generation/shuffle contains non-injected global RNG paths."
+          echo "AUDIT_SIGNAL: detector/consumer modules are separable harvest candidates."
