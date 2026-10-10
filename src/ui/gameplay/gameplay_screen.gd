@@ -7,6 +7,8 @@ signal feedback_requested(kind: String)
 signal navigation_requested(section: String)
 
 const BoardState = preload("res://src/match3/domain/board_state.gd")
+const MoveFinder = preload("res://src/match3/domain/move_finder.gd")
+const PieceAssetLoader = preload("res://src/match3/presentation/piece_asset_loader.gd")
 const MoveResolver = preload("res://src/match3/domain/move_resolver.gd")
 const HapticsController = preload("res://src/feedback/haptics_controller.gd")
 const KENNEY_DIVIDER_PATH := "res://assets/candidate/third_party/kenney/fantasy-ui-borders/divider-004.png"
@@ -27,6 +29,7 @@ var _pending_win: bool = false
 var _pending_terminal_result: String = ""
 var _pending_hud_refresh: bool = false
 var haptics = HapticsController.new()
+var _potion_used_for_attempt := false
 
 @onready var eyebrow_label: Label = $Layout/Eyebrow
 @onready var title_label: Label = $Layout/Title
@@ -53,6 +56,7 @@ var haptics = HapticsController.new()
 func _ready() -> void:
 	_install_candidate_divider()
 	_build_top_resource_bar()
+	_build_booster_tray()
 	_build_bottom_navigation()
 	if board_view.has_signal("swap_requested"):
 		board_view.swap_requested.connect(_on_swap_requested)
@@ -84,6 +88,7 @@ func load_level_path(path: String, seed_value: int = 1001) -> bool:
 		return false
 	current_level_path = path
 	current_seed = seed_value
+	_potion_used_for_attempt = false
 	current_level_id = String(parsed.get("id", ""))
 	current_reward_curio = String(parsed.get("reward_curio", ""))
 	current_house_stage_reward = int(parsed.get("house_stage_reward", 0))
@@ -381,3 +386,67 @@ func _build_top_resource_bar() -> void:
 		label.add_theme_font_size_override("font_size", 15)
 		label.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 		row.add_child(label)
+
+func _build_booster_tray() -> void:
+	var panel := PanelContainer.new()
+	panel.name = "BoosterTray"
+	panel.anchor_left = 0.08
+	panel.anchor_right = 0.92
+	panel.anchor_top = 1.0
+	panel.anchor_bottom = 1.0
+	panel.offset_top = -124.0
+	panel.offset_bottom = -72.0
+	panel.z_index = 18
+	var shell := StyleBoxFlat.new()
+	shell.bg_color = Color("#101320", 0.97)
+	shell.border_color = Color("#D5AD70", 0.72)
+	shell.set_border_width_all(1)
+	shell.set_corner_radius_all(8)
+	panel.add_theme_stylebox_override("panel", shell)
+	add_child(panel)
+	var row := HBoxContainer.new()
+	row.add_theme_constant_override("separation", 6)
+	panel.add_child(row)
+	_add_booster_button(row, "☾ HINT", "res://assets/pieces/moon_sigil.svg", _use_hint_boost)
+	_add_booster_button(row, "⚗ +3 MOVES", "res://assets/pieces/potion.svg", _use_potion_boost)
+	_add_booster_button(row, "✦ RETRY", "res://assets/pieces/skull.svg", _on_pause_retry)
+
+func _add_booster_button(parent: HBoxContainer, caption: String, art_path: String, action: Callable) -> void:
+	var button := Button.new()
+	button.text = caption
+	button.custom_minimum_size = Vector2(0, 42)
+	button.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	button.add_theme_font_size_override("font_size", 12)
+	button.add_theme_color_override("font_color", Color("#F4E5D3"))
+	button.icon = PieceAssetLoader.ornament(art_path)
+	button.expand_icon = true
+	button.icon_max_width = 28
+	var box := StyleBoxFlat.new()
+	box.bg_color = Color("#251529")
+	box.border_color = Color("#D5AD70", 0.38)
+	box.set_border_width_all(1)
+	box.set_corner_radius_all(6)
+	button.add_theme_stylebox_override("normal", box)
+	button.add_theme_stylebox_override("hover", box)
+	button.pressed.connect(action)
+	parent.add_child(button)
+
+func _use_potion_boost() -> void:
+	if board_state == null or _potion_used_for_attempt or result_overlay.visible or pause_overlay.visible:
+		return
+	_potion_used_for_attempt = true
+	board_state.moves_remaining += 3
+	_refresh_hud()
+	hint_label.text = "The emerald potion grants three extra moves."
+	feedback_requested.emit("special")
+
+func _use_hint_boost() -> void:
+	if board_state == null or result_overlay.visible or pause_overlay.visible:
+		return
+	var move: Dictionary = MoveFinder.first_legal_move(board_state)
+	if move.is_empty():
+		hint_label.text = "The House is reshaping the sigils. Try a different line."
+		return
+	board_view.set_teaching_move(move["from"], move["to"])
+	hint_label.text = "Follow the moonlit highlight for a legal match."
+	feedback_requested.emit("match")
