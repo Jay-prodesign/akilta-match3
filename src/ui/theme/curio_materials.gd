@@ -4,14 +4,14 @@ extends RefCounted
 ## Shared Curio House material language for player-facing UI.
 ## Product-owned: no donor visual identity or paid assets.
 
-const INK := Color("#100D12")
-const VELVET := Color("#17131B")
-const PLUM := Color("#241A27")
-const PLUM_RAISED := Color("#2E2135")
-const BONE := Color("#F1E8DD")
-const MIST := Color("#D9CDD5")
-const LILAC := Color("#BFA5D8")
-const GOLD := Color("#D8B56A")
+const INK := Color("#080C15")
+const VELVET := Color("#101320")
+const PLUM := Color("#251529")
+const PLUM_RAISED := Color("#371C3C")
+const BONE := Color("#F4E5D3")
+const MIST := Color("#D8C6C3")
+const LILAC := Color("#9F78C0")
+const GOLD := Color("#D5AD70")
 
 const PRIMARY_BUTTONS := ["Start", "Action", "Close", "PlayButton", "Resume"]
 const SECONDARY_BUTTONS := ["Back", "SettingsButton", "CollectionButton", "Retry", "Exit"]
@@ -35,7 +35,7 @@ static func contract() -> Dictionary:
 		"mist": MIST.to_html(),
 		"lilac": LILAC.to_html(),
 		"gold": GOLD.to_html(),
-		"corner_radius": 18,
+		"corner_radius": 8,
 		"identity": "curio_house_product_owned",
 	}
 
@@ -60,16 +60,16 @@ static func _style_panel(panel: PanelContainer) -> void:
 	if not (HERO_PANELS.has(name) or SEALED_PANELS.has(name) or CHIP_PANELS.has(name)):
 		return
 	var box := StyleBoxFlat.new()
-	box.corner_radius_top_left = 22
-	box.corner_radius_top_right = 22
-	box.corner_radius_bottom_left = 22
-	box.corner_radius_bottom_right = 22
+	box.corner_radius_top_left = 8
+	box.corner_radius_top_right = 8
+	box.corner_radius_bottom_left = 8
+	box.corner_radius_bottom_right = 8
 	box.border_width_left = 1
 	box.border_width_top = 1
 	box.border_width_right = 1
 	box.border_width_bottom = 1
 	box.shadow_color = Color(0, 0, 0, 0.36)
-	box.shadow_size = 10
+	box.shadow_size = 15
 	if SEALED_PANELS.has(name):
 		box.bg_color = Color(0.07, 0.052, 0.082, 0.97)
 		box.border_color = Color(LILAC, 0.20)
@@ -82,24 +82,24 @@ static func _style_panel(panel: PanelContainer) -> void:
 		box.corner_radius_bottom_right = 14
 		box.shadow_size = 4
 	else:
-		box.bg_color = Color(0.09, 0.067, 0.105, 0.985)
-		box.border_color = Color(GOLD, 0.38)
+		box.bg_color = Color(0.043, 0.052, 0.085, 0.985)
+		box.border_color = Color(GOLD, 0.78)
 	panel.add_theme_stylebox_override("panel", box)
 
 static func _style_button(button: Button) -> void:
 	var name := String(button.name)
 	if PRIMARY_BUTTONS.has(name):
-		var normal := _button_box(Color("#BEA4D8"), Color(BONE, 0.24), 18)
-		var hover := _button_box(Color("#CDB8E1"), Color(BONE, 0.42), 18)
-		var pressed := _button_box(Color("#A98FC3"), Color(GOLD, 0.42), 18)
+		var normal := _button_box(Color("#512057"), Color(GOLD, 0.88), 8)
+		var hover := _button_box(Color("#6B2A73"), Color(GOLD, 1.0), 8)
+		var pressed := _button_box(Color("#35153B"), Color(GOLD, 0.95), 8)
 		button.add_theme_stylebox_override("normal", normal)
 		button.add_theme_stylebox_override("hover", hover)
 		button.add_theme_stylebox_override("pressed", pressed)
-		button.add_theme_color_override("font_color", INK)
-		button.add_theme_color_override("font_hover_color", INK)
-		button.add_theme_color_override("font_pressed_color", INK)
+		button.add_theme_color_override("font_color", BONE)
+		button.add_theme_color_override("font_hover_color", BONE)
+		button.add_theme_color_override("font_pressed_color", BONE)
 	elif SECONDARY_BUTTONS.has(name):
-		var utility := _button_box(Color(0.105, 0.078, 0.12, 0.98), Color(LILAC, 0.24), 15)
+		var utility := _button_box(Color(0.055, 0.063, 0.105, 0.98), Color(GOLD, 0.48), 8)
 		button.add_theme_stylebox_override("normal", utility)
 		button.add_theme_stylebox_override("hover", utility)
 		button.add_theme_stylebox_override("pressed", utility)
@@ -129,6 +129,8 @@ static func _button_box(fill: Color, border: Color, radius: int) -> StyleBoxFlat
 	box.border_width_right = 1
 	box.border_width_bottom = 1
 	box.border_color = border
+	box.shadow_color = Color(0, 0, 0, 0.42)
+	box.shadow_size = 5
 	box.corner_radius_top_left = radius
 	box.corner_radius_top_right = radius
 	box.corner_radius_bottom_left = radius
