@@ -256,20 +256,20 @@ func show_feature_preview(feature: String) -> bool:
 		card_body.text = String(entry["body"])
 		card_body.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 		card_body.add_theme_color_override("font_color", Color("#D8C6C3"))
-		card_body.add_theme_font_size_override("font_size", 18)
+		card_body.add_theme_font_size_override("font_size", 23)
 		copy.add_child(card_body)
 		var status := Label.new()
 		status.text = String(entry["status"])
 		status.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 		status.add_theme_color_override("font_color", Color("#BFA5D8"))
-		status.add_theme_font_size_override("font_size", 14)
+		status.add_theme_font_size_override("font_size", 18)
 		copy.add_child(status)
 	var back := Button.new()
 	back.name = "BackToHouse"
 	back.text = "RETURN TO THE HOUSE"
 	back.custom_minimum_size = Vector2(0, 48)
 	back.add_theme_color_override("font_color", Color("#F4E5D3"))
-	back.add_theme_font_size_override("font_size", 16)
+	back.add_theme_font_size_override("font_size", 22)
 	var back_style := StyleBoxFlat.new()
 	back_style.bg_color = Color("#38233A")
 	back_style.border_color = Color("#D5AD70")
