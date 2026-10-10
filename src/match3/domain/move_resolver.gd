@@ -30,10 +30,11 @@ static func try_swap(board, from: Vector2i, to: Vector2i):
 	var before: String = String(board.signature())
 	var combo_id: String = ComboRules.combo_id(from_kind, to_kind)
 	var is_combo: bool = combo_id != ""
+	var single_special: bool = not is_combo and (from_kind != "" or to_kind != "")
 
 	board.swap_cells(from, to)
 	var matches: Array[Vector2i] = MatchDetector.find_match_cells(board)
-	if not is_combo and matches.is_empty():
+	if not is_combo and not single_special and matches.is_empty():
 		board.swap_cells(from, to)
 		trace.add_event("swap_rejected", {
 			"reason": "no_match",
@@ -58,7 +59,26 @@ static func try_swap(board, from: Vector2i, to: Vector2i):
 		board.moves_remaining -= 1
 
 	var cascade: int = 0
-	if is_combo:
+	if single_special:
+		cascade = 1
+		var active_kind: String = from_kind if from_kind != "" else to_kind
+		var active_pos: Vector2i = to if from_kind != "" else from
+		var target_family: String = to_family if from_kind != "" else from_family
+		var affected: Array[Vector2i] = SpecialRules.affected_cells(board, active_pos, active_kind, target_family)
+		if not affected.has(active_pos):
+			affected.append(active_pos)
+		trace.add_event("special_triggered", {
+			"cascade": cascade,
+			"at": _pos_key(active_pos),
+			"kind": active_kind,
+			"target_family": target_family
+		})
+		var expanded: Array[Vector2i] = _expand_existing_specials(board, affected, trace, cascade)
+		_clear_cells(board, expanded, trace, cascade, "clear")
+		_apply_gravity(board, trace, cascade)
+		_refill(board, trace, cascade)
+		matches = MatchDetector.find_match_cells(board)
+	elif is_combo:
 		cascade = 1
 		var combo_cells: Array[Vector2i] = ComboRules.affected_cells(
 			board,
