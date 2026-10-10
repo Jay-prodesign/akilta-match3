@@ -28,14 +28,12 @@ func _capture() -> void:
 	if not await _save(app, "journey-01-house-dormant.png"):
 		return
 
-	var house = app.current_screen()
-	house.get_node("Layout/PlayButton").emit_signal("pressed")
+	if not app.show_chapters():
+		return _fail(app, "House -> Chapter Select failed")
 	await _frames(3)
-	var chapters = app.current_screen()
-	if String(chapters.name) != "ChapterSelect":
-		return _fail(app, "House -> Chapter Select failed (screen=%s)" % String(chapters.name))
 	if not await _save(app, "journey-01b-chapter-select.png"):
 		return
+	var chapters = app.current_screen()
 	chapters.get_node("Layout/ChapterGrid/CurioBoutiqueButton").emit_signal("pressed")
 	await _frames(3)
 	if String(app.current_route_name()) != "map":
