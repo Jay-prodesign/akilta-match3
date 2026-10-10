@@ -59,11 +59,14 @@ func _refresh() -> void:
 	collection_button.text = "RELIQUARY · %d / 3" % owned_curios.size()
 	var next_level := int(progress.highest_level_unlocked) if progress != null else 1
 	var has_started: bool = progress != null and not progress.completed_levels.is_empty()
-	play_button.disabled = next_level > available_level_count or available_level_count < 1
-	if play_button.disabled:
-		play_button.text = "MORE CURIOS STIR SOON"
-	elif has_started and next_level > 1:
+	var level1_completed: bool = progress != null and progress.completed_levels.has("ch01_level_001")
+	play_button.disabled = available_level_count < 1
+	if has_started and next_level > 1 and next_level <= available_level_count:
 		play_button.text = "ENTER LEVEL %d" % next_level
+	elif level1_completed and next_level > available_level_count:
+		play_button.text = "REPLAY LEVEL 1"
+	elif next_level > available_level_count:
+		play_button.text = "MORE CURIOS STIR SOON"
 	else:
 		play_button.text = "OPEN CURIO MAP"
 
@@ -78,7 +81,7 @@ func _on_play_pressed() -> void:
 		map_requested.emit()
 
 func _build_navigation_dock() -> void:
-	# Persistent, touch-sized first-party navigation for the playable three-level preview.
+	# Persistent, touch-sized first-party navigation; Level 1 remains the only open level pending founder approval.
 	var dock := HBoxContainer.new()
 	dock.name = "BottomNavigation"
 	dock.add_theme_constant_override("separation", 4)
