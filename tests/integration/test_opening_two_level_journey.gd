@@ -18,8 +18,19 @@ func _run() -> void:
 	app.set("save_path_override", TEST_PATH)
 	root.add_child(app)
 	await process_frame
-	_expect(str(app.current_route_name()) == "gameplay", "new player must boot into gameplay")
+	_expect(str(app.current_route_name()) == "house", "new player must boot into House")
+	var first_house = app.current_screen()
+	first_house.get_node("Layout/PlayButton").emit_signal("pressed")
+	await process_frame
+	_expect(str(app.current_route_name()) == "map", "new player must open the chapter map")
+	var first_map = app.current_screen()
+	first_map.get_level_button(1).emit_signal("pressed")
+	await process_frame
+	_expect(str(app.current_route_name()) == "prestart", "Level 1 map node must open prestart")
+	app.current_screen().get_node("Layout/Card/Content/Start").emit_signal("pressed")
+	await process_frame
 	var level1 = app.current_screen()
+	_expect(str(app.current_route_name()) == "gameplay", "Level 1 prestart must enter gameplay")
 	_expect(level1 != null and str(level1.current_level_id) == "ch01_level_001", "opening route must load authored Level 1")
 	var first_trace = level1.attempt_swap(Vector2i(1, 4), Vector2i(2, 4))
 	_expect(first_trace != null and first_trace.accepted, "Level 1 teaching swipe must be accepted")
