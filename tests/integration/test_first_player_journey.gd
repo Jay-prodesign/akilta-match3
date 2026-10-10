@@ -46,6 +46,8 @@ func _run() -> void:
 	await process_frame
 	_expect(str(app.current_route_name()) == "prestart", "Level 1 selection must open prestart")
 	var prestart = app.current_screen()
+	var objective: Label = prestart.get_node("Layout/Card/Content/Objective")
+	_expect(objective.text == "GOAL · GATHER 6 MOON SIGILS", "prestart must reflect the canonical Level 1 collect-family objective")
 	var start_button: Button = prestart.get_node("Layout/Card/Content/Start")
 	start_button.emit_signal("pressed")
 	await process_frame

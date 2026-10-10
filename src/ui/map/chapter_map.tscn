@@ -60,7 +60,7 @@ offset_left = 40.0
 offset_top = 48.0
 offset_right = -40.0
 offset_bottom = -48.0
-theme_override_constants/separation = 22
+theme_override_constants/separation = 18
 
 [node name="Eyebrow" type="Label" parent="Layout"]
 layout_mode = 2
@@ -84,46 +84,81 @@ text = "CURIO BOUTIQUE · 0 AWAKENINGS"
 horizontal_alignment = 1
 
 [node name="RoutePanel" type="PanelContainer" parent="Layout"]
-custom_minimum_size = Vector2(0, 760)
+custom_minimum_size = Vector2(0, 700)
 layout_mode = 2
 size_flags_vertical = 3
 theme_override_styles/panel = SubResource("Panel")
 
 [node name="Route" type="VBoxContainer" parent="Layout/RoutePanel"]
 layout_mode = 2
-theme_override_constants/separation = 26
+theme_override_constants/separation = 13
 alignment = 1
 
 [node name="Intro" type="Label" parent="Layout/RoutePanel/Route"]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.851, 0.804, 0.835, 1)
 theme_override_font_sizes/font_size = 22
-text = "Wake each sealed display. The House remembers every relic you return."
+text = "Three displays wait behind the velvet.\nWake the first; the rest stay sealed until Level 1 is approved."
 horizontal_alignment = 1
 autowrap_mode = 2
 
+[node name="PathTop" type="Label" parent="Layout/RoutePanel/Route"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.851, 0.71, 0.416, 0.7)
+theme_override_font_sizes/font_size = 22
+text = "·  ·  ·"
+horizontal_alignment = 1
+
+[node name="Level1Caption" type="Label" parent="Layout/RoutePanel/Route"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.749, 0.647, 0.847, 1)
+theme_override_font_sizes/font_size = 19
+text = "FIRST DISPLAY · MOON CAMEO"
+horizontal_alignment = 1
+
 [node name="Level1" type="Button" parent="Layout/RoutePanel/Route"]
-custom_minimum_size = Vector2(0, 120)
+custom_minimum_size = Vector2(0, 118)
 layout_mode = 2
 theme_override_font_sizes/font_size = 28
 theme_override_styles/normal = SubResource("Level")
 text = "LEVEL 1 · ENTER"
 
-[node name="Level2" type="Button" parent="Layout/RoutePanel/Route"]
-custom_minimum_size = Vector2(0, 100)
+[node name="Connector1" type="Label" parent="Layout/RoutePanel/Route"]
 layout_mode = 2
-theme_override_font_sizes/font_size = 25
+theme_override_colors/font_color = Color(0.851, 0.71, 0.416, 0.45)
+theme_override_font_sizes/font_size = 20
+text = "│\n◆\n│"
+horizontal_alignment = 1
+
+[node name="Level2" type="Button" parent="Layout/RoutePanel/Route"]
+custom_minimum_size = Vector2(0, 88)
+layout_mode = 2
+theme_override_font_sizes/font_size = 23
 theme_override_styles/normal = SubResource("Level")
 text = "LEVEL 2 · SEALED"
 disabled = true
 
-[node name="Level3" type="Button" parent="Layout/RoutePanel/Route"]
-custom_minimum_size = Vector2(0, 100)
+[node name="Connector2" type="Label" parent="Layout/RoutePanel/Route"]
 layout_mode = 2
-theme_override_font_sizes/font_size = 25
+theme_override_colors/font_color = Color(0.851, 0.71, 0.416, 0.28)
+theme_override_font_sizes/font_size = 18
+text = "│\n◆\n│"
+horizontal_alignment = 1
+
+[node name="Level3" type="Button" parent="Layout/RoutePanel/Route"]
+custom_minimum_size = Vector2(0, 88)
+layout_mode = 2
+theme_override_font_sizes/font_size = 23
 theme_override_styles/normal = SubResource("Level")
 text = "LEVEL 3 · SEALED"
 disabled = true
+
+[node name="GateNote" type="Label" parent="Layout/RoutePanel/Route"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.663, 0.6, 0.659, 1)
+theme_override_font_sizes/font_size = 18
+text = "FOUNDER GATE · LEVEL 2+ REMAINS SEALED"
+horizontal_alignment = 1
 
 [node name="Back" type="Button" parent="Layout"]
 custom_minimum_size = Vector2(0, 64)
