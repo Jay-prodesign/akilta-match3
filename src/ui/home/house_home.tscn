@@ -109,6 +109,7 @@ vertical_alignment = 1
 custom_minimum_size = Vector2(0, 610)
 layout_mode = 2
 size_flags_vertical = 3
+clip_contents = true
 script = ExtResource("2_room")
 
 [node name="Detail" type="Label" parent="Layout"]
