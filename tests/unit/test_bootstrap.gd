@@ -1,6 +1,6 @@
-extends RefCounted
+extends SceneTree
 
-func run() -> Array[String]:
+func _init() -> void:
 	var failures: Array[String] = []
 	var version := Engine.get_version_info()
 
@@ -10,15 +10,20 @@ func run() -> Array[String]:
 	var bootstrap_path := "res://src/app/app_bootstrap.gd"
 	if not ResourceLoader.exists(bootstrap_path):
 		failures.append("AppBootstrap production script is missing")
-		return failures
+	else:
+		var bootstrap_script := load(bootstrap_path)
+		if bootstrap_script == null:
+			failures.append("AppBootstrap production script could not be loaded")
+		else:
+			var bootstrap = bootstrap_script.new()
+			if String(bootstrap.get("environment")) != "development":
+				failures.append("AppBootstrap must default to development environment")
 
-	var bootstrap_script := load(bootstrap_path)
-	if bootstrap_script == null:
-		failures.append("AppBootstrap production script could not be loaded")
-		return failures
+	if failures.is_empty():
+		print("TEST_PASS: bootstrap contract")
+		quit(0)
+		return
 
-	var bootstrap = bootstrap_script.new()
-	if String(bootstrap.get("environment")) != "development":
-		failures.append("AppBootstrap must default to development environment")
-
-	return failures
+	for failure in failures:
+		printerr("TEST_FAIL: %s" % failure)
+	quit(1)
