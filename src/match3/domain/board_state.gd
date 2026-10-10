@@ -86,6 +86,12 @@ func _generate_without_starting_matches() -> void:
 				var up_two := get_cell(Vector2i(x, y - 2))
 				if up_one != "" and up_one == up_two:
 					candidates.erase(up_one)
+			if x >= 1 and y >= 1:
+				var left := get_cell(Vector2i(x - 1, y))
+				var up := get_cell(Vector2i(x, y - 1))
+				var diagonal := get_cell(Vector2i(x - 1, y - 1))
+				if left != "" and left == up and up == diagonal:
+					candidates.erase(left)
 			if candidates.is_empty():
 				candidates = families.duplicate()
 			set_cell(pos, String(rng.choose(candidates)))

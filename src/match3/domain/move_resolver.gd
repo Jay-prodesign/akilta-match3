@@ -6,6 +6,7 @@ const ResolutionTrace = preload("res://src/match3/domain/resolution_trace.gd")
 const SpecialRules = preload("res://src/match3/domain/special_rules.gd")
 const WaxSeal = preload("res://src/match3/domain/blockers/wax_seal.gd")
 const ObjectiveState = preload("res://src/match3/domain/objective_state.gd")
+const BoardShuffler = preload("res://src/match3/domain/board_shuffler.gd")
 
 const MAX_CASCADES := 64
 
@@ -33,7 +34,15 @@ static func try_swap(board, from: Vector2i, to: Vector2i):
 	while not matches.is_empty() and cascade < MAX_CASCADES:
 		cascade += 1
 		trace.add_event("match_found", {"cascade": cascade, "cells": _pos_keys(matches)})
+		var preferred: Array[Vector2i] = [to, from] if cascade == 1 else []
+		var creation: Dictionary = {}
+		if not _contains_existing_special(board, matches):
+			creation = MatchDetector.plan_special_creation(board, preferred)
 		var clear_cells: Array[Vector2i] = _expand_existing_specials(board, matches, trace, cascade)
+		var creation_pos := Vector2i(-1, -1)
+		if not creation.is_empty():
+			creation_pos = creation["position"]
+			clear_cells.erase(creation_pos)
 		var objective_before: int = int(board.objective_progress)
 		var cleared: Array[String] = []
 		for pos in clear_cells:
@@ -62,6 +71,15 @@ static func try_swap(board, from: Vector2i, to: Vector2i):
 		for blocker_event in WaxSeal.apply_damage(board, clear_cells):
 			trace.add_event(String(blocker_event.get("type", "")), blocker_event)
 
+		if not creation.is_empty():
+			board.set_special(creation_pos, String(creation["kind"]))
+			trace.add_event("special_created", {
+				"cascade": cascade,
+				"at": _pos_key(creation_pos),
+				"kind": String(creation["kind"]),
+				"family": String(creation["family"])
+			})
+
 		_apply_gravity(board, trace, cascade)
 		_refill(board, trace, cascade)
 		matches = MatchDetector.find_match_cells(board)
@@ -69,6 +87,9 @@ static func try_swap(board, from: Vector2i, to: Vector2i):
 	if cascade >= MAX_CASCADES and not matches.is_empty():
 		trace.add_event("resolution_guard", {"cascade": cascade})
 
+	var pre_shuffle_result: String = ObjectiveState.evaluate(board)
+	if pre_shuffle_result == "playing":
+		BoardShuffler.ensure_playable(board, trace)
 	trace.result = ObjectiveState.evaluate(board)
 	trace.add_event("settled", {
 		"cascades": cascade,
@@ -77,6 +98,12 @@ static func try_swap(board, from: Vector2i, to: Vector2i):
 		"objective_remaining": ObjectiveState.remaining(board)
 	})
 	return trace
+
+static func _contains_existing_special(board, cells: Array[Vector2i]) -> bool:
+	for pos in cells:
+		if String(board.get_special(pos)) != "":
+			return true
+	return false
 
 static func _expand_existing_specials(board, initial: Array[Vector2i], trace, cascade: int) -> Array[Vector2i]:
 	var pending: Array[Vector2i] = initial.duplicate()
