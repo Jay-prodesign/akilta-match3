@@ -87,7 +87,8 @@ func _build_navigation_dock() -> void:
 		{"title": "CURIOS", "action": "curios"},
 		{"title": "MAP", "action": "map"},
 		{"title": "EVENTS", "action": "events"},
-		{"title": "SHOP", "action": "shop"}
+		{"title": "SHOP", "action": "shop"},
+		{"title": "PROFILE", "action": "profile"}
 	]:
 		var button := Button.new()
 		button.text = String(entry["title"])
@@ -104,4 +105,5 @@ func _navigate_dock(action: String) -> void:
 		"map": map_requested.emit()
 		"events": events_requested.emit()
 		"shop": shop_requested.emit()
+		"profile": settings_requested.emit()
 		"house": _refresh()
