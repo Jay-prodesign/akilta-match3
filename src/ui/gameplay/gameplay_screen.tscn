@@ -100,9 +100,9 @@ text = "12 moves"
 horizontal_alignment = 2
 
 [node name="BoardView" type="Control" parent="Layout"]
-custom_minimum_size = Vector2(0, 1080)
+custom_minimum_size = Vector2(0, 1030)
 layout_mode = 2
-size_flags_vertical = 3
+size_flags_vertical = 0
 mouse_filter = 0
 script = ExtResource("2_board")
 

@@ -56,6 +56,9 @@ func _run() -> void:
 				var descriptor: Dictionary = contract[family]
 				silhouettes[str(descriptor.get("silhouette", ""))] = true
 				motifs[str(descriptor.get("motif", ""))] = true
+				_expect(str(descriptor.get("world_role", "")) == "base_family", "each Level 1 piece must declare its world/gameplay role")
+				_expect(str(descriptor.get("status", "")) == "founder_gate_candidate", "Level 1 piece visuals must remain explicitly candidate before Founder approval")
+				_expect(str(descriptor.get("material", "")) != "", "each Level 1 piece must declare a candidate material language")
 			_expect(silhouettes.size() == 5, "piece silhouettes must be unique; hue-only differentiation is forbidden")
 			_expect(motifs.size() == 5, "piece motifs must be unique; hue-only differentiation is forbidden")
 

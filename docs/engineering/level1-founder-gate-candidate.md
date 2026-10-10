@@ -1,0 +1,49 @@
+# Founder Gate D-024 — Level 1 + Core Asset Candidate
+
+Status: PENDING FOUNDER APPROVAL · candidate evidence only
+
+## Purpose
+
+This packet identifies exactly what the current rendered Level 1 evidence is allowed to prove. It does not approve Level 2+ content or promote procedural/candidate visuals to shipping assets.
+
+## Review Pair
+
+- `artifacts/level1-gameplay.png` — Level 1 gameplay/readability.
+- `artifacts/house-stage1.png` — first persistent Curio Boutique awakening.
+
+CI publishes these two files together as `level1-founder-gate-evidence`.
+
+## Candidate Core Language Under Review
+
+### Base families
+- Moon Sigil — crescent silhouette / lilac moonstone language.
+- Thorn Rose — rosette silhouette / wine enamel language.
+- Luna Moth — winged silhouette / spectral glass language.
+- Curio Key — key-relic silhouette / antique metal language.
+- Night Ivy — elongated ivy/leaf silhouette / lacquered green language.
+
+All five remain functionally distinct through color + silhouette + motif/value, not hue alone.
+
+### Special treatment
+Special function remains domain-owned. Presentation translates it into House-native sigil/relic language. The Level 1 global special is shown as an eclipse/reliquary halo rather than a generic bomb/rocket/disco-ball shorthand.
+
+### Board material
+The active board is a quiet dark ritual-display surface: high scanning clarity first, restrained antique-gold / moon-lilac frame second. Ornament stays outside the piece-reading area.
+
+### House / Curio connection
+Winning Level 1 awakens the Moon Cameo in the Curio Boutique. The House is persistent progression, not decorative wallpaper.
+
+## Founder Gate Questions
+
+1. Can the five base families be recognized quickly without relying on color alone?
+2. Does the board read as this game's world rather than a recolored generic Match-3?
+3. Is the special treatment obvious enough while remaining original?
+4. Is the visual hierarchy playable first, decorative second?
+5. Does the Level 1 → Moon Cameo → House awakening connection feel like the right product fantasy?
+6. Is this core language strong enough to scale into reusable production assets?
+
+## Explicit Non-Approval
+
+Approval of this gate does not lock final pixels, final brand, all chapter variants, final motion timing, final VFX/audio, shop/event design, or Level 2+ authored content. It approves the reusable visual/gameplay language so those systems can be produced coherently.
+
+Until approval, candidate/procedural visuals remain replaceable and Level 2–3 remain provisional engineering exploration.

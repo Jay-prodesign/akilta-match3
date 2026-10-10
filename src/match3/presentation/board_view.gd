@@ -9,10 +9,14 @@ const INK := Color("#100D12")
 const VELVET := Color("#17131B")
 const PLUM := Color("#241A27")
 const GLASS := Color("#2E2432")
+const RAISED := Color("#382C3D")
 const BONE := Color("#F1E8DD")
+const MIST := Color("#D9CDD5")
 const GOLD := Color("#D8B56A")
+const LILAC := Color("#BFA5D8")
 
 @export var cell_gap: float = 8.0
+@export var board_frame_padding: float = 14.0
 @export var swipe_threshold: float = 24.0
 
 var board_state
@@ -127,6 +131,11 @@ func _draw() -> void:
 	var origin: Vector2 = geometry["origin"]
 	var cell_size: float = geometry["cell_size"]
 	var pitch := cell_size + cell_gap
+	var board_size := Vector2(
+		cell_size * board_state.width + cell_gap * (board_state.width - 1),
+		cell_size * board_state.height + cell_gap * (board_state.height - 1)
+	)
+	_draw_board_frame(Rect2(origin, board_size).grow(board_frame_padding))
 
 	for y in range(board_state.height):
 		for x in range(board_state.width):
@@ -173,7 +182,33 @@ func _board_geometry() -> Dictionary:
 		cell_size * board_state.width + cell_gap * (board_state.width - 1),
 		cell_size * board_state.height + cell_gap * (board_state.height - 1)
 	)
-	return {"origin": (size - total) * 0.5, "cell_size": cell_size}
+	var origin_x := (size.x - total.x) * 0.5
+	var origin_y := maxf(8.0, (size.y - total.y) * 0.18)
+	return {"origin": Vector2(origin_x, origin_y), "cell_size": cell_size}
+
+func _draw_board_frame(rect: Rect2) -> void:
+	var shadow := rect.grow(7.0)
+	draw_rect(shadow, Color(0.02, 0.015, 0.025, 0.72), true)
+	draw_rect(rect, Color("#18131C"), true)
+	var outer := Color(GOLD)
+	outer.a = 0.34
+	draw_rect(rect, outer, false, 2.0)
+	var inner := Color(LILAC)
+	inner.a = 0.13
+	draw_rect(rect.grow(-5.0), inner, false, 1.0)
+	var mark_color := Color(GOLD)
+	mark_color.a = 0.5
+	var mark := minf(rect.size.x, rect.size.y) * 0.035
+	for corner in [
+		rect.position,
+		Vector2(rect.end.x, rect.position.y),
+		Vector2(rect.position.x, rect.end.y),
+		rect.end
+	]:
+		var sx: float = 1.0 if corner.x == rect.position.x else -1.0
+		var sy: float = 1.0 if corner.y == rect.position.y else -1.0
+		draw_line(corner, corner + Vector2(mark * sx, 0), mark_color, 2.0)
+		draw_line(corner, corner + Vector2(0, mark * sy), mark_color, 2.0)
 
 func _draw_cell(rect: Rect2, pos: Vector2i) -> void:
 	var radius := rect.size.x * 0.18
@@ -205,6 +240,9 @@ func _draw_piece(rect: Rect2, family: String, descriptor: Dictionary) -> void:
 	var color: Color = descriptor["color"]
 	var c := rect.get_center()
 	var r: float = minf(rect.size.x, rect.size.y) * 0.38
+	var glow := Color(color)
+	glow.a = 0.10
+	draw_circle(c, r * 1.12, glow)
 
 	match family:
 		"moon":
@@ -243,31 +281,47 @@ func _draw_piece(rect: Rect2, family: String, descriptor: Dictionary) -> void:
 		"leaf":
 			var leaf := PackedVector2Array([
 				c + Vector2(0, -r),
-				c + Vector2(r * 0.82, -r * 0.10),
+				c + Vector2(r * 0.68, -r * 0.28),
+				c + Vector2(r * 0.50, r * 0.34),
 				c + Vector2(0, r),
-				c + Vector2(-r * 0.82, -r * 0.10)
+				c + Vector2(-r * 0.50, r * 0.34),
+				c + Vector2(-r * 0.68, -r * 0.28)
 			])
 			draw_colored_polygon(leaf, color)
-			draw_line(c + Vector2(0, -r * 0.72), c + Vector2(0, r * 0.70), BONE, max(1.5, r * 0.07))
+			draw_line(c + Vector2(0, -r * 0.72), c + Vector2(0, r * 0.72), BONE, max(1.5, r * 0.07))
+			draw_line(c + Vector2(0, -r * 0.10), c + Vector2(r * 0.34, -r * 0.34), BONE, max(1.0, r * 0.045))
+			draw_line(c + Vector2(0, r * 0.12), c + Vector2(-r * 0.32, r * 0.34), BONE, max(1.0, r * 0.045))
 
 func _draw_special_mark(rect: Rect2, kind: String) -> void:
-	var c := rect.position + Vector2(rect.size.x * 0.78, rect.size.y * 0.22)
-	var r := rect.size.x * 0.10
-	draw_circle(c, r * 1.5, INK)
-	draw_arc(c, r, 0.0, TAU, 24, GOLD, max(2.0, r * 0.33))
-	if kind == "line_h":
-		draw_line(c + Vector2(-r * 0.7, 0), c + Vector2(r * 0.7, 0), GOLD, 2.0)
-	elif kind == "line_v":
-		draw_line(c + Vector2(0, -r * 0.7), c + Vector2(0, r * 0.7), GOLD, 2.0)
-	elif kind == "global":
-		draw_circle(c, r * 0.30, GOLD)
+	var center := rect.get_center()
+	var full_r := rect.size.x * 0.39
+	var halo := Color(GOLD)
+	halo.a = 0.20
+	if kind == "global":
+		draw_circle(center, full_r * 1.04, halo, false, max(2.0, rect.size.x * 0.035))
+		draw_arc(center, full_r * 0.88, 0.0, TAU, 40, GOLD, max(2.0, rect.size.x * 0.025))
 		for angle in [0.0, PI * 0.5, PI, PI * 1.5]:
-			draw_line(c + Vector2(cos(angle), sin(angle)) * r * 0.42, c + Vector2(cos(angle), sin(angle)) * r * 0.82, GOLD, 2.0)
-	elif kind == "area":
-		draw_rect(Rect2(c - Vector2.ONE * r * 0.42, Vector2.ONE * r * 0.84), GOLD, false, 2.0)
-	elif kind == "smart":
-		draw_circle(c, r * 0.30, GOLD, false, 2.0)
-		draw_circle(c, r * 0.08, GOLD)
+			var direction := Vector2(cos(angle), sin(angle))
+			draw_line(center + direction * full_r * 0.88, center + direction * full_r * 1.16, GOLD, max(2.0, rect.size.x * 0.025))
+		return
+	if kind == "line_h":
+		draw_line(center + Vector2(-full_r, 0), center + Vector2(full_r, 0), GOLD, max(3.0, rect.size.x * 0.055))
+		draw_line(center + Vector2(-full_r, -rect.size.y * 0.08), center + Vector2(full_r, -rect.size.y * 0.08), Color(1,1,1,0.35), 1.5)
+		return
+	if kind == "line_v":
+		draw_line(center + Vector2(0, -full_r), center + Vector2(0, full_r), GOLD, max(3.0, rect.size.x * 0.055))
+		draw_line(center + Vector2(rect.size.x * 0.08, -full_r), center + Vector2(rect.size.x * 0.08, full_r), Color(1,1,1,0.35), 1.5)
+		return
+	if kind == "area":
+		draw_arc(center, full_r * 0.74, 0.0, TAU, 32, GOLD, max(2.0, rect.size.x * 0.035))
+		for angle in [PI * 0.25, PI * 0.75, PI * 1.25, PI * 1.75]:
+			var direction := Vector2(cos(angle), sin(angle))
+			draw_line(center + direction * full_r * 0.40, center + direction * full_r * 0.96, GOLD, 2.0)
+		return
+	if kind == "smart":
+		draw_arc(center, full_r * 0.70, PI * 0.10, PI * 0.90, 24, GOLD, 2.5)
+		draw_arc(center, full_r * 0.70, PI * 1.10, PI * 1.90, 24, GOLD, 2.5)
+		draw_circle(center, full_r * 0.15, GOLD)
 
 func _draw_wax_seal(rect: Rect2, hp: int) -> void:
 	var c := rect.position + Vector2(rect.size.x * 0.22, rect.size.y * 0.78)

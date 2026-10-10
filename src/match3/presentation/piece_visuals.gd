@@ -6,31 +6,51 @@ const CONTRACT := {
 		"color": Color("#BFA5D8"),
 		"silhouette": "crescent",
 		"motif": "moon_cut",
-		"value": 0.78
+		"value": 0.78,
+		"display_name": "Moon Sigil",
+		"material": "smoked_moonstone",
+		"world_role": "base_family",
+		"status": "founder_gate_candidate"
 	},
 	"rose": {
 		"color": Color("#C7728F"),
 		"silhouette": "faceted_rose",
 		"motif": "thorn_rosette",
-		"value": 0.62
+		"value": 0.62,
+		"display_name": "Thorn Rose",
+		"material": "carved_wine_enamel",
+		"world_role": "base_family",
+		"status": "founder_gate_candidate"
 	},
 	"moth": {
 		"color": Color("#A9C6C8"),
 		"silhouette": "winged",
 		"motif": "moth_eye",
-		"value": 0.74
+		"value": 0.74,
+		"display_name": "Luna Moth",
+		"material": "spectral_glass",
+		"world_role": "base_family",
+		"status": "founder_gate_candidate"
 	},
 	"key": {
 		"color": Color("#D8B56A"),
 		"silhouette": "key_relic",
 		"motif": "keyhole",
-		"value": 0.68
+		"value": 0.68,
+		"display_name": "Curio Key",
+		"material": "antique_metal",
+		"world_role": "base_family",
+		"status": "founder_gate_candidate"
 	},
 	"leaf": {
 		"color": Color("#8BAF7C"),
 		"silhouette": "almond_leaf",
 		"motif": "midrib",
-		"value": 0.58
+		"value": 0.58,
+		"display_name": "Night Ivy",
+		"material": "lacquered_leaf",
+		"world_role": "base_family",
+		"status": "founder_gate_candidate"
 	}
 }
 
