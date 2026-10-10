@@ -32,6 +32,8 @@ var _pending_level_number: int = 0
 ## Founder explicitly authorized Levels 1–3 to be playable in this review build.
 ## Internal playtest override recorded in D-024 gate candidate: Levels 1–3 only.
 const TEST_LEVEL_COUNT := 3
+# Do not expose Level 2+ until the founder has reviewed and approved Level 1.
+const FOUNDER_APPROVED_LEVEL_COUNT := 1
 # Founder approval gate: do not expose authored Level 2+ until Level 1 is reviewed.
 const INTERNAL_REVIEW_PLAYABLE_LEVEL_COUNT := 1
 
