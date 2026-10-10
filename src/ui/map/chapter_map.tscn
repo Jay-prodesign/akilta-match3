@@ -1,0 +1,134 @@
+[gd_scene load_steps=5 format=3]
+
+[ext_resource type="Script" path="res://src/ui/map/chapter_map.gd" id="1_map"]
+
+[sub_resource type="StyleBoxFlat" id="Panel"]
+bg_color = Color(0.09, 0.07, 0.11, 0.97)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.851, 0.71, 0.416, 0.35)
+corner_radius_top_left = 24
+corner_radius_top_right = 24
+corner_radius_bottom_right = 24
+corner_radius_bottom_left = 24
+
+[sub_resource type="StyleBoxFlat" id="Level"]
+bg_color = Color(0.18, 0.12, 0.22, 1)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.749, 0.647, 0.847, 0.6)
+corner_radius_top_left = 22
+corner_radius_top_right = 22
+corner_radius_bottom_right = 22
+corner_radius_bottom_left = 22
+
+[sub_resource type="StyleBoxFlat" id="Back"]
+bg_color = Color(0.12, 0.09, 0.14, 1)
+corner_radius_top_left = 16
+corner_radius_top_right = 16
+corner_radius_bottom_right = 16
+corner_radius_bottom_left = 16
+
+[node name="ChapterMap" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_map")
+
+[node name="Backdrop" type="ColorRect" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.035, 0.025, 0.045, 1)
+
+[node name="Layout" type="VBoxContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 40.0
+offset_top = 48.0
+offset_right = -40.0
+offset_bottom = -48.0
+theme_override_constants/separation = 22
+
+[node name="Eyebrow" type="Label" parent="Layout"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.663, 0.6, 0.659, 1)
+theme_override_font_sizes/font_size = 20
+text = "THE HOUSE · CHAPTER I"
+horizontal_alignment = 1
+
+[node name="Title" type="Label" parent="Layout"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.945, 0.91, 0.866, 1)
+theme_override_font_sizes/font_size = 44
+text = "Curio Boutique"
+horizontal_alignment = 1
+
+[node name="Progress" type="Label" parent="Layout"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.851, 0.71, 0.416, 1)
+theme_override_font_sizes/font_size = 21
+text = "CURIO BOUTIQUE · 0 AWAKENINGS"
+horizontal_alignment = 1
+
+[node name="RoutePanel" type="PanelContainer" parent="Layout"]
+custom_minimum_size = Vector2(0, 760)
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_styles/panel = SubResource("Panel")
+
+[node name="Route" type="VBoxContainer" parent="Layout/RoutePanel"]
+layout_mode = 2
+theme_override_constants/separation = 26
+alignment = 1
+
+[node name="Intro" type="Label" parent="Layout/RoutePanel/Route"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.851, 0.804, 0.835, 1)
+theme_override_font_sizes/font_size = 22
+text = "Wake each sealed display. The House remembers every relic you return."
+horizontal_alignment = 1
+autowrap_mode = 2
+
+[node name="Level1" type="Button" parent="Layout/RoutePanel/Route"]
+custom_minimum_size = Vector2(0, 120)
+layout_mode = 2
+theme_override_font_sizes/font_size = 28
+theme_override_styles/normal = SubResource("Level")
+text = "LEVEL 1 · ENTER"
+
+[node name="Level2" type="Button" parent="Layout/RoutePanel/Route"]
+custom_minimum_size = Vector2(0, 100)
+layout_mode = 2
+theme_override_font_sizes/font_size = 25
+theme_override_styles/normal = SubResource("Level")
+text = "LEVEL 2 · SEALED"
+disabled = true
+
+[node name="Level3" type="Button" parent="Layout/RoutePanel/Route"]
+custom_minimum_size = Vector2(0, 100)
+layout_mode = 2
+theme_override_font_sizes/font_size = 25
+theme_override_styles/normal = SubResource("Level")
+text = "LEVEL 3 · SEALED"
+disabled = true
+
+[node name="Back" type="Button" parent="Layout"]
+custom_minimum_size = Vector2(0, 64)
+layout_mode = 2
+theme_override_colors/font_color = Color(0.945, 0.91, 0.866, 1)
+theme_override_font_sizes/font_size = 22
+theme_override_styles/normal = SubResource("Back")
+text = "BACK TO THE HOUSE"
