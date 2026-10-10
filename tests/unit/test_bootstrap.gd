@@ -5,7 +5,7 @@ func _init() -> void:
 	var version := Engine.get_version_info()
 
 	if int(version.get("major", -1)) != 4 or int(version.get("minor", -1)) != 7 or int(version.get("patch", -1)) != 2:
-		failures.append("Expected Godot 4.7.2, got %s" % String(version))
+		failures.append("Expected Godot 4.7.2, got %s" % str(version))
 
 	var bootstrap_path := "res://src/app/app_bootstrap.gd"
 	if not ResourceLoader.exists(bootstrap_path):
@@ -16,7 +16,7 @@ func _init() -> void:
 			failures.append("AppBootstrap production script could not be loaded")
 		else:
 			var bootstrap = bootstrap_script.new()
-			if String(bootstrap.get("environment")) != "development":
+			if str(bootstrap.get("environment")) != "development":
 				failures.append("AppBootstrap must default to development environment")
 
 	if failures.is_empty():

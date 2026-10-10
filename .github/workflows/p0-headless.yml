@@ -37,9 +37,10 @@ jobs:
         shell: bash
         run: |
           set +e
-          timeout 30s ./godot --headless --path . -s res://tests/unit/test_bootstrap.gd
+          output=$(timeout 30s ./godot --headless --path . -s res://tests/unit/test_bootstrap.gd 2>&1)
           status=$?
           set -e
+          printf '%s\n' "$output"
           if [ "$status" -eq 124 ]; then
             echo "::error::Bootstrap test runner timed out; this is a harness failure, not the expected RED."
             exit 1
@@ -48,7 +49,11 @@ jobs:
             echo "::error::Bootstrap test unexpectedly passed before AppBootstrap exists."
             exit 1
           fi
-          echo "Expected RED observed with exit code $status."
+          if ! grep -Fq "TEST_FAIL: AppBootstrap production script is missing" <<<"$output"; then
+            echo "::error::Bootstrap test failed for an unexpected reason."
+            exit 1
+          fi
+          echo "Expected RED confirmed: AppBootstrap production script is missing."
 
       - name: Verify project parses
         shell: bash
