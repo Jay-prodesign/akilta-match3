@@ -37,14 +37,19 @@ func _run() -> void:
 	var map_button: Button = house.get_node("Layout/PlayButton")
 	map_button.emit_signal("pressed")
 	await process_frame
-	_expect(str(app.current_route_name()) == "map", "House Play CTA must open the chapter map directly")
+	_expect(str(app.current_route_name()) == "house", "chapter selector remains in House navigation state")
+	var chapters = app.current_screen()
+	_expect(str(chapters.name) == "ChapterSelect", "House Play CTA must open chapter selection")
+	chapters.get_node("Layout/ChapterGrid/CurioBoutiqueButton").emit_signal("pressed")
+	await process_frame
+	_expect(str(app.current_route_name()) == "map", "Curio Boutique selection must open its level map")
 	var map = app.current_screen()
-	_expect(str(map.name) == "ChapterMap", "House CTA must open the authored chapter map")
+	_expect(str(map.name) == "ChapterMap", "Curio Boutique must open the authored chapter map")
 	var level1_button: Button = map.get_level_button(1)
 	var level2_button: Button = map.get_level_button(2)
 	_expect(level1_button != null and not level1_button.disabled, "Level 1 must be selectable")
-	_expect(level2_button != null and level2_button.disabled, "Level 2 must remain sealed until Level 1 receives founder approval")
-	_expect(map.get_level_button(3) != null and map.get_level_button(3).disabled, "Level 3 must remain sealed until Level 1 receives founder approval")
+	_expect(level2_button != null and not level2_button.disabled, "Founder-authorized playtest must expose Level 2")
+	_expect(map.get_level_button(3) != null and not map.get_level_button(3).disabled, "Founder-authorized playtest must expose Level 3")
 	_expect(map.get_level_button(4) != null and map.get_level_button(4).disabled, "Level 4 and later must remain sealed beyond the three-level playtest scope")
 
 	level1_button.emit_signal("pressed")
