@@ -1,6 +1,11 @@
 name: Level 1 iPhone Web Build
 
 on:
+  push:
+    branches:
+      - p0/bootstrap
+    paths:
+      - ".github/workflows/level1-web.yml"
   # Run the full milestone checks deliberately, not on every development commit.
   workflow_dispatch:
 
