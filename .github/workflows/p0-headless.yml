@@ -7,6 +7,7 @@ on:
     paths:
       - "project.godot"
       - "src/**"
+      - "content/**"
       - "tests/**"
       - ".github/workflows/p0-headless.yml"
   workflow_dispatch:
@@ -15,9 +16,9 @@ permissions:
   contents: read
 
 jobs:
-  p0-headless:
+  headless:
     runs-on: ubuntu-latest
-    timeout-minutes: 5
+    timeout-minutes: 10
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -26,7 +27,7 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          curl -L --fail --retry 3             -o godot.zip             "https://github.com/godotengine/godot-builds/releases/download/4.7.2-stable/Godot_v4.7.2-stable_linux.x86_64.zip"
+          curl -L --fail --retry 3 -o godot.zip             "https://github.com/godotengine/godot-builds/releases/download/4.7.2-stable/Godot_v4.7.2-stable_linux.x86_64.zip"
           echo "cadd3204e728a35d3f13adb7fd0d7902636b79f6b95c40c265eb73b6c35329e4  godot.zip" | sha256sum -c -
           unzip -q godot.zip
           mv Godot_v4.7.2-stable_linux.x86_64 godot
@@ -38,27 +39,10 @@ jobs:
         run: |
           timeout 30s ./godot --headless --path . -s res://tests/unit/test_bootstrap.gd
 
-      - name: Verify expected RED Match-3 core test
+      - name: Run deterministic Match-3 core contract
         shell: bash
         run: |
-          set +e
-          output=$(timeout 30s ./godot --headless --path . -s res://tests/unit/match3/test_core.gd 2>&1)
-          status=$?
-          set -e
-          printf '%s\n' "$output"
-          if [ "$status" -eq 124 ]; then
-            echo "::error::Match-3 core test timed out; this is a harness failure."
-            exit 1
-          fi
-          if [ "$status" -eq 0 ]; then
-            echo "::error::Match-3 core test unexpectedly passed before the core exists."
-            exit 1
-          fi
-          if ! grep -Fq "TEST_FAIL: BoardState production script is missing" <<<"$output"; then
-            echo "::error::Match-3 core test failed for an unexpected reason."
-            exit 1
-          fi
-          echo "Expected RED confirmed: BoardState production script is missing."
+          timeout 30s ./godot --headless --path . -s res://tests/unit/test_match3_core.gd
 
       - name: Verify project parses
         shell: bash
