@@ -9,6 +9,8 @@ on:
       - "src/ui/**"
       - "src/app/**"
       - "src/match3/presentation/**"
+      - "assets/world/**"
+      - "assets/pieces/**"
       - "content/levels/**"
       - "tests/visual/**"
       - ".github/workflows/p0-visual.yml"
