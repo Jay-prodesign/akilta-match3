@@ -1,5 +1,11 @@
 # Match-3 Donor Admission
 
+## Gate Decision
+
+**HARVEST**
+
+The exact donor commit is technically compatible with Godot 4.7.2, but the whole addon is not admitted as the product's Match-3 foundation because its runtime architecture conflicts with the project's deterministic pure-domain/simulation contract.
+
 ## Candidate
 
 - Upstream: `sempitern0/match3-board`
@@ -8,45 +14,66 @@
 - License: MIT
 - Upstream addon version: 2.1.0
 - Upstream project feature line: Godot 4.4
-- Product target: Godot 4.7.2-stable
-- Decision: PENDING RUNTIME AUDIT
+- Product target tested: Godot 4.7.2-stable
 
-## True Gate Outcomes
+## Runtime Evidence
 
-- **ADMIT** — donor remains a maintainable technical foundation; adaptation is contained.
-- **HARVEST** — selected algorithms/utilities are useful, but core architecture remains ours.
-- **REJECT** — compatibility/coupling/maintenance cost removes the acceleration benefit.
+GitHub Actions donor audit on 2026-10-10:
 
-## Static Architecture Findings
+- exact archive download: PASS;
+- repository MIT license check: PASS;
+- Godot 4.7.2 editor/project parse: PASS;
+- donor demo scene headless boot on Godot 4.7.2: PASS;
+- required module files present: PASS.
 
-Evidence from exact audited commit:
+Therefore the donor is not rejected for compatibility.
 
-1. `Match3Board` extends `Node2D`; the board model and scene/runtime object graph are not a pure data-domain core.
-2. `Match3PieceGenerator` owns a `RandomNumberGenerator` but calls `rng.randomize()` in `_init()`.
-3. Piece selection also calls Array `shuffle()`, which uses global RNG rather than the owned RNG.
-4. `Match3Shuffler` calls Array `shuffle()`, again coupling outcome randomness to global RNG.
-5. Board resolution contains `await get_tree().process_frame` calls.
-6. Core consume/swap/fall paths directly coordinate optional animator hooks.
-7. Sequence detector/consumer logic is relatively self-contained and is a promising HARVEST candidate.
-8. Demo/product assets are clearly separable under `demo/` and must never be admitted as product assets.
+## Architecture Evidence
 
-These findings do not alone decide the gate. Runtime compatibility on Godot 4.7.2 is tested separately.
+1. `Match3Board` extends `Node2D`; board truth lives in the scene/runtime object graph instead of a pure data-domain core.
+2. `Match3PieceGenerator` calls `rng.randomize()`.
+3. Piece rolling also calls Array `shuffle()`, using global RNG outside the owned RNG.
+4. `Match3Shuffler` calls Array `shuffle()`, also tying gameplay outcome to global RNG.
+5. Board resolution contains `await get_tree().process_frame`.
+6. Consume/swap/fall paths coordinate animator/runtime hooks directly.
+7. Sequence detector/consumer and configuration concepts are comparatively separable and useful.
+8. Demo/product assets are isolated and can be excluded completely.
 
-## Mandatory Checks
+## Why HARVEST Instead of ADMIT
 
-1. Exact upstream commit pinned. **PASS**
-2. MIT license and dependency boundaries verified. **PASS at repository level; file-level notice retained if harvested**
-3. Godot 4.7.2 project parse/load. **PENDING**
-4. Representative demo/board runtime boot. **PENDING**
-5. Shaped/empty-cell support exists. **PASS by API/static evidence**
-6. Special spawn/rule extensibility exists. **PASS by API/static evidence**
-7. Obstacle/blocker extensibility exists. **PASS by API/static evidence**
-8. Gameplay RNG can be controlled or cleanly wrapped for reproducibility. **CONCERN**
-9. Logical board outcomes can be observed without presentation owning game truth. **CONCERN**
-10. Headless/simulation path remains practical. **PENDING / CONCERN**
-11. Demo/product art and UI can be completely excluded. **PASS**
-12. No mandatory paid or incompatible dependency. **PASS from current repository audit**
+Full ADMIT would save initial board implementation work but would make deterministic simulation, replay/debug traces and strict presentation separation more expensive for the lifetime of the game. Repairing the addon until it meets our architecture would amount to invasive rewrites inside a donor-owned shape.
 
-## Product Rule
+HARVEST preserves the useful work without accepting that coupling.
 
-The donor is allowed to accelerate low-level mechanics only. It does not own product identity, world, levels, economy, live systems, UI, art, audio or commercial behavior.
+## Authorized Harvest Scope
+
+Allowed after tests define our interfaces:
+
+- match/sequence detection concepts and selected MIT implementation ideas;
+- sequence priority / special-spawn rule concepts;
+- shaped/empty-cell configuration concepts;
+- weighted piece-generation concepts, rewritten behind our seeded RNG boundary;
+- useful finder/fall/fill algorithm concepts when they fit our pure-domain structures.
+
+Not admitted:
+
+- `Match3Board` as product state authority;
+- donor scene/UI/input shell;
+- demo levels;
+- demo art/assets;
+- donor animator/highlighter presentation;
+- donor global RNG behavior;
+- donor product naming/copy.
+
+## Provenance Rule
+
+Any source code substantially copied or adapted from the audited commit must identify its upstream file in code comments or the third-party register and retain the required MIT copyright/license notice. Purely independent implementations informed by generic Match-3 concepts should not be falsely attributed as copied code.
+
+## Gate Status
+
+- Compatibility: PASS
+- Commercial license: PASS
+- Product originality boundary: PASS
+- Deterministic architecture as full donor: FAIL
+- Maintainable selective reuse: PASS
+- **FINAL: HARVEST**
