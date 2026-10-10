@@ -86,5 +86,6 @@
     ]
   ],
   "visual_status": "north_star_candidate_v3",
-  "piece_set": "north_star_five_family_candidate_v3"
+  "piece_set": "north_star_five_family_candidate_v3",
+  "visual_profile": "sealed_display"
 }
