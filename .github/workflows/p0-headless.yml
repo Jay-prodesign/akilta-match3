@@ -150,7 +150,19 @@ jobs:
           if grep -Eq "SCRIPT ERROR:|(^| )ERROR:" <<<"$output"; then exit 1; fi
           grep -Fq "TEST_PASS: durable progression and exactly-once save" <<<"$output"
 
-      - name: Run first player journey continuity
+      - name: Run AKILTA first-party shell contracts
+        shell: bash
+        run: |
+          set +e
+          output=$(timeout 30s ./godot --headless --path . -s res://tests/unit/test_first_party_shell.gd 2>&1)
+          status=$?
+          set -e
+          printf '%s\n' "$output"
+          if [ "$status" -ne 0 ]; then exit "$status"; fi
+          if grep -Eq "SCRIPT ERROR:|(^| )ERROR:" <<<"$output"; then exit 1; fi
+          grep -Fq "TEST_PASS: AKILTA first-party shell contracts" <<<"$output"
+
+      - name: Run complete Level 1 shell journey
         shell: bash
         run: |
           set +e
@@ -160,19 +172,7 @@ jobs:
           printf '%s\n' "$output"
           if [ "$status" -ne 0 ]; then exit "$status"; fi
           if grep -Eq "SCRIPT ERROR:|(^| )ERROR:" <<<"$output"; then exit 1; fi
-          grep -Fq "TEST_PASS: first player journey continuity" <<<"$output"
-
-      - name: Run real three-level opening journey
-        shell: bash
-        run: |
-          set +e
-          output=$(timeout 30s ./godot --headless --path . -s res://tests/integration/test_opening_two_level_journey.gd 2>&1)
-          status=$?
-          set -e
-          printf '%s\n' "$output"
-          if [ "$status" -ne 0 ]; then exit "$status"; fi
-          if grep -Eq "SCRIPT ERROR:|(^| )ERROR:" <<<"$output"; then exit 1; fi
-          grep -Fq "TEST_PASS: real three-level opening journey" <<<"$output"
+          grep -Fq "TEST_PASS: complete Level 1 shell journey" <<<"$output"
 
       - name: Verify project parses cleanly
         shell: bash

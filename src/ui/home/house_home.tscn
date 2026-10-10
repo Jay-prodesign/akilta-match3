@@ -106,7 +106,7 @@ horizontal_alignment = 1
 vertical_alignment = 1
 
 [node name="RoomView" type="Control" parent="Layout"]
-custom_minimum_size = Vector2(0, 690)
+custom_minimum_size = Vector2(0, 650)
 layout_mode = 2
 size_flags_vertical = 3
 clip_contents = true
@@ -120,6 +120,13 @@ text = "Win a puzzle to wake the first display."
 horizontal_alignment = 1
 autowrap_mode = 2
 
+[node name="SettingsButton" type="Button" parent="Layout"]
+custom_minimum_size = Vector2(0, 52)
+layout_mode = 2
+theme_override_colors/font_color = Color(0.851, 0.804, 0.835, 1)
+theme_override_font_sizes/font_size = 20
+text = "SETTINGS"
+
 [node name="PlayButton" type="Button" parent="Layout"]
 custom_minimum_size = Vector2(0, 68)
 layout_mode = 2
@@ -130,4 +137,4 @@ theme_override_font_sizes/font_size = 23
 theme_override_styles/normal = SubResource("ButtonNormal")
 theme_override_styles/hover = SubResource("ButtonHover")
 theme_override_styles/pressed = SubResource("ButtonPressed")
-text = "ENTER LEVEL 1"
+text = "OPEN CURIO MAP"

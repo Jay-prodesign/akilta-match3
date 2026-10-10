@@ -2,6 +2,8 @@ class_name Match3HouseHome
 extends Control
 
 signal play_requested(level_number: int)
+signal map_requested
+signal settings_requested
 
 const HouseState = preload("res://src/world/house_state.gd")
 
@@ -9,6 +11,7 @@ const HouseState = preload("res://src/world/house_state.gd")
 @onready var headline: Label = $Layout/Headline
 @onready var detail: Label = $Layout/Detail
 @onready var curio_label: Label = $Layout/CurioChip/Label
+@onready var settings_button: Button = $Layout/SettingsButton
 @onready var play_button: Button = $Layout/PlayButton
 
 var progress
@@ -16,6 +19,7 @@ var available_level_count: int = 1
 
 func _ready() -> void:
 	play_button.pressed.connect(_on_play_pressed)
+	settings_button.pressed.connect(func(): settings_requested.emit())
 
 func set_available_level_count(value: int) -> void:
 	available_level_count = max(0, value)
@@ -45,14 +49,9 @@ func _refresh() -> void:
 		curio_label.text = "CURIO 01 · MOON CAMEO AWAKENED"
 	else:
 		curio_label.text = "DORMANT DISPLAY"
-	var next_level: int = int(progress.highest_level_unlocked) if progress != null else 1
-	var has_authored_next: bool = next_level <= available_level_count
-	play_button.disabled = not has_authored_next
-	play_button.text = "ENTER LEVEL %d" % next_level if has_authored_next else "MORE CURIOS STIR SOON"
+	play_button.disabled = available_level_count < 1
+	play_button.text = "OPEN CURIO MAP" if available_level_count >= 1 else "THE MAP IS SEALED"
 
 func _on_play_pressed() -> void:
-	if progress == null:
-		return
-	var level_number: int = int(progress.highest_level_unlocked)
-	if level_number <= available_level_count:
-		play_requested.emit(level_number)
+	if available_level_count >= 1:
+		map_requested.emit()
