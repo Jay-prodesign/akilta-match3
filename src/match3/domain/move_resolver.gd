@@ -34,6 +34,7 @@ static func try_swap(board, from: Vector2i, to: Vector2i):
 		cascade += 1
 		trace.add_event("match_found", {"cascade": cascade, "cells": _pos_keys(matches)})
 		var clear_cells: Array[Vector2i] = _expand_existing_specials(board, matches, trace, cascade)
+		var objective_before: int = int(board.objective_progress)
 		var cleared: Array[String] = []
 		for pos in clear_cells:
 			cleared.append(_pos_key(pos))
@@ -48,6 +49,15 @@ static func try_swap(board, from: Vector2i, to: Vector2i):
 			"objective_progress": int(board.objective_progress),
 			"objective_remaining": int(board.objective_remaining())
 		})
+		if int(board.objective_progress) != objective_before:
+			trace.add_event("objective_progress", {
+				"objective": String(board.objective_type),
+				"family": String(board.objective_family),
+				"before": objective_before,
+				"progress": int(board.objective_progress),
+				"target": int(board.objective_target),
+				"remaining": int(board.objective_remaining())
+			})
 
 		for blocker_event in WaxSeal.apply_damage(board, clear_cells):
 			trace.add_event(String(blocker_event.get("type", "")), blocker_event)
