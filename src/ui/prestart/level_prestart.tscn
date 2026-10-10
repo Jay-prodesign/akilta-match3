@@ -1,6 +1,7 @@
-[gd_scene load_steps=5 format=3]
+[gd_scene load_steps=6 format=3]
 
 [ext_resource type="Script" path="res://src/ui/prestart/level_prestart.gd" id="1_pre"]
+[ext_resource type="Script" path="res://src/ui/shared/moon_cameo_ritual_view.gd" id="2_cameo"]
 
 [sub_resource type="StyleBoxFlat" id="Card"]
 bg_color = Color(0.09, 0.07, 0.11, 0.98)
@@ -66,14 +67,22 @@ text = "CURIO BOUTIQUE · BEFORE THE DOOR OPENS"
 horizontal_alignment = 1
 
 [node name="Card" type="PanelContainer" parent="Layout"]
-custom_minimum_size = Vector2(0, 690)
+custom_minimum_size = Vector2(0, 860)
 layout_mode = 2
 theme_override_styles/panel = SubResource("Card")
 
 [node name="Content" type="VBoxContainer" parent="Layout/Card"]
 layout_mode = 2
-theme_override_constants/separation = 34
+theme_override_constants/separation = 22
 alignment = 1
+
+[node name="RitualArt" type="Control" parent="Layout/Card/Content"]
+custom_minimum_size = Vector2(0, 250)
+layout_mode = 2
+mouse_filter = 2
+script = ExtResource("2_cameo")
+mode = "prestart"
+glow_strength = 0.6
 
 [node name="Level" type="Label" parent="Layout/Card/Content"]
 layout_mode = 2
