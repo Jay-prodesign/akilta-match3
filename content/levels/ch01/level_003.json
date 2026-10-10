@@ -41,29 +41,32 @@
     "rose",
     "moth",
     "key",
-    "leaf"
+    "leaf",
+    "cat",
+    "candle",
+    "skull"
   ],
   "initial_rows": [
     [
       "rose",
-      "moth",
+      "cat",
       "key",
-      "leaf",
+      "skull",
       "rose"
     ],
     [
-      "moth",
+      "candle",
       "key",
       "leaf",
       "rose",
-      "moth"
+      "skull"
     ],
     [
       "key",
       "leaf",
       "rose",
       "moon",
-      "key"
+      "cat"
     ],
     [
       "rose",
@@ -74,13 +77,13 @@
     ],
     [
       "moon",
-      "moon",
+      "candle",
       "rose",
       "moon",
       "key"
     ]
   ],
-  "visual_status": "north_star_candidate_v3",
-  "piece_set": "north_star_five_family_candidate_v3",
+  "visual_status": "north_star_eight_symbol_candidate_v5",
+  "piece_set": "north_star_eight_symbol_candidate_v5",
   "visual_profile": "thornlight_arrangement"
 }
