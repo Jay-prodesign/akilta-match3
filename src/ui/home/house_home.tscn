@@ -1,7 +1,8 @@
-[gd_scene load_steps=9 format=3]
+[gd_scene load_steps=10 format=3]
 
 [ext_resource type="Script" path="res://src/ui/home/house_home.gd" id="1_home"]
 [ext_resource type="Script" path="res://src/world/curio_boutique.gd" id="2_room"]
+[ext_resource type="Script" path="res://src/ui/shared/moon_cameo_ritual_view.gd" id="3_cameo"]
 
 [sub_resource type="StyleBoxFlat" id="ButtonNormal"]
 bg_color = Color(0.749, 0.647, 0.847, 1)
@@ -135,6 +136,21 @@ layout_mode = 2
 size_flags_vertical = 3
 clip_contents = true
 script = ExtResource("2_room")
+
+[node name="MoonCameoOverlay" type="Control" parent="Layout/RoomView"]
+visible = false
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.34
+anchor_top = 0.34
+anchor_right = 0.66
+anchor_bottom = 0.66
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+script = ExtResource("3_cameo")
+mode = "house"
+glow_strength = 0.88
 
 [node name="Detail" type="Label" parent="Layout"]
 layout_mode = 2

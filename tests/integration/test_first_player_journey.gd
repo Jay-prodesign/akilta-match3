@@ -26,6 +26,8 @@ func _run() -> void:
 
 	_expect(str(app.current_route_name()) == "house", "new player must boot into House")
 	var house = app.current_screen()
+	var dormant_cameo: Control = house.get_node("Layout/RoomView/MoonCameoOverlay")
+	_expect(not dormant_cameo.visible, "Moon Cameo physical relic must stay hidden before Level 1 is won")
 	var settings_button: Button = house.get_node("Layout/ActionDock/Actions/SettingsButton")
 	settings_button.emit_signal("pressed")
 	await process_frame
@@ -74,6 +76,10 @@ func _run() -> void:
 	var progress = app.get("progress")
 	_expect(int(progress.house_stage) == 1, "House must awaken to stage 1")
 	_expect(progress.curios.count("moon_cameo") == 1, "Moon Cameo must persist exactly once")
+	var awakened_house = app.current_screen()
+	var awakened_cameo: Control = awakened_house.get_node("Layout/RoomView/MoonCameoOverlay")
+	_expect(awakened_cameo.visible, "awakened House must display the same shared Moon Cameo component")
+	_expect(String(awakened_cameo.get("mode")) == "house", "House relic must use the shared Moon Cameo house mode")
 
 	var awakened_house = app.current_screen()
 	var collection_button: Button = awakened_house.get_node("Layout/ActionDock/Actions/CollectionButton")

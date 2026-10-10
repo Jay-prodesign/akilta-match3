@@ -20,6 +20,10 @@ var curios: Array[String] = []
 func set_house_state(stage: int, owned_curios: Array[String]) -> void:
 	house_stage = stage
 	curios = owned_curios.duplicate()
+	var cameo_overlay := get_node_or_null("MoonCameoOverlay")
+	if cameo_overlay != null:
+		cameo_overlay.visible = house_stage >= 1 and curios.has("moon_cameo")
+		cameo_overlay.queue_redraw()
 	queue_redraw()
 
 func _draw() -> void:
@@ -196,7 +200,6 @@ func _draw_central_cabinet(room: Rect2) -> void:
 		draw_circle(glow_center, cabinet.size.x * 0.39, Color(0.749, 0.647, 0.847, 0.055))
 		draw_circle(glow_center, cabinet.size.x * 0.29, Color(0.749, 0.647, 0.847, 0.085))
 		draw_circle(glow_center, cabinet.size.x * 0.20, Color(0.851, 0.71, 0.416, 0.05))
-		_draw_moon_cameo(glow_center, cabinet.size.x * 0.18)
 		_draw_candle(Vector2(cabinet.position.x + cabinet.size.x * 0.18, shelf_y - 5.0), 0.66)
 		_draw_candle(Vector2(cabinet.end.x - cabinet.size.x * 0.18, shelf_y - 5.0), 0.66)
 	else:
@@ -211,35 +214,6 @@ func _draw_central_cabinet(room: Rect2) -> void:
 	draw_rect(drawer, Color("#1C151F"), true)
 	draw_rect(drawer, Color(0.851, 0.71, 0.416, 0.22), false, 1.0)
 	draw_circle(drawer.get_center(), 3.5, GOLD)
-
-func _draw_moon_cameo(center: Vector2, radius: float) -> void:
-	# The same smoked-moonstone / antique-metal language used by the board now
-	# appears as a persistent physical Curio in the House.
-	for i in range(4, 0, -1):
-		var aura := Color(LILAC)
-		aura.a = 0.018 * float(i)
-		draw_circle(center, radius * (1.30 + float(i) * 0.20), aura)
-	draw_circle(center + Vector2(radius * 0.04, radius * 0.07), radius * 1.46, Color(0,0,0,0.38))
-	draw_circle(center, radius * 1.44, Color("#17131B"))
-	draw_arc(center, radius * 1.38, 0.0, TAU, 56, Color(GOLD, 0.78), 4.0)
-	draw_arc(center, radius * 1.18, 0.0, TAU, 52, Color(LILAC, 0.34), 2.0)
-	var stone_center := center - Vector2(radius * 0.06, radius * 0.02)
-	draw_circle(stone_center, radius * 0.78, LILAC)
-	draw_circle(stone_center + Vector2(radius * 0.29, -radius * 0.12), radius * 0.68, Color("#241C29"))
-	draw_arc(stone_center, radius * 0.62, PI * 0.60, PI * 1.40, 28, Color(BONE, 0.46), 2.0)
-	var craters: Array[Vector2] = [
-		Vector2(-0.30, -0.12),
-		Vector2(-0.20, 0.22),
-		Vector2(-0.02, -0.34)
-	]
-	for crater: Vector2 in craters:
-		var p: Vector2 = stone_center + crater * radius
-		draw_circle(p, radius * 0.055, Color(1,1,1,0.15))
-	draw_circle(stone_center + Vector2(-radius * 0.18, radius * 0.04), radius * 0.075, BONE)
-	# Small rose wax drop makes the relic feel catalogued rather than floating.
-	draw_circle(center + Vector2(0, radius * 1.58), radius * 0.13, ROSE.darkened(0.08))
-	draw_arc(center + Vector2(0, radius * 1.58), radius * 0.13, 0.0, TAU, 22, Color(GOLD,0.48), 1.3)
-	draw_arc(center, radius * 1.50, -PI * 0.25, PI * 0.25, 24, Color(GOLD, 0.38), 2.0)
 
 func _draw_bottle(base: Vector2, color: Color, scale: float) -> void:
 	var w: float = 14.0 * scale
