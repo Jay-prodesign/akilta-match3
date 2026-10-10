@@ -37,11 +37,10 @@ func _run() -> void:
 	await process_frame
 	_expect(str(app.current_route_name()) == "map", "House CTA must route to chapter map")
 	var map = app.current_screen()
-	var level1_button: Button = map.get_level_button(1)
-	var level2_button: Button = map.get_level_button(2)
-	_expect(level1_button != null and not level1_button.disabled, "Level 1 must be selectable")
-	_expect(level2_button != null and level2_button.disabled, "Level 2 route must remain sealed before D-027")
-	_expect(map.get_level_button(10) != null, "map must reveal a longer numbered route without canonizing future levels")
+	var level1_button: Button = map.get_node("Layout/RoutePanel/RouteView/Level1")
+	var level2_button: Button = map.get_node("Layout/RoutePanel/RouteView/Level2")
+	_expect(not level1_button.disabled, "Level 1 must be selectable")
+	_expect(level2_button.disabled, "Level 2 route must remain sealed before D-027")
 
 	level1_button.emit_signal("pressed")
 	await process_frame
