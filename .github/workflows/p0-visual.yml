@@ -1,21 +1,7 @@
 name: P0 Visual Verification
 
 on:
-  push:
-    branches:
-      - p0/bootstrap
-      - p0/north-star-level1-gate
-    paths:
-      - "src/ui/**"
-      - "src/app/**"
-      - "src/match3/presentation/**"
-      - "assets/**"
-      - "assets/world/**"
-      - "assets/pieces/**"
-      - "content/levels/**"
-      - "tests/visual/**"
-      - "tests/integration/**"
-      - ".github/workflows/p0-visual.yml"
+  # Run the full milestone checks deliberately, not on every development commit.
   workflow_dispatch:
 
 permissions:
