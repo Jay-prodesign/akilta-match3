@@ -60,10 +60,10 @@ jobs:
           if-no-files-found: error
           retention-days: 14
 
-  # Publish the founder-review preview from p0/bootstrap when GitHub Pages is configured.
-  # The playable cap remains Level 1 until the founder approves the experience.
+  # Deployment stays opt-in until GitHub Pages is enabled in repository settings.
+  # The downloadable Web export remains available even when Pages is not configured.
   deploy:
-    if: ${{ github.ref == 'refs/heads/p0/bootstrap' || vars.ENABLE_LEVEL1_PAGES == 'true' }}
+    if: ${{ vars.ENABLE_LEVEL1_PAGES == 'true' }}
     needs: export
     runs-on: ubuntu-latest
     timeout-minutes: 10
