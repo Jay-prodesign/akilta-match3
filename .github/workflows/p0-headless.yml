@@ -202,6 +202,18 @@ jobs:
           if grep -Eq "SCRIPT ERROR:|(^| )ERROR:" <<<"$output"; then exit 1; fi
           grep -Fq "TEST_PASS: Level 1 fail retry recovery" <<<"$output"
 
+      - name: Run opening Levels 2 and 3 runtime gameplay and reward contracts
+        shell: bash
+        run: |
+          set +e
+          output=$(timeout 60s ./godot --headless --path . -s res://tests/integration/test_opening_levels_runtime.gd 2>&1)
+          status=$?
+          set -e
+          printf '%s\\n' "$output"
+          if [ "$status" -ne 0 ]; then exit "$status"; fi
+          if grep -Eq "SCRIPT ERROR:|(^| )ERROR:|TEST_FAIL:" <<<"$output"; then exit 1; fi
+          grep -Fq "TEST_PASS: opening Levels 2 and 3 runtime gameplay and reward contracts" <<<"$output"
+
       - name: Run first-party audio bus routing
         shell: bash
         run: |
