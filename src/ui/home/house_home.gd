@@ -56,11 +56,24 @@ func _refresh() -> void:
 	else:
 		curio_label.text = "DORMANT DISPLAY"
 	collection_button.text = "RELIQUARY · %d / 3" % owned_curios.size()
-	play_button.disabled = available_level_count < 1
-	play_button.text = "OPEN CURIO MAP" if available_level_count >= 1 else "THE MAP IS SEALED"
+	var next_level := int(progress.highest_level_unlocked) if progress != null else 1
+	var has_started := progress != null and not progress.completed_levels.is_empty()
+	play_button.disabled = next_level > available_level_count or available_level_count < 1
+	if play_button.disabled:
+		play_button.text = "MORE CURIOS STIR SOON"
+	elif has_started and next_level > 1:
+		play_button.text = "ENTER LEVEL %d" % next_level
+	else:
+		play_button.text = "OPEN CURIO MAP"
 
 func _on_play_pressed() -> void:
-	if available_level_count >= 1:
+	if available_level_count < 1:
+		return
+	var next_level := int(progress.highest_level_unlocked) if progress != null else 1
+	var has_started := progress != null and not progress.completed_levels.is_empty()
+	if has_started and next_level > 1 and next_level <= available_level_count:
+		play_requested.emit(next_level)
+	else:
 		map_requested.emit()
 
 func _build_navigation_dock() -> void:
