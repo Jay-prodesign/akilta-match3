@@ -15,7 +15,7 @@ permissions:
   contents: read
 
 jobs:
-  bootstrap-red:
+  bootstrap-green:
     runs-on: ubuntu-latest
     timeout-minutes: 4
     steps:
@@ -33,29 +33,17 @@ jobs:
           chmod +x godot
           ./godot --version
 
-      - name: Verify expected RED bootstrap test
+      - name: Run bootstrap contract
         shell: bash
         run: |
-          set +e
-          output=$(timeout 30s ./godot --headless --path . -s res://tests/unit/test_bootstrap.gd 2>&1)
-          status=$?
-          set -e
-          printf '%s\n' "$output"
-          if [ "$status" -eq 124 ]; then
-            echo "::error::Bootstrap test runner timed out; this is a harness failure, not the expected RED."
-            exit 1
-          fi
-          if [ "$status" -eq 0 ]; then
-            echo "::error::Bootstrap test unexpectedly passed before AppBootstrap exists."
-            exit 1
-          fi
-          if ! grep -Fq "TEST_FAIL: AppBootstrap production script is missing" <<<"$output"; then
-            echo "::error::Bootstrap test failed for an unexpected reason."
-            exit 1
-          fi
-          echo "Expected RED confirmed: AppBootstrap production script is missing."
+          timeout 30s ./godot --headless --path . -s res://tests/unit/test_bootstrap.gd
 
       - name: Verify project parses
         shell: bash
         run: |
           timeout 30s ./godot --headless --path . --editor --quit
+
+      - name: Smoke boot main scene
+        shell: bash
+        run: |
+          timeout 30s ./godot --headless --path . --quit-after 2
