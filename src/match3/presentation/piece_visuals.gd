@@ -23,27 +23,27 @@ const CONTRACT := {
 		"status": "first_party_svg_candidate_v2"
 	},
 	"moth": {
-		"color": Color("#A9C6C8"),
-		"silhouette": "raven_profile",
-		"motif": "amber_raven_eye",
+		"color": Color("#77718E"),
+		"silhouette": "crow_profile",
+		"motif": "amber_crow_eye",
 		"value": 0.74,
-		"display_name": "Raven",
+		"display_name": "Moon Crow",
 		"material": "midnight_feather",
 		"world_role": "base_family",
 		"status": "first_party_svg_candidate_v2"
 	},
 	"key": {
-		"color": Color("#D8B56A"),
-		"silhouette": "key_relic",
-		"motif": "keyhole",
+		"color": Color("#45B88A"),
+		"silhouette": "apothecary_flask",
+		"motif": "emerald_elixir",
 		"value": 0.68,
-		"display_name": "Curio Key",
-		"material": "antique_metal",
+		"display_name": "Witchlight Potion",
+		"material": "emerald_glass_and_antique_gold",
 		"world_role": "base_family",
 		"status": "first_party_svg_candidate_v2"
 	},
 	"leaf": {
-		"color": Color("#8BAF7C"),
+		"color": Color("#C6A2E8"),
 		"silhouette": "pentagram_medallion",
 		"motif": "arcane_star",
 		"value": 0.58,
