@@ -7,6 +7,7 @@ on:
     paths:
       - "project.godot"
       - "src/**"
+      - "content/**"
       - "tests/**"
       - ".github/workflows/p0-headless.yml"
   workflow_dispatch:
@@ -15,7 +16,7 @@ permissions:
   contents: read
 
 jobs:
-  bootstrap-red:
+  headless:
     runs-on: ubuntu-latest
     timeout-minutes: 10
     steps:
@@ -26,31 +27,46 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          curl -L --fail --retry 3             -o godot.zip             "https://github.com/godotengine/godot-builds/releases/download/4.7.2-stable/Godot_v4.7.2-stable_linux.x86_64.zip"
+          curl -L --fail --retry 3 -o godot.zip             "https://github.com/godotengine/godot-builds/releases/download/4.7.2-stable/Godot_v4.7.2-stable_linux.x86_64.zip"
           echo "cadd3204e728a35d3f13adb7fd0d7902636b79f6b95c40c265eb73b6c35329e4  godot.zip" | sha256sum -c -
           unzip -q godot.zip
           mv Godot_v4.7.2-stable_linux.x86_64 godot
           chmod +x godot
           ./godot --version
 
-      - name: Verify expected RED bootstrap test
+      - name: Run bootstrap contract
+        shell: bash
+        run: |
+          timeout 30s ./godot --headless --path . -s res://tests/unit/test_bootstrap.gd
+
+      - name: Verify expected RED deterministic core contract
         shell: bash
         run: |
           set +e
-          timeout 30s ./godot --headless --path . -s res://tests/test_runner.gd -- res://tests/unit/test_bootstrap.gd
+          output=$(timeout 30s ./godot --headless --path . -s res://tests/unit/test_match3_core.gd 2>&1)
           status=$?
           set -e
+          printf '%s\n' "$output"
           if [ "$status" -eq 124 ]; then
-            echo "::error::Test runner timed out; RED was not proven."
+            echo "::error::Core test timed out; RED was not proven."
             exit 1
           fi
           if [ "$status" -eq 0 ]; then
-            echo "::error::Bootstrap test unexpectedly passed before AppBootstrap exists."
+            echo "::error::Core test unexpectedly passed before deterministic core exists."
             exit 1
           fi
-          echo "Expected RED observed with exit code $status."
+          if ! grep -Fq "TEST_FAIL: deterministic Match-3 core is missing" <<<"$output"; then
+            echo "::error::Core test failed for an unexpected reason."
+            exit 1
+          fi
+          echo "Expected RED confirmed: deterministic Match-3 core is missing."
 
       - name: Verify project parses
         shell: bash
         run: |
           timeout 30s ./godot --headless --path . --editor --quit
+
+      - name: Smoke boot main scene
+        shell: bash
+        run: |
+          timeout 30s ./godot --headless --path . --quit-after 2
