@@ -24,6 +24,7 @@ var _pending_terminal_result: String = ""
 
 @onready var eyebrow_label: Label = $Layout/Eyebrow
 @onready var title_label: Label = $Layout/Title
+@onready var title_divider: TextureRect = $Layout/TitleDivider
 @onready var board_view = $Layout/BoardView
 @onready var objective_label: Label = $Layout/HUD/Objective
 @onready var moves_label: Label = $Layout/HUD/Moves
@@ -188,3 +189,14 @@ func _install_candidate_divider() -> void:
 	divider.stretch_mode = TextureRect.STRETCH_SCALE
 	layout.add_child(divider)
 	layout.move_child(divider, min(2, layout.get_child_count() - 1))
+
+
+func _load_candidate_divider() -> void:
+	if title_divider == null:
+		return
+	var path := "res://assets/candidate/third_party/kenney/fantasy-ui-borders/divider-004.png"
+	var image := Image.load_from_file(ProjectSettings.globalize_path(path))
+	if image == null or image.is_empty():
+		title_divider.visible = false
+		return
+	title_divider.texture = ImageTexture.create_from_image(image)
