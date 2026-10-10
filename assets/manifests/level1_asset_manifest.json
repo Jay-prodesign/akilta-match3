@@ -123,36 +123,36 @@
       "class": "special",
       "scope": "global",
       "path": "assets/specials/gbl_special_area_idle_v01.svg",
-      "status": "concept",
+      "status": "candidate",
       "target": "256x256",
       "format": "svg",
       "role": "area special",
       "approval": "Founder D-027",
-      "provenance": "first_party_required"
+      "provenance": "first_party"
     },
     {
       "id": "gbl.special.smart",
       "class": "special",
       "scope": "global",
       "path": "assets/specials/gbl_special_smart_idle_v01.svg",
-      "status": "concept",
+      "status": "candidate",
       "target": "256x256",
       "format": "svg",
       "role": "smart target special",
       "approval": "Founder D-027",
-      "provenance": "first_party_required"
+      "provenance": "first_party"
     },
     {
       "id": "gbl.special.global",
       "class": "special",
       "scope": "global",
       "path": "assets/specials/gbl_special_global_idle_v01.svg",
-      "status": "concept",
+      "status": "candidate",
       "target": "256x256",
       "format": "svg",
       "role": "global/eclipsed mirror special",
       "approval": "Founder D-027",
-      "provenance": "first_party_required"
+      "provenance": "first_party"
     },
     {
       "id": "ch01.blocker.wax_seal.intact",
@@ -183,36 +183,36 @@
       "class": "board",
       "scope": "global",
       "path": "assets/board/gbl_board_ritual_frame_9s_base_v01.svg",
-      "status": "concept",
+      "status": "candidate",
       "target": "512x512",
       "format": "svg_9slice",
       "role": "board ritual display frame",
       "approval": "Founder D-027",
-      "provenance": "first_party_required"
+      "provenance": "first_party"
     },
     {
       "id": "ch01.curio.moon_cameo.sealed",
       "class": "curio",
       "scope": "chapter",
       "path": "assets/curios/ch01_curio_moon_cameo_sealed_v01.svg",
-      "status": "concept",
+      "status": "candidate",
       "target": "512x512",
       "format": "svg",
       "role": "Level 1 reward sealed",
       "approval": "Founder D-027",
-      "provenance": "first_party_required"
+      "provenance": "first_party"
     },
     {
       "id": "ch01.curio.moon_cameo.awakened",
       "class": "curio",
       "scope": "chapter",
       "path": "assets/curios/ch01_curio_moon_cameo_awakened_v01.svg",
-      "status": "concept",
+      "status": "candidate",
       "target": "512x512",
       "format": "svg",
       "role": "persistent Level 1 reward",
       "approval": "Founder D-027",
-      "provenance": "first_party_required"
+      "provenance": "first_party"
     },
     {
       "id": "ch01.world.curio_boutique.stage00",
@@ -243,12 +243,12 @@
       "class": "ui_chrome",
       "scope": "global",
       "path": "assets/ui/chrome/gbl_ui_ritual_panel_9s_base_v01.svg",
-      "status": "concept",
+      "status": "candidate",
       "target": "512x512",
       "format": "svg_9slice",
       "role": "prestart/result/collection panel system",
       "approval": "Founder D-027",
-      "provenance": "first_party_required"
+      "provenance": "first_party"
     },
     {
       "id": "ch01.ui.map.route",
