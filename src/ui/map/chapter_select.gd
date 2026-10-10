@@ -39,21 +39,21 @@ func _ready() -> void:
 	var eyebrow := Label.new()
 	eyebrow.text = "THE HOUSE AND ITS CHAPTERS"
 	eyebrow.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	eyebrow.add_theme_font_size_override("font_size", 16)
+	eyebrow.add_theme_font_size_override("font_size", 20)
 	eyebrow.add_theme_color_override("font_color", Color("#F0DCCB"))
 	layout.add_child(eyebrow)
 
 	var title := Label.new()
 	title.text = "Choose a Wing"
 	title.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	title.add_theme_font_size_override("font_size", 36)
+	title.add_theme_font_size_override("font_size", 42)
 	title.add_theme_color_override("font_color", Color("#FFF0D8"))
 	layout.add_child(title)
 
 	var detail := Label.new()
 	detail.text = "Explore, restore and unlock new wings."
 	detail.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	detail.add_theme_font_size_override("font_size", 16)
+	detail.add_theme_font_size_override("font_size", 22)
 	detail.add_theme_color_override("font_color", Color("#E8C987"))
 	layout.add_child(detail)
 
@@ -81,7 +81,7 @@ func _ready() -> void:
 		button.custom_minimum_size = Vector2(240, 110)
 		button.disabled = not bool(data["open"])
 		button.text = "%s\n%s\n%s%s" % [String(data["glyph"]), String(data["name"]), String(data["detail"]), "" if bool(data["open"]) else "\nSEALED WING"]
-		button.add_theme_font_size_override("font_size", 18)
+		button.add_theme_font_size_override("font_size", 24)
 		button.add_theme_color_override("font_color", Color("#FFF7E9"))
 		button.add_theme_color_override("font_disabled_color", Color("#E9DDEC"))
 		var box := StyleBoxFlat.new()
@@ -104,6 +104,7 @@ func _ready() -> void:
 
 	var back := Button.new()
 	back.text = "BACK TO THE HOUSE"
-	back.custom_minimum_size = Vector2(0, 52)
+	back.custom_minimum_size = Vector2(0, 60)
+	back.add_theme_font_size_override("font_size", 20)
 	back.pressed.connect(func(): back_requested.emit())
 	layout.add_child(back)
