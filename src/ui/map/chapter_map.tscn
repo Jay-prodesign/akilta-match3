@@ -1,9 +1,10 @@
-[gd_scene load_steps=3 format=3]
+[gd_scene load_steps=5 format=3]
 
 [ext_resource type="Script" path="res://src/ui/map/chapter_map.gd" id="1_map"]
+[ext_resource type="Script" path="res://src/ui/map/chapter_route_view.gd" id="2_route"]
 
 [sub_resource type="StyleBoxFlat" id="Panel"]
-bg_color = Color(0.055, 0.04, 0.068, 0.98)
+bg_color = Color(0.055, 0.043, 0.066, 0.98)
 border_width_left = 1
 border_width_top = 1
 border_width_right = 1
@@ -13,6 +14,13 @@ corner_radius_top_left = 24
 corner_radius_top_right = 24
 corner_radius_bottom_right = 24
 corner_radius_bottom_left = 24
+
+[sub_resource type="StyleBoxFlat" id="Back"]
+bg_color = Color(0.12, 0.09, 0.14, 1)
+corner_radius_top_left = 16
+corner_radius_top_right = 16
+corner_radius_bottom_right = 16
+corner_radius_bottom_left = 16
 
 [node name="ChapterMap" type="Control"]
 layout_mode = 3
@@ -37,49 +45,98 @@ layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
-offset_left = 34.0
-offset_top = 38.0
-offset_right = -34.0
-offset_bottom = -38.0
-theme_override_constants/separation = 12
+offset_left = 40.0
+offset_top = 48.0
+offset_right = -40.0
+offset_bottom = -48.0
+theme_override_constants/separation = 16
 
 [node name="Eyebrow" type="Label" parent="Layout"]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.663, 0.6, 0.659, 1)
-theme_override_font_sizes/font_size = 18
+theme_override_font_sizes/font_size = 20
 text = "THE HOUSE · CHAPTER I"
 horizontal_alignment = 1
 
 [node name="Title" type="Label" parent="Layout"]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.945, 0.91, 0.866, 1)
-theme_override_font_sizes/font_size = 42
+theme_override_font_sizes/font_size = 44
 text = "Curio Boutique"
 horizontal_alignment = 1
 
 [node name="Progress" type="Label" parent="Layout"]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.851, 0.71, 0.416, 1)
-theme_override_font_sizes/font_size = 18
+theme_override_font_sizes/font_size = 21
 text = "CURIO BOUTIQUE · 0 AWAKENINGS"
 horizontal_alignment = 1
 
+[node name="Intro" type="Label" parent="Layout"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.851, 0.804, 0.835, 1)
+theme_override_font_sizes/font_size = 19
+text = "Wake the first display. Each returned Curio opens another secret in the House."
+horizontal_alignment = 1
+autowrap_mode = 2
+
 [node name="RoutePanel" type="PanelContainer" parent="Layout"]
+custom_minimum_size = Vector2(0, 720)
 layout_mode = 2
 size_flags_vertical = 3
 theme_override_styles/panel = SubResource("Panel")
 
-[node name="Scroll" type="ScrollContainer" parent="Layout/RoutePanel"]
+[node name="RouteView" type="Control" parent="Layout/RoutePanel"]
 layout_mode = 2
-horizontal_scroll_mode = 0
-vertical_scroll_mode = 1
+mouse_filter = 0
+script = ExtResource("2_route")
 
-[node name="RouteContent" type="Control" parent="Layout/RoutePanel/Scroll"]
-custom_minimum_size = Vector2(450, 1380)
-layout_mode = 2
+[node name="Level1" type="Button" parent="Layout/RoutePanel/RouteView"]
+offset_right = 126.0
+offset_bottom = 126.0
+text = "1"
+
+[node name="Level2" type="Button" parent="Layout/RoutePanel/RouteView"]
+offset_right = 104.0
+offset_bottom = 104.0
+text = "2"
+disabled = true
+
+[node name="Level3" type="Button" parent="Layout/RoutePanel/RouteView"]
+offset_right = 104.0
+offset_bottom = 104.0
+text = "3"
+disabled = true
+
+[node name="Label1" type="Label" parent="Layout/RoutePanel/RouteView"]
+offset_right = 350.0
+offset_bottom = 58.0
+theme_override_colors/font_color = Color(0.945, 0.91, 0.866, 1)
+theme_override_font_sizes/font_size = 19
+text = "MOONLIT CABINET"
+vertical_alignment = 1
+
+[node name="Label2" type="Label" parent="Layout/RoutePanel/RouteView"]
+offset_right = 350.0
+offset_bottom = 58.0
+theme_override_colors/font_color = Color(0.663, 0.6, 0.659, 1)
+theme_override_font_sizes/font_size = 18
+text = "SEALED DISPLAY"
+horizontal_alignment = 2
+vertical_alignment = 1
+
+[node name="Label3" type="Label" parent="Layout/RoutePanel/RouteView"]
+offset_right = 350.0
+offset_bottom = 58.0
+theme_override_colors/font_color = Color(0.663, 0.6, 0.659, 1)
+theme_override_font_sizes/font_size = 18
+text = "SEALED DISPLAY"
+vertical_alignment = 1
 
 [node name="Back" type="Button" parent="Layout"]
-custom_minimum_size = Vector2(0, 62)
+custom_minimum_size = Vector2(0, 64)
 layout_mode = 2
-theme_override_font_sizes/font_size = 21
+theme_override_colors/font_color = Color(0.945, 0.91, 0.866, 1)
+theme_override_font_sizes/font_size = 22
+theme_override_styles/normal = SubResource("Back")
 text = "BACK TO THE HOUSE"

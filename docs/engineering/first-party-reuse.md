@@ -31,3 +31,8 @@ Level 2+ product routes are sealed until D-027 completed-Level-1 Founder approva
 - Future-schema saves are preserved and activate write protection.
 - Beach Cocktails presentation settings now reach Match-3 gameplay; Reduced Motion bypasses resolution animation while preserving deterministic state, and High Contrast strengthens board boundaries.
 - Rewarded ads remain deliberately deferred because they are not required for completed Level 1 / D-027.
+
+
+## Chapter map adaptation
+
+The Level 1 chapter map now follows the Beach Cocktails first-party separation of route layer, stateful marker layer and product-owned navigation authority. Match-3 uses original Curio Boutique geometry/material language and its own D-027 route cap. Internal governance terms are never displayed in player-facing UI; locked future nodes are expressed in-world as sealed displays.
