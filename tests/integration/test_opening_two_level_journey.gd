@@ -24,7 +24,8 @@ func _run() -> void:
 	var first_trace = level1.attempt_swap(Vector2i(1, 4), Vector2i(2, 4))
 	_expect(first_trace != null and first_trace.accepted, "Level 1 teaching swipe must be accepted")
 	_expect(first_trace != null and str(first_trace.result) == "won", "Level 1 teaching swipe must produce the first win")
-	_expect(level1.result_overlay.visible, "win must hold on a result beat before routing away")
+	await _await_board_motion(level1)
+	_expect(level1.result_overlay.visible, "win must hold on a result beat after resolution motion before routing away")
 	_expect(str(app.current_route_name()) == "gameplay", "win beat must remain on gameplay until player continues")
 	_expect(level1.continue_after_win(), "win continue must commit the journey")
 	await process_frame
@@ -46,6 +47,7 @@ func _run() -> void:
 	_expect(second_trace != null and second_trace.accepted, "Level 2 teaching swipe must be accepted")
 	_expect(second_trace != null and str(second_trace.result) == "won", "Level 2 teaching swipe must clear both Wax Seals")
 	_expect(int(level2.board_state.remaining_blockers()) == 0, "Wax Seal tutorial must resolve both blockers")
+	await _await_board_motion(level2)
 	_expect(level2.continue_after_win(), "Level 2 win must continue to House")
 	await process_frame
 	progress = app.get("progress")
@@ -66,10 +68,12 @@ func _run() -> void:
 	_expect(create_trace != null and create_trace.event_types().has("special_created"), "Level 3 first move must generate a special")
 	_expect(create_trace != null and str(create_trace.result) == "playing", "creating the Line special must not finish Level 3")
 	_expect(level3.board_state.specials.size() >= 1, "generated Line special must remain on the board")
+	await _await_board_motion(level3)
 	var activate_trace = level3.attempt_swap(Vector2i(3, 3), Vector2i(3, 4))
 	_expect(activate_trace != null and activate_trace.accepted, "Level 3 activation swipe must be accepted")
 	_expect(activate_trace != null and activate_trace.event_types().has("special_triggered"), "Level 3 second move must trigger the generated Line special")
 	_expect(activate_trace != null and str(activate_trace.result) == "won", "Line special must collect the key and win Level 3")
+	await _await_board_motion(level3)
 	_expect(level3.continue_after_win(), "Level 3 win must return to House")
 	await process_frame
 
@@ -98,6 +102,15 @@ func _run() -> void:
 	await process_frame
 	_cleanup()
 	_finish()
+
+func _await_board_motion(screen) -> void:
+	if screen == null:
+		return
+	var board_view = screen.get_node_or_null("Layout/BoardView")
+	if board_view == null or not board_view.has_method("is_motion_active"):
+		return
+	if bool(board_view.is_motion_active()) and board_view.has_signal("trace_motion_finished"):
+		await board_view.trace_motion_finished
 
 func _cleanup() -> void:
 	for path in [TEST_PATH, TEST_PATH + ".bak", TEST_PATH + ".tmp"]:

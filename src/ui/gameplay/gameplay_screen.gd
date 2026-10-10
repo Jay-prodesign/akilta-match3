@@ -72,6 +72,8 @@ func load_level_path(path: String, seed_value: int = 1001) -> bool:
 func attempt_swap(from: Vector2i, to: Vector2i):
 	if board_state == null or result_overlay.visible:
 		return null
+	if board_view.has_method("is_motion_active") and bool(board_view.is_motion_active()):
+		return null
 	last_trace = MoveResolver.try_swap(board_state, from, to)
 	board_view.set_board(board_state)
 	var motion_started := false
