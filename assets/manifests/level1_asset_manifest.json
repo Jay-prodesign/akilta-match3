@@ -71,14 +71,14 @@
       "provenance": "first_party"
     },
     {
-      "id": "gbl.piece.potion",
+      "id": "gbl.piece.curio_key",
       "class": "piece",
       "scope": "global",
-      "path": "assets/pieces/potion.svg",
+      "path": "assets/pieces/curio_key.svg",
       "status": "candidate",
       "target": "256x256",
       "format": "svg",
-      "role": "base family / emerald alchemical glass",
+      "role": "base family / antique key relic",
       "approval": "Founder D-027",
       "provenance": "first_party"
     },
@@ -397,6 +397,16 @@
       "target": "512x512",
       "format": "svg",
       "role": "Level 3 special lesson reward and collection relic",
+      "provenance": "first_party"
+    }    ,{
+      "id": "gbl.booster.potion",
+      "class": "booster",
+      "scope": "global",
+      "path": "assets/pieces/potion.svg",
+      "status": "candidate",
+      "target": "256x256",
+      "format": "svg",
+      "role": "one-use gameplay booster that grants three extra moves",
       "provenance": "first_party"
     }
   ]
