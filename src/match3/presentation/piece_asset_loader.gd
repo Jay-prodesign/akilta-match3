@@ -55,19 +55,19 @@ const PROFILE_PATHS := {
 	"sealed_display": {
 		"moon": "res://assets/pieces/moon_sigil.svg",
 		"rose": "res://assets/pieces/thorn_rose.svg",
-		"moth": "res://assets/pieces/crow.svg",
-		"key": "res://assets/pieces/potion.svg",
-		"leaf": "res://assets/pieces/pentagram.svg",
+		"moth": "res://assets/pieces/black_cat.svg",
+		"key": "res://assets/pieces/candle.svg",
+		"leaf": "res://assets/pieces/skull.svg",
 		"cat": "res://assets/pieces/black_cat.svg",
 		"candle": "res://assets/pieces/candle.svg",
 		"skull": "res://assets/pieces/skull.svg"
 	},
 	"thornlight_arrangement": {
 		"moon": "res://assets/pieces/moon_sigil.svg",
-		"rose": "res://assets/pieces/thorn_rose.svg",
+		"rose": "res://assets/pieces/black_cat.svg",
 		"moth": "res://assets/pieces/crow.svg",
 		"key": "res://assets/pieces/potion.svg",
-		"leaf": "res://assets/pieces/pentagram.svg",
+		"leaf": "res://assets/pieces/candle.svg",
 		"cat": "res://assets/pieces/black_cat.svg",
 		"candle": "res://assets/pieces/candle.svg",
 		"skull": "res://assets/pieces/skull.svg"
