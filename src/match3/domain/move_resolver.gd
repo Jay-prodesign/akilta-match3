@@ -4,6 +4,7 @@ extends RefCounted
 const MatchDetector = preload("res://src/match3/domain/match_detector.gd")
 const ResolutionTrace = preload("res://src/match3/domain/resolution_trace.gd")
 const SpecialRules = preload("res://src/match3/domain/special_rules.gd")
+const ComboRules = preload("res://src/match3/domain/special_combo_rules.gd")
 const WaxSeal = preload("res://src/match3/domain/blockers/wax_seal.gd")
 const ObjectiveState = preload("res://src/match3/domain/objective_state.gd")
 const BoardShuffler = preload("res://src/match3/domain/board_shuffler.gd")
@@ -17,9 +18,16 @@ static func try_swap(board, from: Vector2i, to: Vector2i):
 		return trace
 
 	var before: String = String(board.signature())
+	var from_kind: String = String(board.get_special(from))
+	var to_kind: String = String(board.get_special(to))
+	var from_family: String = String(board.get_cell(from))
+	var to_family: String = String(board.get_cell(to))
+	var combo_id: String = ComboRules.combo_id(from_kind, to_kind)
+	var is_combo: bool = combo_id != ""
+
 	board.swap_cells(from, to)
-	var matches := MatchDetector.find_match_cells(board)
-	if matches.is_empty():
+	var matches: Array[Vector2i] = MatchDetector.find_match_cells(board)
+	if not is_combo and matches.is_empty():
 		board.swap_cells(from, to)
 		trace.add_event("swap_rejected", {"reason": "no_match"})
 		assert(board.signature() == before)
@@ -30,7 +38,29 @@ static func try_swap(board, from: Vector2i, to: Vector2i):
 	if board.moves_remaining > 0:
 		board.moves_remaining -= 1
 
-	var cascade := 0
+	var cascade: int = 0
+	if is_combo:
+		cascade = 1
+		var combo_cells: Array[Vector2i] = ComboRules.affected_cells(
+			board,
+			from,
+			to,
+			from_kind,
+			to_kind,
+			from_family,
+			to_family
+		)
+		trace.add_event("combo_triggered", {
+			"combo": combo_id,
+			"from": _pos_key(from),
+			"to": _pos_key(to),
+			"cells": _pos_keys(combo_cells)
+		})
+		_clear_cells(board, combo_cells, trace, cascade, "combo_clear")
+		_apply_gravity(board, trace, cascade)
+		_refill(board, trace, cascade)
+		matches = MatchDetector.find_match_cells(board)
+
 	while not matches.is_empty() and cascade < MAX_CASCADES:
 		cascade += 1
 		trace.add_event("match_found", {"cascade": cascade, "cells": _pos_keys(matches)})
@@ -46,33 +76,8 @@ static func try_swap(board, from: Vector2i, to: Vector2i):
 		if not creation.is_empty():
 			creation_pos = creation["position"]
 			clear_cells.erase(creation_pos)
-		var objective_before: int = int(board.objective_progress)
-		var cleared: Array[String] = []
-		for pos in clear_cells:
-			cleared.append(_pos_key(pos))
-			var cleared_family: String = String(board.get_cell(pos))
-			if cleared_family != "":
-				board.record_collected(cleared_family, 1)
-			board.set_cell(pos, "")
-			board.set_special(pos, "")
-		trace.add_event("clear", {
-			"cascade": cascade,
-			"cells": cleared,
-			"objective_progress": int(board.objective_progress),
-			"objective_remaining": int(board.objective_remaining())
-		})
-		if int(board.objective_progress) != objective_before:
-			trace.add_event("objective_progress", {
-				"objective": String(board.objective_type),
-				"family": String(board.objective_family),
-				"before": objective_before,
-				"progress": int(board.objective_progress),
-				"target": int(board.objective_target),
-				"remaining": int(board.objective_remaining())
-			})
 
-		for blocker_event in WaxSeal.apply_damage(board, clear_cells):
-			trace.add_event(String(blocker_event.get("type", "")), blocker_event)
+		_clear_cells(board, clear_cells, trace, cascade, "clear")
 
 		if not creation.is_empty():
 			board.set_special(creation_pos, String(creation["kind"]))
@@ -102,6 +107,36 @@ static func try_swap(board, from: Vector2i, to: Vector2i):
 	})
 	return trace
 
+static func _clear_cells(board, clear_cells: Array[Vector2i], trace, cascade: int, event_type: String) -> void:
+	var objective_before: int = int(board.objective_progress)
+	var cleared: Array[String] = []
+	for pos in clear_cells:
+		cleared.append(_pos_key(pos))
+		var cleared_family: String = String(board.get_cell(pos))
+		if cleared_family != "":
+			board.record_collected(cleared_family, 1)
+		board.set_cell(pos, "")
+		board.set_special(pos, "")
+
+	trace.add_event(event_type, {
+		"cascade": cascade,
+		"cells": cleared,
+		"objective_progress": int(board.objective_progress),
+		"objective_remaining": int(board.objective_remaining())
+	})
+	if int(board.objective_progress) != objective_before:
+		trace.add_event("objective_progress", {
+			"objective": String(board.objective_type),
+			"family": String(board.objective_family),
+			"before": objective_before,
+			"progress": int(board.objective_progress),
+			"target": int(board.objective_target),
+			"remaining": int(board.objective_remaining())
+		})
+
+	for blocker_event in WaxSeal.apply_damage(board, clear_cells):
+		trace.add_event(String(blocker_event.get("type", "")), blocker_event)
+
 static func _contains_existing_special(board, cells: Array[Vector2i]) -> bool:
 	for pos in cells:
 		if String(board.get_special(pos)) != "":
@@ -118,7 +153,7 @@ static func _expand_existing_specials(board, initial: Array[Vector2i], trace, ca
 		if included.has(pos):
 			continue
 		included[pos] = true
-		var kind: String = board.get_special(pos)
+		var kind: String = String(board.get_special(pos))
 		if kind == "":
 			continue
 		trace.add_event("special_triggered", {
