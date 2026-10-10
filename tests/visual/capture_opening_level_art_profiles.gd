@@ -37,6 +37,20 @@ func _capture() -> void:
 			screen.queue_free()
 			quit(1)
 			return
+		var reward_label: Label = screen.get_node_or_null("Layout/Awakening/Content/Label")
+		var progress_copy: Label = screen.get_node_or_null("Layout/Awakening/Content/ProgressCopy")
+		if reward_label == null or progress_copy == null:
+			printerr("CAPTURE_FAIL: Level %d relic progress strip missing" % level_number)
+			screen.queue_free()
+			quit(1)
+			return
+		var expected_relic := "RELIC · MOTH RELIQUARY" if level_number == 2 else "RELIC · THORNED LOCKET"
+		var expected_unit := "SEALS" if level_number == 2 else "SIGILS"
+		if reward_label.text != expected_relic or not progress_copy.text.contains(expected_unit):
+			printerr("CAPTURE_FAIL: Level %d objective strip does not match reward/objective" % level_number)
+			screen.queue_free()
+			quit(1)
+			return
 		await process_frame
 		await process_frame
 		var image: Image = screen.get_viewport().get_texture().get_image()
