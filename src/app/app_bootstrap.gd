@@ -192,6 +192,7 @@ func _render_house() -> void:
 	screen.set_progress(progress)
 	screen.collection_requested.connect(show_collection)
 	screen.map_requested.connect(show_map)
+	screen.play_requested.connect(_on_house_play_requested)
 	screen.settings_requested.connect(show_settings)
 	if screen.has_signal("events_requested"):
 		screen.events_requested.connect(func(): show_feature_preview("Events"))
@@ -298,3 +299,9 @@ func _render_splash() -> void:
 
 func _on_splash_continue() -> void:
 	_render_house()
+
+func _on_house_play_requested(level_number: int) -> void:
+	if navigation.current() != NavigationScript.Route.HOUSE:
+		return
+	if show_map():
+		show_prestart(level_number)
