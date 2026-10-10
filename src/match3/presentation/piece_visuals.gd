@@ -51,7 +51,7 @@ const CONTRACT := {
 		"material": "gilded_arcane_enamel",
 		"world_role": "base_family",
 		"status": "first_party_svg_candidate_v2"
-	},,
+	},
 	"cat": {
 		"color": Color("#24202D"),
 		"silhouette": "black_cat",
