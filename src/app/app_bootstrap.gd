@@ -11,6 +11,7 @@ const CollectionScene = preload("res://src/ui/collection/curio_collection.tscn")
 const MapScene = preload("res://src/ui/map/chapter_map.tscn")
 const PrestartScene = preload("res://src/ui/prestart/level_prestart.tscn")
 const SettingsScene = preload("res://src/ui/settings/settings_panel.tscn")
+const SplashScene = preload("res://src/ui/splash/splash_screen.tscn")
 const AudioDirectorScript = preload("res://src/feedback/audio_director.gd")
 const Typography = preload("res://src/ui/theme/typography.gd")
 const CurioMaterials = preload("res://src/ui/theme/curio_materials.gd")
@@ -44,7 +45,10 @@ func _ready() -> void:
 	audio_director.name = "AudioDirector"
 	add_child(audio_director)
 	navigation.go(NavigationScript.Route.HOUSE, {"reason": "boot"})
-	_render_house()
+	if OS.has_feature("web"):
+		_render_splash()
+	else:
+		_render_house()
 
 func current_route_name() -> String:
 	return navigation.route_name().to_lower() if navigation != null else ""
@@ -286,3 +290,11 @@ func _install_north_star_backdrop(screen: Node) -> void:
 	var flat := screen.get_node_or_null("Backdrop")
 	if flat is ColorRect:
 		(flat as ColorRect).color.a = 0.48
+
+func _render_splash() -> void:
+	var screen: Node = SplashScene.instantiate()
+	_show_screen(screen)
+	screen.continue_requested.connect(_on_splash_continue)
+
+func _on_splash_continue() -> void:
+	_render_house()
