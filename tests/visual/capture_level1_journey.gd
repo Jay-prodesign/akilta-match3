@@ -127,6 +127,13 @@ func _capture() -> void:
 	if not app.show_feature_preview("Events"):
 		return _fail(app, "House -> Events preview failed")
 	await _frames(3)
+	var event_preview: Node = app.get_node_or_null("ScreenHost/FeaturePreview")
+	var event_art_nodes: Array[Node] = event_preview.find_children("FeatureArtwork", "TextureRect", true, false) if event_preview != null else []
+	if event_art_nodes.size() != 3:
+		return _fail(app, "Events must render all three first-party feature illustrations")
+	for art_node in event_art_nodes:
+		if (art_node as TextureRect).texture == null:
+			return _fail(app, "Events feature illustration did not load")
 	if not await _save(app, "journey-09-events.png"):
 		return
 	app.get_node("ScreenHost/FeaturePreview/FeatureLayout/BackToHouse").emit_signal("pressed")
@@ -134,6 +141,13 @@ func _capture() -> void:
 	if not app.show_feature_preview("Shop"):
 		return _fail(app, "House -> Shop preview failed")
 	await _frames(3)
+	var shop_preview: Node = app.get_node_or_null("ScreenHost/FeaturePreview")
+	var shop_art_nodes: Array[Node] = shop_preview.find_children("FeatureArtwork", "TextureRect", true, false) if shop_preview != null else []
+	if shop_art_nodes.size() != 3:
+		return _fail(app, "Shop must render all three first-party feature illustrations")
+	for art_node in shop_art_nodes:
+		if (art_node as TextureRect).texture == null:
+			return _fail(app, "Shop feature illustration did not load")
 	if not await _save(app, "journey-10-shop.png"):
 		return
 	app.get_node("ScreenHost/FeaturePreview/FeatureLayout/BackToHouse").emit_signal("pressed")
