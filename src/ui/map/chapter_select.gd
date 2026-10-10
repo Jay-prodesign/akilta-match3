@@ -32,6 +32,7 @@ func _ready() -> void:
 	detail.add_theme_color_override("font_color", Color("#D5AD70"))
 	layout.add_child(detail)
 	var grid := GridContainer.new()
+	grid.name = "ChapterGrid"
 	grid.columns = 2
 	grid.size_flags_vertical = Control.SIZE_EXPAND_FILL
 	grid.add_theme_constant_override("h_separation", 12)
