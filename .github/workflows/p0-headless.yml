@@ -44,6 +44,28 @@ jobs:
         run: |
           timeout 30s ./godot --headless --path . -s res://tests/unit/test_match3_core.gd
 
+      - name: Verify expected RED specials/objectives contract
+        shell: bash
+        run: |
+          set +e
+          output=$(timeout 30s ./godot --headless --path . -s res://tests/unit/test_specials_objectives.gd 2>&1)
+          status=$?
+          set -e
+          printf '%s\n' "$output"
+          if [ "$status" -eq 124 ]; then
+            echo "::error::Specials/objectives test timed out; RED was not proven."
+            exit 1
+          fi
+          if [ "$status" -eq 0 ]; then
+            echo "::error::Specials/objectives test unexpectedly passed before implementation."
+            exit 1
+          fi
+          if ! grep -Fq "TEST_FAIL: specials/objectives layer is missing" <<<"$output"; then
+            echo "::error::Specials/objectives test failed for an unexpected reason."
+            exit 1
+          fi
+          echo "Expected RED confirmed: specials/objectives layer is missing."
+
       - name: Verify project parses
         shell: bash
         run: |
