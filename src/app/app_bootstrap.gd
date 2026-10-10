@@ -293,7 +293,7 @@ func _on_collection_back() -> void:
 
 func _on_map_back() -> void:
 	if navigation.go(NavigationScript.Route.HOUSE, {"via": "map_back"}):
-		_render_house()
+		show_chapters()
 
 func _on_prestart_back() -> void:
 	if navigation.go(NavigationScript.Route.MAP, {"via": "prestart_back"}):
