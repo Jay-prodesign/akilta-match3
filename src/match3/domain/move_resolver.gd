@@ -93,7 +93,7 @@ static func _expand_existing_specials(board, initial: Array[Vector2i], trace, ca
 
 static func _apply_gravity(board, trace, cascade: int) -> void:
 	for x in range(board.width):
-		var write_y := board.height - 1
+		var write_y: int = int(board.height) - 1
 		for read_y in range(board.height - 1, -1, -1):
 			var read_pos := Vector2i(x, read_y)
 			if board.is_hole(read_pos):
@@ -102,7 +102,7 @@ static func _apply_gravity(board, trace, cascade: int) -> void:
 				write_y -= 1
 			if write_y < 0:
 				break
-			var value := board.get_cell(read_pos)
+			var value: String = String(board.get_cell(read_pos))
 			if value != "":
 				var write_pos := Vector2i(x, write_y)
 				if write_pos != read_pos:
@@ -121,7 +121,7 @@ static func _refill(board, trace, cascade: int) -> void:
 			var pos := Vector2i(x, y)
 			if board.is_hole(pos) or board.get_cell(pos) != "":
 				continue
-			var value := board.refill_cell(pos)
+			var value: String = String(board.refill_cell(pos))
 			trace.add_event("spawn", {
 				"cascade": cascade,
 				"at": _pos_key(pos),
