@@ -71,7 +71,7 @@ func _ready() -> void:
 		button.add_theme_color_override("font_disabled_color", Color("#D2C4D7"))
 		var box := StyleBoxFlat.new()
 		box.bg_color = Color("#302039") if bool(data["open"]) else Color("#211A2A")
-		box.border_color = Color("#D5AD70", 0.92 if bool(data["open"]) else 0.62)
+		box.border_color = Color("#E8C987", 1.0 if bool(data["open"]) else 0.78)
 		box.set_border_width_all(1)
 		box.set_corner_radius_all(8)
 		box.shadow_color = Color(0,0,0,0.4)
