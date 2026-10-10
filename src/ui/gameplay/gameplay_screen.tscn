@@ -116,7 +116,7 @@ theme_override_constants/separation = 24
 layout_mode = 2
 size_flags_horizontal = 3
 theme_override_colors/font_color = Color(0.749, 0.647, 0.847, 1)
-theme_override_font_sizes/font_size = 28
+theme_override_font_sizes/font_size = 32
 text = "Gather Moon sigils  0/6"
 
 [node name="Moves" type="Label" parent="Layout/HUD"]
@@ -130,7 +130,7 @@ horizontal_alignment = 2
 custom_minimum_size = Vector2(68, 54)
 layout_mode = 2
 theme_override_colors/font_color = Color(0.945, 0.91, 0.866, 1)
-theme_override_font_sizes/font_size = 22
+theme_override_font_sizes/font_size = 24
 theme_override_styles/normal = SubResource("PauseUtility")
 theme_override_styles/hover = SubResource("PauseUtility")
 theme_override_styles/pressed = SubResource("PauseUtility")
@@ -163,7 +163,7 @@ theme_override_constants/separation = 6
 [node name="Label" type="Label" parent="Layout/Awakening/Content"]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.851, 0.71, 0.416, 1)
-theme_override_font_sizes/font_size = 18
+theme_override_font_sizes/font_size = 20
 text = "AWAKENING · MOON CAMEO"
 horizontal_alignment = 1
 
@@ -312,7 +312,7 @@ alignment = 1
 [node name="Eyebrow" type="Label" parent="ResultOverlay/Card/Content"]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.663, 0.6, 0.659, 1)
-theme_override_font_sizes/font_size = 17
+theme_override_font_sizes/font_size = 20
 text = "CURIO RECOVERED · RELIC 01"
 horizontal_alignment = 1
 
