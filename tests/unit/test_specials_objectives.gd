@@ -14,6 +14,7 @@ func _init() -> void:
 	_test_wax_seal_damage()
 	_test_objective_results()
 	_test_move_resolution_updates_blocker_objective()
+	_test_collect_family_objective_from_resolution()
 
 	if failures.is_empty():
 		print("TEST_PASS: specials blockers objectives")
@@ -98,6 +99,31 @@ func _test_move_resolution_updates_blocker_objective() -> void:
 	_expect(board.remaining_blockers() == 0, "bottom-row match must damage adjacent Wax Seal")
 	_expect(trace.result == "won", "clearing final blocker during resolution must win")
 	_expect(trace.event_types().has("blocker_cleared"), "trace must expose blocker clear")
+
+
+func _test_collect_family_objective_from_resolution() -> void:
+	var board = BoardState.from_level({
+		"width": 3,
+		"height": 3,
+		"moves": 3,
+		"objective": "collect_family",
+		"objective_family": "moon",
+		"objective_target": 3,
+		"families": ["moon", "rose", "moth", "key", "leaf"],
+		"initial_rows": [
+			["moth", "key", "leaf"],
+			["rose", "moon", "rose"],
+			["moon", "rose", "moon"]
+		]
+	}, 8080)
+	_expect(str(board.get("objective_family")) == "moon", "collect objective family must load from level data")
+	_expect(int(board.get("objective_target")) == 3, "collect objective target must load from level data")
+	_expect(int(board.get("objective_progress")) == 0, "collect objective starts at zero progress")
+	var trace = MoveResolver.try_swap(board, Vector2i(1, 1), Vector2i(1, 2))
+	_expect(trace.accepted, "collect objective fixture swap must be accepted")
+	_expect(int(board.get("objective_progress")) >= 3, "cleared moon pieces must advance collect objective")
+	_expect(trace.result == "won", "meeting collect-family target during resolution must win")
+	_expect(trace.event_types().has("objective_progress"), "trace must expose objective progress")
 
 func _expect(condition: bool, message: String) -> void:
 	if not condition:
