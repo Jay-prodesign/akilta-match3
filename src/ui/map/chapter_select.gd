@@ -20,12 +20,15 @@ func _ready() -> void:
 	layout.offset_top = 34
 	layout.offset_bottom = -28
 	layout.add_theme_constant_override("separation", 14)
+	layout.z_index = 10
+	layout.modulate = Color.WHITE
 	add_child(layout)
 
 	var world_art := TextureRect.new()
 	world_art.name = "HouseWorldBackdrop"
 	world_art.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	world_art.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	world_art.z_index = -1
 	world_art.texture = PieceAssetLoader.ornament("res://assets/world/ch01_curio_boutique/north_star_splash.svg")
 	world_art.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
 	world_art.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_COVERED
@@ -79,11 +82,11 @@ func _ready() -> void:
 		button.disabled = not bool(data["open"])
 		button.text = "%s\n%s\n%s%s" % [String(data["glyph"]), String(data["name"]), String(data["detail"]), "" if bool(data["open"]) else "\nSEALED WING"]
 		button.add_theme_font_size_override("font_size", 18)
-		button.add_theme_color_override("font_color", Color("#FFF0D8"))
-		button.add_theme_color_override("font_disabled_color", Color("#D2C4D7"))
+		button.add_theme_color_override("font_color", Color("#FFF7E9"))
+		button.add_theme_color_override("font_disabled_color", Color("#E9DDEC"))
 		var box := StyleBoxFlat.new()
-		box.bg_color = Color("#302039", 0.94) if bool(data["open"]) else Color("#211A2A", 0.90)
-		box.border_color = Color("#E8C987", 1.0 if bool(data["open"]) else 0.78)
+		box.bg_color = Color("#482650", 0.99) if bool(data["open"]) else Color("#302638", 0.97)
+		box.border_color = Color("#F2D49A", 1.0 if bool(data["open"]) else 0.92)
 		box.set_border_width_all(1)
 		box.set_corner_radius_all(8)
 		box.shadow_color = Color(0, 0, 0, 0.55)
