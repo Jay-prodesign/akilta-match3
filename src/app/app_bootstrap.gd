@@ -12,6 +12,7 @@ const MapScene = preload("res://src/ui/map/chapter_map.tscn")
 const PrestartScene = preload("res://src/ui/prestart/level_prestart.tscn")
 const SettingsScene = preload("res://src/ui/settings/settings_panel.tscn")
 const AudioDirectorScript = preload("res://src/feedback/audio_director.gd")
+const Typography = preload("res://src/ui/theme/typography.gd")
 
 @export var environment: String = "development"
 @export var save_path_override: String = ""
@@ -125,6 +126,7 @@ func show_settings() -> bool:
 		return false
 	_settings_screen = SettingsScene.instantiate()
 	screen_host.add_child(_settings_screen)
+	Typography.apply(_settings_screen)
 	_settings_screen.bind_settings(user_settings)
 	_settings_screen.close_requested.connect(close_settings)
 	return true
@@ -187,3 +189,4 @@ func _show_screen(screen: Node) -> void:
 		_current_screen.queue_free()
 	_current_screen = screen
 	screen_host.add_child(screen)
+	Typography.apply(screen)
