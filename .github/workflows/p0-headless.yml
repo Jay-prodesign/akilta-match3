@@ -101,6 +101,42 @@ jobs:
             exit 1
           fi
 
+      - name: Verify expected RED durable progression contract
+        shell: bash
+        run: |
+          set +e
+          output=$(timeout 30s ./godot --headless --path . -s res://tests/unit/test_save_progress.gd 2>&1)
+          status=$?
+          set -e
+          printf '%s\n' "$output"
+          if [ "$status" -eq 0 ]; then
+            echo "::error::Durable progression test unexpectedly passed before implementation."
+            exit 1
+          fi
+          if ! grep -Fq "TEST_FAIL: durable progression layer is missing" <<<"$output"; then
+            echo "::error::Durable progression RED failed for an unexpected reason."
+            exit 1
+          fi
+          echo "Expected RED confirmed: durable progression layer is missing."
+
+      - name: Verify expected RED first player journey
+        shell: bash
+        run: |
+          set +e
+          output=$(timeout 30s ./godot --headless --path . -s res://tests/integration/test_first_player_journey.gd 2>&1)
+          status=$?
+          set -e
+          printf '%s\n' "$output"
+          if [ "$status" -eq 0 ]; then
+            echo "::error::First journey test unexpectedly passed before House implementation."
+            exit 1
+          fi
+          if ! grep -Fq "TEST_FAIL: first player journey House surface is missing" <<<"$output"; then
+            echo "::error::First journey RED failed for an unexpected reason."
+            exit 1
+          fi
+          echo "Expected RED confirmed: first player journey House surface is missing."
+
       - name: Verify project parses cleanly
         shell: bash
         run: |
