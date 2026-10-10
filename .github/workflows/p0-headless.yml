@@ -42,7 +42,22 @@ jobs:
       - name: Run deterministic Match-3 core contract
         shell: bash
         run: |
-          timeout 30s ./godot --headless --path . -s res://tests/unit/test_match3_core.gd
+          set -euo pipefail
+          output=$(timeout 30s ./godot --headless --path . -s res://tests/unit/test_match3_core.gd 2>&1)
+          status=$?
+          printf '%s\n' "$output"
+          if [ "$status" -ne 0 ]; then
+            echo "::error::Deterministic core contract exited with $status."
+            exit "$status"
+          fi
+          if grep -Eq "SCRIPT ERROR:|(^| )ERROR:" <<<"$output"; then
+            echo "::error::Godot reported script/runtime errors during deterministic core contract."
+            exit 1
+          fi
+          if ! grep -Fq "TEST_PASS: deterministic Match-3 core" <<<"$output"; then
+            echo "::error::Deterministic core contract did not emit its PASS marker."
+            exit 1
+          fi
 
       - name: Verify expected RED specials/objectives contract
         shell: bash
@@ -66,10 +81,20 @@ jobs:
           fi
           echo "Expected RED confirmed: specials/objectives layer is missing."
 
-      - name: Verify project parses
+      - name: Verify project parses cleanly
         shell: bash
         run: |
-          timeout 30s ./godot --headless --path . --editor --quit
+          set -euo pipefail
+          output=$(timeout 30s ./godot --headless --path . --editor --quit 2>&1)
+          status=$?
+          printf '%s\n' "$output"
+          if [ "$status" -ne 0 ]; then
+            exit "$status"
+          fi
+          if grep -Eq "SCRIPT ERROR:|(^| )ERROR:" <<<"$output"; then
+            echo "::error::Godot project parse reported errors."
+            exit 1
+          fi
 
       - name: Smoke boot main scene
         shell: bash
