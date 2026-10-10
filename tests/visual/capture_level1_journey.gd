@@ -1,6 +1,7 @@
 extends SceneTree
 
 const APP_SCENE := preload("res://src/app/app_bootstrap.tscn")
+const SPLASH_SCENE := preload("res://src/ui/splash/splash_screen.tscn")
 const SAVE_PATH := "user://capture_level1_journey.json"
 const SETTINGS_PATH := "user://capture_level1_journey_settings.json"
 
@@ -9,6 +10,13 @@ func _init() -> void:
 
 func _capture() -> void:
 	_cleanup()
+	var splash = SPLASH_SCENE.instantiate()
+	root.add_child(splash)
+	await _frames(3)
+	if not await _save(splash, "journey-00-splash.png"):
+		return
+	splash.queue_free()
+	await process_frame
 	var app = APP_SCENE.instantiate()
 	app.save_path_override = SAVE_PATH
 	app.settings_path_override = SETTINGS_PATH
@@ -91,6 +99,20 @@ func _capture() -> void:
 		return
 	if not app.close_settings():
 		return _fail(app, "Settings did not close cleanly")
+	await _frames(2)
+	if not app.show_feature_preview("Events"):
+		return _fail(app, "House -> Events preview failed")
+	await _frames(3)
+	if not await _save(app, "journey-09-events.png"):
+		return
+	app.get_node("ScreenHost/FeaturePreview/FeatureLayout/BackToHouse").emit_signal("pressed")
+	await _frames(2)
+	if not app.show_feature_preview("Shop"):
+		return _fail(app, "House -> Shop preview failed")
+	await _frames(3)
+	if not await _save(app, "journey-10-shop.png"):
+		return
+	app.get_node("ScreenHost/FeaturePreview/FeatureLayout/BackToHouse").emit_signal("pressed")
 	await _frames(2)
 
 	print("CAPTURE_PASS: complete Level 1 player journey")
