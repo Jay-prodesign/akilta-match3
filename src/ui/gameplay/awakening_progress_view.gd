@@ -6,12 +6,16 @@ const LILAC := Color("#BFA5D8")
 const BONE := Color("#F1E8DD")
 const PLUM := Color("#241A27")
 const INK := Color("#100D12")
+const PieceAssetLoader = preload("res://src/match3/presentation/piece_asset_loader.gd")
+
+var _skull_texture: Texture2D
 
 var progress: int = 0
 var target: int = 6
 var family: String = "moon"
 
 func _ready() -> void:
+	_skull_texture = PieceAssetLoader.ornament("res://assets/pieces/skull.svg")
 	resized.connect(queue_redraw)
 	queue_redraw()
 
@@ -45,7 +49,10 @@ func _draw() -> void:
 		var t := 0.0 if count <= 1 else float(i) / float(count - 1)
 		var c := Vector2(lerpf(left_x, right_x, t), center_y)
 		var active := i < progress
-		_draw_moon_seal(c, size.y * 0.105, active)
+		if family == "wax_seal":
+			_draw_wax_seal(c, size.y * 0.105, active)
+		else:
+			_draw_moon_seal(c, size.y * 0.105, active)
 
 	var line := Color(GOLD)
 	line.a = 0.16
@@ -57,9 +64,12 @@ func _draw() -> void:
 		draw_circle(cameo_center, radius * (1.0 + float(ring) * 0.28), Color(LILAC, 0.018 * float(ring)))
 	draw_circle(cameo_center, radius * 0.78, Color("#182027"))
 	draw_arc(cameo_center, radius * 0.78, 0.0, TAU, 36, Color(GOLD, 0.62), 2.0)
-	var moon_c := cameo_center - Vector2(radius * 0.10, 0.0)
-	draw_circle(moon_c, radius * 0.46, Color(LILAC, 0.92 if progress >= target else 0.48))
-	draw_circle(moon_c + Vector2(radius * 0.18, -radius * 0.04), radius * 0.41, Color("#182027"))
+	if family == "wax_seal" and _skull_texture != null:
+		draw_texture_rect(_skull_texture, Rect2(cameo_center - Vector2(radius * 0.82, radius * 0.82), Vector2(radius * 1.64, radius * 1.64)), false)
+	else:
+		var moon_c := cameo_center - Vector2(radius * 0.10, 0.0)
+		draw_circle(moon_c, radius * 0.46, Color(LILAC, 0.92 if progress >= target else 0.48))
+		draw_circle(moon_c + Vector2(radius * 0.18, -radius * 0.04), radius * 0.41, Color("#182027"))
 
 func _draw_moon_seal(center: Vector2, radius: float, active: bool) -> void:
 	var backing := Color(PLUM)
@@ -71,3 +81,15 @@ func _draw_moon_seal(center: Vector2, radius: float, active: bool) -> void:
 	moon.a = 0.92 if active else 0.24
 	draw_circle(center - Vector2(radius * 0.10, 0.0), radius * 0.72, moon)
 	draw_circle(center + Vector2(radius * 0.20, -radius * 0.03), radius * 0.68, backing)
+
+func _draw_wax_seal(center: Vector2, radius: float, active: bool) -> void:
+	var backing := Color("#4B1E35")
+	draw_circle(center, radius * 1.36, backing)
+	var rim := Color(GOLD)
+	rim.a = 0.78 if active else 0.28
+	draw_arc(center, radius * 1.34, 0.0, TAU, 24, rim, 1.6)
+	if _skull_texture != null:
+		draw_texture_rect(_skull_texture, Rect2(center - Vector2(radius * 0.92, radius * 0.92), Vector2(radius * 1.84, radius * 1.84)), false)
+	else:
+		draw_line(center + Vector2(-radius * 0.45, -radius * 0.2), center + Vector2(radius * 0.45, radius * 0.2), Color(BONE, 0.9), 1.5)
+		draw_line(center + Vector2(radius * 0.45, -radius * 0.2), center + Vector2(-radius * 0.45, radius * 0.2), Color(BONE, 0.9), 1.5)
