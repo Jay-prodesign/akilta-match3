@@ -17,6 +17,8 @@ func _run() -> void:
 	_expect(String(contract.get("license", "")) == "CC0", "audio contract must remain CC0-only")
 	_expect(bool(contract.get("ambient_loaded", false)), "Curio House ambient candidate must load")
 	_expect(bool(contract.get("chime_loaded", false)), "ritual chime candidate must load")
+	_expect(bool(contract.get("soft_match_loaded", false)), "soft match tap must be generated for repeated gameplay feedback")
+	_expect(String(contract.get("match_feedback", "")) == "procedural_soft_wood_glass_tap", "match feedback must use the gentle replacement rather than the old repeated bell")
 	_expect(String(contract.get("music_bus", "")) == "Music", "ambient must route through Music bus")
 	_expect(String(contract.get("sfx_bus", "")) == "SFX", "feedback must route through SFX bus")
 	_expect((contract.get("feedback", {}) as Dictionary).size() >= 5, "semantic feedback profiles must exist")
