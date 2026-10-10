@@ -121,6 +121,8 @@ func contract() -> Dictionary:
 		"soft_match_loaded": _soft_match_stream != null,
 		"match_feedback": "procedural_soft_wood_glass_tap",
 		"mix_profile": "restrained_dark_cabinet_v2",
+		"ambient_gain_db": -34.0,
+		"match_gain_db": -32.0,
 		"music_bus": String(music_player.bus) if music_player != null else "",
 		"sfx_bus": String(sfx_player.bus) if sfx_player != null else "",
 		"feedback": FEEDBACK.duplicate(true),
