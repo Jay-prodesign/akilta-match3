@@ -4,6 +4,8 @@ extends Control
 signal back_requested
 signal start_requested(level_number: int)
 
+const PieceAssetLoader = preload("res://src/match3/presentation/piece_asset_loader.gd")
+
 @onready var level_label: Label = $Layout/Card/Content/Level
 @onready var title_label: Label = $Layout/Card/Content/Title
 @onready var objective_label: Label = $Layout/Card/Content/Objective
@@ -16,8 +18,21 @@ signal start_requested(level_number: int)
 var level_number: int = 1
 
 func _ready() -> void:
+	_install_world_backdrop()
 	start_button.pressed.connect(func(): start_requested.emit(level_number))
 	back_button.pressed.connect(func(): back_requested.emit())
+
+func _install_world_backdrop() -> void:
+	var art := TextureRect.new()
+	art.name = "NorthStarWorldBackdrop"
+	art.texture = PieceAssetLoader.ornament("res://assets/world/ch01_curio_boutique/curio_boutique_moonlit_backdrop.svg")
+	art.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+	art.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_COVERED
+	art.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	art.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	art.modulate = Color(0.78, 0.70, 0.80, 0.34)
+	add_child(art)
+	move_child(art, 1)
 
 func configure_level(value: int) -> bool:
 	level_number = value
