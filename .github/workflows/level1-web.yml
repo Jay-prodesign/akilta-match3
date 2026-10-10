@@ -14,6 +14,8 @@ on:
 
 permissions:
   contents: read
+  pages: write
+  id-token: write
 
 jobs:
   export:
@@ -46,6 +48,10 @@ jobs:
           test -s build/web/index.html
           test -s build/web/index.pck
           test -s build/web/index.wasm
+      - name: Upload Pages deployment artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: build/web/
       - name: Upload complete Web game
         uses: actions/upload-artifact@v4
         with:
@@ -53,3 +59,15 @@ jobs:
           path: build/web/
           if-no-files-found: error
           retention-days: 14
+
+  deploy:
+    needs: export
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Publish Level 1 on GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
