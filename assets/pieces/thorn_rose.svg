@@ -13,8 +13,8 @@
 <g fill="url(#wine)" stroke="#f0b1c4" stroke-opacity=".45" stroke-width="2">
 <ellipse cx="128" cy="81" rx="24" ry="39"/><ellipse cx="161" cy="94" rx="24" ry="39" transform="rotate(48 161 94)"/><ellipse cx="173" cy="129" rx="24" ry="39" transform="rotate(92 173 129)"/><ellipse cx="155" cy="160" rx="24" ry="39" transform="rotate(140 155 160)"/><ellipse cx="121" cy="170" rx="24" ry="39" transform="rotate(184 121 170)"/><ellipse cx="91" cy="151" rx="24" ry="39" transform="rotate(226 91 151)"/><ellipse cx="83" cy="116" rx="24" ry="39" transform="rotate(274 83 116)"/><ellipse cx="99" cy="88" rx="24" ry="39" transform="rotate(320 99 88)"/>
 </g>
-<circle cx="128" cy="126" r="47" fill="#8f3153" stroke="url(#gold)" stroke-width="3"/>
+<g fill="none" stroke="#54704C" stroke-width="7" stroke-linecap="round"><path d="M123 188 Q126 207 111 223"/><path d="M122 202 Q101 186 88 196"/><path d="M125 207 Q148 190 164 200"/></g><path d="M88 196 Q91 177 111 191 Q103 207 88 196Z M164 200 Q155 182 139 196 Q148 211 164 200Z" fill="#466A48" stroke="#9CB176" stroke-width="2"/><circle cx="128" cy="126" r="47" fill="#8f3153" stroke="url(#gold)" stroke-width="3"/>
 <path d="M97 134 C101 100 139 91 157 111 C173 129 156 158 132 159 C111 160 99 147 108 132 C116 119 139 119 145 131 C150 141 137 149 126 145" fill="none" stroke="#f4c1cf" stroke-opacity=".72" stroke-width="7" stroke-linecap="round"/>
-<g fill="#d8b56a"><path d="M128 44 l8 16 -8 12 -8-12z"/><path d="M196 126 l-16 8 -12-8 12-8z"/><path d="M128 208 l-8-16 8-12 8 12z"/><path d="M60 126 l16-8 12 8 -12 8z"/></g>
+<g fill="#f5c6d0" opacity=".7"><path d="M105 105Q113 91 125 93" stroke="#fff1e8" stroke-width="3" fill="none"/><path d="M153 118Q164 131 152 145" stroke="#f8afc8" stroke-width="3" fill="none"/></g><g fill="#d8b56a"><path d="M128 44 l8 16 -8 12 -8-12z"/><path d="M196 126 l-16 8 -12-8 12-8z"/><path d="M128 208 l-8-16 8-12 8 12z"/><path d="M60 126 l16-8 12 8 -12 8z"/></g>
 <circle cx="128" cy="126" r="94" fill="url(#gloss)" opacity=".45"/>
 </svg>
