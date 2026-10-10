@@ -55,7 +55,7 @@ func _run() -> void:
 
 	# A future-schema primary is preserved and blocks writes so an older build
 	# cannot silently downgrade/overwrite newer player data.
-	var future := recovered_progress.to_dict()
+	var future: Dictionary = recovered_progress.to_dict()
 	future["schema_version"] = 99
 	var future_file := FileAccess.open(TEST_PATH, FileAccess.WRITE)
 	_expect(future_file != null, "test must create future-schema primary")
