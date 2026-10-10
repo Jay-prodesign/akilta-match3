@@ -66,10 +66,11 @@ func _ready() -> void:
 		button.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 		button.disabled = not bool(data["open"])
 		button.text = "%s\n%s\n%s%s" % [String(data["glyph"]), String(data["name"]), String(data["detail"]), "" if bool(data["open"]) else "\nSEALED WING"]
-		button.add_theme_font_size_override("font_size", 18)
-		button.add_theme_color_override("font_color", Color("#F4E5D3") if bool(data["open"]) else Color("#B6A6B9"))
+		button.add_theme_font_size_override("font_size", 20)
+		button.add_theme_color_override("font_color", Color("#F4E5D3"))
+		button.add_theme_color_override("font_disabled_color", Color("#B6A6B9"))
 		var box := StyleBoxFlat.new()
-		box.bg_color = Color("#251529") if bool(data["open"]) else Color("#1B1724")
+		box.bg_color = Color("#302039") if bool(data["open"]) else Color("#211A2A")
 		box.border_color = Color("#D5AD70", 0.85 if bool(data["open"]) else 0.42)
 		box.set_border_width_all(1)
 		box.set_corner_radius_all(8)
