@@ -37,7 +37,7 @@ func _run() -> void:
 	_expect(board != null, "GameplayScreen must own logical board_state")
 	if board != null:
 		_expect(int(board.width) == 7 and int(board.height) == 7, "Level 1 board must be 7x7")
-		_expect(board.families.size() == 5, "Level 1 must use five piece families")
+		_expect(board.families.size() == 8, "Level 1 must use the eight North Star piece families")
 		_expect(str(board.objective_type) == "collect_family", "Level 1 must teach collect_family")
 		_expect(str(board.objective_family) == "moon", "Level 1 target family must be moon")
 		_expect(int(board.objective_target) == 6, "Level 1 target must be six moon pieces")
@@ -54,8 +54,8 @@ func _run() -> void:
 			_expect(str(asset_contract.get("source", "")) == "AKILTA first-party original SVG", "piece assets must remain first-party originals")
 			_expect(not bool(asset_contract.get("paid_dependency", true)), "core piece assets must have no paid dependency")
 			var loaded_assets: Dictionary = asset_contract.get("families", {})
-			_expect(loaded_assets.size() == 5, "five SVG piece assets must be registered")
-			for family in ["moon", "rose", "moth", "key", "leaf"]:
+			_expect(loaded_assets.size() == 8, "eight SVG piece assets must be registered")
+			for family in ["moon", "rose", "moth", "key", "leaf", "cat", "candle", "skull"]:
 				_expect(bool(loaded_assets.get(family, false)), "%s SVG candidate must load" % family)
 		_expect(board_view.has_method("teaching_contract"), "BoardView must expose Level 1 teaching contract")
 		if board_view.has_method("teaching_contract"):
@@ -71,7 +71,7 @@ func _run() -> void:
 			_expect(float(motion.get("total_duration", 0.0)) > 0.0, "motion profile must define a non-zero move-resolution duration")
 		if board_view.has_method("visual_contract"):
 			var contract: Dictionary = board_view.visual_contract()
-			_expect(contract.size() == 5, "BoardView must expose five visual families")
+			_expect(contract.size() == 8, "BoardView must expose eight visual families")
 			var silhouettes: Dictionary = {}
 			var motifs: Dictionary = {}
 			for family in contract.keys():
@@ -81,8 +81,8 @@ func _run() -> void:
 				_expect(str(descriptor.get("world_role", "")) == "base_family", "each Level 1 piece must declare its world/gameplay role")
 				_expect(str(descriptor.get("status", "")) == "first_party_svg_candidate_v2", "Level 1 piece visuals must remain explicitly Founder-unapproved first-party SVG candidates before D-027")
 				_expect(str(descriptor.get("material", "")) != "", "each Level 1 piece must declare a candidate material language")
-			_expect(silhouettes.size() == 5, "piece silhouettes must be unique; hue-only differentiation is forbidden")
-			_expect(motifs.size() == 5, "piece motifs must be unique; hue-only differentiation is forbidden")
+			_expect(silhouettes.size() == 8, "piece silhouettes must be unique; hue-only differentiation is forbidden")
+			_expect(motifs.size() == 8, "piece motifs must be unique; hue-only differentiation is forbidden")
 
 	_expect(screen.get_node_or_null("Layout/HUD/Objective") != null, "HUD must expose Objective")
 	_expect(screen.get_node_or_null("Layout/HUD/Moves") != null, "HUD must expose Moves")
