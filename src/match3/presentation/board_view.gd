@@ -128,7 +128,7 @@ func _draw_cell(rect: Rect2, pos: Vector2i) -> void:
 	draw_style_box(_cell_box(radius), rect)
 	var inset := rect.grow(-rect.size.x * 0.10)
 	var family: String = String(board_state.get_cell(pos))
-	var descriptor := PieceVisuals.descriptor(family)
+	var descriptor: Dictionary = PieceVisuals.descriptor(family)
 	_draw_piece(inset, family, descriptor)
 
 	var special: String = String(board_state.get_special(pos))
@@ -152,7 +152,7 @@ func _draw_piece(rect: Rect2, family: String, descriptor: Dictionary) -> void:
 		return
 	var color: Color = descriptor["color"]
 	var c := rect.get_center()
-	var r := min(rect.size.x, rect.size.y) * 0.38
+	var r: float = minf(rect.size.x, rect.size.y) * 0.38
 
 	match family:
 		"moon":
@@ -163,7 +163,7 @@ func _draw_piece(rect: Rect2, family: String, descriptor: Dictionary) -> void:
 			var points := PackedVector2Array()
 			for i in range(8):
 				var angle := TAU * float(i) / 8.0 - PI * 0.5
-				var rr := r if i % 2 == 0 else r * 0.72
+				var rr: float = r if i % 2 == 0 else r * 0.72
 				points.append(c + Vector2(cos(angle), sin(angle)) * rr)
 			draw_colored_polygon(points, color)
 			draw_arc(c, r * 0.43, 0.0, TAU * 1.6, 32, BONE, max(1.5, r * 0.08))
