@@ -5,6 +5,7 @@ signal level_won(level_id: String, curio_id: String, house_stage_reward: int)
 
 const BoardState = preload("res://src/match3/domain/board_state.gd")
 const MoveResolver = preload("res://src/match3/domain/move_resolver.gd")
+const HapticsController = preload("res://src/feedback/haptics_controller.gd")
 const KENNEY_DIVIDER_PATH := "res://assets/candidate/third_party/kenney/fantasy-ui-borders/divider-004.png"
 
 @export var default_level_path := "res://content/levels/ch01/level_001.json"
@@ -21,6 +22,7 @@ var current_win_title: String = "THE CABINET STIRS"
 var current_win_detail: String = "Something in the Curio Boutique has awakened."
 var _pending_win: bool = false
 var _pending_terminal_result: String = ""
+var haptics = HapticsController.new()
 
 @onready var eyebrow_label: Label = $Layout/Eyebrow
 @onready var title_label: Label = $Layout/Title
@@ -47,6 +49,7 @@ func _ready() -> void:
 func apply_presentation_settings(state: Dictionary) -> void:
 	if board_view != null and board_view.has_method("apply_presentation_settings"):
 		board_view.apply_presentation_settings(state)
+	haptics.apply_settings(state)
 
 func load_level_path(path: String, seed_value: int = 1001) -> bool:
 	if not FileAccess.file_exists(path):
@@ -88,6 +91,11 @@ func attempt_swap(from: Vector2i, to: Vector2i):
 	_refresh_hud()
 	_refresh_move_feedback(last_trace)
 	if last_trace.accepted:
+		var feedback_types: Array[String] = last_trace.event_types()
+		if feedback_types.has("combo_triggered") or feedback_types.has("special_triggered") or feedback_types.has("special_created"):
+			haptics.request_special()
+		else:
+			haptics.request_match()
 		var terminal_result := String(last_trace.result)
 		if terminal_result == "won" or terminal_result == "failed":
 			if motion_started:
@@ -106,6 +114,7 @@ func continue_after_win() -> bool:
 func retry_current_level() -> bool:
 	if current_level_path == "":
 		return false
+	haptics.reset_for_new_attempt()
 	return load_level_path(current_level_path, current_seed)
 
 func _on_swap_requested(from: Vector2i, to: Vector2i) -> void:
@@ -146,12 +155,14 @@ func _refresh_hud() -> void:
 
 func _show_result_if_terminal(result: String) -> void:
 	if result == "won":
+		haptics.request_terminal("won")
 		_pending_win = true
 		result_title.text = current_win_title
 		result_detail.text = current_win_detail
 		result_action.text = "RETURN TO THE HOUSE"
 		result_overlay.visible = true
 	elif result == "failed":
+		haptics.request_terminal("failed")
 		_pending_win = false
 		result_title.text = "THE ROOM WAITS"
 		result_detail.text = "The House keeps its secrets. Try another arrangement."
