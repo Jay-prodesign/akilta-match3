@@ -7,8 +7,9 @@ const BONE := Color("#F1E8DD")
 const PLUM := Color("#2A1C32")
 const INK := Color("#100D12")
 const ROSE := Color("#C66A88")
-const CAMEO_SEALED = preload("res://assets/curios/ch01_curio_moon_cameo_sealed_v01.svg")
-const CAMEO_AWAKENED = preload("res://assets/curios/ch01_curio_moon_cameo_awakened_v01.svg")
+const CAMEO_SEALED_PATH := "res://assets/curios/ch01_curio_moon_cameo_sealed_v01.svg"
+const CAMEO_AWAKENED_PATH := "res://assets/curios/ch01_curio_moon_cameo_awakened_v01.svg"
+var _cameo_textures: Dictionary = {}
 
 @export var mode: String = "prestart"
 @export_range(0.0, 1.0, 0.05) var glow_strength: float = 0.55
@@ -64,10 +65,11 @@ func _draw_cameo_identity(center: Vector2, radius: float, dormant: bool, show_or
 	draw_arc(center, radius * 0.86, 0.0, TAU, 64, Color(LILAC, 0.16 if dormant else 0.46), 1.8)
 
 	# The same authored Curio master is shared by House, prestart, result and Collection.
-	var cameo_texture: Texture2D = CAMEO_SEALED if dormant or mode == "prestart" else CAMEO_AWAKENED
+	var cameo_texture: Texture2D = _load_cameo(CAMEO_SEALED_PATH if dormant or mode == "prestart" else CAMEO_AWAKENED_PATH)
 	var cameo_rect := Rect2(center - Vector2.ONE * radius * 0.88, Vector2.ONE * radius * 1.76)
-	draw_texture_rect(cameo_texture, cameo_rect, false)
-	return
+	if cameo_texture != null:
+		draw_texture_rect(cameo_texture, cameo_rect, false)
+		return
 
 	# Smoked moonstone cameo.
 	draw_circle(center + Vector2(radius * 0.025, radius * 0.045), radius * 0.76, Color(0, 0, 0, 0.34))
@@ -126,3 +128,18 @@ func _draw_wax_seal(center: Vector2, r: float) -> void:
 	draw_arc(center, r, 0.0, TAU, 30, Color(GOLD, 0.45), 1.5)
 	draw_line(center + Vector2(-r * 0.42, 0), center + Vector2(r * 0.42, 0), Color(BONE, 0.62), 1.2)
 	draw_line(center + Vector2(0, -r * 0.42), center + Vector2(0, r * 0.42), Color(BONE, 0.62), 1.2)
+
+func _load_cameo(path: String) -> Texture2D:
+	if _cameo_textures.has(path):
+		return _cameo_textures[path]
+	var file := FileAccess.open(path, FileAccess.READ)
+	if file == null:
+		return null
+	var source := file.get_as_text()
+	file.close()
+	var image := Image.new()
+	if image.load_svg_from_string(source, 1.0) != OK or image.is_empty():
+		return null
+	var texture := ImageTexture.create_from_image(image)
+	_cameo_textures[path] = texture
+	return texture
