@@ -82,10 +82,16 @@ func _on_play_pressed() -> void:
 
 func _build_navigation_dock() -> void:
 	# Persistent, touch-sized first-party navigation; Level 1 remains the only open level pending founder approval.
+	var dock_scroll := ScrollContainer.new()
+	dock_scroll.name = "BottomNavigationScroll"
+	dock_scroll.custom_minimum_size = Vector2(0, 60)
+	dock_scroll.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_AUTO
+	dock_scroll.vertical_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
+	$Layout.add_child(dock_scroll)
 	var dock := HBoxContainer.new()
 	dock.name = "BottomNavigation"
 	dock.add_theme_constant_override("separation", 4)
-	$Layout.add_child(dock)
+	dock_scroll.add_child(dock)
 	for entry in [
 		{"title": "HOUSE", "action": "house"},
 		{"title": "CURIOS", "action": "curios"},
@@ -96,7 +102,7 @@ func _build_navigation_dock() -> void:
 	]:
 		var button := Button.new()
 		button.text = String(entry["title"])
-		button.custom_minimum_size = Vector2(0, 54)
+		button.custom_minimum_size = Vector2(94, 54)
 		button.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 		button.add_theme_font_size_override("font_size", 15)
 		var action := String(entry["action"])
