@@ -1,12 +1,14 @@
 class_name Match3PieceAssetLoader
 extends RefCounted
 
+# Visual replacement mapping keeps legacy deterministic Level 1 family IDs intact.
+# This is a transitional visual skin, NOT the final family taxonomy.
 const PATHS := {
 	"moon": "res://assets/pieces/moon_sigil.svg",
 	"rose": "res://assets/pieces/thorn_rose.svg",
-	"moth": "res://assets/pieces/luna_moth.svg",
-	"key": "res://assets/pieces/curio_key.svg",
-	"leaf": "res://assets/pieces/night_ivy.svg",
+	"moth": "res://assets/pieces/black_cat.svg",
+	"key": "res://assets/pieces/potion.svg",
+	"leaf": "res://assets/pieces/pentagram.svg",
 }
 
 static var _textures: Dictionary = {}
@@ -42,7 +44,7 @@ static func contract() -> Dictionary:
 		loaded[family] = texture(String(family)) != null
 	return {
 		"source": "AKILTA first-party original SVG",
-		"status": "art_direction_candidate_v2",
+		"status": "north_star_transitional_skin_v1",
 		"paid_dependency": false,
 		"fallback": "owned_procedural_renderer",
 		"families": loaded,
