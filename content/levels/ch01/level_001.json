@@ -1,4 +1,10 @@
 {
+  "schema_version": 1,
+  "content_status": "draft",
+  "validation_seed": 1001,
+  "validation_expected_result": "won",
+  "teaching_moves": [[1, 4, 2, 4]],
+  "validation_expect": {"special_triggered_min": 1},
   "id": "ch01_level_001",
   "chapter": "curio_boutique",
   "title": "Moonlit Cabinet",
@@ -24,7 +30,5 @@
     ["key", "leaf", "moon", "rose", "moth", "key", "leaf"],
     ["leaf", "moon", "rose", "moon", "rose", "leaf", "moth"]
   ],
-  "specials": [
-    {"x": 1, "y": 4, "kind": "global"}
-  ]
+  "specials": [{"x": 1, "y": 4, "kind": "global"}]
 }

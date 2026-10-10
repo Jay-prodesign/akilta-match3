@@ -1,4 +1,10 @@
 {
+  "schema_version": 1,
+  "content_status": "draft",
+  "validation_seed": 1003,
+  "validation_expected_result": "won",
+  "teaching_moves": [[2, 3, 2, 4], [3, 3, 3, 4]],
+  "validation_expect": {"special_created_min": 1, "special_triggered_min": 1},
   "id": "ch01_level_003",
   "chapter": "curio_boutique",
   "title": "Thornlight Arrangement",

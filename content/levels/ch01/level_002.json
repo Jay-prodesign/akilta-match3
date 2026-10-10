@@ -1,4 +1,10 @@
 {
+  "schema_version": 1,
+  "content_status": "draft",
+  "validation_seed": 1002,
+  "validation_expected_result": "won",
+  "teaching_moves": [[4, 2, 4, 3]],
+  "validation_expect": {"blocker_cleared_min": 2},
   "id": "ch01_level_002",
   "chapter": "curio_boutique",
   "title": "Sealed Display",
