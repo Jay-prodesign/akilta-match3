@@ -178,10 +178,9 @@ func show_feature_preview(feature: String) -> bool:
 	detail.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	detail.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	detail.add_theme_color_override("font_color", Color("#D8C6C3"))
-	detail.add_theme_font_size_override("font_size", 15)
+	detail.add_theme_font_size_override("font_size", 17)
 	layout.add_child(detail)
 	var cards := VBoxContainer.new()
-	cards.size_flags_vertical = Control.SIZE_EXPAND_FILL
 	cards.add_theme_constant_override("separation", 10)
 	layout.add_child(cards)
 	var entries: Array[Dictionary]
@@ -199,7 +198,7 @@ func show_feature_preview(feature: String) -> bool:
 		]
 	for entry in entries:
 		var card := PanelContainer.new()
-		card.size_flags_vertical = Control.SIZE_EXPAND_FILL
+		card.custom_minimum_size = Vector2(0, 145)
 		var panel_style := StyleBoxFlat.new()
 		panel_style.bg_color = Color("#171321")
 		panel_style.border_color = Color("#D5AD70", 0.58)
@@ -232,19 +231,19 @@ func show_feature_preview(feature: String) -> bool:
 		var card_title := Label.new()
 		card_title.text = String(entry["title"])
 		card_title.add_theme_color_override("font_color", Color("#F4E5D3"))
-		card_title.add_theme_font_size_override("font_size", 16)
+		card_title.add_theme_font_size_override("font_size", 19)
 		copy.add_child(card_title)
 		var card_body := Label.new()
 		card_body.text = String(entry["body"])
 		card_body.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 		card_body.add_theme_color_override("font_color", Color("#D8C6C3"))
-		card_body.add_theme_font_size_override("font_size", 13)
+		card_body.add_theme_font_size_override("font_size", 16)
 		copy.add_child(card_body)
 		var status := Label.new()
 		status.text = String(entry["status"])
 		status.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 		status.add_theme_color_override("font_color", Color("#BFA5D8"))
-		status.add_theme_font_size_override("font_size", 10)
+		status.add_theme_font_size_override("font_size", 12)
 		copy.add_child(status)
 	var back := Button.new()
 	back.name = "BackToHouse"
