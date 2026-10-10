@@ -8,6 +8,9 @@ const PATHS := {
 	"moth": "res://assets/pieces/crow.svg",
 	"key": "res://assets/pieces/potion.svg",
 	"leaf": "res://assets/pieces/pentagram.svg",
+	"cat": "res://assets/pieces/black_cat.svg",
+	"candle": "res://assets/pieces/candle.svg",
+	"skull": "res://assets/pieces/skull.svg",
 }
 
 static var _textures: Dictionary = {}
