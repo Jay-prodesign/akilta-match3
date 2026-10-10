@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "content_status": "draft",
+  "content_status": "playtest",
   "validation_seed": 1001,
   "validation_expected_result": "won",
   "teaching_moves": [
@@ -17,8 +17,8 @@
   "id": "ch01_level_001",
   "chapter": "curio_boutique",
   "visual_profile": "curio_boutique_opening",
-  "piece_set": "north_star_five_family_candidate_v3",
-  "visual_status": "north_star_candidate_v3",
+  "piece_set": "north_star_eight_symbol_candidate_v4",
+  "visual_status": "north_star_eight_symbol_candidate_v4",
   "title": "Moonlit Cabinet",
   "eyebrow": "CURIO BOUTIQUE · FIRST AWAKENING",
   "hint": "Match the moon sigils to wake the first relic.",
@@ -37,13 +37,16 @@
     "rose",
     "moth",
     "key",
-    "leaf"
+    "leaf",
+    "cat",
+    "candle",
+    "skull"
   ],
   "initial_rows": [
     [
       "moon",
       "rose",
-      "moth",
+      "cat",
       "key",
       "leaf",
       "moon",
@@ -53,7 +56,7 @@
       "rose",
       "moth",
       "key",
-      "leaf",
+      "candle",
       "moon",
       "rose",
       "moth"
@@ -63,7 +66,7 @@
       "key",
       "leaf",
       "moon",
-      "rose",
+      "skull",
       "moth",
       "key"
     ],
