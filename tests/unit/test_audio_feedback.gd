@@ -22,7 +22,7 @@ func _run() -> void:
 	_expect(String(contract.get("music_bus", "")) == "Music", "ambient must route through Music bus")
 	_expect(String(contract.get("sfx_bus", "")) == "SFX", "feedback must route through SFX bus")
 	_expect((contract.get("feedback", {}) as Dictionary).size() >= 5, "semantic feedback profiles must exist")
-	_expect(String(contract.get("mix_profile", "")) == "restrained_dark_cabinet_v2", "mix must use the restrained cabinet profile")
+	_expect(String(contract.get("mix_profile", "")) == "restrained_dark_cabinet_v3", "mix must use the restrained cabinet profile")
 	_expect(float(contract.get("ambient_gain_db", 0.0)) <= -32.0, "ambient must stay subtle beneath gameplay")
 	_expect(float(contract.get("match_gain_db", 0.0)) <= -30.0, "repeated match taps must not be piercing")
 	var profiles: Dictionary = contract.get("feedback", {})
