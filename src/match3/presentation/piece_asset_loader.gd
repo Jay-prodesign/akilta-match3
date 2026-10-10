@@ -7,7 +7,7 @@ const PATHS := {
 	"moon": "res://assets/pieces/moon_sigil.svg",
 	"rose": "res://assets/pieces/thorn_rose.svg",
 	"moth": "res://assets/pieces/crow.svg",
-	"key": "res://assets/pieces/potion.svg",
+	"key": "res://assets/pieces/curio_key.svg",
 	"leaf": "res://assets/pieces/pentagram.svg",
 }
 
