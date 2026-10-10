@@ -63,12 +63,12 @@ func _ready() -> void:
 	layout.add_child(grid)
 
 	var chapters := [
-		{"id":"curio_boutique","name":"CURIO BOUTIQUE","detail":"Rare finds · Levels 1–3","open":true,"glyph":"✦","x":0.03,"y":0.16,"w":0.44,"h":0.14},
-		{"id":"witch_atelier","name":"WITCH ATELIER","detail":"Potions & experiments","open":false,"glyph":"⚗","x":0.53,"y":0.24,"w":0.44,"h":0.14},
-		{"id":"dark_vanity","name":"DARK VANITY","detail":"Mirrors & secrets","open":false,"glyph":"☽","x":0.03,"y":0.37,"w":0.42,"h":0.14},
-		{"id":"grand_hall","name":"GRAND HALL","detail":"Your restored House","open":false,"glyph":"⌂","x":0.53,"y":0.45,"w":0.43,"h":0.14},
-		{"id":"moon_conservatory","name":"MOON CONSERVATORY","detail":"Celestial botanicals","open":false,"glyph":"❋","x":0.53,"y":0.64,"w":0.44,"h":0.14},
-		{"id":"cemetery_garden","name":"CEMETERY GARDEN","detail":"Resting beauties","open":false,"glyph":"✧","x":0.03,"y":0.73,"w":0.44,"h":0.14}
+		{"id":"curio_boutique","name":"CURIO BOUTIQUE","detail":"Rare finds · Levels 1–3","open":true,"glyph":"✦","art":"res://assets/curios/ch01_curio_moon_cameo_awakened_v01.svg","x":0.03,"y":0.16,"w":0.44,"h":0.14},
+		{"id":"witch_atelier","name":"WITCH ATELIER","detail":"Potions & experiments","open":false,"glyph":"⚗","art":"res://assets/pieces/potion.svg","x":0.53,"y":0.24,"w":0.44,"h":0.14},
+		{"id":"dark_vanity","name":"DARK VANITY","detail":"Mirrors & secrets","open":false,"glyph":"☽","art":"res://assets/pieces/moon_sigil.svg","x":0.03,"y":0.37,"w":0.42,"h":0.14},
+		{"id":"grand_hall","name":"GRAND HALL","detail":"Your restored House","open":false,"glyph":"⌂","art":"res://assets/world/ch01_curio_boutique/curio_boutique_moonlit_backdrop.svg","x":0.53,"y":0.45,"w":0.43,"h":0.14},
+		{"id":"moon_conservatory","name":"MOON CONSERVATORY","detail":"Celestial botanicals","open":false,"glyph":"❋","art":"res://assets/pieces/thorn_rose.svg","x":0.53,"y":0.64,"w":0.44,"h":0.14},
+		{"id":"cemetery_garden","name":"CEMETERY GARDEN","detail":"Resting beauties","open":false,"glyph":"✧","art":"res://assets/pieces/crow.svg","x":0.03,"y":0.73,"w":0.44,"h":0.14}
 	]
 	var hotspot_buttons: Array[Button] = []
 	for data in chapters:
@@ -80,12 +80,16 @@ func _ready() -> void:
 		button.set_meta("map_h", float(data["h"]))
 		button.custom_minimum_size = Vector2(240, 110)
 		button.disabled = not bool(data["open"])
-		button.text = "%s\n%s\n%s%s" % [String(data["glyph"]), String(data["name"]), String(data["detail"]), "" if bool(data["open"]) else "\nSEALED WING"]
+		button.text = "%s\n%s%s" % [String(data["name"]), String(data["detail"]), "" if bool(data["open"]) else "\nSEALED WING"]
+		button.icon = PieceAssetLoader.ornament(String(data.get("art", "")))
+		button.icon_alignment = HORIZONTAL_ALIGNMENT_LEFT
+		button.icon_max_width = 104
+		button.expand_icon = true
 		button.add_theme_font_size_override("font_size", 24)
 		button.add_theme_color_override("font_color", Color("#FFF7E9"))
 		button.add_theme_color_override("font_disabled_color", Color("#E9DDEC"))
 		var box := StyleBoxFlat.new()
-		box.bg_color = Color("#482650", 0.99) if bool(data["open"]) else Color("#302638", 0.97)
+		box.bg_color = Color("#241827", 0.92) if bool(data["open"]) else Color("#17131D", 0.90)
 		box.border_color = Color("#F2D49A", 1.0 if bool(data["open"]) else 0.92)
 		box.set_border_width_all(1)
 		box.set_corner_radius_all(8)
