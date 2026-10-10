@@ -67,6 +67,23 @@ func _capture() -> void:
 	if not await _save(app, "journey-07-curio-collection.png"):
 		return
 
+	var collection = app.current_screen()
+	var collection_back := collection.get_node_or_null("Layout/Back")
+	if collection_back == null:
+		return _fail(app, "Curio Collection back control missing")
+	collection_back.emit_signal("pressed")
+	await _frames(3)
+	if String(app.current_route_name()) != "house":
+		return _fail(app, "Collection did not return to House before settings capture")
+	if not app.show_settings():
+		return _fail(app, "House -> Settings failed")
+	await _frames(3)
+	if not await _save(app, "journey-08-settings.png"):
+		return
+	if not app.close_settings():
+		return _fail(app, "Settings did not close cleanly")
+	await _frames(2)
+
 	print("CAPTURE_PASS: complete Level 1 player journey")
 	app.queue_free()
 	await process_frame
