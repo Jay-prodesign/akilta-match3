@@ -174,6 +174,18 @@ jobs:
           if grep -Eq "SCRIPT ERROR:|(^| )ERROR:" <<<"$output"; then exit 1; fi
           grep -Fq "TEST_PASS: complete Level 1 shell journey" <<<"$output"
 
+      - name: Run Level 1 fail retry recovery
+        shell: bash
+        run: |
+          set +e
+          output=$(timeout 30s ./godot --headless --path . -s res://tests/integration/test_level1_failure_recovery.gd 2>&1)
+          status=$?
+          set -e
+          printf '%s\n' "$output"
+          if [ "$status" -ne 0 ]; then exit "$status"; fi
+          if grep -Eq "SCRIPT ERROR:|(^| )ERROR:" <<<"$output"; then exit 1; fi
+          grep -Fq "TEST_PASS: Level 1 fail retry recovery" <<<"$output"
+
       - name: Verify project parses cleanly
         shell: bash
         run: |

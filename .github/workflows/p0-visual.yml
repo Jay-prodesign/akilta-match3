@@ -53,6 +53,21 @@ jobs:
           test -s artifacts/journey-06-house-awakened.png
           test -s artifacts/journey-07-curio-collection.png
 
+      - name: Render Level 1 fail and retry
+        shell: bash
+        run: |
+          set -uo pipefail
+          set +e
+          output=$(LIBGL_ALWAYS_SOFTWARE=1 xvfb-run -a ./godot --audio-driver Dummy --path . -s res://tests/visual/capture_level1_failure.gd 2>&1)
+          status=$?
+          set -e
+          printf '%s\n' "$output"
+          if [ "$status" -ne 0 ]; then exit "$status"; fi
+          if grep -Eq "SCRIPT ERROR:|(^| )ERROR:|CAPTURE_FAIL:" <<<"$output"; then exit 1; fi
+          grep -Fq "CAPTURE_PASS: Level 1 fail retry" <<<"$output"
+          test -s artifacts/level1-fail-result.png
+          test -s artifacts/level1-retry-restored.png
+
       - name: Render Level 1 portrait
         shell: bash
         run: |
@@ -147,6 +162,8 @@ jobs:
             artifacts/journey-05-level1-result.png
             artifacts/journey-06-house-awakened.png
             artifacts/journey-07-curio-collection.png
+            artifacts/level1-fail-result.png
+            artifacts/level1-retry-restored.png
           if-no-files-found: error
           retention-days: 14
 
