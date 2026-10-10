@@ -116,7 +116,7 @@ static func _validate_positions(level: Dictionary, width: int, height: int, issu
 			issues.append("%s: duplicate blocker position" % level_id)
 		occupied_blockers[pos] = true
 
-func _validate_teaching_moves(level: Dictionary, width: int, height: int, issues: Array[String]) -> void:
+static func _validate_teaching_moves(level: Dictionary, width: int, height: int, issues: Array[String]) -> void:
 	var level_id: String = String(level.get("id", "<missing-id>"))
 	var moves = level.get("teaching_moves", [])
 	if not moves is Array or moves.is_empty():
