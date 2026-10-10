@@ -1,16 +1,8 @@
 name: Level 1 iPhone Web Build
 
 on:
+  # Run the full milestone checks deliberately, not on every development commit.
   workflow_dispatch:
-  push:
-    branches: [p0/bootstrap, p0/north-star-level1-gate]
-    paths:
-      - 'src/**'
-      - 'assets/**'
-      - 'content/**'
-      - 'project.godot'
-      - 'export_presets.cfg'
-      - '.github/workflows/level1-web.yml'
 
 permissions:
   contents: read
