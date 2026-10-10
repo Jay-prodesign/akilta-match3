@@ -113,11 +113,11 @@ func _draw_empty_state() -> void:
 func _board_geometry() -> Dictionary:
 	if board_state == null or board_state.width <= 0 or board_state.height <= 0:
 		return {"origin": Vector2.ZERO, "cell_size": 1.0}
-	var available := Vector2(max(1.0, size.x - 28.0), max(1.0, size.y - 28.0))
-	var by_width := (available.x - cell_gap * float(board_state.width - 1)) / float(board_state.width)
-	var by_height := (available.y - cell_gap * float(board_state.height - 1)) / float(board_state.height)
-	var cell_size := max(8.0, min(by_width, by_height))
-	var total := Vector2(
+	var available: Vector2 = Vector2(maxf(1.0, size.x - 28.0), maxf(1.0, size.y - 28.0))
+	var by_width: float = (available.x - cell_gap * float(board_state.width - 1)) / float(board_state.width)
+	var by_height: float = (available.y - cell_gap * float(board_state.height - 1)) / float(board_state.height)
+	var cell_size: float = maxf(8.0, minf(by_width, by_height))
+	var total: Vector2 = Vector2(
 		cell_size * board_state.width + cell_gap * (board_state.width - 1),
 		cell_size * board_state.height + cell_gap * (board_state.height - 1)
 	)
