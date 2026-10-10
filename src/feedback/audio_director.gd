@@ -9,11 +9,11 @@ const AMBIENT_PATH := "res://assets/audio/music/curio_house_ambient.ogg"
 const CHIME_PATH := "res://assets/audio/sfx/ritual_chime.wav"
 
 const FEEDBACK := {
-	"match": {"pitch": 0.92, "gain_db": -32.0},
-	"special": {"pitch": 0.96, "gain_db": -30.0},
-	"win": {"pitch": 1.00, "gain_db": -25.0},
-	"fail": {"pitch": 0.82, "gain_db": -33.0},
-	"retry": {"pitch": 0.90, "gain_db": -32.0},
+	"match": {"pitch": 0.88, "gain_db": -34.0},
+	"special": {"pitch": 0.94, "gain_db": -32.0},
+	"win": {"pitch": 0.98, "gain_db": -28.0},
+	"fail": {"pitch": 0.80, "gain_db": -35.0},
+	"retry": {"pitch": 0.86, "gain_db": -34.0},
 }
 
 var music_player: AudioStreamPlayer
@@ -97,7 +97,7 @@ func request_feedback(kind: String) -> bool:
 		match_player.stream = _soft_match_stream
 		var variation: float = float([0.94, 1.0, 1.035][int(_feedback_counts[kind]) % 3])
 		match_player.pitch_scale = variation
-		match_player.volume_db = -32.0
+		match_player.volume_db = -34.0
 		match_player.play()
 		return true
 	sfx_player.stream = _chime_stream
@@ -120,7 +120,7 @@ func contract() -> Dictionary:
 		"chime_loaded": _chime_stream != null,
 		"soft_match_loaded": _soft_match_stream != null,
 		"match_feedback": "procedural_soft_wood_glass_tap",
-		"mix_profile": "restrained_dark_cabinet_v2",
+		"mix_profile": "restrained_dark_cabinet_v3",
 		"ambient_gain_db": -34.0,
 		"match_gain_db": -32.0,
 		"music_bus": String(music_player.bus) if music_player != null else "",
@@ -132,15 +132,15 @@ func contract() -> Dictionary:
 func _make_soft_match_stream() -> AudioStreamWAV:
 	# Short, low-amplitude wooden-glass tap: intentionally gentler than the repeated bell.
 	var rate := 22050
-	var duration := 0.14
+	var duration := 0.12
 	var count := int(rate * duration)
 	var bytes := PackedByteArray()
 	bytes.resize(count * 2)
 	for i in range(count):
 		var t := float(i) / float(rate)
-		var envelope := (1.0 - exp(-t * 180.0)) * exp(-t * 27.0)
-		var tone := sin(TAU * 620.0 * t) * 0.68 + sin(TAU * 930.0 * t) * 0.22 + sin(TAU * 1240.0 * t) * 0.10
-		var sample := clampf(tone * envelope * 0.16, -1.0, 1.0)
+		var envelope := (1.0 - exp(-t * 110.0)) * exp(-t * 36.0)
+		var tone := sin(TAU * 360.0 * t) * 0.74 + sin(TAU * 540.0 * t) * 0.20 + sin(TAU * 720.0 * t) * 0.06
+		var sample := clampf(tone * envelope * 0.12, -1.0, 1.0)
 		bytes.encode_s16(i * 2, int(sample * 32767.0))
 	var stream := AudioStreamWAV.new()
 	stream.format = AudioStreamWAV.FORMAT_16_BITS
