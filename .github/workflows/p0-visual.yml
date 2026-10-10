@@ -45,6 +45,7 @@ jobs:
           if [ "$status" -ne 0 ]; then exit "$status"; fi
           if grep -Eq "SCRIPT ERROR:|(^| )ERROR:|CAPTURE_FAIL:" <<<"$output"; then exit 1; fi
           grep -Fq "CAPTURE_PASS: complete Level 1 player journey" <<<"$output"
+          test -s artifacts/journey-00-splash.png
           test -s artifacts/journey-01-house-dormant.png
           test -s artifacts/journey-02-chapter-map.png
           test -s artifacts/journey-03-prestart.png
@@ -54,6 +55,8 @@ jobs:
           test -s artifacts/journey-06-house-awakened.png
           test -s artifacts/journey-07-curio-collection.png
           test -s artifacts/journey-08-settings.png
+          test -s artifacts/journey-09-events.png
+          test -s artifacts/journey-10-shop.png
 
       - name: Render Level 1 fail and retry
         shell: bash
@@ -131,6 +134,7 @@ jobs:
         with:
           name: level1-player-journey-evidence
           path: |
+            artifacts/journey-00-splash.png
             artifacts/journey-01-house-dormant.png
             artifacts/journey-02-chapter-map.png
             artifacts/journey-03-prestart.png
@@ -140,6 +144,8 @@ jobs:
             artifacts/journey-06-house-awakened.png
             artifacts/journey-07-curio-collection.png
             artifacts/journey-08-settings.png
+            artifacts/journey-09-events.png
+            artifacts/journey-10-shop.png
             artifacts/level1-fail-result.png
             artifacts/level1-retry-restored.png
           if-no-files-found: error
