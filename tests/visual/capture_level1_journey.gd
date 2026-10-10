@@ -20,9 +20,16 @@ func _capture() -> void:
 	if not await _save(app, "journey-01-house-dormant.png"):
 		return
 
-	if not app.show_map():
-		return _fail(app, "House -> Map failed")
+	if not app.show_chapters():
+		return _fail(app, "House -> Chapter Select failed")
 	await _frames(3)
+	if not await _save(app, "journey-01b-chapter-select.png"):
+		return
+	var chapters = app.current_screen()
+	chapters.get_node("Layout/ChapterGrid/CurioBoutiqueButton").emit_signal("pressed")
+	await _frames(3)
+	if String(app.current_route_name()) != "map":
+		return _fail(app, "Curio Boutique -> Map failed")
 	if not await _save(app, "journey-02-chapter-map.png"):
 		return
 
