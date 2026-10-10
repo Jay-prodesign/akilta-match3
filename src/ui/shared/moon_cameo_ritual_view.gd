@@ -9,9 +9,14 @@ const INK := Color("#100D12")
 const ROSE := Color("#C66A88")
 const CAMEO_SEALED_PATH := "res://assets/curios/ch01_curio_moon_cameo_sealed_v01.svg"
 const CAMEO_AWAKENED_PATH := "res://assets/curios/ch01_curio_moon_cameo_awakened_v01.svg"
+const RELIC_PATHS := {
+	"moth_reliquary": "res://assets/curios/ch01_curio_moth_reliquary.svg",
+	"thorned_locket": "res://assets/curios/ch01_curio_thorned_locket.svg"
+}
 var _cameo_textures: Dictionary = {}
 
 @export var mode: String = "prestart"
+@export var relic_id: String = "moon_cameo"
 @export_range(0.0, 1.0, 0.05) var glow_strength: float = 0.55
 
 func _ready() -> void:
@@ -43,7 +48,10 @@ func _draw() -> void:
 	arch_color.a = 0.12 if dormant else 0.28
 	draw_arc(Vector2(center.x, frame.position.y + radius * 0.55), frame.size.x * 0.34, PI, TAU, 48, arch_color, 2.0)
 
-	_draw_cameo_identity(center, radius, dormant, true, false)
+	if relic_id == "moon_cameo":
+		_draw_cameo_identity(center, radius, dormant, true, false)
+	else:
+		_draw_relic_identity(center, radius, dormant)
 
 	# Candle/relic accents establish the cabinet rather than generic modal chrome.
 	if not dormant:
@@ -57,6 +65,22 @@ func _draw() -> void:
 		seal_line.a = 0.36
 		draw_line(center + Vector2(-radius * 0.72, -radius * 0.72), center + Vector2(radius * 0.72, radius * 0.72), seal_line, 3.0)
 		draw_line(center + Vector2(radius * 0.72, -radius * 0.72), center + Vector2(-radius * 0.72, radius * 0.72), seal_line, 3.0)
+
+func _draw_relic_identity(center: Vector2, radius: float, dormant: bool) -> void:
+	for i in range(4, 0, -1):
+		var glow := Color(LILAC)
+		glow.a = glow_strength * 0.018 * float(i)
+		draw_circle(center, radius * (1.0 + float(i) * 0.22), glow)
+	var ring := Color(GOLD, 0.30 if dormant else 0.76)
+	draw_arc(center, radius * 1.10, 0.0, TAU, 64, ring, 2.5)
+	draw_arc(center, radius * 0.90, 0.0, TAU, 64, Color(LILAC, 0.22), 1.8)
+	var path := String(RELIC_PATHS.get(relic_id, ""))
+	var relic_texture := _load_cameo(path) if path != "" else null
+	if relic_texture != null:
+		var relic_rect := Rect2(center - Vector2.ONE * radius * 0.82, Vector2.ONE * radius * 1.64)
+		draw_texture_rect(relic_texture, relic_rect, false)
+	else:
+		_draw_cameo_identity(center, radius, dormant, false, false)
 
 func _draw_cameo_identity(center: Vector2, radius: float, dormant: bool, show_orbit: bool, show_catalogue_drop: bool) -> void:
 	# Soft occult glow and nested antique-metal seals.
