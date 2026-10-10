@@ -42,6 +42,9 @@ var haptics = HapticsController.new()
 @onready var result_overlay: Control = $ResultOverlay
 @onready var result_title: Label = $ResultOverlay/Card/Content/Title
 @onready var result_detail: Label = $ResultOverlay/Card/Content/Detail
+@onready var result_eyebrow: Label = $ResultOverlay/Card/Content/Eyebrow
+@onready var result_reward_name: Label = $ResultOverlay/Card/Content/RewardName
+@onready var result_house_change: Label = $ResultOverlay/Card/Content/HouseChange
 @onready var result_ritual: Control = $ResultOverlay/Card/Content/RewardRitual
 @onready var result_action: Button = $ResultOverlay/Card/Content/Action
 

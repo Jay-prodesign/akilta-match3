@@ -64,17 +64,17 @@ anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-offset_left = -360.0
-offset_top = -400.0
-offset_right = 360.0
-offset_bottom = 400.0
+offset_left = -380.0
+offset_top = -430.0
+offset_right = 380.0
+offset_bottom = 430.0
 grow_horizontal = 2
 grow_vertical = 2
 theme_override_styles/panel = SubResource("Card")
 
 [node name="Content" type="VBoxContainer" parent="Card"]
 layout_mode = 2
-theme_override_constants/separation = 14
+theme_override_constants/separation = 16
 alignment = 1
 
 [node name="Eyebrow" type="Label" parent="Card/Content"]
@@ -106,7 +106,7 @@ theme_override_font_sizes/font_size = 17
 text = "AUDIO"
 
 [node name="Master" type="CheckButton" parent="Card/Content"]
-custom_minimum_size = Vector2(0, 54)
+custom_minimum_size = Vector2(0, 58)
 layout_mode = 2
 theme_override_colors/font_color = Color(0.945, 0.91, 0.866, 1)
 theme_override_font_sizes/font_size = 21
