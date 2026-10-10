@@ -133,34 +133,121 @@ func complete_level_win(transaction_id: String, level_id: String, curio_id: Stri
 	return show_house()
 
 func show_feature_preview(feature: String) -> bool:
-	# Accessible non-monetized preview while first-party Events and Shop systems are built.
+	# First-party, non-monetized preview: all controls are navigable, purchases remain disabled.
 	if navigation == null or navigation.current() != NavigationScript.Route.HOUSE:
 		return false
-	var overlay := ColorRect.new()
+	var overlay := Control.new()
 	overlay.name = "FeaturePreview"
-	overlay.color = Color("#100D19")
 	overlay.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	screen_host.add_child(overlay)
-	var column := VBoxContainer.new()
-	column.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
-	column.add_theme_constant_override("separation", 24)
-	column.alignment = BoxContainer.ALIGNMENT_CENTER
-	column.offset_left = 28
-	column.offset_right = -28
-	overlay.add_child(column)
+	var backdrop := ColorRect.new()
+	backdrop.color = Color("#0A0C16")
+	backdrop.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	overlay.add_child(backdrop)
+	var layout := VBoxContainer.new()
+	layout.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	layout.offset_left = 18
+	layout.offset_top = 24
+	layout.offset_right = -18
+	layout.offset_bottom = -20
+	layout.add_theme_constant_override("separation", 12)
+	overlay.add_child(layout)
+	var eyebrow := Label.new()
+	eyebrow.text = "THE HOUSE OF CURIOS  ·  AKILTA"
+	eyebrow.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	eyebrow.add_theme_color_override("font_color", Color("#D5AD70"))
+	eyebrow.add_theme_font_size_override("font_size", 13)
+	layout.add_child(eyebrow)
 	var title := Label.new()
-	title.text = feature.to_upper()
+	title.text = "WEEKLY RITUALS" if feature.to_lower() == "events" else "THE CURIO EMPORIUM"
 	title.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	title.add_theme_font_size_override("font_size", 38)
-	column.add_child(title)
+	title.add_theme_color_override("font_color", Color("#F4E5D3"))
+	title.add_theme_font_size_override("font_size", 30)
+	layout.add_child(title)
 	var detail := Label.new()
-	detail.text = "THE HOUSE IS PREPARING THIS WING.\nNo purchases or live events are available in this test build."
+	detail.text = "A new moonlit challenge arrives each week." if feature.to_lower() == "events" else "Spend no real money in this preview build."
 	detail.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	detail.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-	column.add_child(detail)
+	detail.add_theme_color_override("font_color", Color("#D8C6C3"))
+	detail.add_theme_font_size_override("font_size", 15)
+	layout.add_child(detail)
+	var cards := VBoxContainer.new()
+	cards.size_flags_vertical = Control.SIZE_EXPAND_FILL
+	cards.add_theme_constant_override("separation", 10)
+	layout.add_child(cards)
+	var entries: Array[Dictionary]
+	if feature.to_lower() == "events":
+		entries = [
+			{"icon":"☾", "title":"MOONLIGHT MARKET", "body":"Play levels to gather moon sigils.", "status":"COMING SOON · EVENT RULES NOT ACTIVE"},
+			{"icon":"♜", "title":"THE LOST RELICS", "body":"A raven has spotted a sealed cabinet.", "status":"LOCKED · COMPLETE THE OPENING CHAPTER"},
+			{"icon":"✧", "title":"WEEKLY RITUALS", "body":"Your weekly ritual streak will live here.", "status":"PREVIEW · NO CLAIMABLE REWARDS"}
+		]
+	else:
+		entries = [
+			{"icon":"◉", "title":"COIN SATCHEL", "body":"Soft currency for future House restoration.", "status":"NOT FOR SALE · ECONOMY PREVIEW"},
+			{"icon":"◇", "title":"MOONSTONE GEMS", "body":"Premium currency concept; no payment flow.", "status":"NOT FOR SALE · NO REAL-MONEY PURCHASES"},
+			{"icon":"✦", "title":"STARTER RELIQUARY", "body":"A future bundle of curios and boosters.", "status":"LOCKED · STORE NOT CONNECTED"}
+		]
+	for entry in entries:
+		var card := PanelContainer.new()
+		card.size_flags_vertical = Control.SIZE_EXPAND_FILL
+		var panel_style := StyleBoxFlat.new()
+		panel_style.bg_color = Color("#171321")
+		panel_style.border_color = Color("#D5AD70", 0.58)
+		panel_style.set_border_width_all(1)
+		panel_style.set_corner_radius_all(10)
+		panel_style.content_margin_left = 14
+		panel_style.content_margin_right = 14
+		panel_style.content_margin_top = 10
+		panel_style.content_margin_bottom = 10
+		card.add_theme_stylebox_override("panel", panel_style)
+		cards.add_child(card)
+		var row := HBoxContainer.new()
+		row.add_theme_constant_override("separation", 12)
+		card.add_child(row)
+		var icon := Label.new()
+		icon.text = String(entry["icon"])
+		icon.custom_minimum_size = Vector2(42, 42)
+		icon.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
+		icon.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+		icon.add_theme_color_override("font_color", Color("#D5AD70"))
+		icon.add_theme_font_size_override("font_size", 30)
+		row.add_child(icon)
+		var copy := VBoxContainer.new()
+		copy.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		copy.alignment = BoxContainer.ALIGNMENT_CENTER
+		copy.add_theme_constant_override("separation", 5)
+		row.add_child(copy)
+		var card_title := Label.new()
+		card_title.text = String(entry["title"])
+		card_title.add_theme_color_override("font_color", Color("#F4E5D3"))
+		card_title.add_theme_font_size_override("font_size", 16)
+		copy.add_child(card_title)
+		var card_body := Label.new()
+		card_body.text = String(entry["body"])
+		card_body.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+		card_body.add_theme_color_override("font_color", Color("#D8C6C3"))
+		card_body.add_theme_font_size_override("font_size", 13)
+		copy.add_child(card_body)
+		var status := Label.new()
+		status.text = String(entry["status"])
+		status.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+		status.add_theme_color_override("font_color", Color("#BFA5D8"))
+		status.add_theme_font_size_override("font_size", 10)
+		copy.add_child(status)
 	var back := Button.new()
 	back.text = "RETURN TO THE HOUSE"
-	column.add_child(back)
+	back.custom_minimum_size = Vector2(0, 48)
+	back.add_theme_color_override("font_color", Color("#F4E5D3"))
+	back.add_theme_font_size_override("font_size", 16)
+	var back_style := StyleBoxFlat.new()
+	back_style.bg_color = Color("#38233A")
+	back_style.border_color = Color("#D5AD70")
+	back_style.set_border_width_all(1)
+	back_style.set_corner_radius_all(8)
+	back.add_theme_stylebox_override("normal", back_style)
+	back.add_theme_stylebox_override("hover", back_style)
+	layout.add_child(back)
 	back.pressed.connect(func(): overlay.queue_free())
 	Typography.apply(overlay)
 	CurioMaterials.apply(overlay)
