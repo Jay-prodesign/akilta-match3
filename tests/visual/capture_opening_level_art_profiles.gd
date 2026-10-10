@@ -103,6 +103,4 @@ func _capture() -> void:
 		print("CAPTURE_PASS: Level %d prestart reward art %s -> %s" % [level_number, expected_relic, prestart_path])
 		prestart.queue_free()
 		await process_frame
-	screen.queue_free()
-	await process_frame
 	quit(0)
