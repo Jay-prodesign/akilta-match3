@@ -108,7 +108,7 @@ func _test_valid_swap_resolves_deterministically() -> void:
 	_expect(first.signature() == second.signature(), "same seed and move must settle to same board")
 	_expect(trace_a.debug_signature() == trace_b.debug_signature(), "same seed and move must emit same logical trace")
 
-	var types := trace_a.event_types()
+	var types: Array[String] = trace_a.event_types()
 	for required_type in ["swap_accepted", "match_found", "clear", "gravity", "spawn", "settled"]:
 		_expect(types.has(required_type), "valid resolution must emit %s" % required_type)
 
