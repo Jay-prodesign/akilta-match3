@@ -41,7 +41,7 @@ func _run() -> void:
 		_expect(str(board.objective_type) == "collect_family", "Level 1 must teach collect_family")
 		_expect(str(board.objective_family) == "moon", "Level 1 target family must be moon")
 		_expect(int(board.objective_target) == 6, "Level 1 target must be six moon pieces")
-		_expect(int(board.moves_remaining) == 12, "Level 1 must start with twelve moves")
+		_expect(int(board.moves_remaining) == 20, "Level 1 must start with the North Star twenty-move budget")
 
 	var board_view = screen.get_node_or_null("Layout/BoardView")
 	_expect(board_view != null, "GameplayScreen must contain BoardView")
