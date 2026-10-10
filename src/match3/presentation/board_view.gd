@@ -494,12 +494,13 @@ func _draw_moonstone_piece(c: Vector2, r: float, color: Color) -> void:
 	var edge := Color(BONE)
 	edge.a = 0.46
 	draw_arc(moon_c, r * 0.58, PI * 0.61, PI * 1.39, 26, edge, maxf(1.3, r * 0.055))
-	for crater in [
+	var craters: Array[Vector2] = [
 		Vector2(-0.28, -0.16),
 		Vector2(-0.23, 0.22),
 		Vector2(-0.02, -0.34)
-	]:
-		var cc := moon_c + crater * r
+	]
+	for crater: Vector2 in craters:
+		var cc: Vector2 = moon_c + crater * r
 		draw_circle(cc, r * 0.055, Color(1, 1, 1, 0.14))
 		draw_arc(cc, r * 0.055, 0.0, TAU, 12, Color(0, 0, 0, 0.18), 1.0)
 	draw_circle(moon_c + Vector2(-r * 0.20, r * 0.04), r * 0.075, Color(BONE, 0.92))

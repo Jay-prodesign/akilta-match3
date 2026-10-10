@@ -227,12 +227,13 @@ func _draw_moon_cameo(center: Vector2, radius: float) -> void:
 	draw_circle(stone_center, radius * 0.78, LILAC)
 	draw_circle(stone_center + Vector2(radius * 0.29, -radius * 0.12), radius * 0.68, Color("#241C29"))
 	draw_arc(stone_center, radius * 0.62, PI * 0.60, PI * 1.40, 28, Color(BONE, 0.46), 2.0)
-	for crater in [
+	var craters: Array[Vector2] = [
 		Vector2(-0.30, -0.12),
 		Vector2(-0.20, 0.22),
 		Vector2(-0.02, -0.34)
-	]:
-		var p := stone_center + crater * radius
+	]
+	for crater: Vector2 in craters:
+		var p: Vector2 = stone_center + crater * radius
 		draw_circle(p, radius * 0.055, Color(1,1,1,0.15))
 	draw_circle(stone_center + Vector2(-radius * 0.18, radius * 0.04), radius * 0.075, BONE)
 	# Small rose wax drop makes the relic feel catalogued rather than floating.
