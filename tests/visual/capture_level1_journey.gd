@@ -54,6 +54,14 @@ func _capture() -> void:
 		return
 
 	var gameplay = app.current_screen()
+	var board_view = gameplay.get_node_or_null("Layout/BoardView")
+	if board_view == null or not board_view.has_method("piece_asset_contract"):
+		return _fail(app, "Level 1 board asset contract missing")
+	var piece_contract: Dictionary = board_view.piece_asset_contract()
+	var piece_families: Dictionary = piece_contract.get("families", {})
+	for family in ["moon", "rose", "moth", "key", "leaf"]:
+		if not bool(piece_families.get(family, false)):
+			return _fail(app, "North Star piece asset did not load: %s" % family)
 	if not gameplay.show_pause():
 		return _fail(app, "Level 1 pause did not open")
 	await _frames(2)
