@@ -1,10 +1,11 @@
-[gd_scene load_steps=9 format=3]
+[gd_scene load_steps=10 format=3]
 
 [ext_resource type="Script" path="res://src/ui/gameplay/gameplay_screen.gd" id="1_game"]
 [ext_resource type="Script" path="res://src/match3/presentation/board_view.gd" id="2_board"]
 
 [ext_resource type="Script" path="res://src/ui/shared/moon_cameo_ritual_view.gd" id="9_cameo"]
 [ext_resource type="Script" path="res://src/ui/gameplay/awakening_progress_view.gd" id="10_progress"]
+[ext_resource type="Texture2D" path="res://assets/world/ch01_curio_boutique/curio_boutique_moonlit_backdrop.svg" id="11_world_backdrop"]
 
 [sub_resource type="StyleBoxFlat" id="StylePanel"]
 bg_color = Color(0.0902, 0.0745, 0.1059, 0.98)
@@ -68,6 +69,19 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 color = Color(0.0627, 0.051, 0.0706, 1)
+
+[node name="WorldBackdrop" type="TextureRect" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+texture = ExtResource("11_world_backdrop")
+expand_mode = 1
+stretch_mode = 6
+modulate = Color(0.82, 0.76, 0.82, 0.34)
 
 [node name="Layout" type="VBoxContainer" parent="."]
 layout_mode = 1
