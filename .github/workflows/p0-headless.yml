@@ -9,6 +9,7 @@ on:
       - "src/**"
       - "content/**"
       - "tests/**"
+      - "tools/**"
       - ".github/workflows/p0-headless.yml"
   workflow_dispatch:
 
