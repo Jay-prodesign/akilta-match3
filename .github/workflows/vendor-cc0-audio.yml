@@ -9,7 +9,7 @@ on:
   workflow_dispatch:
 
 permissions:
-  contents: read
+  contents: write
 
 jobs:
   vendor:
@@ -18,22 +18,61 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+        with:
+          ref: p0/bootstrap
 
-      - name: Fetch pinned CC0 candidate binaries
+      - name: Fetch pinned CC0 binaries
         shell: bash
         run: |
           set -euo pipefail
-          mkdir -p artifacts/cc0-audio
-          curl -L --fail --retry 3             -o artifacts/cc0-audio/cathedral_in_the_forest.ogg             "https://raw.githubusercontent.com/dns7221-web/Path-of-Ash/28c5b9a4aa34cfb07f4cd47d1c7bfda615388385/Assets/Project/Audio/BGM/TitleCandidates/02_cathedral_in_the_forest.ogg"
-          curl -L --fail --retry 3             -o artifacts/cc0-audio/bell_ding1.wav             "https://raw.githubusercontent.com/MGS-sails/hammerspoon-monitor-teleport-/59cdd4fac4fca571396154a3b6fe1ecb8bc6b72e/teleport/assets/sounds/bell_ding1.wav"
-          test -s artifacts/cc0-audio/cathedral_in_the_forest.ogg
-          test -s artifacts/cc0-audio/bell_ding1.wav
-          sha256sum artifacts/cc0-audio/* | tee artifacts/cc0-audio/SHA256SUMS.txt
+          mkdir -p assets/audio/music assets/audio/sfx
+          curl -L --fail --retry 3             -o assets/audio/music/curio_house_ambient.ogg             "https://raw.githubusercontent.com/dns7221-web/Path-of-Ash/28c5b9a4aa34cfb07f4cd47d1c7bfda615388385/Assets/Project/Audio/BGM/TitleCandidates/02_cathedral_in_the_forest.ogg"
+          curl -L --fail --retry 3             -o assets/audio/sfx/ritual_chime.wav             "https://raw.githubusercontent.com/MGS-sails/hammerspoon-monitor-teleport-/59cdd4fac4fca571396154a3b6fe1ecb8bc6b72e/teleport/assets/sounds/bell_ding1.wav"
+          echo "b9e05a1fcd5869b63193515e2a9c1bd578906a78e628e307f19527d387262593  assets/audio/music/curio_house_ambient.ogg" | sha256sum -c -
+          echo "8ce40f49cd211125303df59db0da4fe911e8b2f34d3847011b15137c6b5850de  assets/audio/sfx/ritual_chime.wav" | sha256sum -c -
 
-      - name: Upload candidate bundle
-        uses: actions/upload-artifact@v4
-        with:
-          name: cc0-audio-candidate
-          path: artifacts/cc0-audio/
-          if-no-files-found: error
-          retention-days: 2
+      - name: Write provenance
+        shell: bash
+        run: |
+          cat > assets/audio/PROVENANCE.md <<'EOF'
+          # Match Game CC0 Audio Provenance
+
+          ## Curio House ambient candidate
+
+          - Local: `assets/audio/music/curio_house_ambient.ogg`
+          - Original title: **Cathedral in the forest (ambient loop)**
+          - Author: congusbongus
+          - Canonical source: OpenGameArt — https://opengameart.org/content/cathedral-in-the-forest-ambient-loop
+          - Canonical license: **CC0**
+          - Publisher description: seamless dark ambient loop; pads and bells
+          - Deterministic retrieval mirror: `dns7221-web/Path-of-Ash` @ `28c5b9a4aa34cfb07f4cd47d1c7bfda615388385`
+          - SHA-256: `b9e05a1fcd5869b63193515e2a9c1bd578906a78e628e307f19527d387262593`
+          - Status: **Level 1 sonic candidate**, not immutable final music.
+
+          ## Ritual chime candidate
+
+          - Local: `assets/audio/sfx/ritual_chime.wav`
+          - Original title: **Bell dings/chimes — bell_ding1.wav**
+          - Author: PWL
+          - Canonical source: OpenGameArt — https://opengameart.org/content/bell-dingschimes
+          - Canonical license: **CC0 / public domain**
+          - Deterministic retrieval mirror: `MGS-sails/hammerspoon-monitor-teleport-` @ `59cdd4fac4fca571396154a3b6fe1ecb8bc6b72e`
+          - SHA-256: `8ce40f49cd211125303df59db0da4fe911e8b2f34d3847011b15137c6b5850de`
+          - Status: **Level 1 sonic candidate**; pitch/gain variants may serve match/special/result roles.
+
+          The retrieval mirrors are delivery sources only. The canonical licensing evidence is the OpenGameArt source page.
+          EOF
+
+      - name: Commit vendored candidates
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add assets/audio
+          if git diff --cached --quiet; then
+            echo "Audio candidates already vendored."
+            exit 0
+          fi
+          git commit -m "assets: vendor pinned CC0 Level 1 audio candidates"
+          git push origin HEAD:p0/bootstrap
