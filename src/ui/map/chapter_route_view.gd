@@ -72,7 +72,7 @@ func _build_route() -> void:
 		label.size = Vector2(245.0, 54.0)
 		label.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
 		label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-		label.add_theme_font_size_override("font_size", 19 if level_number == 1 else 16)
+		label.add_theme_font_size_override("font_size", 20 if level_number == 1 else 18)
 		label.add_theme_color_override("font_color", BONE if level_number == 1 else Color("#D2C4D7"))
 		var on_right := center.x < route_width * 0.5
 		if on_right:
