@@ -49,7 +49,6 @@ var _motion_clock: float = 1.0
 var _motion_active: bool = false
 var _motion_items: Array[Dictionary] = []
 var _reveal_at: Dictionary = {}
-var _candidate_frame_texture: Texture2D
 var _candidate_frame_texture: ImageTexture
 
 func _ready() -> void:
