@@ -377,6 +377,27 @@
       "format": "svg",
       "role": "ivory skull with dark eye sockets",
       "provenance": "first_party"
+    }    ,{
+      "id": "ch01.curio.moth_reliquary",
+      "class": "curio",
+      "scope": "chapter",
+      "path": "assets/curios/ch01_curio_moth_reliquary.svg",
+      "status": "candidate",
+      "target": "512x512",
+      "format": "svg",
+      "role": "Level 2 wax seal reward and collection relic",
+      "provenance": "first_party"
+    },
+    {
+      "id": "ch01.curio.thorned_locket",
+      "class": "curio",
+      "scope": "chapter",
+      "path": "assets/curios/ch01_curio_thorned_locket.svg",
+      "status": "candidate",
+      "target": "512x512",
+      "format": "svg",
+      "role": "Level 3 special lesson reward and collection relic",
+      "provenance": "first_party"
     }
   ]
 }
