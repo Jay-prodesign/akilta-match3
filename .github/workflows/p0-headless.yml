@@ -177,7 +177,7 @@ jobs:
           if grep -Eq "SCRIPT ERROR:|(^| )ERROR:" <<<"$output"; then exit 1; fi
           grep -Fq "TEST_PASS: complete Level 1 shell journey" <<<"$output"
 
-      - name: Run authored three-level player journey
+      - name: Run Level 1 approval gate journey
         shell: bash
         run: |
           set +e
@@ -187,7 +187,7 @@ jobs:
           printf '%s\\n' "$output"
           if [ "$status" -ne 0 ]; then exit "$status"; fi
           if grep -Eq "SCRIPT ERROR:|(^| )ERROR:" <<<"$output"; then exit 1; fi
-          grep -Fq "TEST_PASS: real three-level opening journey" <<<"$output"
+          grep -Fq "TEST_PASS: Level 1 approval gate journey" <<<"$output"
 
       - name: Run Level 1 fail retry recovery
         shell: bash
