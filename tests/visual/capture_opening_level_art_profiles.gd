@@ -87,8 +87,8 @@ func _capture() -> void:
 		await process_frame
 		await process_frame
 		var prestart_art = prestart.get_node_or_null("Layout/Card/Content/RitualArt")
-		var expected_relic := "moth_reliquary" if level_number == 2 else "thorned_locket"
-		if prestart_art == null or str(prestart_art.get("relic_id")) != expected_relic:
+		var expected_prestart_relic := "moth_reliquary" if level_number == 2 else "thorned_locket"
+		if prestart_art == null or str(prestart_art.get("relic_id")) != expected_prestart_relic:
 			printerr("CAPTURE_FAIL: Level %d prestart art does not match its reward" % level_number)
 			prestart.queue_free()
 			quit(1)
@@ -100,7 +100,7 @@ func _capture() -> void:
 			prestart.queue_free()
 			quit(1)
 			return
-		print("CAPTURE_PASS: Level %d prestart reward art %s -> %s" % [level_number, expected_relic, prestart_path])
+		print("CAPTURE_PASS: Level %d prestart reward art %s -> %s" % [level_number, expected_prestart_relic, prestart_path])
 		prestart.queue_free()
 		await process_frame
 	quit(0)
