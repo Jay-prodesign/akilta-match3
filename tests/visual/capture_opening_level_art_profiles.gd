@@ -68,6 +68,41 @@ func _capture() -> void:
 			quit(1)
 			return
 		print("CAPTURE_PASS: Level %d art profile %s -> %s" % [level_number, expected_profile, output_path])
+		screen.queue_free()
+		await process_frame
+
+		var prestart_scene := load("res://src/ui/prestart/level_prestart.tscn")
+		if prestart_scene == null:
+			printerr("CAPTURE_FAIL: Level %d prestart scene missing" % level_number)
+			quit(1)
+			return
+		var prestart = prestart_scene.instantiate()
+		root.add_child(prestart)
+		await process_frame
+		if not prestart.configure_level(level_number):
+			printerr("CAPTURE_FAIL: Level %d prestart content could not load" % level_number)
+			prestart.queue_free()
+			quit(1)
+			return
+		await process_frame
+		await process_frame
+		var prestart_art = prestart.get_node_or_null("Layout/Card/Content/RitualArt")
+		var expected_relic := "moth_reliquary" if level_number == 2 else "thorned_locket"
+		if prestart_art == null or str(prestart_art.get("relic_id")) != expected_relic:
+			printerr("CAPTURE_FAIL: Level %d prestart art does not match its reward" % level_number)
+			prestart.queue_free()
+			quit(1)
+			return
+		var prestart_image: Image = prestart.get_viewport().get_texture().get_image()
+		var prestart_path := ProjectSettings.globalize_path("res://artifacts/level%d-prestart.png" % level_number)
+		if prestart_image == null or prestart_image.is_empty() or prestart_image.save_png(prestart_path) != OK:
+			printerr("CAPTURE_FAIL: Level %d prestart screenshot could not save" % level_number)
+			prestart.queue_free()
+			quit(1)
+			return
+		print("CAPTURE_PASS: Level %d prestart reward art %s -> %s" % [level_number, expected_relic, prestart_path])
+		prestart.queue_free()
+		await process_frame
 	screen.queue_free()
 	await process_frame
 	quit(0)
