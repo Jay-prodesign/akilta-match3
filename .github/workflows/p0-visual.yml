@@ -33,6 +33,25 @@ jobs:
           mv Godot_v4.7.2-stable_linux.x86_64 godot
           chmod +x godot
 
+      - name: Render complete Level 1 player journey
+        shell: bash
+        run: |
+          set -uo pipefail
+          set +e
+          output=$(LIBGL_ALWAYS_SOFTWARE=1 xvfb-run -a ./godot --audio-driver Dummy --path . -s res://tests/visual/capture_level1_journey.gd 2>&1)
+          status=$?
+          set -e
+          printf '%s\n' "$output"
+          if [ "$status" -ne 0 ]; then exit "$status"; fi
+          if grep -Eq "SCRIPT ERROR:|(^| )ERROR:|CAPTURE_FAIL:" <<<"$output"; then exit 1; fi
+          grep -Fq "CAPTURE_PASS: complete Level 1 player journey" <<<"$output"
+          test -s artifacts/journey-01-house-dormant.png
+          test -s artifacts/journey-02-chapter-map.png
+          test -s artifacts/journey-03-prestart.png
+          test -s artifacts/journey-04-level1-gameplay.png
+          test -s artifacts/journey-05-level1-result.png
+          test -s artifacts/journey-06-house-awakened.png
+
       - name: Render Level 1 portrait
         shell: bash
         run: |
@@ -130,6 +149,20 @@ jobs:
           if grep -Eq "SCRIPT ERROR:|(^| )ERROR:|CAPTURE_FAIL:" <<<"$output"; then exit 1; fi
           grep -Fq "CAPTURE_PASS:" <<<"$output"
           test -s artifacts/house-stage3.png
+
+      - name: Upload complete Level 1 journey evidence
+        uses: actions/upload-artifact@v4
+        with:
+          name: level1-player-journey-evidence
+          path: |
+            artifacts/journey-01-house-dormant.png
+            artifacts/journey-02-chapter-map.png
+            artifacts/journey-03-prestart.png
+            artifacts/journey-04-level1-gameplay.png
+            artifacts/journey-05-level1-result.png
+            artifacts/journey-06-house-awakened.png
+          if-no-files-found: error
+          retention-days: 14
 
       - name: Upload Founder Level 1 gate evidence
         uses: actions/upload-artifact@v4
