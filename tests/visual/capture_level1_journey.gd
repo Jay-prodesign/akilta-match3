@@ -34,7 +34,18 @@ func _capture() -> void:
 	if not await _save(app, "journey-01b-chapter-select.png"):
 		return
 	var chapters = app.current_screen()
-	chapters.get_node("Layout/ChapterGrid/CurioBoutiqueButton").emit_signal("pressed")
+	var chapter_layout: Control = chapters.get_node("Layout") as Control
+	var chapter_world_art: Control = chapters.get_node("HouseWorldBackdrop") as Control
+	if chapter_layout == null or chapter_world_art == null or chapter_world_art.get_index() >= chapter_layout.get_index():
+		return _fail(app, "Chapter Select world art must stay behind readable interaction controls")
+	var active_wing: Button = chapters.get_node("Layout/ChapterGrid/CurioBoutiqueButton") as Button
+	if active_wing == null or active_wing.disabled:
+		return _fail(app, "Curio Boutique must be the only playable opening wing")
+	for chapter_id in ["witch_atelier", "dark_vanity", "grand_hall", "moon_conservatory", "cemetery_garden"]:
+		var sealed_wing: Button = chapters.get_node_or_null("Layout/ChapterGrid/Chapter_" + chapter_id) as Button
+		if sealed_wing == null or not sealed_wing.disabled:
+			return _fail(app, "Unreleased chapter must remain visibly sealed: %s" % chapter_id)
+	active_wing.emit_signal("pressed")
 	await _frames(3)
 	if String(app.current_route_name()) != "map":
 		return _fail(app, "Curio Boutique -> Chapter Map failed")
