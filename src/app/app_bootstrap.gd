@@ -81,7 +81,7 @@ func show_map() -> bool:
 	if not navigation.go(NavigationScript.Route.MAP):
 		return false
 	var screen: Node = MapScene.instantiate()
-	screen.set("canonical_level_cap", FOUNDER_APPROVED_LEVEL_COUNT)
+	screen.set("canonical_level_cap", TEST_LEVEL_COUNT)
 	_show_screen(screen)
 	screen.set_progress(progress)
 	screen.back_requested.connect(_on_map_back)
@@ -89,7 +89,7 @@ func show_map() -> bool:
 	return true
 
 func show_prestart(level_number: int) -> bool:
-	if level_number < 1 or level_number > FOUNDER_APPROVED_LEVEL_COUNT or navigation.current() != NavigationScript.Route.MAP:
+	if level_number < 1 or level_number > TEST_LEVEL_COUNT or navigation.current() != NavigationScript.Route.MAP:
 		return false
 	if not navigation.go(NavigationScript.Route.PRESTART, {"level": level_number}):
 		return false
@@ -103,7 +103,7 @@ func show_prestart(level_number: int) -> bool:
 	return true
 
 func start_level(level_number: int = 1) -> bool:
-	if level_number < 1 or level_number > FOUNDER_APPROVED_LEVEL_COUNT or navigation.current() != NavigationScript.Route.PRESTART:
+	if level_number < 1 or level_number > TEST_LEVEL_COUNT or navigation.current() != NavigationScript.Route.PRESTART:
 		return false
 	var level_path: String = _level_path(level_number)
 	if not FileAccess.file_exists(level_path):
@@ -283,7 +283,7 @@ func close_settings() -> bool:
 func _render_house() -> void:
 	var screen: Node = HouseScene.instantiate()
 	_show_screen(screen)
-	screen.set_available_level_count(FOUNDER_APPROVED_LEVEL_COUNT)
+	screen.set_available_level_count(TEST_LEVEL_COUNT)
 	screen.set_progress(progress)
 	screen.collection_requested.connect(show_collection)
 	screen.map_requested.connect(show_chapters)
@@ -305,7 +305,7 @@ func _on_map_back() -> void:
 func _on_prestart_back() -> void:
 	if navigation.go(NavigationScript.Route.MAP, {"via": "prestart_back"}):
 		var screen: Node = MapScene.instantiate()
-		screen.set("canonical_level_cap", FOUNDER_APPROVED_LEVEL_COUNT)
+		screen.set("canonical_level_cap", TEST_LEVEL_COUNT)
 		_show_screen(screen)
 		screen.set_progress(progress)
 		screen.back_requested.connect(_on_map_back)
