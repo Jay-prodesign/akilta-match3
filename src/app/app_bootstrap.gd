@@ -108,6 +108,8 @@ func start_level(level_number: int = 1) -> bool:
 	if screen.has_method("apply_presentation_settings"):
 		screen.apply_presentation_settings(user_settings.get_presentation_state())
 	screen.level_won.connect(_on_level_won)
+	if screen.has_signal("navigation_requested"):
+		screen.navigation_requested.connect(_on_gameplay_navigation_requested)
 	if screen.has_signal("level_exit_requested"):
 		screen.level_exit_requested.connect(_on_level_exit_requested)
 	if screen.has_signal("feedback_requested"):
@@ -239,3 +241,18 @@ func _show_screen(screen: Node) -> void:
 	screen_host.add_child(screen)
 	Typography.apply(screen)
 	CurioMaterials.apply(screen)
+
+func _on_gameplay_navigation_requested(section: String) -> void:
+	if navigation.current() == NavigationScript.Route.GAMEPLAY:
+		show_house()
+	match section:
+		"house":
+			return
+		"curios":
+			show_collection()
+		"map":
+			show_map()
+		"events":
+			show_feature_preview("Events")
+		"shop":
+			show_feature_preview("Shop")
