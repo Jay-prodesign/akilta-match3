@@ -41,6 +41,7 @@ func _draw() -> void:
 	_draw_ambient_light(room)
 	_draw_arch(room)
 	_draw_moon_window(room)
+	_draw_wall_frames(room)
 	_draw_side_shelves(room)
 	_draw_central_cabinet(room)
 	_draw_floor(room)
@@ -65,9 +66,28 @@ func _draw_wall_panels(room: Rect2) -> void:
 	var wall := room.grow(-inset)
 	draw_rect(wall, Color("#1D1721"), true)
 	var wash := Color("#3A2335")
-	wash.a = 0.22
+	wash.a = 0.30
 	draw_rect(wall, wash, true)
-	draw_rect(wall, Color(0.749, 0.647, 0.847, 0.14), false, 2.0)
+	draw_rect(wall, Color(0.749, 0.647, 0.847, 0.22), false, 2.0)
+
+	# Large-scale wallpaper geometry keeps the room readable at portrait size.
+	var motif := Color(GOLD)
+	motif.a = 0.075
+	var motif_step_x := wall.size.x / 6.0
+	var motif_step_y := wall.size.y / 7.0
+	for row in range(1, 7):
+		for col in range(1, 6):
+			var c := Vector2(wall.position.x + motif_step_x * float(col), wall.position.y + motif_step_y * float(row))
+			var rx := motif_step_x * 0.20
+			var ry := motif_step_y * 0.16
+			var diamond := PackedVector2Array([
+				c + Vector2(0, -ry),
+				c + Vector2(rx, 0),
+				c + Vector2(0, ry),
+				c + Vector2(-rx, 0),
+				c + Vector2(0, -ry)
+			])
+			draw_polyline(diamond, motif, 1.3)
 
 	var panel_top: float = wall.position.y + wall.size.y * 0.18
 	var panel_bottom: float = wall.position.y + wall.size.y * 0.70
@@ -84,10 +104,10 @@ func _draw_wall_panels(room: Rect2) -> void:
 func _draw_arch(room: Rect2) -> void:
 	var center := Vector2(room.get_center().x, room.position.y + room.size.y * 0.235)
 	var radius: float = room.size.x * 0.445
-	draw_arc(center, radius, PI, TAU, 72, RAISED, 13.0)
-	draw_arc(center, radius - 8.0, PI, TAU, 72, Color(0.851, 0.71, 0.416, 0.24), 2.0)
-	draw_line(Vector2(center.x - radius, center.y), Vector2(center.x - radius, room.end.y), RAISED, 13.0)
-	draw_line(Vector2(center.x + radius, center.y), Vector2(center.x + radius, room.end.y), RAISED, 13.0)
+	draw_arc(center, radius, PI, TAU, 72, RAISED, 18.0)
+	draw_arc(center, radius - 10.0, PI, TAU, 72, Color(0.851, 0.71, 0.416, 0.32), 2.5)
+	draw_line(Vector2(center.x - radius, center.y), Vector2(center.x - radius, room.end.y), RAISED, 18.0)
+	draw_line(Vector2(center.x + radius, center.y), Vector2(center.x + radius, room.end.y), RAISED, 18.0)
 	var arch_glow := Color(GOLD)
 	arch_glow.a = 0.14
 	draw_arc(center, radius - 18.0, PI, TAU, 72, arch_glow, 4.0)
@@ -105,9 +125,9 @@ func _draw_arch(room: Rect2) -> void:
 		Vector2(room.end.x - room.size.x * 0.13, room.position.y + room.size.y * 0.67),
 		Vector2(room.end.x - room.size.x * 0.04, room.position.y + room.size.y * 0.73)
 	])
-	draw_colored_polygon(curtain_left, Color("#35172F"))
-	draw_colored_polygon(curtain_right, Color("#35172F"))
-	draw_line(curtain_left[1], curtain_left[2], Color(0.78, 0.45, 0.56, 0.22), 3.0)
+	draw_colored_polygon(curtain_left, Color("#451A3B"))
+	draw_colored_polygon(curtain_right, Color("#451A3B"))
+	draw_line(curtain_left[1], curtain_left[2], Color(0.78, 0.45, 0.56, 0.34), 4.0)
 	draw_line(curtain_right[1], curtain_right[2], Color(0.78, 0.45, 0.56, 0.22), 3.0)
 
 func _draw_moon_window(room: Rect2) -> void:
@@ -122,6 +142,38 @@ func _draw_moon_window(room: Rect2) -> void:
 	draw_circle(c - Vector2(r * 0.10, r * 0.04), r * 0.54, LILAC)
 	draw_circle(c + Vector2(r * 0.24, -r * 0.10), r * 0.53, Color("#1A2028"))
 	draw_arc(c, r * 1.02, 0.0, TAU, 48, GOLD, 2.0)
+
+func _draw_wall_frames(room: Rect2) -> void:
+	var top_y := room.position.y + room.size.y * 0.27
+	var frame_w := room.size.x * 0.105
+	var frame_h := room.size.y * 0.105
+	for x_ratio in [0.16, 0.84]:
+		var center := Vector2(lerpf(room.position.x, room.end.x, float(x_ratio)), top_y)
+		var frame := Rect2(center - Vector2(frame_w, frame_h) * 0.5, Vector2(frame_w, frame_h))
+		draw_rect(frame.grow(5.0), Color("#120F15"), true)
+		draw_rect(frame, Color("#241A27"), true)
+		draw_rect(frame, Color(GOLD, 0.34), false, 2.0)
+		# Original House motifs: thorn rosette left, moth reliquary right.
+		if float(x_ratio) < 0.5:
+			_draw_rose_silhouette(center, minf(frame_w, frame_h) * 0.24)
+		else:
+			_draw_moth_frame(center, minf(frame_w, frame_h) * 0.24, house_stage >= 1)
+	# Small sconces make the wall feel inhabited rather than diagrammatic.
+	_draw_wall_sconce(Vector2(room.position.x + room.size.x * 0.28, top_y + frame_h * 0.18), house_stage >= 1)
+	_draw_wall_sconce(Vector2(room.end.x - room.size.x * 0.28, top_y + frame_h * 0.18), house_stage >= 1)
+
+func _draw_wall_sconce(center: Vector2, active: bool) -> void:
+	var metal := GOLD.darkened(0.35)
+	draw_line(center + Vector2(0, 14), center + Vector2(0, -9), metal, 3.0)
+	draw_line(center, center + Vector2(13, 8), metal, 2.0)
+	draw_line(center, center + Vector2(-13, 8), metal, 2.0)
+	if active:
+		var glow := Color(GOLD)
+		glow.a = 0.08
+		draw_circle(center - Vector2(0, 13), 22.0, glow)
+		draw_circle(center - Vector2(0, 13), 6.0, GOLD)
+	else:
+		draw_circle(center - Vector2(0, 13), 5.0, Color("#665566"))
 
 func _draw_side_shelves(room: Rect2) -> void:
 	var shelf_y0: float = room.position.y + room.size.y * 0.42
@@ -140,12 +192,13 @@ func _draw_side_shelves(room: Rect2) -> void:
 		Vector2((right_x1 - right_x0) + room.size.x * 0.036, shelf_gap * 2.72)
 	)
 	for alcove in [left_alcove, right_alcove]:
-		draw_rect(alcove, Color("#161119"), true)
-		draw_rect(alcove, Color(0.851, 0.71, 0.416, 0.16), false, 2.0)
+		draw_rect(alcove.grow(4.0), Color("#100D12"), true)
+		draw_rect(alcove, Color("#18121B"), true)
+		draw_rect(alcove, Color(0.851, 0.71, 0.416, 0.26), false, 2.0)
 
 	for i in range(3):
 		var y: float = shelf_y0 + shelf_gap * float(i)
-		draw_line(Vector2(left_x0, y), Vector2(left_x1, y), GOLD.darkened(0.45), 3.0)
+		draw_line(Vector2(left_x0, y), Vector2(left_x1, y), Color(GOLD, 0.48), 3.5)
 		draw_line(Vector2(right_x0, y), Vector2(right_x1, y), GOLD.darkened(0.45), 3.0)
 
 	_draw_bottle(Vector2((left_x0 + left_x1) * 0.5, shelf_y0 - 14.0), CYAN, 0.95)
@@ -180,16 +233,31 @@ func _draw_central_cabinet(room: Rect2) -> void:
 		Vector2(room.position.x + room.size.x * 0.285, room.position.y + room.size.y * 0.34),
 		Vector2(room.size.x * 0.43, room.size.y * 0.43)
 	)
-	draw_rect(cabinet.grow(8.0), Color("#120F15"), true)
-	draw_rect(cabinet.grow(6.0), GOLD.darkened(0.58), false, 5.0)
-	draw_rect(cabinet, PLUM, true)
+	draw_rect(cabinet.grow(14.0), Color(0, 0, 0, 0.30), true)
+	draw_rect(cabinet.grow(9.0), Color("#120F15"), true)
+	draw_rect(cabinet.grow(7.0), Color(GOLD, 0.48), false, 5.0)
+	draw_rect(cabinet, Color("#291C2B"), true)
+	# Cabinet crown / reliquary pediment.
+	var crown_y := cabinet.position.y - 10.0
+	draw_line(Vector2(cabinet.position.x + cabinet.size.x * 0.12, crown_y), Vector2(cabinet.end.x - cabinet.size.x * 0.12, crown_y), Color(GOLD, 0.52), 4.0)
+	draw_arc(Vector2(cabinet.get_center().x, crown_y + 2.0), cabinet.size.x * 0.18, PI, TAU, 32, Color(GOLD, 0.42), 3.0)
+	# Brass side columns improve object permanence at small scale.
+	for x in [cabinet.position.x + 10.0, cabinet.end.x - 10.0]:
+		draw_line(Vector2(x, cabinet.position.y + 14.0), Vector2(x, cabinet.end.y - 14.0), Color(GOLD, 0.34), 4.0)
+		draw_circle(Vector2(x, cabinet.position.y + 12.0), 5.0, Color(GOLD, 0.44))
+		draw_circle(Vector2(x, cabinet.end.y - 12.0), 5.0, Color(GOLD, 0.44))
 	if house_stage >= 1:
 		var velvet := Rect2(
 			cabinet.position + Vector2(cabinet.size.x * 0.07, cabinet.size.y * 0.06),
 			Vector2(cabinet.size.x * 0.86, cabinet.size.y * 0.57)
 		)
-		draw_rect(velvet, Color("#2A1828"), true)
-		draw_rect(velvet, Color(0.78, 0.45, 0.56, 0.14), false, 1.0)
+		draw_rect(velvet, Color("#321A30"), true)
+		draw_rect(velvet, Color(0.78, 0.45, 0.56, 0.24), false, 1.5)
+		# Glass reflections give the display depth without covering the Curio.
+		var glass := Color("#A9C6C8")
+		glass.a = 0.07
+		draw_line(velvet.position + Vector2(velvet.size.x * 0.12, 4.0), velvet.position + Vector2(velvet.size.x * 0.34, velvet.size.y - 6.0), glass, 4.0)
+		draw_line(velvet.position + Vector2(velvet.size.x * 0.62, 4.0), velvet.position + Vector2(velvet.size.x * 0.78, velvet.size.y * 0.56), glass, 2.0)
 	draw_rect(cabinet, Color(0.851, 0.71, 0.416, 0.34), false, 2.0)
 
 	var shelf_y: float = cabinet.position.y + cabinet.size.y * 0.68
@@ -203,8 +271,15 @@ func _draw_central_cabinet(room: Rect2) -> void:
 		_draw_candle(Vector2(cabinet.position.x + cabinet.size.x * 0.18, shelf_y - 5.0), 0.66)
 		_draw_candle(Vector2(cabinet.end.x - cabinet.size.x * 0.18, shelf_y - 5.0), 0.66)
 	else:
-		draw_circle(glow_center, cabinet.size.x * 0.10, GLASS)
-		draw_arc(glow_center, cabinet.size.x * 0.09, 0.0, TAU, 32, Color("#6E626F"), 3.0)
+		# Dormant display is visibly sealed, not merely empty.
+		draw_circle(glow_center, cabinet.size.x * 0.16, Color("#151219"))
+		draw_arc(glow_center, cabinet.size.x * 0.145, 0.0, TAU, 36, Color("#6E626F"), 3.0)
+		var seal := Color("#7D3048")
+		draw_circle(glow_center, cabinet.size.x * 0.075, seal.darkened(0.18))
+		draw_arc(glow_center, cabinet.size.x * 0.075, 0.0, TAU, 30, ROSE.darkened(0.18), 2.0)
+		for angle in [PI * 0.25, PI * 0.75, PI * 1.25, PI * 1.75]:
+			var d := Vector2(cos(angle), sin(angle))
+			draw_line(glow_center + d * cabinet.size.x * 0.08, glow_center + d * cabinet.size.x * 0.14, Color("#6E626F"), 2.0)
 
 	# Drawer / hardware gives the display physical permanence.
 	var drawer := Rect2(
@@ -285,8 +360,15 @@ func _draw_floor(room: Rect2) -> void:
 		Vector2(room.get_center().x + room.size.x * 0.24, room.end.y),
 		Vector2(room.get_center().x - room.size.x * 0.24, room.end.y)
 	])
-	draw_colored_polygon(runner, Color("#211522"))
-	draw_polyline(PackedVector2Array([runner[0], runner[1], runner[2], runner[3], runner[0]]), Color(0.851, 0.71, 0.416, 0.15), 2.0)
+	draw_colored_polygon(runner, Color("#2A1728"))
+	draw_polyline(PackedVector2Array([runner[0], runner[1], runner[2], runner[3], runner[0]]), Color(0.851, 0.71, 0.416, 0.24), 2.0)
+	# Subtle runner medallions survive the small mobile render better than fine texture.
+	for i in range(3):
+		var t := 0.32 + float(i) * 0.20
+		var c := Vector2(room.get_center().x, lerpf(horizon_y, room.end.y, t))
+		var rr := lerpf(room.size.x * 0.025, room.size.x * 0.055, t)
+		draw_arc(c, rr, 0.0, TAU, 28, Color(GOLD, 0.16), 2.0)
+		draw_line(c - Vector2(rr * 0.6, 0), c + Vector2(rr * 0.6, 0), Color(GOLD, 0.10), 1.0)
 	var center_x: float = room.get_center().x
 	for x_ratio in [0.18, 0.34, 0.66, 0.82]:
 		var x: float = lerpf(room.position.x, room.end.x, float(x_ratio))
@@ -300,5 +382,6 @@ func _draw_awakened_sparkles(room: Rect2) -> void:
 		Vector2(room.end.x - room.size.x * 0.18, room.position.y + room.size.y * 0.54)
 	]
 	for p in points:
-		draw_line(p - Vector2(5, 0), p + Vector2(5, 0), Color(0.945, 0.91, 0.866, 0.45), 1.0)
-		draw_line(p - Vector2(0, 5), p + Vector2(0, 5), Color(0.945, 0.91, 0.866, 0.45), 1.0)
+		draw_circle(p, 14.0, Color(0.851, 0.71, 0.416, 0.025))
+		draw_line(p - Vector2(7, 0), p + Vector2(7, 0), Color(0.945, 0.91, 0.866, 0.62), 1.4)
+		draw_line(p - Vector2(0, 7), p + Vector2(0, 7), Color(0.945, 0.91, 0.866, 0.62), 1.4)
