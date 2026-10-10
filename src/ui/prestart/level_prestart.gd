@@ -25,17 +25,18 @@ func configure_level(value: int) -> bool:
 	var file := FileAccess.open(path, FileAccess.READ)
 	if file == null:
 		return false
-	var parsed = JSON.parse_string(file.get_as_text())
+	var parsed: Variant = JSON.parse_string(file.get_as_text())
 	file.close()
 	if not parsed is Dictionary:
 		return false
-	title_label.text = String(parsed.get("title", "Hidden Display"))
-	moves_label.text = "%d MOVES" % int(parsed.get("moves", 0))
-	var objective := parsed.get("objective", {})
+	var data: Dictionary = parsed
+	title_label.text = String(data.get("title", "Hidden Display"))
+	moves_label.text = "%d MOVES" % int(data.get("moves", 0))
+	var objective: Variant = data.get("objective", {})
 	if objective is Dictionary and String(objective.get("type", "")) == "collect_family":
 		objective_label.text = "GOAL · GATHER %d %s SIGILS" % [int(objective.get("target", 0)), String(objective.get("family", "")).to_upper()]
 	else:
 		objective_label.text = "GOAL · BREAK THE HOUSE SEAL"
-	var curio := String(parsed.get("reward_curio", "moon_cameo")).replace("_", " ").capitalize()
+	var curio := String(data.get("reward_curio", "moon_cameo")).replace("_", " ").capitalize()
 	reward_label.text = "REWARD · %s" % curio.to_upper()
 	return true

@@ -15,12 +15,12 @@ var settings
 
 func _ready() -> void:
 	close_button.pressed.connect(func(): close_requested.emit())
-	master_toggle.toggled.connect(func(on): _set("master_muted", not on))
-	music_toggle.toggled.connect(func(on): _set("music_muted", not on))
-	sfx_toggle.toggled.connect(func(on): _set("sfx_muted", not on))
-	haptics_toggle.toggled.connect(func(on): _set("haptics_enabled", on))
-	reduced_toggle.toggled.connect(func(on): _set("reduced_motion", on))
-	contrast_toggle.toggled.connect(func(on): _set("high_contrast", on))
+	master_toggle.toggled.connect(func(on): _set_setting("master_muted", not on))
+	music_toggle.toggled.connect(func(on): _set_setting("music_muted", not on))
+	sfx_toggle.toggled.connect(func(on): _set_setting("sfx_muted", not on))
+	haptics_toggle.toggled.connect(func(on): _set_setting("haptics_enabled", on))
+	reduced_toggle.toggled.connect(func(on): _set_setting("reduced_motion", on))
+	contrast_toggle.toggled.connect(func(on): _set_setting("high_contrast", on))
 
 func bind_settings(value) -> void:
 	settings = value
@@ -33,6 +33,6 @@ func bind_settings(value) -> void:
 	reduced_toggle.button_pressed = bool(settings.get_value("reduced_motion", false))
 	contrast_toggle.button_pressed = bool(settings.get_value("high_contrast", false))
 
-func _set(key: String, value) -> void:
+func _set_setting(key: String, value) -> void:
 	if settings != null:
 		settings.set_value(key, value)

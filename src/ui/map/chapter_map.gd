@@ -28,7 +28,7 @@ func set_progress(value) -> void:
 func _refresh() -> void:
 	if not is_node_ready():
 		return
-	var completed := progress.completed_levels.size() if progress != null else 0
+	var completed: int = int(progress.completed_levels.size()) if progress != null else 0
 	chapter_progress.text = "CURIO BOUTIQUE · %d AWAKENING%s" % [completed, "" if completed == 1 else "S"]
 	_configure_button(level1_button, 1)
 	_configure_button(level2_button, 2)
@@ -36,8 +36,8 @@ func _refresh() -> void:
 
 func _configure_button(button: Button, level_number: int) -> void:
 	var level_id := "ch01_level_%03d" % level_number
-	var completed := progress != null and progress.completed_levels.has(level_id)
-	var within_gate := level_number <= canonical_level_cap
+	var completed: bool = progress != null and progress.completed_levels.has(level_id)
+	var within_gate: bool = level_number <= canonical_level_cap
 	button.disabled = not within_gate
 	if completed:
 		button.text = "LEVEL %d · AWAKENED" % level_number
