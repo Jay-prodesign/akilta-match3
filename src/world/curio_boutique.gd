@@ -60,7 +60,10 @@ func _draw_wall_panels(room: Rect2) -> void:
 	var inset: float = room.size.x * 0.045
 	var wall := room.grow(-inset)
 	draw_rect(wall, Color("#1D1721"), true)
-	draw_rect(wall, Color(0.749, 0.647, 0.847, 0.10), false, 2.0)
+	var wash := Color("#3A2335")
+	wash.a = 0.22
+	draw_rect(wall, wash, true)
+	draw_rect(wall, Color(0.749, 0.647, 0.847, 0.14), false, 2.0)
 
 	var panel_top: float = wall.position.y + wall.size.y * 0.18
 	var panel_bottom: float = wall.position.y + wall.size.y * 0.70
@@ -81,6 +84,9 @@ func _draw_arch(room: Rect2) -> void:
 	draw_arc(center, radius - 8.0, PI, TAU, 72, Color(0.851, 0.71, 0.416, 0.24), 2.0)
 	draw_line(Vector2(center.x - radius, center.y), Vector2(center.x - radius, room.end.y), RAISED, 13.0)
 	draw_line(Vector2(center.x + radius, center.y), Vector2(center.x + radius, room.end.y), RAISED, 13.0)
+	var arch_glow := Color(GOLD)
+	arch_glow.a = 0.14
+	draw_arc(center, radius - 18.0, PI, TAU, 72, arch_glow, 4.0)
 
 	# Velvet curtain suggestions keep the room intimate without hiding the cabinet.
 	var curtain_left := PackedVector2Array([
@@ -95,8 +101,8 @@ func _draw_arch(room: Rect2) -> void:
 		Vector2(room.end.x - room.size.x * 0.13, room.position.y + room.size.y * 0.67),
 		Vector2(room.end.x - room.size.x * 0.04, room.position.y + room.size.y * 0.73)
 	])
-	draw_colored_polygon(curtain_left, Color("#2A1828"))
-	draw_colored_polygon(curtain_right, Color("#2A1828"))
+	draw_colored_polygon(curtain_left, Color("#35172F"))
+	draw_colored_polygon(curtain_right, Color("#35172F"))
 	draw_line(curtain_left[1], curtain_left[2], Color(0.78, 0.45, 0.56, 0.22), 3.0)
 	draw_line(curtain_right[1], curtain_right[2], Color(0.78, 0.45, 0.56, 0.22), 3.0)
 
@@ -106,6 +112,9 @@ func _draw_moon_window(room: Rect2) -> void:
 	draw_circle(c, r * 1.24, RAISED)
 	draw_circle(c, r, Color("#1A2028"))
 	draw_circle(c, r * 0.70, Color(0.663, 0.776, 0.784, 0.24))
+	# Stained-glass crossbars keep the moon window architectural, not another gameplay piece.
+	draw_line(c + Vector2(-r * 0.78, 0), c + Vector2(r * 0.78, 0), Color(0.851,0.71,0.416,0.18), 2.0)
+	draw_line(c + Vector2(0, -r * 0.78), c + Vector2(0, r * 0.78), Color(0.851,0.71,0.416,0.18), 2.0)
 	draw_circle(c - Vector2(r * 0.10, r * 0.04), r * 0.54, LILAC)
 	draw_circle(c + Vector2(r * 0.24, -r * 0.10), r * 0.53, Color("#1A2028"))
 	draw_arc(c, r * 1.02, 0.0, TAU, 48, GOLD, 2.0)
@@ -136,8 +145,9 @@ func _draw_side_shelves(room: Rect2) -> void:
 		draw_line(Vector2(right_x0, y), Vector2(right_x1, y), GOLD.darkened(0.45), 3.0)
 
 	_draw_bottle(Vector2((left_x0 + left_x1) * 0.5, shelf_y0 - 14.0), CYAN, 0.95)
-	_draw_candle(Vector2(left_x0 + 20.0, shelf_y0 + shelf_gap - 4.0), 0.86)
-	_draw_bottle(Vector2(left_x1 - 18.0, shelf_y0 + shelf_gap - 8.0), ROSE, 0.58)
+	_draw_candle(Vector2(left_x0 + 20.0, shelf_y0 + shelf_gap - 4.0), 1.05)
+	_draw_bottle(Vector2(left_x1 - 18.0, shelf_y0 + shelf_gap - 8.0), ROSE, 0.66)
+	_draw_rose_silhouette(Vector2(left_x0 + 34.0, shelf_y0 + shelf_gap * 2.0 - 12.0), 12.0)
 	var locket_center := Vector2(left_x1 - 24.0, shelf_y0 + shelf_gap * 2.0 - 19.0)
 	if house_stage >= 3:
 		draw_circle(locket_center, 29.0, Color(0.78, 0.45, 0.56, 0.07))
@@ -146,10 +156,20 @@ func _draw_side_shelves(room: Rect2) -> void:
 		_draw_thorn_locket(locket_center, 16.0, false)
 
 	_draw_bottle(Vector2((right_x0 + right_x1) * 0.5, shelf_y0 - 14.0), LEAF, 0.88)
-	_draw_candle(Vector2(right_x1 - 20.0, shelf_y0 + shelf_gap - 4.0), 0.92)
-	_draw_bottle(Vector2(right_x0 + 20.0, shelf_y0 + shelf_gap - 8.0), LILAC, 0.58)
+	_draw_candle(Vector2(right_x1 - 20.0, shelf_y0 + shelf_gap - 4.0), 1.05)
+	_draw_bottle(Vector2(right_x0 + 20.0, shelf_y0 + shelf_gap - 8.0), LILAC, 0.66)
+	_draw_rose_silhouette(Vector2(right_x1 - 34.0, shelf_y0 + shelf_gap * 2.0 - 12.0), 12.0)
 	var moth_center := Vector2(right_x0 + 28.0, shelf_y0 + shelf_gap * 2.0 - 18.0)
 	_draw_moth_frame(moth_center, 20.0 if house_stage >= 2 else 17.0, house_stage >= 2)
+
+func _draw_rose_silhouette(center: Vector2, radius: float) -> void:
+	var petals := PackedVector2Array()
+	for i in range(10):
+		var angle := TAU * float(i) / 10.0 - PI * 0.5
+		var rr := radius if i % 2 == 0 else radius * 0.62
+		petals.append(center + Vector2(cos(angle), sin(angle)) * rr)
+	draw_colored_polygon(petals, Color("#7D3048"))
+	draw_circle(center, radius * 0.26, Color("#C7728F"))
 
 func _draw_central_cabinet(room: Rect2) -> void:
 	var cabinet := Rect2(

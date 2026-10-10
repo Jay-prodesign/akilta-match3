@@ -213,7 +213,11 @@ func _draw_board_frame(rect: Rect2) -> void:
 func _draw_cell(rect: Rect2, pos: Vector2i) -> void:
 	var radius := rect.size.x * 0.18
 	draw_style_box(_cell_box(radius), rect)
-	var inset := rect.grow(-rect.size.x * 0.10)
+	var inner := rect.grow(-rect.size.x * 0.055)
+	var inner_line := Color(LILAC)
+	inner_line.a = 0.07
+	draw_rect(inner, inner_line, false, 1.0)
+	var inset := rect.grow(-rect.size.x * 0.13)
 	var family: String = String(board_state.get_cell(pos))
 	var descriptor: Dictionary = PieceVisuals.descriptor(family)
 	_draw_piece(inset, family, descriptor)
@@ -228,10 +232,10 @@ func _draw_cell(rect: Rect2, pos: Vector2i) -> void:
 
 func _cell_box(radius: float) -> StyleBoxFlat:
 	var box := StyleBoxFlat.new()
-	box.bg_color = GLASS
-	box.border_color = Color(1.0, 1.0, 1.0, 0.055)
+	box.bg_color = Color("#2A2230")
+	box.border_color = Color(0.851, 0.71, 0.416, 0.12)
 	box.set_border_width_all(1)
-	box.set_corner_radius_all(int(radius))
+	box.set_corner_radius_all(int(maxf(6.0, radius * 0.52)))
 	return box
 
 func _draw_piece(rect: Rect2, family: String, descriptor: Dictionary) -> void:
@@ -247,7 +251,8 @@ func _draw_piece(rect: Rect2, family: String, descriptor: Dictionary) -> void:
 	match family:
 		"moon":
 			draw_circle(c, r, color)
-			draw_circle(c + Vector2(r * 0.34, -r * 0.12), r * 0.86, GLASS)
+			draw_circle(c + Vector2(r * 0.34, -r * 0.12), r * 0.86, Color("#2A2230"))
+			draw_arc(c + Vector2(-r * 0.06, 0), r * 0.72, PI * 0.58, PI * 1.43, 28, Color(1,1,1,0.18), max(1.0, r * 0.05))
 			draw_circle(c + Vector2(-r * 0.15, r * 0.05), r * 0.10, BONE)
 		"rose":
 			var points := PackedVector2Array()
@@ -256,6 +261,7 @@ func _draw_piece(rect: Rect2, family: String, descriptor: Dictionary) -> void:
 				var rr: float = r if i % 2 == 0 else r * 0.72
 				points.append(c + Vector2(cos(angle), sin(angle)) * rr)
 			draw_colored_polygon(points, color)
+			draw_circle(c, r * 0.55, Color(color, 0.15), false, max(1.0, r * 0.05))
 			draw_arc(c, r * 0.43, 0.0, TAU * 1.6, 32, BONE, max(1.5, r * 0.08))
 		"moth":
 			draw_circle(c, r * 0.16, BONE)
@@ -273,7 +279,9 @@ func _draw_piece(rect: Rect2, family: String, descriptor: Dictionary) -> void:
 			]), color)
 			draw_circle(c + Vector2(-r * 0.52, -r * 0.04), r * 0.12, INK)
 			draw_circle(c + Vector2(r * 0.52, -r * 0.04), r * 0.12, INK)
+			draw_arc(c, r * 0.82, PI * 1.06, PI * 1.94, 18, Color(1,1,1,0.16), max(1.0, r * 0.04))
 		"key":
+			draw_circle(c + Vector2(0, -r * 0.34), r * 0.42, Color(color, 0.10))
 			draw_arc(c + Vector2(0, -r * 0.34), r * 0.30, 0.0, TAU, 32, color, r * 0.18)
 			draw_line(c + Vector2(0, -r * 0.04), c + Vector2(0, r * 0.76), color, r * 0.18)
 			draw_line(c + Vector2(0, r * 0.52), c + Vector2(r * 0.34, r * 0.52), color, r * 0.14)
@@ -288,6 +296,7 @@ func _draw_piece(rect: Rect2, family: String, descriptor: Dictionary) -> void:
 				c + Vector2(-r * 0.68, -r * 0.28)
 			])
 			draw_colored_polygon(leaf, color)
+			draw_arc(c, r * 0.84, PI * 0.78, PI * 1.26, 16, Color(1,1,1,0.12), max(1.0, r * 0.035))
 			draw_line(c + Vector2(0, -r * 0.72), c + Vector2(0, r * 0.72), BONE, max(1.5, r * 0.07))
 			draw_line(c + Vector2(0, -r * 0.10), c + Vector2(r * 0.34, -r * 0.34), BONE, max(1.0, r * 0.045))
 			draw_line(c + Vector2(0, r * 0.12), c + Vector2(-r * 0.32, r * 0.34), BONE, max(1.0, r * 0.045))
