@@ -42,8 +42,9 @@ func _run() -> void:
 	var level1_button: Button = map.get_level_button(1)
 	var level2_button: Button = map.get_level_button(2)
 	_expect(level1_button != null and not level1_button.disabled, "Level 1 must be selectable")
-	_expect(level2_button != null and level2_button.disabled, "Level 2 route must remain sealed before D-027")
-	_expect(map.get_level_button(10) != null, "chapter map must expose the longer ten-display route without unlocking future levels")
+	_expect(level2_button != null and not level2_button.disabled, "Founder-approved three-level playtest must expose Level 2")
+	_expect(map.get_level_button(3) != null and not map.get_level_button(3).disabled, "Founder-approved playtest must expose Level 3")
+	_expect(map.get_level_button(4) != null and map.get_level_button(4).disabled, "Level 4 and later must remain sealed beyond the three-level playtest scope")
 
 	level1_button.emit_signal("pressed")
 	await process_frame
