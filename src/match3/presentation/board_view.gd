@@ -613,6 +613,22 @@ func _draw_board_frame(rect: Rect2) -> void:
 		var sy: float = 1.0 if corner.y == rect.position.y else -1.0
 		draw_line(corner, corner + Vector2(mark * sx, 0), mark_color, 2.0)
 		draw_line(corner, corner + Vector2(0, mark * sy), mark_color, 2.0)
+	# Carved corner diamonds and double inner rule echo the North Star's antique frame.
+	draw_rect(rect.grow(-5.0), Color(GOLD, 0.26), false, 1.0)
+	for corner in [
+		rect.position + Vector2(mark * 0.62, mark * 0.62),
+		Vector2(rect.end.x - mark * 0.62, rect.position.y + mark * 0.62),
+		Vector2(rect.position.x + mark * 0.62, rect.end.y - mark * 0.62),
+		rect.end - Vector2(mark * 0.62, mark * 0.62)
+	]:
+		var diamond := PackedVector2Array([
+			corner + Vector2(0, -mark * 0.30),
+			corner + Vector2(mark * 0.30, 0),
+			corner + Vector2(0, mark * 0.30),
+			corner + Vector2(-mark * 0.30, 0)
+		])
+		draw_colored_polygon(diamond, Color(GOLD, 0.85))
+		draw_circle(corner, maxf(1.5, mark * 0.07), Color("#FFF0C7"))
 
 	# CC0 frame geometry is used only as a candidate ornamental primitive;
 	# Curio House color/material identity remains owned by this renderer.
