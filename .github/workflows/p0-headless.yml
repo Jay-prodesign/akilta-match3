@@ -1,20 +1,7 @@
 name: P0 Headless Verification
 
 on:
-  push:
-    branches:
-      - p0/bootstrap
-      - p0/north-star-level1-gate
-    paths:
-      - "project.godot"
-      - "src/**"
-      - "content/**"
-      - "assets/pieces/**"
-      - "assets/fonts/**"
-      - "assets/audio/**"
-      - "tests/**"
-      - "tools/**"
-      - ".github/workflows/p0-headless.yml"
+  # Run the full milestone checks deliberately, not on every development commit.
   workflow_dispatch:
 
 permissions:
