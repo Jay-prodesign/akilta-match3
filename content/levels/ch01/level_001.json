@@ -3,35 +3,112 @@
   "content_status": "draft",
   "validation_seed": 1001,
   "validation_expected_result": "won",
-  "teaching_moves": [[1, 4, 2, 4]],
-  "validation_expect": {"special_triggered_min": 1},
+  "teaching_moves": [
+    [
+      1,
+      4,
+      2,
+      4
+    ]
+  ],
+  "validation_expect": {
+    "special_triggered_min": 1
+  },
   "id": "ch01_level_001",
   "chapter": "curio_boutique",
   "visual_profile": "curio_boutique_opening",
-  "piece_set": "core_five_level1_candidate_v2",
-  "visual_status": "art_direction_wip",
+  "piece_set": "north_star_five_family_candidate_v3",
+  "visual_status": "north_star_candidate_v3",
   "title": "Moonlit Cabinet",
   "eyebrow": "CURIO BOUTIQUE · FIRST AWAKENING",
-  "hint": "Slide the moon sigil right. Wake the cabinet in one luminous move.",
+  "hint": "Match the moon sigils to wake the first relic.",
   "win_title": "THE CABINET STIRS",
   "win_detail": "The Moon Cameo wakes behind the glass.",
   "reward_curio": "moon_cameo",
   "house_stage_reward": 1,
   "width": 7,
   "height": 7,
-  "moves": 12,
+  "moves": 20,
   "objective": "collect_family",
   "objective_family": "moon",
   "objective_target": 6,
-  "families": ["moon", "rose", "moth", "key", "leaf"],
-  "initial_rows": [
-    ["moon", "rose", "moth", "key", "leaf", "moon", "rose"],
-    ["rose", "moth", "key", "leaf", "moon", "rose", "moth"],
-    ["moth", "key", "leaf", "moon", "rose", "moth", "key"],
-    ["key", "leaf", "moon", "rose", "moth", "key", "leaf"],
-    ["leaf", "moon", "rose", "moth", "key", "leaf", "moon"],
-    ["key", "leaf", "moon", "rose", "moth", "key", "leaf"],
-    ["leaf", "moon", "rose", "moon", "rose", "leaf", "moth"]
+  "families": [
+    "moon",
+    "rose",
+    "moth",
+    "key",
+    "leaf"
   ],
-  "specials": [{"x": 1, "y": 4, "kind": "global"}]
+  "initial_rows": [
+    [
+      "moon",
+      "rose",
+      "moth",
+      "key",
+      "leaf",
+      "moon",
+      "rose"
+    ],
+    [
+      "rose",
+      "moth",
+      "key",
+      "leaf",
+      "moon",
+      "rose",
+      "moth"
+    ],
+    [
+      "moth",
+      "key",
+      "leaf",
+      "moon",
+      "rose",
+      "moth",
+      "key"
+    ],
+    [
+      "key",
+      "leaf",
+      "moon",
+      "rose",
+      "moth",
+      "key",
+      "leaf"
+    ],
+    [
+      "leaf",
+      "moon",
+      "rose",
+      "moth",
+      "key",
+      "leaf",
+      "moon"
+    ],
+    [
+      "key",
+      "leaf",
+      "moon",
+      "rose",
+      "moth",
+      "key",
+      "leaf"
+    ],
+    [
+      "leaf",
+      "moon",
+      "rose",
+      "moon",
+      "rose",
+      "leaf",
+      "moth"
+    ]
+  ],
+  "specials": [
+    {
+      "x": 1,
+      "y": 4,
+      "kind": "global"
+    }
+  ]
 }
