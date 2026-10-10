@@ -14,6 +14,7 @@ const GOLD := Color("#D8B56A")
 const ROSE := Color("#C7728F")
 const LEAF := Color("#8BAF7C")
 
+const PieceAssetLoader = preload("res://src/match3/presentation/piece_asset_loader.gd")
 const BACKDROP_PATH := "res://assets/world/ch01_curio_boutique/curio_boutique_moonlit_backdrop.svg"
 var _backdrop: Texture2D
 const CAT_PORTRAIT_PATH := "res://assets/pieces/black_cat.svg"
@@ -66,6 +67,7 @@ func _draw() -> void:
 	_draw_moon_window(room)
 	_draw_wall_frames(room)
 	_draw_cat_portrait(room)
+	_draw_candle_props(room)
 	_draw_side_shelves(room)
 	_draw_central_cabinet(room)
 	_draw_floor(room)
@@ -420,3 +422,12 @@ func _draw_cat_portrait(room: Rect2) -> void:
 	draw_rect(portrait.grow(5.0), Color("#100B15"), true)
 	draw_rect(portrait.grow(3.0), Color(GOLD, 0.72), false, 2.0)
 	draw_texture_rect(_cat_portrait, portrait, false)
+
+func _draw_candle_props(room: Rect2) -> void:
+	var candle := PieceAssetLoader.ornament("res://assets/pieces/candle.svg")
+	if candle == null:
+		return
+	var prop_size := Vector2(room.size.x * 0.105, room.size.y * 0.13)
+	for side in [-1.0, 1.0]:
+		var center := Vector2(room.get_center().x + side * room.size.x * 0.405, room.position.y + room.size.y * 0.76)
+		draw_texture_rect(candle, Rect2(center - prop_size * 0.5, prop_size), false)
