@@ -83,9 +83,11 @@ jobs:
       - name: Run playable Level 1 contract
         shell: bash
         run: |
-          set -euo pipefail
+          set -uo pipefail
+          set +e
           output=$(timeout 30s ./godot --headless --path . -s res://tests/integration/test_level1_gameplay.gd 2>&1)
           status=$?
+          set -e
           printf '%s\n' "$output"
           if [ "$status" -ne 0 ]; then
             exit "$status"

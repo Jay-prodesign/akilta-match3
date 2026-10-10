@@ -10,7 +10,7 @@ const MoveResolver = preload("res://src/match3/domain/move_resolver.gd")
 var board_state
 var last_trace
 
-@onready var board_view: Control = $Layout/BoardView
+@onready var board_view = $Layout/BoardView
 @onready var objective_label: Label = $Layout/HUD/Objective
 @onready var moves_label: Label = $Layout/HUD/Moves
 @onready var result_overlay: Control = $ResultOverlay
