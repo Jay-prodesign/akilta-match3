@@ -23,6 +23,10 @@ var current_level_path: String = ""
 var current_seed: int = 1001
 var current_reward_curio: String = ""
 var current_house_stage_reward: int = 0
+var current_objective_type: String = "collect_family"
+var current_objective_family: String = "moon"
+var current_objective_target: int = 6
+var current_initial_blocker_count: int = 0
 var current_win_title: String = "THE CABINET STIRS"
 var current_win_detail: String = "Something in the Curio Boutique has awakened."
 var _pending_win: bool = false
@@ -43,6 +47,7 @@ var _potion_used_for_attempt := false
 @onready var pause_retry: Button = $PauseOverlay/Card/Content/Retry
 @onready var pause_exit: Button = $PauseOverlay/Card/Content/Exit
 @onready var hint_label: Label = $Layout/Hint
+@onready var awakening_title: Label = $Layout/Awakening/Content/Label
 @onready var awakening_view: Control = $Layout/Awakening/Content/ProgressView
 @onready var awakening_copy: Label = $Layout/Awakening/Content/ProgressCopy
 @onready var result_overlay: Control = $ResultOverlay
@@ -94,6 +99,11 @@ func load_level_path(path: String, seed_value: int = 1001) -> bool:
 	current_level_id = String(parsed.get("id", ""))
 	current_reward_curio = String(parsed.get("reward_curio", ""))
 	current_house_stage_reward = int(parsed.get("house_stage_reward", 0))
+	current_objective_type = String(parsed.get("objective", "collect_family"))
+	current_objective_family = String(parsed.get("objective_family", "moon"))
+	current_objective_target = int(parsed.get("objective_target", 1))
+	var blockers_data: Variant = parsed.get("blockers", [])
+	current_initial_blocker_count = blockers_data.size() if blockers_data is Array else 0
 	current_win_title = String(parsed.get("win_title", "THE CABINET STIRS"))
 	current_win_detail = String(parsed.get("win_detail", "Something in the Curio Boutique has awakened."))
 	eyebrow_label.text = String(parsed.get("eyebrow", "CURIO BOUTIQUE"))
@@ -232,18 +242,30 @@ func _refresh_hud() -> void:
 		moves_label.text = "—"
 		return
 	moves_label.text = "%d moves" % int(board_state.moves_remaining)
+	var progress_value := int(board_state.objective_progress)
+	var target_value := int(board_state.objective_target)
+	var progress_family := String(board_state.objective_family)
+	var progress_unit := "SIGILS"
+	if String(board_state.objective_type) == "clear_blockers":
+		progress_value = maxi(0, current_initial_blocker_count - int(board_state.remaining_blockers()))
+		target_value = maxi(1, current_initial_blocker_count)
+		progress_family = "wax_seal"
+		progress_unit = "SEALS"
+	if awakening_title != null:
+		var relic_name := current_reward_curio.replace("_", " ").to_upper()
+		awakening_title.text = "AWAKENING · MOON CAMEO" if current_reward_curio == "moon_cameo" else "RELIC · %s" % relic_name
 	if awakening_view != null and awakening_view.has_method("set_objective"):
-		awakening_view.set_objective(
-			int(board_state.objective_progress),
-			int(board_state.objective_target),
-			String(board_state.objective_family)
-		)
+		awakening_view.set_objective(progress_value, target_value, progress_family)
 	if awakening_copy != null:
-		var remaining := maxi(0, int(board_state.objective_target) - int(board_state.objective_progress))
-		awakening_copy.text = "%d / %d SIGILS · %s" % [
-			int(board_state.objective_progress),
-			int(board_state.objective_target),
-			"THE MOON CAMEO WAKES" if remaining == 0 else "%d REMAIN" % remaining
+		var remaining := maxi(0, target_value - progress_value)
+		var completion_copy := "THE MOON CAMEO WAKES" if current_reward_curio == "moon_cameo" else "%s READY" % current_reward_curio.replace("_", " ").to_upper()
+		if progress_unit == "SEALS":
+			completion_copy = "THE RELIQUARY OPENS"
+		awakening_copy.text = "%d / %d %s · %s" % [
+			progress_value,
+			target_value,
+			progress_unit,
+			completion_copy if remaining == 0 else "%d REMAIN" % remaining
 		]
 	if String(board_state.objective_type) == "collect_family":
 		var family_label: String = String(board_state.objective_family).capitalize()
