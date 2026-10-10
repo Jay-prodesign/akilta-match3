@@ -33,7 +33,7 @@ var _pending_level_number: int = 0
 ## Internal playtest override recorded in D-024 gate candidate: Levels 1–3 only.
 const TEST_LEVEL_COUNT := 3
 # Founder approval gate: do not expose authored Level 2+ until Level 1 is reviewed.
-const FOUNDER_APPROVED_LEVEL_COUNT := 1
+const INTERNAL_REVIEW_PLAYABLE_LEVEL_COUNT := 1
 
 @onready var screen_host: Node = $ScreenHost
 
