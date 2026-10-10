@@ -1,0 +1,35 @@
+class_name Match3HouseHome
+extends Control
+
+signal play_requested(level_number: int)
+
+const HouseState = preload("res://src/world/house_state.gd")
+
+@onready var room_view = $Layout/RoomView
+@onready var headline: Label = $Layout/Headline
+@onready var detail: Label = $Layout/Detail
+@onready var play_button: Button = $Layout/PlayButton
+
+var progress
+
+func _ready() -> void:
+	play_button.pressed.connect(_on_play_pressed)
+
+func set_progress(value) -> void:
+	progress = value
+	var stage: int = 0
+	var owned_curios: Array[String] = []
+	if progress != null:
+		stage = int(progress.house_stage)
+		for curio in progress.curios:
+			owned_curios.append(String(curio))
+	var state: Dictionary = HouseState.descriptor(stage)
+	headline.text = String(state.get("headline", "The Curio Boutique sleeps."))
+	detail.text = String(state.get("detail", ""))
+	room_view.set_house_state(stage, owned_curios)
+	var next_level: int = int(progress.highest_level_unlocked) if progress != null else 1
+	play_button.text = "ENTER LEVEL %d" % next_level
+
+func _on_play_pressed() -> void:
+	var level_number: int = int(progress.highest_level_unlocked) if progress != null else 1
+	play_requested.emit(level_number)

@@ -1,0 +1,71 @@
+[gd_scene load_steps=3 format=3]
+
+[ext_resource type="Script" path="res://src/ui/home/house_home.gd" id="1_home"]
+[ext_resource type="Script" path="res://src/world/curio_boutique.gd" id="2_room"]
+
+[node name="HouseHome" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_home")
+
+[node name="Backdrop" type="ColorRect" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.0627, 0.051, 0.0706, 1)
+
+[node name="Layout" type="VBoxContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 42.0
+offset_top = 56.0
+offset_right = -42.0
+offset_bottom = -58.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/separation = 20
+
+[node name="Eyebrow" type="Label" parent="Layout"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.663, 0.6, 0.659, 1)
+theme_override_font_sizes/font_size = 23
+text = "THE HOUSE · CURIO BOUTIQUE"
+horizontal_alignment = 1
+
+[node name="Headline" type="Label" parent="Layout"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.945, 0.91, 0.866, 1)
+theme_override_font_sizes/font_size = 44
+text = "The Curio Boutique sleeps."
+horizontal_alignment = 1
+autowrap_mode = 2
+
+[node name="RoomView" type="Control" parent="Layout"]
+custom_minimum_size = Vector2(0, 1180)
+layout_mode = 2
+size_flags_vertical = 3
+script = ExtResource("2_room")
+
+[node name="Detail" type="Label" parent="Layout"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.851, 0.804, 0.835, 1)
+theme_override_font_sizes/font_size = 24
+text = "Win a puzzle to wake the first display."
+horizontal_alignment = 1
+autowrap_mode = 2
+
+[node name="PlayButton" type="Button" parent="Layout"]
+custom_minimum_size = Vector2(0, 82)
+layout_mode = 2
+theme_override_colors/font_color = Color(0.0627, 0.051, 0.0706, 1)
+theme_override_font_sizes/font_size = 27
+text = "ENTER LEVEL 1"

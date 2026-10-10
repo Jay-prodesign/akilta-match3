@@ -1,6 +1,8 @@
 class_name Match3GameplayScreen
 extends Control
 
+signal level_won(level_id: String)
+
 const BoardState = preload("res://src/match3/domain/board_state.gd")
 const MoveResolver = preload("res://src/match3/domain/move_resolver.gd")
 
@@ -9,6 +11,7 @@ const MoveResolver = preload("res://src/match3/domain/move_resolver.gd")
 
 var board_state
 var last_trace
+var current_level_id: String = ""
 
 @onready var board_view = $Layout/BoardView
 @onready var objective_label: Label = $Layout/HUD/Objective
@@ -33,6 +36,7 @@ func load_level_path(path: String, seed_value: int = 1001) -> bool:
 	var parsed = JSON.parse_string(file.get_as_text())
 	if not parsed is Dictionary:
 		return false
+	current_level_id = String(parsed.get("id", ""))
 	board_state = BoardState.from_level(parsed, seed_value)
 	board_view.set_board(board_state)
 	result_overlay.visible = false
@@ -73,6 +77,7 @@ func _show_result_if_terminal(result: String) -> void:
 		result_title.text = "THE CABINET STIRS"
 		result_detail.text = "Something in the Curio Boutique has awakened."
 		result_overlay.visible = true
+		level_won.emit(current_level_id)
 	elif result == "failed":
 		result_title.text = "THE ROOM WAITS"
 		result_detail.text = "The House keeps its secrets. Try another arrangement."

@@ -101,7 +101,7 @@ jobs:
             exit 1
           fi
 
-      - name: Verify expected RED durable progression contract
+      - name: Run durable progression contract
         shell: bash
         run: |
           set +e
@@ -109,17 +109,11 @@ jobs:
           status=$?
           set -e
           printf '%s\n' "$output"
-          if [ "$status" -eq 0 ]; then
-            echo "::error::Durable progression test unexpectedly passed before implementation."
-            exit 1
-          fi
-          if ! grep -Fq "TEST_FAIL: durable progression layer is missing" <<<"$output"; then
-            echo "::error::Durable progression RED failed for an unexpected reason."
-            exit 1
-          fi
-          echo "Expected RED confirmed: durable progression layer is missing."
+          if [ "$status" -ne 0 ]; then exit "$status"; fi
+          if grep -Eq "SCRIPT ERROR:|(^| )ERROR:" <<<"$output"; then exit 1; fi
+          grep -Fq "TEST_PASS: durable progression and exactly-once save" <<<"$output"
 
-      - name: Verify expected RED first player journey
+      - name: Run first player journey continuity
         shell: bash
         run: |
           set +e
@@ -127,15 +121,9 @@ jobs:
           status=$?
           set -e
           printf '%s\n' "$output"
-          if [ "$status" -eq 0 ]; then
-            echo "::error::First journey test unexpectedly passed before House implementation."
-            exit 1
-          fi
-          if ! grep -Fq "TEST_FAIL: first player journey House surface is missing" <<<"$output"; then
-            echo "::error::First journey RED failed for an unexpected reason."
-            exit 1
-          fi
-          echo "Expected RED confirmed: first player journey House surface is missing."
+          if [ "$status" -ne 0 ]; then exit "$status"; fi
+          if grep -Eq "SCRIPT ERROR:|(^| )ERROR:" <<<"$output"; then exit 1; fi
+          grep -Fq "TEST_PASS: first player journey continuity" <<<"$output"
 
       - name: Verify project parses cleanly
         shell: bash
