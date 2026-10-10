@@ -47,6 +47,7 @@ func _ready() -> void:
 	]
 	for data in chapters:
 		var button := Button.new()
+		button.name = String(data["id"]).capitalize().replace("_", "") + "Button"
 		button.custom_minimum_size = Vector2(0, 132)
 		button.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 		button.disabled = not bool(data["open"])
