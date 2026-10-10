@@ -22,18 +22,19 @@ static func try_swap(board, from: Vector2i, to: Vector2i):
 		return trace
 
 	trace.accepted = true
-	trace.add_event("swap", {"from": _pos_key(from), "to": _pos_key(to)})
+	trace.add_event("swap_accepted", {"from": _pos_key(from), "to": _pos_key(to)})
 	if board.moves_remaining > 0:
 		board.moves_remaining -= 1
 
 	var cascade := 0
 	while not matches.is_empty() and cascade < MAX_CASCADES:
 		cascade += 1
+		trace.add_event("match_found", {"cascade": cascade, "cells": _pos_keys(matches)})
 		var cleared: Array[String] = []
 		for pos in matches:
 			cleared.append(_pos_key(pos))
 			board.set_cell(pos, "")
-		trace.add_event("match_clear", {"cascade": cascade, "cells": cleared})
+		trace.add_event("clear", {"cascade": cascade, "cells": cleared})
 
 		_apply_gravity(board, trace, cascade)
 		_refill(board, trace, cascade)
@@ -81,6 +82,12 @@ static func _refill(board, trace, cascade: int) -> void:
 				"at": _pos_key(pos),
 				"family": value
 			})
+
+static func _pos_keys(positions: Array[Vector2i]) -> Array[String]:
+	var result: Array[String] = []
+	for pos in positions:
+		result.append(_pos_key(pos))
+	return result
 
 static func _pos_key(pos: Vector2i) -> String:
 	return "%d,%d" % [pos.x, pos.y]

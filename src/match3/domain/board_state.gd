@@ -98,6 +98,14 @@ func refill_cell(pos: Vector2i) -> String:
 	set_cell(pos, value)
 	return value
 
+func has_empty() -> bool:
+	for y in range(height):
+		for x in range(width):
+			var pos := Vector2i(x, y)
+			if not is_hole(pos) and get_cell(pos) == "":
+				return true
+	return false
+
 func signature() -> String:
 	var parts: Array[String] = []
 	for y in range(height):
