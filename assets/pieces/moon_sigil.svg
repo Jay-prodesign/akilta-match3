@@ -15,5 +15,5 @@
 <path d="M156 61 C111 67 84 102 88 140 C92 178 127 202 164 188 C138 179 121 155 122 130 C123 103 136 78 156 61 Z" fill="url(#moonstone)" stroke="#efe7f6" stroke-opacity=".45" stroke-width="3"/>
 <circle cx="105" cy="113" r="7" fill="#7d6b90" opacity=".42"/><circle cx="104" cy="151" r="5" fill="#f4eef9" opacity=".20"/><circle cx="124" cy="88" r="4" fill="#f4eef9" opacity=".25"/>
 <path d="M105 77 C91 86 82 99 78 114" fill="none" stroke="#fff" stroke-opacity=".32" stroke-width="4" stroke-linecap="round"/>
-<circle cx="128" cy="126" r="94" fill="url(#gloss)" opacity=".55"/>
+<g fill="#F7E7BB"><circle cx="70" cy="112" r="3"/><circle cx="182" cy="99" r="2.5"/><circle cx="172" cy="168" r="2"/><path d="M181 60l3 9 9 3-9 3-3 9-3-9-9-3 9-3z" opacity=".88"/><path d="M76 168l2 7 7 2-7 2-2 7-2-7-7-2 7-2z" opacity=".75"/></g><g fill="none" stroke="#D8B56A" stroke-width="2.5" opacity=".72"><path d="M75 88Q83 65 107 57"/><path d="M173 188Q153 201 135 203"/></g><circle cx="128" cy="126" r="94" fill="url(#gloss)" opacity=".55"/>
 </svg>
