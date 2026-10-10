@@ -51,6 +51,36 @@ const CONTRACT := {
 		"material": "gilded_arcane_enamel",
 		"world_role": "base_family",
 		"status": "first_party_svg_candidate_v2"
+	},
+	"cat": {
+		"color": Color("#24202D"),
+		"silhouette": "black_cat",
+		"motif": "golden_eyes_and_crescent_collar",
+		"value": 0.84,
+		"display_name": "House Cat",
+		"material": "obsidian_enamel",
+		"world_role": "base_family",
+		"status": "first_party_svg_candidate_v1"
+	},
+	"candle": {
+		"color": Color("#E8B86C"),
+		"silhouette": "wax_candle",
+		"motif": "living_flame",
+		"value": 0.61,
+		"display_name": "Witchlight Candle",
+		"material": "ivory_wax_and_warm_gold",
+		"world_role": "base_family",
+		"status": "first_party_svg_candidate_v1"
+	},
+	"skull": {
+		"color": Color("#E7DCC8"),
+		"silhouette": "small_skull",
+		"motif": "dark_eye_sockets",
+		"value": 0.72,
+		"display_name": "Curio Skull",
+		"material": "aged_bone_enamel",
+		"world_role": "base_family",
+		"status": "first_party_svg_candidate_v1"
 	}
 }
 
