@@ -133,19 +133,19 @@ func _apply_level_art_profile(profile: String) -> void:
 	# The board symbols, room tint, and heading accents move together by chapter beat.
 	match profile:
 		"sealed_display":
-			world_backdrop.modulate = Color(0.76, 0.86, 0.96, 0.62)
+			world_backdrop.modulate = Color(0.76, 0.86, 0.96, 0.36)
 			eyebrow_label.add_theme_color_override("font_color", Color("#9fb7d0"))
 			title_label.add_theme_color_override("font_color", Color("#f1e6d2"))
 			objective_label.add_theme_color_override("font_color", Color("#a8c6d2"))
 			moves_label.add_theme_color_override("font_color", Color("#d8c8a1"))
 		"thornlight_arrangement":
-			world_backdrop.modulate = Color(0.98, 0.72, 0.82, 0.60)
+			world_backdrop.modulate = Color(0.98, 0.72, 0.82, 0.36)
 			eyebrow_label.add_theme_color_override("font_color", Color("#d9a0b8"))
 			title_label.add_theme_color_override("font_color", Color("#f5e6e2"))
 			objective_label.add_theme_color_override("font_color", Color("#c7a0df"))
 			moves_label.add_theme_color_override("font_color", Color("#e6bd83"))
 		_:
-			world_backdrop.modulate = Color(0.92, 0.82, 0.78, 0.56)
+			world_backdrop.modulate = Color(0.92, 0.82, 0.78, 0.34)
 			eyebrow_label.add_theme_color_override("font_color", Color("#b7a5b8"))
 			title_label.add_theme_color_override("font_color", Color("#f1e8dc"))
 			objective_label.add_theme_color_override("font_color", Color("#bca1cf"))
