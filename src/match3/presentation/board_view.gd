@@ -53,7 +53,16 @@ var _motion_items: Array[Dictionary] = []
 var _motion_cascade_count: int = 1
 var _motion_initial_cells: Dictionary = {}
 var _motion_initial_specials: Dictionary = {}
+var _motion_stages: Array[Dictionary] = []
 var _reveal_at: Dictionary = {}
+
+func _motion_stage_cells() -> Dictionary:
+	var visible: Dictionary = _motion_initial_cells.duplicate()
+	for stage in _motion_stages:
+		if _motion_clock < float(stage.get("at", 1.0)):
+			break
+		visible = stage["cells"]
+	return visible
 
 func _cascade_window(cascade: int) -> Vector2:
 	var count := maxi(1, _motion_cascade_count)
@@ -180,6 +189,7 @@ func _set_teaching_pulse(value: float) -> void:
 func snapshot_before_move() -> void:
 	_motion_initial_cells.clear()
 	_motion_initial_specials.clear()
+	_motion_stages.clear()
 	if board_state == null:
 		return
 	for y in range(board_state.height):
@@ -203,10 +213,12 @@ func play_trace(trace) -> bool:
 		_pulse_feedback("reject", 0.32, 0.18)
 
 	_build_motion(trace)
+	_build_motion_stages(trace)
 	if _reduced_motion:
 		_motion_initial_cells.clear()
 		_motion_initial_specials.clear()
 		_motion_items.clear()
+		_motion_stages.clear()
 		_reveal_at.clear()
 		_motion_clock = 1.0
 		_motion_active = false
@@ -214,6 +226,8 @@ func play_trace(trace) -> bool:
 		return false
 	if _motion_items.is_empty():
 		_motion_initial_cells.clear()
+		_motion_initial_specials.clear()
+		_motion_stages.clear()
 		return false
 	if _motion_tween != null and _motion_tween.is_valid():
 		_motion_tween.kill()
@@ -319,6 +333,47 @@ func _build_motion(trace) -> void:
 			_:
 				pass
 
+func _build_motion_stages(trace) -> void:
+	_motion_stages.clear()
+	if _motion_initial_cells.is_empty():
+		return
+	var cells: Dictionary = _motion_initial_cells.duplicate()
+	var last_cascade := 0
+	for event in trace.events:
+		var kind := String(event.get("type", ""))
+		var cascade := maxi(1, int(event.get("cascade", 1)))
+		if last_cascade > 0 and cascade > last_cascade:
+			var prior_window := _cascade_window(last_cascade)
+			_motion_stages.append({"at": prior_window.y, "cells": cells.duplicate()})
+		last_cascade = maxi(last_cascade, cascade)
+		match kind:
+			"swap_accepted":
+				var a := _parse_pos(event.get("from", ""))
+				var b := _parse_pos(event.get("to", ""))
+				if cells.has(a) and cells.has(b):
+					var old_a: String = String(cells[a])
+					cells[a] = cells[b]
+					cells[b] = old_a
+				_motion_stages.append({"at": float(MOTION_PROFILE["swap_end"]), "cells": cells.duplicate()})
+			"clear", "combo_clear":
+				for item in event.get("pieces", []):
+					if item is Dictionary:
+						cells[_parse_pos(item.get("at", ""))] = ""
+				var window := _cascade_window(cascade)
+				_motion_stages.append({"at": lerpf(window.x, window.y, 0.46), "cells": cells.duplicate()})
+			"gravity":
+				var from := _parse_pos(event.get("from", ""))
+				var to := _parse_pos(event.get("to", ""))
+				cells[to] = String(event.get("family", ""))
+				cells[from] = ""
+			"spawn":
+				cells[_parse_pos(event.get("at", ""))] = String(event.get("family", ""))
+			_:
+				pass
+	if last_cascade > 0:
+		var end_window := _cascade_window(last_cascade)
+		_motion_stages.append({"at": end_window.y, "cells": cells.duplicate()})
+
 func _remember_reveal(pos: Vector2i, at_clock: float) -> void:
 	if pos.x < 0:
 		return
@@ -332,6 +387,7 @@ func _finish_motion() -> void:
 	_motion_clock = 1.0
 	_motion_active = false
 	_motion_items.clear()
+	_motion_stages.clear()
 	_reveal_at.clear()
 	_motion_initial_cells.clear()
 	_motion_initial_specials.clear()
@@ -569,25 +625,22 @@ func _draw_cell(rect: Rect2, pos: Vector2i) -> void:
 	draw_rect(inner, inner_line, false, 1.0)
 	var inset := rect.grow(-rect.size.x * 0.13)
 	var family: String = String(board_state.get_cell(pos))
+	var special: String = String(board_state.get_special(pos))
+	if _motion_active and not _motion_initial_cells.is_empty():
+		var stage_cells := _motion_stage_cells()
+		family = String(stage_cells.get(pos, ""))
+		if _motion_clock < 0.10:
+			special = String(_motion_initial_specials.get(pos, ""))
+		elif _motion_clock < 0.98:
+			special = ""
 	var descriptor: Dictionary = PieceVisuals.descriptor(family)
-	var reveal_clock := float(_reveal_at.get(pos, 0.0))
-	var show_final := not _motion_active or _motion_clock >= reveal_clock
-	if show_final:
+	if family != "":
 		_draw_piece(inset, family, descriptor)
-	elif _motion_initial_cells.has(pos) and _motion_clock < 0.10:
-		var original_family: String = String(_motion_initial_cells[pos])
-		_draw_piece(inset, original_family, PieceVisuals.descriptor(original_family))
-		var original_special: String = String(_motion_initial_specials.get(pos, ""))
-		if original_special != "":
-			_draw_special_mark(rect, original_special)
-
-		var special: String = String(board_state.get_special(pos))
-		if special != "":
-			_draw_special_mark(rect, special)
-
-		var blocker: Dictionary = board_state.get_blocker(pos)
-		if not blocker.is_empty():
-			_draw_wax_seal(rect, int(blocker.get("hp", 1)))
+	if special != "":
+		_draw_special_mark(rect, special)
+	var blocker: Dictionary = board_state.get_blocker(pos)
+	if not blocker.is_empty():
+		_draw_wax_seal(rect, int(blocker.get("hp", 1)))
 
 func _cell_box(radius: float) -> StyleBoxFlat:
 	var box := StyleBoxFlat.new()
