@@ -49,6 +49,7 @@ jobs:
           test -s artifacts/journey-02-chapter-map.png
           test -s artifacts/journey-03-prestart.png
           test -s artifacts/journey-04-level1-gameplay.png
+          test -s artifacts/journey-04b-level1-pause.png
           test -s artifacts/journey-05-level1-result.png
           test -s artifacts/journey-06-house-awakened.png
           test -s artifacts/journey-07-curio-collection.png
@@ -160,6 +161,7 @@ jobs:
             artifacts/journey-02-chapter-map.png
             artifacts/journey-03-prestart.png
             artifacts/journey-04-level1-gameplay.png
+            artifacts/journey-04b-level1-pause.png
             artifacts/journey-05-level1-result.png
             artifacts/journey-06-house-awakened.png
             artifacts/journey-07-curio-collection.png

@@ -2,6 +2,7 @@ class_name Match3GameplayScreen
 extends Control
 
 signal level_won(level_id: String, curio_id: String, house_stage_reward: int)
+signal level_exit_requested
 signal feedback_requested(kind: String)
 
 const BoardState = preload("res://src/match3/domain/board_state.gd")
@@ -30,6 +31,11 @@ var haptics = HapticsController.new()
 @onready var board_view = $Layout/BoardView
 @onready var objective_label: Label = $Layout/HUD/Objective
 @onready var moves_label: Label = $Layout/HUD/Moves
+@onready var pause_button: Button = $Layout/HUD/Pause
+@onready var pause_overlay: Control = $PauseOverlay
+@onready var pause_resume: Button = $PauseOverlay/Card/Content/Resume
+@onready var pause_retry: Button = $PauseOverlay/Card/Content/Retry
+@onready var pause_exit: Button = $PauseOverlay/Card/Content/Exit
 @onready var hint_label: Label = $Layout/Hint
 @onready var awakening_view: Control = $Layout/Awakening/Content/ProgressView
 @onready var awakening_copy: Label = $Layout/Awakening/Content/ProgressCopy
@@ -46,6 +52,11 @@ func _ready() -> void:
 	if board_view.has_signal("trace_motion_finished"):
 		board_view.trace_motion_finished.connect(_on_board_trace_motion_finished)
 	result_action.pressed.connect(_on_result_action_pressed)
+	pause_button.pressed.connect(show_pause)
+	pause_resume.pressed.connect(resume_level)
+	pause_retry.pressed.connect(_on_pause_retry)
+	pause_exit.pressed.connect(_on_pause_exit)
+	pause_overlay.visible = false
 	result_overlay.visible = false
 	if FileAccess.file_exists(default_level_path):
 		load_level_path(default_level_path, default_seed)
@@ -79,6 +90,7 @@ func load_level_path(path: String, seed_value: int = 1001) -> bool:
 	_configure_teaching_move(parsed)
 	_pending_win = false
 	_pending_terminal_result = ""
+	pause_overlay.visible = false
 	result_overlay.visible = false
 	if result_ritual != null:
 		result_ritual.set("mode", "result")
@@ -102,8 +114,34 @@ func _configure_teaching_move(level_data: Dictionary) -> void:
 	if board_view.has_method("clear_teaching_move"):
 		board_view.clear_teaching_move()
 
+func show_pause() -> bool:
+	if board_state == null or result_overlay.visible or pause_overlay.visible:
+		return false
+	if board_view.has_method("is_motion_active") and bool(board_view.is_motion_active()):
+		return false
+	pause_overlay.visible = true
+	return true
+
+func resume_level() -> bool:
+	if not pause_overlay.visible:
+		return false
+	pause_overlay.visible = false
+	return true
+
+func _on_pause_retry() -> void:
+	if not pause_overlay.visible:
+		return
+	pause_overlay.visible = false
+	retry_current_level()
+
+func _on_pause_exit() -> void:
+	if not pause_overlay.visible:
+		return
+	pause_overlay.visible = false
+	level_exit_requested.emit()
+
 func attempt_swap(from: Vector2i, to: Vector2i):
-	if board_state == null or result_overlay.visible:
+	if board_state == null or result_overlay.visible or pause_overlay.visible:
 		return null
 	if board_view.has_method("is_motion_active") and bool(board_view.is_motion_active()):
 		return null

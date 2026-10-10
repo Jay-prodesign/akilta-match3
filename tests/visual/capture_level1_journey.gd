@@ -39,6 +39,14 @@ func _capture() -> void:
 		return
 
 	var gameplay = app.current_screen()
+	if not gameplay.show_pause():
+		return _fail(app, "Level 1 pause did not open")
+	await _frames(2)
+	if not await _save(app, "journey-04b-level1-pause.png"):
+		return
+	if not gameplay.resume_level():
+		return _fail(app, "Level 1 pause did not resume")
+	await _frames(2)
 	var trace = gameplay.attempt_swap(Vector2i(1, 4), Vector2i(2, 4))
 	if trace == null or not bool(trace.accepted) or String(trace.result) != "won":
 		return _fail(app, "authored Level 1 teaching move did not win")

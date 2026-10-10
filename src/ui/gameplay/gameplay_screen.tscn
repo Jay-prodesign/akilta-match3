@@ -1,4 +1,4 @@
-[gd_scene load_steps=8 format=3]
+[gd_scene load_steps=9 format=3]
 
 [ext_resource type="Script" path="res://src/ui/gameplay/gameplay_screen.gd" id="1_game"]
 [ext_resource type="Script" path="res://src/match3/presentation/board_view.gd" id="2_board"]
@@ -38,6 +38,18 @@ corner_radius_top_left = 16
 corner_radius_top_right = 16
 corner_radius_bottom_right = 16
 corner_radius_bottom_left = 16
+
+[sub_resource type="StyleBoxFlat" id="PauseUtility"]
+bg_color = Color(0.082, 0.064, 0.094, 0.98)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.749, 0.647, 0.847, 0.34)
+corner_radius_top_left = 12
+corner_radius_top_right = 12
+corner_radius_bottom_right = 12
+corner_radius_bottom_left = 12
 
 [node name="GameplayScreen" type="Control"]
 layout_mode = 3
@@ -102,6 +114,17 @@ theme_override_font_sizes/font_size = 28
 text = "12 moves"
 horizontal_alignment = 2
 
+[node name="Pause" type="Button" parent="Layout/HUD"]
+custom_minimum_size = Vector2(68, 54)
+layout_mode = 2
+theme_override_colors/font_color = Color(0.945, 0.91, 0.866, 1)
+theme_override_font_sizes/font_size = 22
+theme_override_styles/normal = SubResource("PauseUtility")
+theme_override_styles/hover = SubResource("PauseUtility")
+theme_override_styles/pressed = SubResource("PauseUtility")
+text = "Ⅱ"
+tooltip_text = "Pause"
+
 [node name="BoardView" type="Control" parent="Layout"]
 custom_minimum_size = Vector2(0, 980)
 layout_mode = 2
@@ -144,6 +167,96 @@ theme_override_colors/font_color = Color(0.663, 0.6, 0.659, 1)
 theme_override_font_sizes/font_size = 16
 text = "0 / 6 SIGILS · THE RELIC IS STILL DORMANT"
 horizontal_alignment = 1
+
+[node name="PauseOverlay" type="Control" parent="."]
+visible = false
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 0
+
+[node name="Dim" type="ColorRect" parent="PauseOverlay"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.0314, 0.0235, 0.0353, 0.84)
+
+[node name="Card" type="PanelContainer" parent="PauseOverlay"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -350.0
+offset_top = -330.0
+offset_right = 350.0
+offset_bottom = 330.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_styles/panel = SubResource("StylePanel")
+
+[node name="Content" type="VBoxContainer" parent="PauseOverlay/Card"]
+layout_mode = 2
+theme_override_constants/separation = 22
+alignment = 1
+
+[node name="Eyebrow" type="Label" parent="PauseOverlay/Card/Content"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.663, 0.6, 0.659, 1)
+theme_override_font_sizes/font_size = 18
+text = "CURIO BOUTIQUE"
+horizontal_alignment = 1
+
+[node name="Title" type="Label" parent="PauseOverlay/Card/Content"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.945, 0.91, 0.866, 1)
+theme_override_font_sizes/font_size = 40
+text = "Level Paused"
+horizontal_alignment = 1
+
+[node name="Detail" type="Label" parent="PauseOverlay/Card/Content"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.851, 0.804, 0.835, 1)
+theme_override_font_sizes/font_size = 20
+text = "The cabinet waits exactly as you left it."
+horizontal_alignment = 1
+
+[node name="Resume" type="Button" parent="PauseOverlay/Card/Content"]
+custom_minimum_size = Vector2(0, 70)
+layout_mode = 2
+theme_override_colors/font_color = Color(0.0627, 0.051, 0.0706, 1)
+theme_override_font_sizes/font_size = 22
+theme_override_styles/normal = SubResource("ActionNormal")
+theme_override_styles/hover = SubResource("ActionHover")
+theme_override_styles/pressed = SubResource("ActionPressed")
+text = "RESUME"
+
+[node name="Retry" type="Button" parent="PauseOverlay/Card/Content"]
+custom_minimum_size = Vector2(0, 64)
+layout_mode = 2
+theme_override_colors/font_color = Color(0.945, 0.91, 0.866, 1)
+theme_override_font_sizes/font_size = 20
+theme_override_styles/normal = SubResource("PauseUtility")
+theme_override_styles/hover = SubResource("PauseUtility")
+theme_override_styles/pressed = SubResource("PauseUtility")
+text = "RESTART LEVEL"
+
+[node name="Exit" type="Button" parent="PauseOverlay/Card/Content"]
+custom_minimum_size = Vector2(0, 64)
+layout_mode = 2
+theme_override_colors/font_color = Color(0.851, 0.804, 0.835, 1)
+theme_override_font_sizes/font_size = 20
+theme_override_styles/normal = SubResource("PauseUtility")
+theme_override_styles/hover = SubResource("PauseUtility")
+theme_override_styles/pressed = SubResource("PauseUtility")
+text = "RETURN TO THE HOUSE"
 
 [node name="ResultOverlay" type="Control" parent="."]
 visible = false

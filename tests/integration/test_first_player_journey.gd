@@ -57,6 +57,12 @@ func _run() -> void:
 	_expect(str(app.current_route_name()) == "gameplay", "prestart must enter gameplay")
 	var gameplay = app.current_screen()
 	_expect(str(gameplay.current_level_id) == "ch01_level_001", "gameplay must load canonical Level 1")
+	_expect(gameplay.show_pause(), "Level 1 must expose a safe pause state")
+	_expect(gameplay.pause_overlay.visible, "pause overlay must become visible")
+	_expect(str(app.current_route_name()) == "gameplay", "pause must not change the product route")
+	_expect(gameplay.attempt_swap(Vector2i(1, 4), Vector2i(2, 4)) == null, "board input must be blocked while paused")
+	_expect(gameplay.resume_level(), "paused Level 1 must resume")
+	_expect(not gameplay.pause_overlay.visible, "resume must close pause overlay")
 	_expect(app.audio_director != null and bool(app.audio_director.contract().get("ambient_loaded", false)), "Level 1 app shell must own the CC0 ambient director")
 
 	var trace = gameplay.attempt_swap(Vector2i(1, 4), Vector2i(2, 4))

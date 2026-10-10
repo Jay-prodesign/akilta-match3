@@ -105,6 +105,8 @@ func start_level(level_number: int = 1) -> bool:
 	if screen.has_method("apply_presentation_settings"):
 		screen.apply_presentation_settings(user_settings.get_presentation_state())
 	screen.level_won.connect(_on_level_won)
+	if screen.has_signal("level_exit_requested"):
+		screen.level_exit_requested.connect(_on_level_exit_requested)
 	if screen.has_signal("feedback_requested"):
 		screen.feedback_requested.connect(_on_gameplay_feedback_requested)
 	return true
@@ -167,6 +169,9 @@ func _on_prestart_back() -> void:
 func _on_prestart_start(level_number: int) -> void:
 	if level_number == _pending_level_number:
 		start_level(level_number)
+
+func _on_level_exit_requested() -> void:
+	show_house()
 
 func _on_level_won(level_id: String, curio_id: String, house_stage_reward: int) -> void:
 	var transaction_id := "win:%s:%d" % [level_id, progress.processed_transactions.size() + 1]
