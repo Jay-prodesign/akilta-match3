@@ -50,7 +50,7 @@ func _test_match_detection(board_state_script, detector_script) -> void:
 
 func _test_rejected_swap_restores_board(board_state_script, resolver_script) -> void:
 	var board = _swap_fixture(board_state_script, 99)
-	var before := board.signature()
+	var before: String = str(board.signature())
 	var trace = resolver_script.try_swap(board, Vector2i(1, 0), Vector2i(2, 0))
 	_expect_true(trace.has_type("swap_rejected"), "non-matching adjacent swap should be rejected")
 	_expect_eq(board.signature(), before, "rejected swap must restore the exact board")
