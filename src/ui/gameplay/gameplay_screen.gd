@@ -34,6 +34,7 @@ var haptics = HapticsController.new()
 @onready var result_overlay: Control = $ResultOverlay
 @onready var result_title: Label = $ResultOverlay/Card/Content/Title
 @onready var result_detail: Label = $ResultOverlay/Card/Content/Detail
+@onready var result_ritual: Control = $ResultOverlay/Card/Content/RewardRitual
 @onready var result_action: Button = $ResultOverlay/Card/Content/Action
 
 func _ready() -> void:
@@ -76,6 +77,10 @@ func load_level_path(path: String, seed_value: int = 1001) -> bool:
 	_pending_win = false
 	_pending_terminal_result = ""
 	result_overlay.visible = false
+	if result_ritual != null:
+		result_ritual.set("mode", "result")
+		result_ritual.set("glow_strength", 0.75)
+		result_ritual.queue_redraw()
 	_refresh_hud()
 	return true
 
@@ -164,6 +169,10 @@ func _show_result_if_terminal(result: String) -> void:
 		_pending_win = true
 		result_title.text = current_win_title
 		result_detail.text = current_win_detail
+		if result_ritual != null:
+			result_ritual.set("mode", "result")
+			result_ritual.set("glow_strength", 0.75)
+			result_ritual.queue_redraw()
 		result_action.text = "RETURN TO THE HOUSE"
 		result_overlay.visible = true
 	elif result == "failed":
@@ -172,6 +181,10 @@ func _show_result_if_terminal(result: String) -> void:
 		_pending_win = false
 		result_title.text = "THE ROOM WAITS"
 		result_detail.text = "The House keeps its secrets. Try another arrangement."
+		if result_ritual != null:
+			result_ritual.set("mode", "fail")
+			result_ritual.set("glow_strength", 0.12)
+			result_ritual.queue_redraw()
 		result_action.text = "TRY AGAIN"
 		result_overlay.visible = true
 

@@ -63,6 +63,8 @@ func _run() -> void:
 	if bool(board_view.is_motion_active()):
 		await board_view.trace_motion_finished
 	_expect(gameplay.result_overlay.visible, "result beat must appear after motion")
+	var win_ritual: Control = gameplay.get_node("ResultOverlay/Card/Content/RewardRitual")
+	_expect(String(win_ritual.get("mode")) == "result", "win must reveal the awakened Moon Cameo reward treatment")
 	_expect(app.audio_director.get_feedback_count("special") + app.audio_director.get_feedback_count("match") >= 1, "accepted teaching move must produce semantic audio feedback")
 	_expect(app.audio_director.get_feedback_count("win") == 1, "Level 1 terminal win must produce one win audio cue")
 	_expect(gameplay.continue_after_win(), "win continue must commit progression")

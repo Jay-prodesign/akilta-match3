@@ -21,45 +21,53 @@ func _draw() -> void:
 	var center := Vector2(size.x * 0.5, size.y * 0.52)
 	var min_dim := minf(size.x, size.y)
 	var radius := min_dim * (0.24 if mode == "prestart" else 0.28)
+	var dormant := mode == "fail"
 
 	# Reliquary/cabinet frame.
 	var frame := Rect2(size.x * 0.17, size.y * 0.09, size.x * 0.66, size.y * 0.82)
 	draw_style_box(_panel_box(), frame)
 	var arch_color := Color(GOLD)
-	arch_color.a = 0.28
+	arch_color.a = 0.12 if dormant else 0.28
 	draw_arc(Vector2(center.x, frame.position.y + radius * 0.55), frame.size.x * 0.34, PI, TAU, 48, arch_color, 2.0)
 
 	# Soft occult glow and nested seals.
 	for i in range(4, 0, -1):
 		var glow := Color(LILAC)
-		glow.a = glow_strength * 0.035 * float(i)
+		glow.a = glow_strength * (0.012 if dormant else 0.035) * float(i)
 		draw_circle(center, radius * (1.0 + float(i) * 0.22), glow)
 	var ring := Color(GOLD)
-	ring.a = 0.72
+	ring.a = 0.28 if dormant else 0.72
 	draw_arc(center, radius * 1.10, 0.0, TAU, 64, ring, 2.5)
-	draw_arc(center, radius * 0.86, 0.0, TAU, 64, Color(LILAC, 0.46), 1.8)
+	draw_arc(center, radius * 0.86, 0.0, TAU, 64, Color(LILAC, 0.16 if dormant else 0.46), 1.8)
 
 	# Moon Cameo: crescent carved into a dark medallion.
 	draw_circle(center, radius * 0.72, Color("#182027"))
 	draw_arc(center, radius * 0.72, 0.0, TAU, 64, Color(GOLD, 0.70), 2.0)
 	var moon_center := center - Vector2(radius * 0.10, 0.0)
-	draw_circle(moon_center, radius * 0.43, LILAC)
+	draw_circle(moon_center, radius * 0.43, Color("#645D6B") if dormant else LILAC)
 	draw_circle(moon_center + Vector2(radius * 0.17, -radius * 0.04), radius * 0.39, Color("#182027"))
 	var highlight := Color(BONE)
-	highlight.a = 0.50
+	highlight.a = 0.18 if dormant else 0.50
 	draw_arc(moon_center, radius * 0.36, PI * 0.72, PI * 1.42, 18, highlight, 2.0)
 
 	# Six learned moon-sigil echoes orbit the reward without becoming stars.
 	for i in range(6):
 		var angle := -PI * 0.5 + TAU * float(i) / 6.0
 		var p := center + Vector2(cos(angle), sin(angle)) * radius * 1.42
-		_draw_small_moon(p, radius * 0.12)
+		_draw_small_moon(p, radius * 0.12, dormant)
 
 	# Candle/relic accents establish the cabinet rather than generic modal chrome.
-	_draw_candle(Vector2(frame.position.x + frame.size.x * 0.12, frame.end.y - 24.0), radius * 0.09)
-	_draw_candle(Vector2(frame.end.x - frame.size.x * 0.12, frame.end.y - 24.0), radius * 0.09)
+	if not dormant:
+		_draw_candle(Vector2(frame.position.x + frame.size.x * 0.12, frame.end.y - 24.0), radius * 0.09)
+		_draw_candle(Vector2(frame.end.x - frame.size.x * 0.12, frame.end.y - 24.0), radius * 0.09)
 	if mode == "result":
 		_draw_wax_seal(Vector2(center.x, frame.end.y - radius * 0.12), radius * 0.20)
+	elif dormant:
+		_draw_wax_seal(center, radius * 0.32)
+		var seal_line := Color(ROSE)
+		seal_line.a = 0.36
+		draw_line(center + Vector2(-radius * 0.72, -radius * 0.72), center + Vector2(radius * 0.72, radius * 0.72), seal_line, 3.0)
+		draw_line(center + Vector2(radius * 0.72, -radius * 0.72), center + Vector2(-radius * 0.72, radius * 0.72), seal_line, 3.0)
 
 func _panel_box() -> StyleBoxFlat:
 	var box := StyleBoxFlat.new()
@@ -69,12 +77,12 @@ func _panel_box() -> StyleBoxFlat:
 	box.set_corner_radius_all(22)
 	return box
 
-func _draw_small_moon(center: Vector2, r: float) -> void:
+func _draw_small_moon(center: Vector2, r: float, dormant: bool = false) -> void:
 	var backing := Color(PLUM)
 	backing.a = 0.95
 	draw_circle(center, r * 1.55, backing)
-	draw_arc(center, r * 1.55, 0.0, TAU, 24, Color(GOLD, 0.30), 1.2)
-	draw_circle(center - Vector2(r * 0.12, 0.0), r, Color(LILAC, 0.88))
+	draw_arc(center, r * 1.55, 0.0, TAU, 24, Color(GOLD, 0.12 if dormant else 0.30), 1.2)
+	draw_circle(center - Vector2(r * 0.12, 0.0), r, Color("#5E5963") if dormant else Color(LILAC, 0.88))
 	draw_circle(center + Vector2(r * 0.30, -r * 0.05), r * 0.92, backing)
 
 func _draw_candle(base: Vector2, scale: float) -> void:
