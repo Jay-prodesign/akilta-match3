@@ -28,37 +28,59 @@ func _ready() -> void:
 func current_route_name() -> String:
 	return _route_name
 
-func start_level(level_number: int = 1) -> void:
-	var screen = GameplayScene.instantiate()
+func current_screen() -> Node:
+	return _current_screen
+
+func start_level(level_number: int = 1) -> bool:
+	var level_path: String = _level_path(level_number)
+	if not FileAccess.file_exists(level_path):
+		return false
+	var screen: Node = GameplayScene.instantiate()
+	screen.set("default_level_path", level_path)
+	screen.set("default_seed", 1000 + level_number)
 	_show_screen(screen, "gameplay")
 	if screen.has_signal("level_won"):
 		screen.level_won.connect(_on_level_won)
+	return true
 
-func complete_level_win(transaction_id: String, level_id: String, curio_id: String = "moon_cameo") -> bool:
+func complete_level_win(transaction_id: String, level_id: String, curio_id: String = "moon_cameo", house_stage_reward: int = -1) -> bool:
 	if progress == null:
 		progress = ProgressScript.new()
-	var applied: bool = bool(progress.apply_level_win(transaction_id, level_id, curio_id))
+	var candidate = ProgressScript.from_dict(progress.to_dict())
+	var applied: bool = bool(candidate.apply_level_win(transaction_id, level_id, curio_id, house_stage_reward))
 	if not applied:
 		return false
 	if _store == null:
 		var path: String = save_path_override if save_path_override != "" else SaveStoreScript.DEFAULT_PATH
 		_store = SaveStoreScript.new(path)
-	if not _store.save(progress.to_dict()):
+	if not _store.save(candidate.to_dict()):
 		return false
+	progress = candidate
 	show_house()
 	return true
 
 func show_house() -> void:
-	var screen = HouseScene.instantiate()
+	var screen: Node = HouseScene.instantiate()
 	_show_screen(screen, "house")
+	if screen.has_method("set_available_level_count"):
+		screen.set_available_level_count(_available_level_count())
 	if screen.has_method("set_progress"):
 		screen.set_progress(progress)
 	if screen.has_signal("play_requested"):
 		screen.play_requested.connect(start_level)
 
-func _on_level_won(level_id: String) -> void:
+func _on_level_won(level_id: String, curio_id: String, house_stage_reward: int) -> void:
 	var transaction_id := "win:%s:%d" % [level_id, progress.processed_transactions.size() + 1]
-	complete_level_win(transaction_id, level_id, "moon_cameo")
+	complete_level_win(transaction_id, level_id, curio_id, house_stage_reward)
+
+func _level_path(level_number: int) -> String:
+	return "res://content/levels/ch01/level_%03d.json" % level_number
+
+func _available_level_count() -> int:
+	var count := 0
+	while FileAccess.file_exists(_level_path(count + 1)):
+		count += 1
+	return count
 
 func _show_screen(screen: Node, route: String) -> void:
 	if _current_screen != null and is_instance_valid(_current_screen):

@@ -1,0 +1,27 @@
+{
+  "id": "ch01_level_002",
+  "chapter": "curio_boutique",
+  "title": "Sealed Display",
+  "eyebrow": "CURIO BOUTIQUE · WAX SEALS",
+  "hint": "Match beside a wax seal to crack it. One precise swipe opens both.",
+  "win_title": "THE SEALS GIVE WAY",
+  "win_detail": "A Moth Reliquary answers from the side cabinet.",
+  "reward_curio": "moth_reliquary",
+  "house_stage_reward": 2,
+  "width": 5,
+  "height": 5,
+  "moves": 8,
+  "objective": "clear_blockers",
+  "families": ["moon", "rose", "moth", "key", "leaf"],
+  "blockers": [
+    {"x": 2, "y": 1, "type": "wax_seal", "hp": 1},
+    {"x": 4, "y": 1, "type": "wax_seal", "hp": 1}
+  ],
+  "initial_rows": [
+    ["rose", "moth", "key", "leaf", "moon"],
+    ["moth", "key", "leaf", "rose", "moth"],
+    ["moon", "rose", "moon", "moon", "key"],
+    ["key", "leaf", "rose", "moth", "moon"],
+    ["leaf", "moon", "rose", "key", "moth"]
+  ]
+}

@@ -1,6 +1,13 @@
 {
   "id": "ch01_level_001",
   "chapter": "curio_boutique",
+  "title": "Moonlit Cabinet",
+  "eyebrow": "CURIO BOUTIQUE · FIRST AWAKENING",
+  "hint": "Slide the moon sigil right. Wake the cabinet in one luminous move.",
+  "win_title": "THE CABINET STIRS",
+  "win_detail": "The Moon Cameo wakes behind the glass.",
+  "reward_curio": "moon_cameo",
+  "house_stage_reward": 1,
   "width": 7,
   "height": 7,
   "moves": 12,
@@ -18,6 +25,6 @@
     ["leaf", "moon", "rose", "moon", "rose", "leaf", "moth"]
   ],
   "specials": [
-    {"x": 4, "y": 6, "kind": "line_h"}
+    {"x": 1, "y": 4, "kind": "global"}
   ]
 }

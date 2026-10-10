@@ -108,9 +108,14 @@ func set_cell(pos: Vector2i, value: String) -> void:
 	cells[pos.y * width + pos.x] = value
 
 func swap_cells(a: Vector2i, b: Vector2i) -> void:
-	var first := get_cell(a)
-	set_cell(a, get_cell(b))
+	var first: String = get_cell(a)
+	var second: String = get_cell(b)
+	var first_special: String = get_special(a)
+	var second_special: String = get_special(b)
+	set_cell(a, second)
 	set_cell(b, first)
+	set_special(a, second_special)
+	set_special(b, first_special)
 
 func is_adjacent(a: Vector2i, b: Vector2i) -> bool:
 	if not in_bounds(a) or not in_bounds(b) or is_hole(a) or is_hole(b):

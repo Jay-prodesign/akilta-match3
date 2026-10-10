@@ -33,15 +33,17 @@ func to_dict() -> Dictionary:
 		"processed_transactions": processed_transactions.duplicate()
 	}
 
-func apply_level_win(transaction_id: String, level_id: String, curio_id: String = "") -> bool:
+func apply_level_win(transaction_id: String, level_id: String, curio_id: String = "", house_stage_reward: int = -1) -> bool:
 	if transaction_id == "" or processed_transactions.has(transaction_id):
 		return false
 	processed_transactions.append(transaction_id)
 	_append_unique(completed_levels, level_id)
 	if curio_id != "":
 		_append_unique(curios, curio_id)
-	house_stage = max(house_stage, 1)
-	highest_level_unlocked = max(highest_level_unlocked, _level_number(level_id) + 1)
+	var level_number: int = _level_number(level_id)
+	var stage_reward: int = house_stage_reward if house_stage_reward >= 0 else level_number
+	house_stage = max(house_stage, stage_reward)
+	highest_level_unlocked = max(highest_level_unlocked, level_number + 1)
 	return true
 
 static func _append_unique(values: Array[String], value: String) -> void:

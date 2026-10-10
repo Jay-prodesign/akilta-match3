@@ -1,19 +1,40 @@
-[gd_scene load_steps=3 format=3]
+[gd_scene load_steps=6 format=3]
 
 [ext_resource type="Script" path="res://src/ui/gameplay/gameplay_screen.gd" id="1_game"]
 [ext_resource type="Script" path="res://src/match3/presentation/board_view.gd" id="2_board"]
 
 [sub_resource type="StyleBoxFlat" id="StylePanel"]
-bg_color = Color(0.0902, 0.0745, 0.1059, 0.96)
+bg_color = Color(0.0902, 0.0745, 0.1059, 0.98)
 border_width_left = 1
 border_width_top = 1
 border_width_right = 1
 border_width_bottom = 1
-border_color = Color(0.749, 0.647, 0.847, 0.24)
+border_color = Color(0.749, 0.647, 0.847, 0.34)
 corner_radius_top_left = 28
 corner_radius_top_right = 28
 corner_radius_bottom_right = 28
 corner_radius_bottom_left = 28
+
+[sub_resource type="StyleBoxFlat" id="ActionNormal"]
+bg_color = Color(0.749, 0.647, 0.847, 1)
+corner_radius_top_left = 16
+corner_radius_top_right = 16
+corner_radius_bottom_right = 16
+corner_radius_bottom_left = 16
+
+[sub_resource type="StyleBoxFlat" id="ActionHover"]
+bg_color = Color(0.82, 0.73, 0.9, 1)
+corner_radius_top_left = 16
+corner_radius_top_right = 16
+corner_radius_bottom_right = 16
+corner_radius_bottom_left = 16
+
+[sub_resource type="StyleBoxFlat" id="ActionPressed"]
+bg_color = Color(0.65, 0.55, 0.75, 1)
+corner_radius_top_left = 16
+corner_radius_top_right = 16
+corner_radius_bottom_right = 16
+corner_radius_bottom_left = 16
 
 [node name="GameplayScreen" type="Control"]
 layout_mode = 3
@@ -69,7 +90,7 @@ layout_mode = 2
 size_flags_horizontal = 3
 theme_override_colors/font_color = Color(0.749, 0.647, 0.847, 1)
 theme_override_font_sizes/font_size = 28
-text = "Gather moon sigils  0/6"
+text = "Gather Moon sigils  0/6"
 
 [node name="Moves" type="Label" parent="Layout/HUD"]
 layout_mode = 2
@@ -91,6 +112,7 @@ theme_override_colors/font_color = Color(0.851, 0.804, 0.835, 1)
 theme_override_font_sizes/font_size = 23
 text = "Swipe a sigil to wake the cabinet."
 horizontal_alignment = 1
+autowrap_mode = 2
 
 [node name="ResultOverlay" type="Control" parent="."]
 visible = false
@@ -109,7 +131,7 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-color = Color(0.0314, 0.0235, 0.0353, 0.76)
+color = Color(0.0314, 0.0235, 0.0353, 0.82)
 
 [node name="Card" type="PanelContainer" parent="ResultOverlay"]
 layout_mode = 1
@@ -119,14 +141,19 @@ anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
 offset_left = -390.0
-offset_top = -220.0
+offset_top = -260.0
 offset_right = 390.0
-offset_bottom = 220.0
+offset_bottom = 260.0
 grow_horizontal = 2
 grow_vertical = 2
 theme_override_styles/panel = SubResource("StylePanel")
 
-[node name="Title" type="Label" parent="ResultOverlay/Card"]
+[node name="Content" type="VBoxContainer" parent="ResultOverlay/Card"]
+layout_mode = 2
+theme_override_constants/separation = 28
+alignment = 1
+
+[node name="Title" type="Label" parent="ResultOverlay/Card/Content"]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.945, 0.91, 0.866, 1)
 theme_override_font_sizes/font_size = 42
@@ -134,7 +161,7 @@ text = "THE CABINET STIRS"
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="Detail" type="Label" parent="ResultOverlay/Card"]
+[node name="Detail" type="Label" parent="ResultOverlay/Card/Content"]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.851, 0.804, 0.835, 1)
 theme_override_font_sizes/font_size = 24
@@ -142,3 +169,13 @@ text = "Something in the Curio Boutique has awakened."
 horizontal_alignment = 1
 vertical_alignment = 1
 autowrap_mode = 2
+
+[node name="Action" type="Button" parent="ResultOverlay/Card/Content"]
+custom_minimum_size = Vector2(0, 74)
+layout_mode = 2
+theme_override_colors/font_color = Color(0.0627, 0.051, 0.0706, 1)
+theme_override_font_sizes/font_size = 23
+theme_override_styles/normal = SubResource("ActionNormal")
+theme_override_styles/hover = SubResource("ActionHover")
+theme_override_styles/pressed = SubResource("ActionPressed")
+text = "RETURN TO THE HOUSE"

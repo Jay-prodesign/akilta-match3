@@ -1,7 +1,7 @@
 class_name Match3GameplayScreen
 extends Control
 
-signal level_won(level_id: String)
+signal level_won(level_id: String, curio_id: String, house_stage_reward: int)
 
 const BoardState = preload("res://src/match3/domain/board_state.gd")
 const MoveResolver = preload("res://src/match3/domain/move_resolver.gd")
@@ -12,17 +12,29 @@ const MoveResolver = preload("res://src/match3/domain/move_resolver.gd")
 var board_state
 var last_trace
 var current_level_id: String = ""
+var current_level_path: String = ""
+var current_seed: int = 1001
+var current_reward_curio: String = ""
+var current_house_stage_reward: int = 0
+var current_win_title: String = "THE CABINET STIRS"
+var current_win_detail: String = "Something in the Curio Boutique has awakened."
+var _pending_win: bool = false
 
+@onready var eyebrow_label: Label = $Layout/Eyebrow
+@onready var title_label: Label = $Layout/Title
 @onready var board_view = $Layout/BoardView
 @onready var objective_label: Label = $Layout/HUD/Objective
 @onready var moves_label: Label = $Layout/HUD/Moves
+@onready var hint_label: Label = $Layout/Hint
 @onready var result_overlay: Control = $ResultOverlay
-@onready var result_title: Label = $ResultOverlay/Card/Title
-@onready var result_detail: Label = $ResultOverlay/Card/Detail
+@onready var result_title: Label = $ResultOverlay/Card/Content/Title
+@onready var result_detail: Label = $ResultOverlay/Card/Content/Detail
+@onready var result_action: Button = $ResultOverlay/Card/Content/Action
 
 func _ready() -> void:
 	if board_view.has_signal("swap_requested"):
 		board_view.swap_requested.connect(_on_swap_requested)
+	result_action.pressed.connect(_on_result_action_pressed)
 	result_overlay.visible = false
 	if FileAccess.file_exists(default_level_path):
 		load_level_path(default_level_path, default_seed)
@@ -36,15 +48,25 @@ func load_level_path(path: String, seed_value: int = 1001) -> bool:
 	var parsed = JSON.parse_string(file.get_as_text())
 	if not parsed is Dictionary:
 		return false
+	current_level_path = path
+	current_seed = seed_value
 	current_level_id = String(parsed.get("id", ""))
+	current_reward_curio = String(parsed.get("reward_curio", ""))
+	current_house_stage_reward = int(parsed.get("house_stage_reward", 0))
+	current_win_title = String(parsed.get("win_title", "THE CABINET STIRS"))
+	current_win_detail = String(parsed.get("win_detail", "Something in the Curio Boutique has awakened."))
+	eyebrow_label.text = String(parsed.get("eyebrow", "CURIO BOUTIQUE"))
+	title_label.text = String(parsed.get("title", "Hidden Display"))
+	hint_label.text = String(parsed.get("hint", "Swipe a sigil."))
 	board_state = BoardState.from_level(parsed, seed_value)
 	board_view.set_board(board_state)
+	_pending_win = false
 	result_overlay.visible = false
 	_refresh_hud()
 	return true
 
 func attempt_swap(from: Vector2i, to: Vector2i):
-	if board_state == null:
+	if board_state == null or result_overlay.visible:
 		return null
 	last_trace = MoveResolver.try_swap(board_state, from, to)
 	board_view.set_board(board_state)
@@ -52,6 +74,18 @@ func attempt_swap(from: Vector2i, to: Vector2i):
 	if last_trace.accepted:
 		_show_result_if_terminal(String(last_trace.result))
 	return last_trace
+
+func continue_after_win() -> bool:
+	if not _pending_win:
+		return false
+	_pending_win = false
+	level_won.emit(current_level_id, current_reward_curio, current_house_stage_reward)
+	return true
+
+func retry_current_level() -> bool:
+	if current_level_path == "":
+		return false
+	return load_level_path(current_level_path, current_seed)
 
 func _on_swap_requested(from: Vector2i, to: Vector2i) -> void:
 	attempt_swap(from, to)
@@ -63,22 +97,33 @@ func _refresh_hud() -> void:
 		return
 	moves_label.text = "%d moves" % int(board_state.moves_remaining)
 	if String(board_state.objective_type) == "collect_family":
-		objective_label.text = "Gather moon sigils  %d/%d" % [
+		var family_label: String = String(board_state.objective_family).capitalize()
+		objective_label.text = "Gather %s sigils  %d/%d" % [
+			family_label,
 			int(board_state.objective_progress),
 			int(board_state.objective_target)
 		]
 	elif String(board_state.objective_type) == "clear_blockers":
-		objective_label.text = "Break the seals  %d left" % int(board_state.remaining_blockers())
+		objective_label.text = "Break the wax seals  %d left" % int(board_state.remaining_blockers())
 	else:
 		objective_label.text = "Awaken the collection"
 
 func _show_result_if_terminal(result: String) -> void:
 	if result == "won":
-		result_title.text = "THE CABINET STIRS"
-		result_detail.text = "Something in the Curio Boutique has awakened."
+		_pending_win = true
+		result_title.text = current_win_title
+		result_detail.text = current_win_detail
+		result_action.text = "RETURN TO THE HOUSE"
 		result_overlay.visible = true
-		level_won.emit(current_level_id)
 	elif result == "failed":
+		_pending_win = false
 		result_title.text = "THE ROOM WAITS"
 		result_detail.text = "The House keeps its secrets. Try another arrangement."
+		result_action.text = "TRY AGAIN"
 		result_overlay.visible = true
+
+func _on_result_action_pressed() -> void:
+	if _pending_win:
+		continue_after_win()
+	else:
+		retry_current_level()

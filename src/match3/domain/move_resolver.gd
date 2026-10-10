@@ -124,8 +124,11 @@ static func _apply_gravity(board, trace, cascade: int) -> void:
 			if value != "":
 				var write_pos := Vector2i(x, write_y)
 				if write_pos != read_pos:
+					var special: String = String(board.get_special(read_pos))
 					board.set_cell(write_pos, value)
+					board.set_special(write_pos, special)
 					board.set_cell(read_pos, "")
+					board.set_special(read_pos, "")
 					trace.add_event("gravity", {
 						"cascade": cascade,
 						"from": _pos_key(read_pos),
