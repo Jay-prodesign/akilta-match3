@@ -3,13 +3,29 @@
   "content_status": "draft",
   "validation_seed": 1003,
   "validation_expected_result": "won",
-  "teaching_moves": [[2, 3, 2, 4], [3, 3, 3, 4]],
-  "validation_expect": {"special_created_min": 1, "special_triggered_min": 1},
+  "teaching_moves": [
+    [
+      2,
+      3,
+      2,
+      4
+    ],
+    [
+      3,
+      3,
+      3,
+      4
+    ]
+  ],
+  "validation_expect": {
+    "special_created_min": 1,
+    "special_triggered_min": 1
+  },
   "id": "ch01_level_003",
   "chapter": "curio_boutique",
   "title": "Thornlight Arrangement",
   "eyebrow": "CURIO BOUTIQUE · FORM A MOON BEAM",
-  "hint": "Slide the center moon down. Four moons will bind into a line sigil.",
+  "hint": "Slide the center moon down. Four moon sigils will bind into a line sigil.",
   "win_title": "THE BEAM FINDS A KEY",
   "win_detail": "A Thorned Locket slips free from the velvet lining.",
   "reward_curio": "thorned_locket",
@@ -18,14 +34,50 @@
   "height": 5,
   "moves": 6,
   "objective": "collect_family",
-  "objective_family": "key",
-  "objective_target": 1,
-  "families": ["moon", "rose", "moth", "key", "leaf"],
+  "objective_family": "moon",
+  "objective_target": 4,
+  "families": [
+    "moon",
+    "rose",
+    "moth",
+    "key",
+    "leaf"
+  ],
   "initial_rows": [
-    ["rose", "moth", "key", "leaf", "rose"],
-    ["moth", "key", "leaf", "rose", "moth"],
-    ["key", "leaf", "rose", "moon", "key"],
-    ["rose", "moon", "moon", "key", "leaf"],
-    ["moon", "moon", "rose", "moon", "key"]
+    [
+      "rose",
+      "moth",
+      "key",
+      "leaf",
+      "rose"
+    ],
+    [
+      "moth",
+      "key",
+      "leaf",
+      "rose",
+      "moth"
+    ],
+    [
+      "key",
+      "leaf",
+      "rose",
+      "moon",
+      "key"
+    ],
+    [
+      "rose",
+      "moon",
+      "moon",
+      "key",
+      "leaf"
+    ],
+    [
+      "moon",
+      "moon",
+      "rose",
+      "moon",
+      "key"
+    ]
   ]
 }
