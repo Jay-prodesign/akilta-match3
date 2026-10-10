@@ -9,6 +9,7 @@ const GameplayScene = preload("res://src/ui/gameplay/gameplay_screen.tscn")
 const HouseScene = preload("res://src/ui/home/house_home.tscn")
 const CollectionScene = preload("res://src/ui/collection/curio_collection.tscn")
 const MapScene = preload("res://src/ui/map/chapter_map.tscn")
+const ChapterSelectScene = preload("res://src/ui/map/chapter_select.tscn")
 const PrestartScene = preload("res://src/ui/prestart/level_prestart.tscn")
 const SettingsScene = preload("res://src/ui/settings/settings_panel.tscn")
 const SplashScene = preload("res://src/ui/splash/splash_screen.tscn")
@@ -278,7 +279,7 @@ func _render_house() -> void:
 	screen.set_available_level_count(TEST_LEVEL_COUNT)
 	screen.set_progress(progress)
 	screen.collection_requested.connect(show_collection)
-	screen.map_requested.connect(show_map)
+	screen.map_requested.connect(show_chapters)
 	screen.play_requested.connect(_on_house_play_requested)
 	screen.settings_requested.connect(show_settings)
 	if screen.has_signal("events_requested"):
@@ -344,7 +345,7 @@ func _on_gameplay_navigation_requested(section: String) -> void:
 		"curios":
 			show_collection()
 		"map":
-			show_map()
+			show_chapters()
 		"events":
 			show_feature_preview("Events")
 		"shop":
@@ -394,3 +395,16 @@ func _on_house_play_requested(level_number: int) -> void:
 		return
 	if show_map():
 		show_prestart(level_number)
+
+func show_chapters() -> bool:
+	if navigation == null or navigation.current() != NavigationScript.Route.HOUSE:
+		return false
+	var screen: Node = ChapterSelectScene.instantiate()
+	_show_screen(screen)
+	screen.chapter_requested.connect(_on_chapter_selected)
+	screen.back_requested.connect(show_house)
+	return true
+
+func _on_chapter_selected(chapter_id: String) -> void:
+	if chapter_id == "curio_boutique":
+		show_map()
