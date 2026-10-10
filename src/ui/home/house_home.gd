@@ -70,7 +70,7 @@ func _on_play_pressed() -> void:
 	if available_level_count < 1:
 		return
 	var next_level := int(progress.highest_level_unlocked) if progress != null else 1
-	var has_started := progress != null and not progress.completed_levels.is_empty()
+	var has_started: bool = progress != null and not progress.completed_levels.is_empty()
 	if has_started and next_level > 1 and next_level <= available_level_count:
 		play_requested.emit(next_level)
 	else:
