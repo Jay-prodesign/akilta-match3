@@ -212,6 +212,7 @@ func show_feature_preview(feature: String) -> bool:
 		card.add_theme_stylebox_override("panel", panel_style)
 		cards.add_child(card)
 		var row := HBoxContainer.new()
+		row.size_flags_vertical = Control.SIZE_EXPAND_FILL
 		row.add_theme_constant_override("separation", 12)
 		card.add_child(row)
 		var icon := Label.new()
@@ -224,6 +225,7 @@ func show_feature_preview(feature: String) -> bool:
 		row.add_child(icon)
 		var copy := VBoxContainer.new()
 		copy.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		copy.size_flags_vertical = Control.SIZE_EXPAND_FILL
 		copy.alignment = BoxContainer.ALIGNMENT_CENTER
 		copy.add_theme_constant_override("separation", 5)
 		row.add_child(copy)
@@ -259,8 +261,8 @@ func show_feature_preview(feature: String) -> bool:
 	back.add_theme_stylebox_override("hover", back_style)
 	layout.add_child(back)
 	back.pressed.connect(func(): overlay.queue_free())
-	Typography.apply(overlay)
-	CurioMaterials.apply(overlay)
+	# Explicit card typography is intentionally retained; applying the global theme
+	# after construction would shrink these feature panels below mobile reading size.
 	return true
 
 func show_settings() -> bool:
