@@ -358,8 +358,10 @@ func _install_north_star_backdrop(screen: Node) -> void:
 		return
 	if screen.has_node("NorthStarBackdrop"):
 		return
-	const ART_PATH := "res://assets/world/ch01_curio_boutique/curio_boutique_moonlit_backdrop.svg"
-	var file := FileAccess.open(ART_PATH, FileAccess.READ)
+	var art_path := "res://assets/world/ch01_curio_boutique/curio_boutique_moonlit_backdrop.svg"
+	if screen.name == "ChapterMap":
+		art_path = "res://assets/world/ch01_curio_boutique/north_star_splash.svg"
+	var file := FileAccess.open(art_path, FileAccess.READ)
 	if file == null:
 		return
 	var image := Image.new()
