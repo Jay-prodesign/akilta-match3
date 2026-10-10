@@ -210,6 +210,18 @@ jobs:
           if grep -Eq "SCRIPT ERROR:|(^| )ERROR:" <<<"$output"; then exit 1; fi
           grep -Fq "TEST_PASS: first-party Match-3 haptics feedback" <<<"$output"
 
+      - name: Run CC0 Level 1 audio feedback
+        shell: bash
+        run: |
+          set +e
+          output=$(timeout 30s ./godot --headless --path . -s res://tests/unit/test_audio_feedback.gd 2>&1)
+          status=$?
+          set -e
+          printf '%s\n' "$output"
+          if [ "$status" -ne 0 ]; then exit "$status"; fi
+          if grep -Eq "SCRIPT ERROR:|(^| )ERROR:" <<<"$output"; then exit 1; fi
+          grep -Fq "TEST_PASS: CC0 Level 1 audio feedback" <<<"$output"
+
       - name: Verify project parses cleanly
         shell: bash
         run: |

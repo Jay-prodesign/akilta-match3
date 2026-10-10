@@ -2,6 +2,7 @@ class_name Match3GameplayScreen
 extends Control
 
 signal level_won(level_id: String, curio_id: String, house_stage_reward: int)
+signal feedback_requested(kind: String)
 
 const BoardState = preload("res://src/match3/domain/board_state.gd")
 const MoveResolver = preload("res://src/match3/domain/move_resolver.gd")
@@ -94,8 +95,10 @@ func attempt_swap(from: Vector2i, to: Vector2i):
 		var feedback_types: Array[String] = last_trace.event_types()
 		if feedback_types.has("combo_triggered") or feedback_types.has("special_triggered") or feedback_types.has("special_created"):
 			haptics.request_special()
+			feedback_requested.emit("special")
 		else:
 			haptics.request_match()
+			feedback_requested.emit("match")
 		var terminal_result := String(last_trace.result)
 		if terminal_result == "won" or terminal_result == "failed":
 			if motion_started:
@@ -115,6 +118,7 @@ func retry_current_level() -> bool:
 	if current_level_path == "":
 		return false
 	haptics.reset_for_new_attempt()
+	feedback_requested.emit("retry")
 	return load_level_path(current_level_path, current_seed)
 
 func _on_swap_requested(from: Vector2i, to: Vector2i) -> void:
@@ -156,6 +160,7 @@ func _refresh_hud() -> void:
 func _show_result_if_terminal(result: String) -> void:
 	if result == "won":
 		haptics.request_terminal("won")
+		feedback_requested.emit("win")
 		_pending_win = true
 		result_title.text = current_win_title
 		result_detail.text = current_win_detail
@@ -163,6 +168,7 @@ func _show_result_if_terminal(result: String) -> void:
 		result_overlay.visible = true
 	elif result == "failed":
 		haptics.request_terminal("failed")
+		feedback_requested.emit("fail")
 		_pending_win = false
 		result_title.text = "THE ROOM WAITS"
 		result_detail.text = "The House keeps its secrets. Try another arrangement."

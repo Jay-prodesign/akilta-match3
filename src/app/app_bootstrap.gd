@@ -11,6 +11,7 @@ const CollectionScene = preload("res://src/ui/collection/curio_collection.tscn")
 const MapScene = preload("res://src/ui/map/chapter_map.tscn")
 const PrestartScene = preload("res://src/ui/prestart/level_prestart.tscn")
 const SettingsScene = preload("res://src/ui/settings/settings_panel.tscn")
+const AudioDirectorScript = preload("res://src/feedback/audio_director.gd")
 
 @export var environment: String = "development"
 @export var save_path_override: String = ""
@@ -19,6 +20,7 @@ const SettingsScene = preload("res://src/ui/settings/settings_panel.tscn")
 var progress
 var navigation
 var user_settings
+var audio_director
 var _store
 var _current_screen: Node
 var _settings_screen: Node
@@ -35,6 +37,9 @@ func _ready() -> void:
 	var settings_path := settings_path_override if settings_path_override != "" else UserSettingsScript.DEFAULT_PATH
 	user_settings.load_settings(settings_path)
 	user_settings.presentation_changed.connect(_on_presentation_settings_changed)
+	audio_director = AudioDirectorScript.new()
+	audio_director.name = "AudioDirector"
+	add_child(audio_director)
 	navigation.go(NavigationScript.Route.HOUSE, {"reason": "boot"})
 	_render_house()
 
@@ -99,6 +104,8 @@ func start_level(level_number: int = 1) -> bool:
 	if screen.has_method("apply_presentation_settings"):
 		screen.apply_presentation_settings(user_settings.get_presentation_state())
 	screen.level_won.connect(_on_level_won)
+	if screen.has_signal("feedback_requested"):
+		screen.feedback_requested.connect(_on_gameplay_feedback_requested)
 	return true
 
 func complete_level_win(transaction_id: String, level_id: String, curio_id: String = "moon_cameo", house_stage_reward: int = -1) -> bool:
@@ -162,6 +169,10 @@ func _on_prestart_start(level_number: int) -> void:
 func _on_level_won(level_id: String, curio_id: String, house_stage_reward: int) -> void:
 	var transaction_id := "win:%s:%d" % [level_id, progress.processed_transactions.size() + 1]
 	complete_level_win(transaction_id, level_id, curio_id, house_stage_reward)
+
+func _on_gameplay_feedback_requested(kind: String) -> void:
+	if audio_director != null:
+		audio_director.request_feedback(kind)
 
 func _on_presentation_settings_changed(state: Dictionary) -> void:
 	if _current_screen != null and is_instance_valid(_current_screen) and _current_screen.has_method("apply_presentation_settings"):

@@ -55,6 +55,7 @@ func _run() -> void:
 	_expect(str(app.current_route_name()) == "gameplay", "prestart must enter gameplay")
 	var gameplay = app.current_screen()
 	_expect(str(gameplay.current_level_id) == "ch01_level_001", "gameplay must load canonical Level 1")
+	_expect(app.audio_director != null and bool(app.audio_director.contract().get("ambient_loaded", false)), "Level 1 app shell must own the CC0 ambient director")
 
 	var trace = gameplay.attempt_swap(Vector2i(1, 4), Vector2i(2, 4))
 	_expect(trace != null and trace.accepted and str(trace.result) == "won", "Level 1 teaching swipe must win")
@@ -62,6 +63,8 @@ func _run() -> void:
 	if bool(board_view.is_motion_active()):
 		await board_view.trace_motion_finished
 	_expect(gameplay.result_overlay.visible, "result beat must appear after motion")
+	_expect(app.audio_director.get_feedback_count("special") + app.audio_director.get_feedback_count("match") >= 1, "accepted teaching move must produce semantic audio feedback")
+	_expect(app.audio_director.get_feedback_count("win") == 1, "Level 1 terminal win must produce one win audio cue")
 	_expect(gameplay.continue_after_win(), "win continue must commit progression")
 	await process_frame
 	await process_frame
