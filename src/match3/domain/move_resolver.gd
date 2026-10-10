@@ -3,6 +3,9 @@ extends RefCounted
 
 const MatchDetector = preload("res://src/match3/domain/match_detector.gd")
 const ResolutionTrace = preload("res://src/match3/domain/resolution_trace.gd")
+const SpecialRules = preload("res://src/match3/domain/special_rules.gd")
+const WaxSeal = preload("res://src/match3/domain/blockers/wax_seal.gd")
+const ObjectiveState = preload("res://src/match3/domain/objective_state.gd")
 
 const MAX_CASCADES := 64
 
@@ -30,11 +33,16 @@ static func try_swap(board, from: Vector2i, to: Vector2i):
 	while not matches.is_empty() and cascade < MAX_CASCADES:
 		cascade += 1
 		trace.add_event("match_found", {"cascade": cascade, "cells": _pos_keys(matches)})
+		var clear_cells: Array[Vector2i] = _expand_existing_specials(board, matches, trace, cascade)
 		var cleared: Array[String] = []
-		for pos in matches:
+		for pos in clear_cells:
 			cleared.append(_pos_key(pos))
 			board.set_cell(pos, "")
+			board.set_special(pos, "")
 		trace.add_event("clear", {"cascade": cascade, "cells": cleared})
+
+		for blocker_event in WaxSeal.apply_damage(board, clear_cells):
+			trace.add_event(String(blocker_event.get("type", "")), blocker_event)
 
 		_apply_gravity(board, trace, cascade)
 		_refill(board, trace, cascade)
@@ -43,8 +51,45 @@ static func try_swap(board, from: Vector2i, to: Vector2i):
 	if cascade >= MAX_CASCADES and not matches.is_empty():
 		trace.add_event("resolution_guard", {"cascade": cascade})
 
-	trace.add_event("settled", {"cascades": cascade, "signature": board.signature()})
+	trace.result = ObjectiveState.evaluate(board)
+	trace.add_event("settled", {
+		"cascades": cascade,
+		"signature": board.signature(),
+		"result": trace.result,
+		"objective_remaining": ObjectiveState.remaining(board)
+	})
 	return trace
+
+static func _expand_existing_specials(board, initial: Array[Vector2i], trace, cascade: int) -> Array[Vector2i]:
+	var pending: Array[Vector2i] = initial.duplicate()
+	var included: Dictionary = {}
+	var cursor := 0
+	while cursor < pending.size():
+		var pos := pending[cursor]
+		cursor += 1
+		if included.has(pos):
+			continue
+		included[pos] = true
+		var kind: String = board.get_special(pos)
+		if kind == "":
+			continue
+		trace.add_event("special_triggered", {
+			"cascade": cascade,
+			"at": _pos_key(pos),
+			"kind": kind
+		})
+		for affected in SpecialRules.affected_cells(board, pos, kind):
+			if not included.has(affected):
+				pending.append(affected)
+	var result: Array[Vector2i] = []
+	for pos in included.keys():
+		result.append(pos)
+	result.sort_custom(func(a: Vector2i, b: Vector2i) -> bool:
+		if a.y == b.y:
+			return a.x < b.x
+		return a.y < b.y
+	)
+	return result
 
 static func _apply_gravity(board, trace, cascade: int) -> void:
 	for x in range(board.width):

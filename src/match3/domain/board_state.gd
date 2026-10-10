@@ -9,6 +9,9 @@ var cells: Array[String] = []
 var holes: Dictionary = {}
 var families: Array[String] = []
 var moves_remaining: int = -1
+var objective_type: String = ""
+var specials: Dictionary = {}
+var blockers: Dictionary = {}
 var rng
 
 static func from_level(level_data: Dictionary, seed_value: int):
@@ -16,6 +19,7 @@ static func from_level(level_data: Dictionary, seed_value: int):
 	board.width = int(level_data.get("width", 0))
 	board.height = int(level_data.get("height", 0))
 	board.moves_remaining = int(level_data.get("moves", -1))
+	board.objective_type = String(level_data.get("objective", ""))
 	for family in level_data.get("families", []):
 		board.families.append(String(family))
 	for raw_hole in level_data.get("holes", []):
@@ -24,6 +28,21 @@ static func from_level(level_data: Dictionary, seed_value: int):
 	board.rng = BoardRng.new(seed_value)
 	board.cells.resize(board.width * board.height)
 	board.cells.fill("")
+
+	for raw_special in level_data.get("specials", []):
+		if raw_special is Dictionary:
+			var special_pos := Vector2i(int(raw_special.get("x", -1)), int(raw_special.get("y", -1)))
+			if board.in_bounds(special_pos) and not board.is_hole(special_pos):
+				board.specials[special_pos] = String(raw_special.get("kind", ""))
+
+	for raw_blocker in level_data.get("blockers", []):
+		if raw_blocker is Dictionary:
+			var blocker_pos := Vector2i(int(raw_blocker.get("x", -1)), int(raw_blocker.get("y", -1)))
+			if board.in_bounds(blocker_pos) and not board.is_hole(blocker_pos):
+				board.blockers[blocker_pos] = {
+					"type": String(raw_blocker.get("type", "wax_seal")),
+					"hp": max(1, int(raw_blocker.get("hp", 1)))
+				}
 
 	var initial_rows = level_data.get("initial_rows", [])
 	if initial_rows is Array and not initial_rows.is_empty():
@@ -98,6 +117,31 @@ func refill_cell(pos: Vector2i) -> String:
 	set_cell(pos, value)
 	return value
 
+func get_special(pos: Vector2i) -> String:
+	return String(specials.get(pos, ""))
+
+func set_special(pos: Vector2i, kind: String) -> void:
+	if kind == "":
+		specials.erase(pos)
+	else:
+		specials[pos] = kind
+
+func get_blocker(pos: Vector2i) -> Dictionary:
+	return blockers.get(pos, {}).duplicate(true)
+
+func set_blocker_hp(pos: Vector2i, hp: int) -> void:
+	if not blockers.has(pos):
+		return
+	if hp <= 0:
+		blockers.erase(pos)
+		return
+	var state: Dictionary = blockers[pos]
+	state["hp"] = hp
+	blockers[pos] = state
+
+func remaining_blockers() -> int:
+	return blockers.size()
+
 func has_empty() -> bool:
 	for y in range(height):
 		for x in range(width):
@@ -111,5 +155,15 @@ func signature() -> String:
 	for y in range(height):
 		for x in range(width):
 			var pos := Vector2i(x, y)
-			parts.append("#" if is_hole(pos) else get_cell(pos))
+			if is_hole(pos):
+				parts.append("#")
+				continue
+			var token := get_cell(pos)
+			var special := get_special(pos)
+			if special != "":
+				token += "@%s" % special
+			if blockers.has(pos):
+				var blocker: Dictionary = blockers[pos]
+				token += "!%s:%d" % [String(blocker.get("type", "")), int(blocker.get("hp", 0))]
+			parts.append(token)
 	return "|".join(parts)
