@@ -109,9 +109,11 @@ func load_level_path(path: String, seed_value: int = 1001) -> bool:
 	eyebrow_label.text = String(parsed.get("eyebrow", "CURIO BOUTIQUE"))
 	title_label.text = String(parsed.get("title", "Hidden Display"))
 	hint_label.text = String(parsed.get("hint", "Swipe a sigil."))
+	var art_profile := String(parsed.get("visual_profile", "curio_boutique_opening"))
+	_apply_level_art_profile(art_profile)
 	board_state = BoardState.from_level(parsed, seed_value)
 	if board_view.has_method("set_visual_profile"):
-		board_view.set_visual_profile(String(parsed.get("visual_profile", "curio_boutique_opening")))
+		board_view.set_visual_profile(art_profile)
 	board_view.set_board(board_state)
 	_configure_teaching_move(parsed)
 	_pending_win = false
@@ -126,6 +128,28 @@ func load_level_path(path: String, seed_value: int = 1001) -> bool:
 		result_ritual.queue_redraw()
 	_refresh_hud()
 	return true
+
+func _apply_level_art_profile(profile: String) -> void:
+	# The board symbols, room tint, and heading accents move together by chapter beat.
+	match profile:
+		"sealed_display":
+			world_backdrop.modulate = Color(0.76, 0.86, 0.96, 0.62)
+			eyebrow_label.add_theme_color_override("font_color", Color("#9fb7d0"))
+			title_label.add_theme_color_override("font_color", Color("#f1e6d2"))
+			objective_label.add_theme_color_override("font_color", Color("#a8c6d2"))
+			moves_label.add_theme_color_override("font_color", Color("#d8c8a1"))
+		"thornlight_arrangement":
+			world_backdrop.modulate = Color(0.98, 0.72, 0.82, 0.60)
+			eyebrow_label.add_theme_color_override("font_color", Color("#d9a0b8"))
+			title_label.add_theme_color_override("font_color", Color("#f5e6e2"))
+			objective_label.add_theme_color_override("font_color", Color("#c7a0df"))
+			moves_label.add_theme_color_override("font_color", Color("#e6bd83"))
+		_:
+			world_backdrop.modulate = Color(0.92, 0.82, 0.78, 0.56)
+			eyebrow_label.add_theme_color_override("font_color", Color("#b7a5b8"))
+			title_label.add_theme_color_override("font_color", Color("#f1e8dc"))
+			objective_label.add_theme_color_override("font_color", Color("#bca1cf"))
+			moves_label.add_theme_color_override("font_color", Color("#d9b56a"))
 
 func _configure_teaching_move(level_data: Dictionary) -> void:
 	if not board_view.has_method("set_teaching_move"):
