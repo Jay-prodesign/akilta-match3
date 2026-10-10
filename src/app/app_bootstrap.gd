@@ -239,6 +239,7 @@ func _show_screen(screen: Node) -> void:
 		_current_screen.queue_free()
 	_current_screen = screen
 	screen_host.add_child(screen)
+	_install_north_star_backdrop(screen)
 	Typography.apply(screen)
 	CurioMaterials.apply(screen)
 
@@ -256,3 +257,32 @@ func _on_gameplay_navigation_requested(section: String) -> void:
 			show_feature_preview("Events")
 		"shop":
 			show_feature_preview("Shop")
+
+func _install_north_star_backdrop(screen: Node) -> void:
+	if screen == null or not screen is Control:
+		return
+	if screen.has_node("NorthStarBackdrop"):
+		return
+	const ART_PATH := "res://assets/world/ch01_curio_boutique/curio_boutique_moonlit_backdrop.svg"
+	var file := FileAccess.open(ART_PATH, FileAccess.READ)
+	if file == null:
+		return
+	var image := Image.new()
+	var error := image.load_svg_from_string(file.get_as_text(), 1.0)
+	file.close()
+	if error != OK or image.is_empty():
+		return
+	var backdrop := TextureRect.new()
+	backdrop.name = "NorthStarBackdrop"
+	backdrop.texture = ImageTexture.create_from_image(image)
+	backdrop.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+	backdrop.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_COVERED
+	backdrop.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	backdrop.modulate = Color(0.72, 0.76, 0.95, 0.52)
+	backdrop.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	backdrop.z_index = -100
+	(screen as Control).add_child(backdrop)
+	(screen as Control).move_child(backdrop, 0)
+	var flat := screen.get_node_or_null("Backdrop")
+	if flat is ColorRect:
+		(flat as ColorRect).color.a = 0.48
