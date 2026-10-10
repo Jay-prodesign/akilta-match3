@@ -83,7 +83,7 @@ func _ready() -> void:
 		button.text = "%s\n%s%s" % [String(data["name"]), String(data["detail"]), "" if bool(data["open"]) else "\nSEALED WING"]
 		button.icon = PieceAssetLoader.ornament(String(data.get("art", "")))
 		button.icon_alignment = HORIZONTAL_ALIGNMENT_LEFT
-		button.icon_max_width = 104
+		button.add_theme_constant_override("icon_max_width", 104)
 		button.expand_icon = true
 		button.add_theme_font_size_override("font_size", 24)
 		button.add_theme_color_override("font_color", Color("#FFF7E9"))
