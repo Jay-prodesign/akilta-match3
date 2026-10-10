@@ -32,7 +32,8 @@ func _capture() -> void:
 	house.get_node("Layout/PlayButton").emit_signal("pressed")
 	await _frames(3)
 	if String(app.current_route_name()) != "map":
-		return _fail(app, "House -> Chapter Map failed")
+		var play_button: Button = house.get_node("Layout/PlayButton")
+		return _fail(app, "House -> Chapter Map failed (route=%s, disabled=%s, text=%s)" % [String(app.current_route_name()), str(play_button.disabled), play_button.text])
 	if not await _save(app, "journey-02-chapter-map.png"):
 		return
 
