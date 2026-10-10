@@ -67,7 +67,7 @@ text = "CURIO BOUTIQUE · BEFORE THE DOOR OPENS"
 horizontal_alignment = 1
 
 [node name="Card" type="PanelContainer" parent="Layout"]
-custom_minimum_size = Vector2(0, 1010)
+custom_minimum_size = Vector2(0, 720)
 layout_mode = 2
 theme_override_styles/panel = SubResource("Card")
 
@@ -77,7 +77,7 @@ theme_override_constants/separation = 22
 alignment = 1
 
 [node name="RitualArt" type="Control" parent="Layout/Card/Content"]
-custom_minimum_size = Vector2(0, 315)
+custom_minimum_size = Vector2(0, 220)
 layout_mode = 2
 mouse_filter = 2
 script = ExtResource("2_cameo")
