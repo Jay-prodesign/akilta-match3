@@ -125,3 +125,17 @@ Use risk-based, milestone-level review rather than micro-approval:
 ## Current Repository Interpretation
 
 The current procedural pieces, board styling and Curio Boutique drawing are production-direction prototypes. The architecture is intentionally separable enough that approved final assets/tokens/motion can replace presentation without replacing deterministic gameplay authority.
+
+
+## Current Execution Sequence — D-026
+
+The prior procedural Level 1 is **D-024A structural evidence**, not the Founder art-direction candidate.
+
+Current sequence:
+1. **D-024A Structural Visual Grammar — ENGINEERING PROOF PASS.** Existing Godot renders prove functional piece separation, special/blocker roles, interaction and Level 1 → Moon Cameo → House continuity.
+2. **P1.5 Donor / Asset Visual Acceleration.** Re-audit permissive donor/free sources at file/capability level. Prefer non-identity acceleration such as animation orchestration, tween patterns, highlighting/input feedback, generic materials/shaders, particle/VFX primitives and frame/slot helpers. Record provenance before import.
+3. **Curio House Art-Direction Adaptation.** Transform admitted acceleration into original Curio House pieces, board material, Wax Seal/special presentation and Curio Boutique environment. Donor demo/product identity is not accepted as product identity.
+4. **D-024B Founder Art-Direction Gate.** Ask Founder for creative approval only when real Godot-rendered Level 1 + House consequence is materially above programmer-art/prototype quality and representative enough to judge the intended shipped aesthetic.
+5. **After D-024B PASS.** Centralize approved tokens, create asset manifest/provenance registry and chapter visual profiles, then scale production assets and canonical Level 2+ content.
+
+Independent level tooling/simulation may continue before D-024B if it does not promote unapproved visual/content direction.
