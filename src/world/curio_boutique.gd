@@ -14,6 +14,18 @@ const GOLD := Color("#D8B56A")
 const ROSE := Color("#C7728F")
 const LEAF := Color("#8BAF7C")
 
+const CAT_PORTRAIT_PATH := "res://assets/pieces/black_cat.svg"
+var _cat_portrait: Texture2D
+
+func _ready() -> void:
+	var file := FileAccess.open(CAT_PORTRAIT_PATH, FileAccess.READ)
+	if file != null:
+		var image := Image.new()
+		if image.load_svg_from_string(file.get_as_text(), 1.0) == OK and not image.is_empty():
+			_cat_portrait = ImageTexture.create_from_image(image)
+		file.close()
+	queue_redraw()
+
 var house_stage: int = 0
 var curios: Array[String] = []
 
@@ -42,6 +54,7 @@ func _draw() -> void:
 	_draw_arch(room)
 	_draw_moon_window(room)
 	_draw_wall_frames(room)
+	_draw_cat_portrait(room)
 	_draw_side_shelves(room)
 	_draw_central_cabinet(room)
 	_draw_floor(room)
@@ -385,3 +398,14 @@ func _draw_awakened_sparkles(room: Rect2) -> void:
 		draw_circle(p, 14.0, Color(0.851, 0.71, 0.416, 0.025))
 		draw_line(p - Vector2(7, 0), p + Vector2(7, 0), Color(0.945, 0.91, 0.866, 0.62), 1.4)
 		draw_line(p - Vector2(0, 7), p + Vector2(0, 7), Color(0.945, 0.91, 0.866, 0.62), 1.4)
+
+func _draw_cat_portrait(room: Rect2) -> void:
+	if _cat_portrait == null:
+		return
+	# First-party black-cat portrait is part of the House scene, not only the board.
+	var portrait_size := Vector2(room.size.x * 0.15, room.size.y * 0.16)
+	var center := Vector2(room.get_center().x, room.position.y + room.size.y * 0.77)
+	var portrait := Rect2(center - portrait_size * 0.5, portrait_size)
+	draw_rect(portrait.grow(5.0), Color("#100B15"), true)
+	draw_rect(portrait.grow(3.0), Color(GOLD, 0.72), false, 2.0)
+	draw_texture_rect(_cat_portrait, portrait, false)
