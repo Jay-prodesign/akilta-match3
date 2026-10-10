@@ -1,0 +1,64 @@
+name: P0 Visual Verification
+
+on:
+  push:
+    branches:
+      - p0/bootstrap
+    paths:
+      - "src/ui/**"
+      - "src/match3/presentation/**"
+      - "content/levels/**"
+      - "tests/visual/**"
+      - ".github/workflows/p0-visual.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  render-level1:
+    runs-on: ubuntu-latest
+    timeout-minutes: 7
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Download pinned Godot 4.7.2
+        shell: bash
+        run: |
+          set -euo pipefail
+          curl -L --fail --retry 3 -o godot.zip             "https://github.com/godotengine/godot-builds/releases/download/4.7.2-stable/Godot_v4.7.2-stable_linux.x86_64.zip"
+          echo "cadd3204e728a35d3f13adb7fd0d7902636b79f6b95c40c265eb73b6c35329e4  godot.zip" | sha256sum -c -
+          unzip -q godot.zip
+          mv Godot_v4.7.2-stable_linux.x86_64 godot
+          chmod +x godot
+
+      - name: Render Level 1 portrait
+        shell: bash
+        run: |
+          set -uo pipefail
+          set +e
+          output=$(LIBGL_ALWAYS_SOFTWARE=1 xvfb-run -a ./godot --path .             -s res://tests/visual/capture_level1.gd 2>&1)
+          status=$?
+          set -e
+          printf '%s\n' "$output"
+          if [ "$status" -ne 0 ]; then
+            exit "$status"
+          fi
+          if grep -Eq "SCRIPT ERROR:|(^| )ERROR:|CAPTURE_FAIL:" <<<"$output"; then
+            echo "::error::Godot visual capture reported errors."
+            exit 1
+          fi
+          if ! grep -Fq "CAPTURE_PASS:" <<<"$output"; then
+            echo "::error::Visual capture did not emit PASS marker."
+            exit 1
+          fi
+          test -s artifacts/level1-gameplay.png
+
+      - name: Upload Level 1 render
+        uses: actions/upload-artifact@v4
+        with:
+          name: level1-gameplay-render
+          path: artifacts/level1-gameplay.png
+          if-no-files-found: error
+          retention-days: 7
