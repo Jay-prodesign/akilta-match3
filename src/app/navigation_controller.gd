@@ -8,11 +8,12 @@ extends RefCounted
 signal route_changed(from_route: int, to_route: int, payload: Dictionary)
 signal settings_changed(open: bool)
 
-enum Route { BOOT, HOUSE, MAP, PRESTART, GAMEPLAY }
+enum Route { BOOT, HOUSE, COLLECTION, MAP, PRESTART, GAMEPLAY }
 
 const _EDGES := {
 	Route.BOOT: [Route.HOUSE],
-	Route.HOUSE: [Route.MAP],
+	Route.HOUSE: [Route.COLLECTION, Route.MAP],
+	Route.COLLECTION: [Route.HOUSE],
 	Route.MAP: [Route.HOUSE, Route.PRESTART],
 	Route.PRESTART: [Route.MAP, Route.GAMEPLAY],
 	Route.GAMEPLAY: [Route.HOUSE],
@@ -82,6 +83,8 @@ func back() -> String:
 		close_settings()
 		return "close_settings"
 	match _route:
+		Route.COLLECTION:
+			return "house" if go(Route.HOUSE, {"via": "back"}) else "none"
 		Route.MAP:
 			return "house" if go(Route.HOUSE, {"via": "back"}) else "none"
 		Route.PRESTART:

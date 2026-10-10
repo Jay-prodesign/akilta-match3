@@ -2,6 +2,7 @@ class_name Match3HouseHome
 extends Control
 
 signal play_requested(level_number: int)
+signal collection_requested
 signal map_requested
 signal settings_requested
 
@@ -11,6 +12,7 @@ const HouseState = preload("res://src/world/house_state.gd")
 @onready var headline: Label = $Layout/Headline
 @onready var detail: Label = $Layout/Detail
 @onready var curio_label: Label = $Layout/CurioChip/Label
+@onready var collection_button: Button = $Layout/CollectionButton
 @onready var settings_button: Button = $Layout/SettingsButton
 @onready var play_button: Button = $Layout/PlayButton
 
@@ -19,6 +21,7 @@ var available_level_count: int = 1
 
 func _ready() -> void:
 	play_button.pressed.connect(_on_play_pressed)
+	collection_button.pressed.connect(func(): collection_requested.emit())
 	settings_button.pressed.connect(func(): settings_requested.emit())
 
 func set_available_level_count(value: int) -> void:
@@ -49,6 +52,7 @@ func _refresh() -> void:
 		curio_label.text = "CURIO 01 · MOON CAMEO AWAKENED"
 	else:
 		curio_label.text = "DORMANT DISPLAY"
+	collection_button.text = "CURIOS · %d / 3" % owned_curios.size()
 	play_button.disabled = available_level_count < 1
 	play_button.text = "OPEN CURIO MAP" if available_level_count >= 1 else "THE MAP IS SEALED"
 
