@@ -55,10 +55,34 @@ jobs:
           fi
           test -s artifacts/level1-gameplay.png
 
-      - name: Upload Level 1 render
+      - name: Render House stage 1
+        shell: bash
+        run: |
+          set -uo pipefail
+          set +e
+          output=$(LIBGL_ALWAYS_SOFTWARE=1 xvfb-run -a ./godot --audio-driver Dummy --path . -s res://tests/visual/capture_house_stage1.gd 2>&1)
+          status=$?
+          set -e
+          printf '%s\n' "$output"
+          if [ "$status" -ne 0 ]; then
+            exit "$status"
+          fi
+          if grep -Eq "SCRIPT ERROR:|(^| )ERROR:|CAPTURE_FAIL:" <<<"$output"; then
+            echo "::error::Godot House visual capture reported errors."
+            exit 1
+          fi
+          if ! grep -Fq "CAPTURE_PASS:" <<<"$output"; then
+            echo "::error::House visual capture did not emit PASS marker."
+            exit 1
+          fi
+          test -s artifacts/house-stage1.png
+
+      - name: Upload milestone renders
         uses: actions/upload-artifact@v4
         with:
-          name: level1-gameplay-render
-          path: artifacts/level1-gameplay.png
+          name: p0-milestone-renders
+          path: |
+            artifacts/level1-gameplay.png
+            artifacts/house-stage1.png
           if-no-files-found: error
           retention-days: 7
