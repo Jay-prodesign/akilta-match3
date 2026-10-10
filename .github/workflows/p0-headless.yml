@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - p0/bootstrap
+      - p0/north-star-level1-gate
     paths:
       - "project.godot"
       - "src/**"
@@ -177,7 +178,7 @@ jobs:
           if grep -Eq "SCRIPT ERROR:|(^| )ERROR:" <<<"$output"; then exit 1; fi
           grep -Fq "TEST_PASS: complete Level 1 shell journey" <<<"$output"
 
-      - name: Run Level 1 approval gate journey
+      - name: Run Level 1 approval gate and replay journey
         shell: bash
         run: |
           set +e

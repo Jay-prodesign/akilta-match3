@@ -32,6 +32,8 @@ var _pending_level_number: int = 0
 ## Founder explicitly authorized Levels 1–3 to be playable in this review build.
 ## Internal playtest override recorded in D-024 gate candidate: Levels 1–3 only.
 const TEST_LEVEL_COUNT := 3
+# Do not expose Level 2+ until the founder has reviewed and approved Level 1.
+const FOUNDER_APPROVED_LEVEL_COUNT := 1
 # Founder approval gate: do not expose authored Level 2+ until Level 1 is reviewed.
 const INTERNAL_REVIEW_PLAYABLE_LEVEL_COUNT := 1
 
@@ -157,6 +159,7 @@ func show_feature_preview(feature: String) -> bool:
 	layout.offset_right = -18
 	layout.offset_bottom = -20
 	layout.add_theme_constant_override("separation", 12)
+	layout.alignment = BoxContainer.ALIGNMENT_CENTER
 	overlay.add_child(layout)
 	var eyebrow := Label.new()
 	eyebrow.text = "THE HOUSE OF CURIOS  ·  AKILTA"
@@ -176,10 +179,9 @@ func show_feature_preview(feature: String) -> bool:
 	detail.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	detail.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	detail.add_theme_color_override("font_color", Color("#D8C6C3"))
-	detail.add_theme_font_size_override("font_size", 15)
+	detail.add_theme_font_size_override("font_size", 17)
 	layout.add_child(detail)
 	var cards := VBoxContainer.new()
-	cards.size_flags_vertical = Control.SIZE_EXPAND_FILL
 	cards.add_theme_constant_override("separation", 10)
 	layout.add_child(cards)
 	var entries: Array[Dictionary]
@@ -197,7 +199,7 @@ func show_feature_preview(feature: String) -> bool:
 		]
 	for entry in entries:
 		var card := PanelContainer.new()
-		card.size_flags_vertical = Control.SIZE_EXPAND_FILL
+		card.custom_minimum_size = Vector2(0, 210)
 		var panel_style := StyleBoxFlat.new()
 		panel_style.bg_color = Color("#171321")
 		panel_style.border_color = Color("#D5AD70", 0.58)
@@ -210,6 +212,7 @@ func show_feature_preview(feature: String) -> bool:
 		card.add_theme_stylebox_override("panel", panel_style)
 		cards.add_child(card)
 		var row := HBoxContainer.new()
+		row.size_flags_vertical = Control.SIZE_EXPAND_FILL
 		row.add_theme_constant_override("separation", 12)
 		card.add_child(row)
 		var icon := Label.new()
@@ -222,25 +225,26 @@ func show_feature_preview(feature: String) -> bool:
 		row.add_child(icon)
 		var copy := VBoxContainer.new()
 		copy.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		copy.size_flags_vertical = Control.SIZE_EXPAND_FILL
 		copy.alignment = BoxContainer.ALIGNMENT_CENTER
 		copy.add_theme_constant_override("separation", 5)
 		row.add_child(copy)
 		var card_title := Label.new()
 		card_title.text = String(entry["title"])
 		card_title.add_theme_color_override("font_color", Color("#F4E5D3"))
-		card_title.add_theme_font_size_override("font_size", 16)
+		card_title.add_theme_font_size_override("font_size", 19)
 		copy.add_child(card_title)
 		var card_body := Label.new()
 		card_body.text = String(entry["body"])
 		card_body.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 		card_body.add_theme_color_override("font_color", Color("#D8C6C3"))
-		card_body.add_theme_font_size_override("font_size", 13)
+		card_body.add_theme_font_size_override("font_size", 16)
 		copy.add_child(card_body)
 		var status := Label.new()
 		status.text = String(entry["status"])
 		status.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 		status.add_theme_color_override("font_color", Color("#BFA5D8"))
-		status.add_theme_font_size_override("font_size", 10)
+		status.add_theme_font_size_override("font_size", 12)
 		copy.add_child(status)
 	var back := Button.new()
 	back.name = "BackToHouse"
@@ -257,8 +261,8 @@ func show_feature_preview(feature: String) -> bool:
 	back.add_theme_stylebox_override("hover", back_style)
 	layout.add_child(back)
 	back.pressed.connect(func(): overlay.queue_free())
-	Typography.apply(overlay)
-	CurioMaterials.apply(overlay)
+	# Explicit card typography is intentionally retained; applying the global theme
+	# after construction would shrink these feature panels below mobile reading size.
 	return true
 
 func show_settings() -> bool:
