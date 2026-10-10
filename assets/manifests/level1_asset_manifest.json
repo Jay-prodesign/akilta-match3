@@ -345,7 +345,8 @@
       "role": "functional UI typography",
       "approval": "Founder D-027",
       "provenance": "OFL-1.1"
-    }    ,{
+    },
+    {
       "id": "gbl.piece.black_cat",
       "class": "piece",
       "scope": "global",
@@ -377,7 +378,8 @@
       "format": "svg",
       "role": "ivory skull with dark eye sockets",
       "provenance": "first_party"
-    }    ,{
+    },
+    {
       "id": "ch01.curio.moth_reliquary",
       "class": "curio",
       "scope": "chapter",
@@ -398,7 +400,8 @@
       "format": "svg",
       "role": "Level 3 special lesson reward and collection relic",
       "provenance": "first_party"
-    }    ,{
+    },
+    {
       "id": "gbl.booster.potion",
       "class": "booster",
       "scope": "global",
@@ -408,7 +411,8 @@
       "format": "svg",
       "role": "one-use gameplay booster that grants three extra moves",
       "provenance": "first_party"
-    }    ,{
+    },
+    {
       "id": "ch01.world.north_star_splash",
       "class": "world_art",
       "scope": "chapter",
@@ -417,6 +421,17 @@
       "target": "720x1280",
       "format": "svg",
       "role": "Moonlit castle splash art with black cat and thorn roses",
+      "provenance": "first_party"
+    },
+    {
+      "id": "ch01.world.north_star_gameplay_backdrop",
+      "class": "world_art",
+      "scope": "chapter",
+      "path": "assets/world/ch01_curio_boutique/north_star_gameplay_backdrop.svg",
+      "status": "candidate",
+      "target": "720x1280",
+      "format": "svg",
+      "role": "North Star moonlit gothic cabinet gameplay backdrop",
       "provenance": "first_party"
     }
   ]
