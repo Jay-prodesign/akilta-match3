@@ -1,13 +1,12 @@
 class_name Match3PieceAssetLoader
 extends RefCounted
 
-# Visual replacement mapping keeps legacy deterministic Level 1 family IDs intact.
-# This is a transitional visual skin, NOT the final family taxonomy.
+# North Star board art mapped onto the deterministic five-family gameplay IDs.
 const PATHS := {
 	"moon": "res://assets/pieces/moon_sigil.svg",
 	"rose": "res://assets/pieces/thorn_rose.svg",
 	"moth": "res://assets/pieces/crow.svg",
-	"key": "res://assets/pieces/curio_key.svg",
+	"key": "res://assets/pieces/potion.svg",
 	"leaf": "res://assets/pieces/pentagram.svg",
 }
 
