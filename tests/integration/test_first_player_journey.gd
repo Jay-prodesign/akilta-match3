@@ -37,7 +37,12 @@ func _run() -> void:
 	var map_button: Button = house.get_node("Layout/PlayButton")
 	map_button.emit_signal("pressed")
 	await process_frame
-	_expect(str(app.current_route_name()) == "map", "House CTA must route to chapter map")
+	_expect(str(app.current_route_name()) == "house", "chapter selection stays within the House navigation state")
+	var chapters = app.current_screen()
+	_expect(str(chapters.name) == "ChapterSelect", "House CTA must open the chapter selection page")
+	chapters.get_node("Layout/ChapterGrid/CurioBoutiqueButton").emit_signal("pressed")
+	await process_frame
+	_expect(str(app.current_route_name()) == "map", "Curio Boutique chapter must open its level map")
 	var map = app.current_screen()
 	var level1_button: Button = map.get_level_button(1)
 	var level2_button: Button = map.get_level_button(2)
