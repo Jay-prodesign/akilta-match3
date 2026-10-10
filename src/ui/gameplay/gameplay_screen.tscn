@@ -79,7 +79,7 @@ grow_vertical = 2
 mouse_filter = 2
 expand_mode = 1
 stretch_mode = 6
-modulate = Color(0.82, 0.76, 0.82, 0.34)
+modulate = Color(0.92, 0.84, 0.87, 0.48)
 
 [node name="Layout" type="VBoxContainer" parent="."]
 layout_mode = 1
