@@ -1,6 +1,9 @@
 extends SceneTree
 
 func _init() -> void:
+	call_deferred("_run_tests")
+
+func _run_tests() -> void:
 	var args := OS.get_cmdline_user_args()
 	if args.is_empty():
 		push_error("TEST_RUNNER: missing test script argument")

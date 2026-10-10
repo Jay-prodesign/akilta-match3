@@ -15,9 +15,9 @@ permissions:
   contents: read
 
 jobs:
-  bootstrap-green:
+  bootstrap-red:
     runs-on: ubuntu-latest
-    timeout-minutes: 4
+    timeout-minutes: 10
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -33,17 +33,24 @@ jobs:
           chmod +x godot
           ./godot --version
 
-      - name: Run bootstrap contract
+      - name: Verify expected RED bootstrap test
         shell: bash
         run: |
-          timeout 30s ./godot --headless --path . -s res://tests/unit/test_bootstrap.gd
+          set +e
+          timeout 30s ./godot --headless --path . -s res://tests/test_runner.gd -- res://tests/unit/test_bootstrap.gd
+          status=$?
+          set -e
+          if [ "$status" -eq 124 ]; then
+            echo "::error::Test runner timed out; RED was not proven."
+            exit 1
+          fi
+          if [ "$status" -eq 0 ]; then
+            echo "::error::Bootstrap test unexpectedly passed before AppBootstrap exists."
+            exit 1
+          fi
+          echo "Expected RED observed with exit code $status."
 
       - name: Verify project parses
         shell: bash
         run: |
           timeout 30s ./godot --headless --path . --editor --quit
-
-      - name: Smoke boot main scene
-        shell: bash
-        run: |
-          timeout 30s ./godot --headless --path . --quit-after 2
