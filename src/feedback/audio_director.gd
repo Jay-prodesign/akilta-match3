@@ -9,11 +9,11 @@ const AMBIENT_PATH := "res://assets/audio/music/curio_house_ambient.ogg"
 const CHIME_PATH := "res://assets/audio/sfx/ritual_chime.wav"
 
 const FEEDBACK := {
-	"match": {"pitch": 0.92, "gain_db": -30.0},
-	"special": {"pitch": 1.02, "gain_db": -23.0},
-	"win": {"pitch": 1.05, "gain_db": -19.0},
-	"fail": {"pitch": 0.82, "gain_db": -27.0},
-	"retry": {"pitch": 0.90, "gain_db": -27.0},
+	"match": {"pitch": 0.92, "gain_db": -32.0},
+	"special": {"pitch": 0.96, "gain_db": -30.0},
+	"win": {"pitch": 1.00, "gain_db": -25.0},
+	"fail": {"pitch": 0.82, "gain_db": -33.0},
+	"retry": {"pitch": 0.90, "gain_db": -32.0},
 }
 
 var music_player: AudioStreamPlayer
@@ -69,7 +69,7 @@ func start_ambient() -> bool:
 	if _ambient_stream == null:
 		return false
 	music_player.stream = _ambient_stream
-	music_player.volume_db = -28.0
+	music_player.volume_db = -34.0
 	if not music_player.playing:
 		music_player.play()
 	return true
@@ -82,9 +82,9 @@ func request_feedback(kind: String) -> bool:
 	if not FEEDBACK.has(kind):
 		return false
 	_ensure_players()
-	if _chime_stream == null:
+	if kind != "match" and _chime_stream == null:
 		_load_candidates()
-	if _chime_stream == null:
+	if kind != "match" and _chime_stream == null:
 		return false
 	var profile: Dictionary = FEEDBACK[kind]
 	_feedback_counts[kind] = int(_feedback_counts.get(kind, 0)) + 1
@@ -97,7 +97,7 @@ func request_feedback(kind: String) -> bool:
 		match_player.stream = _soft_match_stream
 		var variation: float = float([0.94, 1.0, 1.035][int(_feedback_counts[kind]) % 3])
 		match_player.pitch_scale = variation
-		match_player.volume_db = -20.0
+		match_player.volume_db = -32.0
 		match_player.play()
 		return true
 	sfx_player.stream = _chime_stream
@@ -120,6 +120,7 @@ func contract() -> Dictionary:
 		"chime_loaded": _chime_stream != null,
 		"soft_match_loaded": _soft_match_stream != null,
 		"match_feedback": "procedural_soft_wood_glass_tap",
+		"mix_profile": "restrained_dark_cabinet_v2",
 		"music_bus": String(music_player.bus) if music_player != null else "",
 		"sfx_bus": String(sfx_player.bus) if sfx_player != null else "",
 		"feedback": FEEDBACK.duplicate(true),
