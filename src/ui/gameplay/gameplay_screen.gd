@@ -347,7 +347,7 @@ func _build_bottom_navigation() -> void:
 		button.text = String(item["label"])
 		button.custom_minimum_size = Vector2(0, 46)
 		button.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-		button.add_theme_font_size_override("font_size", 12)
+		button.add_theme_font_size_override("font_size", 14)
 		button.add_theme_color_override("font_color", Color("#F4E5D3"))
 		var button_style := StyleBoxFlat.new()
 		button_style.bg_color = Color("#251529")
@@ -385,7 +385,7 @@ func _build_top_resource_bar() -> void:
 		label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 		label.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
 		label.add_theme_color_override("font_color", Color("#F4E5D3"))
-		label.add_theme_font_size_override("font_size", 15)
+		label.add_theme_font_size_override("font_size", 16)
 		label.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 		row.add_child(label)
 
