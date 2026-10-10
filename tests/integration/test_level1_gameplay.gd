@@ -78,9 +78,18 @@ func _run() -> void:
 	_expect(screen.get_node_or_null("Layout/HUD/Objective") != null, "HUD must expose Objective")
 	_expect(screen.get_node_or_null("Layout/HUD/Moves") != null, "HUD must expose Moves")
 	_expect(screen.get_node_or_null("Layout/BoardView") != null, "board must be the dominant gameplay surface")
+	var awakening = screen.get_node_or_null("Layout/Awakening/Content/ProgressView")
+	_expect(awakening != null and awakening.has_method("contract"), "Level 1 must expose the Moon Cameo awakening strip")
+	if awakening != null and awakening.has_method("contract"):
+		var awakening_contract: Dictionary = awakening.contract()
+		_expect(int(awakening_contract.get("progress", -1)) == 0, "awakening strip starts at zero")
+		_expect(int(awakening_contract.get("target", -1)) == 6, "awakening strip must reflect six-Moon target")
+		_expect(str(awakening_contract.get("language", "")) == "awakening_seals", "awakening strip must use House-native seals")
 
 	var teaching_trace = screen.attempt_swap(Vector2i(1, 4), Vector2i(2, 4))
 	_expect(teaching_trace != null and bool(teaching_trace.accepted), "authored teaching swipe must be accepted")
+	if awakening != null and awakening.has_method("contract"):
+		_expect(int(awakening.contract().get("progress", 0)) >= 6, "winning teaching move must fully awaken the Level 1 reward meter")
 	if board_view != null and board_view.has_method("teaching_contract"):
 		_expect(not bool(board_view.teaching_contract().get("active", true)), "teaching cue must disappear after the first accepted swipe")
 

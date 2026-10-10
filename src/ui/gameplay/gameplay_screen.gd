@@ -31,6 +31,8 @@ var haptics = HapticsController.new()
 @onready var objective_label: Label = $Layout/HUD/Objective
 @onready var moves_label: Label = $Layout/HUD/Moves
 @onready var hint_label: Label = $Layout/Hint
+@onready var awakening_view: Control = $Layout/Awakening/Content/ProgressView
+@onready var awakening_copy: Label = $Layout/Awakening/Content/ProgressCopy
 @onready var result_overlay: Control = $ResultOverlay
 @onready var result_title: Label = $ResultOverlay/Card/Content/Title
 @onready var result_detail: Label = $ResultOverlay/Card/Content/Detail
@@ -168,6 +170,19 @@ func _refresh_hud() -> void:
 		moves_label.text = "—"
 		return
 	moves_label.text = "%d moves" % int(board_state.moves_remaining)
+	if awakening_view != null and awakening_view.has_method("set_objective"):
+		awakening_view.set_objective(
+			int(board_state.objective_progress),
+			int(board_state.objective_target),
+			String(board_state.objective_family)
+		)
+	if awakening_copy != null:
+		var remaining := maxi(0, int(board_state.objective_target) - int(board_state.objective_progress))
+		awakening_copy.text = "%d / %d SIGILS · %s" % [
+			int(board_state.objective_progress),
+			int(board_state.objective_target),
+			"THE MOON CAMEO WAKES" if remaining == 0 else "%d REMAIN" % remaining
+		]
 	if String(board_state.objective_type) == "collect_family":
 		var family_label: String = String(board_state.objective_family).capitalize()
 		objective_label.text = "Gather %s sigils  %d/%d" % [

@@ -1,9 +1,10 @@
-[gd_scene load_steps=7 format=3]
+[gd_scene load_steps=8 format=3]
 
 [ext_resource type="Script" path="res://src/ui/gameplay/gameplay_screen.gd" id="1_game"]
 [ext_resource type="Script" path="res://src/match3/presentation/board_view.gd" id="2_board"]
 
 [ext_resource type="Script" path="res://src/ui/shared/moon_cameo_ritual_view.gd" id="9_cameo"]
+[ext_resource type="Script" path="res://src/ui/gameplay/awakening_progress_view.gd" id="10_progress"]
 
 [sub_resource type="StyleBoxFlat" id="StylePanel"]
 bg_color = Color(0.0902, 0.0745, 0.1059, 0.98)
@@ -115,6 +116,34 @@ theme_override_font_sizes/font_size = 23
 text = "Slide the moon sigil right. Wake the cabinet in one luminous move."
 horizontal_alignment = 1
 autowrap_mode = 2
+
+[node name="Awakening" type="PanelContainer" parent="Layout"]
+custom_minimum_size = Vector2(0, 190)
+layout_mode = 2
+
+[node name="Content" type="VBoxContainer" parent="Layout/Awakening"]
+layout_mode = 2
+theme_override_constants/separation = 6
+
+[node name="Label" type="Label" parent="Layout/Awakening/Content"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.851, 0.71, 0.416, 1)
+theme_override_font_sizes/font_size = 18
+text = "AWAKENING · MOON CAMEO"
+horizontal_alignment = 1
+
+[node name="ProgressView" type="Control" parent="Layout/Awakening/Content"]
+custom_minimum_size = Vector2(0, 120)
+layout_mode = 2
+mouse_filter = 2
+script = ExtResource("10_progress")
+
+[node name="ProgressCopy" type="Label" parent="Layout/Awakening/Content"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.663, 0.6, 0.659, 1)
+theme_override_font_sizes/font_size = 16
+text = "0 / 6 SIGILS · THE RELIC IS STILL DORMANT"
+horizontal_alignment = 1
 
 [node name="ResultOverlay" type="Control" parent="."]
 visible = false
