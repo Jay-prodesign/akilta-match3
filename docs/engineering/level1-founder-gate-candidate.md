@@ -10,8 +10,9 @@ This packet identifies exactly what the current rendered Level 1 evidence is all
 
 - `artifacts/level1-gameplay.png` — Level 1 gameplay/readability.
 - `artifacts/house-stage1.png` — first persistent Curio Boutique awakening.
+- `artifacts/core-asset-language.png` — engine-rendered specimen of the five base families, all four special roles plus global, and Wax Seal treatment without promoting Level 2+ content.
 
-CI publishes these two files together as `level1-founder-gate-evidence`.
+CI publishes these gate-evidence renders together as `level1-founder-gate-evidence`.
 
 ## Candidate Core Language Under Review
 
