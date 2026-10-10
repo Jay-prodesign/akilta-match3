@@ -1,6 +1,6 @@
 # AKILTA Match-3 Core Symbol Set
 
-Status: AKILTA first-party original art-direction candidates for the Curio Boutique opening; the active Level 1–3 playtest set uses eight distinct symbol families.
+Status: AKILTA first-party original art-direction candidates for the Curio Boutique opening; Level 1 now uses the complete eight-symbol North Star set.
 
 ## Runtime family mapping
 
