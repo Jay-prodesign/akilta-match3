@@ -39,6 +39,7 @@ const MOTION_PROFILE := {
 @export var swipe_threshold: float = 24.0
 
 var board_state
+var _visual_profile: String = "curio_boutique_opening"
 var _press_position := Vector2.ZERO
 var _pressed_cell := Vector2i(-1, -1)
 var _tracking := false
@@ -96,6 +97,10 @@ func _load_candidate_frame() -> void:
 	if image == null or image.is_empty():
 		return
 	_candidate_frame_texture = ImageTexture.create_from_image(image)
+
+func set_visual_profile(profile: String) -> void:
+	_visual_profile = profile if PieceAssetLoader.PROFILE_PATHS.has(profile) else "curio_boutique_opening"
+	queue_redraw()
 
 func set_board(board) -> void:
 	board_state = board
@@ -691,7 +696,7 @@ func _cell_box(radius: float) -> StyleBoxFlat:
 func _draw_piece(rect: Rect2, family: String, descriptor: Dictionary) -> void:
 	if descriptor.is_empty():
 		return
-	var texture := PieceAssetLoader.texture(family)
+	var texture := PieceAssetLoader.texture_for_profile(_visual_profile, family)
 	if texture != null:
 		var asset_rect := rect.grow(rect.size.x * 0.08)
 		draw_texture_rect(texture, asset_rect, false)
