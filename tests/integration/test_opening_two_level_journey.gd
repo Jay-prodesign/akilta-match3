@@ -1,7 +1,8 @@
 extends SceneTree
 
 const BOOTSTRAP_SCENE := "res://src/app/app_bootstrap.tscn"
-const TEST_PATH := "user://akilta_match3_opening_journey_test.json"
+const TEST_PATH := "user://akilta_match3_approval_gate_test.json"
+const SETTINGS_PATH := "user://akilta_match3_approval_gate_settings.json"
 var failures: Array[String] = []
 
 func _init() -> void:
@@ -16,113 +17,66 @@ func _run() -> void:
 		return
 	var app = packed.instantiate()
 	app.set("save_path_override", TEST_PATH)
+	app.set("settings_path_override", SETTINGS_PATH)
 	root.add_child(app)
 	await process_frame
+	await process_frame
 	_expect(str(app.current_route_name()) == "house", "new player must boot into House")
-	var first_house = app.current_screen()
-	first_house.get_node("Layout/PlayButton").emit_signal("pressed")
+	var house = app.current_screen()
+	house.get_node("Layout/PlayButton").emit_signal("pressed")
 	await process_frame
-	_expect(str(app.current_route_name()) == "house", "chapter selector remains in House navigation state")
-	var chapters = app.current_screen()
-	_expect(str(chapters.name) == "ChapterSelect", "new player must see chapter selection before the level map")
-	chapters.get_node("Layout/ChapterGrid/CurioBoutiqueButton").emit_signal("pressed")
+	_expect(str(app.current_route_name()) == "map", "House Play must open the chapter map")
+	var map = app.current_screen()
+	var level1_button: Button = map.get_level_button(1)
+	var level2_button: Button = map.get_level_button(2)
+	var level3_button: Button = map.get_level_button(3)
+	_expect(level1_button != null and not level1_button.disabled, "Level 1 must be playable for founder review")
+	_expect(level2_button != null and level2_button.disabled, "Level 2 must stay sealed pending Level 1 approval")
+	_expect(level3_button != null and level3_button.disabled, "Level 3 must stay sealed pending Level 1 approval")
+	_expect(not app.show_prestart(2), "direct navigation must not bypass the Level 1 approval gate")
+	_expect(str(app.current_route_name()) == "map", "rejected Level 2 navigation must leave the map intact")
+	level1_button.emit_signal("pressed")
 	await process_frame
-	_expect(str(app.current_route_name()) == "map", "Curio Boutique selection must open its level map")
-	var first_map = app.current_screen()
-	first_map.get_level_button(1).emit_signal("pressed")
-	await process_frame
-	_expect(str(app.current_route_name()) == "prestart", "Level 1 map node must open prestart")
+	_expect(str(app.current_route_name()) == "prestart", "Level 1 must open prestart")
 	app.current_screen().get_node("Layout/Card/Content/Start").emit_signal("pressed")
 	await process_frame
 	var level1 = app.current_screen()
 	_expect(str(app.current_route_name()) == "gameplay", "Level 1 prestart must enter gameplay")
-	_expect(level1 != null and str(level1.current_level_id) == "ch01_level_001", "opening route must load authored Level 1")
-	var first_trace = level1.attempt_swap(Vector2i(1, 4), Vector2i(2, 4))
-	_expect(first_trace != null and first_trace.accepted, "Level 1 teaching swipe must be accepted")
-	_expect(first_trace != null and str(first_trace.result) == "won", "Level 1 teaching swipe must produce the first win")
+	_expect(level1 != null and str(level1.current_level_id) == "ch01_level_001", "founder gate must test the authored Level 1")
+	var trace = level1.attempt_swap(Vector2i(1, 4), Vector2i(2, 4))
+	_expect(trace != null and trace.accepted and str(trace.result) == "won", "Level 1 teaching move must produce the first win")
 	await _await_board_motion(level1)
-	_expect(level1.result_overlay.visible, "win must hold on a result beat after resolution motion before routing away")
-	_expect(str(app.current_route_name()) == "gameplay", "win beat must remain on gameplay until player continues")
-	_expect(level1.continue_after_win(), "win continue must commit the journey")
+	_expect(level1.result_overlay.visible, "Level 1 must show the win beat before routing away")
+	_expect(level1.continue_after_win(), "Level 1 win must save progression")
 	await process_frame
-	_expect(str(app.current_route_name()) == "house", "Level 1 continue must route to House")
+	await process_frame
+	_expect(str(app.current_route_name()) == "house", "Level 1 win must return to House")
 	var progress = app.get("progress")
 	_expect(progress != null and int(progress.house_stage) == 1, "Level 1 must awaken House stage 1")
-	_expect(progress != null and progress.curios.has("moon_cameo"), "Level 1 must grant Moon Cameo exactly once")
-	var house = app.current_screen()
-	var button: Button = house.get_node("Layout/PlayButton")
-	_expect(not button.disabled and button.text == "ENTER LEVEL 2", "House must expose real Level 2 CTA")
-	button.emit_signal("pressed")
+	_expect(progress != null and progress.curios.has("moon_cameo"), "Level 1 must grant the Moon Cameo")
+	_expect(progress != null and int(progress.highest_level_unlocked) == 2, "save may remember the next progression cursor without bypassing the approval gate")
+	var replay_button: Button = app.current_screen().get_node("Layout/PlayButton")
+	_expect(not replay_button.disabled and replay_button.text == "REPLAY LEVEL 1", "House must offer replay while later levels await approval")
+	replay_button.emit_signal("pressed")
 	await process_frame
-	var level2_prestart = app.current_screen()
-	_expect(str(app.current_route_name()) == "prestart", "House continue CTA must open Level 2 prestart")
-	_expect(level2_prestart != null and level2_prestart.get_node("Layout/Card/Content/Title").text == "Sealed Display", "CTA must prepare authored Level 2, not replay Level 1")
-	level2_prestart.get_node("Layout/Card/Content/Start").emit_signal("pressed")
-	await process_frame
-	var level2 = app.current_screen()
-	_expect(str(app.current_route_name()) == "gameplay", "Level 2 prestart must enter gameplay")
-	_expect(level2 != null and str(level2.current_level_id) == "ch01_level_002", "prestart must load authored Level 2")
-	_expect(str(level2.board_state.objective_type) == "clear_blockers", "Level 2 must teach Wax Seal objective")
-	_expect(int(level2.board_state.remaining_blockers()) == 2, "Level 2 must begin with two Wax Seals")
-	var second_trace = level2.attempt_swap(Vector2i(4, 2), Vector2i(4, 3))
-	_expect(second_trace != null and second_trace.accepted, "Level 2 teaching swipe must be accepted")
-	_expect(second_trace != null and str(second_trace.result) == "won", "Level 2 teaching swipe must clear both Wax Seals")
-	_expect(int(level2.board_state.remaining_blockers()) == 0, "Wax Seal tutorial must resolve both blockers")
-	await _await_board_motion(level2)
-	_expect(level2.continue_after_win(), "Level 2 win must continue to House")
-	await process_frame
-	progress = app.get("progress")
-	_expect(str(app.current_route_name()) == "house", "Level 2 continue must return to House")
-	_expect(progress != null and int(progress.house_stage) == 2, "Level 2 must awaken House stage 2")
-	_expect(progress != null and progress.curios.has("moth_reliquary"), "Level 2 must grant Moth Reliquary")
-	_expect(progress != null and int(progress.highest_level_unlocked) == 3, "Level 2 completion must advance progression cursor")
-	var stage2_house = app.current_screen()
-	var stage2_button: Button = stage2_house.get_node("Layout/PlayButton")
-	_expect(not stage2_button.disabled and stage2_button.text == "ENTER LEVEL 3", "House must expose authored Level 3")
-	stage2_button.emit_signal("pressed")
-	await process_frame
-
-	var level3_prestart = app.current_screen()
-	_expect(str(app.current_route_name()) == "prestart", "House continue CTA must open Level 3 prestart")
-	level3_prestart.get_node("Layout/Card/Content/Start").emit_signal("pressed")
-	await process_frame
-	var level3 = app.current_screen()
-	_expect(level3 != null and str(level3.current_level_id) == "ch01_level_003", "Level 3 prestart must open the authored line-special lesson")
-	var create_trace = level3.attempt_swap(Vector2i(2, 3), Vector2i(2, 4))
-	_expect(create_trace != null and create_trace.accepted, "Level 3 special-creation swipe must be accepted")
-	_expect(create_trace != null and create_trace.event_types().has("special_created"), "Level 3 first move must generate a special")
-	_expect(create_trace != null and str(create_trace.result) == "playing", "creating the Line special must not finish Level 3")
-	_expect(level3.board_state.specials.size() >= 1, "generated Line special must remain on the board")
-	await _await_board_motion(level3)
-	var activate_trace = level3.attempt_swap(Vector2i(3, 3), Vector2i(3, 4))
-	_expect(activate_trace != null and activate_trace.accepted, "Level 3 activation swipe must be accepted")
-	_expect(activate_trace != null and activate_trace.event_types().has("special_triggered"), "Level 3 second move must trigger the generated Line special")
-	_expect(activate_trace != null and str(activate_trace.result) == "won", "Line special must collect the key and win Level 3")
-	await _await_board_motion(level3)
-	_expect(level3.continue_after_win(), "Level 3 win must return to House")
-	await process_frame
-
-	progress = app.get("progress")
-	_expect(int(progress.house_stage) == 3, "Level 3 must awaken House stage 3")
-	_expect(progress.curios.has("thorned_locket"), "Level 3 must grant Thorned Locket")
-	_expect(int(progress.highest_level_unlocked) == 4, "Level 3 completion must advance progression cursor")
-	var stage3_house = app.current_screen()
-	var stage3_button: Button = stage3_house.get_node("Layout/PlayButton")
-	_expect(stage3_button.disabled, "House must not route into unauthored Level 4")
-	_expect(stage3_button.text == "MORE CURIOS STIR SOON", "stage 3 must truthfully stop at current authored content")
-
+	_expect(str(app.current_route_name()) == "map", "replay CTA must reopen the chapter map")
+	map = app.current_screen()
+	_expect(map.get_level_button(2) != null and map.get_level_button(2).disabled, "Level 2 must remain sealed after Level 1 completion")
+	_expect(map.get_level_button(3) != null and map.get_level_button(3).disabled, "Level 3 must remain sealed after Level 1 completion")
+	_expect(not app.show_prestart(2), "Level 2 must remain inaccessible until explicit approval")
 	app.queue_free()
 	await process_frame
 	var relaunched = packed.instantiate()
 	relaunched.set("save_path_override", TEST_PATH)
+	relaunched.set("settings_path_override", SETTINGS_PATH)
 	root.add_child(relaunched)
 	await process_frame
+	await process_frame
 	var restored = relaunched.get("progress")
-	_expect(str(relaunched.current_route_name()) == "house", "relaunch after progression must return to House")
-	_expect(restored != null and int(restored.house_stage) == 3, "relaunch must preserve House stage 3")
-	_expect(restored != null and restored.curios.count("moon_cameo") == 1, "Moon Cameo must remain exactly once")
-	_expect(restored != null and restored.curios.count("moth_reliquary") == 1, "Moth Reliquary must remain exactly once")
-	_expect(restored != null and restored.curios.count("thorned_locket") == 1, "Thorned Locket must remain exactly once")
+	_expect(str(relaunched.current_route_name()) == "house", "relaunch must return to House")
+	_expect(restored != null and int(restored.house_stage) == 1, "relaunch must preserve Level 1 House restoration")
+	_expect(restored != null and restored.curios.count("moon_cameo") == 1, "relaunch must preserve Moon Cameo exactly once")
+	_expect(relaunched.current_screen().get_node("Layout/PlayButton").text == "REPLAY LEVEL 1", "saved House must keep replay available")
 	relaunched.queue_free()
 	await process_frame
 	_cleanup()
@@ -138,7 +92,7 @@ func _await_board_motion(screen) -> void:
 		await board_view.trace_motion_finished
 
 func _cleanup() -> void:
-	for path in [TEST_PATH, TEST_PATH + ".bak", TEST_PATH + ".tmp"]:
+	for path in [TEST_PATH, TEST_PATH + ".bak", TEST_PATH + ".tmp", SETTINGS_PATH]:
 		if FileAccess.file_exists(path):
 			DirAccess.remove_absolute(ProjectSettings.globalize_path(path))
 
@@ -151,7 +105,7 @@ func _fail(message: String) -> void:
 
 func _finish() -> void:
 	if failures.is_empty():
-		print("TEST_PASS: real three-level opening journey")
+		print("TEST_PASS: Level 1 approval gate journey")
 		quit(0)
 		return
 	for failure in failures:
