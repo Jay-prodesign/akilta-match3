@@ -434,7 +434,7 @@ func _build_top_resource_bar() -> void:
 	row.alignment = BoxContainer.ALIGNMENT_CENTER
 	row.add_theme_constant_override("separation", 26)
 	panel.add_child(row)
-	for value in ["♥ 5 / 5", "◉ 12,340", "◇ 520"]:
+	for value in ["☾ CURIO BOUTIQUE", "✦ CHAPTER ONE", "◇ PREVIEW"]:
 		var label := Label.new()
 		label.text = value
 		label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
