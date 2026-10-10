@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="256" height="256" viewBox="0 0 256 256">
+<defs>
+<radialGradient id="bezel" cx="35%" cy="28%" r="75%"><stop offset="0" stop-color="#3a3040"/><stop offset=".55" stop-color="#1c1720"/><stop offset="1" stop-color="#0f0c12"/></radialGradient>
+<linearGradient id="gold" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#f0d58a"/><stop offset=".42" stop-color="#d8b56a"/><stop offset="1" stop-color="#8b6b32"/></linearGradient>
+<radialGradient id="gloss" cx="30%" cy="22%" r="75%"><stop offset="0" stop-color="#ffffff" stop-opacity=".22"/><stop offset=".45" stop-color="#ffffff" stop-opacity=".03"/><stop offset="1" stop-color="#000000" stop-opacity=".2"/></radialGradient>
+</defs>
+<circle cx="128" cy="133" r="112" fill="#000" opacity=".36"/>
+<circle cx="128" cy="126" r="112" fill="url(#bezel)" stroke="url(#gold)" stroke-width="7"/>
+<circle cx="128" cy="126" r="96" fill="#211925" stroke="#bfa5d8" stroke-opacity=".38" stroke-width="3"/>
+<path d="M62 64 Q128 28 194 64" fill="none" stroke="#fff" stroke-opacity=".10" stroke-width="5" stroke-linecap="round"/>
+
+<defs><linearGradient id="metal" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#f1d987"/><stop offset=".35" stop-color="#d1a949"/><stop offset=".75" stop-color="#9b7330"/><stop offset="1" stop-color="#60431c"/></linearGradient></defs>
+<circle cx="108" cy="92" r="42" fill="none" stroke="url(#metal)" stroke-width="15"/>
+<circle cx="108" cy="92" r="20" fill="#211925" stroke="#f3df9d" stroke-opacity=".38" stroke-width="3"/>
+<path d="M132 119 L187 174" stroke="url(#metal)" stroke-width="17" stroke-linecap="round"/>
+<path d="M169 156 L191 134 M181 168 L202 147 M153 140 L168 124" stroke="url(#metal)" stroke-width="10" stroke-linecap="round"/>
+<path d="M83 91 C83 72 99 58 116 58" fill="none" stroke="#fff1bd" stroke-opacity=".35" stroke-width="5" stroke-linecap="round"/>
+<path d="M100 48 L108 34 L116 48 M67 75 L52 68 L58 85" fill="none" stroke="#d8b56a" stroke-width="4" stroke-linejoin="round"/>
+<circle cx="128" cy="126" r="94" fill="url(#gloss)" opacity=".44"/>
+</svg>

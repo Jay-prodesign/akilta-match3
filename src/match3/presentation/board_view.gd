@@ -5,6 +5,7 @@ signal swap_requested(from: Vector2i, to: Vector2i)
 signal trace_motion_finished
 
 const PieceVisuals = preload("res://src/match3/presentation/piece_visuals.gd")
+const PieceAssetLoader = preload("res://src/match3/presentation/piece_asset_loader.gd")
 const KENNEY_FRAME_PATH := "res://assets/candidate/third_party/kenney/fantasy-ui-borders/frame-024.png"
 
 const INK := Color("#100D12")
@@ -78,6 +79,9 @@ func set_board(board) -> void:
 
 func visual_contract() -> Dictionary:
 	return PieceVisuals.contract()
+
+func piece_asset_contract() -> Dictionary:
+	return PieceAssetLoader.contract()
 
 func motion_contract() -> Dictionary:
 	var contract := MOTION_PROFILE.duplicate(true)
@@ -525,6 +529,11 @@ func _cell_box(radius: float) -> StyleBoxFlat:
 
 func _draw_piece(rect: Rect2, family: String, descriptor: Dictionary) -> void:
 	if descriptor.is_empty():
+		return
+	var texture := PieceAssetLoader.texture(family)
+	if texture != null:
+		var asset_rect := rect.grow(rect.size.x * 0.08)
+		draw_texture_rect(texture, asset_rect, false)
 		return
 	var color: Color = descriptor["color"]
 	var material := String(descriptor.get("material", ""))

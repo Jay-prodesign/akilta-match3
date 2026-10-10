@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="256" height="256" viewBox="0 0 256 256">
+<defs>
+<radialGradient id="bezel" cx="35%" cy="28%" r="75%"><stop offset="0" stop-color="#3a3040"/><stop offset=".55" stop-color="#1c1720"/><stop offset="1" stop-color="#0f0c12"/></radialGradient>
+<linearGradient id="gold" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#f0d58a"/><stop offset=".42" stop-color="#d8b56a"/><stop offset="1" stop-color="#8b6b32"/></linearGradient>
+<radialGradient id="gloss" cx="30%" cy="22%" r="75%"><stop offset="0" stop-color="#ffffff" stop-opacity=".22"/><stop offset=".45" stop-color="#ffffff" stop-opacity=".03"/><stop offset="1" stop-color="#000000" stop-opacity=".2"/></radialGradient>
+</defs>
+<circle cx="128" cy="133" r="112" fill="#000" opacity=".36"/>
+<circle cx="128" cy="126" r="112" fill="url(#bezel)" stroke="url(#gold)" stroke-width="7"/>
+<circle cx="128" cy="126" r="96" fill="#211925" stroke="#bfa5d8" stroke-opacity=".38" stroke-width="3"/>
+<path d="M62 64 Q128 28 194 64" fill="none" stroke="#fff" stroke-opacity=".10" stroke-width="5" stroke-linecap="round"/>
+
+<defs><radialGradient id="wine" cx="40%" cy="30%" r="70%"><stop offset="0" stop-color="#f09ab6"/><stop offset=".35" stop-color="#c75f83"/><stop offset="1" stop-color="#6f243f"/></radialGradient></defs>
+<g fill="url(#wine)" stroke="#f0b1c4" stroke-opacity=".45" stroke-width="2">
+<ellipse cx="128" cy="81" rx="24" ry="39"/><ellipse cx="161" cy="94" rx="24" ry="39" transform="rotate(48 161 94)"/><ellipse cx="173" cy="129" rx="24" ry="39" transform="rotate(92 173 129)"/><ellipse cx="155" cy="160" rx="24" ry="39" transform="rotate(140 155 160)"/><ellipse cx="121" cy="170" rx="24" ry="39" transform="rotate(184 121 170)"/><ellipse cx="91" cy="151" rx="24" ry="39" transform="rotate(226 91 151)"/><ellipse cx="83" cy="116" rx="24" ry="39" transform="rotate(274 83 116)"/><ellipse cx="99" cy="88" rx="24" ry="39" transform="rotate(320 99 88)"/>
+</g>
+<circle cx="128" cy="126" r="47" fill="#8f3153" stroke="url(#gold)" stroke-width="3"/>
+<path d="M97 134 C101 100 139 91 157 111 C173 129 156 158 132 159 C111 160 99 147 108 132 C116 119 139 119 145 131 C150 141 137 149 126 145" fill="none" stroke="#f4c1cf" stroke-opacity=".72" stroke-width="7" stroke-linecap="round"/>
+<g fill="#d8b56a"><path d="M128 44 l8 16 -8 12 -8-12z"/><path d="M196 126 l-16 8 -12-8 12-8z"/><path d="M128 208 l-8-16 8-12 8 12z"/><path d="M60 126 l16-8 12 8 -12 8z"/></g>
+<circle cx="128" cy="126" r="94" fill="url(#gloss)" opacity=".45"/>
+</svg>

@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="256" height="256" viewBox="0 0 256 256">
+<defs>
+<radialGradient id="bezel" cx="35%" cy="28%" r="75%"><stop offset="0" stop-color="#3a3040"/><stop offset=".55" stop-color="#1c1720"/><stop offset="1" stop-color="#0f0c12"/></radialGradient>
+<linearGradient id="gold" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#f0d58a"/><stop offset=".42" stop-color="#d8b56a"/><stop offset="1" stop-color="#8b6b32"/></linearGradient>
+<radialGradient id="gloss" cx="30%" cy="22%" r="75%"><stop offset="0" stop-color="#ffffff" stop-opacity=".22"/><stop offset=".45" stop-color="#ffffff" stop-opacity=".03"/><stop offset="1" stop-color="#000000" stop-opacity=".2"/></radialGradient>
+</defs>
+<circle cx="128" cy="133" r="112" fill="#000" opacity=".36"/>
+<circle cx="128" cy="126" r="112" fill="url(#bezel)" stroke="url(#gold)" stroke-width="7"/>
+<circle cx="128" cy="126" r="96" fill="#211925" stroke="#bfa5d8" stroke-opacity=".38" stroke-width="3"/>
+<path d="M62 64 Q128 28 194 64" fill="none" stroke="#fff" stroke-opacity=".10" stroke-width="5" stroke-linecap="round"/>
+
+<defs><linearGradient id="leafg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#c6e2a8"/><stop offset=".35" stop-color="#84b66d"/><stop offset="1" stop-color="#355b3b"/></linearGradient></defs>
+<path d="M128 53 C177 68 193 111 174 151 C158 184 127 199 128 205 C126 199 96 185 80 154 C58 111 78 70 128 53 Z" fill="url(#leafg)" stroke="#dcebc5" stroke-opacity=".52" stroke-width="3"/>
+<path d="M128 66 L128 192" stroke="#e7d98f" stroke-width="5" stroke-linecap="round"/>
+<path d="M126 96 L101 81 M129 112 L157 92 M127 132 L96 115 M129 150 L161 128 M127 168 L104 154" stroke="#d5e6bf" stroke-opacity=".62" stroke-width="4" stroke-linecap="round"/>
+<path d="M97 80 C79 101 77 128 89 150" fill="none" stroke="#fff" stroke-opacity=".20" stroke-width="5" stroke-linecap="round"/>
+<circle cx="128" cy="126" r="94" fill="url(#gloss)" opacity=".42"/>
+</svg>
