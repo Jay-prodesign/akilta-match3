@@ -22,7 +22,12 @@ func _run() -> void:
 	var first_house = app.current_screen()
 	first_house.get_node("Layout/PlayButton").emit_signal("pressed")
 	await process_frame
-	_expect(str(app.current_route_name()) == "map", "new player must open the chapter map")
+	_expect(str(app.current_route_name()) == "house", "chapter selector remains in House navigation state")
+	var chapters = app.current_screen()
+	_expect(str(chapters.name) == "ChapterSelect", "new player must see chapter selection before the level map")
+	chapters.get_node("Layout/ChapterGrid/CurioBoutiqueButton").emit_signal("pressed")
+	await process_frame
+	_expect(str(app.current_route_name()) == "map", "Curio Boutique selection must open its level map")
 	var first_map = app.current_screen()
 	first_map.get_level_button(1).emit_signal("pressed")
 	await process_frame
