@@ -1,37 +1,18 @@
-[gd_scene load_steps=5 format=3]
+[gd_scene load_steps=3 format=3]
 
 [ext_resource type="Script" path="res://src/ui/map/chapter_map.gd" id="1_map"]
 
 [sub_resource type="StyleBoxFlat" id="Panel"]
-bg_color = Color(0.09, 0.07, 0.11, 0.97)
+bg_color = Color(0.055, 0.04, 0.068, 0.98)
 border_width_left = 1
 border_width_top = 1
 border_width_right = 1
 border_width_bottom = 1
-border_color = Color(0.851, 0.71, 0.416, 0.35)
+border_color = Color(0.851, 0.71, 0.416, 0.34)
 corner_radius_top_left = 24
 corner_radius_top_right = 24
 corner_radius_bottom_right = 24
 corner_radius_bottom_left = 24
-
-[sub_resource type="StyleBoxFlat" id="Level"]
-bg_color = Color(0.18, 0.12, 0.22, 1)
-border_width_left = 2
-border_width_top = 2
-border_width_right = 2
-border_width_bottom = 2
-border_color = Color(0.749, 0.647, 0.847, 0.6)
-corner_radius_top_left = 22
-corner_radius_top_right = 22
-corner_radius_bottom_right = 22
-corner_radius_bottom_left = 22
-
-[sub_resource type="StyleBoxFlat" id="Back"]
-bg_color = Color(0.12, 0.09, 0.14, 1)
-corner_radius_top_left = 16
-corner_radius_top_right = 16
-corner_radius_bottom_right = 16
-corner_radius_bottom_left = 16
 
 [node name="ChapterMap" type="Control"]
 layout_mode = 3
@@ -56,114 +37,49 @@ layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
-offset_left = 40.0
-offset_top = 48.0
-offset_right = -40.0
-offset_bottom = -48.0
-theme_override_constants/separation = 18
+offset_left = 34.0
+offset_top = 38.0
+offset_right = -34.0
+offset_bottom = -38.0
+theme_override_constants/separation = 12
 
 [node name="Eyebrow" type="Label" parent="Layout"]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.663, 0.6, 0.659, 1)
-theme_override_font_sizes/font_size = 20
+theme_override_font_sizes/font_size = 18
 text = "THE HOUSE · CHAPTER I"
 horizontal_alignment = 1
 
 [node name="Title" type="Label" parent="Layout"]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.945, 0.91, 0.866, 1)
-theme_override_font_sizes/font_size = 44
+theme_override_font_sizes/font_size = 42
 text = "Curio Boutique"
 horizontal_alignment = 1
 
 [node name="Progress" type="Label" parent="Layout"]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.851, 0.71, 0.416, 1)
-theme_override_font_sizes/font_size = 21
+theme_override_font_sizes/font_size = 18
 text = "CURIO BOUTIQUE · 0 AWAKENINGS"
 horizontal_alignment = 1
 
 [node name="RoutePanel" type="PanelContainer" parent="Layout"]
-custom_minimum_size = Vector2(0, 700)
 layout_mode = 2
 size_flags_vertical = 3
 theme_override_styles/panel = SubResource("Panel")
 
-[node name="Route" type="VBoxContainer" parent="Layout/RoutePanel"]
+[node name="Scroll" type="ScrollContainer" parent="Layout/RoutePanel"]
 layout_mode = 2
-theme_override_constants/separation = 13
-alignment = 1
+horizontal_scroll_mode = 0
+vertical_scroll_mode = 1
 
-[node name="Intro" type="Label" parent="Layout/RoutePanel/Route"]
+[node name="RouteContent" type="Control" parent="Layout/RoutePanel/Scroll"]
+custom_minimum_size = Vector2(450, 1380)
 layout_mode = 2
-theme_override_colors/font_color = Color(0.851, 0.804, 0.835, 1)
-theme_override_font_sizes/font_size = 22
-text = "Three displays wait behind the velvet.\nWake the first; the rest stay sealed until Level 1 is approved."
-horizontal_alignment = 1
-autowrap_mode = 2
-
-[node name="PathTop" type="Label" parent="Layout/RoutePanel/Route"]
-layout_mode = 2
-theme_override_colors/font_color = Color(0.851, 0.71, 0.416, 0.7)
-theme_override_font_sizes/font_size = 22
-text = "·  ·  ·"
-horizontal_alignment = 1
-
-[node name="Level1Caption" type="Label" parent="Layout/RoutePanel/Route"]
-layout_mode = 2
-theme_override_colors/font_color = Color(0.749, 0.647, 0.847, 1)
-theme_override_font_sizes/font_size = 19
-text = "FIRST DISPLAY · MOON CAMEO"
-horizontal_alignment = 1
-
-[node name="Level1" type="Button" parent="Layout/RoutePanel/Route"]
-custom_minimum_size = Vector2(0, 118)
-layout_mode = 2
-theme_override_font_sizes/font_size = 28
-theme_override_styles/normal = SubResource("Level")
-text = "LEVEL 1 · ENTER"
-
-[node name="Connector1" type="Label" parent="Layout/RoutePanel/Route"]
-layout_mode = 2
-theme_override_colors/font_color = Color(0.851, 0.71, 0.416, 0.45)
-theme_override_font_sizes/font_size = 20
-text = "│\n◆\n│"
-horizontal_alignment = 1
-
-[node name="Level2" type="Button" parent="Layout/RoutePanel/Route"]
-custom_minimum_size = Vector2(0, 88)
-layout_mode = 2
-theme_override_font_sizes/font_size = 23
-theme_override_styles/normal = SubResource("Level")
-text = "LEVEL 2 · SEALED"
-disabled = true
-
-[node name="Connector2" type="Label" parent="Layout/RoutePanel/Route"]
-layout_mode = 2
-theme_override_colors/font_color = Color(0.851, 0.71, 0.416, 0.28)
-theme_override_font_sizes/font_size = 18
-text = "│\n◆\n│"
-horizontal_alignment = 1
-
-[node name="Level3" type="Button" parent="Layout/RoutePanel/Route"]
-custom_minimum_size = Vector2(0, 88)
-layout_mode = 2
-theme_override_font_sizes/font_size = 23
-theme_override_styles/normal = SubResource("Level")
-text = "LEVEL 3 · SEALED"
-disabled = true
-
-[node name="GateNote" type="Label" parent="Layout/RoutePanel/Route"]
-layout_mode = 2
-theme_override_colors/font_color = Color(0.663, 0.6, 0.659, 1)
-theme_override_font_sizes/font_size = 18
-text = "FOUNDER GATE · LEVEL 2+ REMAINS SEALED"
-horizontal_alignment = 1
 
 [node name="Back" type="Button" parent="Layout"]
-custom_minimum_size = Vector2(0, 64)
+custom_minimum_size = Vector2(0, 62)
 layout_mode = 2
-theme_override_colors/font_color = Color(0.945, 0.91, 0.866, 1)
-theme_override_font_sizes/font_size = 22
-theme_override_styles/normal = SubResource("Back")
+theme_override_font_sizes/font_size = 21
 text = "BACK TO THE HOUSE"

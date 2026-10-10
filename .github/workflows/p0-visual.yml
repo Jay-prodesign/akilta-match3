@@ -27,7 +27,7 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          curl -L --fail --retry 3 -o godot.zip             "https://github.com/godotengine/godot-builds/releases/download/4.7.2-stable/Godot_v4.7.2-stable_linux.x86_64.zip"
+          curl -L --fail --retry 3 -o godot.zip "https://github.com/godotengine/godot-builds/releases/download/4.7.2-stable/Godot_v4.7.2-stable_linux.x86_64.zip"
           echo "cadd3204e728a35d3f13adb7fd0d7902636b79f6b95c40c265eb73b6c35329e4  godot.zip" | sha256sum -c -
           unzip -q godot.zip
           mv Godot_v4.7.2-stable_linux.x86_64 godot
@@ -51,6 +51,7 @@ jobs:
           test -s artifacts/journey-04-level1-gameplay.png
           test -s artifacts/journey-05-level1-result.png
           test -s artifacts/journey-06-house-awakened.png
+          test -s artifacts/journey-07-curio-collection.png
 
       - name: Render Level 1 portrait
         shell: bash
@@ -61,17 +62,9 @@ jobs:
           status=$?
           set -e
           printf '%s\n' "$output"
-          if [ "$status" -ne 0 ]; then
-            exit "$status"
-          fi
-          if grep -Eq "SCRIPT ERROR:|(^| )ERROR:|CAPTURE_FAIL:" <<<"$output"; then
-            echo "::error::Godot visual capture reported errors."
-            exit 1
-          fi
-          if ! grep -Fq "CAPTURE_PASS:" <<<"$output"; then
-            echo "::error::Visual capture did not emit PASS marker."
-            exit 1
-          fi
+          if [ "$status" -ne 0 ]; then exit "$status"; fi
+          if grep -Eq "SCRIPT ERROR:|(^| )ERROR:|CAPTURE_FAIL:" <<<"$output"; then exit 1; fi
+          grep -Fq "CAPTURE_PASS:" <<<"$output"
           test -s artifacts/level1-gameplay.png
 
       - name: Render Level 1 trace motion
@@ -111,17 +104,9 @@ jobs:
           status=$?
           set -e
           printf '%s\n' "$output"
-          if [ "$status" -ne 0 ]; then
-            exit "$status"
-          fi
-          if grep -Eq "SCRIPT ERROR:|(^| )ERROR:|CAPTURE_FAIL:" <<<"$output"; then
-            echo "::error::Godot House visual capture reported errors."
-            exit 1
-          fi
-          if ! grep -Fq "CAPTURE_PASS:" <<<"$output"; then
-            echo "::error::House visual capture did not emit PASS marker."
-            exit 1
-          fi
+          if [ "$status" -ne 0 ]; then exit "$status"; fi
+          if grep -Eq "SCRIPT ERROR:|(^| )ERROR:|CAPTURE_FAIL:" <<<"$output"; then exit 1; fi
+          grep -Fq "CAPTURE_PASS:" <<<"$output"
           test -s artifacts/house-stage1.png
 
       - name: Render Level 3 generated Line special
@@ -161,6 +146,7 @@ jobs:
             artifacts/journey-04-level1-gameplay.png
             artifacts/journey-05-level1-result.png
             artifacts/journey-06-house-awakened.png
+            artifacts/journey-07-curio-collection.png
           if-no-files-found: error
           retention-days: 14
 

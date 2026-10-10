@@ -61,6 +61,12 @@ func _capture() -> void:
 	if not await _save(app, "journey-06-house-awakened.png"):
 		return
 
+	if not app.show_collection():
+		return _fail(app, "House -> Curio Collection failed")
+	await _frames(3)
+	if not await _save(app, "journey-07-curio-collection.png"):
+		return
+
 	print("CAPTURE_PASS: complete Level 1 player journey")
 	app.queue_free()
 	await process_frame

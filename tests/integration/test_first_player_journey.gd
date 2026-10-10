@@ -37,10 +37,11 @@ func _run() -> void:
 	await process_frame
 	_expect(str(app.current_route_name()) == "map", "House CTA must route to chapter map")
 	var map = app.current_screen()
-	var level1_button: Button = map.get_node("Layout/RoutePanel/Route/Level1")
-	var level2_button: Button = map.get_node("Layout/RoutePanel/Route/Level2")
-	_expect(not level1_button.disabled, "Level 1 must be selectable")
-	_expect(level2_button.disabled, "Level 2 route must remain sealed before D-027")
+	var level1_button: Button = map.get_level_button(1)
+	var level2_button: Button = map.get_level_button(2)
+	_expect(level1_button != null and not level1_button.disabled, "Level 1 must be selectable")
+	_expect(level2_button != null and level2_button.disabled, "Level 2 route must remain sealed before D-027")
+	_expect(map.get_level_button(10) != null, "map must reveal a longer numbered route without canonizing future levels")
 
 	level1_button.emit_signal("pressed")
 	await process_frame
@@ -68,6 +69,18 @@ func _run() -> void:
 	var progress = app.get("progress")
 	_expect(int(progress.house_stage) == 1, "House must awaken to stage 1")
 	_expect(progress.curios.count("moon_cameo") == 1, "Moon Cameo must persist exactly once")
+
+	var awakened_house = app.current_screen()
+	var collection_button: Button = awakened_house.get_node("Layout/CollectionButton")
+	collection_button.emit_signal("pressed")
+	await process_frame
+	_expect(str(app.current_route_name()) == "collection", "House Curios control must open collection")
+	var collection = app.current_screen()
+	var moon_state: Label = collection.get_node("Layout/Cards/MoonCard/Content/State")
+	_expect(moon_state.text == "AWAKENED", "Moon Cameo must be inspectable as awakened in collection")
+	collection.get_node("Layout/Back").emit_signal("pressed")
+	await process_frame
+	_expect(str(app.current_route_name()) == "house", "collection must return to House")
 
 	app.queue_free()
 	await process_frame
