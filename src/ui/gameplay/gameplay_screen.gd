@@ -60,7 +60,7 @@ var _potion_used_for_attempt := false
 @onready var result_action: Button = $ResultOverlay/Card/Content/Action
 
 func _ready() -> void:
-	world_backdrop.texture = PieceAssetLoader.ornament("res://assets/world/ch01_curio_boutique/curio_boutique_moonlit_backdrop.svg")
+	world_backdrop.texture = PieceAssetLoader.ornament("res://assets/world/ch01_curio_boutique/north_star_gameplay_backdrop.svg")
 	_install_candidate_divider()
 	_build_top_resource_bar()
 	_build_booster_tray()
