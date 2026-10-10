@@ -39,7 +39,7 @@ func _draw() -> void:
 		glow_strength = saved_glow
 		return
 
-	var radius := min_dim * (0.24 if mode == "prestart" else 0.28)
+	var radius := min_dim * (0.36 if mode == "prestart" else 0.28)
 
 	# Reliquary/cabinet frame.
 	var frame := Rect2(size.x * 0.17, size.y * 0.09, size.x * 0.66, size.y * 0.82)
