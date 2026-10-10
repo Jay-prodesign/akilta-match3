@@ -46,9 +46,9 @@
     [
       "moon",
       "rose",
-      "cat",
+      "moth",
       "key",
-      "candle",
+      "leaf",
       "moon",
       "rose"
     ],
@@ -59,28 +59,28 @@
       "leaf",
       "moon",
       "rose",
-      "skull"
+      "moth"
     ],
     [
-      "candle",
+      "moth",
       "key",
       "leaf",
       "moon",
-      "skull",
+      "rose",
       "moth",
       "key"
     ],
     [
       "key",
-      "skull",
+      "leaf",
       "moon",
       "rose",
-      "candle",
-      "cat",
+      "moth",
+      "key",
       "leaf"
     ],
     [
-      "cat",
+      "leaf",
       "moon",
       "rose",
       "moth",
@@ -92,9 +92,9 @@
       "key",
       "leaf",
       "moon",
-      "candle",
+      "rose",
       "moth",
-      "cat",
+      "key",
       "leaf"
     ],
     [
@@ -103,7 +103,7 @@
       "rose",
       "moon",
       "rose",
-      "skull",
+      "leaf",
       "moth"
     ]
   ],
