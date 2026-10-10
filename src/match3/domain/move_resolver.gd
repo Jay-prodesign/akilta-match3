@@ -73,6 +73,9 @@ static func try_swap(board, from: Vector2i, to: Vector2i):
 			"kind": active_kind,
 			"target_family": target_family
 		})
+		# The swapped special has already selected its target family; do not
+		# trigger it a second time using the tile family at its new position.
+		board.set_special(active_pos, "")
 		var expanded: Array[Vector2i] = _expand_existing_specials(board, affected, trace, cascade)
 		_clear_cells(board, expanded, trace, cascade, "clear")
 		_apply_gravity(board, trace, cascade)
