@@ -13,7 +13,7 @@ static func first_legal_move(board) -> Dictionary:
 			if board.is_hole(from):
 				continue
 			for delta in [Vector2i.RIGHT, Vector2i.DOWN]:
-				var to := from + delta
+				var to: Vector2i = from + Vector2i(delta)
 				if not board.in_bounds(to) or board.is_hole(to):
 					continue
 				var first_special: String = String(board.get_special(from))

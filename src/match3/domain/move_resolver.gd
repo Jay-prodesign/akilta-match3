@@ -34,7 +34,10 @@ static func try_swap(board, from: Vector2i, to: Vector2i):
 	while not matches.is_empty() and cascade < MAX_CASCADES:
 		cascade += 1
 		trace.add_event("match_found", {"cascade": cascade, "cells": _pos_keys(matches)})
-		var preferred: Array[Vector2i] = [to, from] if cascade == 1 else []
+		var preferred: Array[Vector2i] = []
+		if cascade == 1:
+			preferred.append(to)
+			preferred.append(from)
 		var creation: Dictionary = {}
 		if not _contains_existing_special(board, matches):
 			creation = MatchDetector.plan_special_creation(board, preferred)
