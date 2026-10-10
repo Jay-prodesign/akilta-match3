@@ -58,7 +58,7 @@ func _build_route() -> void:
 
 		var button := Button.new()
 		button.name = "Level%d" % level_number
-		var diameter := 122.0 if level_number == 1 else 104.0
+		var diameter := 122.0 if level_number == 1 else (112.0 if level_number <= 3 else 88.0)
 		button.position = center - Vector2.ONE * diameter * 0.5
 		button.size = Vector2.ONE * diameter
 		button.focus_mode = Control.FOCUS_ALL
@@ -69,17 +69,17 @@ func _build_route() -> void:
 
 		var label := Label.new()
 		label.name = "Label%d" % level_number
-		label.size = Vector2(245.0, 54.0)
+		label.size = Vector2(270.0, 64.0)
 		label.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
 		label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-		label.add_theme_font_size_override("font_size", 20 if level_number == 1 else 18)
+		label.add_theme_font_size_override("font_size", 28 if level_number == 1 else (25 if level_number <= 3 else 22))
 		label.add_theme_color_override("font_color", BONE if level_number == 1 else Color("#D2C4D7"))
 		var on_right := center.x < route_width * 0.5
 		if on_right:
-			label.position = Vector2(center.x + diameter * 0.58, center.y - 27.0)
+			label.position = Vector2(center.x + diameter * 0.58, center.y - 32.0)
 			label.horizontal_alignment = HORIZONTAL_ALIGNMENT_LEFT
 		else:
-			label.position = Vector2(center.x - diameter * 0.58 - label.size.x, center.y - 27.0)
+			label.position = Vector2(center.x - diameter * 0.58 - label.size.x, center.y - 32.0)
 			label.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
 		add_child(label)
 		_level_labels[level_number] = label
@@ -124,13 +124,18 @@ func _tooltip_for(level_number: int) -> String:
 func _caption(level_number: int, completed: bool, open: bool) -> String:
 	if level_number == 1:
 		return "MOONLIT CABINET\n%s" % ("MOON CAMEO AWAKENED" if completed else "MOON CAMEO WAITS")
+	if level_number == 2:
+		return "SEALED DISPLAY\nWAX SEALS · %s" % ("READY" if open else "PREPARED · SEALED")
+	if level_number == 3:
+		return "THORNLIGHT\nLINE SIGIL · %s" % ("READY" if open else "PREPARED · SEALED")
 	if not open:
-		return "DISPLAY %02d · SEALED" % level_number
+		return "SEALED DISPLAY %02d" % level_number
 	return "DISPLAY %02d · READY" % level_number
 
 func _apply_node_style(button: Button, completed: bool, open: bool) -> void:
 	var box := StyleBoxFlat.new()
-	var radius := 61 if button.name == "Level1" else 47
+	var level_number := int(button.name.trim_prefix("Level"))
+	var radius := 61 if level_number == 1 else (53 if level_number <= 3 else 44)
 	box.set_corner_radius_all(radius)
 	box.set_border_width_all(3 if open else 2)
 	box.shadow_color = Color(0, 0, 0, 0.42)
@@ -150,7 +155,7 @@ func _apply_node_style(button: Button, completed: bool, open: bool) -> void:
 	button.add_theme_stylebox_override("disabled", box)
 	button.add_theme_color_override("font_color", BONE if open else Color("#D2C4D7"))
 	button.add_theme_color_override("font_disabled_color", Color("#B6A6B9"))
-	button.add_theme_font_size_override("font_size", 33 if button.name == "Level1" else 24)
+	button.add_theme_font_size_override("font_size", 40 if button.name == "Level1" else (32 if int(button.name.trim_prefix("Level")) <= 3 else 27))
 
 func _draw() -> void:
 	var content := Rect2(Vector2.ZERO, size)
