@@ -3,7 +3,7 @@ name: Level 1 iPhone Web Build
 on:
   workflow_dispatch:
   push:
-    branches: [p0/bootstrap]
+    branches: [p0/bootstrap, p0/north-star-level1-gate]
     paths:
       - 'src/**'
       - 'assets/**'
