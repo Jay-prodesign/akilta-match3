@@ -52,6 +52,7 @@ var haptics = HapticsController.new()
 
 func _ready() -> void:
 	_install_candidate_divider()
+	_build_top_resource_bar()
 	_build_bottom_navigation()
 	if board_view.has_signal("swap_requested"):
 		board_view.swap_requested.connect(_on_swap_requested)
@@ -350,3 +351,33 @@ func _build_bottom_navigation() -> void:
 		button.add_theme_stylebox_override("hover", button_style)
 		button.pressed.connect(func(): navigation_requested.emit(String(item["id"])))
 		row.add_child(button)
+
+func _build_top_resource_bar() -> void:
+	var panel := PanelContainer.new()
+	panel.name = "ResourceBar"
+	panel.anchor_left = 0.04
+	panel.anchor_right = 0.96
+	panel.anchor_top = 0.0
+	panel.anchor_bottom = 0.0
+	panel.offset_top = 6.0
+	panel.offset_bottom = 46.0
+	var style := StyleBoxFlat.new()
+	style.bg_color = Color("#0B0D17", 0.94)
+	style.border_color = Color("#D5AD70", 0.68)
+	style.set_border_width_all(1)
+	style.set_corner_radius_all(8)
+	panel.add_theme_stylebox_override("panel", style)
+	add_child(panel)
+	var row := HBoxContainer.new()
+	row.alignment = BoxContainer.ALIGNMENT_CENTER
+	row.add_theme_constant_override("separation", 26)
+	panel.add_child(row)
+	for value in ["♥ 5 / 5", "◉ 12,340", "◇ 520"]:
+		var label := Label.new()
+		label.text = value
+		label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+		label.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
+		label.add_theme_color_override("font_color", Color("#F4E5D3"))
+		label.add_theme_font_size_override("font_size", 15)
+		label.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		row.add_child(label)
