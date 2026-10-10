@@ -1,10 +1,10 @@
 # Founder Gate D-024 — Level 1 + Core Asset Candidate
 
-Status: PENDING FOUNDER APPROVAL · candidate evidence only
+Status: D-024A STRUCTURAL EVIDENCE · NOT THE D-024B FOUNDER ART-DIRECTION CANDIDATE
 
 ## Purpose
 
-This packet identifies exactly what the current rendered Level 1 evidence is allowed to prove. It does not approve Level 2+ content or promote procedural/candidate visuals to shipping assets.
+This packet identifies exactly what the current procedural Level 1 is allowed to prove: structural/readability grammar only. Founder art-direction approval must NOT be requested from this programmer-art evidence. D-024B requires a later production-direction Level 1 built after the donor/asset visual-acceleration pass. It does not approve Level 2+ content or promote procedural visuals to shipping assets.
 
 ## Review Pair
 
@@ -34,7 +34,7 @@ The active board is a quiet dark ritual-display surface: high scanning clarity f
 ### House / Curio connection
 Winning Level 1 awakens the Moon Cameo in the Curio Boutique. The House is persistent progression, not decorative wallpaper. The candidate House view must show an actual curiosity-room material language: moonlit architecture, cabinet focal hierarchy, side reliquary shelves, candle/warm contrast, persistent Curio placement and a visible shift from dormant to awakened rather than a generic menu panel.
 
-## Founder Gate Questions
+## D-024A Structural Review Questions
 
 1. Can the five base families be recognized quickly without relying on color alone?
 2. Does the board read as this game's world rather than a recolored generic Match-3?
@@ -43,7 +43,7 @@ Winning Level 1 awakens the Moon Cameo in the Curio Boutique. The House is persi
 5. Does the Level 1 → Moon Cameo → House awakening connection feel like the right product fantasy?
 6. Is this core language strong enough to scale into reusable production assets?
 
-## Explicit Non-Approval
+## Explicit Non-Approval / D-024B Still Required
 
 Approval of this gate does not lock final pixels, final brand, all chapter variants, final motion timing, final VFX/audio, shop/event design, or Level 2+ authored content. It approves the reusable visual/gameplay language so those systems can be produced coherently.
 
