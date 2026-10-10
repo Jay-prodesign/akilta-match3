@@ -99,24 +99,24 @@
       "class": "special",
       "scope": "global",
       "path": "assets/specials/gbl_special_line_h_idle_v01.svg",
-      "status": "concept",
+      "status": "candidate",
       "target": "256x256",
       "format": "svg",
       "role": "horizontal line special",
       "approval": "Founder D-027",
-      "provenance": "first_party_required"
+      "provenance": "first_party"
     },
     {
       "id": "gbl.special.line_v",
       "class": "special",
       "scope": "global",
       "path": "assets/specials/gbl_special_line_v_idle_v01.svg",
-      "status": "concept",
+      "status": "candidate",
       "target": "256x256",
       "format": "svg",
       "role": "vertical line special",
       "approval": "Founder D-027",
-      "provenance": "first_party_required"
+      "provenance": "first_party"
     },
     {
       "id": "gbl.special.area",
@@ -159,24 +159,24 @@
       "class": "blocker",
       "scope": "chapter",
       "path": "assets/blockers/ch01_blocker_wax_seal_intact_v01.svg",
-      "status": "concept",
+      "status": "candidate",
       "target": "256x256",
       "format": "svg",
       "role": "Wax Seal intact",
       "approval": "Founder D-027",
-      "provenance": "first_party_required"
+      "provenance": "first_party"
     },
     {
       "id": "ch01.blocker.wax_seal.cracked",
       "class": "blocker",
       "scope": "chapter",
       "path": "assets/blockers/ch01_blocker_wax_seal_cracked_v01.svg",
-      "status": "concept",
+      "status": "candidate",
       "target": "256x256",
       "format": "svg",
       "role": "Wax Seal damaged",
       "approval": "Founder D-027",
-      "provenance": "first_party_required"
+      "provenance": "first_party"
     },
     {
       "id": "gbl.board.frame",
