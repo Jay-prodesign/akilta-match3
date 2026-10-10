@@ -9,11 +9,11 @@ const AMBIENT_PATH := "res://assets/audio/music/curio_house_ambient.ogg"
 const CHIME_PATH := "res://assets/audio/sfx/ritual_chime.wav"
 
 const FEEDBACK := {
-	"match": {"pitch": 0.92, "gain_db": -9.0},
-	"special": {"pitch": 1.08, "gain_db": -5.0},
-	"win": {"pitch": 1.18, "gain_db": -2.5},
-	"fail": {"pitch": 0.72, "gain_db": -7.0},
-	"retry": {"pitch": 0.86, "gain_db": -8.0},
+	"match": {"pitch": 0.92, "gain_db": -26.0},
+	"special": {"pitch": 1.02, "gain_db": -19.0},
+	"win": {"pitch": 1.05, "gain_db": -15.0},
+	"fail": {"pitch": 0.82, "gain_db": -23.0},
+	"retry": {"pitch": 0.90, "gain_db": -23.0},
 }
 
 var music_player: AudioStreamPlayer
@@ -59,7 +59,7 @@ func start_ambient() -> bool:
 	if _ambient_stream == null:
 		return false
 	music_player.stream = _ambient_stream
-	music_player.volume_db = -13.0
+	music_player.volume_db = -23.0
 	if not music_player.playing:
 		music_player.play()
 	return true
@@ -80,6 +80,10 @@ func request_feedback(kind: String) -> bool:
 	_feedback_counts[kind] = int(_feedback_counts.get(kind, 0)) + 1
 	if _play_sink.is_valid():
 		_play_sink.call(kind, profile.duplicate(true))
+		return true
+	if kind == "match":
+		# The existing bell is unsuitable as a high-frequency match sound.
+		# Keep match feedback silent until the replacement soft-tap asset ships.
 		return true
 	sfx_player.stream = _chime_stream
 	sfx_player.pitch_scale = float(profile["pitch"])
