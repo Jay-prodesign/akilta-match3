@@ -118,6 +118,8 @@ func contract() -> Dictionary:
 		"chime_path": CHIME_PATH,
 		"ambient_loaded": _ambient_stream != null,
 		"chime_loaded": _chime_stream != null,
+		"soft_match_loaded": _soft_match_stream != null,
+		"match_feedback": "procedural_soft_wood_glass_tap",
 		"music_bus": String(music_player.bus) if music_player != null else "",
 		"sfx_bus": String(sfx_player.bus) if sfx_player != null else "",
 		"feedback": FEEDBACK.duplicate(true),
