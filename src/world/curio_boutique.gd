@@ -34,6 +34,7 @@ func _draw() -> void:
 	)
 	draw_rect(room, VELVET, true)
 	_draw_wall_panels(room)
+	_draw_ambient_light(room)
 	_draw_arch(room)
 	_draw_moon_window(room)
 	_draw_side_shelves(room)
@@ -41,6 +42,19 @@ func _draw() -> void:
 	_draw_floor(room)
 	if house_stage >= 1:
 		_draw_awakened_sparkles(room)
+
+func _draw_ambient_light(room: Rect2) -> void:
+	var moon_center := Vector2(room.get_center().x, room.position.y + room.size.y * 0.18)
+	for i in range(4, 0, -1):
+		var moon_glow := Color(LILAC)
+		moon_glow.a = 0.010 + 0.010 * float(i)
+		draw_circle(moon_center, room.size.x * (0.09 + 0.035 * float(i)), moon_glow)
+	if house_stage >= 1:
+		var cabinet_glow_center := Vector2(room.get_center().x, room.position.y + room.size.y * 0.50)
+		for i in range(5, 0, -1):
+			var warm := Color(GOLD)
+			warm.a = 0.008 + 0.009 * float(i)
+			draw_circle(cabinet_glow_center, room.size.x * (0.12 + 0.045 * float(i)), warm)
 
 func _draw_wall_panels(room: Rect2) -> void:
 	var inset: float = room.size.x * 0.045
@@ -104,13 +118,26 @@ func _draw_side_shelves(room: Rect2) -> void:
 	var right_x0: float = room.end.x - room.size.x * 0.255
 	var right_x1: float = room.end.x - room.size.x * 0.075
 
+	var left_alcove := Rect2(
+		Vector2(left_x0 - room.size.x * 0.018, shelf_y0 - room.size.y * 0.075),
+		Vector2((left_x1 - left_x0) + room.size.x * 0.036, shelf_gap * 2.72)
+	)
+	var right_alcove := Rect2(
+		Vector2(right_x0 - room.size.x * 0.018, shelf_y0 - room.size.y * 0.075),
+		Vector2((right_x1 - right_x0) + room.size.x * 0.036, shelf_gap * 2.72)
+	)
+	for alcove in [left_alcove, right_alcove]:
+		draw_rect(alcove, Color("#161119"), true)
+		draw_rect(alcove, Color(0.851, 0.71, 0.416, 0.16), false, 2.0)
+
 	for i in range(3):
 		var y: float = shelf_y0 + shelf_gap * float(i)
 		draw_line(Vector2(left_x0, y), Vector2(left_x1, y), GOLD.darkened(0.45), 3.0)
 		draw_line(Vector2(right_x0, y), Vector2(right_x1, y), GOLD.darkened(0.45), 3.0)
 
-	_draw_bottle(Vector2((left_x0 + left_x1) * 0.5, shelf_y0 - 14.0), CYAN, 0.85)
-	_draw_candle(Vector2(left_x0 + 22.0, shelf_y0 + shelf_gap - 4.0), 0.78)
+	_draw_bottle(Vector2((left_x0 + left_x1) * 0.5, shelf_y0 - 14.0), CYAN, 0.95)
+	_draw_candle(Vector2(left_x0 + 20.0, shelf_y0 + shelf_gap - 4.0), 0.86)
+	_draw_bottle(Vector2(left_x1 - 18.0, shelf_y0 + shelf_gap - 8.0), ROSE, 0.58)
 	var locket_center := Vector2(left_x1 - 24.0, shelf_y0 + shelf_gap * 2.0 - 19.0)
 	if house_stage >= 3:
 		draw_circle(locket_center, 29.0, Color(0.78, 0.45, 0.56, 0.07))
@@ -118,8 +145,9 @@ func _draw_side_shelves(room: Rect2) -> void:
 	else:
 		_draw_thorn_locket(locket_center, 16.0, false)
 
-	_draw_bottle(Vector2((right_x0 + right_x1) * 0.5, shelf_y0 - 14.0), LEAF, 0.75)
-	_draw_candle(Vector2(right_x1 - 22.0, shelf_y0 + shelf_gap - 4.0), 0.88)
+	_draw_bottle(Vector2((right_x0 + right_x1) * 0.5, shelf_y0 - 14.0), LEAF, 0.88)
+	_draw_candle(Vector2(right_x1 - 20.0, shelf_y0 + shelf_gap - 4.0), 0.92)
+	_draw_bottle(Vector2(right_x0 + 20.0, shelf_y0 + shelf_gap - 8.0), LILAC, 0.58)
 	var moth_center := Vector2(right_x0 + 28.0, shelf_y0 + shelf_gap * 2.0 - 18.0)
 	_draw_moth_frame(moth_center, 20.0 if house_stage >= 2 else 17.0, house_stage >= 2)
 
@@ -131,6 +159,13 @@ func _draw_central_cabinet(room: Rect2) -> void:
 	draw_rect(cabinet.grow(8.0), Color("#120F15"), true)
 	draw_rect(cabinet.grow(6.0), GOLD.darkened(0.58), false, 5.0)
 	draw_rect(cabinet, PLUM, true)
+	if house_stage >= 1:
+		var velvet := Rect2(
+			cabinet.position + Vector2(cabinet.size.x * 0.07, cabinet.size.y * 0.06),
+			Vector2(cabinet.size.x * 0.86, cabinet.size.y * 0.57)
+		)
+		draw_rect(velvet, Color("#2A1828"), true)
+		draw_rect(velvet, Color(0.78, 0.45, 0.56, 0.14), false, 1.0)
 	draw_rect(cabinet, Color(0.851, 0.71, 0.416, 0.34), false, 2.0)
 
 	var shelf_y: float = cabinet.position.y + cabinet.size.y * 0.68
@@ -231,6 +266,14 @@ func _draw_floor(room: Rect2) -> void:
 		var t: float = float(i) / 5.0
 		var y: float = lerpf(horizon_y, room.end.y, t)
 		draw_line(Vector2(room.position.x, y), Vector2(room.end.x, y), Color(0.851, 0.71, 0.416, 0.07), 1.0)
+	var runner := PackedVector2Array([
+		Vector2(room.get_center().x - room.size.x * 0.14, horizon_y),
+		Vector2(room.get_center().x + room.size.x * 0.14, horizon_y),
+		Vector2(room.get_center().x + room.size.x * 0.24, room.end.y),
+		Vector2(room.get_center().x - room.size.x * 0.24, room.end.y)
+	])
+	draw_colored_polygon(runner, Color("#211522"))
+	draw_polyline(PackedVector2Array([runner[0], runner[1], runner[2], runner[3], runner[0]]), Color(0.851, 0.71, 0.416, 0.15), 2.0)
 	var center_x: float = room.get_center().x
 	for x_ratio in [0.18, 0.34, 0.66, 0.82]:
 		var x: float = lerpf(room.position.x, room.end.x, float(x_ratio))

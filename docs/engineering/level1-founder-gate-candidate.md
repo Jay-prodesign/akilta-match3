@@ -31,7 +31,7 @@ Special function remains domain-owned. Presentation translates it into House-nat
 The active board is a quiet dark ritual-display surface: high scanning clarity first, restrained antique-gold / moon-lilac frame second. Ornament stays outside the piece-reading area.
 
 ### House / Curio connection
-Winning Level 1 awakens the Moon Cameo in the Curio Boutique. The House is persistent progression, not decorative wallpaper.
+Winning Level 1 awakens the Moon Cameo in the Curio Boutique. The House is persistent progression, not decorative wallpaper. The candidate House view must show an actual curiosity-room material language: moonlit architecture, cabinet focal hierarchy, side reliquary shelves, candle/warm contrast, persistent Curio placement and a visible shift from dormant to awakened rather than a generic menu panel.
 
 ## Founder Gate Questions
 
