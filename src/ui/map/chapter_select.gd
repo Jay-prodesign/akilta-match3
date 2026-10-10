@@ -4,6 +4,8 @@ extends Control
 signal back_requested
 signal chapter_requested(chapter_id: String)
 
+const PieceAssetLoader = preload("res://src/match3/presentation/piece_asset_loader.gd")
+
 func _ready() -> void:
 	var layout := VBoxContainer.new()
 	layout.name = "Layout"
@@ -14,6 +16,16 @@ func _ready() -> void:
 	layout.offset_bottom = -28
 	layout.add_theme_constant_override("separation", 14)
 	add_child(layout)
+	var world_art := TextureRect.new()
+	world_art.name = "HouseWorldBackdrop"
+	world_art.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	world_art.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	world_art.texture = PieceAssetLoader.ornament("res://assets/world/ch01_curio_boutique/north_star_splash.svg")
+	world_art.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+	world_art.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_COVERED
+	world_art.modulate = Color(0.90, 0.82, 0.90, 0.72)
+	add_child(world_art)
+	move_child(world_art, 1)
 	var eyebrow := Label.new()
 	eyebrow.text = "THE HOUSE AND ITS CHAPTERS"
 	eyebrow.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
@@ -50,11 +62,11 @@ func _ready() -> void:
 	for data in chapters:
 		var button := Button.new()
 		button.name = "CurioBoutiqueButton" if String(data["id"]) == "curio_boutique" else "Chapter_" + String(data["id"])
-		button.custom_minimum_size = Vector2(0, 132)
+		button.custom_minimum_size = Vector2(0, 168)
 		button.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 		button.disabled = not bool(data["open"])
 		button.text = "%s\n%s\n%s%s" % [String(data["glyph"]), String(data["name"]), String(data["detail"]), "" if bool(data["open"]) else "\nSEALED WING"]
-		button.add_theme_font_size_override("font_size", 15)
+		button.add_theme_font_size_override("font_size", 18)
 		button.add_theme_color_override("font_color", Color("#F4E5D3") if bool(data["open"]) else Color("#B6A6B9"))
 		var box := StyleBoxFlat.new()
 		box.bg_color = Color("#251529") if bool(data["open"]) else Color("#1B1724")
