@@ -6,7 +6,7 @@ extends RefCounted
 const PATHS := {
 	"moon": "res://assets/pieces/moon_sigil.svg",
 	"rose": "res://assets/pieces/thorn_rose.svg",
-	"moth": "res://assets/pieces/black_cat.svg",
+	"moth": "res://assets/pieces/crow.svg",
 	"key": "res://assets/pieces/potion.svg",
 	"leaf": "res://assets/pieces/pentagram.svg",
 }
@@ -44,7 +44,7 @@ static func contract() -> Dictionary:
 		loaded[family] = texture(String(family)) != null
 	return {
 		"source": "AKILTA first-party original SVG",
-		"status": "north_star_transitional_skin_v1",
+		"status": "north_star_symbol_set_v2",
 		"paid_dependency": false,
 		"fallback": "owned_procedural_renderer",
 		"families": loaded,
