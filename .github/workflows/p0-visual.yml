@@ -55,6 +55,20 @@ jobs:
           fi
           test -s artifacts/level1-gameplay.png
 
+      - name: Render Level 1 trace motion
+        shell: bash
+        run: |
+          set -uo pipefail
+          set +e
+          output=$(LIBGL_ALWAYS_SOFTWARE=1 xvfb-run -a ./godot --audio-driver Dummy --path . -s res://tests/visual/capture_level1_motion.gd 2>&1)
+          status=$?
+          set -e
+          printf '%s\n' "$output"
+          if [ "$status" -ne 0 ]; then exit "$status"; fi
+          if grep -Eq "SCRIPT ERROR:|(^| )ERROR:|CAPTURE_FAIL:" <<<"$output"; then exit 1; fi
+          grep -Fq "CAPTURE_PASS:" <<<"$output"
+          test -s artifacts/level1-motion.png
+
       - name: Render core asset language specimen
         shell: bash
         run: |
@@ -123,6 +137,7 @@ jobs:
           name: level1-founder-gate-evidence
           path: |
             artifacts/level1-gameplay.png
+            artifacts/level1-motion.png
             artifacts/house-stage1.png
             artifacts/core-asset-language.png
           if-no-files-found: error

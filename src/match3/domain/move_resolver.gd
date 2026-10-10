@@ -13,15 +13,21 @@ const MAX_CASCADES := 64
 
 static func try_swap(board, from: Vector2i, to: Vector2i):
 	var trace = ResolutionTrace.new()
-	if not board.is_adjacent(from, to):
-		trace.add_event("swap_rejected", {"reason": "not_adjacent"})
-		return trace
-
-	var before: String = String(board.signature())
 	var from_kind: String = String(board.get_special(from))
 	var to_kind: String = String(board.get_special(to))
 	var from_family: String = String(board.get_cell(from))
 	var to_family: String = String(board.get_cell(to))
+	if not board.is_adjacent(from, to):
+		trace.add_event("swap_rejected", {
+			"reason": "not_adjacent",
+			"from": _pos_key(from),
+			"to": _pos_key(to),
+			"from_family": from_family,
+			"to_family": to_family
+		})
+		return trace
+
+	var before: String = String(board.signature())
 	var combo_id: String = ComboRules.combo_id(from_kind, to_kind)
 	var is_combo: bool = combo_id != ""
 
@@ -29,12 +35,25 @@ static func try_swap(board, from: Vector2i, to: Vector2i):
 	var matches: Array[Vector2i] = MatchDetector.find_match_cells(board)
 	if not is_combo and matches.is_empty():
 		board.swap_cells(from, to)
-		trace.add_event("swap_rejected", {"reason": "no_match"})
+		trace.add_event("swap_rejected", {
+			"reason": "no_match",
+			"from": _pos_key(from),
+			"to": _pos_key(to),
+			"from_family": from_family,
+			"to_family": to_family
+		})
 		assert(board.signature() == before)
 		return trace
 
 	trace.accepted = true
-	trace.add_event("swap_accepted", {"from": _pos_key(from), "to": _pos_key(to)})
+	trace.add_event("swap_accepted", {
+		"from": _pos_key(from),
+		"to": _pos_key(to),
+		"from_family": from_family,
+		"to_family": to_family,
+		"from_special": from_kind,
+		"to_special": to_kind
+	})
 	if board.moves_remaining > 0:
 		board.moves_remaining -= 1
 
@@ -110,9 +129,16 @@ static func try_swap(board, from: Vector2i, to: Vector2i):
 static func _clear_cells(board, clear_cells: Array[Vector2i], trace, cascade: int, event_type: String) -> void:
 	var objective_before: int = int(board.objective_progress)
 	var cleared: Array[String] = []
+	var cleared_pieces: Array[Dictionary] = []
 	for pos in clear_cells:
 		cleared.append(_pos_key(pos))
 		var cleared_family: String = String(board.get_cell(pos))
+		var cleared_special: String = String(board.get_special(pos))
+		cleared_pieces.append({
+			"at": _pos_key(pos),
+			"family": cleared_family,
+			"special": cleared_special
+		})
 		if cleared_family != "":
 			board.record_collected(cleared_family, 1)
 		board.set_cell(pos, "")
@@ -121,6 +147,7 @@ static func _clear_cells(board, clear_cells: Array[Vector2i], trace, cascade: in
 	trace.add_event(event_type, {
 		"cascade": cascade,
 		"cells": cleared,
+		"pieces": cleared_pieces,
 		"objective_progress": int(board.objective_progress),
 		"objective_remaining": int(board.objective_remaining())
 	})
@@ -197,7 +224,9 @@ static func _apply_gravity(board, trace, cascade: int) -> void:
 					trace.add_event("gravity", {
 						"cascade": cascade,
 						"from": _pos_key(read_pos),
-						"to": _pos_key(write_pos)
+						"to": _pos_key(write_pos),
+						"family": value,
+						"special": special
 					})
 				write_y -= 1
 

@@ -10,7 +10,7 @@ const CONTRACT := {
 		"display_name": "Moon Sigil",
 		"material": "smoked_moonstone",
 		"world_role": "base_family",
-		"status": "founder_gate_candidate"
+		"status": "art_direction_wip"
 	},
 	"rose": {
 		"color": Color("#C7728F"),
@@ -20,7 +20,7 @@ const CONTRACT := {
 		"display_name": "Thorn Rose",
 		"material": "carved_wine_enamel",
 		"world_role": "base_family",
-		"status": "founder_gate_candidate"
+		"status": "art_direction_wip"
 	},
 	"moth": {
 		"color": Color("#A9C6C8"),
@@ -30,7 +30,7 @@ const CONTRACT := {
 		"display_name": "Luna Moth",
 		"material": "spectral_glass",
 		"world_role": "base_family",
-		"status": "founder_gate_candidate"
+		"status": "art_direction_wip"
 	},
 	"key": {
 		"color": Color("#D8B56A"),
@@ -40,7 +40,7 @@ const CONTRACT := {
 		"display_name": "Curio Key",
 		"material": "antique_metal",
 		"world_role": "base_family",
-		"status": "founder_gate_candidate"
+		"status": "art_direction_wip"
 	},
 	"leaf": {
 		"color": Color("#8BAF7C"),
@@ -50,7 +50,7 @@ const CONTRACT := {
 		"display_name": "Night Ivy",
 		"material": "lacquered_leaf",
 		"world_role": "base_family",
-		"status": "founder_gate_candidate"
+		"status": "art_direction_wip"
 	}
 }
 

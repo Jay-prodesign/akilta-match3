@@ -19,6 +19,7 @@ var current_house_stage_reward: int = 0
 var current_win_title: String = "THE CABINET STIRS"
 var current_win_detail: String = "Something in the Curio Boutique has awakened."
 var _pending_win: bool = false
+var _pending_terminal_result: String = ""
 
 @onready var eyebrow_label: Label = $Layout/Eyebrow
 @onready var title_label: Label = $Layout/Title
@@ -34,6 +35,8 @@ var _pending_win: bool = false
 func _ready() -> void:
 	if board_view.has_signal("swap_requested"):
 		board_view.swap_requested.connect(_on_swap_requested)
+	if board_view.has_signal("trace_motion_finished"):
+		board_view.trace_motion_finished.connect(_on_board_trace_motion_finished)
 	result_action.pressed.connect(_on_result_action_pressed)
 	result_overlay.visible = false
 	if FileAccess.file_exists(default_level_path):
@@ -61,6 +64,7 @@ func load_level_path(path: String, seed_value: int = 1001) -> bool:
 	board_state = BoardState.from_level(parsed, seed_value)
 	board_view.set_board(board_state)
 	_pending_win = false
+	_pending_terminal_result = ""
 	result_overlay.visible = false
 	_refresh_hud()
 	return true
@@ -70,12 +74,18 @@ func attempt_swap(from: Vector2i, to: Vector2i):
 		return null
 	last_trace = MoveResolver.try_swap(board_state, from, to)
 	board_view.set_board(board_state)
+	var motion_started := false
 	if board_view.has_method("play_trace"):
-		board_view.play_trace(last_trace)
+		motion_started = bool(board_view.play_trace(last_trace))
 	_refresh_hud()
 	_refresh_move_feedback(last_trace)
 	if last_trace.accepted:
-		_show_result_if_terminal(String(last_trace.result))
+		var terminal_result := String(last_trace.result)
+		if terminal_result == "won" or terminal_result == "failed":
+			if motion_started:
+				_pending_terminal_result = terminal_result
+			else:
+				_show_result_if_terminal(terminal_result)
 	return last_trace
 
 func continue_after_win() -> bool:
@@ -145,3 +155,11 @@ func _on_result_action_pressed() -> void:
 		continue_after_win()
 	else:
 		retry_current_level()
+
+
+func _on_board_trace_motion_finished() -> void:
+	if _pending_terminal_result == "":
+		return
+	var result := _pending_terminal_result
+	_pending_terminal_result = ""
+	_show_result_if_terminal(result)

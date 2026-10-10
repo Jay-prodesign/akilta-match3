@@ -47,6 +47,12 @@ func _run() -> void:
 	_expect(board_view != null, "GameplayScreen must contain BoardView")
 	if board_view != null:
 		_expect(board_view.has_method("visual_contract"), "BoardView must expose visual_contract")
+		_expect(board_view.has_method("motion_contract"), "BoardView must expose trace-driven motion_contract")
+		if board_view.has_method("motion_contract"):
+			var motion: Dictionary = board_view.motion_contract()
+			_expect(str(motion.get("license", "")) == "MIT", "motion acceleration provenance must record donor license")
+			_expect(str(motion.get("adaptation", "")) == "trace_driven_owned_renderer", "motion must remain AKILTA-owned presentation adaptation")
+			_expect(float(motion.get("total_duration", 0.0)) > 0.0, "motion profile must define a non-zero move-resolution duration")
 		if board_view.has_method("visual_contract"):
 			var contract: Dictionary = board_view.visual_contract()
 			_expect(contract.size() == 5, "BoardView must expose five visual families")
@@ -57,7 +63,7 @@ func _run() -> void:
 				silhouettes[str(descriptor.get("silhouette", ""))] = true
 				motifs[str(descriptor.get("motif", ""))] = true
 				_expect(str(descriptor.get("world_role", "")) == "base_family", "each Level 1 piece must declare its world/gameplay role")
-				_expect(str(descriptor.get("status", "")) == "founder_gate_candidate", "Level 1 piece visuals must remain explicitly candidate before Founder approval")
+				_expect(str(descriptor.get("status", "")) == "art_direction_wip", "Level 1 piece visuals must remain explicitly art-direction WIP before completed Level 1 Founder approval")
 				_expect(str(descriptor.get("material", "")) != "", "each Level 1 piece must declare a candidate material language")
 			_expect(silhouettes.size() == 5, "piece silhouettes must be unique; hue-only differentiation is forbidden")
 			_expect(motifs.size() == 5, "piece motifs must be unique; hue-only differentiation is forbidden")
