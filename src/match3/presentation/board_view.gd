@@ -42,6 +42,7 @@ var board_state
 var _press_position := Vector2.ZERO
 var _pressed_cell := Vector2i(-1, -1)
 var _tracking := false
+var _tap_selected := Vector2i(-1, -1)
 var _feedback_strength: float = 0.0
 var _feedback_mode: String = ""
 var _feedback_tween: Tween
@@ -75,6 +76,7 @@ func _load_candidate_frame() -> void:
 
 func set_board(board) -> void:
 	board_state = board
+	_tap_selected = Vector2i(-1, -1)
 	queue_redraw()
 
 func visual_contract() -> Dictionary:
@@ -346,7 +348,20 @@ func _finish_pointer(position: Vector2) -> void:
 	_tracking = false
 	var delta := position - _press_position
 	if delta.length() < swipe_threshold:
+		var tapped := cell_at_local(position)
+		if tapped.x < 0:
+			_tap_selected = Vector2i(-1, -1)
+			queue_redraw()
+			return
+		if _tap_selected.x >= 0 and board_state.is_adjacent(_tap_selected, tapped):
+			var source := _tap_selected
+			_tap_selected = Vector2i(-1, -1)
+			swap_requested.emit(source, tapped)
+		else:
+			_tap_selected = tapped
+		queue_redraw()
 		return
+	_tap_selected = Vector2i(-1, -1)
 	var step := Vector2i.ZERO
 	if abs(delta.x) > abs(delta.y):
 		step = Vector2i(1 if delta.x > 0.0 else -1, 0)
@@ -397,8 +412,18 @@ func _draw() -> void:
 			_draw_cell(rect, pos)
 
 	_draw_teaching_cue()
+	_draw_tap_selection()
 	_draw_feedback()
 	_draw_motion()
+
+func _draw_tap_selection() -> void:
+	if board_state == null or _tap_selected.x < 0 or _motion_active:
+		return
+	if not board_state.in_bounds(_tap_selected):
+		return
+	var center := _cell_center(_tap_selected)
+	var radius := float(_board_geometry()["cell_size"]) * 0.48
+	draw_arc(center, radius, 0.0, TAU, 40, GOLD, 3.0)
 
 func _draw_teaching_cue() -> void:
 	if not _teaching_active or _motion_active or board_state == null:
