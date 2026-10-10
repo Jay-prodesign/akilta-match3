@@ -11,8 +11,9 @@ signal back_requested
 @onready var moon_origin: Label = $Layout/Cards/MoonCard/Content/Origin
 @onready var back_button: Button = $Layout/Back
 
-const MOON_SEALED = preload("res://assets/curios/ch01_curio_moon_cameo_sealed_v01.svg")
-const MOON_AWAKENED = preload("res://assets/curios/ch01_curio_moon_cameo_awakened_v01.svg")
+const MOON_SEALED_PATH := "res://assets/curios/ch01_curio_moon_cameo_sealed_v01.svg"
+const MOON_AWAKENED_PATH := "res://assets/curios/ch01_curio_moon_cameo_awakened_v01.svg"
+var _moon_textures: Dictionary = {}
 
 var progress
 var _moon_art: TextureRect
@@ -37,7 +38,7 @@ func _refresh() -> void:
 	moon_origin.text = "RECOVERED FROM · MOONLIT CABINET" if has_moon else "SEALED BEHIND · MOONLIT CABINET"
 	moon_card.modulate = Color.WHITE if has_moon else Color(0.58, 0.54, 0.62, 0.72)
 	if _moon_art != null:
-		_moon_art.texture = MOON_AWAKENED if has_moon else MOON_SEALED
+		_moon_art.texture = _load_moon_texture(MOON_AWAKENED_PATH if has_moon else MOON_SEALED_PATH)
 		_moon_art.modulate = Color.WHITE if has_moon else Color(0.75, 0.70, 0.81, 0.78)
 	if moon_ritual != null:
 		moon_ritual.set("glow_strength", 0.82 if has_moon else 0.18)
@@ -53,3 +54,18 @@ func _install_moon_art() -> void:
 	_moon_art.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
 	_moon_art.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	moon_ritual.add_child(_moon_art)
+
+func _load_moon_texture(path: String) -> Texture2D:
+	if _moon_textures.has(path):
+		return _moon_textures[path]
+	var file := FileAccess.open(path, FileAccess.READ)
+	if file == null:
+		return null
+	var svg := file.get_as_text()
+	file.close()
+	var image := Image.new()
+	if image.load_svg_from_string(svg, 1.0) != OK or image.is_empty():
+		return null
+	var texture := ImageTexture.create_from_image(image)
+	_moon_textures[path] = texture
+	return texture
