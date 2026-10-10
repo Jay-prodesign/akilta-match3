@@ -95,7 +95,7 @@ func request_feedback(kind: String) -> bool:
 		if _soft_match_stream == null:
 			_soft_match_stream = _make_soft_match_stream()
 		match_player.stream = _soft_match_stream
-		var variation := [0.94, 1.0, 1.035][int(_feedback_counts[kind]) % 3]
+		var variation: float = float([0.94, 1.0, 1.035][int(_feedback_counts[kind]) % 3])
 		match_player.pitch_scale = variation
 		match_player.volume_db = -13.0
 		match_player.play()
