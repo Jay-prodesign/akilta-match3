@@ -115,9 +115,11 @@ func _refresh() -> void:
 	queue_redraw()
 
 func _tooltip_for(level_number: int) -> String:
-	if level_number == 1:
-		return "Moonlit Cabinet · Moon Cameo"
-	return "Sealed display · Level %d" % level_number
+	match level_number:
+		1: return "Moonlit Cabinet · Moon Cameo"
+		2: return "Sealed Display · Wax Seals"
+		3: return "Thornlight Arrangement · Line Sigil"
+		_: return "Sealed display · Level %d" % level_number
 
 func _caption(level_number: int, completed: bool, open: bool) -> String:
 	if level_number == 1:
