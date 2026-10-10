@@ -5,10 +5,14 @@ const INK := Color("#100D12")
 const VELVET := Color("#17131B")
 const PLUM := Color("#241A27")
 const GLASS := Color("#2E2432")
+const RAISED := Color("#382C3D")
 const BONE := Color("#F1E8DD")
+const MIST := Color("#D9CDD5")
 const LILAC := Color("#BFA5D8")
+const CYAN := Color("#A9C6C8")
 const GOLD := Color("#D8B56A")
 const ROSE := Color("#C7728F")
+const LEAF := Color("#8BAF7C")
 
 var house_stage: int = 0
 var curios: Array[String] = []
@@ -20,50 +24,206 @@ func set_house_state(stage: int, owned_curios: Array[String]) -> void:
 
 func _draw() -> void:
 	draw_rect(Rect2(Vector2.ZERO, size), INK, true)
-	var margin: float = size.x * 0.07
-	var room := Rect2(Vector2(margin, size.y * 0.08), Vector2(size.x - margin * 2.0, size.y * 0.78))
+	if size.x <= 1.0 or size.y <= 1.0:
+		return
+
+	var margin: float = size.x * 0.035
+	var room := Rect2(
+		Vector2(margin, size.y * 0.025),
+		Vector2(size.x - margin * 2.0, size.y * 0.93)
+	)
 	draw_rect(room, VELVET, true)
+	_draw_wall_panels(room)
 	_draw_arch(room)
-	_draw_cabinet(room)
+	_draw_moon_window(room)
+	_draw_side_shelves(room)
+	_draw_central_cabinet(room)
 	_draw_floor(room)
+	if house_stage >= 1:
+		_draw_awakened_sparkles(room)
+
+func _draw_wall_panels(room: Rect2) -> void:
+	var inset: float = room.size.x * 0.045
+	var wall := room.grow(-inset)
+	draw_rect(wall, Color("#1D1721"), true)
+	draw_rect(wall, Color(0.749, 0.647, 0.847, 0.10), false, 2.0)
+
+	var panel_top: float = wall.position.y + wall.size.y * 0.18
+	var panel_bottom: float = wall.position.y + wall.size.y * 0.70
+	for x_ratio in [0.11, 0.34, 0.66, 0.89]:
+		var x: float = lerpf(wall.position.x, wall.end.x, float(x_ratio))
+		draw_line(Vector2(x, panel_top), Vector2(x, panel_bottom), Color(0.663, 0.6, 0.659, 0.10), 1.0)
+	draw_line(
+		Vector2(wall.position.x, panel_bottom),
+		Vector2(wall.end.x, panel_bottom),
+		Color(0.663, 0.6, 0.659, 0.12),
+		2.0
+	)
 
 func _draw_arch(room: Rect2) -> void:
-	var center := Vector2(room.get_center().x, room.position.y + room.size.y * 0.27)
-	var radius: float = room.size.x * 0.42
-	draw_arc(center, radius, PI, TAU, 72, Color("#382C3D"), 10.0)
-	draw_line(Vector2(center.x - radius, center.y), Vector2(center.x - radius, room.end.y), Color("#382C3D"), 10.0)
-	draw_line(Vector2(center.x + radius, center.y), Vector2(center.x + radius, room.end.y), Color("#382C3D"), 10.0)
+	var center := Vector2(room.get_center().x, room.position.y + room.size.y * 0.235)
+	var radius: float = room.size.x * 0.445
+	draw_arc(center, radius, PI, TAU, 72, RAISED, 13.0)
+	draw_arc(center, radius - 8.0, PI, TAU, 72, Color(0.851, 0.71, 0.416, 0.24), 2.0)
+	draw_line(Vector2(center.x - radius, center.y), Vector2(center.x - radius, room.end.y), RAISED, 13.0)
+	draw_line(Vector2(center.x + radius, center.y), Vector2(center.x + radius, room.end.y), RAISED, 13.0)
 
-func _draw_cabinet(room: Rect2) -> void:
+	# Velvet curtain suggestions keep the room intimate without hiding the cabinet.
+	var curtain_left := PackedVector2Array([
+		Vector2(room.position.x + room.size.x * 0.06, room.position.y + room.size.y * 0.13),
+		Vector2(room.position.x + room.size.x * 0.18, room.position.y + room.size.y * 0.20),
+		Vector2(room.position.x + room.size.x * 0.13, room.position.y + room.size.y * 0.67),
+		Vector2(room.position.x + room.size.x * 0.04, room.position.y + room.size.y * 0.73)
+	])
+	var curtain_right := PackedVector2Array([
+		Vector2(room.end.x - room.size.x * 0.06, room.position.y + room.size.y * 0.13),
+		Vector2(room.end.x - room.size.x * 0.18, room.position.y + room.size.y * 0.20),
+		Vector2(room.end.x - room.size.x * 0.13, room.position.y + room.size.y * 0.67),
+		Vector2(room.end.x - room.size.x * 0.04, room.position.y + room.size.y * 0.73)
+	])
+	draw_colored_polygon(curtain_left, Color("#2A1828"))
+	draw_colored_polygon(curtain_right, Color("#2A1828"))
+	draw_line(curtain_left[1], curtain_left[2], Color(0.78, 0.45, 0.56, 0.22), 3.0)
+	draw_line(curtain_right[1], curtain_right[2], Color(0.78, 0.45, 0.56, 0.22), 3.0)
+
+func _draw_moon_window(room: Rect2) -> void:
+	var c := Vector2(room.get_center().x, room.position.y + room.size.y * 0.17)
+	var r: float = room.size.x * 0.105
+	draw_circle(c, r * 1.24, RAISED)
+	draw_circle(c, r, Color("#1A2028"))
+	draw_circle(c, r * 0.70, Color(0.663, 0.776, 0.784, 0.24))
+	draw_circle(c - Vector2(r * 0.10, r * 0.04), r * 0.54, LILAC)
+	draw_circle(c + Vector2(r * 0.24, -r * 0.10), r * 0.53, Color("#1A2028"))
+	draw_arc(c, r * 1.02, 0.0, TAU, 48, GOLD, 2.0)
+
+func _draw_side_shelves(room: Rect2) -> void:
+	var shelf_y0: float = room.position.y + room.size.y * 0.42
+	var shelf_gap: float = room.size.y * 0.115
+	var left_x0: float = room.position.x + room.size.x * 0.075
+	var left_x1: float = room.position.x + room.size.x * 0.255
+	var right_x0: float = room.end.x - room.size.x * 0.255
+	var right_x1: float = room.end.x - room.size.x * 0.075
+
+	for i in range(3):
+		var y: float = shelf_y0 + shelf_gap * float(i)
+		draw_line(Vector2(left_x0, y), Vector2(left_x1, y), GOLD.darkened(0.45), 3.0)
+		draw_line(Vector2(right_x0, y), Vector2(right_x1, y), GOLD.darkened(0.45), 3.0)
+
+	_draw_bottle(Vector2((left_x0 + left_x1) * 0.5, shelf_y0 - 14.0), CYAN, 0.85)
+	_draw_candle(Vector2(left_x0 + 22.0, shelf_y0 + shelf_gap - 4.0), 0.78)
+	_draw_bottle(Vector2(left_x1 - 20.0, shelf_y0 + shelf_gap * 2.0 - 13.0), ROSE, 0.68)
+
+	_draw_bottle(Vector2((right_x0 + right_x1) * 0.5, shelf_y0 - 14.0), LEAF, 0.75)
+	_draw_candle(Vector2(right_x1 - 22.0, shelf_y0 + shelf_gap - 4.0), 0.88)
+	_draw_moth_frame(Vector2(right_x0 + 28.0, shelf_y0 + shelf_gap * 2.0 - 18.0), 17.0)
+
+func _draw_central_cabinet(room: Rect2) -> void:
 	var cabinet := Rect2(
-		Vector2(room.position.x + room.size.x * 0.18, room.position.y + room.size.y * 0.34),
-		Vector2(room.size.x * 0.64, room.size.y * 0.46)
+		Vector2(room.position.x + room.size.x * 0.285, room.position.y + room.size.y * 0.34),
+		Vector2(room.size.x * 0.43, room.size.y * 0.43)
 	)
+	draw_rect(cabinet.grow(8.0), Color("#120F15"), true)
+	draw_rect(cabinet.grow(6.0), GOLD.darkened(0.58), false, 5.0)
 	draw_rect(cabinet, PLUM, true)
-	draw_rect(cabinet, Color("#6E626F"), false, 4.0)
-	var shelf_y: float = cabinet.position.y + cabinet.size.y * 0.58
-	draw_line(Vector2(cabinet.position.x, shelf_y), Vector2(cabinet.end.x, shelf_y), Color("#6E626F"), 4.0)
-	var glow_center := cabinet.get_center() - Vector2(0, cabinet.size.y * 0.08)
-	if house_stage >= 1:
-		draw_circle(glow_center, cabinet.size.x * 0.29, Color(0.749, 0.647, 0.847, 0.08))
-		draw_circle(glow_center, cabinet.size.x * 0.18, Color(0.749, 0.647, 0.847, 0.10))
-		_draw_moon_cameo(glow_center)
-	else:
-		draw_circle(glow_center, cabinet.size.x * 0.08, GLASS)
-		draw_arc(glow_center, cabinet.size.x * 0.07, 0.0, TAU, 32, Color("#6E626F"), 3.0)
+	draw_rect(cabinet, Color(0.851, 0.71, 0.416, 0.34), false, 2.0)
 
-func _draw_moon_cameo(center: Vector2) -> void:
-	var radius: float = size.x * 0.075
-	draw_circle(center, radius * 1.32, Color("#382C3D"))
-	draw_arc(center, radius * 1.18, 0.0, TAU, 48, GOLD, 4.0)
-	draw_circle(center, radius * 0.74, LILAC)
-	draw_circle(center + Vector2(radius * 0.28, -radius * 0.12), radius * 0.63, PLUM)
-	draw_circle(center + Vector2(-radius * 0.18, radius * 0.02), radius * 0.08, BONE)
-	draw_circle(center + Vector2(0, radius * 1.62), radius * 0.12, ROSE)
+	var shelf_y: float = cabinet.position.y + cabinet.size.y * 0.68
+	draw_line(Vector2(cabinet.position.x, shelf_y), Vector2(cabinet.end.x, shelf_y), GOLD.darkened(0.5), 3.0)
+
+	var glow_center := cabinet.get_center() - Vector2(0, cabinet.size.y * 0.10)
+	if house_stage >= 1:
+		draw_circle(glow_center, cabinet.size.x * 0.39, Color(0.749, 0.647, 0.847, 0.055))
+		draw_circle(glow_center, cabinet.size.x * 0.29, Color(0.749, 0.647, 0.847, 0.085))
+		draw_circle(glow_center, cabinet.size.x * 0.20, Color(0.851, 0.71, 0.416, 0.05))
+		_draw_moon_cameo(glow_center, cabinet.size.x * 0.18)
+		_draw_candle(Vector2(cabinet.position.x + cabinet.size.x * 0.18, shelf_y - 5.0), 0.66)
+		_draw_candle(Vector2(cabinet.end.x - cabinet.size.x * 0.18, shelf_y - 5.0), 0.66)
+	else:
+		draw_circle(glow_center, cabinet.size.x * 0.10, GLASS)
+		draw_arc(glow_center, cabinet.size.x * 0.09, 0.0, TAU, 32, Color("#6E626F"), 3.0)
+
+	# Drawer / hardware gives the display physical permanence.
+	var drawer := Rect2(
+		Vector2(cabinet.position.x + cabinet.size.x * 0.16, cabinet.end.y - cabinet.size.y * 0.19),
+		Vector2(cabinet.size.x * 0.68, cabinet.size.y * 0.11)
+	)
+	draw_rect(drawer, Color("#1C151F"), true)
+	draw_rect(drawer, Color(0.851, 0.71, 0.416, 0.22), false, 1.0)
+	draw_circle(drawer.get_center(), 3.5, GOLD)
+
+func _draw_moon_cameo(center: Vector2, radius: float) -> void:
+	draw_circle(center, radius * 1.42, Color("#161119"))
+	draw_circle(center, radius * 1.30, RAISED)
+	draw_arc(center, radius * 1.22, 0.0, TAU, 48, GOLD, 4.0)
+	draw_circle(center, radius * 0.78, LILAC)
+	draw_circle(center + Vector2(radius * 0.29, -radius * 0.12), radius * 0.66, PLUM)
+	draw_circle(center + Vector2(-radius * 0.20, radius * 0.02), radius * 0.08, BONE)
+	draw_circle(center + Vector2(0, radius * 1.58), radius * 0.12, ROSE)
+	draw_arc(center, radius * 1.48, -PI * 0.25, PI * 0.25, 24, Color(0.851, 0.71, 0.416, 0.32), 2.0)
+
+func _draw_bottle(base: Vector2, color: Color, scale: float) -> void:
+	var w: float = 14.0 * scale
+	var h: float = 30.0 * scale
+	var body := Rect2(base - Vector2(w * 0.5, h), Vector2(w, h))
+	draw_rect(body, color.darkened(0.24), true)
+	draw_rect(body, color.lightened(0.18), false, 1.5)
+	var neck := Rect2(Vector2(base.x - w * 0.22, base.y - h - 8.0 * scale), Vector2(w * 0.44, 9.0 * scale))
+	draw_rect(neck, color, true)
+	draw_circle(Vector2(base.x, base.y - h * 0.48), 2.4 * scale, BONE)
+
+func _draw_candle(base: Vector2, scale: float) -> void:
+	var w: float = 9.0 * scale
+	var h: float = 27.0 * scale
+	draw_rect(Rect2(base - Vector2(w * 0.5, h), Vector2(w, h)), BONE.darkened(0.15), true)
+	var flame := PackedVector2Array([
+		base - Vector2(0, h + 12.0 * scale),
+		base + Vector2(5.0 * scale, -h - 3.0 * scale),
+		base + Vector2(0, -h + 1.0 * scale),
+		base + Vector2(-5.0 * scale, -h - 3.0 * scale)
+	])
+	draw_colored_polygon(flame, GOLD)
+	draw_circle(base - Vector2(0, h + 4.0 * scale), 13.0 * scale, Color(0.851, 0.71, 0.416, 0.035))
+
+func _draw_moth_frame(center: Vector2, radius: float) -> void:
+	draw_circle(center, radius * 1.15, Color("#151219"))
+	draw_arc(center, radius, 0.0, TAU, 36, GOLD.darkened(0.25), 2.0)
+	var left := PackedVector2Array([
+		center + Vector2(-2, -1),
+		center + Vector2(-radius * 0.65, -radius * 0.35),
+		center + Vector2(-radius * 0.50, radius * 0.48)
+	])
+	var right := PackedVector2Array([
+		center + Vector2(2, -1),
+		center + Vector2(radius * 0.65, -radius * 0.35),
+		center + Vector2(radius * 0.50, radius * 0.48)
+	])
+	draw_colored_polygon(left, CYAN)
+	draw_colored_polygon(right, CYAN)
 
 func _draw_floor(room: Rect2) -> void:
-	var y: float = room.end.y
-	draw_line(Vector2(room.position.x, y), Vector2(room.end.x, y), GOLD, 2.0)
+	var horizon_y: float = room.position.y + room.size.y * 0.79
+	draw_rect(
+		Rect2(Vector2(room.position.x, horizon_y), Vector2(room.size.x, room.end.y - horizon_y)),
+		Color("#120F15"),
+		true
+	)
+	draw_line(Vector2(room.position.x, horizon_y), Vector2(room.end.x, horizon_y), GOLD.darkened(0.45), 2.0)
 	for i in range(1, 5):
 		var t: float = float(i) / 5.0
-		draw_line(Vector2(room.position.x, lerpf(y, size.y, t)), Vector2(room.end.x, lerpf(y, size.y, t)), Color(0.851, 0.71, 0.416, 0.09), 1.0)
+		var y: float = lerpf(horizon_y, room.end.y, t)
+		draw_line(Vector2(room.position.x, y), Vector2(room.end.x, y), Color(0.851, 0.71, 0.416, 0.07), 1.0)
+	var center_x: float = room.get_center().x
+	for x_ratio in [0.18, 0.34, 0.66, 0.82]:
+		var x: float = lerpf(room.position.x, room.end.x, float(x_ratio))
+		draw_line(Vector2(center_x, horizon_y), Vector2(x, room.end.y), Color(0.851, 0.71, 0.416, 0.05), 1.0)
+
+func _draw_awakened_sparkles(room: Rect2) -> void:
+	var points: Array[Vector2] = [
+		Vector2(room.position.x + room.size.x * 0.24, room.position.y + room.size.y * 0.29),
+		Vector2(room.end.x - room.size.x * 0.22, room.position.y + room.size.y * 0.32),
+		Vector2(room.position.x + room.size.x * 0.19, room.position.y + room.size.y * 0.58),
+		Vector2(room.end.x - room.size.x * 0.18, room.position.y + room.size.y * 0.54)
+	]
+	for p in points:
+		draw_line(p - Vector2(5, 0), p + Vector2(5, 0), Color(0.945, 0.91, 0.866, 0.45), 1.0)
+		draw_line(p - Vector2(0, 5), p + Vector2(0, 5), Color(0.945, 0.91, 0.866, 0.45), 1.0)

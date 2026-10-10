@@ -1,7 +1,50 @@
-[gd_scene load_steps=3 format=3]
+[gd_scene load_steps=7 format=3]
 
 [ext_resource type="Script" path="res://src/ui/home/house_home.gd" id="1_home"]
 [ext_resource type="Script" path="res://src/world/curio_boutique.gd" id="2_room"]
+
+[sub_resource type="StyleBoxFlat" id="ButtonNormal"]
+bg_color = Color(0.749, 0.647, 0.847, 1)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.945, 0.91, 0.866, 0.32)
+corner_radius_top_left = 18
+corner_radius_top_right = 18
+corner_radius_bottom_right = 18
+corner_radius_bottom_left = 18
+
+[sub_resource type="StyleBoxFlat" id="ButtonHover"]
+bg_color = Color(0.82, 0.73, 0.9, 1)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.945, 0.91, 0.866, 0.5)
+corner_radius_top_left = 18
+corner_radius_top_right = 18
+corner_radius_bottom_right = 18
+corner_radius_bottom_left = 18
+
+[sub_resource type="StyleBoxFlat" id="ButtonPressed"]
+bg_color = Color(0.65, 0.55, 0.75, 1)
+corner_radius_top_left = 18
+corner_radius_top_right = 18
+corner_radius_bottom_right = 18
+corner_radius_bottom_left = 18
+
+[sub_resource type="StyleBoxFlat" id="CurioChip"]
+bg_color = Color(0.141, 0.102, 0.153, 0.94)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.851, 0.71, 0.416, 0.26)
+corner_radius_top_left = 14
+corner_radius_top_right = 14
+corner_radius_bottom_right = 14
+corner_radius_bottom_left = 14
 
 [node name="HouseHome" type="Control"]
 layout_mode = 3
@@ -26,31 +69,44 @@ layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
-offset_left = 42.0
-offset_top = 56.0
-offset_right = -42.0
-offset_bottom = -58.0
+offset_left = 28.0
+offset_top = 34.0
+offset_right = -28.0
+offset_bottom = -34.0
 grow_horizontal = 2
 grow_vertical = 2
-theme_override_constants/separation = 20
+theme_override_constants/separation = 12
 
 [node name="Eyebrow" type="Label" parent="Layout"]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.663, 0.6, 0.659, 1)
-theme_override_font_sizes/font_size = 23
+theme_override_font_sizes/font_size = 19
 text = "THE HOUSE · CURIO BOUTIQUE"
 horizontal_alignment = 1
 
 [node name="Headline" type="Label" parent="Layout"]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.945, 0.91, 0.866, 1)
-theme_override_font_sizes/font_size = 44
+theme_override_font_sizes/font_size = 34
 text = "The Curio Boutique sleeps."
 horizontal_alignment = 1
 autowrap_mode = 2
 
+[node name="CurioChip" type="PanelContainer" parent="Layout"]
+custom_minimum_size = Vector2(0, 44)
+layout_mode = 2
+theme_override_styles/panel = SubResource("CurioChip")
+
+[node name="Label" type="Label" parent="Layout/CurioChip"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.851, 0.71, 0.416, 1)
+theme_override_font_sizes/font_size = 18
+text = "DORMANT DISPLAY"
+horizontal_alignment = 1
+vertical_alignment = 1
+
 [node name="RoomView" type="Control" parent="Layout"]
-custom_minimum_size = Vector2(0, 1180)
+custom_minimum_size = Vector2(0, 610)
 layout_mode = 2
 size_flags_vertical = 3
 script = ExtResource("2_room")
@@ -58,14 +114,19 @@ script = ExtResource("2_room")
 [node name="Detail" type="Label" parent="Layout"]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.851, 0.804, 0.835, 1)
-theme_override_font_sizes/font_size = 24
+theme_override_font_sizes/font_size = 20
 text = "Win a puzzle to wake the first display."
 horizontal_alignment = 1
 autowrap_mode = 2
 
 [node name="PlayButton" type="Button" parent="Layout"]
-custom_minimum_size = Vector2(0, 82)
+custom_minimum_size = Vector2(0, 68)
 layout_mode = 2
 theme_override_colors/font_color = Color(0.0627, 0.051, 0.0706, 1)
-theme_override_font_sizes/font_size = 27
+theme_override_colors/font_hover_color = Color(0.0627, 0.051, 0.0706, 1)
+theme_override_colors/font_pressed_color = Color(0.0627, 0.051, 0.0706, 1)
+theme_override_font_sizes/font_size = 23
+theme_override_styles/normal = SubResource("ButtonNormal")
+theme_override_styles/hover = SubResource("ButtonHover")
+theme_override_styles/pressed = SubResource("ButtonPressed")
 text = "ENTER LEVEL 1"

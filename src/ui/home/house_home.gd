@@ -8,6 +8,7 @@ const HouseState = preload("res://src/world/house_state.gd")
 @onready var room_view = $Layout/RoomView
 @onready var headline: Label = $Layout/Headline
 @onready var detail: Label = $Layout/Detail
+@onready var curio_label: Label = $Layout/CurioChip/Label
 @onready var play_button: Button = $Layout/PlayButton
 
 var progress
@@ -27,6 +28,7 @@ func set_progress(value) -> void:
 	headline.text = String(state.get("headline", "The Curio Boutique sleeps."))
 	detail.text = String(state.get("detail", ""))
 	room_view.set_house_state(stage, owned_curios)
+	curio_label.text = "CURIO 01 · MOON CAMEO AWAKENED" if stage >= 1 else "DORMANT DISPLAY"
 	var next_level: int = int(progress.highest_level_unlocked) if progress != null else 1
 	play_button.text = "ENTER LEVEL %d" % next_level
 
