@@ -26,7 +26,12 @@ func _draw() -> void:
 	var dormant := mode == "fail"
 	if mode == "house":
 		var house_radius := min_dim * 0.30
-		_draw_cameo_identity(center, house_radius, false, true, true)
+		# The House should feel like a physical relic on display, not a gameplay power-up.
+		# Keep the antique bezel and catalogue drop; suppress orbiting tokens and excess bloom.
+		var saved_glow := glow_strength
+		glow_strength = minf(glow_strength, 0.28)
+		_draw_cameo_identity(center, house_radius, false, false, true)
+		glow_strength = saved_glow
 		return
 
 	var radius := min_dim * (0.24 if mode == "prestart" else 0.28)
