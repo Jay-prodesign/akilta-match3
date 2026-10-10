@@ -97,8 +97,15 @@ func _run() -> void:
 
 	var teaching_trace = screen.attempt_swap(Vector2i(1, 4), Vector2i(2, 4))
 	_expect(teaching_trace != null and bool(teaching_trace.accepted), "authored teaching swipe must be accepted")
+	_expect(int(board.objective_progress) >= 6, "winning teaching move must complete the logical Level 1 objective")
+	# HUD intentionally updates after trace-driven animations finish; it must not jump ahead.
+	if board_view != null and board_view.has_method("is_motion_active"):
+		var frames := 0
+		while bool(board_view.is_motion_active()) and frames < 180:
+			await process_frame
+			frames += 1
 	if awakening != null and awakening.has_method("contract"):
-		_expect(int(awakening.contract().get("progress", 0)) >= 6, "winning teaching move must fully awaken the Level 1 reward meter")
+		_expect(int(awakening.contract().get("progress", 0)) >= 6, "reward meter must fully awaken after the visible move resolves")
 	if board_view != null and board_view.has_method("teaching_contract"):
 		_expect(not bool(board_view.teaching_contract().get("active", true)), "teaching cue must disappear after the first accepted swipe")
 
