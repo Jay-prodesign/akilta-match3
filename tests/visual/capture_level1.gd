@@ -16,8 +16,8 @@ func _capture() -> void:
 	await process_frame
 	await process_frame
 
-	var viewport := screen.get_viewport()
-	var image := viewport.get_texture().get_image()
+	var viewport: Viewport = screen.get_viewport()
+	var image: Image = viewport.get_texture().get_image()
 	if image == null or image.is_empty():
 		printerr("CAPTURE_FAIL: viewport image empty")
 		quit(1)
@@ -26,7 +26,7 @@ func _capture() -> void:
 	var output_dir := ProjectSettings.globalize_path("res://artifacts")
 	DirAccess.make_dir_recursive_absolute(output_dir)
 	var output_path := output_dir.path_join("level1-gameplay.png")
-	var err := image.save_png(output_path)
+	var err: int = int(image.save_png(output_path))
 	if err != OK:
 		printerr("CAPTURE_FAIL: save_png error %d" % err)
 		quit(1)
