@@ -125,9 +125,9 @@ func _caption(level_number: int, completed: bool, open: bool) -> String:
 	if level_number == 1:
 		return "MOONLIT CABINET\n%s" % ("MOON CAMEO AWAKENED" if completed else "MOON CAMEO WAITS")
 	if level_number == 2:
-		return "SEALED DISPLAY\nWAX SEALS"
+		return "SEALED DISPLAY\nWAX SEALS · LOCKED"
 	if level_number == 3:
-		return "THORNLIGHT\nLINE SIGIL"
+		return "THORNLIGHT\nLINE SIGIL · LOCKED"
 	if not open:
 		return "SEALED DISPLAY %02d" % level_number
 	return "DISPLAY %02d · READY" % level_number
