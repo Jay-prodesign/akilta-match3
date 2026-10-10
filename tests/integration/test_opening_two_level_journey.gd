@@ -38,9 +38,14 @@ func _run() -> void:
 	_expect(not button.disabled and button.text == "ENTER LEVEL 2", "House must expose real Level 2 CTA")
 	button.emit_signal("pressed")
 	await process_frame
+	var level2_prestart = app.current_screen()
+	_expect(str(app.current_route_name()) == "prestart", "House continue CTA must open Level 2 prestart")
+	_expect(level2_prestart != null and level2_prestart.get_node("Layout/Card/Content/Title").text == "Sealed Display", "CTA must prepare authored Level 2, not replay Level 1")
+	level2_prestart.get_node("Layout/Card/Content/Start").emit_signal("pressed")
+	await process_frame
 	var level2 = app.current_screen()
-	_expect(str(app.current_route_name()) == "gameplay", "House CTA must route back into gameplay")
-	_expect(level2 != null and str(level2.current_level_id) == "ch01_level_002", "CTA must load authored Level 2, not replay Level 1")
+	_expect(str(app.current_route_name()) == "gameplay", "Level 2 prestart must enter gameplay")
+	_expect(level2 != null and str(level2.current_level_id) == "ch01_level_002", "prestart must load authored Level 2")
 	_expect(str(level2.board_state.objective_type) == "clear_blockers", "Level 2 must teach Wax Seal objective")
 	_expect(int(level2.board_state.remaining_blockers()) == 2, "Level 2 must begin with two Wax Seals")
 	var second_trace = level2.attempt_swap(Vector2i(4, 2), Vector2i(4, 3))
@@ -61,8 +66,12 @@ func _run() -> void:
 	stage2_button.emit_signal("pressed")
 	await process_frame
 
+	var level3_prestart = app.current_screen()
+	_expect(str(app.current_route_name()) == "prestart", "House continue CTA must open Level 3 prestart")
+	level3_prestart.get_node("Layout/Card/Content/Start").emit_signal("pressed")
+	await process_frame
 	var level3 = app.current_screen()
-	_expect(level3 != null and str(level3.current_level_id) == "ch01_level_003", "Level 3 CTA must open the authored line-special lesson")
+	_expect(level3 != null and str(level3.current_level_id) == "ch01_level_003", "Level 3 prestart must open the authored line-special lesson")
 	var create_trace = level3.attempt_swap(Vector2i(2, 3), Vector2i(2, 4))
 	_expect(create_trace != null and create_trace.accepted, "Level 3 special-creation swipe must be accepted")
 	_expect(create_trace != null and create_trace.event_types().has("special_created"), "Level 3 first move must generate a special")
