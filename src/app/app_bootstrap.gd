@@ -30,6 +30,7 @@ var _pending_level_number: int = 0
 @onready var screen_host: Node = $ScreenHost
 
 func _ready() -> void:
+	screen_host.theme = Typography.create_ui_theme()
 	var path: String = save_path_override if save_path_override != "" else SaveStoreScript.DEFAULT_PATH
 	_store = SaveStoreScript.new(path)
 	progress = ProgressScript.from_dict(_store.load_or_default())
