@@ -55,10 +55,10 @@ func _ready() -> void:
 		button.disabled = not bool(data["open"])
 		button.text = "%s\n%s\n%s" % [String(data["glyph"]), String(data["name"]), String(data["detail"])]
 		button.add_theme_font_size_override("font_size", 15)
-		button.add_theme_color_override("font_color", Color("#F4E5D3") if bool(data["open"]) else Color("#8B8290"))
+		button.add_theme_color_override("font_color", Color("#F4E5D3") if bool(data["open"]) else Color("#B6A6B9"))
 		var box := StyleBoxFlat.new()
-		box.bg_color = Color("#251529") if bool(data["open"]) else Color("#101320")
-		box.border_color = Color("#D5AD70", 0.85 if bool(data["open"]) else 0.25)
+		box.bg_color = Color("#251529") if bool(data["open"]) else Color("#1B1724")
+		box.border_color = Color("#D5AD70", 0.85 if bool(data["open"]) else 0.42)
 		box.set_border_width_all(1)
 		box.set_corner_radius_all(8)
 		box.shadow_color = Color(0,0,0,0.4)
