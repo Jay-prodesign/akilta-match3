@@ -55,6 +55,8 @@ jobs:
           test -s artifacts/journey-06-house-awakened.png
           test -s artifacts/journey-07-curio-collection.png
           test -s artifacts/journey-08-settings.png
+          test -s artifacts/journey-09-level2-gameplay.png
+          test -s artifacts/journey-10-level3-gameplay.png
 
       - name: Render Level 1 fail and retry
         shell: bash
