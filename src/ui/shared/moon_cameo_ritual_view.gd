@@ -77,7 +77,8 @@ func _draw_relic_identity(center: Vector2, radius: float, dormant: bool) -> void
 	var path := String(RELIC_PATHS.get(relic_id, ""))
 	var relic_texture := _load_cameo(path) if path != "" else null
 	if relic_texture != null:
-		var relic_rect := Rect2(center - Vector2.ONE * radius * 0.82, Vector2.ONE * radius * 1.64)
+		var relic_scale := 2.05 if mode == "prestart" else 1.80
+	var relic_rect := Rect2(center - Vector2.ONE * radius * relic_scale * 0.5, Vector2.ONE * radius * relic_scale)
 		draw_texture_rect(relic_texture, relic_rect, false)
 	else:
 		_draw_cameo_identity(center, radius, dormant, false, false)
