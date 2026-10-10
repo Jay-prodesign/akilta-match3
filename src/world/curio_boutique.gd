@@ -14,10 +14,18 @@ const GOLD := Color("#D8B56A")
 const ROSE := Color("#C7728F")
 const LEAF := Color("#8BAF7C")
 
+const BACKDROP_PATH := "res://assets/world/ch01_curio_boutique/curio_boutique_moonlit_backdrop.svg"
+var _backdrop: Texture2D
 const CAT_PORTRAIT_PATH := "res://assets/pieces/black_cat.svg"
 var _cat_portrait: Texture2D
 
 func _ready() -> void:
+	var background_file := FileAccess.open(BACKDROP_PATH, FileAccess.READ)
+	if background_file != null:
+		var background_image := Image.new()
+		if background_image.load_svg_from_string(background_file.get_as_text(), 1.0) == OK and not background_image.is_empty():
+			_backdrop = ImageTexture.create_from_image(background_image)
+		background_file.close()
 	var file := FileAccess.open(CAT_PORTRAIT_PATH, FileAccess.READ)
 	if file != null:
 		var image := Image.new()
@@ -49,7 +57,10 @@ func _draw() -> void:
 		Vector2(size.x - margin * 2.0, size.y * 0.93)
 	)
 	draw_rect(room, VELVET, true)
-	_draw_wall_panels(room)
+	if _backdrop != null:
+		draw_texture_rect(_backdrop, room, false)
+	else:
+		_draw_wall_panels(room)
 	_draw_ambient_light(room)
 	_draw_arch(room)
 	_draw_moon_window(room)
