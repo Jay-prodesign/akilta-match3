@@ -68,15 +68,15 @@ horizontal_alignment = 1
 [node name="Progress" type="Label" parent="Layout"]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.851, 0.71, 0.416, 1)
-theme_override_font_sizes/font_size = 18
+theme_override_font_sizes/font_size = 22
 text = "CURIO BOUTIQUE · 0 AWAKENINGS"
 horizontal_alignment = 1
 
 [node name="Intro" type="Label" parent="Layout"]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.851, 0.804, 0.835, 1)
-theme_override_font_sizes/font_size = 17
-text = "Follow the sealed displays through the Boutique. The first three displays are open for playtesting; the rest remain sealed."
+theme_override_font_sizes/font_size = 22
+text = "Follow the sealed displays through the Boutique. The opening three are authored; Level 1 opens first, and the next cabinets await its review."
 horizontal_alignment = 1
 autowrap_mode = 2
 
