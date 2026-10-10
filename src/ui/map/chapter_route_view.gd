@@ -72,7 +72,7 @@ func _build_route() -> void:
 		label.size = Vector2(270.0, 64.0)
 		label.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
 		label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-		label.add_theme_font_size_override("font_size", 26 if level_number == 1 else (22 if level_number <= 3 else 20))
+		label.add_theme_font_size_override("font_size", 26 if level_number <= 3 else 20)
 		label.add_theme_color_override("font_color", BONE if level_number == 1 else Color("#D2C4D7"))
 		var on_right := center.x < route_width * 0.5
 		if on_right:
@@ -125,9 +125,9 @@ func _caption(level_number: int, completed: bool, open: bool) -> String:
 	if level_number == 1:
 		return "MOONLIT CABINET\n%s" % ("MOON CAMEO AWAKENED" if completed else "MOON CAMEO WAITS")
 	if level_number == 2:
-		return "SEALED DISPLAY\nWAX SEALS · LOCKED"
+		return "SEALED DISPLAY\nWAX SEALS"
 	if level_number == 3:
-		return "THORNLIGHT\nLINE SIGIL · LOCKED"
+		return "THORNLIGHT\nLINE SIGIL"
 	if not open:
 		return "SEALED DISPLAY %02d" % level_number
 	return "DISPLAY %02d · READY" % level_number
