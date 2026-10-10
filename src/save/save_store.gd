@@ -55,7 +55,11 @@ func _read_valid(path: String) -> Dictionary:
 		return {}
 	var raw: String = file.get_as_text()
 	file.close()
-	var parsed = JSON.parse_string(raw)
+	var parser := JSON.new()
+	var parse_error: int = int(parser.parse(raw))
+	if parse_error != OK:
+		return {}
+	var parsed = parser.data
 	if parsed is Dictionary:
 		return parsed
 	return {}

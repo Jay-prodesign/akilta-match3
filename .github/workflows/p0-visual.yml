@@ -38,7 +38,7 @@ jobs:
         run: |
           set -uo pipefail
           set +e
-          output=$(LIBGL_ALWAYS_SOFTWARE=1 xvfb-run -a ./godot --path .             -s res://tests/visual/capture_level1.gd 2>&1)
+          output=$(LIBGL_ALWAYS_SOFTWARE=1 xvfb-run -a ./godot --audio-driver Dummy --path . -s res://tests/visual/capture_level1.gd 2>&1)
           status=$?
           set -e
           printf '%s\n' "$output"
