@@ -16,6 +16,7 @@ const SplashScene = preload("res://src/ui/splash/splash_screen.tscn")
 const AudioDirectorScript = preload("res://src/feedback/audio_director.gd")
 const Typography = preload("res://src/ui/theme/typography.gd")
 const CurioMaterials = preload("res://src/ui/theme/curio_materials.gd")
+const PieceAssetLoader = preload("res://src/match3/presentation/piece_asset_loader.gd")
 
 @export var environment: String = "development"
 @export var save_path_override: String = ""
@@ -155,9 +156,19 @@ func show_feature_preview(feature: String) -> bool:
 	layout.offset_top = 24
 	layout.offset_right = -18
 	layout.offset_bottom = -20
-	layout.add_theme_constant_override("separation", 12)
-	layout.alignment = BoxContainer.ALIGNMENT_CENTER
+	layout.add_theme_constant_override("separation", 16)
+	layout.alignment = BoxContainer.ALIGNMENT_BEGINNING
 	overlay.add_child(layout)
+	var world_art := TextureRect.new()
+	world_art.name = "WorldBackdrop"
+	world_art.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	world_art.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	world_art.texture = PieceAssetLoader.ornament("res://assets/world/ch01_curio_boutique/curio_boutique_moonlit_backdrop.svg")
+	world_art.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+	world_art.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_COVERED
+	world_art.modulate = Color(0.88, 0.80, 0.88, 0.20)
+	overlay.add_child(world_art)
+	overlay.move_child(world_art, 1)
 	var eyebrow := Label.new()
 	eyebrow.text = "THE HOUSE OF CURIOS  ·  AKILTA"
 	eyebrow.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
@@ -196,7 +207,7 @@ func show_feature_preview(feature: String) -> bool:
 		]
 	for entry in entries:
 		var card := PanelContainer.new()
-		card.custom_minimum_size = Vector2(0, 210)
+		card.custom_minimum_size = Vector2(0, 280)
 		var panel_style := StyleBoxFlat.new()
 		panel_style.bg_color = Color("#171321")
 		panel_style.border_color = Color("#D5AD70", 0.58)
@@ -235,13 +246,13 @@ func show_feature_preview(feature: String) -> bool:
 		card_body.text = String(entry["body"])
 		card_body.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 		card_body.add_theme_color_override("font_color", Color("#D8C6C3"))
-		card_body.add_theme_font_size_override("font_size", 16)
+		card_body.add_theme_font_size_override("font_size", 18)
 		copy.add_child(card_body)
 		var status := Label.new()
 		status.text = String(entry["status"])
 		status.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 		status.add_theme_color_override("font_color", Color("#BFA5D8"))
-		status.add_theme_font_size_override("font_size", 12)
+		status.add_theme_font_size_override("font_size", 14)
 		copy.add_child(status)
 	var back := Button.new()
 	back.name = "BackToHouse"
