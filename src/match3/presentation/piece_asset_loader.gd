@@ -38,6 +38,37 @@ static func texture(family: String) -> Texture2D:
 	_textures[family] = result
 	return result
 
+const PROFILE_PATHS := {
+	"curio_boutique_opening": {
+		"moon": "res://assets/pieces/moon_sigil.svg",
+		"rose": "res://assets/pieces/thorn_rose.svg",
+		"moth": "res://assets/pieces/crow.svg",
+		"key": "res://assets/pieces/potion.svg",
+		"leaf": "res://assets/pieces/pentagram.svg"
+	},
+	"sealed_display": {
+		"moon": "res://assets/pieces/moon_sigil.svg",
+		"rose": "res://assets/pieces/thorn_rose.svg",
+		"moth": "res://assets/pieces/black_cat.svg",
+		"key": "res://assets/pieces/candle.svg",
+		"leaf": "res://assets/pieces/skull.svg"
+	},
+	"thornlight_arrangement": {
+		"moon": "res://assets/pieces/moon_sigil.svg",
+		"rose": "res://assets/pieces/black_cat.svg",
+		"moth": "res://assets/pieces/crow.svg",
+		"key": "res://assets/pieces/potion.svg",
+		"leaf": "res://assets/pieces/candle.svg"
+	}
+}
+
+static func texture_for_profile(profile: String, family: String) -> Texture2D:
+	var profile_paths: Dictionary = PROFILE_PATHS.get(profile, {})
+	var path := String(profile_paths.get(family, PATHS.get(family, "")))
+	if path == "":
+		return null
+	return ornament(path)
+
 static func contract() -> Dictionary:
 	var loaded: Dictionary = {}
 	for family in PATHS:
@@ -48,6 +79,7 @@ static func contract() -> Dictionary:
 		"paid_dependency": false,
 		"fallback": "owned_procedural_renderer",
 		"families": loaded,
+		"visual_profiles": PROFILE_PATHS.keys(),
 	}
 
 static func ornament(path: String) -> Texture2D:
