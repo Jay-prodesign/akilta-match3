@@ -46,6 +46,7 @@ jobs:
           if grep -Eq "SCRIPT ERROR:|(^| )ERROR:|CAPTURE_FAIL:" <<<"$output"; then exit 1; fi
           grep -Fq "CAPTURE_PASS: complete Level 1 player journey" <<<"$output"
           test -s artifacts/journey-01-house-dormant.png
+          test -s artifacts/journey-01b-chapter-select.png
           test -s artifacts/journey-02-chapter-map.png
           test -s artifacts/journey-03-prestart.png
           test -s artifacts/journey-04-level1-gameplay.png
