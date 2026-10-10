@@ -71,10 +71,10 @@
       "provenance": "first_party"
     },
     {
-      "id": "gbl.piece.curio_key",
+      "id": "gbl.piece.potion",
       "class": "piece",
       "scope": "global",
-      "path": "assets/pieces/curio_key.svg",
+      "path": "assets/pieces/potion.svg",
       "status": "candidate",
       "target": "256x256",
       "format": "svg",
