@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "content_status": "draft",
+  "content_status": "playtest",
   "validation_seed": 1003,
   "validation_expected_result": "won",
   "teaching_moves": [
@@ -79,5 +79,6 @@
       "moon",
       "key"
     ]
-  ]
+  ],
+  "visual_status": "north_star_candidate_v3"
 }
