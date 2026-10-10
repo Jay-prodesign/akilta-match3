@@ -9,6 +9,7 @@ on:
       - "src/ui/**"
       - "src/app/**"
       - "src/match3/presentation/**"
+      - "assets/**"
       - "assets/world/**"
       - "assets/pieces/**"
       - "content/levels/**"
