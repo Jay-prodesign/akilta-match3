@@ -36,22 +36,22 @@ func _capture() -> void:
 
 	var board := BoardView.new()
 	board.position = Vector2(64, 220)
-	board.size = Vector2(952, 930)
+	board.size = Vector2(952, 520)
 	board.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	surface.add_child(board)
 
 	var level := {
-		"width": 5,
+		"width": 8,
 		"height": 3,
 		"moves": 99,
 		"objective": "collect_family",
 		"objective_family": "moon",
 		"objective_target": 99,
-		"families": ["moon", "rose", "moth", "key", "leaf"],
+		"families": ["moon", "rose", "moth", "key", "leaf", "cat", "candle", "skull"],
 		"initial_rows": [
-			["moon", "rose", "moth", "key", "leaf"],
-			["moon", "rose", "moth", "key", "leaf"],
-			["moon", "rose", "moth", "key", "leaf"]
+			["moon", "rose", "moth", "key", "leaf", "cat", "candle", "skull"],
+			["skull", "candle", "cat", "leaf", "key", "moth", "rose", "moon"],
+			["moth", "moon", "skull", "rose", "candle", "key", "cat", "leaf"]
 		],
 		"specials": [
 			{"x": 0, "y": 1, "kind": "global"},
@@ -68,16 +68,16 @@ func _capture() -> void:
 	board.set_board(BoardState.from_level(level, 7070))
 
 	var row1 := Label.new()
-	row1.position = Vector2(90, 1184)
+	row1.position = Vector2(90, 820)
 	row1.size = Vector2(900, 36)
-	row1.text = "ROW 1 · base family readability"
+	row1.text = "ROW 1 · eight distinct North Star base families"
 	row1.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	row1.add_theme_color_override("font_color", Color("#D9CDD5"))
 	row1.add_theme_font_size_override("font_size", 18)
 	surface.add_child(row1)
 
 	var row2 := Label.new()
-	row2.position = Vector2(90, 1226)
+	row2.position = Vector2(90, 862)
 	row2.size = Vector2(900, 36)
 	row2.text = "ROW 2 · eclipse/global · horizontal beam · vertical beam · ritual burst · seeker"
 	row2.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
@@ -86,7 +86,7 @@ func _capture() -> void:
 	surface.add_child(row2)
 
 	var row3 := Label.new()
-	row3.position = Vector2(90, 1268)
+	row3.position = Vector2(90, 904)
 	row3.size = Vector2(900, 72)
 	row3.text = "ROW 3 · Wax Seal treatment over the same learned base vocabulary\nCandidate/procedural presentation · NOT shipping art"
 	row3.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
