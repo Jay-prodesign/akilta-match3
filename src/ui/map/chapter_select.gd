@@ -25,7 +25,7 @@ func _ready() -> void:
 	world_art.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_COVERED
 	world_art.modulate = Color(0.90, 0.82, 0.90, 0.72)
 	add_child(world_art)
-	move_child(world_art, 1)
+	move_child(world_art, 0)
 	var eyebrow := Label.new()
 	eyebrow.text = "THE HOUSE AND ITS CHAPTERS"
 	eyebrow.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
@@ -68,10 +68,10 @@ func _ready() -> void:
 		button.text = "%s\n%s\n%s%s" % [String(data["glyph"]), String(data["name"]), String(data["detail"]), "" if bool(data["open"]) else "\nSEALED WING"]
 		button.add_theme_font_size_override("font_size", 20)
 		button.add_theme_color_override("font_color", Color("#F4E5D3"))
-		button.add_theme_color_override("font_disabled_color", Color("#B6A6B9"))
+		button.add_theme_color_override("font_disabled_color", Color("#D2C4D7"))
 		var box := StyleBoxFlat.new()
 		box.bg_color = Color("#302039") if bool(data["open"]) else Color("#211A2A")
-		box.border_color = Color("#D5AD70", 0.85 if bool(data["open"]) else 0.42)
+		box.border_color = Color("#D5AD70", 0.92 if bool(data["open"]) else 0.62)
 		box.set_border_width_all(1)
 		box.set_corner_radius_all(8)
 		box.shadow_color = Color(0,0,0,0.4)
