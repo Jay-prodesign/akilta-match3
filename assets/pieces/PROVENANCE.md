@@ -1,6 +1,6 @@
 # AKILTA Match-3 Core Symbol Set
 
-Status: AKILTA first-party original art-direction candidates for the Curio Boutique opening; five-family board contract remains the current playable baseline.
+Status: AKILTA first-party original art-direction candidates for the Curio Boutique opening; the active Level 1–3 playtest set uses eight distinct symbol families.
 
 ## Runtime family mapping
 
