@@ -41,13 +41,16 @@
     "rose",
     "moth",
     "key",
-    "leaf"
+    "leaf",
+    "cat",
+    "candle",
+    "skull"
   ],
   "initial_rows": [
     [
       "rose",
       "moth",
-      "key",
+      "cat",
       "leaf",
       "rose"
     ],
@@ -55,7 +58,7 @@
       "moth",
       "key",
       "leaf",
-      "rose",
+      "candle",
       "moth"
     ],
     [
@@ -63,7 +66,7 @@
       "leaf",
       "rose",
       "moon",
-      "key"
+      "skull"
     ],
     [
       "rose",
@@ -80,5 +83,6 @@
       "key"
     ]
   ],
-  "visual_status": "north_star_candidate_v3"
+  "visual_status": "north_star_eight_symbol_candidate_v4",
+  "piece_set": "north_star_eight_symbol_candidate_v4"
 }
