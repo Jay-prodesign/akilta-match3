@@ -103,7 +103,7 @@ func show_prestart(level_number: int) -> bool:
 	return true
 
 func start_level(level_number: int = 1) -> bool:
-	if level_number < 1 or level_number > TEST_LEVEL_COUNT or navigation.current() != NavigationScript.Route.PRESTART:
+	if level_number < 1 or level_number > FOUNDER_APPROVED_LEVEL_COUNT or navigation.current() != NavigationScript.Route.PRESTART:
 		return false
 	var level_path: String = _level_path(level_number)
 	if not FileAccess.file_exists(level_path):
@@ -305,7 +305,7 @@ func _on_map_back() -> void:
 func _on_prestart_back() -> void:
 	if navigation.go(NavigationScript.Route.MAP, {"via": "prestart_back"}):
 		var screen: Node = MapScene.instantiate()
-		screen.set("canonical_level_cap", TEST_LEVEL_COUNT)
+		screen.set("canonical_level_cap", FOUNDER_APPROVED_LEVEL_COUNT)
 		_show_screen(screen)
 		screen.set_progress(progress)
 		screen.back_requested.connect(_on_map_back)
