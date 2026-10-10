@@ -1,0 +1,23 @@
+{
+  "id": "ch01_level_001",
+  "chapter": "curio_boutique",
+  "width": 7,
+  "height": 7,
+  "moves": 12,
+  "objective": "collect_family",
+  "objective_family": "moon",
+  "objective_target": 6,
+  "families": ["moon", "rose", "moth", "key", "leaf"],
+  "initial_rows": [
+    ["moon", "rose", "moth", "key", "leaf", "moon", "rose"],
+    ["rose", "moth", "key", "leaf", "moon", "rose", "moth"],
+    ["moth", "key", "leaf", "moon", "rose", "moth", "key"],
+    ["key", "leaf", "moon", "rose", "moth", "key", "leaf"],
+    ["leaf", "moon", "rose", "moth", "key", "leaf", "moon"],
+    ["key", "leaf", "moon", "rose", "moth", "key", "leaf"],
+    ["leaf", "moon", "rose", "moon", "rose", "leaf", "moth"]
+  ],
+  "specials": [
+    {"x": 4, "y": 6, "kind": "line_h"}
+  ]
+}

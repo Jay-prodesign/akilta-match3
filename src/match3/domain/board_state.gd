@@ -10,6 +10,9 @@ var holes: Dictionary = {}
 var families: Array[String] = []
 var moves_remaining: int = -1
 var objective_type: String = ""
+var objective_family: String = ""
+var objective_target: int = 0
+var objective_progress: int = 0
 var specials: Dictionary = {}
 var blockers: Dictionary = {}
 var rng
@@ -20,6 +23,9 @@ static func from_level(level_data: Dictionary, seed_value: int):
 	board.height = int(level_data.get("height", 0))
 	board.moves_remaining = int(level_data.get("moves", -1))
 	board.objective_type = String(level_data.get("objective", ""))
+	board.objective_family = String(level_data.get("objective_family", ""))
+	board.objective_target = int(level_data.get("objective_target", 0))
+	board.objective_progress = int(level_data.get("objective_progress", 0))
 	for family in level_data.get("families", []):
 		board.families.append(String(family))
 	for raw_hole in level_data.get("holes", []):
@@ -142,6 +148,17 @@ func set_blocker_hp(pos: Vector2i, hp: int) -> void:
 func remaining_blockers() -> int:
 	return blockers.size()
 
+func record_collected(family: String, count: int = 1) -> void:
+	if objective_type == "collect_family" and family == objective_family:
+		objective_progress = min(objective_target, objective_progress + max(0, count))
+
+func objective_remaining() -> int:
+	if objective_type == "collect_family":
+		return max(0, objective_target - objective_progress)
+	if objective_type == "clear_blockers":
+		return remaining_blockers()
+	return 0
+
 func has_empty() -> bool:
 	for y in range(height):
 		for x in range(width):
@@ -166,4 +183,10 @@ func signature() -> String:
 				var blocker: Dictionary = blockers[pos]
 				token += "!%s:%d" % [String(blocker.get("type", "")), int(blocker.get("hp", 0))]
 			parts.append(token)
-	return "|".join(parts)
+	return "|".join(parts) + "|objective=%s:%s:%d/%d|moves=%d" % [
+		objective_type,
+		objective_family,
+		objective_progress,
+		objective_target,
+		moves_remaining
+	]

@@ -1,0 +1,144 @@
+[gd_scene load_steps=3 format=3]
+
+[ext_resource type="Script" path="res://src/ui/gameplay/gameplay_screen.gd" id="1_game"]
+[ext_resource type="Script" path="res://src/match3/presentation/board_view.gd" id="2_board"]
+
+[sub_resource type="StyleBoxFlat" id="StylePanel"]
+bg_color = Color(0.0902, 0.0745, 0.1059, 0.96)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.749, 0.647, 0.847, 0.24)
+corner_radius_top_left = 28
+corner_radius_top_right = 28
+corner_radius_bottom_right = 28
+corner_radius_bottom_left = 28
+
+[node name="GameplayScreen" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_game")
+
+[node name="Backdrop" type="ColorRect" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.0627, 0.051, 0.0706, 1)
+
+[node name="Layout" type="VBoxContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 42.0
+offset_top = 72.0
+offset_right = -42.0
+offset_bottom = -72.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/separation = 28
+
+[node name="Eyebrow" type="Label" parent="Layout"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.663, 0.6, 0.659, 1)
+theme_override_font_sizes/font_size = 24
+text = "CURIO BOUTIQUE · FIRST AWAKENING"
+horizontal_alignment = 1
+
+[node name="Title" type="Label" parent="Layout"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.945, 0.91, 0.866, 1)
+theme_override_font_sizes/font_size = 48
+text = "Moonlit Cabinet"
+horizontal_alignment = 1
+
+[node name="HUD" type="HBoxContainer" parent="Layout"]
+layout_mode = 2
+theme_override_constants/separation = 24
+
+[node name="Objective" type="Label" parent="Layout/HUD"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_colors/font_color = Color(0.749, 0.647, 0.847, 1)
+theme_override_font_sizes/font_size = 28
+text = "Gather moon sigils  0/6"
+
+[node name="Moves" type="Label" parent="Layout/HUD"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.851, 0.71, 0.416, 1)
+theme_override_font_sizes/font_size = 28
+text = "12 moves"
+horizontal_alignment = 2
+
+[node name="BoardView" type="Control" parent="Layout"]
+custom_minimum_size = Vector2(0, 1080)
+layout_mode = 2
+size_flags_vertical = 3
+mouse_filter = 0
+script = ExtResource("2_board")
+
+[node name="Hint" type="Label" parent="Layout"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.851, 0.804, 0.835, 1)
+theme_override_font_sizes/font_size = 23
+text = "Swipe a sigil to wake the cabinet."
+horizontal_alignment = 1
+
+[node name="ResultOverlay" type="Control" parent="."]
+visible = false
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 0
+
+[node name="Dim" type="ColorRect" parent="ResultOverlay"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.0314, 0.0235, 0.0353, 0.76)
+
+[node name="Card" type="PanelContainer" parent="ResultOverlay"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -390.0
+offset_top = -220.0
+offset_right = 390.0
+offset_bottom = 220.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_styles/panel = SubResource("StylePanel")
+
+[node name="Title" type="Label" parent="ResultOverlay/Card"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.945, 0.91, 0.866, 1)
+theme_override_font_sizes/font_size = 42
+text = "THE CABINET STIRS"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Detail" type="Label" parent="ResultOverlay/Card"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.851, 0.804, 0.835, 1)
+theme_override_font_sizes/font_size = 24
+text = "Something in the Curio Boutique has awakened."
+horizontal_alignment = 1
+vertical_alignment = 1
+autowrap_mode = 2

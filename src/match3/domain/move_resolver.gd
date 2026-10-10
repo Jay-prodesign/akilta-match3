@@ -37,9 +37,17 @@ static func try_swap(board, from: Vector2i, to: Vector2i):
 		var cleared: Array[String] = []
 		for pos in clear_cells:
 			cleared.append(_pos_key(pos))
+			var cleared_family: String = String(board.get_cell(pos))
+			if cleared_family != "":
+				board.record_collected(cleared_family, 1)
 			board.set_cell(pos, "")
 			board.set_special(pos, "")
-		trace.add_event("clear", {"cascade": cascade, "cells": cleared})
+		trace.add_event("clear", {
+			"cascade": cascade,
+			"cells": cleared,
+			"objective_progress": int(board.objective_progress),
+			"objective_remaining": int(board.objective_remaining())
+		})
 
 		for blocker_event in WaxSeal.apply_damage(board, clear_cells):
 			trace.add_event(String(blocker_event.get("type", "")), blocker_event)
