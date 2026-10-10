@@ -1,0 +1,39 @@
+name: Vendor CC0 Audio Candidate
+
+on:
+  push:
+    branches:
+      - p0/bootstrap
+    paths:
+      - ".github/workflows/vendor-cc0-audio.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  vendor:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Fetch pinned CC0 candidate binaries
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p artifacts/cc0-audio
+          curl -L --fail --retry 3             -o artifacts/cc0-audio/cathedral_in_the_forest.ogg             "https://raw.githubusercontent.com/dns7221-web/Path-of-Ash/28c5b9a4aa34cfb07f4cd47d1c7bfda615388385/Assets/Project/Audio/BGM/TitleCandidates/02_cathedral_in_the_forest.ogg"
+          curl -L --fail --retry 3             -o artifacts/cc0-audio/bell_ding1.wav             "https://raw.githubusercontent.com/MGS-sails/hammerspoon-monitor-teleport-/59cdd4fac4fca571396154a3b6fe1ecb8bc6b72e/teleport/assets/sounds/bell_ding1.wav"
+          test -s artifacts/cc0-audio/cathedral_in_the_forest.ogg
+          test -s artifacts/cc0-audio/bell_ding1.wav
+          sha256sum artifacts/cc0-audio/* | tee artifacts/cc0-audio/SHA256SUMS.txt
+
+      - name: Upload candidate bundle
+        uses: actions/upload-artifact@v4
+        with:
+          name: cc0-audio-candidate
+          path: artifacts/cc0-audio/
+          if-no-files-found: error
+          retention-days: 2
