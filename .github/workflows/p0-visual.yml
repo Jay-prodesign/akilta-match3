@@ -108,6 +108,8 @@ jobs:
           grep -Fq "CAPTURE_PASS: Level 3 art profile thornlight_arrangement" <<<"$output"
           test -s artifacts/level2-gameplay.png
           test -s artifacts/level3-gameplay.png
+          test -s artifacts/level2-prestart.png
+          test -s artifacts/level3-prestart.png
 
       - name: Render Level 1 trace motion
         shell: bash
@@ -173,6 +175,8 @@ jobs:
             artifacts/level1-retry-restored.png
             artifacts/level2-gameplay.png
             artifacts/level3-gameplay.png
+            artifacts/level2-prestart.png
+            artifacts/level3-prestart.png
           if-no-files-found: error
           retention-days: 14
 
