@@ -41,10 +41,12 @@ func _ensure_players() -> void:
 		add_child(sfx_player)
 
 func _load_candidates() -> void:
-	if ResourceLoader.exists(AMBIENT_PATH):
-		_ambient_stream = load(AMBIENT_PATH) as AudioStream
-	if ResourceLoader.exists(CHIME_PATH):
-		_chime_stream = load(CHIME_PATH) as AudioStream
+	# Load source audio directly so clean CI/device installs do not depend on an
+	# editor-generated import cache existing before the first app boot.
+	if FileAccess.file_exists(AMBIENT_PATH):
+		_ambient_stream = AudioStreamOggVorbis.load_from_file(AMBIENT_PATH)
+	if FileAccess.file_exists(CHIME_PATH):
+		_chime_stream = AudioStreamWAV.load_from_file(CHIME_PATH)
 	if music_player != null:
 		music_player.stream = _ambient_stream
 	if sfx_player != null:
