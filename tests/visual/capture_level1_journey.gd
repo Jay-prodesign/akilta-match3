@@ -73,9 +73,9 @@ func _capture() -> void:
 	var trace = gameplay.attempt_swap(Vector2i(1, 4), Vector2i(2, 4))
 	if trace == null or not bool(trace.accepted) or String(trace.result) != "won":
 		return _fail(app, "authored Level 1 teaching move did not win")
-	var board_view = gameplay.get_node_or_null("Layout/BoardView")
-	if board_view != null and board_view.has_method("is_motion_active") and bool(board_view.is_motion_active()):
-		await board_view.trace_motion_finished
+	var motion_board_view = gameplay.get_node_or_null("Layout/BoardView")
+	if motion_board_view != null and motion_board_view.has_method("is_motion_active") and bool(motion_board_view.is_motion_active()):
+		await motion_board_view.trace_motion_finished
 	await _frames(2)
 	if not gameplay.result_overlay.visible:
 		return _fail(app, "Level 1 result did not appear")
