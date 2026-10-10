@@ -27,6 +27,7 @@ var _store
 var _current_screen: Node
 var _settings_screen: Node
 var _pending_level_number: int = 0
+const TEST_LEVEL_COUNT := 3
 
 @onready var screen_host: Node = $ScreenHost
 
@@ -71,6 +72,7 @@ func show_map() -> bool:
 	if not navigation.go(NavigationScript.Route.MAP):
 		return false
 	var screen: Node = MapScene.instantiate()
+	screen.set("canonical_level_cap", TEST_LEVEL_COUNT)
 	_show_screen(screen)
 	screen.set_progress(progress)
 	screen.back_requested.connect(_on_map_back)
@@ -78,7 +80,7 @@ func show_map() -> bool:
 	return true
 
 func show_prestart(level_number: int) -> bool:
-	if level_number != 1 or navigation.current() != NavigationScript.Route.MAP:
+	if level_number < 1 or level_number > TEST_LEVEL_COUNT or navigation.current() != NavigationScript.Route.MAP:
 		return false
 	if not navigation.go(NavigationScript.Route.PRESTART, {"level": level_number}):
 		return false
@@ -92,7 +94,7 @@ func show_prestart(level_number: int) -> bool:
 	return true
 
 func start_level(level_number: int = 1) -> bool:
-	if level_number != 1 or navigation.current() != NavigationScript.Route.PRESTART:
+	if level_number < 1 or level_number > TEST_LEVEL_COUNT or navigation.current() != NavigationScript.Route.PRESTART:
 		return false
 	var level_path: String = _level_path(level_number)
 	if not FileAccess.file_exists(level_path):
@@ -124,6 +126,40 @@ func complete_level_win(transaction_id: String, level_id: String, curio_id: Stri
 	progress = candidate
 	return show_house()
 
+func show_feature_preview(feature: String) -> bool:
+	# Accessible non-monetized preview while first-party Events and Shop systems are built.
+	if navigation == null or navigation.current() != NavigationScript.Route.HOUSE:
+		return false
+	var overlay := ColorRect.new()
+	overlay.name = "FeaturePreview"
+	overlay.color = Color("#100D19")
+	overlay.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	screen_host.add_child(overlay)
+	var column := VBoxContainer.new()
+	column.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	column.add_theme_constant_override("separation", 24)
+	column.alignment = BoxContainer.ALIGNMENT_CENTER
+	column.offset_left = 28
+	column.offset_right = -28
+	overlay.add_child(column)
+	var title := Label.new()
+	title.text = feature.to_upper()
+	title.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	title.add_theme_font_size_override("font_size", 38)
+	column.add_child(title)
+	var detail := Label.new()
+	detail.text = "THE HOUSE IS PREPARING THIS WING.\\nNo purchases or live events are available in this test build."
+	detail.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	detail.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	column.add_child(detail)
+	var back := Button.new()
+	back.text = "RETURN TO THE HOUSE"
+	column.add_child(back)
+	back.pressed.connect(func(): overlay.queue_free())
+	Typography.apply(overlay)
+	CurioMaterials.apply(overlay)
+	return true
+
 func show_settings() -> bool:
 	if navigation == null or not navigation.open_settings():
 		return false
@@ -146,11 +182,15 @@ func close_settings() -> bool:
 func _render_house() -> void:
 	var screen: Node = HouseScene.instantiate()
 	_show_screen(screen)
-	screen.set_available_level_count(1)
+	screen.set_available_level_count(TEST_LEVEL_COUNT)
 	screen.set_progress(progress)
 	screen.collection_requested.connect(show_collection)
 	screen.map_requested.connect(show_map)
 	screen.settings_requested.connect(show_settings)
+	if screen.has_signal("events_requested"):
+		screen.events_requested.connect(func(): show_feature_preview("Events"))
+	if screen.has_signal("shop_requested"):
+		screen.shop_requested.connect(func(): show_feature_preview("Shop"))
 
 func _on_collection_back() -> void:
 	if navigation.go(NavigationScript.Route.HOUSE, {"via": "collection_back"}):
