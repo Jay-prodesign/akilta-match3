@@ -12,6 +12,7 @@ on:
       - "src/ui/map/**"
       - "src/ui/gameplay/**"
       - "src/ui/prestart/**"
+      - "src/ui/collection/**"
       - "src/world/**"
       - "src/ui/shared/screen_art_registry.gd"
       - "assets/world/ch01_curio_boutique/**"
@@ -61,6 +62,8 @@ jobs:
           test -s artifacts/golden-05-win-reward.png
           test -s artifacts/golden-06-restoration.png
           test -s artifacts/golden-07-house-return.png
+          test -s artifacts/golden-08-curio-verification.png
+          test -s artifacts/golden-09-curio-detail.png
 
       - name: Render Golden Loop failure and retry branch
         shell: bash
@@ -91,6 +94,8 @@ jobs:
             artifacts/golden-05-win-reward.png
             artifacts/golden-06-restoration.png
             artifacts/golden-07-house-return.png
+            artifacts/golden-08-curio-verification.png
+            artifacts/golden-09-curio-detail.png
             artifacts/level1-fail-result.png
             artifacts/level1-retry-restored.png
           if-no-files-found: error

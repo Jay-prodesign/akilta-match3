@@ -118,6 +118,34 @@ func _capture() -> void:
 	if not await _save(app, "golden-07-house-return.png"):
 		return
 
+	# Complete the canonical post-restoration verification: the same earned Curio
+	# must be visible in S08 and inspectable through O04, not merely implied by House art.
+	var curios_nav: Button = returned_house.get_node_or_null("ProductNavigation/Scroll/Items/NavCurios") as Button
+	if curios_nav == null:
+		return _fail(app, "returned S01 must expose Curios in the product shell")
+	curios_nav.emit_signal("pressed")
+	await _frames(4)
+	if String(app.current_route_name()) != "collection":
+		return _fail(app, "House Curios destination must enter S08 Curio Collection")
+	var collection = app.current_screen()
+	var moon_state: Label = collection.get_node_or_null("Layout/Cards/MoonCard/Content/State") as Label if collection != null else null
+	if moon_state == null or not moon_state.text.begins_with("AWAKENED"):
+		return _fail(app, "S08 must show the exact earned Moon Cameo as awakened")
+	if not await _save(app, "golden-08-curio-verification.png"):
+		return
+
+	var inspect: Button = collection.get_node_or_null("Layout/Cards/MoonCard/DetailActionLayer/InspectAction") as Button
+	if inspect == null:
+		return _fail(app, "S08 awakened Curio must expose O04 detail")
+	inspect.emit_signal("pressed")
+	await _frames(3)
+	var detail_state: Label = collection.get_node_or_null("CurioDetailOverlay/CurioDetailCard/Content/State") as Label
+	var detail_origin: Label = collection.get_node_or_null("CurioDetailOverlay/CurioDetailCard/Content/Origin") as Label
+	if detail_state == null or not detail_state.text.contains("AWAKENED") or detail_origin == null or not detail_origin.text.contains("LEVEL 1"):
+		return _fail(app, "O04 must verify awakened ownership and Level 1 origin")
+	if not await _save(app, "golden-09-curio-detail.png"):
+		return
+
 	print("CAPTURE_PASS: canonical Golden Playable Loop")
 	app.queue_free()
 	await process_frame
