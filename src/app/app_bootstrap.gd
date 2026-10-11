@@ -111,10 +111,17 @@ func show_prestart(level_number: int) -> bool:
 	return true
 
 func start_level(level_number: int = 1) -> bool:
-	if level_number < 1 or level_number > INTERNAL_REVIEW_LEVEL_COUNT or level_number > int(progress.highest_level_unlocked) or navigation.current() != NavigationScript.Route.PRESTART:
+	if level_number < 1 or level_number > INTERNAL_REVIEW_LEVEL_COUNT or level_number > int(progress.highest_level_unlocked) or level_number != _pending_level_number or navigation.current() != NavigationScript.Route.PRESTART:
 		return false
 	var level_path: String = _level_path(level_number)
 	if not FileAccess.file_exists(level_path):
+		return false
+	var level_file := FileAccess.open(level_path, FileAccess.READ)
+	if level_file == null:
+		return false
+	var level_data: Variant = JSON.parse_string(level_file.get_as_text())
+	level_file.close()
+	if not level_data is Dictionary:
 		return false
 	if not navigation.go(NavigationScript.Route.GAMEPLAY, {"level": level_number}):
 		return false
