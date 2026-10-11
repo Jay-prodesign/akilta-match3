@@ -8,6 +8,7 @@ on:
       - p1/profile-settings
       - p1/returning-player-resume-v2
       - p1/shop-preview
+      - p1/chapters-wing-state
     paths:
       - ".github/workflows/p0-headless.yml"
       - "src/app/**"
@@ -31,6 +32,7 @@ on:
       - "tests/unit/test_save_progress.gd"
       - "tests/unit/test_first_party_shell.gd"
       - "tests/integration/test_first_player_journey.gd"
+      - "tests/integration/test_chapter_select_states.gd"
       - "tests/integration/test_level1_gameplay.gd"
       - "tests/integration/test_opening_two_level_journey.gd"
       - "tests/integration/test_returning_player_resume.gd"
@@ -191,6 +193,18 @@ jobs:
           if [ "$status" -ne 0 ]; then exit "$status"; fi
           if grep -Eq "SCRIPT ERROR:|(^| )ERROR:" <<<"$output"; then exit 1; fi
           grep -Fq "TEST_PASS: AKILTA first-party shell contracts" <<<"$output"
+
+      - name: Run S02 Chapters production state contract
+        shell: bash
+        run: |
+          set +e
+          output=$(timeout 35s ./godot --headless --path . -s res://tests/integration/test_chapter_select_states.gd 2>&1)
+          status=$?
+          set -e
+          printf '%s\n' "$output"
+          if [ "$status" -ne 0 ]; then exit "$status"; fi
+          if grep -Eq "SCRIPT ERROR:|(^| )ERROR:|TEST_FAIL:" <<<"$output"; then exit 1; fi
+          grep -Fq "TEST_PASS: S02 Chapters production state contract" <<<"$output"
 
       - name: Run complete three-level review shell journey
         shell: bash
