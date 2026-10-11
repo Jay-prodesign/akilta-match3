@@ -6,7 +6,7 @@ on:
       - p0/bootstrap
     paths:
       - ".github/workflows/level1-web.yml"
-  # Milestone trigger: progression-aware chapter select from 0/3 to restored 3/3 (2026-10-11).
+  # Milestone trigger: progression-aware chapter select + opt-in publication boundary (2026-10-11).
   # Run the full milestone build deliberately, not on every development commit.
   workflow_dispatch:
 
@@ -58,9 +58,10 @@ jobs:
           if-no-files-found: error
           retention-days: 14
 
-  # Internal review deployment is enabled for the public repository.
-  # The downloadable Web export remains available even if Pages deployment is unavailable.
+  # Publication remains opt-in. The downloadable Web export is always built,
+  # but GitHub Pages must not publish unless the repository owner explicitly enables it.
   deploy:
+    if: ${{ vars.ENABLE_LEVEL1_PAGES == 'true' }}
     needs: export
     runs-on: ubuntu-latest
     timeout-minutes: 10
