@@ -6,7 +6,7 @@ on:
       - p0/bootstrap
     paths:
       - ".github/workflows/p0-visual.yml"
-  # Milestone trigger: prestart route recovery + continuous shell navigation (2026-10-11).
+  # Milestone trigger: prestart navigation unwind + real splash capture recovery (2026-10-11).
   # Run the full milestone checks deliberately, not on every development commit.
   workflow_dispatch:
 

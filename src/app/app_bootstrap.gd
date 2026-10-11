@@ -485,7 +485,7 @@ func _on_shell_navigation_requested(section: String) -> void:
 	_dismiss_feature_preview()
 	match section:
 		"house":
-			show_house()
+			_ensure_house_route()
 		"curios":
 			if _ensure_house_route():
 				show_collection()
