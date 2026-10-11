@@ -1,5 +1,5 @@
 {
-  "schema_version": 1,
+  "schema_version": 2,
   "product": "AKILTA Match-3",
   "production_rule": "screen_block_slot_state_first",
   "design_viewport": {
@@ -55,7 +55,7 @@
       ],
       "reuse": "global",
       "priority": "P0",
-      "production_status": "required"
+      "production_status": "frozen_component_candidate_not_direct_slot_asset"
     },
     {
       "asset_id": "gbl_shell_bottom_nav_frame",
@@ -82,7 +82,7 @@
       ],
       "reuse": "global",
       "priority": "P0",
-      "production_status": "required"
+      "production_status": "frozen_component_candidate_not_direct_slot_asset"
     },
     {
       "asset_id": "gbl_nav_house",
@@ -302,7 +302,32 @@
       "technical_policy": "raster_only_no_svg_fallback",
       "current_runtime_dimensions": "450x500_webp_review_runtime",
       "source_resolution": "900x1000",
-      "contract_owner": "S01 -> world -> house_hero -> environment -> stage00"
+      "contract_owner": "S01 -> world -> house_hero -> environment -> stage00",
+      "architecture_owned": true,
+      "contract_owners": [
+        {
+          "screen": "S01",
+          "region": "world",
+          "block": "house_hero",
+          "slot": "full_environment",
+          "states": [
+            "dormant",
+            "stage01",
+            "stage02",
+            "stage03"
+          ]
+        },
+        {
+          "screen": "S07",
+          "region": "world",
+          "block": "house_hero",
+          "slot": "full_environment",
+          "states": [
+            "before",
+            "after"
+          ]
+        }
+      ]
     },
     {
       "asset_id": "hub_black_cat_character",
@@ -326,7 +351,31 @@
       ],
       "reuse": "House",
       "priority": "P0",
-      "production_status": "required"
+      "production_status": "required",
+      "architecture_owned": true,
+      "contract_owners": [
+        {
+          "screen": "S01",
+          "region": "world",
+          "block": "house_hero",
+          "slot": "character_world_layer",
+          "states": [
+            "idle",
+            "attention",
+            "celebrate"
+          ]
+        },
+        {
+          "screen": "S07",
+          "region": "world",
+          "block": "house_hero",
+          "slot": "character_world_layer",
+          "states": [
+            "attention",
+            "celebrate"
+          ]
+        }
+      ]
     },
     {
       "asset_id": "gbl_primary_panel_frame",
@@ -352,7 +401,7 @@
       ],
       "reuse": "global",
       "priority": "P0",
-      "production_status": "candidate",
+      "production_status": "frozen_component_candidate_not_direct_slot_asset",
       "current_path": "assets/ui/chrome/gbl_ui_ritual_panel_9s_base_v01.svg"
     },
     {
@@ -381,15 +430,28 @@
       "technical_policy": "raster_only_no_svg_fallback",
       "current_runtime_dimensions": "420x747_source_cropped_by_runtime",
       "source_resolution": "1024x768",
-      "contract_owner": "S04 -> primary_panel -> ritual_panel -> level_art -> first_attempt"
+      "contract_owner": "S04 -> primary_panel -> ritual_panel -> level_art -> first_attempt",
+      "architecture_owned": true,
+      "contract_owners": [
+        {
+          "screen": "S04",
+          "region": "primary",
+          "block": "primary_ritual_panel",
+          "slot": "level_art",
+          "states": [
+            "first_attempt",
+            "replay"
+          ]
+        }
+      ]
     },
     {
       "asset_id": "piece_moon",
       "screen": [
         "S05"
       ],
-      "block": "board",
-      "slot": "base_piece",
+      "block": "match_board",
+      "slot": "base_pieces",
       "state": [
         "idle",
         "selected_runtime",
@@ -405,15 +467,30 @@
       "reuse": "global",
       "priority": "P0",
       "production_status": "candidate_screen_validation",
-      "current_path": "assets/pieces/moon_sigil.svg"
+      "current_path": "assets/pieces/moon_sigil.svg",
+      "architecture_owned": true,
+      "contract_owners": [
+        {
+          "screen": "S05",
+          "region": "board",
+          "block": "match_board",
+          "slot": "base_pieces",
+          "states": [
+            "idle",
+            "selected",
+            "matched",
+            "moving"
+          ]
+        }
+      ]
     },
     {
       "asset_id": "piece_rose",
       "screen": [
         "S05"
       ],
-      "block": "board",
-      "slot": "base_piece",
+      "block": "match_board",
+      "slot": "base_pieces",
       "state": [
         "idle",
         "selected_runtime",
@@ -429,15 +506,30 @@
       "reuse": "global",
       "priority": "P0",
       "production_status": "candidate_screen_validation",
-      "current_path": "assets/pieces/thorn_rose.svg"
+      "current_path": "assets/pieces/thorn_rose.svg",
+      "architecture_owned": true,
+      "contract_owners": [
+        {
+          "screen": "S05",
+          "region": "board",
+          "block": "match_board",
+          "slot": "base_pieces",
+          "states": [
+            "idle",
+            "selected",
+            "matched",
+            "moving"
+          ]
+        }
+      ]
     },
     {
       "asset_id": "piece_moth",
       "screen": [
         "S05"
       ],
-      "block": "board",
-      "slot": "base_piece",
+      "block": "match_board",
+      "slot": "base_pieces",
       "state": [
         "idle",
         "selected_runtime",
@@ -453,15 +545,30 @@
       "reuse": "global",
       "priority": "P0",
       "production_status": "candidate_screen_validation",
-      "current_path": "assets/pieces/luna_moth.svg"
+      "current_path": "assets/pieces/luna_moth.svg",
+      "architecture_owned": true,
+      "contract_owners": [
+        {
+          "screen": "S05",
+          "region": "board",
+          "block": "match_board",
+          "slot": "base_pieces",
+          "states": [
+            "idle",
+            "selected",
+            "matched",
+            "moving"
+          ]
+        }
+      ]
     },
     {
       "asset_id": "piece_key",
       "screen": [
         "S05"
       ],
-      "block": "board",
-      "slot": "base_piece",
+      "block": "match_board",
+      "slot": "base_pieces",
       "state": [
         "idle",
         "selected_runtime",
@@ -477,15 +584,30 @@
       "reuse": "global",
       "priority": "P0",
       "production_status": "candidate_screen_validation",
-      "current_path": "assets/pieces/curio_key.svg"
+      "current_path": "assets/pieces/curio_key.svg",
+      "architecture_owned": true,
+      "contract_owners": [
+        {
+          "screen": "S05",
+          "region": "board",
+          "block": "match_board",
+          "slot": "base_pieces",
+          "states": [
+            "idle",
+            "selected",
+            "matched",
+            "moving"
+          ]
+        }
+      ]
     },
     {
       "asset_id": "piece_ivy",
       "screen": [
         "S05"
       ],
-      "block": "board",
-      "slot": "base_piece",
+      "block": "match_board",
+      "slot": "base_pieces",
       "state": [
         "idle",
         "selected_runtime",
@@ -501,7 +623,22 @@
       "reuse": "global",
       "priority": "P0",
       "production_status": "candidate_screen_validation",
-      "current_path": "assets/pieces/night_ivy.svg"
+      "current_path": "assets/pieces/night_ivy.svg",
+      "architecture_owned": true,
+      "contract_owners": [
+        {
+          "screen": "S05",
+          "region": "board",
+          "block": "match_board",
+          "slot": "base_pieces",
+          "states": [
+            "idle",
+            "selected",
+            "matched",
+            "moving"
+          ]
+        }
+      ]
     },
     {
       "asset_id": "gameplay_bg_curio_boutique",
@@ -528,15 +665,29 @@
       "technical_policy": "raster_only_no_svg_fallback",
       "current_runtime_dimensions": "420x747_webp_review_runtime",
       "source_resolution": "576x1024",
-      "contract_owner": "S05 -> world -> gameplay_environment -> background -> chapter01"
+      "contract_owner": "S05 -> world -> gameplay_environment -> background -> chapter01",
+      "architecture_owned": true,
+      "contract_owners": [
+        {
+          "screen": "S05",
+          "region": "world",
+          "block": "full_screen_background",
+          "slot": "environment",
+          "states": [
+            "playing",
+            "won",
+            "failed"
+          ]
+        }
+      ]
     },
     {
       "asset_id": "gameplay_board_frame",
       "screen": [
         "S05"
       ],
-      "block": "board",
-      "slot": "outer_frame",
+      "block": "match_board",
+      "slot": "board_field",
       "state": [
         "normal",
         "high_contrast"
@@ -551,7 +702,20 @@
       "reuse": "global",
       "priority": "P0",
       "production_status": "candidate",
-      "current_path": "assets/board/gbl_board_ritual_frame_9s_base_v01.svg"
+      "current_path": "assets/board/gbl_board_ritual_frame_9s_base_v01.svg",
+      "architecture_owned": true,
+      "contract_owners": [
+        {
+          "screen": "S05",
+          "region": "board",
+          "block": "match_board",
+          "slot": "board_field",
+          "states": [
+            "normal",
+            "high_contrast"
+          ]
+        }
+      ]
     },
     {
       "asset_id": "booster_hint",
@@ -573,7 +737,31 @@
       "variants": [],
       "reuse": "global",
       "priority": "P0",
-      "production_status": "required"
+      "production_status": "required",
+      "architecture_owned": true,
+      "contract_owners": [
+        {
+          "screen": "S04",
+          "region": "actions",
+          "block": "aid_or_booster_row",
+          "slot": "hint",
+          "states": [
+            "available",
+            "disabled"
+          ]
+        },
+        {
+          "screen": "S05",
+          "region": "actions",
+          "block": "booster_row",
+          "slot": "hint",
+          "states": [
+            "available",
+            "disabled",
+            "pressed"
+          ]
+        }
+      ]
     },
     {
       "asset_id": "booster_plus_moves",
@@ -596,7 +784,31 @@
       "reuse": "global",
       "priority": "P0",
       "production_status": "candidate",
-      "current_path": "assets/pieces/potion.svg"
+      "current_path": "assets/pieces/potion.svg",
+      "architecture_owned": true,
+      "contract_owners": [
+        {
+          "screen": "S04",
+          "region": "actions",
+          "block": "aid_or_booster_row",
+          "slot": "plus_moves",
+          "states": [
+            "available",
+            "disabled"
+          ]
+        },
+        {
+          "screen": "S05",
+          "region": "actions",
+          "block": "booster_row",
+          "slot": "plus_moves",
+          "states": [
+            "available",
+            "disabled",
+            "pressed"
+          ]
+        }
+      ]
     },
     {
       "asset_id": "reward_moon_cameo",
@@ -623,15 +835,61 @@
       "reuse": "vertical_slice",
       "priority": "P0",
       "production_status": "candidate",
-      "current_path": "assets/curios/ch01_curio_moon_cameo_awakened_v01.svg"
+      "current_path": "assets/curios/ch01_curio_moon_cameo_awakened_v01.svg",
+      "architecture_owned": true,
+      "contract_owners": [
+        {
+          "screen": "S04",
+          "region": "primary",
+          "block": "primary_ritual_panel",
+          "slot": "reward_curio",
+          "states": [
+            "sealed",
+            "owned_replay"
+          ]
+        },
+        {
+          "screen": "S06",
+          "region": "result",
+          "block": "result_panel",
+          "slot": "reward_curio",
+          "states": [
+            "sealed",
+            "awakening",
+            "awakened",
+            "replay_owned"
+          ]
+        },
+        {
+          "screen": "S07",
+          "region": "world",
+          "block": "house_hero",
+          "slot": "restored_curio_slot",
+          "states": [
+            "empty",
+            "awakening",
+            "restored"
+          ]
+        },
+        {
+          "screen": "S07",
+          "region": "ceremony",
+          "block": "change_summary",
+          "slot": "curio_identity",
+          "states": [
+            "awakening",
+            "restored"
+          ]
+        }
+      ]
     },
     {
       "asset_id": "vfx_match_clear",
       "screen": [
         "S05"
       ],
-      "block": "board",
-      "slot": "matched_piece_fx",
+      "block": "match_board",
+      "slot": "board_fx",
       "state": [
         "play"
       ],
@@ -644,15 +902,30 @@
       ],
       "reuse": "global",
       "priority": "P0",
-      "production_status": "required"
+      "production_status": "required",
+      "architecture_owned": true,
+      "contract_owners": [
+        {
+          "screen": "S05",
+          "region": "board",
+          "block": "match_board",
+          "slot": "board_fx",
+          "states": [
+            "match",
+            "cascade",
+            "special",
+            "objective_complete"
+          ]
+        }
+      ]
     },
     {
       "asset_id": "vfx_reward_reveal",
       "screen": [
         "S06"
       ],
-      "block": "reward_hero",
-      "slot": "reward_glow",
+      "block": "result_panel",
+      "slot": "reward_fx",
       "state": [
         "play"
       ],
@@ -665,7 +938,20 @@
       ],
       "reuse": "global",
       "priority": "P0",
-      "production_status": "required"
+      "production_status": "required",
+      "architecture_owned": true,
+      "contract_owners": [
+        {
+          "screen": "S06",
+          "region": "result",
+          "block": "result_panel",
+          "slot": "reward_fx",
+          "states": [
+            "reveal",
+            "reduced_motion"
+          ]
+        }
+      ]
     },
     {
       "asset_id": "vfx_house_awaken",
@@ -687,7 +973,20 @@
       ],
       "reuse": "House",
       "priority": "P0",
-      "production_status": "required"
+      "production_status": "required",
+      "architecture_owned": true,
+      "contract_owners": [
+        {
+          "screen": "S07",
+          "region": "world",
+          "block": "house_hero",
+          "slot": "awakening_fx",
+          "states": [
+            "play",
+            "reduced_motion"
+          ]
+        }
+      ]
     },
     {
       "asset_id": "chapter_world_house",
@@ -708,7 +1007,7 @@
       ],
       "reuse": "Chapters",
       "priority": "P1",
-      "production_status": "frozen_existing_candidate_do_not_polish_until_golden_loop_acceptance",
+      "production_status": "frozen_until_golden_loop_acceptance",
       "current_path": "assets/world/ch01_curio_boutique/chapter_world_map.svg"
     },
     {
@@ -782,7 +1081,20 @@
       "technical_policy": "raster_only_no_svg_fallback",
       "current_runtime_dimensions": "420x747_webp_review_runtime",
       "source_resolution": "576x1024",
-      "contract_owner": "S04 -> world -> prestart_environment -> background -> default"
+      "contract_owner": "S04 -> world -> prestart_environment -> background -> default",
+      "architecture_owned": true,
+      "contract_owners": [
+        {
+          "screen": "S04",
+          "region": "world",
+          "block": "full_screen_background",
+          "slot": "environment",
+          "states": [
+            "first_attempt",
+            "replay"
+          ]
+        }
+      ]
     },
     {
       "asset_id": "prestart_ch01_shared_art",
@@ -807,7 +1119,54 @@
       "production_status": "candidate_runtime_connected_raster",
       "current_path": "assets/world/ch01_curio_boutique/prestart_curio_boutique_shared.webp",
       "source_resolution": "240x180 transport preview; production-resolution master retained outside repo pending binary handoff",
-      "technical_policy": "raster_only_no_svg_fallback"
+      "technical_policy": "raster_only_no_svg_fallback",
+      "architecture_owned": true,
+      "contract_owners": [
+        {
+          "screen": "S04",
+          "region": "primary",
+          "block": "primary_ritual_panel",
+          "slot": "level_art",
+          "states": [
+            "first_attempt",
+            "replay"
+          ]
+        }
+      ]
+    },
+    {
+      "asset_id": "chapter_route_curio_boutique",
+      "screen": [
+        "S03"
+      ],
+      "block": "chapter_route",
+      "slot": "environment",
+      "state": [
+        "default"
+      ],
+      "type": "background_art",
+      "dimensions": "2160x3000_master__1080x1500_ship_region",
+      "aspect_ratio": "0.72:1",
+      "transparent": false,
+      "variants": [
+        "chapter01"
+      ],
+      "reuse": "S03_curio_boutique",
+      "priority": "P0",
+      "production_status": "required_by_golden_loop_not_yet_produced",
+      "technical_policy": "raster_only_no_svg_fallback",
+      "architecture_owned": true,
+      "contract_owners": [
+        {
+          "screen": "S03",
+          "region": "route",
+          "block": "chapter_route",
+          "slot": "environment",
+          "states": [
+            "default"
+          ]
+        }
+      ]
     }
   ],
   "vertical_slice_art_policy": {
@@ -844,7 +1203,7 @@
     "rule": "Only authored-art slots owned by the canonical screen/state contract may enter production. No downstream bulk art before Golden Loop acceptance."
   },
   "architecture_source": {
-    "authority": "North Star Product Board interpreted through product architecture",
+    "authority": "North Star Product Board interpreted through canonical product architecture",
     "contract": "assets/manifests/screen_contracts.json",
     "derivation_order": [
       "product_loop",
@@ -853,7 +1212,7 @@
       "global_shell",
       "asset_plan",
       "asset_manifest",
-      "golden_loop",
+      "golden_playable_loop",
       "downstream_expansion"
     ]
   },
@@ -868,7 +1227,7 @@
       "S07",
       "S01"
     ],
-    "rule": "No new or polished art outside a missing Golden Loop screen/block/slot/state until Golden Loop acceptance.",
+    "rule": "Only assets with explicit canonical Screen -> Region -> Block -> Slot -> State ownership inside the incomplete Golden Loop may be produced or polished.",
     "existing_non_golden_candidates": "frozen_do_not_polish"
   },
   "golden_loop_asset_slots": {
