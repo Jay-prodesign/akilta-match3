@@ -5,6 +5,7 @@ on:
     branches:
       - p0/bootstrap
       - p1/events-weekly-missions
+      - p1/profile-settings
     paths:
       - ".github/workflows/p0-visual.yml"
       - "tests/visual/capture_level1_journey.gd"
@@ -20,6 +21,8 @@ on:
       - "src/ui/collection/**"
       - "src/world/**"
       - "src/ui/shared/**"
+      - "src/settings/**"
+      - "src/ui/settings/**"
       - "src/match3/presentation/**"
       - "assets/pieces/**"
       - "assets/manifests/screen_asset_manifest.json"

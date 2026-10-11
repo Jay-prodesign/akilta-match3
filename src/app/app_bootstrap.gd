@@ -668,6 +668,8 @@ func show_settings() -> bool:
 	screen_host.add_child(_settings_screen)
 	Typography.apply(_settings_screen)
 	CurioMaterials.apply(_settings_screen)
+	if _settings_screen.has_method("set_return_context"):
+		_settings_screen.set_return_context(navigation.route_name().to_lower())
 	_settings_screen.bind_settings(user_settings)
 	_settings_screen.close_requested.connect(close_settings)
 	return true
