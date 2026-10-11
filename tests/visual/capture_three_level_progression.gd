@@ -358,9 +358,21 @@ func _play_level(app: Node, level_number: int) -> bool:
 	await _frames(4)
 	if String(app.current_route_name()) == "restoration":
 		var restoration = app.current_screen()
+		var restoration_card: PanelContainer = restoration.get_node_or_null("RestorationOverlay/CeremonyCard") as PanelContainer if restoration != null else null
 		var restoration_continue: Button = restoration.get_node_or_null("RestorationOverlay/CeremonyCard/CeremonyContent/CeremonyRow/Copy/Continue") as Button if restoration != null else null
-		if restoration_continue == null:
-			_fail(app, "Level %d restoration ceremony must expose Continue before returning to House" % level_number)
+		var restoration_room = restoration.get_node_or_null("Layout/RoomView") if restoration != null else null
+		if restoration_continue == null or restoration_card == null or restoration_room == null:
+			_fail(app, "Level %d restoration ceremony surface is incomplete" % level_number)
+			return false
+		if restoration_card.size.y > restoration.size.y * 0.18:
+			_fail(app, "Level %d restoration ceremony card is taller than its content contract" % level_number)
+			return false
+		if level_number >= 2:
+			var awakening_echo: TextureRect = restoration_room.get_node_or_null("RestorationAwakeningEcho") as TextureRect
+			if awakening_echo == null or awakening_echo.texture == null:
+				_fail(app, "Level %d restoration must render the Curio awakening echo" % level_number)
+				return false
+		if not await _save(app, "progression-level%d-restoration.png" % level_number):
 			return false
 		restoration_continue.emit_signal("pressed")
 		await _frames(4)

@@ -112,6 +112,9 @@ jobs:
           test -s artifacts/progression-level1-gameplay.png
           test -s artifacts/progression-level2-gameplay.png
           test -s artifacts/progression-level3-gameplay.png
+          test -s artifacts/progression-level1-restoration.png
+          test -s artifacts/progression-level2-restoration.png
+          test -s artifacts/progression-level3-restoration.png
           test -s artifacts/progression-final-reliquary.png
           test -s artifacts/progression-final-reliquary-moth-detail.png
           test -s artifacts/progression-final-reliquary-thorned-detail.png
@@ -218,6 +221,9 @@ jobs:
             artifacts/progression-level1-result.png
             artifacts/progression-level2-result.png
             artifacts/progression-level3-result.png
+            artifacts/progression-level1-restoration.png
+            artifacts/progression-level2-restoration.png
+            artifacts/progression-level3-restoration.png
             artifacts/progression-final-reliquary.png
             artifacts/progression-final-reliquary-moth-detail.png
             artifacts/progression-final-reliquary-thorned-detail.png
