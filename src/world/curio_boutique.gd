@@ -17,25 +17,21 @@ const LEAF := Color("#8BAF7C")
 const PieceAssetLoader = preload("res://src/match3/presentation/piece_asset_loader.gd")
 const ScreenArt = preload("res://src/ui/shared/screen_art_registry.gd")
 const BACKDROP_ASSET_ID := "hub_bg_grandhall"
-var _backdrop: Texture2D
-const CAT_PORTRAIT_PATH := "res://assets/pieces/black_cat.svg"
+const HOUSE_FAMILIAR_PATH := "res://assets/characters/ch01_house_black_cat_familiar_layer_v01.png"
 const MOTH_RELIQUARY_PATH := "res://assets/curios/ch01_curio_moth_reliquary.svg"
 const THORNED_LOCKET_PATH := "res://assets/curios/ch01_curio_thorned_locket.svg"
-var _cat_portrait: Texture2D
+var _backdrop: Texture2D
+var _house_familiar: Texture2D
 var _moth_reliquary: Texture2D
 var _thorned_locket: Texture2D
+var _familiar_state: String = "attention"
 
 func _ready() -> void:
 	# Screen-first rule: the House environment is authored raster art. Never fall
 	# back to a procedurally drawn room or an SVG environment when production art
 	# is missing; missing art must remain visible as a production failure.
 	_backdrop = ScreenArt.texture(BACKDROP_ASSET_ID)
-	var file := FileAccess.open(CAT_PORTRAIT_PATH, FileAccess.READ)
-	if file != null:
-		var image := Image.new()
-		if image.load_svg_from_string(file.get_as_text(), 1.0) == OK and not image.is_empty():
-			_cat_portrait = ImageTexture.create_from_image(image)
-		file.close()
+	_house_familiar = PieceAssetLoader.ornament(HOUSE_FAMILIAR_PATH)
 	_moth_reliquary = PieceAssetLoader.ornament(MOTH_RELIQUARY_PATH)
 	_thorned_locket = PieceAssetLoader.ornament(THORNED_LOCKET_PATH)
 	queue_redraw()
@@ -46,6 +42,7 @@ var curios: Array[String] = []
 func set_house_state(stage: int, owned_curios: Array[String]) -> void:
 	house_stage = stage
 	curios = owned_curios.duplicate()
+	_familiar_state = "attention" if house_stage <= 0 else "idle"
 	var cameo_overlay := get_node_or_null("MoonCameoOverlay")
 	if cameo_overlay != null:
 		cameo_overlay.visible = house_stage >= 1 and curios.has("moon_cameo")
@@ -65,9 +62,10 @@ func _draw() -> void:
 	draw_rect(room, VELVET, true)
 	if _backdrop != null:
 		# The House screen owns one same-camera environment. Runtime layers add only
-		# stateful light and restored Curios; they must not duplicate painted props.
+		# contract-owned character feedback and restored Curios.
 		draw_texture_rect(_backdrop, room, false)
 		_draw_authored_atmosphere(room)
+		_draw_familiar_world_layer(room)
 		_draw_authored_restoration_curios(room)
 	else:
 		# Intentionally no illustrative fallback. A flat underlay is allowed only
@@ -91,6 +89,52 @@ func _draw_authored_atmosphere(room: Rect2) -> void:
 			draw_circle(warm_center, room.size.x * (0.06 + float(i) * 0.035), warm)
 	if house_stage > 0:
 		_draw_awakened_sparkles(room)
+
+func set_familiar_state(state: String) -> void:
+	if state not in ["idle", "attention", "celebrate"]:
+		return
+	_familiar_state = state
+	queue_redraw()
+
+func familiar_contract() -> Dictionary:
+	return {
+		"slot": "character_world_layer",
+		"screen": ["S01", "S07"],
+		"state": _familiar_state,
+		"loaded": _house_familiar != null,
+		"path": HOUSE_FAMILIAR_PATH,
+		"source": "AKILTA first-party authored House environment character extraction",
+		"gameplay_piece_substitution": false
+	}
+
+func _draw_familiar_world_layer(room: Rect2) -> void:
+	if _house_familiar == null:
+		return
+	# This layer is authored in the exact same 900x1000 camera coordinate system
+	# as hub_bg_grandhall. Drawing both into the same room rect preserves alignment
+	# on every responsive RoomView size without substituting the Match-3 cat tile.
+	var center := Vector2(
+		room.position.x + room.size.x * 0.283,
+		room.position.y + room.size.y * 0.582
+	)
+	if _familiar_state == "attention":
+		for i in range(3, 0, -1):
+			var glow := Color(GOLD)
+			glow.a = 0.010 + float(i) * 0.012
+			draw_circle(center, room.size.x * (0.060 + float(i) * 0.022), glow)
+	elif _familiar_state == "celebrate":
+		for i in range(4, 0, -1):
+			var glow := Color(LILAC if i % 2 == 0 else GOLD)
+			glow.a = 0.012 + float(i) * 0.012
+			draw_circle(center, room.size.x * (0.060 + float(i) * 0.025), glow)
+		for index in range(6):
+			var angle := TAU * float(index) / 6.0 - 0.35
+			var direction := Vector2(cos(angle), sin(angle))
+			var p := center + direction * room.size.x * 0.105
+			draw_line(p - direction * 5.0, p + direction * 5.0, Color(GOLD, 0.66), 1.6)
+	# The extracted layer carries transparent pixels everywhere except the authored
+	# familiar region, so this does not redraw the room or create a UI portrait.
+	draw_texture_rect(_house_familiar, room, false)
 
 func restoration_contract() -> Dictionary:
 	return {
@@ -491,17 +535,6 @@ func _draw_awakened_sparkles(room: Rect2) -> void:
 		draw_circle(p, 14.0, Color(0.851, 0.71, 0.416, 0.025))
 		draw_line(p - Vector2(7, 0), p + Vector2(7, 0), Color(0.945, 0.91, 0.866, 0.62), 1.4)
 		draw_line(p - Vector2(0, 7), p + Vector2(0, 7), Color(0.945, 0.91, 0.866, 0.62), 1.4)
-
-func _draw_cat_portrait(room: Rect2) -> void:
-	if _cat_portrait == null:
-		return
-	# First-party black-cat portrait is part of the House scene, not only the board.
-	var portrait_size := Vector2(room.size.x * 0.18, room.size.y * 0.19)
-	var center := Vector2(room.get_center().x, room.position.y + room.size.y * 0.77)
-	var portrait := Rect2(center - portrait_size * 0.5, portrait_size)
-	draw_rect(portrait.grow(5.0), Color("#100B15"), true)
-	draw_rect(portrait.grow(3.0), Color(GOLD, 0.72), false, 2.0)
-	draw_texture_rect(_cat_portrait, portrait, false)
 
 func _draw_candle_props(room: Rect2) -> void:
 	var candle := PieceAssetLoader.ornament("res://assets/pieces/candle.svg")

@@ -322,6 +322,8 @@ func _animate_restoration_state(curio_id: String, stage: int, current_curios: Ar
 	if not is_instance_valid(self):
 		return
 	room_view.set_house_state(stage, current_curios)
+	if room_view.has_method("set_familiar_state"):
+		room_view.set_familiar_state("celebrate")
 	room_view.modulate = Color.WHITE
 	if _reduced_motion:
 		return
