@@ -12,10 +12,10 @@ enum Route { BOOT, HOUSE, COLLECTION, MAP, PRESTART, GAMEPLAY }
 
 const _EDGES := {
 	Route.BOOT: [Route.HOUSE],
-	Route.HOUSE: [Route.COLLECTION, Route.MAP],
+	Route.HOUSE: [Route.COLLECTION, Route.MAP, Route.PRESTART],
 	Route.COLLECTION: [Route.HOUSE],
 	Route.MAP: [Route.HOUSE, Route.PRESTART],
-	Route.PRESTART: [Route.MAP, Route.GAMEPLAY],
+	Route.PRESTART: [Route.HOUSE, Route.MAP, Route.GAMEPLAY],
 	Route.GAMEPLAY: [Route.HOUSE],
 }
 
@@ -88,5 +88,5 @@ func back() -> String:
 		Route.MAP:
 			return "house" if go(Route.HOUSE, {"via": "back"}) else "none"
 		Route.PRESTART:
-			return "map" if go(Route.MAP, {"via": "back"}) else "none"
+			return "house" if go(Route.HOUSE, {"via": "back"}) else "none"
 	return "none"
