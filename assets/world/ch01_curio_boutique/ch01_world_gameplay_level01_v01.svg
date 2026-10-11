@@ -1,0 +1,50 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1080" height="1920" viewBox="0 0 1080 1920">
+<defs>
+ <linearGradient id="bg" x2="0" y2="1"><stop stop-color="#060914"/><stop offset=".44" stop-color="#181021"/><stop offset="1" stop-color="#080810"/></linearGradient>
+ <linearGradient id="gold" x2="1" y2="1"><stop stop-color="#edcf91"/><stop offset=".5" stop-color="#ac7849"/><stop offset="1" stop-color="#4f3123"/></linearGradient>
+ <radialGradient id="moon"><stop stop-color="#fff0d5"/><stop offset=".52" stop-color="#c5bddd"/><stop offset="1" stop-color="#66688e"/></radialGradient>
+ <radialGradient id="warm"><stop stop-color="#f7bd62" stop-opacity=".3"/><stop offset="1" stop-color="#f7bd62" stop-opacity="0"/></radialGradient>
+ <radialGradient id="violet"><stop stop-color="#a88ad0" stop-opacity=".18"/><stop offset="1" stop-color="#a88ad0" stop-opacity="0"/></radialGradient>
+</defs>
+<rect width="1080" height="1920" fill="url(#bg)"/>
+<ellipse cx="540" cy="260" rx="430" ry="390" fill="url(#violet)"/>
+<!-- tall gothic framing kept outside the playable center -->
+<path d="M44 1760V430Q44 122 270 98" fill="none" stroke="#33243a" stroke-width="30"/>
+<path d="M1036 1760V430Q1036 122 810 98" fill="none" stroke="#33243a" stroke-width="30"/>
+<path d="M80 1710V454Q80 158 292 134" fill="none" stroke="url(#gold)" stroke-opacity=".55" stroke-width="7"/>
+<path d="M1000 1710V454Q1000 158 788 134" fill="none" stroke="url(#gold)" stroke-opacity=".55" stroke-width="7"/>
+<!-- upper moon crest -->
+<path d="M386 260V184Q386 82 540 70Q694 82 694 184V260Z" fill="#101523" stroke="#7b5a49" stroke-width="5"/>
+<circle cx="540" cy="164" r="74" fill="url(#moon)"/>
+<circle cx="540" cy="164" r="120" fill="#9d8fc8" opacity=".07"/>
+<path d="M540 72v188M388 188h304" stroke="#9c744f" stroke-width="3" opacity=".55"/>
+<!-- side cabinet silhouettes -->
+<g fill="#120d17" stroke="#75523f" stroke-width="4" opacity=".82">
+ <rect x="92" y="580" width="116" height="740" rx="8"/><rect x="872" y="580" width="116" height="740" rx="8"/>
+</g>
+<g stroke="#8b6245" stroke-width="3" opacity=".7">
+ <path d="M92 740h116M92 920h116M92 1100h116M872 740h116M872 920h116M872 1100h116"/>
+</g>
+<!-- roses and books in lower corners -->
+<g fill="#6d1838" stroke="#c67a83" stroke-width="3" opacity=".9">
+ <circle cx="92" cy="1670" r="42"/><circle cx="146" cy="1702" r="35"/><circle cx="988" cy="1672" r="42"/><circle cx="934" cy="1704" r="35"/>
+</g>
+<g fill="#261725" stroke="#8e6548" stroke-width="3" opacity=".9">
+ <rect x="48" y="1740" width="216" height="34" rx="5"/><rect x="70" y="1698" width="190" height="31" rx="5"/>
+ <rect x="816" y="1740" width="216" height="34" rx="5"/><rect x="820" y="1698" width="190" height="31" rx="5"/>
+</g>
+<!-- candle pairs -->
+<ellipse cx="126" cy="1450" rx="165" ry="230" fill="url(#warm)"/>
+<ellipse cx="954" cy="1450" rx="165" ry="230" fill="url(#warm)"/>
+<g fill="#ead8ba" stroke="#8b6045" stroke-width="3">
+ <rect x="104" y="1410" width="36" height="130" rx="4"/><rect x="940" y="1410" width="36" height="130" rx="4"/>
+</g>
+<g fill="#ffd27d"><path d="M122 1378c-22 29-16 53 0 68 16-15 22-39 0-68Z"/><path d="M958 1378c-22 29-16 53 0 68 16-15 22-39 0-68Z"/></g>
+<!-- restrained ornamental divider motifs -->
+<g fill="none" stroke="#b88b5b" stroke-width="4" opacity=".42">
+ <path d="M84 372h230c34 0 57-18 72-44M996 372H766c-34 0-57-18-72-44"/>
+ <path d="M84 1588h230c34 0 57 18 72 44M996 1588H766c-34 0-57 18-72 44"/>
+</g>
+<g fill="#d8b56a" opacity=".5"><circle cx="332" cy="347" r="5"/><circle cx="748" cy="347" r="5"/><circle cx="332" cy="1613" r="5"/><circle cx="748" cy="1613" r="5"/></g>
+<rect x="20" y="20" width="1040" height="1880" rx="14" fill="none" stroke="#c09a68" stroke-opacity=".22" stroke-width="3"/>
+</svg>

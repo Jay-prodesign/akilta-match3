@@ -1,0 +1,169 @@
+name: P0 Golden Loop Render Verification
+
+on:
+  push:
+    branches:
+      - p0/bootstrap
+    paths:
+      - ".github/workflows/p0-visual.yml"
+      - "tests/visual/capture_level1_journey.gd"
+      - "tests/visual/capture_level1_failure.gd"
+      - "tests/visual/capture_three_level_progression.gd"
+      - "tests/visual/capture_level3_special.gd"
+      - "src/app/**"
+      - "src/ui/home/**"
+      - "src/ui/splash/**"
+      - "src/ui/map/**"
+      - "src/ui/gameplay/**"
+      - "src/ui/prestart/**"
+      - "src/ui/collection/**"
+      - "src/world/**"
+      - "src/ui/shared/**"
+      - "src/match3/presentation/**"
+      - "assets/pieces/**"
+      - "assets/manifests/screen_asset_manifest.json"
+      - "assets/world/ch01_curio_boutique/**"
+  # Expensive rendered verification is milestone-based. Functional CI runs
+  # continuously; this workflow is for Golden Loop render evidence only.
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  render-golden-loop:
+    runs-on: ubuntu-latest
+    timeout-minutes: 7
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Download pinned Godot 4.7.2
+        shell: bash
+        run: |
+          set -euo pipefail
+          curl -L --fail --retry 3 -o godot.zip "https://github.com/godotengine/godot-builds/releases/download/4.7.2-stable/Godot_v4.7.2-stable_linux.x86_64.zip"
+          echo "cadd3204e728a35d3f13adb7fd0d7902636b79f6b95c40c265eb73b6c35329e4  godot.zip" | sha256sum -c -
+          unzip -q godot.zip
+          mv Godot_v4.7.2-stable_linux.x86_64 godot
+          chmod +x godot
+
+      - name: Render canonical Golden Playable Loop
+        shell: bash
+        run: |
+          set -uo pipefail
+          set +e
+          output=$(LIBGL_ALWAYS_SOFTWARE=1 xvfb-run -a ./godot --audio-driver Dummy --path . -s res://tests/visual/capture_level1_journey.gd 2>&1)
+          status=$?
+          set -e
+          printf '%s\n' "$output"
+          if [ "$status" -ne 0 ]; then exit "$status"; fi
+          if grep -Eq "SCRIPT ERROR:|(^| )ERROR:|CAPTURE_FAIL:" <<<"$output"; then exit 1; fi
+          grep -Fq "CAPTURE_PASS: canonical Golden Playable Loop" <<<"$output"
+          test -s artifacts/golden-00-splash.png
+          test -s artifacts/golden-01-house-dormant.png
+          test -s artifacts/golden-02-chapter-route.png
+          test -s artifacts/golden-03-prestart.png
+          test -s artifacts/golden-04-gameplay.png
+          test -s artifacts/golden-04b-pause.png
+          test -s artifacts/golden-05-win-reward.png
+          test -s artifacts/golden-06-restoration.png
+          test -s artifacts/golden-07-house-return.png
+          test -s artifacts/golden-08-curio-verification.png
+          test -s artifacts/golden-09-curio-detail.png
+
+      - name: Render Golden Loop failure and retry branch
+        shell: bash
+        run: |
+          set -uo pipefail
+          set +e
+          output=$(LIBGL_ALWAYS_SOFTWARE=1 xvfb-run -a ./godot --audio-driver Dummy --path . -s res://tests/visual/capture_level1_failure.gd 2>&1)
+          status=$?
+          set -e
+          printf '%s\n' "$output"
+          if [ "$status" -ne 0 ]; then exit "$status"; fi
+          if grep -Eq "SCRIPT ERROR:|(^| )ERROR:|CAPTURE_FAIL:" <<<"$output"; then exit 1; fi
+          grep -Fq "CAPTURE_PASS: Level 1 fail retry" <<<"$output"
+          test -s artifacts/level1-fail-result.png
+          test -s artifacts/level1-retry-restored.png
+
+      - name: Render whole-product three-level review shell
+        shell: bash
+        run: |
+          set -uo pipefail
+          set +e
+          output=$(LIBGL_ALWAYS_SOFTWARE=1 xvfb-run -a ./godot --audio-driver Dummy --path . -s res://tests/visual/capture_three_level_progression.gd 2>&1)
+          status=$?
+          set -e
+          printf '%s\n' "$output"
+          if [ "$status" -ne 0 ]; then exit "$status"; fi
+          if grep -Eq "SCRIPT ERROR:|(^| )ERROR:|CAPTURE_FAIL:" <<<"$output"; then exit 1; fi
+          grep -Fq "CAPTURE_PASS: real three-level progression journey" <<<"$output"
+          test -s artifacts/progression-house-stage1.png
+          test -s artifacts/progression-house-stage2.png
+          test -s artifacts/progression-house-stage3.png
+          test -s artifacts/progression-level1-gameplay.png
+          test -s artifacts/progression-level2-gameplay.png
+          test -s artifacts/progression-level3-gameplay.png
+          test -s artifacts/progression-final-reliquary.png
+          test -s artifacts/progression-final-events.png
+          test -s artifacts/progression-final-shop.png
+          test -s artifacts/progression-final-profile.png
+          test -s artifacts/progression-final-settings.png
+          test -s artifacts/progression-final-chapters.png
+          test -s artifacts/progression-final-map.png
+
+      - name: Render Level 3 special-state proof
+        shell: bash
+        run: |
+          set -uo pipefail
+          set +e
+          output=$(LIBGL_ALWAYS_SOFTWARE=1 xvfb-run -a ./godot --audio-driver Dummy --path . -s res://tests/visual/capture_level3_special.gd 2>&1)
+          status=$?
+          set -e
+          printf '%s\n' "$output"
+          if [ "$status" -ne 0 ]; then exit "$status"; fi
+          if grep -Eq "SCRIPT ERROR:|(^| )ERROR:|CAPTURE_FAIL:" <<<"$output"; then exit 1; fi
+          grep -Fq "CAPTURE_PASS:" <<<"$output"
+          test -s artifacts/level3-line-special.png
+
+      - name: Upload Golden Loop render evidence
+        uses: actions/upload-artifact@v4
+        with:
+          name: golden-playable-loop-evidence
+          path: |
+            artifacts/golden-00-splash.png
+            artifacts/golden-01-house-dormant.png
+            artifacts/golden-02-chapter-route.png
+            artifacts/golden-03-prestart.png
+            artifacts/golden-04-gameplay.png
+            artifacts/golden-04b-pause.png
+            artifacts/golden-05-win-reward.png
+            artifacts/golden-06-restoration.png
+            artifacts/golden-07-house-return.png
+            artifacts/golden-08-curio-verification.png
+            artifacts/golden-09-curio-detail.png
+            artifacts/level1-fail-result.png
+            artifacts/level1-retry-restored.png
+            artifacts/progression-house-stage1.png
+            artifacts/progression-house-stage2.png
+            artifacts/progression-house-stage3.png
+            artifacts/progression-level1-gameplay.png
+            artifacts/progression-level2-gameplay.png
+            artifacts/progression-level3-gameplay.png
+            artifacts/level3-line-special.png
+            artifacts/progression-map-before-level1.png
+            artifacts/progression-map-before-level2.png
+            artifacts/progression-map-before-level3.png
+            artifacts/progression-level1-result.png
+            artifacts/progression-level2-result.png
+            artifacts/progression-level3-result.png
+            artifacts/progression-final-reliquary.png
+            artifacts/progression-final-events.png
+            artifacts/progression-final-shop.png
+            artifacts/progression-final-profile.png
+            artifacts/progression-final-settings.png
+            artifacts/progression-final-chapters.png
+            artifacts/progression-final-map.png
+          if-no-files-found: error
+          retention-days: 14

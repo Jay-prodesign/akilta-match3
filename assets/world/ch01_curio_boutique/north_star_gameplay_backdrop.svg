@@ -1,0 +1,43 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="720" height="1280" viewBox="0 0 720 1280">
+<defs>
+ <linearGradient id="night" x1="0" y1="0" x2="0" y2="1"><stop stop-color="#090d1b"/><stop offset=".42" stop-color="#171225"/><stop offset="1" stop-color="#090a14"/></linearGradient>
+ <linearGradient id="velvet" x1="0" y1="0" x2="1" y2="0"><stop stop-color="#080a15"/><stop offset=".5" stop-color="#291827"/><stop offset="1" stop-color="#080a15"/></linearGradient>
+ <linearGradient id="gold" x1="0" y1="0" x2="0" y2="1"><stop stop-color="#f5dca9"/><stop offset=".48" stop-color="#b78a53"/><stop offset="1" stop-color="#59402e"/></linearGradient>
+ <radialGradient id="moon"><stop stop-color="#f8edcd"/><stop offset=".45" stop-color="#bfc7df"/><stop offset="1" stop-color="#6e789c" stop-opacity="0"/></radialGradient>
+ <radialGradient id="candleGlow"><stop stop-color="#f5bb68" stop-opacity=".3"/><stop offset="1" stop-color="#f5bb68" stop-opacity="0"/></radialGradient>
+ <linearGradient id="glass" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#26384b"/><stop offset=".5" stop-color="#161a32"/><stop offset="1" stop-color="#4c2441"/></linearGradient>
+ <g id="window"><path d="M-46 0V-88Q-46-136 0-136Q46-136 46-88V0Z" fill="#080d1a" stroke="url(#gold)" stroke-width="5"/><path d="M-34-7V-88Q-34-121 0-121Q34-121 34-88V-7Z" fill="url(#glass)" stroke="#725744" stroke-width="2"/><path d="M0-119V-8M-32-57H32" stroke="#a88b64" stroke-width="3"/><path d="M-30-13L-14-45L0-13L16-45L30-13" fill="none" stroke="#9d6d7c" stroke-width="2" opacity=".75"/></g>
+ <g id="candle"><ellipse cx="0" cy="12" rx="22" ry="5" fill="#02030a" opacity=".6"/><path d="M-13 10V-24Q-13-29-7-29H7Q13-29 13-24V10Z" fill="#e8d7b8" stroke="#9e7d56" stroke-width="2"/><path d="M0-28Q-16-49 0-69Q16-48 0-28Z" fill="#edac58"/><path d="M0-31Q-7-43 0-55Q7-43 0-31Z" fill="#fff0c7"/></g>
+ <g id="rose"><path d="M0 8Q-8 24-13 30M0 16Q12 9 18 19" fill="none" stroke="#596c50" stroke-width="4"/><path d="M0-18C-23-30-31-5-12 7C-27 24-5 33 5 16C25 25 35 2 16-7C24-29 3-35 0-18Z" fill="#77273f" stroke="#d3a06c" stroke-width="2"/><path d="M0-15Q-12-8 0 1Q12-8 0-15Z" fill="none" stroke="#e5b986" stroke-width="2"/></g>
+ <g id="star"><path d="M0-22L6-7L22-7L10 3L15 19L0 9L-15 19L-10 3L-22-7L-6-7Z" fill="none" stroke="url(#gold)" stroke-width="3"/><circle r="3" fill="#e7c98c"/></g>
+</defs>
+<rect width="720" height="1280" fill="url(#night)"/>
+<path d="M0 0H720V1280H0Z" fill="url(#velvet)" opacity=".4"/>
+<!-- distant moonlit rain and star field -->
+<circle cx="360" cy="210" r="220" fill="url(#moon)" opacity=".55"/>
+<g fill="#d8c9a8" opacity=".65"><circle cx="80" cy="110" r="2"/><circle cx="142" cy="182" r="1.5"/><circle cx="570" cy="102" r="2"/><circle cx="640" cy="230" r="1.5"/><circle cx="84" cy="350" r="1.5"/><circle cx="604" cy="388" r="2"/><circle cx="119" cy="510" r="1.5"/><circle cx="601" cy="615" r="1.5"/><circle cx="96" cy="746" r="2"/><circle cx="629" cy="850" r="1.5"/></g>
+<!-- antique architectural frame -->
+<path d="M24 1280V270Q24 82 190 52Q360 8 530 52Q696 82 696 270V1280" fill="none" stroke="#080812" stroke-width="28"/>
+<path d="M30 1280V270Q30 89 193 60Q360 17 527 60Q690 89 690 270V1280" fill="none" stroke="url(#gold)" stroke-width="5" opacity=".82"/>
+<path d="M49 1280V282Q49 112 201 83Q360 42 519 83Q671 112 671 282V1280" fill="none" stroke="#7d5b4c" stroke-width="2" opacity=".7"/>
+<!-- side gothic windows, deliberately clear behind play board -->
+<g opacity=".8"><use href="#window" x="82" y="390" transform="translate(0 0) scale(.72)"/><use href="#window" x="638" y="390" transform="translate(0 0) scale(.72)"/><use href="#window" x="82" y="700" transform="translate(0 0) scale(.62)"/><use href="#window" x="638" y="700" transform="translate(0 0) scale(.62)"/></g>
+<!-- velvet wall panels with delicate gilded filigree -->
+<g fill="none" stroke="#b58a58" stroke-width="2" opacity=".32">
+ <path d="M70 475Q110 430 150 475Q110 520 70 475Z M110 430V520M86 452Q110 475 134 498M134 452Q110 475 86 498"/>
+ <path d="M570 475Q610 430 650 475Q610 520 570 475Z M610 430V520M586 452Q610 475 634 498M634 452Q610 475 586 498"/>
+ <path d="M72 830Q110 780 148 830Q110 880 72 830Z M110 780V880"/>
+ <path d="M572 830Q610 780 648 830Q610 880 572 830Z M610 780V880"/>
+</g>
+<!-- low candlelit shelves and curios at the side edges -->
+<ellipse cx="74" cy="1010" rx="110" ry="190" fill="url(#candleGlow)"/><ellipse cx="650" cy="1010" rx="110" ry="190" fill="url(#candleGlow)"/>
+<path d="M20 1002H156L145 1020H30ZM564 1002H700L690 1020H575Z" fill="#17101b" stroke="url(#gold)" stroke-width="3"/>
+<g transform="translate(65 972) scale(.72)"><use href="#candle"/></g><g transform="translate(653 972) scale(.72)"><use href="#candle"/></g>
+<g transform="translate(115 995) scale(.62)"><use href="#rose"/></g><g transform="translate(605 995) scale(.62)"><use href="#rose"/></g>
+<g transform="translate(92 1102) scale(.7)"><use href="#star"/></g><g transform="translate(628 1102) scale(.7)"><use href="#star"/></g>
+<!-- shadowed books and cabinet feet -->
+<path d="M18 1132L126 1120L134 1170L24 1184Z" fill="#19111c" stroke="#7f5b42" stroke-width="3"/><path d="M590 1120L702 1132L696 1184L586 1170Z" fill="#19111c" stroke="#7f5b42" stroke-width="3"/>
+<path d="M35 1144L118 1135M39 1155L120 1146M602 1135L684 1144M600 1146L681 1155" stroke="#b38a58" stroke-width="2" opacity=".6"/>
+<!-- gentle center vignette keeps board readable -->
+<rect width="720" height="1280" fill="#080813" opacity=".24"/>
+</svg>

@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="256" height="256" viewBox="0 0 256 256">
+<defs><linearGradient id="feather" x2="1" y2="1"><stop stop-color="#51465C"/><stop offset=".4" stop-color="#202233"/><stop offset="1" stop-color="#070A13"/></linearGradient><linearGradient id="wing" x2="1" y2="1"><stop stop-color="#73617B"/><stop offset=".5" stop-color="#2A2B3C"/><stop offset="1" stop-color="#0B0D17"/></linearGradient><linearGradient id="gold" x2="1" y2="1"><stop stop-color="#FFE0A0"/><stop offset="1" stop-color="#95602E"/></linearGradient></defs>
+<ellipse cx="126" cy="218" rx="76" ry="11" fill="#02040A" opacity=".46"/>
+<path d="M35 158c12-34 40-50 77-38 18-26 40-38 65-26 16 8 21 22 18 38l39 16-42 14c-12 31-42 49-78 42l-28 18-4-25-35 4c-11-12-15-26-12-43Z" fill="url(#feather)" stroke="#B18B60" stroke-width="4"/>
+<path d="M69 136c26-18 54-20 78-7-11 26-36 43-70 51-4-17-6-29-8-44Z" fill="url(#wing)" stroke="#8F819D" stroke-width="3"/>
+<path d="M82 143c19 2 37-1 51-10M82 154c18 2 34-1 47-9M78 166c18 1 32-2 43-9" fill="none" stroke="#C8B5C5" stroke-opacity=".52" stroke-width="3"/>
+<path d="M155 107c0-26 18-44 40-36 17 6 23 22 17 39l-10 24-34-3Z" fill="url(#feather)" stroke="#B18B60" stroke-width="3"/>
+<path d="m203 87 42 20-43 11Z" fill="url(#gold)"/><circle cx="193" cy="88" r="7" fill="#F3C65B"/><circle cx="195" cy="88" r="3" fill="#0A0B13"/>
+<path d="M105 194v28m49-29 7 28" stroke="#B98B53" stroke-width="5"/><path d="M105 221 91 229m14-8 8 10m48-10-10 10m10-10 14 7" stroke="#D9B36D" stroke-width="3"/>
+</svg>

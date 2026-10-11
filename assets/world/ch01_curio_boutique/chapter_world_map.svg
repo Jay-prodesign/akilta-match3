@@ -1,0 +1,49 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="1000" viewBox="0 0 1200 1000">
+<defs>
+ <linearGradient id="sky" x2="0" y2="1"><stop stop-color="#07101F"/><stop offset=".55" stop-color="#142035"/><stop offset="1" stop-color="#090C16"/></linearGradient>
+ <linearGradient id="stone" x2="1" y2="1"><stop stop-color="#463A4F"/><stop offset=".5" stop-color="#232033"/><stop offset="1" stop-color="#0E111C"/></linearGradient>
+ <linearGradient id="gold" x2="1" y2="1"><stop stop-color="#EACB8E"/><stop offset="1" stop-color="#835632"/></linearGradient>
+ <radialGradient id="moon"><stop stop-color="#FFF0D6"/><stop offset=".55" stop-color="#C7C7E4"/><stop offset="1" stop-color="#66749D"/></radialGradient>
+</defs>
+<rect width="1200" height="1000" fill="url(#sky)"/>
+<circle cx="1010" cy="125" r="92" fill="url(#moon)"/>
+<circle cx="1010" cy="125" r="150" fill="#9C8CCE" opacity=".08"/>
+<g fill="#EFD9AF"><circle cx="85" cy="90" r="2"/><circle cx="230" cy="130" r="2"/><circle cx="430" cy="70" r="2"/><circle cx="790" cy="110" r="2"/><circle cx="1120" cy="240" r="2"/></g>
+<!-- distant forest -->
+<path d="M0 530 70 430l40 72 62-120 58 103 72-143 70 134 69-112 61 112 85-150 70 146 65-126 68 122 83-160 70 168 75-124 78 158 95-120v620H0Z" fill="#0A121A"/>
+<!-- six house wings -->
+<g stroke="url(#gold)" stroke-width="5" stroke-linejoin="round">
+ <path d="M390 640V370l105-95 105 95v270Z" fill="url(#stone)"/>
+ <path d="M600 660V300l120-110 120 110v360Z" fill="url(#stone)"/>
+ <path d="M175 690V470l110-95 105 95v220Z" fill="#2A202D"/>
+ <path d="M840 700V455l102-90 105 90v245Z" fill="#2C1833"/>
+ <path d="M340 790V610l100-78 100 78v180Z" fill="#1E2932"/>
+ <path d="M760 800V600l105-82 108 82v200Z" fill="#21353A"/>
+</g>
+<!-- roofs/spires -->
+<g fill="#111522" stroke="#9A7A63" stroke-width="4">
+ <path d="m175 470 110-155 105 155Z"/><path d="m390 370 105-155 105 155Z"/><path d="m600 300 120-185 120 185Z"/><path d="m840 455 102-155 105 155Z"/><path d="m340 610 100-130 100 130Z"/><path d="m760 600 105-140 108 140Z"/>
+</g>
+<g stroke="#B28B60" stroke-width="4"><path d="M285 315V245M495 215v-82M720 115V40M942 300v-75M440 480v-60M865 460v-65"/></g>
+<!-- windows -->
+<g fill="#E9B869" stroke="#6C4650" stroke-width="2">
+ <rect x="252" y="505" width="25" height="48" rx="12"/><rect x="308" y="505" width="25" height="48" rx="12"/>
+ <rect x="462" y="410" width="28" height="53" rx="13"/><rect x="515" y="410" width="28" height="53" rx="13"/>
+ <rect x="680" y="350" width="30" height="56" rx="14"/><rect x="748" y="350" width="30" height="56" rx="14"/>
+ <rect x="910" y="500" width="27" height="50" rx="13"/><rect x="970" y="500" width="27" height="50" rx="13"/>
+</g>
+<!-- chapter color glows -->
+<ellipse cx="285" cy="600" rx="170" ry="130" fill="#D99054" opacity=".14"/>
+<ellipse cx="495" cy="520" rx="170" ry="140" fill="#5AA77B" opacity=".11"/>
+<ellipse cx="942" cy="585" rx="170" ry="140" fill="#BF55B9" opacity=".12"/>
+<ellipse cx="440" cy="715" rx="150" ry="110" fill="#8E79D2" opacity=".10"/>
+<ellipse cx="865" cy="720" rx="160" ry="120" fill="#63B9B3" opacity=".12"/>
+<ellipse cx="720" cy="560" rx="220" ry="170" fill="#E6B25D" opacity=".10"/>
+<!-- paths -->
+<path d="M720 650 495 560M720 650l222-60M720 650 440 720M720 650l145 70M720 650 285 610" fill="none" stroke="#B38D62" stroke-width="8" opacity=".45"/>
+<path d="M720 650c-25 110-20 220 0 330" fill="none" stroke="#D1B17A" stroke-width="12" opacity=".35"/>
+<!-- foreground gardens -->
+<path d="M0 790q180-120 360 0t360 0 480 0v210H0Z" fill="#091015"/>
+<g fill="#4D2036"><circle cx="95" cy="850" r="34"/><circle cx="140" cy="880" r="28"/><circle cx="1090" cy="850" r="34"/><circle cx="1045" cy="882" r="29"/></g>
+<rect x="16" y="16" width="1168" height="968" rx="10" fill="none" stroke="#C19A6B" stroke-opacity=".25" stroke-width="2"/>
+</svg>

@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="256" height="256" viewBox="0 0 256 256">
+<defs><linearGradient id="glass" x2="1" y2="1"><stop stop-color="#D9F5ED" stop-opacity=".75"/><stop offset=".35" stop-color="#557883" stop-opacity=".55"/><stop offset="1" stop-color="#13202D" stop-opacity=".9"/></linearGradient><linearGradient id="liquid" x2="1" y2="1"><stop stop-color="#A4F0BC"/><stop offset=".45" stop-color="#39B979"/><stop offset="1" stop-color="#146147"/></linearGradient><linearGradient id="gold" x2="1" y2="1"><stop stop-color="#F5D690"/><stop offset="1" stop-color="#8C5B2E"/></linearGradient></defs>
+<ellipse cx="128" cy="221" rx="72" ry="13" fill="#02030A" opacity=".42"/>
+<path d="M105 35h46v51c0 11 6 18 22 28 28 18 43 44 37 73-7 35-37 49-82 49s-75-14-82-49c-6-29 9-55 37-73 16-10 22-17 22-28Z" fill="url(#glass)" stroke="url(#gold)" stroke-width="6"/>
+<path d="M55 161c25 17 49 10 73 0 27-11 54-14 72 0v28c-9 25-35 35-72 35-39 0-64-10-73-35Z" fill="url(#liquid)"/>
+<rect x="100" y="25" width="56" height="25" rx="5" fill="#563722" stroke="url(#gold)" stroke-width="4"/>
+<path d="M82 123c-12 13-18 30-16 49" fill="none" stroke="#E9FFF7" stroke-width="8" opacity=".62" stroke-linecap="round"/>
+<circle cx="104" cy="178" r="7" fill="#D7FFE7"/><circle cx="154" cy="194" r="11" fill="#9CFFD1" opacity=".72"/>
+<path d="m128 147 14 17-14 20-14-20Z" fill="#173D35" stroke="#EFD89B" stroke-width="3"/>
+</svg>

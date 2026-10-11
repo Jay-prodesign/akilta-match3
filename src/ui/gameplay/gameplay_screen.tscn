@@ -1,0 +1,419 @@
+[gd_scene load_steps=10 format=3]
+
+[ext_resource type="Script" path="res://src/ui/gameplay/gameplay_screen.gd" id="1_game"]
+[ext_resource type="Script" path="res://src/match3/presentation/board_view.gd" id="2_board"]
+
+[ext_resource type="Script" path="res://src/ui/shared/moon_cameo_ritual_view.gd" id="9_cameo"]
+[ext_resource type="Script" path="res://src/ui/gameplay/awakening_progress_view.gd" id="10_progress"]
+
+[sub_resource type="StyleBoxFlat" id="StylePanel"]
+bg_color = Color(0.047, 0.035, 0.058, 0.985)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.835, 0.678, 0.439, 0.72)
+corner_radius_top_left = 18
+corner_radius_top_right = 18
+corner_radius_bottom_right = 18
+corner_radius_bottom_left = 18
+shadow_color = Color(0, 0, 0, 0.58)
+shadow_size = 18
+
+[sub_resource type="StyleBoxFlat" id="ActionNormal"]
+bg_color = Color(0.749, 0.647, 0.847, 1)
+corner_radius_top_left = 16
+corner_radius_top_right = 16
+corner_radius_bottom_right = 16
+corner_radius_bottom_left = 16
+
+[sub_resource type="StyleBoxFlat" id="ActionHover"]
+bg_color = Color(0.82, 0.73, 0.9, 1)
+corner_radius_top_left = 16
+corner_radius_top_right = 16
+corner_radius_bottom_right = 16
+corner_radius_bottom_left = 16
+
+[sub_resource type="StyleBoxFlat" id="ActionPressed"]
+bg_color = Color(0.65, 0.55, 0.75, 1)
+corner_radius_top_left = 16
+corner_radius_top_right = 16
+corner_radius_bottom_right = 16
+corner_radius_bottom_left = 16
+
+[sub_resource type="StyleBoxFlat" id="PauseUtility"]
+bg_color = Color(0.082, 0.064, 0.094, 0.98)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.749, 0.647, 0.847, 0.34)
+corner_radius_top_left = 12
+corner_radius_top_right = 12
+corner_radius_bottom_right = 12
+corner_radius_bottom_left = 12
+
+[sub_resource type="StyleBoxFlat" id="HintBand"]
+bg_color = Color(0.035, 0.025, 0.045, 0.9)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.835, 0.678, 0.439, 0.38)
+corner_radius_top_left = 10
+corner_radius_top_right = 10
+corner_radius_bottom_right = 10
+corner_radius_bottom_left = 10
+content_margin_left = 14.0
+content_margin_top = 8.0
+content_margin_right = 14.0
+content_margin_bottom = 8.0
+shadow_color = Color(0, 0, 0, 0.42)
+shadow_size = 8
+
+[node name="GameplayScreen" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_game")
+
+[node name="Backdrop" type="ColorRect" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.0627, 0.051, 0.0706, 1)
+
+[node name="WorldBackdrop" type="TextureRect" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+expand_mode = 1
+stretch_mode = 6
+modulate = Color(0.92, 0.84, 0.87, 0.48)
+
+[node name="Layout" type="VBoxContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 24.0
+offset_top = 44.0
+offset_right = -24.0
+offset_bottom = -70.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/separation = 8
+
+[node name="Eyebrow" type="Label" parent="Layout"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.84, 0.73, 0.66, 1)
+theme_override_colors/font_outline_color = Color(0.035, 0.025, 0.045, 0.92)
+theme_override_constants/outline_size = 4
+theme_override_font_sizes/font_size = 16
+text = "CURIO BOUTIQUE · LEVEL 1"
+horizontal_alignment = 1
+
+[node name="Title" type="Label" parent="Layout"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.975, 0.91, 0.79, 1)
+theme_override_colors/font_outline_color = Color(0.035, 0.025, 0.045, 0.95)
+theme_override_constants/outline_size = 6
+theme_override_font_sizes/font_size = 28
+text = "Moonlit Cabinet"
+horizontal_alignment = 1
+
+[node name="HUD" type="HBoxContainer" parent="Layout"]
+layout_mode = 2
+theme_override_constants/separation = 8
+
+[node name="Objective" type="Label" parent="Layout/HUD"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_colors/font_color = Color(0.749, 0.647, 0.847, 1)
+theme_override_colors/font_outline_color = Color(0.03, 0.02, 0.04, 0.9)
+theme_override_constants/outline_size = 3
+theme_override_font_sizes/font_size = 21
+text = "Gather Moon sigils  0/6"
+
+[node name="Moves" type="Label" parent="Layout/HUD"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.851, 0.71, 0.416, 1)
+theme_override_colors/font_outline_color = Color(0.03, 0.02, 0.04, 0.9)
+theme_override_constants/outline_size = 3
+theme_override_font_sizes/font_size = 24
+text = "12 moves"
+horizontal_alignment = 2
+
+[node name="Pause" type="Button" parent="Layout/HUD"]
+custom_minimum_size = Vector2(68, 54)
+layout_mode = 2
+theme_override_colors/font_color = Color(0.945, 0.91, 0.866, 1)
+theme_override_font_sizes/font_size = 24
+theme_override_styles/normal = SubResource("PauseUtility")
+theme_override_styles/hover = SubResource("PauseUtility")
+theme_override_styles/pressed = SubResource("PauseUtility")
+text = "Ⅱ"
+tooltip_text = "Pause"
+
+[node name="BoardView" type="Control" parent="Layout"]
+custom_minimum_size = Vector2(0, 1040)
+layout_mode = 2
+size_flags_vertical = 0
+mouse_filter = 0
+script = ExtResource("2_board")
+
+[node name="Hint" type="Label" parent="Layout"]
+custom_minimum_size = Vector2(0, 56)
+layout_mode = 2
+theme_override_colors/font_color = Color(0.945, 0.91, 0.866, 1)
+theme_override_colors/font_outline_color = Color(0.02, 0.015, 0.025, 0.98)
+theme_override_constants/outline_size = 4
+theme_override_font_sizes/font_size = 20
+theme_override_styles/normal = SubResource("HintBand")
+text = "Slide the moon sigil right. Wake the cabinet in one luminous move."
+horizontal_alignment = 1
+vertical_alignment = 1
+autowrap_mode = 2
+
+[node name="Awakening" type="PanelContainer" parent="Layout"]
+visible = false
+custom_minimum_size = Vector2(0, 224)
+layout_mode = 2
+
+[node name="Content" type="VBoxContainer" parent="Layout/Awakening"]
+layout_mode = 2
+theme_override_constants/separation = 6
+
+[node name="Label" type="Label" parent="Layout/Awakening/Content"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.851, 0.71, 0.416, 1)
+theme_override_colors/font_outline_color = Color(0.03, 0.02, 0.04, 0.9)
+theme_override_constants/outline_size = 3
+theme_override_font_sizes/font_size = 23
+text = "AWAKENING · MOON CAMEO"
+horizontal_alignment = 1
+
+[node name="ProgressView" type="Control" parent="Layout/Awakening/Content"]
+custom_minimum_size = Vector2(0, 120)
+layout_mode = 2
+mouse_filter = 2
+script = ExtResource("10_progress")
+
+[node name="ProgressCopy" type="Label" parent="Layout/Awakening/Content"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.663, 0.6, 0.659, 1)
+theme_override_font_sizes/font_size = 20
+text = "0 / 6 SIGILS · THE RELIC IS STILL DORMANT"
+horizontal_alignment = 1
+
+[node name="PauseOverlay" type="Control" parent="."]
+visible = false
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 0
+
+[node name="Dim" type="ColorRect" parent="PauseOverlay"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.0314, 0.0235, 0.0353, 0.84)
+
+[node name="Card" type="PanelContainer" parent="PauseOverlay"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -350.0
+offset_top = -330.0
+offset_right = 350.0
+offset_bottom = 330.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_styles/panel = SubResource("StylePanel")
+
+[node name="Content" type="VBoxContainer" parent="PauseOverlay/Card"]
+layout_mode = 2
+theme_override_constants/separation = 22
+alignment = 1
+
+[node name="Eyebrow" type="Label" parent="PauseOverlay/Card/Content"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.663, 0.6, 0.659, 1)
+theme_override_font_sizes/font_size = 18
+text = "CURIO BOUTIQUE"
+horizontal_alignment = 1
+
+[node name="Title" type="Label" parent="PauseOverlay/Card/Content"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.945, 0.91, 0.866, 1)
+theme_override_font_sizes/font_size = 40
+text = "Level Paused"
+horizontal_alignment = 1
+
+[node name="Detail" type="Label" parent="PauseOverlay/Card/Content"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.851, 0.804, 0.835, 1)
+theme_override_font_sizes/font_size = 20
+text = "The cabinet waits exactly as you left it."
+horizontal_alignment = 1
+
+[node name="Resume" type="Button" parent="PauseOverlay/Card/Content"]
+custom_minimum_size = Vector2(0, 70)
+layout_mode = 2
+theme_override_colors/font_color = Color(0.0627, 0.051, 0.0706, 1)
+theme_override_font_sizes/font_size = 22
+theme_override_styles/normal = SubResource("ActionNormal")
+theme_override_styles/hover = SubResource("ActionHover")
+theme_override_styles/pressed = SubResource("ActionPressed")
+text = "RESUME"
+
+[node name="Retry" type="Button" parent="PauseOverlay/Card/Content"]
+custom_minimum_size = Vector2(0, 64)
+layout_mode = 2
+theme_override_colors/font_color = Color(0.945, 0.91, 0.866, 1)
+theme_override_font_sizes/font_size = 20
+theme_override_styles/normal = SubResource("PauseUtility")
+theme_override_styles/hover = SubResource("PauseUtility")
+theme_override_styles/pressed = SubResource("PauseUtility")
+text = "RESTART LEVEL"
+
+[node name="Settings" type="Button" parent="PauseOverlay/Card/Content"]
+custom_minimum_size = Vector2(0, 60)
+layout_mode = 2
+theme_override_colors/font_color = Color(0.945, 0.91, 0.866, 1)
+theme_override_font_sizes/font_size = 19
+theme_override_styles/normal = SubResource("PauseUtility")
+theme_override_styles/hover = SubResource("PauseUtility")
+theme_override_styles/pressed = SubResource("PauseUtility")
+text = "AUDIO & ACCESSIBILITY"
+
+[node name="Exit" type="Button" parent="PauseOverlay/Card/Content"]
+custom_minimum_size = Vector2(0, 64)
+layout_mode = 2
+theme_override_colors/font_color = Color(0.851, 0.804, 0.835, 1)
+theme_override_font_sizes/font_size = 20
+theme_override_styles/normal = SubResource("PauseUtility")
+theme_override_styles/hover = SubResource("PauseUtility")
+theme_override_styles/pressed = SubResource("PauseUtility")
+text = "RETURN TO THE HOUSE"
+
+[node name="ResultOverlay" type="Control" parent="."]
+visible = false
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 0
+
+[node name="Dim" type="ColorRect" parent="ResultOverlay"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.0314, 0.0235, 0.0353, 0.82)
+
+[node name="Card" type="PanelContainer" parent="ResultOverlay"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -390.0
+offset_top = -390.0
+offset_right = 390.0
+offset_bottom = 390.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_styles/panel = SubResource("StylePanel")
+
+[node name="Content" type="VBoxContainer" parent="ResultOverlay/Card"]
+layout_mode = 2
+theme_override_constants/separation = 12
+alignment = 1
+
+[node name="Eyebrow" type="Label" parent="ResultOverlay/Card/Content"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.851, 0.71, 0.416, 1)
+theme_override_colors/font_outline_color = Color(0.02, 0.015, 0.025, 0.92)
+theme_override_constants/outline_size = 3
+theme_override_font_sizes/font_size = 22
+text = "CURIO RECOVERED · RELIC 01"
+horizontal_alignment = 1
+
+[node name="Title" type="Label" parent="ResultOverlay/Card/Content"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.975, 0.91, 0.79, 1)
+theme_override_colors/font_outline_color = Color(0.02, 0.015, 0.025, 0.95)
+theme_override_constants/outline_size = 5
+theme_override_font_sizes/font_size = 48
+text = "THE CABINET STIRS"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Detail" type="Label" parent="ResultOverlay/Card/Content"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.851, 0.804, 0.835, 1)
+theme_override_font_sizes/font_size = 22
+text = "Something in the Curio Boutique has awakened."
+horizontal_alignment = 1
+vertical_alignment = 1
+autowrap_mode = 2
+
+[node name="RewardRitual" type="Control" parent="ResultOverlay/Card/Content"]
+custom_minimum_size = Vector2(0, 220)
+layout_mode = 2
+mouse_filter = 2
+script = ExtResource("9_cameo")
+mode = "result"
+glow_strength = 0.75
+
+[node name="RewardName" type="Label" parent="ResultOverlay/Card/Content"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.851, 0.71, 0.416, 1)
+theme_override_colors/font_outline_color = Color(0.02, 0.015, 0.025, 0.9)
+theme_override_constants/outline_size = 3
+theme_override_font_sizes/font_size = 24
+text = "MOON CAMEO · AWAKENED"
+horizontal_alignment = 1
+
+[node name="HouseChange" type="Label" parent="ResultOverlay/Card/Content"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.851, 0.804, 0.835, 1)
+theme_override_font_sizes/font_size = 19
+text = "The first cabinet now keeps this Curio in the House."
+horizontal_alignment = 1
+autowrap_mode = 2
+
+[node name="Action" type="Button" parent="ResultOverlay/Card/Content"]
+custom_minimum_size = Vector2(0, 78)
+layout_mode = 2
+theme_override_colors/font_color = Color(0.0627, 0.051, 0.0706, 1)
+theme_override_font_sizes/font_size = 25
+theme_override_styles/normal = SubResource("ActionNormal")
+theme_override_styles/hover = SubResource("ActionHover")
+theme_override_styles/pressed = SubResource("ActionPressed")
+text = "RETURN TO THE HOUSE"

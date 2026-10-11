@@ -1,0 +1,74 @@
+name: Three-Level Internal Review Web Build
+
+on:
+  push:
+    branches:
+      - p0/bootstrap
+    paths:
+      - ".github/workflows/level1-web.yml"
+  # Milestone trigger: completed North Star opening-shell internal review build (2026-10-11).
+  # Run the full milestone build deliberately, not on every development commit.
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+jobs:
+  export:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    env:
+      GODOT_VERSION: '4.7.2'
+    steps:
+      - uses: actions/checkout@v4
+      - name: Download pinned Godot editor and matching export templates
+        shell: bash
+        run: |
+          set -euo pipefail
+          base="https://github.com/godotengine/godot-builds/releases/download/${GODOT_VERSION}-stable"
+          curl -fL --retry 3 "$base/Godot_v${GODOT_VERSION}-stable_linux.x86_64.zip" -o godot.zip
+          curl -fL --retry 3 "$base/Godot_v${GODOT_VERSION}-stable_export_templates.tpz" -o templates.tpz
+          unzip -q godot.zip
+          chmod +x "Godot_v${GODOT_VERSION}-stable_linux.x86_64"
+          mkdir -p "$HOME/.local/share/godot/export_templates/${GODOT_VERSION}.stable"
+          unzip -q templates.tpz -d template_unpack
+          cp -R template_unpack/templates/. "$HOME/.local/share/godot/export_templates/${GODOT_VERSION}.stable/"
+          echo "GODOT=$PWD/Godot_v${GODOT_VERSION}-stable_linux.x86_64" >> "$GITHUB_ENV"
+      - name: Import assets and parse project
+        run: |
+          "$GODOT" --headless --path . --editor --quit
+      - name: Export playable three-level review Web build
+        run: |
+          mkdir -p build/web
+          "$GODOT" --headless --path . --export-release Web build/web/index.html
+          test -s build/web/index.html
+          test -s build/web/index.pck
+          test -s build/web/index.wasm
+      - name: Upload Pages deployment artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: build/web/
+      - name: Upload complete Web game
+        uses: actions/upload-artifact@v4
+        with:
+          name: cat-and-coven-three-level-review-web
+          path: build/web/
+          if-no-files-found: error
+          retention-days: 14
+
+  # Publication remains opt-in. The downloadable Web export is always built,
+  # but GitHub Pages must not publish unless the repository owner explicitly enables it.
+  deploy:
+    if: ${{ vars.ENABLE_LEVEL1_PAGES == 'true' }}
+    needs: export
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Publish three-level review on GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4

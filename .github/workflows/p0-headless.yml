@@ -1,0 +1,302 @@
+name: P0 Golden Playable Loop Verification
+
+on:
+  push:
+    branches:
+      - p0/bootstrap
+    paths:
+      - ".github/workflows/p0-headless.yml"
+      - "src/app/**"
+      - "src/ui/home/**"
+      - "src/ui/splash/**"
+      - "src/ui/map/**"
+      - "src/ui/gameplay/**"
+      - "src/ui/prestart/**"
+      - "src/ui/collection/**"
+      - "src/progression/**"
+      - "src/save/**"
+      - "src/world/**"
+      - "src/match3/presentation/**"
+      - "assets/pieces/**"
+      - "src/ui/shared/**"
+      - "assets/manifests/screen_contracts.json"
+      - "assets/manifests/screen_asset_manifest.json"
+      - "tests/unit/test_screen_state_architecture.gd"
+      - "tests/unit/test_save_progress.gd"
+      - "tests/unit/test_first_party_shell.gd"
+      - "tests/integration/test_first_player_journey.gd"
+      - "tests/integration/test_level1_gameplay.gd"
+      - "tests/integration/test_opening_two_level_journey.gd"
+  # Milestone trigger: canonical Golden Loop architecture + playable journey verification (2026-10-11).
+  # Run the full milestone checks deliberately, not on every development commit.
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  headless:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Download pinned Godot 4.7.2
+        shell: bash
+        run: |
+          set -euo pipefail
+          curl -L --fail --retry 3 -o godot.zip             "https://github.com/godotengine/godot-builds/releases/download/4.7.2-stable/Godot_v4.7.2-stable_linux.x86_64.zip"
+          echo "cadd3204e728a35d3f13adb7fd0d7902636b79f6b95c40c265eb73b6c35329e4  godot.zip" | sha256sum -c -
+          unzip -q godot.zip
+          mv Godot_v4.7.2-stable_linux.x86_64 godot
+          chmod +x godot
+          ./godot --version
+
+      - name: Run bootstrap contract
+        shell: bash
+        run: |
+          timeout 30s ./godot --headless --path . -s res://tests/unit/test_bootstrap.gd
+
+      - name: Run canonical screen-state architecture contract
+        shell: bash
+        run: |
+          timeout 30s ./godot --headless --path . -s res://tests/unit/test_screen_state_architecture.gd
+
+      - name: Run deterministic Match-3 core contract
+        shell: bash
+        run: |
+          set -euo pipefail
+          output=$(timeout 30s ./godot --headless --path . -s res://tests/unit/test_match3_core.gd 2>&1)
+          status=$?
+          printf '%s\n' "$output"
+          if [ "$status" -ne 0 ]; then
+            echo "::error::Deterministic core contract exited with $status."
+            exit "$status"
+          fi
+          if grep -Eq "SCRIPT ERROR:|(^| )ERROR:" <<<"$output"; then
+            echo "::error::Godot reported script/runtime errors during deterministic core contract."
+            exit 1
+          fi
+          if ! grep -Fq "TEST_PASS: deterministic Match-3 core" <<<"$output"; then
+            echo "::error::Deterministic core contract did not emit its PASS marker."
+            exit 1
+          fi
+
+      - name: Run specials blockers and objectives contract
+        shell: bash
+        run: |
+          set -uo pipefail
+          set +e
+          output=$(timeout 30s ./godot --headless --path . -s res://tests/unit/test_specials_objectives.gd 2>&1)
+          status=$?
+          set -e
+          printf '%s\n' "$output"
+          if [ "$status" -ne 0 ]; then
+            exit "$status"
+          fi
+          if grep -Eq "SCRIPT ERROR:|(^| )ERROR:" <<<"$output"; then
+            echo "::error::Godot reported errors during specials/objectives contract."
+            exit 1
+          fi
+          if ! grep -Fq "TEST_PASS: specials blockers objectives" <<<"$output"; then
+            echo "::error::Specials/objectives contract did not emit its PASS marker."
+            exit 1
+          fi
+
+      - name: Run production special creation and shuffle grammar
+        shell: bash
+        run: |
+          set +e
+          output=$(timeout 30s ./godot --headless --path . -s res://tests/unit/test_production_grammar.gd 2>&1)
+          status=$?
+          set -e
+          printf '%s\n' "$output"
+          if [ "$status" -ne 0 ]; then exit "$status"; fi
+          if grep -Eq "SCRIPT ERROR:|(^| )ERROR:" <<<"$output"; then exit 1; fi
+          grep -Fq "TEST_PASS: production special creation and shuffle grammar" <<<"$output"
+
+      - name: Run full special combo matrix
+        shell: bash
+        run: |
+          set +e
+          output=$(timeout 30s ./godot --headless --path . -s res://tests/unit/test_special_combos.gd 2>&1)
+          status=$?
+          set -e
+          printf '%s\n' "$output"
+          if [ "$status" -ne 0 ]; then exit "$status"; fi
+          if grep -Eq "SCRIPT ERROR:|(^| )ERROR:" <<<"$output"; then exit 1; fi
+          grep -Fq "TEST_PASS: full special combo matrix" <<<"$output"
+
+      - name: Run opening level catalog validation and simulation
+        shell: bash
+        run: |
+          set +e
+          output=$(timeout 30s ./godot --headless --path . -s res://tools/simulation/run_opening_catalog.gd 2>&1)
+          status=$?
+          set -e
+          printf '%s\n' "$output"
+          if [ "$status" -ne 0 ]; then exit "$status"; fi
+          if grep -Eq "SCRIPT ERROR:|(^| )ERROR:|CATALOG_FAIL:" <<<"$output"; then exit 1; fi
+          grep -Fq "CATALOG_PASS:" <<<"$output"
+
+      - name: Run playable Level 1 contract
+        shell: bash
+        run: |
+          set -uo pipefail
+          set +e
+          output=$(timeout 30s ./godot --headless --path . -s res://tests/integration/test_level1_gameplay.gd 2>&1)
+          status=$?
+          set -e
+          printf '%s\n' "$output"
+          if [ "$status" -ne 0 ]; then
+            exit "$status"
+          fi
+          if grep -Eq "SCRIPT ERROR:|(^| )ERROR:" <<<"$output"; then
+            echo "::error::Godot reported errors during Level 1 gameplay contract."
+            exit 1
+          fi
+          if ! grep -Fq "TEST_PASS: Level 1 gameplay surface contract" <<<"$output"; then
+            echo "::error::Level 1 gameplay contract did not emit its PASS marker."
+            exit 1
+          fi
+
+      - name: Run durable progression contract
+        shell: bash
+        run: |
+          set +e
+          output=$(timeout 30s ./godot --headless --path . -s res://tests/unit/test_save_progress.gd 2>&1)
+          status=$?
+          set -e
+          printf '%s\n' "$output"
+          if [ "$status" -ne 0 ]; then exit "$status"; fi
+          if grep -Eq "SCRIPT ERROR:|(^| )ERROR:" <<<"$output"; then exit 1; fi
+          grep -Fq "TEST_PASS: durable progression and exactly-once save" <<<"$output"
+
+      - name: Run AKILTA first-party shell contracts
+        shell: bash
+        run: |
+          set +e
+          output=$(timeout 30s ./godot --headless --path . -s res://tests/unit/test_first_party_shell.gd 2>&1)
+          status=$?
+          set -e
+          printf '%s\n' "$output"
+          if [ "$status" -ne 0 ]; then exit "$status"; fi
+          if grep -Eq "SCRIPT ERROR:|(^| )ERROR:" <<<"$output"; then exit 1; fi
+          grep -Fq "TEST_PASS: AKILTA first-party shell contracts" <<<"$output"
+
+      - name: Run complete three-level review shell journey
+        shell: bash
+        run: |
+          set +e
+          output=$(timeout 30s ./godot --headless --path . -s res://tests/integration/test_first_player_journey.gd 2>&1)
+          status=$?
+          set -e
+          printf '%s\n' "$output"
+          if [ "$status" -ne 0 ]; then exit "$status"; fi
+          if grep -Eq "SCRIPT ERROR:|(^| )ERROR:" <<<"$output"; then exit 1; fi
+          grep -Fq "TEST_PASS: complete three-level review shell journey" <<<"$output"
+
+      - name: Run Level 1 unlock and replay journey
+        shell: bash
+        run: |
+          set +e
+          output=$(timeout 45s ./godot --headless --path . -s res://tests/integration/test_opening_two_level_journey.gd 2>&1)
+          status=$?
+          set -e
+          printf '%s\\n' "$output"
+          if [ "$status" -ne 0 ]; then exit "$status"; fi
+          if grep -Eq "SCRIPT ERROR:|(^| )ERROR:" <<<"$output"; then exit 1; fi
+          grep -Fq "TEST_PASS: Level 1 unlock and replay journey" <<<"$output"
+
+      - name: Run Level 1 fail retry recovery
+        shell: bash
+        run: |
+          set +e
+          output=$(timeout 30s ./godot --headless --path . -s res://tests/integration/test_level1_failure_recovery.gd 2>&1)
+          status=$?
+          set -e
+          printf '%s\n' "$output"
+          if [ "$status" -ne 0 ]; then exit "$status"; fi
+          if grep -Eq "SCRIPT ERROR:|(^| )ERROR:" <<<"$output"; then exit 1; fi
+          grep -Fq "TEST_PASS: Level 1 fail retry recovery" <<<"$output"
+
+      - name: Run opening Levels 2 and 3 runtime gameplay and reward contracts
+        shell: bash
+        run: |
+          set +e
+          output=$(timeout 60s ./godot --headless --path . -s res://tests/integration/test_opening_levels_runtime.gd 2>&1)
+          status=$?
+          set -e
+          printf '%s\\n' "$output"
+          if [ "$status" -ne 0 ]; then exit "$status"; fi
+          if grep -Eq "SCRIPT ERROR:|(^| )ERROR:|TEST_FAIL:" <<<"$output"; then exit 1; fi
+          grep -Fq "TEST_PASS: opening Levels 2 and 3 runtime gameplay and reward contracts" <<<"$output"
+
+      - name: Run first-party audio bus routing
+        shell: bash
+        run: |
+          set +e
+          output=$(timeout 30s ./godot --headless --path . -s res://tests/unit/test_audio_settings.gd 2>&1)
+          status=$?
+          set -e
+          printf '%s\n' "$output"
+          if [ "$status" -ne 0 ]; then exit "$status"; fi
+          if grep -Eq "SCRIPT ERROR:|(^| )ERROR:" <<<"$output"; then exit 1; fi
+          grep -Fq "TEST_PASS: first-party audio bus routing" <<<"$output"
+
+      - name: Run first-party Match-3 haptics feedback
+        shell: bash
+        run: |
+          set +e
+          output=$(timeout 30s ./godot --headless --path . -s res://tests/unit/test_haptics_feedback.gd 2>&1)
+          status=$?
+          set -e
+          printf '%s\n' "$output"
+          if [ "$status" -ne 0 ]; then exit "$status"; fi
+          if grep -Eq "SCRIPT ERROR:|(^| )ERROR:" <<<"$output"; then exit 1; fi
+          grep -Fq "TEST_PASS: first-party Match-3 haptics feedback" <<<"$output"
+
+      - name: Run CC0 Level 1 audio feedback
+        shell: bash
+        run: |
+          set +e
+          output=$(timeout 30s ./godot --headless --path . -s res://tests/unit/test_audio_feedback.gd 2>&1)
+          status=$?
+          set -e
+          printf '%s\n' "$output"
+          if [ "$status" -ne 0 ]; then exit "$status"; fi
+          if grep -Eq "SCRIPT ERROR:|(^| )ERROR:" <<<"$output"; then exit 1; fi
+          grep -Fq "TEST_PASS: CC0 Level 1 audio feedback" <<<"$output"
+
+      - name: Run OFL Curio House typography contract
+        shell: bash
+        run: |
+          set +e
+          output=$(timeout 30s ./godot --headless --path . -s res://tests/unit/test_typography.gd 2>&1)
+          status=$?
+          set -e
+          printf '%s\n' "$output"
+          if [ "$status" -ne 0 ]; then exit "$status"; fi
+          if grep -Eq "SCRIPT ERROR:|(^| )ERROR:" <<<"$output"; then exit 1; fi
+          grep -Fq "TEST_PASS: OFL Curio House typography" <<<"$output"
+
+      - name: Verify project parses cleanly
+        shell: bash
+        run: |
+          set -euo pipefail
+          output=$(timeout 30s ./godot --headless --path . --editor --quit 2>&1)
+          status=$?
+          printf '%s\n' "$output"
+          if [ "$status" -ne 0 ]; then
+            exit "$status"
+          fi
+          if grep -Eq "SCRIPT ERROR:|(^| )ERROR:" <<<"$output"; then
+            echo "::error::Godot project parse reported errors."
+            exit 1
+          fi
+
+      - name: Smoke boot main scene
+        shell: bash
+        run: |
+          timeout 30s ./godot --headless --path . --quit-after 2

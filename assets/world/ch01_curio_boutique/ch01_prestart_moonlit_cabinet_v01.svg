@@ -1,0 +1,48 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1024" height="768" viewBox="0 0 1024 768">
+<defs>
+ <linearGradient id="bg" x2="0" y2="1"><stop stop-color="#090b14"/><stop offset=".58" stop-color="#1a1120"/><stop offset="1" stop-color="#090810"/></linearGradient>
+ <linearGradient id="gold" x2="1" y2="1"><stop stop-color="#f2d89a"/><stop offset=".5" stop-color="#bd8b50"/><stop offset="1" stop-color="#5a3724"/></linearGradient>
+ <radialGradient id="moon"><stop stop-color="#fff0d8"/><stop offset=".55" stop-color="#c9bfe4"/><stop offset="1" stop-color="#69638d"/></radialGradient>
+ <radialGradient id="glow"><stop stop-color="#c9b1e5" stop-opacity=".25"/><stop offset="1" stop-color="#c9b1e5" stop-opacity="0"/></radialGradient>
+ <radialGradient id="warm"><stop stop-color="#ffc76d" stop-opacity=".38"/><stop offset="1" stop-color="#ffc76d" stop-opacity="0"/></radialGradient>
+</defs>
+<rect width="1024" height="768" fill="url(#bg)"/>
+<ellipse cx="512" cy="264" rx="290" ry="250" fill="url(#glow)"/>
+<!-- cabinet arch -->
+<path d="M176 704V298Q176 84 512 68Q848 84 848 298V704Z" fill="#100d16" stroke="#09070d" stroke-width="28"/>
+<path d="M204 686V310Q204 116 512 98Q820 116 820 310V686Z" fill="#211427" stroke="url(#gold)" stroke-width="6"/>
+<path d="M254 648V330Q254 165 512 148Q770 165 770 330V648Z" fill="#110e17" stroke="#865f45" stroke-width="4"/>
+<!-- moon window -->
+<path d="M402 360V226Q402 134 512 124Q622 134 622 226V360Z" fill="#172538" stroke="#b78859" stroke-width="5"/>
+<circle cx="512" cy="226" r="74" fill="url(#moon)"/>
+<circle cx="512" cy="226" r="112" fill="#a997d5" opacity=".08"/>
+<path d="M512 124v236M402 258h220" stroke="#b88958" stroke-width="4" opacity=".75"/>
+<!-- display -->
+<rect x="338" y="344" width="348" height="260" rx="12" fill="#120c16" stroke="#d0a36a" stroke-width="5"/>
+<rect x="360" y="366" width="304" height="216" rx="9" fill="#2a1428" stroke="#6d4a3d" stroke-width="3"/>
+<ellipse cx="512" cy="458" rx="130" ry="112" fill="url(#glow)"/>
+<!-- sealed moon cameo -->
+<path d="M512 382c-54 0-98 43-98 96s44 96 98 96 98-43 98-96-44-96-98-96Z" fill="#181821" stroke="url(#gold)" stroke-width="8"/>
+<circle cx="492" cy="474" r="58" fill="#a79bc7"/>
+<circle cx="520" cy="461" r="55" fill="#181821"/>
+<path d="M455 438c22-27 52-39 80-35" fill="none" stroke="#f2e5d2" stroke-opacity=".48" stroke-width="6" stroke-linecap="round"/>
+<circle cx="512" cy="478" r="84" fill="none" stroke="#7f304a" stroke-width="7" stroke-dasharray="14 12"/>
+<path d="m512 405 17 25-17 26-17-26Z" fill="#7c2747" stroke="#e4bd7a" stroke-width="3"/>
+<!-- candles -->
+<g fill="#ead8b9" stroke="#8b6045" stroke-width="3">
+ <rect x="286" y="516" width="30" height="102" rx="4"/><rect x="708" y="516" width="30" height="102" rx="4"/>
+ <rect x="248" y="552" width="22" height="74" rx="3"/><rect x="754" y="552" width="22" height="74" rx="3"/>
+</g>
+<g fill="#ffd27d">
+ <path d="M301 490c-18 25-13 46 0 59 13-13 18-34 0-59Z"/><path d="M723 490c-18 25-13 46 0 59 13-13 18-34 0-59Z"/>
+ <path d="M259 532c-13 18-10 33 0 43 10-10 13-25 0-43Z"/><path d="M765 532c-13 18-10 33 0 43 10-10 13-25 0-43Z"/>
+</g>
+<ellipse cx="301" cy="545" rx="90" ry="130" fill="url(#warm)"/>
+<ellipse cx="723" cy="545" rx="90" ry="130" fill="url(#warm)"/>
+<!-- shelf curios -->
+<g fill="#2e1a2d" stroke="#a87953" stroke-width="3">
+ <rect x="222" y="392" width="82" height="118" rx="8"/><rect x="720" y="392" width="82" height="118" rx="8"/>
+</g>
+<g fill="#6f2b49" stroke="#d48a97" stroke-width="2"><circle cx="263" cy="448" r="24"/><circle cx="761" cy="448" r="24"/></g>
+<rect x="18" y="18" width="988" height="732" rx="12" fill="none" stroke="#c09a68" stroke-opacity=".25" stroke-width="3"/>
+</svg>

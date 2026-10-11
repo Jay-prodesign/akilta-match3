@@ -1,0 +1,100 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="720" height="1080" viewBox="0 0 720 1080">
+<defs>
+  <linearGradient id="wall" x1="0" y1="0" x2="0" y2="1"><stop stop-color="#111426"/><stop offset=".42" stop-color="#2b1a31"/><stop offset="1" stop-color="#100d1a"/></linearGradient>
+  <linearGradient id="wood" x1="0" y1="0" x2="1" y2="0"><stop stop-color="#14101d"/><stop offset=".45" stop-color="#3b2835"/><stop offset="1" stop-color="#100e19"/></linearGradient>
+  <linearGradient id="gold" x1="0" y1="0" x2="0" y2="1"><stop stop-color="#f0d19a"/><stop offset=".45" stop-color="#b88a56"/><stop offset="1" stop-color="#5d3e35"/></linearGradient>
+  <linearGradient id="glass" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#a9c6ce" stop-opacity=".9"/><stop offset=".45" stop-color="#355e66" stop-opacity=".85"/><stop offset="1" stop-color="#16252f" stop-opacity=".95"/></linearGradient>
+  <linearGradient id="emerald" x1="0" y1="0" x2="0" y2="1"><stop stop-color="#9ee3b6"/><stop offset=".4" stop-color="#2f9b78"/><stop offset="1" stop-color="#153a3b"/></linearGradient>
+  <radialGradient id="moon"><stop stop-color="#fff0d0"/><stop offset=".42" stop-color="#cfc3e2"/><stop offset="1" stop-color="#7e7fa9"/></radialGradient>
+  <radialGradient id="glow"><stop stop-color="#f4c77e" stop-opacity=".34"/><stop offset="1" stop-color="#e3a95e" stop-opacity="0"/></radialGradient>
+  <linearGradient id="rose" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#e28ca9"/><stop offset=".5" stop-color="#a23c5d"/><stop offset="1" stop-color="#4b1c36"/></linearGradient>
+  <linearGradient id="leaf" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#73876b"/><stop offset="1" stop-color="#1b302e"/></linearGradient>
+  <g id="wallMotif" fill="none" stroke="#b08b69" stroke-opacity=".14" stroke-width="2">
+    <path d="M0 0Q-42 38 0 76Q42 38 0 0ZM0 76Q-36 108 0 140Q36 108 0 76"/>
+    <path d="M0 140V168M-12 154H12"/>
+  </g>
+  <g id="litWindow">
+    <path d="M-24 35V-12Q-24-39 0-39Q24-39 24-12V35Z" fill="#0a0d18" stroke="url(#gold)" stroke-width="4"/>
+    <path d="M-15 29V-11Q-15-27 0-27Q15-27 15-11V29Z" fill="#e7b66c"/>
+    <path d="M0-26V29M-14 5H14" stroke="#65424a" stroke-width="3"/>
+  </g>
+  <g id="candle">
+    <ellipse cx="0" cy="38" rx="22" ry="5" fill="#080911" opacity=".55"/>
+    <path d="M-13 34V-5Q-13-11-7-11H7Q13-11 13-5V34Z" fill="#d9c7a8" stroke="#947452" stroke-width="2"/>
+    <path d="M0-10Q-16-30 0-48Q16-29 0-10Z" fill="#f4bd6d"/>
+    <path d="M0-12Q-7-25 0-35Q7-25 0-12Z" fill="#fff0c5"/>
+    <path d="M0-10V-2" stroke="#48302b" stroke-width="2"/>
+  </g>
+  <g id="potion">
+    <path d="M-9-31H9V-15Q9-8 18 0Q31 11 31 27Q31 44 0 44Q-31 44-31 27Q-31 11-18 0Q-9-8-9-15Z" fill="url(#glass)" stroke="url(#gold)" stroke-width="3"/>
+    <path d="M-26 20Q0 10 26 20V29Q22 39 0 39Q-22 39-26 29Z" fill="url(#emerald)"/>
+    <path d="M-5-28H5V-17H-5Z" fill="#d9c39b" stroke="#765340" stroke-width="2"/>
+    <path d="M-15 7Q-7-1 1 5" fill="none" stroke="#f4e7c8" stroke-width="3" opacity=".8"/>
+    <circle cx="12" cy="18" r="4" fill="#b8efd3"/>
+  </g>
+  <g id="rose">
+    <path d="M0 16Q-4 29-12 36M0 22Q13 15 20 23" fill="none" stroke="#6c8965" stroke-width="4" stroke-linecap="round"/>
+    <path d="M-12 36Q-24 22-10 20Q-4 28-12 36ZM20 23Q9 9 3 21Q9 29 20 23Z" fill="url(#leaf)"/>
+    <ellipse cx="0" cy="-10" rx="12" ry="20" fill="url(#rose)"/><ellipse cx="-14" cy="0" rx="15" ry="17" transform="rotate(-35 -14 0)" fill="url(#rose)"/><ellipse cx="14" cy="0" rx="15" ry="17" transform="rotate(35 14 0)" fill="url(#rose)"/><ellipse cx="0" cy="9" rx="13" ry="16" fill="url(#rose)"/>
+    <circle cx="0" cy="0" r="8" fill="#68213e" stroke="#d7a06c" stroke-width="1.5"/><path d="M-5 1Q0-7 6-1Q8 4 0 6Q-6 5-5 1Z" fill="none" stroke="#f0c58d" stroke-width="1.5"/>
+  </g>
+</defs>
+<rect width="720" height="1080" fill="url(#wall)"/>
+<!-- Damask wallpaper -->
+<g>
+  <use href="#wallMotif" x="95" y="70"/><use href="#wallMotif" x="245" y="70"/><use href="#wallMotif" x="475" y="70"/><use href="#wallMotif" x="625" y="70"/>
+  <use href="#wallMotif" x="95" y="310"/><use href="#wallMotif" x="625" y="310"/><use href="#wallMotif" x="95" y="550"/><use href="#wallMotif" x="625" y="550"/>
+</g>
+<!-- moonlit arched window -->
+<path d="M198 1080V320Q198 56 360 46Q522 56 522 320V1080Z" fill="#090d19" stroke="#0a0914" stroke-width="26"/>
+<path d="M212 1080V320Q212 78 360 67Q508 78 508 320V1080Z" fill="#11172a" stroke="#9b7756" stroke-width="6"/>
+<path d="M232 1080V320Q232 98 360 87Q488 98 488 320V1080Z" fill="#17162a" stroke="#4d3a4b" stroke-width="3"/>
+<path d="M252 340V268Q252 140 360 132Q468 140 468 268V340Z" fill="#0b1426" stroke="url(#gold)" stroke-width="8"/>
+<circle cx="360" cy="230" r="98" fill="url(#glow)"/>
+<circle cx="360" cy="229" r="68" fill="url(#moon)"/>
+<path d="M382 173Q327 192 330 241Q333 280 373 291Q348 267 350 235Q352 199 382 173Z" fill="#8982a5" opacity=".35"/>
+<path d="M360 132V340M254 246H466" stroke="#9d805e" stroke-width="4" opacity=".75"/>
+<path d="M280 340Q280 305 310 285M440 340Q440 305 410 285" fill="none" stroke="#e0bc83" stroke-width="3" opacity=".6"/>
+<!-- cabinet side walls and carved shelves -->
+<path d="M0 330H183V1080H0Z" fill="url(#wood)" stroke="#0a0913" stroke-width="10"/>
+<path d="M537 330H720V1080H537Z" fill="url(#wood)" stroke="#0a0913" stroke-width="10"/>
+<g fill="none" stroke="url(#gold)">
+  <path d="M14 350H169V1060H14Z" stroke-width="3"/><path d="M551 350H706V1060H551Z" stroke-width="3"/>
+  <path d="M20 590H164M20 790H164M20 980H164M556 590H700M556 790H700M556 980H700" stroke-width="8"/>
+  <path d="M27 598H157M27 798H157M27 988H157M563 598H693M563 798H693M563 988H693" stroke="#e8c68a" stroke-opacity=".25" stroke-width="2"/>
+</g>
+<!-- warm light pools -->
+<ellipse cx="90" cy="525" rx="92" ry="140" fill="url(#glow)"/><ellipse cx="630" cy="525" rx="92" ry="140" fill="url(#glow)"/>
+<!-- shelves: candles, flasks, old books, curios -->
+<g>
+  <use href="#candle" transform="translate(47 480) scale(.74)"/><use href="#potion" transform="translate(111 545) scale(.64)"/><use href="#rose" transform="translate(146 564) scale(.60)"/>
+  <use href="#candle" transform="translate(65 735) scale(.82)"/><use href="#potion" transform="translate(130 742) scale(.62)"/>
+  <use href="#potion" transform="translate(585 535) scale(.65)"/><use href="#candle" transform="translate(663 487) scale(.78)"/><use href="#rose" transform="translate(622 563) scale(.62)"/>
+  <use href="#candle" transform="translate(580 742) scale(.72)"/><use href="#potion" transform="translate(656 741) scale(.68)"/>
+</g>
+<!-- stacked leather books -->
+<g stroke="#b18b61" stroke-width="2">
+  <path d="M25 572 92 565 98 585 30 593Z" fill="#3b2436"/><path d="M31 550 97 557 92 576 26 570Z" fill="#182a2d"/><path d="M33 551 95 558" stroke="#d2ae79"/>
+  <path d="M563 572 630 564 636 585 568 593Z" fill="#30213b"/><path d="M584 550 651 557 646 576 579 570Z" fill="#34242b"/><path d="M585 551 649 558" stroke="#d2ae79"/>
+  <path d="M30 958 100 951 105 970 35 978Z" fill="#34223a"/><path d="M565 956 635 949 640 969 570 976Z" fill="#3c2530"/>
+</g>
+<!-- ornate floor and central cabinet -->
+<path d="M0 870Q175 825 360 864T720 854V1080H0Z" fill="#090b14"/>
+<path d="M0 902Q170 862 360 901T720 891" fill="none" stroke="#5b4351" stroke-width="4"/>
+<path d="M0 1005Q180 970 360 1006T720 998" fill="none" stroke="#211c2c" stroke-width="3"/>
+<path d="M244 1080V750Q244 650 360 650Q476 650 476 750V1080Z" fill="#120f1c" stroke="#0a0914" stroke-width="20"/>
+<path d="M260 1080V750Q260 670 360 670Q460 670 460 750V1080Z" fill="url(#wood)" stroke="url(#gold)" stroke-width="6"/>
+<path d="M280 1080V758Q280 694 360 694Q440 694 440 758V1080Z" fill="#171220" stroke="#5a3d47" stroke-width="3"/>
+<path d="M290 780Q290 718 360 718Q430 718 430 780V828H290Z" fill="#0b0e19" stroke="#a17c57" stroke-width="4"/>
+<circle cx="360" cy="770" r="37" fill="#1b1b2b" stroke="#d0a86b" stroke-width="3"/>
+<path d="M373 740Q343 751 345 775Q348 800 372 802Q355 784 360 766Q362 750 373 740Z" fill="#c7b2dc"/>
+<path d="M287 840H433M287 1018H433" stroke="#b18a60" stroke-width="5"/>
+<!-- ivy at the sides -->
+<g fill="none" stroke="url(#leaf)" stroke-width="8" stroke-linecap="round"><path d="M5 650Q34 622 19 588T36 520Q55 494 48 465"/><path d="M715 650Q686 622 701 588T684 520Q665 494 672 465"/></g>
+<g fill="url(#leaf)" stroke="#8b9a78" stroke-opacity=".35" stroke-width="2">
+  <path d="M20 600Q-2 576 18 555Q42 572 20 600ZM33 529Q8 505 30 483Q52 502 33 529Z"/><path d="M700 600Q722 576 702 555Q678 572 700 600ZM687 529Q712 505 690 483Q668 502 687 529Z"/>
+</g>
+<!-- gold flecks -->
+<g fill="#f5dca8"><circle cx="63" cy="276" r="2"/><circle cx="147" cy="234" r="1.5"/><circle cx="574" cy="275" r="2"/><circle cx="651" cy="222" r="1.5"/><path d="M149 304l3 8 8 3-8 3-3 8-3-8-8-3 8-3z"/><path d="M579 330l2 6 6 2-6 2-2 6-2-6-6-2 6-2z"/></g>
+<rect x="14" y="16" width="692" height="1048" rx="8" fill="none" stroke="#c19a6b" stroke-opacity=".24" stroke-width="2"/>
+</svg>

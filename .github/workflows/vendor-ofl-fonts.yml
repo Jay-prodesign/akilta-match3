@@ -1,0 +1,72 @@
+name: Vendor OFL Curio Typography
+
+on:
+  push:
+    branches:
+      - p0/bootstrap
+    paths:
+      - ".github/workflows/vendor-ofl-fonts.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  vendor:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          ref: p0/bootstrap
+
+      - name: Fetch pinned OFL font binaries and licenses
+        shell: bash
+        run: |
+          set -euo pipefail
+          COMMIT="bd8f81ddb5c74d5c8897b36ad88b440266245103"
+          BASE="https://raw.githubusercontent.com/google/fonts/$COMMIT/ofl"
+          mkdir -p assets/fonts assets/licenses
+          curl -L --fail --retry 3 -o assets/fonts/CormorantGaramond-Variable.ttf "$BASE/cormorantgaramond/CormorantGaramond%5Bwght%5D.ttf"
+          curl -L --fail --retry 3 -o assets/fonts/Manrope-Variable.ttf "$BASE/manrope/Manrope%5Bwght%5D.ttf"
+          curl -L --fail --retry 3 -o assets/licenses/CormorantGaramond-OFL.txt "$BASE/cormorantgaramond/OFL.txt"
+          curl -L --fail --retry 3 -o assets/licenses/Manrope-OFL.txt "$BASE/manrope/OFL.txt"
+          sha256sum assets/fonts/CormorantGaramond-Variable.ttf assets/fonts/Manrope-Variable.ttf > assets/fonts/SHA256SUMS
+
+      - name: Write provenance
+        shell: bash
+        run: |
+          cat > assets/fonts/PROVENANCE.md <<'EOF'
+          # Curio House Typography Provenance
+
+          Pinned upstream: google/fonts @ bd8f81ddb5c74d5c8897b36ad88b440266245103
+
+          ## Cormorant Garamond
+          - Upstream: ofl/cormorantgaramond/CormorantGaramond[wght].ttf
+          - License: SIL Open Font License 1.1
+          - Product role: display/headline typography.
+
+          ## Manrope
+          - Upstream: ofl/manrope/Manrope[wght].ttf
+          - License: SIL Open Font License 1.1
+          - Product role: functional UI/body/button typography.
+
+          Exact downloaded binary hashes are recorded in assets/fonts/SHA256SUMS.
+          OFL notices are stored under assets/licenses/.
+          These are free/open production inputs permitted by D-029.
+          EOF
+
+      - name: Commit vendored fonts
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add assets/fonts assets/licenses
+          if git diff --cached --quiet; then
+            echo "OFL fonts already vendored."
+            exit 0
+          fi
+          git commit -m "assets: vendor pinned OFL Curio House typography"
+          git push origin HEAD:p0/bootstrap

@@ -1,0 +1,119 @@
+{
+  "schema_version": 1,
+  "content_status": "playtest",
+  "validation_seed": 1001,
+  "validation_expected_result": "won",
+  "teaching_moves": [
+    [
+      1,
+      4,
+      2,
+      4
+    ]
+  ],
+  "validation_expect": {
+    "special_triggered_min": 1
+  },
+  "id": "ch01_level_001",
+  "chapter": "curio_boutique",
+  "visual_profile": "curio_boutique_opening",
+  "piece_set": "north_star_eight_symbol_candidate_v5",
+  "visual_status": "north_star_eight_symbol_candidate_v5",
+  "title": "Moonlit Cabinet",
+  "eyebrow": "CURIO BOUTIQUE · FIRST AWAKENING",
+  "hint": "Match the moon sigils to wake the first relic.",
+  "retry_hint": "Prioritize Moon sigils and use the moonlit teaching swap when you need a clean opening.",
+  "win_title": "THE CABINET STIRS",
+  "win_detail": "The Moon Cameo wakes behind the glass.",
+  "reward_curio": "moon_cameo",
+  "house_stage_reward": 1,
+  "width": 7,
+  "height": 7,
+  "moves": 20,
+  "objective": "collect_family",
+  "objective_family": "moon",
+  "objective_target": 6,
+  "families": [
+    "moon",
+    "rose",
+    "moth",
+    "key",
+    "leaf",
+    "cat",
+    "candle",
+    "skull"
+  ],
+  "initial_rows": [
+    [
+      "moon",
+      "rose",
+      "cat",
+      "key",
+      "candle",
+      "moon",
+      "rose"
+    ],
+    [
+      "rose",
+      "moth",
+      "key",
+      "leaf",
+      "moon",
+      "rose",
+      "skull"
+    ],
+    [
+      "candle",
+      "key",
+      "leaf",
+      "moon",
+      "skull",
+      "moth",
+      "key"
+    ],
+    [
+      "key",
+      "skull",
+      "cat",
+      "rose",
+      "candle",
+      "cat",
+      "leaf"
+    ],
+    [
+      "cat",
+      "rose",
+      "moon",
+      "moth",
+      "key",
+      "leaf",
+      "moon"
+    ],
+    [
+      "key",
+      "leaf",
+      "moon",
+      "candle",
+      "moth",
+      "cat",
+      "leaf"
+    ],
+    [
+      "leaf",
+      "moon",
+      "rose",
+      "moon",
+      "rose",
+      "skull",
+      "moth"
+    ]
+  ],
+  "specials": [
+    {
+      "x": 1,
+      "y": 4,
+      "kind": "global"
+    }
+  ],
+  "prestart_note": "Wake the Moon Cameo. The first cabinet will remember this victory every time you return to the House."
+}

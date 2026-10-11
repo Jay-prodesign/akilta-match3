@@ -1,0 +1,114 @@
+[gd_scene load_steps=5 format=3]
+
+[ext_resource type="Script" path="res://src/ui/map/chapter_map.gd" id="1_map"]
+[ext_resource type="Script" path="res://src/ui/map/chapter_route_view.gd" id="2_route"]
+
+[sub_resource type="StyleBoxFlat" id="Panel"]
+bg_color = Color(0.035, 0.026, 0.045, 0.86)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.851, 0.71, 0.416, 0.72)
+corner_radius_top_left = 18
+corner_radius_top_right = 18
+corner_radius_bottom_right = 18
+corner_radius_bottom_left = 18
+shadow_color = Color(0, 0, 0, 0.58)
+shadow_size = 18
+
+[sub_resource type="StyleBoxFlat" id="Back"]
+bg_color = Color(0.12, 0.09, 0.14, 1)
+corner_radius_top_left = 16
+corner_radius_top_right = 16
+corner_radius_bottom_right = 16
+corner_radius_bottom_left = 16
+
+[node name="ChapterMap" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_map")
+
+[node name="Backdrop" type="ColorRect" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.035, 0.025, 0.045, 1)
+
+[node name="Layout" type="VBoxContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 24.0
+offset_top = 28.0
+offset_right = -24.0
+offset_bottom = -28.0
+theme_override_constants/separation = 10
+
+[node name="Eyebrow" type="Label" parent="Layout"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.84, 0.73, 0.66, 1)
+theme_override_colors/font_outline_color = Color(0.03, 0.02, 0.04, 0.9)
+theme_override_constants/outline_size = 3
+theme_override_font_sizes/font_size = 20
+text = "THE HOUSE · CHAPTER I"
+horizontal_alignment = 1
+
+[node name="Title" type="Label" parent="Layout"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.975, 0.91, 0.79, 1)
+theme_override_colors/font_outline_color = Color(0.03, 0.02, 0.04, 0.94)
+theme_override_constants/outline_size = 5
+theme_override_font_sizes/font_size = 42
+text = "Curio Boutique"
+horizontal_alignment = 1
+
+[node name="Progress" type="Label" parent="Layout"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.851, 0.71, 0.416, 1)
+theme_override_font_sizes/font_size = 20
+text = "CURIO BOUTIQUE · 0 / 3 DISPLAYS AWAKENED"
+horizontal_alignment = 1
+
+[node name="Intro" type="Label" parent="Layout"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.851, 0.804, 0.835, 1)
+theme_override_font_sizes/font_size = 17
+text = "Complete the opening three rituals to restore the first cabinet set. Upper cabinets remain visible but sealed for later journeys."
+horizontal_alignment = 1
+autowrap_mode = 2
+
+[node name="RoutePanel" type="PanelContainer" parent="Layout"]
+custom_minimum_size = Vector2(0, 1100)
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_styles/panel = SubResource("Panel")
+
+[node name="Scroll" type="ScrollContainer" parent="Layout/RoutePanel"]
+layout_mode = 2
+horizontal_scroll_mode = 0
+vertical_scroll_mode = 0
+
+[node name="RouteView" type="Control" parent="Layout/RoutePanel/Scroll"]
+custom_minimum_size = Vector2(940, 1500)
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+mouse_filter = 0
+script = ExtResource("2_route")
+
+[node name="Back" type="Button" parent="Layout"]
+custom_minimum_size = Vector2(0, 60)
+layout_mode = 2
+theme_override_colors/font_color = Color(0.945, 0.91, 0.866, 1)
+theme_override_font_sizes/font_size = 20
+theme_override_styles/normal = SubResource("Back")
+text = "BACK TO CHAPTERS"
