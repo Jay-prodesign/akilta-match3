@@ -17,6 +17,7 @@ const AudioDirectorScript = preload("res://src/feedback/audio_director.gd")
 const Typography = preload("res://src/ui/theme/typography.gd")
 const CurioMaterials = preload("res://src/ui/theme/curio_materials.gd")
 const PieceAssetLoader = preload("res://src/match3/presentation/piece_asset_loader.gd")
+const ProductNavigation = preload("res://src/ui/shared/product_navigation.gd")
 
 @export var environment: String = "development"
 @export var save_path_override: String = ""
@@ -71,6 +72,7 @@ func show_collection() -> bool:
 	var screen: Node = CollectionScene.instantiate()
 	_show_screen(screen)
 	screen.set_progress(progress)
+	_install_product_navigation(screen, "curios")
 	screen.back_requested.connect(_on_collection_back)
 	return true
 
@@ -81,6 +83,7 @@ func show_map() -> bool:
 	screen.set("canonical_level_cap", INTERNAL_REVIEW_LEVEL_COUNT)
 	_show_screen(screen)
 	screen.set_progress(progress)
+	_install_product_navigation(screen, "map")
 	screen.back_requested.connect(_on_map_back)
 	screen.level_requested.connect(show_prestart)
 	return true
@@ -363,10 +366,8 @@ func show_feature_preview(feature: String) -> bool:
 	back.add_theme_stylebox_override("normal", back_style)
 	back.add_theme_stylebox_override("hover", back_style)
 	layout.add_child(back)
-	back.pressed.connect(func():
-		if is_instance_valid(overlay):
-			overlay.queue_free()
-	)
+	back.pressed.connect(_dismiss_feature_preview)
+	_install_product_navigation(overlay, feature.to_lower(), NodePath("FeatureLayout"))
 	# Explicit card typography is intentionally retained; applying the global theme
 	# after construction would shrink these feature panels below mobile reading size.
 	return true
@@ -419,6 +420,7 @@ func _on_prestart_back() -> void:
 		screen.set("canonical_level_cap", INTERNAL_REVIEW_LEVEL_COUNT)
 		_show_screen(screen)
 		screen.set_progress(progress)
+		_install_product_navigation(screen, "map")
 		screen.back_requested.connect(_on_map_back)
 		screen.level_requested.connect(show_prestart)
 
@@ -453,6 +455,44 @@ func _show_screen(screen: Node) -> void:
 	_install_north_star_backdrop(screen)
 	Typography.apply(screen)
 	CurioMaterials.apply(screen)
+
+func _install_product_navigation(screen: Node, active_section: String, content_path: NodePath = NodePath("Layout")) -> void:
+	if screen is Control:
+		ProductNavigation.attach(screen as Control, active_section, Callable(self, "_on_shell_navigation_requested"), content_path)
+
+func _dismiss_feature_preview() -> void:
+	var overlay := screen_host.get_node_or_null("FeaturePreview")
+	if overlay != null:
+		screen_host.remove_child(overlay)
+		overlay.queue_free()
+
+func _ensure_house_route() -> bool:
+	if navigation == null:
+		return false
+	if navigation.current() == NavigationScript.Route.HOUSE:
+		return true
+	return show_house()
+
+func _on_shell_navigation_requested(section: String) -> void:
+	_dismiss_feature_preview()
+	match section:
+		"house":
+			show_house()
+		"curios":
+			if _ensure_house_route():
+				show_collection()
+		"map":
+			if _ensure_house_route():
+				show_chapters()
+		"events":
+			if _ensure_house_route():
+				show_feature_preview("Events")
+		"shop":
+			if _ensure_house_route():
+				show_feature_preview("Shop")
+		"profile":
+			if _ensure_house_route():
+				show_feature_preview("Profile")
 
 func _on_gameplay_navigation_requested(section: String) -> void:
 	if navigation.current() == NavigationScript.Route.GAMEPLAY:
@@ -526,6 +566,7 @@ func show_chapters() -> bool:
 		return false
 	var screen: Node = ChapterSelectScene.instantiate()
 	_show_screen(screen)
+	_install_product_navigation(screen, "map")
 	screen.chapter_requested.connect(_on_chapter_selected)
 	screen.back_requested.connect(show_house)
 	return true

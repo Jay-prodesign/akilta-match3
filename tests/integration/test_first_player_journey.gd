@@ -46,11 +46,13 @@ func _run() -> void:
 	_expect(str(app.current_route_name()) == "house", "chapter selector remains in House navigation state")
 	var chapters = app.current_screen()
 	_expect(str(chapters.name) == "ChapterSelect", "House Play CTA must open chapter selection")
+	_expect(chapters.get_node_or_null("ProductNavigation") != null, "Chapter Select must retain the shared product navigation")
 	chapters.get_node("Layout/ChapterGrid/CurioBoutiqueButton").emit_signal("pressed")
 	await process_frame
 	_expect(str(app.current_route_name()) == "map", "Curio Boutique selection must open its level map")
 	var map = app.current_screen()
 	_expect(str(map.name) == "ChapterMap", "Curio Boutique must open the authored chapter map")
+	_expect(map.get_node_or_null("ProductNavigation") != null, "Chapter Map must retain the shared product navigation")
 	var level1_button: Button = map.get_level_button(1)
 	var level2_button: Button = map.get_level_button(2)
 	_expect(level1_button != null and not level1_button.disabled, "Level 1 must be selectable")
@@ -118,21 +120,28 @@ func _run() -> void:
 	var collection = app.current_screen()
 	var moon_state: Label = collection.get_node("Layout/Cards/MoonCard/Content/State")
 	_expect(moon_state.text.begins_with("AWAKENED"), "Moon Cameo must be inspectable as awakened in collection")
-	collection.get_node("Layout/Back").emit_signal("pressed")
+	var collection_nav = collection.get_node_or_null("ProductNavigation")
+	_expect(collection_nav != null, "Curio Collection must retain the shared product navigation")
+	if collection_nav != null:
+		collection_nav.get_node("Scroll/Items/NavEvents").emit_signal("pressed")
 	await process_frame
-	_expect(str(app.current_route_name()) == "house", "collection must return to House")
-	_expect(app.show_feature_preview("Events"), "weekly rituals preview must open from House")
 	await process_frame
-	var events_preview = app.get_node("ScreenHost/FeaturePreview")
-	_expect(events_preview.get_node("FeatureLayout/FeatureTitle").text == "WEEKLY RITUALS", "Events tab must show the North Star weekly rituals screen")
-	events_preview.get_node("FeatureLayout/BackToHouse").emit_signal("pressed")
+	_expect(str(app.current_route_name()) == "house", "secondary navigation must return to House authority before opening Events")
+	var events_preview = app.get_node_or_null("ScreenHost/FeaturePreview")
+	_expect(events_preview != null and events_preview.get_node("FeatureLayout/FeatureTitle").text == "WEEKLY RITUALS", "Events tab must open from shared product navigation")
+	_expect(events_preview != null and events_preview.get_node_or_null("ProductNavigation") != null, "Events preview must retain shared product navigation")
+	if events_preview != null:
+		events_preview.get_node("ProductNavigation/Scroll/Items/NavShop").emit_signal("pressed")
 	await process_frame
-	_expect(app.show_feature_preview("Shop"), "non-monetized shop preview must open from House")
 	await process_frame
-	var shop_preview = app.get_node("ScreenHost/FeaturePreview")
-	_expect(shop_preview.get_node("FeatureLayout/FeatureTitle").text == "THE CURIO EMPORIUM", "Shop tab must show the North Star emporium screen")
-	shop_preview.get_node("FeatureLayout/BackToHouse").emit_signal("pressed")
+	var shop_preview = app.get_node_or_null("ScreenHost/FeaturePreview")
+	_expect(shop_preview != null and shop_preview.get_node("FeatureLayout/FeatureTitle").text == "THE CURIO EMPORIUM", "Shop must open directly from Events navigation")
+	_expect(shop_preview != null and shop_preview.get_node_or_null("ProductNavigation") != null, "Shop preview must retain shared product navigation")
+	if shop_preview != null:
+		shop_preview.get_node("ProductNavigation/Scroll/Items/NavHouse").emit_signal("pressed")
 	await process_frame
+	await process_frame
+	_expect(str(app.current_route_name()) == "house", "shared product navigation must return Shop to House")
 
 	# Founder-authorized internal review unlocks Level 2 after Level 1, but keeps Level 4+ sealed.
 	_expect(app.show_chapters(), "House must reopen chapter selection for internal review")
