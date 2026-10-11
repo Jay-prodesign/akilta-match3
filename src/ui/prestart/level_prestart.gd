@@ -20,6 +20,7 @@ var level_number: int = 1
 
 func _ready() -> void:
 	_install_world_backdrop()
+	_install_level_artwork()
 	_build_ritual_aids()
 	_style_ritual_actions()
 	start_button.pressed.connect(func(): start_requested.emit(level_number))
@@ -36,6 +37,18 @@ func _install_world_backdrop() -> void:
 	art.modulate = Color(0.74, 0.70, 0.82, 0.34)
 	add_child(art)
 	move_child(art, 1)
+
+func _install_level_artwork() -> void:
+	if ritual_art == null or ritual_art.get_node_or_null("LevelArtwork") != null:
+		return
+	var art := TextureRect.new()
+	art.name = "LevelArtwork"
+	art.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	art.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+	art.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_COVERED
+	art.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	art.texture = PieceAssetLoader.ornament("res://assets/world/ch01_curio_boutique/ch01_prestart_moonlit_cabinet_v01.svg")
+	ritual_art.add_child(art)
 
 func _build_ritual_aids() -> void:
 	var content := get_node_or_null("Layout/Card/Content") as VBoxContainer
@@ -160,5 +173,8 @@ func configure_level(value: int) -> bool:
 		note_label.text = String(data.get("prestart_note", "Recover %s. The House will remember this ritual when you return." % curio))
 	if ritual_art != null:
 		ritual_art.set("relic_id", curio_id)
+		var level_art := ritual_art.get_node_or_null("LevelArtwork") as TextureRect
+		if level_art != null:
+			level_art.visible = level_number == 1
 		ritual_art.queue_redraw()
 	return true

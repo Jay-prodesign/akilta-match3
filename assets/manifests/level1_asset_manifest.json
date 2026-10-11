@@ -424,6 +424,28 @@
       "provenance": "first_party"
     },
     {
+      "id": "ch01.world.prestart.level01",
+      "class": "content_artwork",
+      "scope": "chapter",
+      "path": "assets/world/ch01_curio_boutique/ch01_prestart_moonlit_cabinet_v01.svg",
+      "status": "candidate",
+      "target": "1024x768",
+      "format": "svg",
+      "role": "S04 primary ritual panel / Level 1 first-attempt and replay artwork",
+      "provenance": "first_party"
+    },
+    {
+      "id": "ch01.world.gameplay.level01",
+      "class": "world_art",
+      "scope": "chapter",
+      "path": "assets/world/ch01_curio_boutique/ch01_world_gameplay_level01_v01.svg",
+      "status": "candidate",
+      "target": "1080x1920",
+      "format": "svg",
+      "role": "S05 full-screen background / Level 1 gameplay environment",
+      "provenance": "first_party"
+    },
+    {
       "id": "ch01.world.north_star_gameplay_backdrop",
       "class": "world_art",
       "scope": "chapter",

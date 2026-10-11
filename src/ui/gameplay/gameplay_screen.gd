@@ -71,7 +71,7 @@ var _result_reward_values: Control
 @onready var result_action: Button = $ResultOverlay/Card/Content/Action
 
 func _ready() -> void:
-	world_backdrop.texture = PieceAssetLoader.ornament("res://assets/world/ch01_curio_boutique/north_star_gameplay_backdrop.svg")
+	world_backdrop.texture = PieceAssetLoader.ornament("res://assets/world/ch01_curio_boutique/ch01_world_gameplay_level01_v01.svg")
 	_install_candidate_divider()
 	_install_hud_plate()
 	_build_top_resource_bar()

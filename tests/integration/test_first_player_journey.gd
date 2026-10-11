@@ -101,10 +101,10 @@ func _run() -> void:
 
 	var restoration_overlay := awakened_house.get_node_or_null("RestorationOverlay")
 	_expect(restoration_overlay != null, "first-time Level 1 win must enter the same-camera House restoration state")
-	var collection_nav: Button = awakened_house.get_node_or_null("ProductNavigation/Scroll/Items/NavCurios") as Button
-	_expect(collection_nav != null, "House global navigation must expose Curios")
-	if collection_nav != null:
-		collection_nav.emit_signal("pressed")
+	var house_curios_nav: Button = awakened_house.get_node_or_null("ProductNavigation/Scroll/Items/NavCurios") as Button
+	_expect(house_curios_nav != null, "House global navigation must expose Curios")
+	if house_curios_nav != null:
+		house_curios_nav.emit_signal("pressed")
 	await process_frame
 	_expect(str(app.current_route_name()) == "collection", "House Curios control must open collection")
 	var collection = app.current_screen()

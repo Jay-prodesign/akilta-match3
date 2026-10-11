@@ -370,7 +370,8 @@
       ],
       "reuse": "Level1_prestart",
       "priority": "P0",
-      "production_status": "required"
+      "production_status": "candidate_screen_validation",
+      "current_path": "assets/world/ch01_curio_boutique/ch01_prestart_moonlit_cabinet_v01.svg"
     },
     {
       "asset_id": "piece_moon",
@@ -512,7 +513,7 @@
       "reuse": "Gameplay_ch01",
       "priority": "P0",
       "production_status": "candidate_requires_recomposition",
-      "current_path": "assets/world/ch01_curio_boutique/north_star_gameplay_backdrop.svg"
+      "current_path": "assets/world/ch01_curio_boutique/ch01_world_gameplay_level01_v01.svg"
     },
     {
       "asset_id": "gameplay_board_frame",
