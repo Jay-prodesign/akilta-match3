@@ -221,9 +221,45 @@ func show_feature_preview(feature: String) -> bool:
 	cards.add_theme_constant_override("separation", 10)
 	card_scroll.add_child(cards)
 	var entries: Array[Dictionary]
-	if feature.to_lower() == "events":
+	var is_events := feature.to_lower() == "events"
+	if is_events:
+		var completed_count := mini(int(progress.completed_levels.size()) if progress != null else 0, INTERNAL_REVIEW_LEVEL_COUNT)
+		var progress_label := Label.new()
+		progress_label.name = "ChapterRitualProgress"
+		progress_label.text = "OPENING RITUAL  ·  %d / %d DISPLAYS AWAKENED" % [completed_count, INTERNAL_REVIEW_LEVEL_COUNT]
+		progress_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+		progress_label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+		progress_label.add_theme_color_override("font_color", Color("#D5AD70"))
+		progress_label.add_theme_font_size_override("font_size", 16)
+		layout.add_child(progress_label)
+		var ritual_progress := ProgressBar.new()
+		ritual_progress.name = "OpeningRitualProgressBar"
+		ritual_progress.min_value = 0
+		ritual_progress.max_value = INTERNAL_REVIEW_LEVEL_COUNT
+		ritual_progress.value = completed_count
+		ritual_progress.show_percentage = false
+		ritual_progress.custom_minimum_size.y = 12
+		var track := StyleBoxFlat.new()
+		track.bg_color = Color("#211827")
+		track.set_corner_radius_all(6)
+		var fill := StyleBoxFlat.new()
+		fill.bg_color = Color("#D5AD70")
+		fill.set_corner_radius_all(6)
+		ritual_progress.add_theme_stylebox_override("background", track)
+		ritual_progress.add_theme_stylebox_override("fill", fill)
+		layout.add_child(ritual_progress)
+	else:
+		var shop_note := Label.new()
+		shop_note.name = "NoPurchasesNotice"
+		shop_note.text = "THE EMPORIUM IS SEALED  ·  NO PURCHASES OR PAYMENTS"
+		shop_note.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+		shop_note.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+		shop_note.add_theme_color_override("font_color", Color("#D5AD70"))
+		shop_note.add_theme_font_size_override("font_size", 15)
+		layout.add_child(shop_note)
+	if is_events:
 		entries = [
-			{"icon":"☾", "art":"res://assets/pieces/moon_sigil.svg", "title":"MOONLIGHT MARKET", "body":"Play levels to gather moon sigils.", "status":"COMING SOON · EVENT RULES NOT ACTIVE"},
+			{"icon":"☾", "art":"res://assets/pieces/moon_sigil.svg", "title":"MOONLIGHT MARKET", "body":"Awaken the three opening displays to restore the Curio House.", "status":"CHAPTER PROGRESS TRACKED · MARKET EVENT NOT YET ACTIVE"},
 			{"icon":"♜", "art":"res://assets/pieces/crow.svg", "title":"THE LOST RELICS", "body":"A raven has spotted a sealed cabinet.", "status":"LOCKED · COMPLETE THE OPENING CHAPTER"},
 			{"icon":"✧", "art":"res://assets/pieces/pentagram.svg", "title":"WEEKLY RITUALS", "body":"Your weekly ritual streak will live here.", "status":"PREVIEW · NO CLAIMABLE REWARDS"}
 		]
