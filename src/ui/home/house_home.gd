@@ -23,10 +23,13 @@ var progress
 var available_level_count: int = 1
 var _dock_buttons: Dictionary = {}
 var _chapter_status: Label
+var _completion_banner: PanelContainer
+var _completion_label: Label
 
 func _ready() -> void:
 	play_button.pressed.connect(_on_play_pressed)
 	_build_resource_bar()
+	_build_completion_banner()
 	_build_navigation_dock()
 	collection_button.pressed.connect(func(): collection_requested.emit())
 	settings_button.pressed.connect(func(): settings_requested.emit())
@@ -60,15 +63,24 @@ func _refresh() -> void:
 	else:
 		curio_label.text = "DORMANT DISPLAY"
 	collection_button.text = "RELIQUARY · %d / 3" % owned_curios.size()
+	var finished: int = mini(progress.completed_levels.size(), available_level_count) if progress != null else 0
+	var opening_complete := available_level_count > 0 and finished >= available_level_count and owned_curios.size() >= available_level_count and stage >= available_level_count
+	if _completion_banner != null:
+		_completion_banner.visible = opening_complete
+	if _completion_label != null:
+		_completion_label.text = "OPENING CABINET SET COMPLETE · %d / %d RITUALS · %d / %d CURIOS" % [finished, available_level_count, mini(owned_curios.size(), available_level_count), available_level_count]
 	if _chapter_status != null:
-		var finished: int = mini(progress.completed_levels.size(), available_level_count) if progress != null else 0
-		_chapter_status.text = "✦ %d / %d RITUALS" % [finished, available_level_count]
+		_chapter_status.text = "✦ OPENING SET COMPLETE" if opening_complete else "✦ %d / %d RITUALS" % [finished, available_level_count]
+	if opening_complete:
+		curio_label.text = "FIRST CABINET SET · 3 CURIOS AWAKENED"
 	var next_level := int(progress.highest_level_unlocked) if progress != null else 1
 	var has_started: bool = progress != null and not progress.completed_levels.is_empty()
 	var level1_completed: bool = progress != null and progress.completed_levels.has("ch01_level_001")
 	play_button.disabled = available_level_count < 1
 	if has_started and next_level > 1 and next_level <= available_level_count:
 		play_button.text = "ENTER LEVEL %d" % next_level
+	elif opening_complete:
+		play_button.text = "REVISIT COMPLETED CURIO MAP"
 	elif level1_completed and next_level > available_level_count:
 		play_button.text = "REVISIT CURIO MAP"
 	elif next_level > available_level_count:
@@ -85,6 +97,30 @@ func _on_play_pressed() -> void:
 		play_requested.emit(next_level)
 	else:
 		map_requested.emit()
+
+func _build_completion_banner() -> void:
+	var panel := PanelContainer.new()
+	panel.name = "ChapterCompletionBanner"
+	panel.custom_minimum_size = Vector2(0, 46)
+	panel.visible = false
+	var shell := StyleBoxFlat.new()
+	shell.bg_color = Color("#241628", 0.97)
+	shell.border_color = Color("#D5AD70", 0.88)
+	shell.set_border_width_all(1)
+	shell.set_corner_radius_all(10)
+	panel.add_theme_stylebox_override("panel", shell)
+	var label := Label.new()
+	label.name = "Label"
+	label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	label.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
+	label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	label.add_theme_color_override("font_color", Color("#F4D995"))
+	label.add_theme_font_size_override("font_size", 14)
+	panel.add_child(label)
+	$Layout.add_child(panel)
+	$Layout.move_child(panel, $Layout/CurioChip.get_index() + 1)
+	_completion_banner = panel
+	_completion_label = label
 
 func _build_navigation_dock() -> void:
 	# Touch-sized, gothic first-party navigation for the three-level internal review.
@@ -161,6 +197,7 @@ func _build_resource_bar() -> void:
 	panel.add_theme_stylebox_override("panel", style)
 	add_child(panel)
 	var row := HBoxContainer.new()
+	row.name = "Resources"
 	row.alignment = BoxContainer.ALIGNMENT_CENTER
 	row.add_theme_constant_override("separation", 4)
 	panel.add_child(row)
@@ -174,4 +211,5 @@ func _build_resource_bar() -> void:
 		label.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 		row.add_child(label)
 		if value.begins_with("✧"):
+			label.name = "ChapterStatus"
 			_chapter_status = label
