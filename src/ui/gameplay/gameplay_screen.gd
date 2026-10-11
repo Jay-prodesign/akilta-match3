@@ -16,6 +16,7 @@ const BoardState = preload("res://src/match3/domain/board_state.gd")
 const MoveFinder = preload("res://src/match3/domain/move_finder.gd")
 const PieceAssetLoader = preload("res://src/match3/presentation/piece_asset_loader.gd")
 const ScreenArt = preload("res://src/ui/shared/screen_art_registry.gd")
+const RewardRevealFx = preload("res://src/ui/shared/reward_reveal_fx.gd")
 const MoveResolver = preload("res://src/match3/domain/move_resolver.gd")
 const HapticsController = preload("res://src/feedback/haptics_controller.gd")
 const KENNEY_DIVIDER_PATH := "res://assets/candidate/third_party/kenney/fantasy-ui-borders/divider-004.png"
