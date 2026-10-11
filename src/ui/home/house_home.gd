@@ -342,13 +342,21 @@ func _animate_restoration_state(curio_id: String, stage: int, current_curios: Ar
 		awakening_echo.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
 		awakening_echo.mouse_filter = Control.MOUSE_FILTER_IGNORE
 		awakening_echo.z_index = 8
-		var side := minf(room_view.size.x * 0.20, room_view.size.y * 0.20)
+		var room_margin := room_view.size.x * 0.035
+		var world_room := Rect2(
+			Vector2(room_margin, room_view.size.y * 0.025),
+			Vector2(room_view.size.x - room_margin * 2.0, room_view.size.y * 0.93)
+		)
+		var side := world_room.size.x * 0.15
 		awakening_echo.size = Vector2(side, side)
 		var y_ratio := 0.38 if stage == 2 else 0.49
-		var center := Vector2(room_view.size.x * 0.84, room_view.size.y * y_ratio)
+		var center := Vector2(
+			world_room.position.x + world_room.size.x * 0.84,
+			world_room.position.y + world_room.size.y * y_ratio
+		)
 		awakening_echo.position = center - awakening_echo.size * 0.5
 		awakening_echo.pivot_offset = awakening_echo.size * 0.5
-		awakening_echo.scale = Vector2(0.60, 0.60)
+		awakening_echo.scale = Vector2(0.82, 0.82)
 		awakening_echo.modulate = Color(1.0, 0.94, 0.78, 0.0)
 		room_view.add_child(awakening_echo)
 
@@ -359,8 +367,8 @@ func _animate_restoration_state(curio_id: String, stage: int, current_curios: Ar
 		tween.parallel().tween_property(restored_curio, "modulate", Color.WHITE, 0.34)
 		tween.parallel().tween_property(restored_curio, "scale", Vector2.ONE, 0.56).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
 	if awakening_echo != null:
-		tween.parallel().tween_property(awakening_echo, "modulate", Color(1.0, 0.94, 0.78, 0.94), 0.28)
-		tween.parallel().tween_property(awakening_echo, "scale", Vector2(1.08, 1.08), 0.48).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
+		tween.parallel().tween_property(awakening_echo, "modulate", Color(1.0, 0.94, 0.78, 0.72), 0.28)
+		tween.parallel().tween_property(awakening_echo, "scale", Vector2.ONE, 0.48).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
 		tween.tween_property(awakening_echo, "modulate", Color(1.0, 0.94, 0.78, 0.0), 0.26)
 		tween.tween_callback(awakening_echo.queue_free)
 
