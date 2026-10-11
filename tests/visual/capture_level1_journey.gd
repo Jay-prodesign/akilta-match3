@@ -1,7 +1,6 @@
 extends SceneTree
 
 const APP_SCENE := preload("res://src/app/app_bootstrap.tscn")
-const SPLASH_SCENE := preload("res://src/ui/splash/splash_screen.tscn")
 const SAVE_PATH := "user://capture_level1_journey.json"
 const SETTINGS_PATH := "user://capture_level1_journey_settings.json"
 
@@ -10,21 +9,24 @@ func _init() -> void:
 
 func _capture() -> void:
 	_cleanup()
-	var splash = SPLASH_SCENE.instantiate()
-	root.add_child(splash)
-	await _frames(3)
-	if not await _save(splash, "journey-00-splash.png"):
-		return
-	splash.queue_free()
-	await process_frame
 	var app = APP_SCENE.instantiate()
 	app.save_path_override = SAVE_PATH
 	app.settings_path_override = SETTINGS_PATH
 	root.add_child(app)
 	await _frames(4)
 
+	if String(app.current_route_name()) != "boot":
+		return _fail(app, "journey must begin in BOOT while splash is visible")
+	if not await _save(app, "journey-00-splash.png"):
+		return
+	var splash = app.current_screen()
+	var enter: Button = splash.get_node_or_null("Layout/Enter") as Button if splash != null else null
+	if enter == null:
+		return _fail(app, "splash enter control missing")
+	enter.emit_signal("pressed")
+	await _frames(4)
 	if String(app.current_route_name()) != "house":
-		return _fail(app, "journey did not boot into House")
+		return _fail(app, "splash did not enter House")
 	if not await _save(app, "journey-01-house-dormant.png"):
 		return
 

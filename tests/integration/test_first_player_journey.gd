@@ -24,7 +24,13 @@ func _run() -> void:
 	await process_frame
 	await process_frame
 
-	_expect(str(app.current_route_name()) == "house", "new player must boot into House")
+	_expect(str(app.current_route_name()) == "boot", "new player must remain in BOOT while splash is visible")
+	var splash = app.current_screen()
+	_expect(splash != null and splash.get_node_or_null("Layout/Enter") != null, "new player must see the authored splash entry surface")
+	splash.get_node("Layout/Enter").emit_signal("pressed")
+	await process_frame
+	await process_frame
+	_expect(str(app.current_route_name()) == "house", "splash entry must route into House")
 	var house = app.current_screen()
 	var dormant_cameo: Control = house.get_node("Layout/RoomView/MoonCameoOverlay")
 	_expect(not dormant_cameo.visible, "Moon Cameo physical relic must stay hidden before Level 1 is won")
@@ -214,8 +220,14 @@ func _run() -> void:
 	root.add_child(relaunched)
 	await process_frame
 	await process_frame
+	_expect(str(relaunched.current_route_name()) == "boot", "relaunch must preserve the authored splash first impression")
+	var relaunch_splash = relaunched.current_screen()
+	_expect(relaunch_splash != null and relaunch_splash.get_node_or_null("Layout/Enter") != null, "relaunch splash must expose the enter control")
+	relaunch_splash.get_node("Layout/Enter").emit_signal("pressed")
+	await process_frame
+	await process_frame
 	var restored = relaunched.get("progress")
-	_expect(str(relaunched.current_route_name()) == "house", "relaunch must return to House")
+	_expect(str(relaunched.current_route_name()) == "house", "splash entry after relaunch must return to House")
 	_expect(int(restored.house_stage) >= 1, "relaunch must preserve House awakening stage")
 	_expect(int(restored.highest_level_unlocked) >= 2, "relaunch must preserve unlocked review level")
 	_expect(restored.curios.count("moon_cameo") == 1, "relaunch must preserve Moon Cameo")

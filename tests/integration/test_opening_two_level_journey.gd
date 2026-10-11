@@ -21,7 +21,13 @@ func _run() -> void:
 	root.add_child(app)
 	await process_frame
 	await process_frame
-	_expect(str(app.current_route_name()) == "house", "new player must boot into House")
+	_expect(str(app.current_route_name()) == "boot", "new player must begin on splash")
+	var splash = app.current_screen()
+	_expect(splash != null and splash.get_node_or_null("Layout/Enter") != null, "splash must expose the enter control")
+	splash.get_node("Layout/Enter").emit_signal("pressed")
+	await process_frame
+	await process_frame
+	_expect(str(app.current_route_name()) == "house", "splash must enter House")
 	var house = app.current_screen()
 	house.get_node("Layout/PlayButton").emit_signal("pressed")
 	await process_frame
@@ -82,8 +88,14 @@ func _run() -> void:
 	root.add_child(relaunched)
 	await process_frame
 	await process_frame
+	_expect(str(relaunched.current_route_name()) == "boot", "relaunch must show splash before House")
+	var relaunch_splash = relaunched.current_screen()
+	_expect(relaunch_splash != null and relaunch_splash.get_node_or_null("Layout/Enter") != null, "relaunch splash must expose enter")
+	relaunch_splash.get_node("Layout/Enter").emit_signal("pressed")
+	await process_frame
+	await process_frame
 	var restored = relaunched.get("progress")
-	_expect(str(relaunched.current_route_name()) == "house", "relaunch must return to House")
+	_expect(str(relaunched.current_route_name()) == "house", "relaunch splash must enter House")
 	_expect(restored != null and int(restored.house_stage) == 1, "relaunch must preserve Level 1 House restoration")
 	_expect(restored != null and restored.curios.count("moon_cameo") == 1, "relaunch must preserve Moon Cameo exactly once")
 	_expect(relaunched.current_screen().get_node("Layout/PlayButton").text == "ENTER LEVEL 2", "saved House must offer unlocked Level 2")
@@ -115,7 +127,7 @@ func _fail(message: String) -> void:
 
 func _finish() -> void:
 	if failures.is_empty():
-		print("TEST_PASS: Level 1 approval gate journey")
+		print("TEST_PASS: Level 1 unlock and replay journey")
 		quit(0)
 		return
 	for failure in failures:

@@ -48,11 +48,9 @@ func _ready() -> void:
 	audio_director = AudioDirectorScript.new()
 	audio_director.name = "AudioDirector"
 	add_child(audio_director)
-	navigation.go(NavigationScript.Route.HOUSE, {"reason": "boot"})
-	if OS.has_feature("web"):
-		_render_splash()
-	else:
-		_render_house()
+	# Every platform enters through the authored first-impression surface.
+	# Navigation stays at BOOT until the player explicitly enters the House.
+	_render_splash()
 
 func current_route_name() -> String:
 	return navigation.route_name().to_lower() if navigation != null else ""
@@ -508,6 +506,13 @@ func _render_splash() -> void:
 	screen.continue_requested.connect(_on_splash_continue)
 
 func _on_splash_continue() -> void:
+	if navigation == null:
+		return
+	if navigation.current() == NavigationScript.Route.BOOT:
+		if not navigation.go(NavigationScript.Route.HOUSE, {"reason": "splash_continue"}):
+			return
+	elif navigation.current() != NavigationScript.Route.HOUSE:
+		return
 	_render_house()
 
 func _on_house_play_requested(level_number: int) -> void:

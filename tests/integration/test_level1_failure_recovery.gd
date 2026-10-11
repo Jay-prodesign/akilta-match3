@@ -27,6 +27,13 @@ func _run() -> void:
 	root.add_child(app)
 	await process_frame
 	await process_frame
+	_expect(String(app.current_route_name()) == "boot", "failure recovery journey must begin on splash")
+	var splash = app.current_screen()
+	_expect(splash != null and splash.get_node_or_null("Layout/Enter") != null, "failure recovery splash must expose enter")
+	splash.get_node("Layout/Enter").emit_signal("pressed")
+	await process_frame
+	await process_frame
+	_expect(String(app.current_route_name()) == "house", "failure recovery splash must enter House")
 	_expect(app.show_map(), "House -> Map must open for failure recovery test")
 	_expect(app.show_prestart(1), "Map -> Prestart must open for failure recovery test")
 	_expect(app.start_level(1), "Prestart -> Level 1 must start for failure recovery test")

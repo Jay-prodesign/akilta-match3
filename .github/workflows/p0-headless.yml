@@ -6,6 +6,7 @@ on:
       - p0/bootstrap
     paths:
       - ".github/workflows/p0-headless.yml"
+  # Milestone trigger: native splash + first-impression route repair (2026-10-11).
   # Run the full milestone checks deliberately, not on every development commit.
   workflow_dispatch:
 
@@ -180,7 +181,7 @@ jobs:
           printf '%s\\n' "$output"
           if [ "$status" -ne 0 ]; then exit "$status"; fi
           if grep -Eq "SCRIPT ERROR:|(^| )ERROR:" <<<"$output"; then exit 1; fi
-          grep -Fq "TEST_PASS: Level 1 approval gate journey" <<<"$output"
+          grep -Fq "TEST_PASS: Level 1 unlock and replay journey" <<<"$output"
 
       - name: Run Level 1 fail retry recovery
         shell: bash
