@@ -94,7 +94,7 @@ func _center_for(level_number: int, content_height: float) -> Vector2:
 	return Vector2(x, y)
 
 func _request(level_number: int) -> void:
-	if level_number <= canonical_level_cap:
+	if level_number <= canonical_level_cap and (progress == null or level_number <= int(progress.highest_level_unlocked)):
 		level_requested.emit(level_number)
 
 func _refresh() -> void:
@@ -106,7 +106,7 @@ func _refresh() -> void:
 		var label := _level_labels[level_number] as Label
 		var level_id := "ch01_level_%03d" % level_number
 		var completed: bool = progress != null and progress.completed_levels.has(level_id)
-		var open: bool = level_number <= canonical_level_cap
+		var open: bool = level_number <= canonical_level_cap and (progress == null or level_number <= int(progress.highest_level_unlocked))
 		button.disabled = not open
 		button.text = "✓" if completed else str(level_number)
 		button.tooltip_text = _tooltip_for(level_number)
