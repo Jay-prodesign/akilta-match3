@@ -101,8 +101,15 @@ func restoration_contract() -> Dictionary:
 
 func _draw_authored_restoration_curios(room: Rect2) -> void:
 	# The authored backdrop owns the room architecture, but progression rewards must
-	# still become physical objects in that room. Keep the Moon Cameo as its shared
-	# Control overlay and layer later reliquaries into the side display niches.
+	# still become physical objects in that room. Moon Cameo occupies the authored
+	# right-side cabinet niche; later reliquaries use the remaining display niches.
+	if house_stage >= 1 and curios.has("moon_cameo"):
+		var moon_niche := Vector2(room.position.x + room.size.x * 0.83, room.position.y + room.size.y * 0.27)
+		for i in range(4, 0, -1):
+			var moon_glow := Color(LILAC)
+			moon_glow.a = 0.012 + float(i) * 0.010
+			draw_circle(moon_niche, room.size.x * (0.055 + float(i) * 0.014), moon_glow)
+		draw_circle(moon_niche, room.size.x * 0.047, Color(GOLD, 0.035))
 	if house_stage >= 2 and curios.has("moth_reliquary") and _moth_reliquary != null:
 		_draw_restored_relic(
 			room,

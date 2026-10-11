@@ -280,9 +280,17 @@ func _animate_restoration_state(stage: int, current_curios: Array[String]) -> vo
 		return
 	room_view.modulate = Color(0.70, 0.64, 0.82, 1)
 	room_view.set_house_state(stage, current_curios)
+	var restored_curio := room_view.get_node_or_null("MoonCameoOverlay") as Control
+	if restored_curio != null and restored_curio.visible:
+		restored_curio.pivot_offset = restored_curio.size * 0.5
+		restored_curio.scale = Vector2(0.52, 0.52)
+		restored_curio.modulate = Color(1.0, 1.0, 1.0, 0.0)
 	var tween := create_tween()
 	tween.set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_OUT)
 	tween.tween_property(room_view, "modulate", Color.WHITE, 0.55)
+	if restored_curio != null and restored_curio.visible:
+		tween.parallel().tween_property(restored_curio, "modulate", Color.WHITE, 0.34)
+		tween.parallel().tween_property(restored_curio, "scale", Vector2.ONE, 0.56).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
 
 func _curio_texture(curio_id: String) -> Texture2D:
 	var path := "res://assets/curios/ch01_curio_moon_cameo_awakened_v01.svg"
