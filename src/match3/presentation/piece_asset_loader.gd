@@ -20,25 +20,13 @@ static var _ornaments: Dictionary = {}
 static func texture(family: String) -> Texture2D:
 	if _textures.has(family):
 		return _textures[family]
-	if _failures.has(family) or not PATHS.has(family):
+	if not PATHS.has(family):
 		return null
-	var path := String(PATHS[family])
-	if not FileAccess.file_exists(path):
-		_failures[family] = "missing"
-		return null
-	var file := FileAccess.open(path, FileAccess.READ)
-	if file == null:
-		_failures[family] = "unreadable"
-		return null
-	var svg := file.get_as_text()
-	file.close()
-	var image := Image.new()
-	var err := image.load_svg_from_string(svg, 1.0)
-	if err != OK or image.is_empty():
-		_failures[family] = "svg_parse"
-		return null
-	var result := ImageTexture.create_from_image(image)
-	_textures[family] = result
+	# All tile families use the same raster-first resolver as scene art.
+	# The actual art file must be authored; SVG is only a fallback.
+	var result := ornament(String(PATHS[family]))
+	if result != null:
+		_textures[family] = result
 	return result
 
 const PROFILE_PATHS := {
@@ -86,8 +74,8 @@ static func contract() -> Dictionary:
 	for family in PATHS:
 		loaded[family] = texture(String(family)) != null
 	return {
-		"source": "AKILTA first-party original SVG",
-		"status": "north_star_ringless_symbol_set_v4",
+		"source": "AKILTA authored raster assets (legacy SVG fallback)",
+		"status": "raster_first_piece_contract",
 		"paid_dependency": false,
 		"fallback": "owned_procedural_renderer",
 		"families": loaded,
