@@ -55,8 +55,8 @@ func _capture() -> void:
 		return _fail(app, "completed House -> Events failed")
 	await _frames(3)
 	var event_progress: Label = app.get_node_or_null("ScreenHost/FeaturePreview/FeatureLayout/ChapterRitualProgress") as Label
-	if event_progress == null or not event_progress.text.contains("3 / 3 DISPLAYS AWAKENED"):
-		return _fail(app, "Events does not reflect completed opening chapter")
+	if event_progress == null or not event_progress.text.begins_with("OPENING RITUAL COMPLETE") or not event_progress.text.contains("3 / 3 DISPLAYS AWAKENED"):
+		return _fail(app, "Events does not expose the completed opening ritual state")
 	if not await _save(app, "progression-final-events.png"):
 		return
 	app.get_node("ScreenHost/FeaturePreview/FeatureLayout/BackToHouse").emit_signal("pressed")
@@ -70,12 +70,14 @@ func _capture() -> void:
 	if profile != null:
 		for node in profile.find_children("", "Label", true, false):
 			profile_copy += (node as Label).text + "\n"
-	if not profile_copy.contains("3 of 3 opening rituals completed."):
-		return _fail(app, "Profile does not show 3/3 rituals")
+	if not profile_copy.contains("Opening chapter complete · 3 of 3 rituals."):
+		return _fail(app, "Profile does not show the completed opening chapter")
 	if not profile_copy.contains("3 of 3 opening curios awakened."):
 		return _fail(app, "Profile does not show 3/3 curios")
-	if not profile_copy.contains("Restoration stage 3."):
-		return _fail(app, "Profile does not show restoration stage 3")
+	if not profile_copy.contains("FIRST CABINET SET RESTORED"):
+		return _fail(app, "Profile does not expose the restored first cabinet set")
+	if not profile_copy.contains("OPENING RESTORATION COMPLETE"):
+		return _fail(app, "Profile does not expose completed House restoration")
 	if not await _save(app, "progression-final-profile.png"):
 		return
 	app.get_node("ScreenHost/FeaturePreview/FeatureLayout/BackToHouse").emit_signal("pressed")
