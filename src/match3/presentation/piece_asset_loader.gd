@@ -87,10 +87,16 @@ static func contract() -> Dictionary:
 static func ornament(path: String) -> Texture2D:
 	if _ornaments.has(path):
 		return _ornaments[path]
-	# Production artwork is raster-first. The old vector artwork remains a
-	# compatibility fallback until each screen's authored PNG is installed.
-	var preferred := path.get_basename() + ".png" if path.get_extension().to_lower() == "svg" else path
-	var chosen := preferred if FileAccess.file_exists(preferred) else path
+	# Production artwork is raster-first. Prefer compact authored WebP, then PNG.
+	# The canonical owned SVG remains compatibility fallback only.
+	var chosen := path
+	if path.get_extension().to_lower() == "svg":
+		var webp_preferred := path.get_basename() + ".webp"
+		var png_preferred := path.get_basename() + ".png"
+		if FileAccess.file_exists(webp_preferred):
+			chosen = webp_preferred
+		elif FileAccess.file_exists(png_preferred):
+			chosen = png_preferred
 	if not FileAccess.file_exists(chosen):
 		return null
 	var image := Image.new()
