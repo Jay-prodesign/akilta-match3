@@ -8,6 +8,9 @@ signal navigation_requested(section: String)
 signal settings_requested
 signal result_state_changed(kind: String)
 
+const SCREEN_CONTRACT_ID := "S05"
+const RESULT_CONTRACT_ID := "S06"
+
 const BoardState = preload("res://src/match3/domain/board_state.gd")
 const MoveFinder = preload("res://src/match3/domain/move_finder.gd")
 const PieceAssetLoader = preload("res://src/match3/presentation/piece_asset_loader.gd")
