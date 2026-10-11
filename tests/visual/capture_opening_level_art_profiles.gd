@@ -68,6 +68,49 @@ func _capture() -> void:
 			quit(1)
 			return
 		print("CAPTURE_PASS: Level %d art profile %s -> %s" % [level_number, expected_profile, output_path])
+
+		var level_file := FileAccess.open(level_path, FileAccess.READ)
+		if level_file == null:
+			printerr("CAPTURE_FAIL: Level %d authored teaching moves missing" % level_number)
+			screen.queue_free()
+			quit(1)
+			return
+		var level_data: Variant = JSON.parse_string(level_file.get_as_text())
+		level_file.close()
+		if not level_data is Dictionary:
+			printerr("CAPTURE_FAIL: Level %d data malformed" % level_number)
+			screen.queue_free()
+			quit(1)
+			return
+		for move in level_data.get("teaching_moves", []):
+			var trace = screen.attempt_swap(
+				Vector2i(int(move[0]), int(move[1])),
+				Vector2i(int(move[2]), int(move[3]))
+			)
+			if trace == null or not trace.accepted:
+				printerr("CAPTURE_FAIL: Level %d authored move rejected" % level_number)
+				screen.queue_free()
+				quit(1)
+				return
+			if board_view.has_method("is_motion_active") and bool(board_view.is_motion_active()) and board_view.has_signal("trace_motion_finished"):
+				await board_view.trace_motion_finished
+			await process_frame
+			if screen.result_overlay.visible:
+				break
+		if not screen.result_overlay.visible:
+			printerr("CAPTURE_FAIL: Level %d authored path did not reach result/reward" % level_number)
+			screen.queue_free()
+			quit(1)
+			return
+		await process_frame
+		var result_image: Image = screen.get_viewport().get_texture().get_image()
+		var result_path := ProjectSettings.globalize_path("res://artifacts/level%d-result.png" % level_number)
+		if result_image == null or result_image.is_empty() or result_image.save_png(result_path) != OK:
+			printerr("CAPTURE_FAIL: Level %d result screenshot could not save" % level_number)
+			screen.queue_free()
+			quit(1)
+			return
+		print("CAPTURE_PASS: Level %d result reward -> %s" % [level_number, result_path])
 		screen.queue_free()
 		await process_frame
 

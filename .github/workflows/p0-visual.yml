@@ -6,7 +6,7 @@ on:
       - p0/bootstrap
     paths:
       - ".github/workflows/p0-visual.yml"
-  # Milestone trigger: unified compact mobile navigation + complete shell/profile evidence (2026-10-11).
+  # Milestone trigger: compact physical House relics + Levels 2/3 result evidence (2026-10-11).
   # Run the full milestone checks deliberately, not on every development commit.
   workflow_dispatch:
 
@@ -104,6 +104,8 @@ jobs:
           test -s artifacts/level3-gameplay.png
           test -s artifacts/level2-prestart.png
           test -s artifacts/level3-prestart.png
+          test -s artifacts/level2-result.png
+          test -s artifacts/level3-result.png
 
       - name: Render Level 1 trace motion
         shell: bash
@@ -186,6 +188,8 @@ jobs:
             artifacts/level3-gameplay.png
             artifacts/level2-prestart.png
             artifacts/level3-prestart.png
+            artifacts/level2-result.png
+            artifacts/level3-result.png
             artifacts/house-stage3.png
           if-no-files-found: error
           retention-days: 14
@@ -204,6 +208,8 @@ jobs:
             artifacts/level3-gameplay.png
             artifacts/level2-prestart.png
             artifacts/level3-prestart.png
+            artifacts/level2-result.png
+            artifacts/level3-result.png
           if-no-files-found: error
           retention-days: 14
 

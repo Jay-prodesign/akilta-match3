@@ -115,22 +115,24 @@ func _draw_authored_restoration_curios(room: Rect2) -> void:
 func _draw_restored_relic(room: Rect2, texture: Texture2D, center: Vector2, glow_color: Color) -> void:
 	if texture == null:
 		return
-	var frame_size := Vector2(room.size.x * 0.155, room.size.y * 0.205)
+	# Keep later rewards embedded in the authored shelf niches instead of reading
+	# as floating UI cards over the room.
+	var relic_size := room.size.x * 0.118
+	var frame_size := Vector2(relic_size, relic_size)
 	var frame := Rect2(center - frame_size * 0.5, frame_size)
 	var glow := glow_color
-	draw_circle(center, frame_size.x * 0.78, Color(glow.r, glow.g, glow.b, 0.055))
-	draw_rect(frame.grow(5.0), Color("#0D0911", 0.82), true)
-	draw_rect(frame.grow(3.0), Color(GOLD, 0.72), false, 2.0)
-	draw_rect(frame, Color("#211525", 0.78), true)
+	draw_circle(center, relic_size * 0.72, Color(glow.r, glow.g, glow.b, 0.065))
+	draw_circle(center, relic_size * 0.58, Color("#0D0911", 0.78))
+	draw_arc(center, relic_size * 0.56, 0.0, TAU, 42, Color(GOLD, 0.72), 1.7)
 	var texture_size := texture.get_size()
 	if texture_size.x <= 0.0 or texture_size.y <= 0.0:
 		return
-	var max_size := frame_size * 0.78
+	var max_size := frame_size * 0.88
 	var fitted_scale: float = minf(max_size.x / texture_size.x, max_size.y / texture_size.y)
 	var fitted_size := texture_size * fitted_scale
 	var relic_rect := Rect2(center - fitted_size * 0.5, fitted_size)
 	draw_texture_rect(texture, relic_rect, false)
-	draw_arc(center, frame_size.x * 0.49, 0.0, TAU, 36, Color(GOLD, 0.34), 1.5)
+	draw_arc(center, relic_size * 0.48, 0.0, TAU, 36, Color(glow.r, glow.g, glow.b, 0.34), 1.2)
 
 func _draw_ambient_light(room: Rect2) -> void:
 	var moon_center := Vector2(room.get_center().x, room.position.y + room.size.y * 0.18)
