@@ -64,6 +64,7 @@ var _motion_initial_specials: Dictionary = {}
 var _motion_stages: Array[Dictionary] = []
 var _motion_visible_cells: Dictionary = {}
 var _reveal_at: Dictionary = {}
+var _last_clear_fx_count: int = 0
 
 func _motion_stage_cells() -> Dictionary:
 	var visible: Dictionary = _motion_initial_cells.duplicate()
@@ -150,6 +151,15 @@ func apply_presentation_settings(state: Dictionary) -> void:
 
 func presentation_settings_contract() -> Dictionary:
 	return {"reduced_motion": _reduced_motion, "high_contrast": _high_contrast}
+
+func feedback_vfx_contract() -> Dictionary:
+	return {
+		"slot": "S05/match_board/board_fx",
+		"mode": "runtime_match_clear_fragment_burst",
+		"last_clear_fx_count": _last_clear_fx_count,
+		"reduced_motion_supported": true,
+		"reduced_motion": _reduced_motion
+	}
 
 func is_motion_active() -> bool:
 	return _motion_active
@@ -259,6 +269,7 @@ func play_trace(trace) -> bool:
 
 func _build_motion(trace) -> void:
 	_motion_items.clear()
+	_last_clear_fx_count = 0
 	_reveal_at.clear()
 	_motion_cascade_count = 1
 	for event in trace.events:
@@ -298,6 +309,7 @@ func _build_motion(trace) -> void:
 					var clear_family := String(piece.get("family", ""))
 					if clear_family != "":
 						_motion_items.append({"type": "clear", "family": clear_family, "at": clear_pos, "cascade": cascade})
+						_last_clear_fx_count += 1
 					_remember_reveal(clear_pos, lerpf(window.x, window.y, 0.96))
 			"special_triggered":
 				_motion_items.append({
@@ -952,10 +964,25 @@ func _draw_motion() -> void:
 				if cp <= 0.0 or cp >= 1.0:
 					continue
 				var ccenter := _cell_center(item["at"])
+				var cell_size := float(_board_geometry()["cell_size"])
 				_draw_motion_piece(ccenter, String(item["family"]), maxf(0.16, 1.0 - cp * 0.88))
+				var pulse := sin(cp * PI)
 				var clear_color := Color(GOLD)
-				clear_color.a = 0.55 * (1.0 - cp)
-				draw_arc(ccenter, float(_board_geometry()["cell_size"]) * (0.18 + cp * 0.34), 0.0, TAU, 28, clear_color, 2.0)
+				clear_color.a = 0.72 * pulse
+				var lilac := Color(LILAC)
+				lilac.a = 0.34 * pulse
+				draw_arc(ccenter, cell_size * (0.16 + cp * 0.38), 0.0, TAU, 32, clear_color, 2.0 + 1.5 * pulse)
+				for ray_index in range(6):
+					var angle := TAU * float(ray_index) / 6.0 + float(item.get("cascade", 1)) * 0.19
+					var direction := Vector2(cos(angle), sin(angle))
+					var inner := ccenter + direction * cell_size * (0.10 + cp * 0.08)
+					var outer := ccenter + direction * cell_size * (0.22 + cp * 0.30)
+					draw_line(inner, outer, clear_color if ray_index % 2 == 0 else lilac, 1.6)
+				for mote_index in range(4):
+					var angle := TAU * (float(mote_index) / 4.0 + 0.08)
+					var orbit := cell_size * (0.12 + cp * (0.18 + 0.03 * float(mote_index)))
+					var mote := ccenter + Vector2(cos(angle), sin(angle)) * orbit
+					draw_circle(mote, maxf(1.3, cell_size * 0.026 * (1.0 - cp)), Color("#FFF0C7", 0.66 * pulse))
 			"gravity":
 				var gp := _cascade_phase(int(item.get("cascade", 1)), 0.42, 0.84)
 				if gp <= 0.0 or gp >= 1.0:
