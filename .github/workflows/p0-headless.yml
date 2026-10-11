@@ -1,4 +1,4 @@
-name: P0 Three-Level Review Verification — Visual Polish Check
+name: P0 Golden Playable Loop Verification
 
 on:
   push:
@@ -9,9 +9,14 @@ on:
       - "src/app/**"
       - "src/ui/gameplay/**"
       - "src/ui/prestart/**"
-      - "src/match3/presentation/board_view.gd"
+      - "src/match3/presentation/**"
+      - "src/ui/shared/screen_art_registry.gd"
+      - "assets/manifests/screen_contracts.json"
+      - "assets/manifests/screen_asset_manifest.json"
+      - "tests/unit/test_screen_state_architecture.gd"
+      - "tests/integration/test_first_player_journey.gd"
       - "tests/integration/test_opening_two_level_journey.gd"
-  # Milestone trigger: reference-slice shell/nav/pause/settings verification (2026-10-11).
+  # Milestone trigger: canonical Golden Loop architecture + playable journey verification (2026-10-11).
   # Run the full milestone checks deliberately, not on every development commit.
   workflow_dispatch:
 
