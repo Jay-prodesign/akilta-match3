@@ -8,15 +8,38 @@ extends RefCounted
 signal route_changed(from_route: int, to_route: int, payload: Dictionary)
 signal settings_changed(open: bool)
 
-enum Route { BOOT, HOUSE, COLLECTION, MAP, PRESTART, GAMEPLAY }
+# Route names preserve COLLECTION/MAP for compatibility, but their canonical
+# product surfaces are S08 Curios and S03 Chapter Detail respectively.
+enum Route {
+	BOOT,
+	HOUSE,
+	COLLECTION,
+	MAP,
+	PRESTART,
+	GAMEPLAY,
+	WIN_REWARDS,
+	RESTORATION,
+	CHAPTERS,
+	MISSIONS,
+	EVENTS,
+	SHOP,
+	PROFILE_SETTINGS
+}
 
 const _EDGES := {
 	Route.BOOT: [Route.HOUSE],
-	Route.HOUSE: [Route.COLLECTION, Route.MAP, Route.PRESTART],
+	Route.HOUSE: [Route.COLLECTION, Route.CHAPTERS, Route.PRESTART, Route.EVENTS, Route.SHOP, Route.PROFILE_SETTINGS],
 	Route.COLLECTION: [Route.HOUSE],
-	Route.MAP: [Route.HOUSE, Route.PRESTART],
+	Route.CHAPTERS: [Route.HOUSE, Route.MAP],
+	Route.MAP: [Route.CHAPTERS, Route.HOUSE, Route.PRESTART],
 	Route.PRESTART: [Route.HOUSE, Route.MAP, Route.GAMEPLAY],
-	Route.GAMEPLAY: [Route.HOUSE],
+	Route.GAMEPLAY: [Route.WIN_REWARDS, Route.HOUSE],
+	Route.WIN_REWARDS: [Route.RESTORATION, Route.HOUSE],
+	Route.RESTORATION: [Route.HOUSE],
+	Route.MISSIONS: [Route.EVENTS, Route.HOUSE],
+	Route.EVENTS: [Route.HOUSE, Route.MISSIONS],
+	Route.SHOP: [Route.HOUSE],
+	Route.PROFILE_SETTINGS: [Route.HOUSE],
 }
 
 var _route: int = Route.BOOT
@@ -85,8 +108,10 @@ func back() -> String:
 	match _route:
 		Route.COLLECTION:
 			return "house" if go(Route.HOUSE, {"via": "back"}) else "none"
-		Route.MAP:
+		Route.CHAPTERS:
 			return "house" if go(Route.HOUSE, {"via": "back"}) else "none"
+		Route.MAP:
+			return "chapters" if go(Route.CHAPTERS, {"via": "back"}) else "none"
 		Route.PRESTART:
 			var origin: int = int(_last_payload.get("origin", Route.HOUSE))
 			if origin == Route.MAP:

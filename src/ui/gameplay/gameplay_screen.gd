@@ -6,6 +6,7 @@ signal level_exit_requested
 signal feedback_requested(kind: String)
 signal navigation_requested(section: String)
 signal settings_requested
+signal result_state_changed(kind: String)
 
 const BoardState = preload("res://src/match3/domain/board_state.gd")
 const MoveFinder = preload("res://src/match3/domain/move_finder.gd")
@@ -373,6 +374,7 @@ func _show_result_if_terminal(result: String) -> void:
 		if _booster_tray != null:
 			_booster_tray.visible = false
 		result_overlay.visible = true
+		result_state_changed.emit("won")
 	elif result == "failed":
 		haptics.request_terminal("failed")
 		feedback_requested.emit("fail")
@@ -393,6 +395,7 @@ func _show_result_if_terminal(result: String) -> void:
 		if _booster_tray != null:
 			_booster_tray.visible = false
 		result_overlay.visible = true
+		result_state_changed.emit("failed")
 
 func _configure_result_reward_copy(won: bool) -> void:
 	var reward_name := current_reward_curio.replace("_", " ").to_upper()

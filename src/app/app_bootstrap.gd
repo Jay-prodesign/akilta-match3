@@ -146,6 +146,8 @@ func start_level(level_number: int = 1) -> bool:
 		screen.feedback_requested.connect(_on_gameplay_feedback_requested)
 	if screen.has_signal("settings_requested"):
 		screen.settings_requested.connect(show_settings)
+	if screen.has_signal("result_state_changed"):
+		screen.result_state_changed.connect(_on_gameplay_result_state_changed)
 	return true
 
 func complete_level_win(transaction_id: String, level_id: String, curio_id: String = "moon_cameo", house_stage_reward: int = -1) -> bool:
@@ -161,10 +163,19 @@ func complete_level_win(transaction_id: String, level_id: String, curio_id: Stri
 		return false
 	progress = candidate
 	var restoration_needed := not curio_was_owned or int(candidate.house_stage) > previous_house_stage
-	if navigation.current() != NavigationScript.Route.HOUSE:
-		if not navigation.go(NavigationScript.Route.HOUSE, {"reason": "level_reward_restoration" if restoration_needed else "level_replay_complete"}):
+	if restoration_needed:
+		if navigation.current() != NavigationScript.Route.WIN_REWARDS:
 			return false
-	_render_house(restoration_needed, curio_id if restoration_needed else "", int(candidate.house_stage))
+		if not navigation.go(NavigationScript.Route.RESTORATION, {"reason": "level_reward_restoration"}):
+			return false
+		_render_house(true, curio_id, int(candidate.house_stage))
+	else:
+		if navigation.current() == NavigationScript.Route.WIN_REWARDS:
+			if not navigation.go(NavigationScript.Route.HOUSE, {"reason": "level_replay_complete"}):
+				return false
+		elif navigation.current() != NavigationScript.Route.HOUSE:
+			return false
+		_render_house(false, "", int(candidate.house_stage))
 	return true
 
 func show_feature_preview(feature: String) -> bool:
@@ -503,6 +514,8 @@ func _render_house(restoration_mode: bool = false, curio_id: String = "", restor
 	screen.set_progress(progress)
 	if restoration_mode and screen.has_method("show_restoration_ceremony"):
 		screen.show_restoration_ceremony(curio_id, restoration_stage)
+		if screen.has_signal("restoration_finished"):
+			screen.restoration_finished.connect(_on_restoration_finished)
 	screen.collection_requested.connect(show_collection)
 	screen.map_requested.connect(show_chapters)
 	screen.play_requested.connect(_on_house_play_requested)
@@ -513,13 +526,17 @@ func _render_house(restoration_mode: bool = false, curio_id: String = "", restor
 	if screen.has_signal("shop_requested"):
 		screen.shop_requested.connect(func(): show_feature_preview("Shop"))
 
+func _on_restoration_finished() -> void:
+	if navigation.current() == NavigationScript.Route.RESTORATION:
+		navigation.go(NavigationScript.Route.HOUSE, {"reason": "restoration_complete"})
+
 func _on_collection_back() -> void:
 	if navigation.go(NavigationScript.Route.HOUSE, {"via": "collection_back"}):
 		_render_house()
 
 func _on_map_back() -> void:
-	if navigation.go(NavigationScript.Route.HOUSE, {"via": "map_back"}):
-		show_chapters()
+	if navigation.go(NavigationScript.Route.CHAPTERS, {"via": "map_back"}):
+		_render_chapters()
 
 func _on_prestart_back() -> void:
 	var origin: int = int(navigation.last_payload().get("origin", NavigationScript.Route.HOUSE))
@@ -546,6 +563,10 @@ func _on_prestart_start(level_number: int) -> void:
 
 func _on_level_exit_requested() -> void:
 	show_house()
+
+func _on_gameplay_result_state_changed(kind: String) -> void:
+	if kind == "won" and navigation.current() == NavigationScript.Route.GAMEPLAY:
+		navigation.go(NavigationScript.Route.WIN_REWARDS, {"result": "won"})
 
 func _on_level_won(level_id: String, curio_id: String, house_stage_reward: int) -> void:
 	var transaction_id := "win:%s:%d" % [level_id, progress.processed_transactions.size() + 1]
@@ -632,47 +653,11 @@ func _on_gameplay_navigation_requested(section: String) -> void:
 		"profile":
 			show_feature_preview("Profile")
 
-func _install_north_star_backdrop(screen: Node) -> void:
-	if screen == null or not screen is Control:
-		return
-	# House owns a persistent same-camera world renderer; do not stack a second
-	# environment image behind it.
-	if String(screen.name) in ["HouseHome", "LevelPrestart", "GameplayScreen"]:
-		return
-	if screen.has_node("NorthStarBackdrop"):
-		return
-	var art_path := "res://assets/world/ch01_curio_boutique/curio_boutique_moonlit_backdrop.svg"
-	match String(screen.name):
-		"GameplayScreen":
-			art_path = "res://assets/world/ch01_curio_boutique/north_star_gameplay_backdrop.svg"
-		"HouseHome":
-			art_path = "res://assets/world/ch01_curio_boutique/house_hub_final.svg"
-		"ChapterSelect":
-			art_path = "res://assets/world/ch01_curio_boutique/north_star_splash.svg"
-		"ChapterMap":
-			art_path = "res://assets/world/ch01_curio_boutique/curio_boutique_moonlit_backdrop.svg"
-	var file := FileAccess.open(art_path, FileAccess.READ)
-	if file == null:
-		return
-	var image := Image.new()
-	var error := image.load_svg_from_string(file.get_as_text(), 1.0)
-	file.close()
-	if error != OK or image.is_empty():
-		return
-	var backdrop := TextureRect.new()
-	backdrop.name = "NorthStarBackdrop"
-	backdrop.texture = ImageTexture.create_from_image(image)
-	backdrop.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
-	backdrop.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_COVERED
-	backdrop.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
-	backdrop.modulate = Color(0.88, 0.82, 0.92, 0.22 if screen.name == "GameplayScreen" else (0.34 if screen.name == "HouseHome" else 0.46))
-	backdrop.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	backdrop.z_index = -100
-	(screen as Control).add_child(backdrop)
-	(screen as Control).move_child(backdrop, 0)
-	var flat := screen.get_node_or_null("Backdrop")
-	if flat is ColorRect:
-		(flat as ColorRect).color.a = 0.48
+func _install_north_star_backdrop(_screen: Node) -> void:
+	# Retired by the canonical screen/state architecture. World art may only be
+	# loaded by the exact Screen -> Block -> Slot owner; no generic SVG wallpaper
+	# is injected across unrelated screens.
+	pass
 
 func _render_splash() -> void:
 	var screen: Node = SplashScene.instantiate()
@@ -697,6 +682,11 @@ func _on_house_play_requested(level_number: int) -> void:
 func show_chapters() -> bool:
 	if navigation == null or navigation.current() != NavigationScript.Route.HOUSE:
 		return false
+	if not navigation.go(NavigationScript.Route.CHAPTERS, {"via": "house"}):
+		return false
+	return _render_chapters()
+
+func _render_chapters() -> bool:
 	var screen: Node = ChapterSelectScene.instantiate()
 	_show_screen(screen)
 	if screen.has_method("set_progress"):

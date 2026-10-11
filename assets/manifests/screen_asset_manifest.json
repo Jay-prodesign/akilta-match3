@@ -830,5 +830,13 @@
       "prestart_ch01_shared_art",
       "gameplay_bg_curio_boutique"
     ]
+  },
+  "architecture_contract": "content/product/screen_state_architecture.json",
+  "north_star_role": "product_architecture_source",
+  "bulk_art_authorized": false,
+  "production_gate": {
+    "golden_loop": "S01>S04>S05>S06>S07>S01",
+    "status": "ARCHITECTURE_AND_RUNTIME_ROUTE_RECONCILIATION_IN_PROGRESS",
+    "rule": "Only authored-art slots owned by the canonical screen/state contract may enter production. No downstream bulk art before Golden Loop acceptance."
   }
 }

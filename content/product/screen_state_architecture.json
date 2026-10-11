@@ -1,0 +1,2274 @@
+{
+  "schema_version": 2,
+  "product": "AKILTA Match-3",
+  "authority": "North Star Product Board -> product architecture -> screen/block/slot contracts -> asset production",
+  "north_star_role": "product_architecture_source",
+  "production_mode": "screen_state_contract_first",
+  "bulk_art_authorized": false,
+  "random_asset_generation_forbidden": true,
+  "golden_playable_loop": {
+    "id": "GOLDEN_LOOP_01",
+    "sequence": [
+      "S01",
+      "S04",
+      "S05",
+      "S06",
+      "S07",
+      "S01"
+    ],
+    "acceptance": [
+      "route_continuity",
+      "durable_progress_before_restoration_animation",
+      "same_camera_house_before_after",
+      "live_component_ui",
+      "no_generic_svg_world_fallback",
+      "rendered_godot_verification"
+    ],
+    "downstream_expansion_blocked_until_accepted": true
+  },
+  "route_map": {
+    "BOOT": "S00",
+    "HOUSE": "S01",
+    "CHAPTERS": "S02",
+    "MAP": "S03",
+    "PRESTART": "S04",
+    "GAMEPLAY": "S05",
+    "WIN_REWARDS": "S06",
+    "RESTORATION": "S07",
+    "COLLECTION": "S08",
+    "MISSIONS": "S09",
+    "EVENTS": "S10",
+    "SHOP": "S11",
+    "PROFILE_SETTINGS": "S12"
+  },
+  "screens": [
+    {
+      "id": "S00",
+      "name": "Splash / Loading",
+      "job": "Enter the world, establish tone, and recover boot state.",
+      "entry": [
+        "app_boot",
+        "relaunch"
+      ],
+      "exit": [
+        "S01"
+      ],
+      "states": [
+        "loading",
+        "ready",
+        "recoverable_error"
+      ],
+      "priority": "P2",
+      "regions": [
+        {
+          "id": "world",
+          "blocks": [
+            {
+              "id": "environment",
+              "slots": [
+                {
+                  "id": "background",
+                  "kind": "environment",
+                  "layer": "background_art",
+                  "states": [
+                    "loading",
+                    "ready"
+                  ],
+                  "interactive": false,
+                  "asset_policy": "authored_art"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "brand",
+          "blocks": [
+            {
+              "id": "identity",
+              "slots": [
+                {
+                  "id": "product_mark",
+                  "kind": "brand",
+                  "layer": "ui_component",
+                  "states": [
+                    "default"
+                  ],
+                  "interactive": false,
+                  "asset_policy": "component"
+                },
+                {
+                  "id": "world_motif",
+                  "kind": "decorative_content",
+                  "layer": "content_artwork",
+                  "states": [
+                    "default"
+                  ],
+                  "interactive": false,
+                  "asset_policy": "authored_art"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "entry",
+          "blocks": [
+            {
+              "id": "loading_or_enter",
+              "slots": [
+                {
+                  "id": "progress",
+                  "kind": "progress",
+                  "layer": "ui_component",
+                  "states": [
+                    "loading"
+                  ],
+                  "interactive": false,
+                  "asset_policy": "component"
+                },
+                {
+                  "id": "enter",
+                  "kind": "primary_action",
+                  "layer": "ui_component",
+                  "states": [
+                    "ready",
+                    "disabled"
+                  ],
+                  "interactive": true,
+                  "asset_policy": "component"
+                },
+                {
+                  "id": "error_message",
+                  "kind": "message",
+                  "layer": "ui_component",
+                  "states": [
+                    "recoverable_error"
+                  ],
+                  "interactive": false,
+                  "asset_policy": "component"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "S01",
+      "name": "House Hub",
+      "job": "Read persistent House progress, resources, and the next useful action.",
+      "entry": [
+        "S00",
+        "S07",
+        "S08",
+        "S10",
+        "S11",
+        "S12"
+      ],
+      "exit": [
+        "S02",
+        "S04",
+        "S08",
+        "S10",
+        "S11",
+        "S12"
+      ],
+      "states": [
+        "dormant",
+        "stage01",
+        "stage02",
+        "stage03",
+        "returning"
+      ],
+      "priority": "P0",
+      "regions": [
+        {
+          "id": "header",
+          "blocks": [
+            {
+              "id": "global_header",
+              "slots": [
+                {
+                  "id": "resource_bar",
+                  "kind": "resources",
+                  "layer": "ui_component",
+                  "states": [
+                    "normal"
+                  ],
+                  "interactive": false,
+                  "asset_policy": "component"
+                },
+                {
+                  "id": "profile_settings",
+                  "kind": "utility_action",
+                  "layer": "ui_component",
+                  "states": [
+                    "normal",
+                    "pressed"
+                  ],
+                  "interactive": true,
+                  "asset_policy": "component"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "world",
+          "blocks": [
+            {
+              "id": "house_hero",
+              "slots": [
+                {
+                  "id": "environment",
+                  "kind": "persistent_environment",
+                  "layer": "background_art",
+                  "states": [
+                    "stage00",
+                    "stage01",
+                    "stage02",
+                    "stage03"
+                  ],
+                  "interactive": false,
+                  "asset_policy": "authored_art"
+                },
+                {
+                  "id": "black_cat",
+                  "kind": "world_character",
+                  "layer": "content_artwork",
+                  "states": [
+                    "idle",
+                    "attention",
+                    "celebrate"
+                  ],
+                  "interactive": false,
+                  "asset_policy": "authored_art"
+                },
+                {
+                  "id": "restored_curios",
+                  "kind": "progression_objects",
+                  "layer": "content_artwork",
+                  "states": [
+                    "locked",
+                    "awakened"
+                  ],
+                  "interactive": false,
+                  "asset_policy": "authored_art"
+                },
+                {
+                  "id": "ambient_state",
+                  "kind": "world_vfx",
+                  "layer": "runtime_vfx",
+                  "states": [
+                    "dormant",
+                    "awakened"
+                  ],
+                  "interactive": false,
+                  "asset_policy": "runtime"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "next_action",
+          "blocks": [
+            {
+              "id": "progress_summary",
+              "slots": [
+                {
+                  "id": "chapter_name",
+                  "kind": "text",
+                  "layer": "ui_component",
+                  "states": [
+                    "default"
+                  ],
+                  "interactive": false,
+                  "asset_policy": "component"
+                },
+                {
+                  "id": "restoration_progress",
+                  "kind": "progress",
+                  "layer": "ui_component",
+                  "states": [
+                    "normal",
+                    "complete"
+                  ],
+                  "interactive": false,
+                  "asset_policy": "component"
+                },
+                {
+                  "id": "curio_count",
+                  "kind": "counter",
+                  "layer": "ui_component",
+                  "states": [
+                    "default"
+                  ],
+                  "interactive": false,
+                  "asset_policy": "component"
+                }
+              ]
+            },
+            {
+              "id": "primary_cta",
+              "slots": [
+                {
+                  "id": "continue_or_map",
+                  "kind": "primary_action",
+                  "layer": "ui_component",
+                  "states": [
+                    "normal",
+                    "disabled",
+                    "pressed"
+                  ],
+                  "interactive": true,
+                  "asset_policy": "component"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "navigation",
+          "blocks": [
+            {
+              "id": "bottom_navigation",
+              "slots": [
+                {
+                  "id": "nav_items",
+                  "kind": "navigation",
+                  "layer": "ui_component",
+                  "states": [
+                    "normal",
+                    "selected",
+                    "pressed",
+                    "disabled"
+                  ],
+                  "interactive": true,
+                  "asset_policy": "component"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "S02",
+      "name": "Chapters",
+      "job": "Choose a House wing without losing global context.",
+      "entry": [
+        "S01",
+        "S03"
+      ],
+      "exit": [
+        "S01",
+        "S03"
+      ],
+      "states": [
+        "first_available",
+        "partially_restored",
+        "complete",
+        "locked_wings"
+      ],
+      "priority": "P1",
+      "regions": [
+        {
+          "id": "header",
+          "blocks": [
+            {
+              "id": "global_header",
+              "slots": [
+                {
+                  "id": "resource_bar",
+                  "kind": "resources",
+                  "layer": "ui_component",
+                  "states": [
+                    "default"
+                  ],
+                  "interactive": false,
+                  "asset_policy": "component"
+                },
+                {
+                  "id": "profile_settings",
+                  "kind": "utility_action",
+                  "layer": "ui_component",
+                  "states": [
+                    "normal",
+                    "pressed"
+                  ],
+                  "interactive": true,
+                  "asset_policy": "component"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "world",
+          "blocks": [
+            {
+              "id": "chapter_world",
+              "slots": [
+                {
+                  "id": "environment",
+                  "kind": "estate_or_house_map",
+                  "layer": "background_art",
+                  "states": [
+                    "default"
+                  ],
+                  "interactive": false,
+                  "asset_policy": "authored_art"
+                },
+                {
+                  "id": "chapter_hotspots",
+                  "kind": "chapter_content",
+                  "layer": "content_artwork",
+                  "states": [
+                    "open",
+                    "current",
+                    "locked",
+                    "complete"
+                  ],
+                  "interactive": true,
+                  "asset_policy": "authored_art"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "context",
+          "blocks": [
+            {
+              "id": "chapter_status",
+              "slots": [
+                {
+                  "id": "title",
+                  "kind": "text",
+                  "layer": "ui_component",
+                  "states": [
+                    "default"
+                  ],
+                  "interactive": false,
+                  "asset_policy": "component"
+                },
+                {
+                  "id": "status",
+                  "kind": "status",
+                  "layer": "ui_component",
+                  "states": [
+                    "open",
+                    "locked",
+                    "complete"
+                  ],
+                  "interactive": false,
+                  "asset_policy": "component"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "navigation",
+          "blocks": [
+            {
+              "id": "bottom_navigation",
+              "slots": [
+                {
+                  "id": "nav_items",
+                  "kind": "navigation",
+                  "layer": "ui_component",
+                  "states": [
+                    "normal",
+                    "selected",
+                    "pressed",
+                    "disabled"
+                  ],
+                  "interactive": true,
+                  "asset_policy": "component"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "S03",
+      "name": "Chapter Detail / Curio Boutique Route",
+      "job": "Choose an available display/level inside the active chapter.",
+      "entry": [
+        "S02",
+        "S04"
+      ],
+      "exit": [
+        "S02",
+        "S04"
+      ],
+      "states": [
+        "progress_0_3",
+        "progress_1_3",
+        "progress_2_3",
+        "progress_3_3"
+      ],
+      "priority": "P1",
+      "regions": [
+        {
+          "id": "header",
+          "blocks": [
+            {
+              "id": "global_header",
+              "slots": [
+                {
+                  "id": "resource_bar",
+                  "kind": "resources",
+                  "layer": "ui_component",
+                  "states": [
+                    "default"
+                  ],
+                  "interactive": false,
+                  "asset_policy": "component"
+                },
+                {
+                  "id": "back",
+                  "kind": "back_action",
+                  "layer": "ui_component",
+                  "states": [
+                    "normal",
+                    "pressed"
+                  ],
+                  "interactive": true,
+                  "asset_policy": "component"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "chapter_context",
+          "blocks": [
+            {
+              "id": "chapter_heading",
+              "slots": [
+                {
+                  "id": "chapter_title",
+                  "kind": "text",
+                  "layer": "ui_component",
+                  "states": [
+                    "default"
+                  ],
+                  "interactive": false,
+                  "asset_policy": "component"
+                },
+                {
+                  "id": "chapter_progress",
+                  "kind": "progress",
+                  "layer": "ui_component",
+                  "states": [
+                    "normal",
+                    "complete"
+                  ],
+                  "interactive": false,
+                  "asset_policy": "component"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "route",
+          "blocks": [
+            {
+              "id": "route_world",
+              "slots": [
+                {
+                  "id": "environment",
+                  "kind": "chapter_environment",
+                  "layer": "background_art",
+                  "states": [
+                    "default"
+                  ],
+                  "interactive": false,
+                  "asset_policy": "authored_art"
+                },
+                {
+                  "id": "route_path",
+                  "kind": "path",
+                  "layer": "runtime_vfx",
+                  "states": [
+                    "default"
+                  ],
+                  "interactive": false,
+                  "asset_policy": "runtime"
+                },
+                {
+                  "id": "level_nodes",
+                  "kind": "level_selector",
+                  "layer": "ui_component",
+                  "states": [
+                    "current",
+                    "available",
+                    "complete",
+                    "locked",
+                    "future_sealed"
+                  ],
+                  "interactive": true,
+                  "asset_policy": "component"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "navigation",
+          "blocks": [
+            {
+              "id": "bottom_navigation",
+              "slots": [
+                {
+                  "id": "nav_items",
+                  "kind": "navigation",
+                  "layer": "ui_component",
+                  "states": [
+                    "normal",
+                    "selected",
+                    "pressed",
+                    "disabled"
+                  ],
+                  "interactive": true,
+                  "asset_policy": "component"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "S04",
+      "name": "Level Pre-start",
+      "job": "Understand level objective, reward, move budget, aids, then start intentionally.",
+      "entry": [
+        "S01",
+        "S03"
+      ],
+      "exit": [
+        "S01",
+        "S03",
+        "S05"
+      ],
+      "states": [
+        "first_attempt",
+        "replay",
+        "aid_available",
+        "aid_disabled"
+      ],
+      "priority": "P0",
+      "regions": [
+        {
+          "id": "context",
+          "blocks": [
+            {
+              "id": "context_header",
+              "slots": [
+                {
+                  "id": "back",
+                  "kind": "back_action",
+                  "layer": "ui_component",
+                  "states": [
+                    "normal",
+                    "pressed"
+                  ],
+                  "interactive": true,
+                  "asset_policy": "component"
+                },
+                {
+                  "id": "level_identity",
+                  "kind": "text",
+                  "layer": "ui_component",
+                  "states": [
+                    "default"
+                  ],
+                  "interactive": false,
+                  "asset_policy": "component"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "world",
+          "blocks": [
+            {
+              "id": "prestart_environment",
+              "slots": [
+                {
+                  "id": "background",
+                  "kind": "environment",
+                  "layer": "background_art",
+                  "states": [
+                    "default"
+                  ],
+                  "interactive": false,
+                  "asset_policy": "authored_art"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "primary_panel",
+          "blocks": [
+            {
+              "id": "ritual_panel",
+              "slots": [
+                {
+                  "id": "level_art",
+                  "kind": "content_art",
+                  "layer": "content_artwork",
+                  "states": [
+                    "first_attempt",
+                    "replay"
+                  ],
+                  "interactive": false,
+                  "asset_policy": "authored_art"
+                },
+                {
+                  "id": "objective",
+                  "kind": "objective",
+                  "layer": "ui_component",
+                  "states": [
+                    "default"
+                  ],
+                  "interactive": false,
+                  "asset_policy": "component"
+                },
+                {
+                  "id": "move_budget",
+                  "kind": "counter",
+                  "layer": "ui_component",
+                  "states": [
+                    "default"
+                  ],
+                  "interactive": false,
+                  "asset_policy": "component"
+                },
+                {
+                  "id": "reward",
+                  "kind": "reward",
+                  "layer": "ui_component",
+                  "states": [
+                    "default"
+                  ],
+                  "interactive": false,
+                  "asset_policy": "component"
+                },
+                {
+                  "id": "reward_art",
+                  "kind": "reward_art",
+                  "layer": "content_artwork",
+                  "states": [
+                    "locked",
+                    "preview"
+                  ],
+                  "interactive": false,
+                  "asset_policy": "authored_art"
+                },
+                {
+                  "id": "aids",
+                  "kind": "booster_selector",
+                  "layer": "ui_component",
+                  "states": [
+                    "available",
+                    "selected",
+                    "disabled"
+                  ],
+                  "interactive": true,
+                  "asset_policy": "component"
+                },
+                {
+                  "id": "play",
+                  "kind": "primary_action",
+                  "layer": "ui_component",
+                  "states": [
+                    "normal",
+                    "pressed",
+                    "disabled"
+                  ],
+                  "interactive": true,
+                  "asset_policy": "component"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "S05",
+      "name": "Match-3 Gameplay",
+      "job": "Solve the active puzzle with clear goals and trustworthy feedback.",
+      "entry": [
+        "S04"
+      ],
+      "exit": [
+        "S06",
+        "O01",
+        "O04",
+        "S01"
+      ],
+      "states": [
+        "playing",
+        "teaching",
+        "swap",
+        "cascade",
+        "special",
+        "blocker",
+        "paused",
+        "won",
+        "failed"
+      ],
+      "priority": "P0",
+      "regions": [
+        {
+          "id": "world",
+          "blocks": [
+            {
+              "id": "gameplay_environment",
+              "slots": [
+                {
+                  "id": "background",
+                  "kind": "environment",
+                  "layer": "background_art",
+                  "states": [
+                    "chapter01"
+                  ],
+                  "interactive": false,
+                  "asset_policy": "authored_art"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "hud",
+          "blocks": [
+            {
+              "id": "gameplay_header",
+              "slots": [
+                {
+                  "id": "level_badge",
+                  "kind": "text",
+                  "layer": "ui_component",
+                  "states": [
+                    "default"
+                  ],
+                  "interactive": false,
+                  "asset_policy": "component"
+                },
+                {
+                  "id": "moves",
+                  "kind": "counter",
+                  "layer": "ui_component",
+                  "states": [
+                    "default"
+                  ],
+                  "interactive": false,
+                  "asset_policy": "component"
+                },
+                {
+                  "id": "objective",
+                  "kind": "objective",
+                  "layer": "ui_component",
+                  "states": [
+                    "default"
+                  ],
+                  "interactive": false,
+                  "asset_policy": "component"
+                },
+                {
+                  "id": "pause",
+                  "kind": "utility_action",
+                  "layer": "ui_component",
+                  "states": [
+                    "normal",
+                    "pressed"
+                  ],
+                  "interactive": true,
+                  "asset_policy": "component"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "board",
+          "blocks": [
+            {
+              "id": "match_board",
+              "slots": [
+                {
+                  "id": "board_frame",
+                  "kind": "structural_frame",
+                  "layer": "ui_component",
+                  "states": [
+                    "normal",
+                    "high_contrast"
+                  ],
+                  "interactive": false,
+                  "asset_policy": "component"
+                },
+                {
+                  "id": "cells",
+                  "kind": "cell_field",
+                  "layer": "ui_component",
+                  "states": [
+                    "normal",
+                    "selected",
+                    "blocked"
+                  ],
+                  "interactive": false,
+                  "asset_policy": "component"
+                },
+                {
+                  "id": "pieces",
+                  "kind": "piece_set",
+                  "layer": "gameplay_asset",
+                  "states": [
+                    "idle",
+                    "selected",
+                    "matched",
+                    "special"
+                  ],
+                  "interactive": true,
+                  "asset_policy": "authored_art"
+                },
+                {
+                  "id": "blockers",
+                  "kind": "blocker_set",
+                  "layer": "gameplay_asset",
+                  "states": [
+                    "intact",
+                    "damaged",
+                    "cleared"
+                  ],
+                  "interactive": false,
+                  "asset_policy": "authored_art"
+                },
+                {
+                  "id": "board_vfx",
+                  "kind": "feedback",
+                  "layer": "runtime_vfx",
+                  "states": [
+                    "swap",
+                    "match",
+                    "cascade",
+                    "special",
+                    "reject"
+                  ],
+                  "interactive": false,
+                  "asset_policy": "runtime"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "actions",
+          "blocks": [
+            {
+              "id": "booster_row",
+              "slots": [
+                {
+                  "id": "boosters",
+                  "kind": "booster_actions",
+                  "layer": "ui_component",
+                  "states": [
+                    "available",
+                    "pressed",
+                    "disabled"
+                  ],
+                  "interactive": true,
+                  "asset_policy": "component"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "S06",
+      "name": "Win / Rewards",
+      "job": "Explain success, granted reward, and the persistent consequence before leaving gameplay.",
+      "entry": [
+        "S05"
+      ],
+      "exit": [
+        "S07",
+        "S01"
+      ],
+      "states": [
+        "first_time_reward",
+        "replay_reward",
+        "reward_reveal"
+      ],
+      "priority": "P0",
+      "regions": [
+        {
+          "id": "context",
+          "blocks": [
+            {
+              "id": "dimmed_gameplay",
+              "slots": [
+                {
+                  "id": "underlay",
+                  "kind": "previous_screen_context",
+                  "layer": "runtime_data",
+                  "states": [
+                    "dimmed"
+                  ],
+                  "interactive": false,
+                  "asset_policy": "runtime"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "result",
+          "blocks": [
+            {
+              "id": "result_panel",
+              "slots": [
+                {
+                  "id": "title",
+                  "kind": "text",
+                  "layer": "ui_component",
+                  "states": [
+                    "default"
+                  ],
+                  "interactive": false,
+                  "asset_policy": "component"
+                },
+                {
+                  "id": "reward_art",
+                  "kind": "reward_hero",
+                  "layer": "content_artwork",
+                  "states": [
+                    "sealed",
+                    "awakening",
+                    "awakened"
+                  ],
+                  "interactive": false,
+                  "asset_policy": "authored_art"
+                },
+                {
+                  "id": "reward_name",
+                  "kind": "text",
+                  "layer": "ui_component",
+                  "states": [
+                    "default"
+                  ],
+                  "interactive": false,
+                  "asset_policy": "component"
+                },
+                {
+                  "id": "reward_values",
+                  "kind": "reward_values",
+                  "layer": "ui_component",
+                  "states": [
+                    "default"
+                  ],
+                  "interactive": false,
+                  "asset_policy": "component"
+                },
+                {
+                  "id": "house_consequence",
+                  "kind": "text",
+                  "layer": "ui_component",
+                  "states": [
+                    "default"
+                  ],
+                  "interactive": false,
+                  "asset_policy": "component"
+                },
+                {
+                  "id": "continue",
+                  "kind": "primary_action",
+                  "layer": "ui_component",
+                  "states": [
+                    "normal",
+                    "pressed"
+                  ],
+                  "interactive": true,
+                  "asset_policy": "component"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "S07",
+      "name": "House Restoration",
+      "job": "Show the persistent same-camera House change caused by a first-time win.",
+      "entry": [
+        "S06"
+      ],
+      "exit": [
+        "S01"
+      ],
+      "states": [
+        "before",
+        "awakening",
+        "after",
+        "already_restored"
+      ],
+      "priority": "P0",
+      "regions": [
+        {
+          "id": "world",
+          "blocks": [
+            {
+              "id": "restoration_world",
+              "slots": [
+                {
+                  "id": "environment",
+                  "kind": "same_camera_house",
+                  "layer": "background_art",
+                  "states": [
+                    "stage_before",
+                    "stage_after"
+                  ],
+                  "interactive": false,
+                  "asset_policy": "authored_art"
+                },
+                {
+                  "id": "new_curio",
+                  "kind": "progression_object",
+                  "layer": "content_artwork",
+                  "states": [
+                    "hidden",
+                    "appearing",
+                    "awakened"
+                  ],
+                  "interactive": false,
+                  "asset_policy": "authored_art"
+                },
+                {
+                  "id": "awakening_vfx",
+                  "kind": "transition",
+                  "layer": "runtime_vfx",
+                  "states": [
+                    "awakening"
+                  ],
+                  "interactive": false,
+                  "asset_policy": "runtime"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "summary",
+          "blocks": [
+            {
+              "id": "change_summary",
+              "slots": [
+                {
+                  "id": "kicker",
+                  "kind": "text",
+                  "layer": "ui_component",
+                  "states": [
+                    "default"
+                  ],
+                  "interactive": false,
+                  "asset_policy": "component"
+                },
+                {
+                  "id": "curio_name",
+                  "kind": "text",
+                  "layer": "ui_component",
+                  "states": [
+                    "default"
+                  ],
+                  "interactive": false,
+                  "asset_policy": "component"
+                },
+                {
+                  "id": "change_copy",
+                  "kind": "text",
+                  "layer": "ui_component",
+                  "states": [
+                    "default"
+                  ],
+                  "interactive": false,
+                  "asset_policy": "component"
+                },
+                {
+                  "id": "continue",
+                  "kind": "primary_action",
+                  "layer": "ui_component",
+                  "states": [
+                    "normal",
+                    "pressed"
+                  ],
+                  "interactive": true,
+                  "asset_policy": "component"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "S08",
+      "name": "Curio Collection",
+      "job": "Inspect owned Curios and understand missing ones.",
+      "entry": [
+        "S01",
+        "O05"
+      ],
+      "exit": [
+        "S01",
+        "O05"
+      ],
+      "states": [
+        "empty",
+        "partial",
+        "complete",
+        "detail_open"
+      ],
+      "priority": "P1",
+      "regions": [
+        {
+          "id": "header",
+          "blocks": [
+            {
+              "id": "global_header",
+              "slots": [
+                {
+                  "id": "resource_bar",
+                  "kind": "resources",
+                  "layer": "ui_component",
+                  "states": [
+                    "default"
+                  ],
+                  "interactive": false,
+                  "asset_policy": "component"
+                },
+                {
+                  "id": "back",
+                  "kind": "back_action",
+                  "layer": "ui_component",
+                  "states": [
+                    "normal",
+                    "pressed"
+                  ],
+                  "interactive": true,
+                  "asset_policy": "component"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "collection",
+          "blocks": [
+            {
+              "id": "collection_summary",
+              "slots": [
+                {
+                  "id": "title",
+                  "kind": "text",
+                  "layer": "ui_component",
+                  "states": [
+                    "default"
+                  ],
+                  "interactive": false,
+                  "asset_policy": "component"
+                },
+                {
+                  "id": "count",
+                  "kind": "counter",
+                  "layer": "ui_component",
+                  "states": [
+                    "default"
+                  ],
+                  "interactive": false,
+                  "asset_policy": "component"
+                },
+                {
+                  "id": "filters",
+                  "kind": "tabs",
+                  "layer": "ui_component",
+                  "states": [
+                    "normal",
+                    "selected"
+                  ],
+                  "interactive": true,
+                  "asset_policy": "component"
+                }
+              ]
+            },
+            {
+              "id": "curio_grid",
+              "slots": [
+                {
+                  "id": "curio_cards",
+                  "kind": "collection_items",
+                  "layer": "ui_component",
+                  "states": [
+                    "locked",
+                    "awakened",
+                    "selected"
+                  ],
+                  "interactive": true,
+                  "asset_policy": "component"
+                },
+                {
+                  "id": "curio_art",
+                  "kind": "item_art",
+                  "layer": "content_artwork",
+                  "states": [
+                    "locked",
+                    "awakened"
+                  ],
+                  "interactive": false,
+                  "asset_policy": "authored_art"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "navigation",
+          "blocks": [
+            {
+              "id": "bottom_navigation",
+              "slots": [
+                {
+                  "id": "nav_items",
+                  "kind": "navigation",
+                  "layer": "ui_component",
+                  "states": [
+                    "normal",
+                    "selected",
+                    "pressed",
+                    "disabled"
+                  ],
+                  "interactive": true,
+                  "asset_policy": "component"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "S09",
+      "name": "Weekly Missions",
+      "job": "Track truthful weekly goals and claim valid rewards.",
+      "entry": [
+        "S10",
+        "S01"
+      ],
+      "exit": [
+        "S10",
+        "S01"
+      ],
+      "states": [
+        "active",
+        "in_progress",
+        "claimable",
+        "claimed",
+        "empty",
+        "offline"
+      ],
+      "priority": "P2",
+      "regions": [
+        {
+          "id": "header",
+          "blocks": [
+            {
+              "id": "global_header",
+              "slots": [
+                {
+                  "id": "resource_bar",
+                  "kind": "resources",
+                  "layer": "ui_component",
+                  "states": [
+                    "default"
+                  ],
+                  "interactive": false,
+                  "asset_policy": "component"
+                },
+                {
+                  "id": "back",
+                  "kind": "back_action",
+                  "layer": "ui_component",
+                  "states": [
+                    "normal",
+                    "pressed"
+                  ],
+                  "interactive": true,
+                  "asset_policy": "component"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "missions",
+          "blocks": [
+            {
+              "id": "mission_header",
+              "slots": [
+                {
+                  "id": "title",
+                  "kind": "text",
+                  "layer": "ui_component",
+                  "states": [
+                    "default"
+                  ],
+                  "interactive": false,
+                  "asset_policy": "component"
+                },
+                {
+                  "id": "timer",
+                  "kind": "timer",
+                  "layer": "ui_component",
+                  "states": [
+                    "active",
+                    "offline"
+                  ],
+                  "interactive": false,
+                  "asset_policy": "component"
+                }
+              ]
+            },
+            {
+              "id": "mission_list",
+              "slots": [
+                {
+                  "id": "mission_cards",
+                  "kind": "missions",
+                  "layer": "ui_component",
+                  "states": [
+                    "in_progress",
+                    "claimable",
+                    "claimed",
+                    "disabled"
+                  ],
+                  "interactive": true,
+                  "asset_policy": "component"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "navigation",
+          "blocks": [
+            {
+              "id": "bottom_navigation",
+              "slots": [
+                {
+                  "id": "nav_items",
+                  "kind": "navigation",
+                  "layer": "ui_component",
+                  "states": [
+                    "normal",
+                    "selected",
+                    "pressed",
+                    "disabled"
+                  ],
+                  "interactive": true,
+                  "asset_policy": "component"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "S10",
+      "name": "Event Center",
+      "job": "Discover live/coming events without fabricating availability.",
+      "entry": [
+        "S01",
+        "S09"
+      ],
+      "exit": [
+        "S01",
+        "S09"
+      ],
+      "states": [
+        "live",
+        "coming",
+        "locked",
+        "complete",
+        "empty"
+      ],
+      "priority": "P2",
+      "regions": [
+        {
+          "id": "header",
+          "blocks": [
+            {
+              "id": "global_header",
+              "slots": [
+                {
+                  "id": "resource_bar",
+                  "kind": "resources",
+                  "layer": "ui_component",
+                  "states": [
+                    "default"
+                  ],
+                  "interactive": false,
+                  "asset_policy": "component"
+                },
+                {
+                  "id": "profile_settings",
+                  "kind": "utility_action",
+                  "layer": "ui_component",
+                  "states": [
+                    "normal",
+                    "pressed"
+                  ],
+                  "interactive": true,
+                  "asset_policy": "component"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "events",
+          "blocks": [
+            {
+              "id": "event_hero",
+              "slots": [
+                {
+                  "id": "hero_art",
+                  "kind": "event_art",
+                  "layer": "content_artwork",
+                  "states": [
+                    "live",
+                    "coming",
+                    "locked"
+                  ],
+                  "interactive": false,
+                  "asset_policy": "authored_art"
+                },
+                {
+                  "id": "title",
+                  "kind": "text",
+                  "layer": "ui_component",
+                  "states": [
+                    "default"
+                  ],
+                  "interactive": false,
+                  "asset_policy": "component"
+                },
+                {
+                  "id": "timer",
+                  "kind": "timer",
+                  "layer": "ui_component",
+                  "states": [
+                    "active",
+                    "hidden"
+                  ],
+                  "interactive": false,
+                  "asset_policy": "component"
+                },
+                {
+                  "id": "cta",
+                  "kind": "primary_action",
+                  "layer": "ui_component",
+                  "states": [
+                    "normal",
+                    "disabled"
+                  ],
+                  "interactive": true,
+                  "asset_policy": "component"
+                }
+              ]
+            },
+            {
+              "id": "event_cards",
+              "slots": [
+                {
+                  "id": "cards",
+                  "kind": "event_list",
+                  "layer": "ui_component",
+                  "states": [
+                    "live",
+                    "coming",
+                    "locked",
+                    "complete"
+                  ],
+                  "interactive": true,
+                  "asset_policy": "component"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "navigation",
+          "blocks": [
+            {
+              "id": "bottom_navigation",
+              "slots": [
+                {
+                  "id": "nav_items",
+                  "kind": "navigation",
+                  "layer": "ui_component",
+                  "states": [
+                    "normal",
+                    "selected",
+                    "pressed",
+                    "disabled"
+                  ],
+                  "interactive": true,
+                  "asset_policy": "component"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "S11",
+      "name": "Shop",
+      "job": "Expose only truthful economy offers; no real purchase until commerce exists.",
+      "entry": [
+        "S01"
+      ],
+      "exit": [
+        "S01"
+      ],
+      "states": [
+        "loading",
+        "available",
+        "disabled",
+        "purchasing",
+        "success",
+        "failure"
+      ],
+      "priority": "P2",
+      "regions": [
+        {
+          "id": "header",
+          "blocks": [
+            {
+              "id": "global_header",
+              "slots": [
+                {
+                  "id": "resource_bar",
+                  "kind": "resources",
+                  "layer": "ui_component",
+                  "states": [
+                    "default"
+                  ],
+                  "interactive": false,
+                  "asset_policy": "component"
+                },
+                {
+                  "id": "back",
+                  "kind": "back_action",
+                  "layer": "ui_component",
+                  "states": [
+                    "normal",
+                    "pressed"
+                  ],
+                  "interactive": true,
+                  "asset_policy": "component"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "catalog",
+          "blocks": [
+            {
+              "id": "featured_offer",
+              "slots": [
+                {
+                  "id": "offer_art",
+                  "kind": "offer_art",
+                  "layer": "content_artwork",
+                  "states": [
+                    "available",
+                    "disabled"
+                  ],
+                  "interactive": false,
+                  "asset_policy": "authored_art"
+                },
+                {
+                  "id": "offer_copy",
+                  "kind": "text",
+                  "layer": "ui_component",
+                  "states": [
+                    "default"
+                  ],
+                  "interactive": false,
+                  "asset_policy": "component"
+                },
+                {
+                  "id": "purchase",
+                  "kind": "purchase_action",
+                  "layer": "ui_component",
+                  "states": [
+                    "disabled",
+                    "available",
+                    "loading"
+                  ],
+                  "interactive": true,
+                  "asset_policy": "component"
+                }
+              ]
+            },
+            {
+              "id": "offer_grid",
+              "slots": [
+                {
+                  "id": "offer_cards",
+                  "kind": "offers",
+                  "layer": "ui_component",
+                  "states": [
+                    "disabled",
+                    "available"
+                  ],
+                  "interactive": true,
+                  "asset_policy": "component"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "navigation",
+          "blocks": [
+            {
+              "id": "bottom_navigation",
+              "slots": [
+                {
+                  "id": "nav_items",
+                  "kind": "navigation",
+                  "layer": "ui_component",
+                  "states": [
+                    "normal",
+                    "selected",
+                    "pressed",
+                    "disabled"
+                  ],
+                  "interactive": true,
+                  "asset_policy": "component"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "S12",
+      "name": "Profile / Settings",
+      "job": "Inspect player progress and control presentation/accessibility settings.",
+      "entry": [
+        "S01",
+        "O02"
+      ],
+      "exit": [
+        "S01"
+      ],
+      "states": [
+        "profile",
+        "settings_open",
+        "settings_closed"
+      ],
+      "priority": "P2",
+      "regions": [
+        {
+          "id": "header",
+          "blocks": [
+            {
+              "id": "profile_header",
+              "slots": [
+                {
+                  "id": "avatar",
+                  "kind": "identity",
+                  "layer": "content_artwork",
+                  "states": [
+                    "default"
+                  ],
+                  "interactive": false,
+                  "asset_policy": "authored_art"
+                },
+                {
+                  "id": "player_summary",
+                  "kind": "text",
+                  "layer": "ui_component",
+                  "states": [
+                    "default"
+                  ],
+                  "interactive": false,
+                  "asset_policy": "component"
+                },
+                {
+                  "id": "back",
+                  "kind": "back_action",
+                  "layer": "ui_component",
+                  "states": [
+                    "normal",
+                    "pressed"
+                  ],
+                  "interactive": true,
+                  "asset_policy": "component"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "progress",
+          "blocks": [
+            {
+              "id": "progress_summary",
+              "slots": [
+                {
+                  "id": "chapter_progress",
+                  "kind": "progress",
+                  "layer": "ui_component",
+                  "states": [
+                    "default"
+                  ],
+                  "interactive": false,
+                  "asset_policy": "component"
+                },
+                {
+                  "id": "curio_progress",
+                  "kind": "progress",
+                  "layer": "ui_component",
+                  "states": [
+                    "default"
+                  ],
+                  "interactive": false,
+                  "asset_policy": "component"
+                },
+                {
+                  "id": "house_stage",
+                  "kind": "status",
+                  "layer": "ui_component",
+                  "states": [
+                    "default"
+                  ],
+                  "interactive": false,
+                  "asset_policy": "component"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "settings",
+          "blocks": [
+            {
+              "id": "settings_list",
+              "slots": [
+                {
+                  "id": "audio",
+                  "kind": "toggle",
+                  "layer": "ui_component",
+                  "states": [
+                    "on",
+                    "off"
+                  ],
+                  "interactive": true,
+                  "asset_policy": "component"
+                },
+                {
+                  "id": "haptics",
+                  "kind": "toggle",
+                  "layer": "ui_component",
+                  "states": [
+                    "on",
+                    "off"
+                  ],
+                  "interactive": true,
+                  "asset_policy": "component"
+                },
+                {
+                  "id": "reduced_motion",
+                  "kind": "toggle",
+                  "layer": "ui_component",
+                  "states": [
+                    "on",
+                    "off"
+                  ],
+                  "interactive": true,
+                  "asset_policy": "component"
+                },
+                {
+                  "id": "high_contrast",
+                  "kind": "toggle",
+                  "layer": "ui_component",
+                  "states": [
+                    "on",
+                    "off"
+                  ],
+                  "interactive": true,
+                  "asset_policy": "component"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "overlays": [
+    {
+      "id": "O01",
+      "name": "Pause",
+      "owner": [
+        "S05"
+      ],
+      "states": [
+        "open"
+      ],
+      "blocks": [
+        {
+          "id": "pause_panel",
+          "slots": [
+            {
+              "id": "resume",
+              "kind": "action",
+              "layer": "ui_component",
+              "states": [
+                "normal",
+                "pressed"
+              ],
+              "interactive": true,
+              "asset_policy": "component"
+            },
+            {
+              "id": "retry",
+              "kind": "action",
+              "layer": "ui_component",
+              "states": [
+                "normal",
+                "pressed"
+              ],
+              "interactive": true,
+              "asset_policy": "component"
+            },
+            {
+              "id": "settings",
+              "kind": "action",
+              "layer": "ui_component",
+              "states": [
+                "normal",
+                "pressed"
+              ],
+              "interactive": true,
+              "asset_policy": "component"
+            },
+            {
+              "id": "exit",
+              "kind": "action",
+              "layer": "ui_component",
+              "states": [
+                "normal",
+                "pressed"
+              ],
+              "interactive": true,
+              "asset_policy": "component"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "O02",
+      "name": "Settings",
+      "owner": [
+        "S01",
+        "S05",
+        "S12"
+      ],
+      "states": [
+        "open"
+      ],
+      "blocks": [
+        {
+          "id": "settings_panel",
+          "slots": [
+            {
+              "id": "controls",
+              "kind": "settings",
+              "layer": "ui_component",
+              "states": [
+                "normal"
+              ],
+              "interactive": true,
+              "asset_policy": "component"
+            },
+            {
+              "id": "close",
+              "kind": "action",
+              "layer": "ui_component",
+              "states": [
+                "normal",
+                "pressed"
+              ],
+              "interactive": true,
+              "asset_policy": "component"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "O03",
+      "name": "Reward Reveal",
+      "owner": [
+        "S06"
+      ],
+      "states": [
+        "revealing",
+        "settled"
+      ],
+      "blocks": [
+        {
+          "id": "reward_reveal",
+          "slots": [
+            {
+              "id": "reward_art",
+              "kind": "reward_art",
+              "layer": "content_artwork",
+              "states": [
+                "revealing",
+                "settled"
+              ],
+              "interactive": false,
+              "asset_policy": "authored_art"
+            },
+            {
+              "id": "reveal_vfx",
+              "kind": "vfx",
+              "layer": "runtime_vfx",
+              "states": [
+                "revealing"
+              ],
+              "interactive": false,
+              "asset_policy": "runtime"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "O04",
+      "name": "Fail / Retry",
+      "owner": [
+        "S05"
+      ],
+      "states": [
+        "failed"
+      ],
+      "blocks": [
+        {
+          "id": "fail_panel",
+          "slots": [
+            {
+              "id": "message",
+              "kind": "text",
+              "layer": "ui_component",
+              "states": [
+                "default"
+              ],
+              "interactive": false,
+              "asset_policy": "component"
+            },
+            {
+              "id": "retry",
+              "kind": "primary_action",
+              "layer": "ui_component",
+              "states": [
+                "normal",
+                "pressed"
+              ],
+              "interactive": true,
+              "asset_policy": "component"
+            },
+            {
+              "id": "exit",
+              "kind": "secondary_action",
+              "layer": "ui_component",
+              "states": [
+                "normal",
+                "pressed"
+              ],
+              "interactive": true,
+              "asset_policy": "component"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "O05",
+      "name": "Curio Detail",
+      "owner": [
+        "S08"
+      ],
+      "states": [
+        "locked",
+        "awakened"
+      ],
+      "blocks": [
+        {
+          "id": "curio_detail",
+          "slots": [
+            {
+              "id": "art",
+              "kind": "curio_art",
+              "layer": "content_artwork",
+              "states": [
+                "locked",
+                "awakened"
+              ],
+              "interactive": false,
+              "asset_policy": "authored_art"
+            },
+            {
+              "id": "metadata",
+              "kind": "text",
+              "layer": "ui_component",
+              "states": [
+                "default"
+              ],
+              "interactive": false,
+              "asset_policy": "component"
+            },
+            {
+              "id": "close",
+              "kind": "action",
+              "layer": "ui_component",
+              "states": [
+                "normal",
+                "pressed"
+              ],
+              "interactive": true,
+              "asset_policy": "component"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "O06",
+      "name": "Locked Explanation",
+      "owner": [
+        "S02",
+        "S03",
+        "S08",
+        "S10"
+      ],
+      "states": [
+        "locked"
+      ],
+      "blocks": [
+        {
+          "id": "locked_panel",
+          "slots": [
+            {
+              "id": "reason",
+              "kind": "text",
+              "layer": "ui_component",
+              "states": [
+                "default"
+              ],
+              "interactive": false,
+              "asset_policy": "component"
+            },
+            {
+              "id": "close",
+              "kind": "action",
+              "layer": "ui_component",
+              "states": [
+                "normal",
+                "pressed"
+              ],
+              "interactive": true,
+              "asset_policy": "component"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "O07",
+      "name": "Confirmation",
+      "owner": [
+        "S05",
+        "S11"
+      ],
+      "states": [
+        "open"
+      ],
+      "blocks": [
+        {
+          "id": "confirmation_panel",
+          "slots": [
+            {
+              "id": "message",
+              "kind": "text",
+              "layer": "ui_component",
+              "states": [
+                "default"
+              ],
+              "interactive": false,
+              "asset_policy": "component"
+            },
+            {
+              "id": "confirm",
+              "kind": "action",
+              "layer": "ui_component",
+              "states": [
+                "normal",
+                "pressed"
+              ],
+              "interactive": true,
+              "asset_policy": "component"
+            },
+            {
+              "id": "cancel",
+              "kind": "action",
+              "layer": "ui_component",
+              "states": [
+                "normal",
+                "pressed"
+              ],
+              "interactive": true,
+              "asset_policy": "component"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "next_work_rule": "highest_priority_incomplete_screen_contract -> required_blocks -> required_slots -> implementation -> rendered_verification -> missing_asset_production"
+}
