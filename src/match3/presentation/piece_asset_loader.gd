@@ -97,16 +97,26 @@ static func contract() -> Dictionary:
 static func ornament(path: String) -> Texture2D:
 	if _ornaments.has(path):
 		return _ornaments[path]
-	if not FileAccess.file_exists(path):
+	# Production artwork is raster-first. The old vector artwork remains a
+	# compatibility fallback until each screen's authored PNG is installed.
+	var preferred := path.get_basename() + ".png" if path.get_extension().to_lower() == "svg" else path
+	var chosen := preferred if FileAccess.file_exists(preferred) else path
+	if not FileAccess.file_exists(chosen):
 		return null
-	var file := FileAccess.open(path, FileAccess.READ)
-	if file == null:
-		return null
-	var svg := file.get_as_text()
-	file.close()
 	var image := Image.new()
-	if image.load_svg_from_string(svg, 1.0) != OK or image.is_empty():
+	var err := ERR_FILE_UNRECOGNIZED
+	if chosen.get_extension().to_lower() == "png":
+		err = image.load_png_from_buffer(FileAccess.get_file_as_bytes(chosen))
+	elif chosen.get_extension().to_lower() == "webp":
+		err = image.load_webp_from_buffer(FileAccess.get_file_as_bytes(chosen))
+	elif chosen.get_extension().to_lower() == "svg":
+		var file := FileAccess.open(chosen, FileAccess.READ)
+		if file == null:
+			return null
+		err = image.load_svg_from_string(file.get_as_text(), 1.0)
+		file.close()
+	if err != OK or image.is_empty():
 		return null
-	var texture := ImageTexture.create_from_image(image)
-	_ornaments[path] = texture
-	return texture
+	var result := ImageTexture.create_from_image(image)
+	_ornaments[path] = result
+	return result
