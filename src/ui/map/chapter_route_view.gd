@@ -10,6 +10,7 @@ const PLUM := Color("#241A27")
 const CYAN := Color("#9BBED0")
 const ROSE := Color("#C98BA8")
 const PieceAssetLoader = preload("res://src/match3/presentation/piece_asset_loader.gd")
+const ScreenArt = preload("res://src/ui/shared/screen_art_registry.gd")
 
 @export var canonical_level_cap: int = 1
 @export var visible_route_levels: int = 10
@@ -220,7 +221,14 @@ func _draw() -> void:
 	# chapter_route/environment slot and must be authored art, never a
 	# procedurally illustrated cabinet/moon/room in this Control.
 	var content := Rect2(Vector2.ZERO, size)
-	draw_rect(content, Color("#090711", 0.34), true)
+	var environment := ScreenArt.texture("chapter_route_curio_boutique")
+	if environment != null:
+		draw_texture_rect(environment, content, false)
+	else:
+		# Missing authored art must stay obvious; never reconstruct the world
+		# with procedural illustration or an SVG fallback.
+		draw_rect(content, Color("#090711"), true)
+	draw_rect(content, Color("#090711", 0.20), true)
 
 	# Opening route: live component geometry over authored environment art.
 	for level_number in range(1, 3):
