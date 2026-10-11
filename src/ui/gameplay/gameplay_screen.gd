@@ -79,7 +79,7 @@ func _ready() -> void:
 	_build_top_resource_bar()
 	_build_booster_tray()
 	call_deferred("_position_booster_tray")
-	resized.connect(_position_booster_tray)
+	resized.connect(func(): call_deferred("_position_booster_tray"))
 	_build_result_reward_values()
 	_build_result_proclamation()
 	if board_view.has_signal("swap_requested"):
@@ -736,7 +736,9 @@ func _position_booster_tray() -> void:
 		return
 	var hint_rect := hint_label.get_global_rect()
 	var screen_rect := get_global_rect()
-	var top := hint_rect.end.y - screen_rect.position.y + 12.0
+	var desired_top := hint_rect.end.y - screen_rect.position.y + 8.0
+	var safe_bottom := maxf(0.0, size.y - 12.0)
+	var top := minf(desired_top, maxf(0.0, safe_bottom - 62.0))
 	_booster_tray.anchor_top = 0.0
 	_booster_tray.anchor_bottom = 0.0
 	_booster_tray.offset_top = top
