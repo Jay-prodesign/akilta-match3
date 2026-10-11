@@ -6,6 +6,7 @@ const LILAC := Color("#BFA5D8")
 const BONE := Color("#F1E8DD")
 const INK := Color("#100D12")
 const ROSE := Color("#C66A88")
+const PieceAssetLoader = preload("res://src/match3/presentation/piece_asset_loader.gd")
 const CAMEO_SEALED_PATH := "res://assets/curios/ch01_curio_moon_cameo_sealed_v01.svg"
 const CAMEO_AWAKENED_PATH := "res://assets/curios/ch01_curio_moon_cameo_awakened_v01.svg"
 const RELIC_PATHS := {
