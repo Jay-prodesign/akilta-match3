@@ -18,6 +18,7 @@ const PATHS := {
 static var _textures: Dictionary = {}
 static var _failures: Dictionary = {}
 static var _ornaments: Dictionary = {}
+static var _resolved_paths: Dictionary = {}
 
 static func texture(family: String) -> Texture2D:
 	if _textures.has(family):
@@ -117,6 +118,12 @@ static func ornament(path: String) -> Texture2D:
 		if err == OK and not image.is_empty():
 			var result := ImageTexture.create_from_image(image)
 			_ornaments[path] = result
+			_resolved_paths[path] = chosen
 			return result
 	_failures[path] = candidates
 	return null
+
+static func resolved_path(path: String) -> String:
+	if not _ornaments.has(path):
+		ornament(path)
+	return String(_resolved_paths.get(path, ""))
