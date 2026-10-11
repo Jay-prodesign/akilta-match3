@@ -51,6 +51,10 @@ func _style_settings_overlay() -> void:
 		panel.set_corner_radius_all(18)
 		panel.shadow_color = Color(0, 0, 0, 0.7)
 		panel.shadow_size = 24
+		panel.content_margin_left = 22
+		panel.content_margin_right = 22
+		panel.content_margin_top = 18
+		panel.content_margin_bottom = 18
 		card.add_theme_stylebox_override("panel", panel)
 	var close_style := StyleBoxFlat.new()
 	close_style.bg_color = Color("#512957")
