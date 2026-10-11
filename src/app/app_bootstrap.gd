@@ -238,6 +238,7 @@ func show_feature_preview(feature: String) -> bool:
 	hero.add_theme_stylebox_override("panel", hero_style)
 	layout.add_child(hero)
 	var hero_row := HBoxContainer.new()
+	hero_row.name = "HeroRow"
 	hero_row.add_theme_constant_override("separation", 14)
 	hero.add_child(hero_row)
 	var hero_art := TextureRect.new()
@@ -248,6 +249,7 @@ func show_feature_preview(feature: String) -> bool:
 	hero_art.texture = PieceAssetLoader.ornament("res://assets/pieces/moon_sigil.svg" if is_events else ("res://assets/curios/ch01_curio_moth_reliquary.svg" if not is_profile else "res://assets/curios/ch01_curio_moon_cameo_awakened_v01.svg"))
 	hero_row.add_child(hero_art)
 	var hero_copy := VBoxContainer.new()
+	hero_copy.name = "HeroCopy"
 	hero_copy.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	hero_copy.alignment = BoxContainer.ALIGNMENT_CENTER
 	hero_copy.add_theme_constant_override("separation", 4)
