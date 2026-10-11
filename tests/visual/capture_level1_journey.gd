@@ -143,6 +143,8 @@ func _capture() -> void:
 		return _fail(app, "Settings surface missing")
 	if settings_card.size.x > settings_panel.size.x * 0.94 or settings_card.position.x < 0.0 or settings_card.position.x + settings_card.size.x > settings_panel.size.x:
 		return _fail(app, "Settings card must stay inside the portrait viewport")
+	if settings_card.size.y > settings_panel.size.y * 0.62:
+		return _fail(app, "Settings must read as a focused modal instead of a full-height empty panel")
 	if settings_sigil == null or settings_sigil.texture == null:
 		return _fail(app, "Settings must carry authored House-world sigil art")
 	if not await _save(app, "journey-08-settings.png"):
