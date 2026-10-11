@@ -60,9 +60,11 @@ func _capture() -> void:
 		printerr("CAPTURE_FAIL: stage 3 House must visibly celebrate opening cabinet completion")
 		quit(1)
 		return
-	var chapter_status: Label = screen.get_node_or_null("ResourceBar/Resources/ChapterStatus")
-	if chapter_status == null or chapter_status.text != "✦ OPENING SET COMPLETE":
-		printerr("CAPTURE_FAIL: completed House resource bar must expose opening-set completion")
+	var life_resource: Label = screen.find_child("LifeResource", true, false) as Label
+	var coin_resource: Label = screen.find_child("CoinResource", true, false) as Label
+	var gem_resource: Label = screen.find_child("GemResource", true, false) as Label
+	if life_resource == null or coin_resource == null or gem_resource == null:
+		printerr("CAPTURE_FAIL: completed House must preserve the global life/coin/gem header contract")
 		quit(1)
 		return
 

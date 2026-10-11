@@ -84,8 +84,8 @@ func _run() -> void:
 			_expect(silhouettes.size() == 8, "piece silhouettes must be unique; hue-only differentiation is forbidden")
 			_expect(motifs.size() == 8, "piece motifs must be unique; hue-only differentiation is forbidden")
 
-	_expect(screen.get_node_or_null("Layout/HUD/Objective") != null, "HUD must expose Objective")
-	_expect(screen.get_node_or_null("Layout/HUD/Moves") != null, "HUD must expose Moves")
+	_expect(screen.find_child("Objective", true, false) != null, "HUD must expose Objective")
+	_expect(screen.find_child("Moves", true, false) != null, "HUD must expose Moves")
 	_expect(screen.get_node_or_null("Layout/BoardView") != null, "board must be the dominant gameplay surface")
 	var awakening = screen.get_node_or_null("Layout/Awakening/Content/ProgressView")
 	_expect(awakening != null and awakening.has_method("contract"), "Level 1 must expose the Moon Cameo awakening strip")
