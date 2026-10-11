@@ -57,7 +57,7 @@ func _run() -> void:
 	_expect(level1.continue_after_win(), "Level 1 win must save progression")
 	await process_frame
 	await process_frame
-	_expect(str(app.current_route_name()) == "house", "Level 1 win must return to House")
+	_expect(str(app.current_route_name()) == "restoration", "Level 1 first-time win must route through explicit House Restoration")
 	var progress = app.get("progress")
 	_expect(progress != null and int(progress.house_stage) == 1, "Level 1 must awaken House stage 1")
 	_expect(progress != null and progress.curios.has("moon_cameo"), "Level 1 must grant the Moon Cameo")
@@ -67,6 +67,7 @@ func _run() -> void:
 	if restoration_continue != null:
 		restoration_continue.emit_signal("pressed")
 	await process_frame
+	_expect(str(app.current_route_name()) == "house", "restoration Continue must return to House")
 	var replay_button: Button = app.current_screen().get_node("Layout/PlayButton")
 	_expect(not replay_button.disabled and replay_button.text == "PLAY LEVEL 2", "House must offer the next provisional review level after restoration completes")
 	_expect(app.show_chapters(), "House must reopen chapter selection after Level 1 restoration")

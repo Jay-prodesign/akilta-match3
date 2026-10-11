@@ -91,7 +91,7 @@ func _run() -> void:
 	_expect(gameplay.continue_after_win(), "win continue must commit progression")
 	await process_frame
 	await process_frame
-	_expect(str(app.current_route_name()) == "house", "win must return to House")
+	_expect(str(app.current_route_name()) == "restoration", "first-time win must route through explicit House Restoration")
 	var progress = app.get("progress")
 	_expect(int(progress.house_stage) == 1, "House must awaken to stage 1")
 	_expect(progress.curios.count("moon_cameo") == 1, "Moon Cameo must persist exactly once")
@@ -107,6 +107,7 @@ func _run() -> void:
 	if restoration_continue != null:
 		restoration_continue.emit_signal("pressed")
 	await process_frame
+	_expect(str(app.current_route_name()) == "house", "restoration Continue must return to House")
 	var house_curios_nav: Button = awakened_house.get_node_or_null("ProductNavigation/Scroll/Items/NavCurios") as Button
 	_expect(house_curios_nav != null and house_curios_nav.visible, "House navigation must return after restoration completes")
 	if house_curios_nav != null:

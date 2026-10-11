@@ -42,6 +42,11 @@ jobs:
         run: |
           timeout 30s ./godot --headless --path . -s res://tests/unit/test_bootstrap.gd
 
+      - name: Run canonical screen-state architecture contract
+        shell: bash
+        run: |
+          timeout 30s ./godot --headless --path . -s res://tests/unit/test_screen_state_architecture.gd
+
       - name: Run deterministic Match-3 core contract
         shell: bash
         run: |
