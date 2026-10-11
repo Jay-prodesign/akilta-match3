@@ -36,7 +36,7 @@ func _refresh() -> void:
 	if not is_node_ready():
 		return
 	var completed: int = int(progress.completed_levels.size()) if progress != null else 0
-	chapter_progress.text = "CURIO BOUTIQUE · %d AWAKENING%s" % [completed, "" if completed == 1 else "S"]
+	chapter_progress.text = "CURIO BOUTIQUE  ·  %d / %d DISPLAYS AWAKENED" % [mini(completed, canonical_level_cap), canonical_level_cap]
 	route_view.set_progress(progress)
 
 func _focus_frontier() -> void:
