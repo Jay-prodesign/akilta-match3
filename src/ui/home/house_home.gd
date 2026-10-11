@@ -20,6 +20,7 @@ const HouseState = preload("res://src/world/house_state.gd")
 
 var progress
 var available_level_count: int = 1
+var _dock_buttons: Dictionary = {}
 
 func _ready() -> void:
 	play_button.pressed.connect(_on_play_pressed)
@@ -81,7 +82,7 @@ func _on_play_pressed() -> void:
 		map_requested.emit()
 
 func _build_navigation_dock() -> void:
-	# Persistent, touch-sized first-party navigation; Level 1 remains the only open level pending founder approval.
+	# Touch-sized, gothic first-party navigation for the three-level internal review.
 	var dock_scroll := ScrollContainer.new()
 	dock_scroll.name = "BottomNavigationScroll"
 	dock_scroll.size_flags_horizontal = Control.SIZE_EXPAND_FILL
@@ -103,12 +104,28 @@ func _build_navigation_dock() -> void:
 	]:
 		var button := Button.new()
 		button.text = String(entry["title"])
+		button.name = "Dock" + String(entry["action"]).capitalize()
 		button.custom_minimum_size = Vector2(94, 54)
 		button.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 		button.add_theme_font_size_override("font_size", 15)
 		button.tooltip_text = String(entry["title"])
 		var action := String(entry["action"])
 		button.pressed.connect(func(): _navigate_dock(action))
+		var normal := StyleBoxFlat.new()
+		normal.bg_color = Color("#211728")
+		normal.border_color = Color("#9B7B91", 0.65)
+		normal.set_border_width_all(1)
+		normal.set_corner_radius_all(10)
+		var active := normal.duplicate() as StyleBoxFlat
+		active.bg_color = Color("#49304C")
+		active.border_color = Color("#D5AD70")
+		active.set_border_width_all(2)
+		button.add_theme_stylebox_override("normal", active if action == "house" else normal)
+		button.add_theme_stylebox_override("hover", active)
+		button.add_theme_stylebox_override("pressed", active)
+		button.add_theme_color_override("font_color", Color("#F4E5D3"))
+		button.add_theme_color_override("font_hover_color", Color("#FFF1D9"))
+		_dock_buttons[action] = button
 		dock.add_child(button)
 
 func _navigate_dock(action: String) -> void:
