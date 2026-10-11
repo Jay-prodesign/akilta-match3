@@ -6,7 +6,7 @@ on:
       - p0/bootstrap
     paths:
       - ".github/workflows/p0-visual.yml"
-  # Milestone trigger: coherent 3/3 chapter completion across House, Events and Profile (2026-10-11).
+  # Milestone trigger: balanced three-relic Reliquary + real 3/3 progression evidence (2026-10-11).
   # Run the full milestone checks deliberately, not on every development commit.
   workflow_dispatch:
 

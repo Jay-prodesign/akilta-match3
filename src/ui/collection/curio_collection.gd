@@ -13,9 +13,13 @@ signal back_requested
 @onready var slot2_number: Label = $Layout/Cards/Slot2/Content/Number
 @onready var slot2_name: Label = $Layout/Cards/Slot2/Content/Copy/Name
 @onready var slot2_hint: Label = $Layout/Cards/Slot2/Content/Copy/Hint
+@onready var slot2_state: Label = $Layout/Cards/Slot2/Content/Copy/State
+@onready var slot2_origin: Label = $Layout/Cards/Slot2/Content/Copy/Origin
 @onready var slot3_number: Label = $Layout/Cards/Slot3/Content/Number
 @onready var slot3_name: Label = $Layout/Cards/Slot3/Content/Copy/Name
 @onready var slot3_hint: Label = $Layout/Cards/Slot3/Content/Copy/Hint
+@onready var slot3_state: Label = $Layout/Cards/Slot3/Content/Copy/State
+@onready var slot3_origin: Label = $Layout/Cards/Slot3/Content/Copy/Origin
 @onready var slot2_card: PanelContainer = $Layout/Cards/Slot2
 @onready var slot3_card: PanelContainer = $Layout/Cards/Slot3
 
@@ -54,18 +58,38 @@ func _refresh() -> void:
 	var has_locket := curios.has("thorned_locket")
 	slot2_name.text = "MOTH RELIQUARY" if has_moth else "SEALED · MOTH RELIQUARY"
 	slot2_hint.text = "Recovered from the sealed side cabinet." if has_moth else "Clear both wax seals in Level 2."
-	slot2_number.modulate = Color.WHITE if has_moth else Color(0.65, 0.60, 0.68, 0.8)
-	slot2_card.modulate = Color.WHITE if has_moth else Color(0.72, 0.68, 0.76, 0.86)
+	slot2_state.text = "AWAKENED · RELIC 02" if has_moth else "DORMANT · RELIC 02"
+	slot2_origin.text = "RECOVERED FROM · SEALED DISPLAY" if has_moth else "SEALED BEHIND · WAX DISPLAY"
+	slot2_number.modulate = Color.WHITE if has_moth else Color(0.55, 0.51, 0.60, 0.72)
+	slot2_card.modulate = Color.WHITE if has_moth else Color(0.66, 0.62, 0.72, 0.82)
+	_apply_reward_card_style(slot2_card, has_moth, Color("#9BBED0"))
 	slot3_name.text = "THORNED LOCKET" if has_locket else "SEALED · THORNED LOCKET"
 	slot3_hint.text = "A moon-beam sigil opened its thorned clasp." if has_locket else "Create and trigger a line special in Level 3."
-	slot3_number.modulate = Color.WHITE if has_locket else Color(0.65, 0.60, 0.68, 0.8)
-	slot3_card.modulate = Color.WHITE if has_locket else Color(0.72, 0.68, 0.76, 0.86)
+	slot3_state.text = "AWAKENED · RELIC 03" if has_locket else "DORMANT · RELIC 03"
+	slot3_origin.text = "RECOVERED FROM · THORNLIGHT ARRANGEMENT" if has_locket else "SEALED BEHIND · THORNLIGHT"
+	slot3_number.modulate = Color.WHITE if has_locket else Color(0.55, 0.51, 0.60, 0.72)
+	slot3_card.modulate = Color.WHITE if has_locket else Color(0.66, 0.62, 0.72, 0.82)
+	_apply_reward_card_style(slot3_card, has_locket, Color("#C98BA8"))
 	if _moon_art != null:
 		_moon_art.texture = _load_moon_texture(MOON_AWAKENED_PATH if has_moon else MOON_SEALED_PATH)
 		_moon_art.modulate = Color.WHITE if has_moon else Color(0.75, 0.70, 0.81, 0.78)
 	if moon_ritual != null:
 		moon_ritual.set("glow_strength", 0.82 if has_moon else 0.18)
 		moon_ritual.queue_redraw()
+
+func _apply_reward_card_style(card: PanelContainer, awakened: bool, accent: Color) -> void:
+	if card == null:
+		return
+	var box := StyleBoxFlat.new()
+	box.bg_color = Color("#151019", 0.98) if awakened else Color("#100D14", 0.96)
+	box.border_color = Color(accent.r, accent.g, accent.b, 0.76 if awakened else 0.28)
+	box.set_border_width_all(2 if awakened else 1)
+	box.set_corner_radius_all(18)
+	box.content_margin_left = 12
+	box.content_margin_right = 12
+	box.content_margin_top = 10
+	box.content_margin_bottom = 10
+	card.add_theme_stylebox_override("panel", box)
 
 func _install_moon_art() -> void:
 	if moon_ritual == null:
