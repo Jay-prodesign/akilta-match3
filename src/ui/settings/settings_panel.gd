@@ -12,6 +12,7 @@ const PieceAssetLoader = preload("res://src/match3/presentation/piece_asset_load
 @onready var reduced_toggle: CheckButton = $Card/Content/Reduced
 @onready var contrast_toggle: CheckButton = $Card/Content/Contrast
 @onready var close_button: Button = $Card/Content/Close
+@onready var saved_note: Label = $Card/Content/SavedNote
 
 var settings
 
@@ -30,6 +31,7 @@ func bind_settings(value) -> void:
 	settings = value
 	if not is_node_ready() or settings == null:
 		return
+	saved_note.text = "Changes save on this device."
 	master_toggle.button_pressed = not bool(settings.get_value("master_muted", false))
 	music_toggle.button_pressed = not bool(settings.get_value("music_muted", false))
 	sfx_toggle.button_pressed = not bool(settings.get_value("sfx_muted", false))
@@ -38,8 +40,22 @@ func bind_settings(value) -> void:
 	contrast_toggle.button_pressed = bool(settings.get_value("high_contrast", false))
 
 func _set_setting(key: String, value) -> void:
-	if settings != null:
-		settings.set_value(key, value)
+	if settings == null:
+		return
+	if settings.set_value(key, value):
+		var label := key.replace("_", " ").to_upper()
+		saved_note.text = "SAVED ON THIS DEVICE ✓ · %s UPDATED" % label
+
+func set_return_context(context: String) -> void:
+	if not is_node_ready():
+		await ready
+	match context:
+		"profile_settings":
+			close_button.text = "RETURN TO PROFILE"
+		"gameplay":
+			close_button.text = "RETURN TO LEVEL"
+		_:
+			close_button.text = "RETURN TO HOUSE"
 
 func _style_settings_overlay() -> void:
 	var card := get_node_or_null("Card") as PanelContainer
