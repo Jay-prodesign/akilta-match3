@@ -434,7 +434,7 @@ func show_feature_preview(feature: String) -> bool:
 	if not is_profile and not is_events:
 		var currency_summary := Label.new()
 		currency_summary.name = "ShopCurrencySummary"
-		currency_summary.text = "HOUSE COINS  %,d  ·  MOONSTONES  %,d" % [int(progress.coins) if progress != null else 0, int(progress.gems) if progress != null else 0]
+		currency_summary.text = "HOUSE COINS  %d  ·  MOONSTONES  %d" % [int(progress.coins) if progress != null else 0, int(progress.gems) if progress != null else 0]
 		currency_summary.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 		currency_summary.add_theme_color_override("font_color", Color("#F2D08B"))
 		currency_summary.add_theme_color_override("font_outline_color", Color("#080710", 0.86))
