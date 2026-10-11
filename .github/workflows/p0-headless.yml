@@ -168,7 +168,7 @@ jobs:
           printf '%s\n' "$output"
           if [ "$status" -ne 0 ]; then exit "$status"; fi
           if grep -Eq "SCRIPT ERROR:|(^| )ERROR:" <<<"$output"; then exit 1; fi
-          grep -Fq "TEST_PASS: complete Level 1 shell journey" <<<"$output"
+          grep -Fq "TEST_PASS: complete three-level review shell journey" <<<"$output"
 
       - name: Run Level 1 approval gate and replay journey
         shell: bash
