@@ -195,6 +195,7 @@ func show_restoration_ceremony(curio_id: String, stage: int) -> void:
 	overlay.add_child(panel)
 
 	var ceremony := VBoxContainer.new()
+	ceremony.name = "CeremonyContent"
 	ceremony.add_theme_constant_override("separation", 7)
 	panel.add_child(ceremony)
 	var section := Label.new()
@@ -207,6 +208,7 @@ func show_restoration_ceremony(curio_id: String, stage: int) -> void:
 	divider.modulate = Color("#D5AD70", 0.45)
 	ceremony.add_child(divider)
 	var row := HBoxContainer.new()
+	row.name = "CeremonyRow"
 	row.add_theme_constant_override("separation", 14)
 	ceremony.add_child(row)
 
@@ -219,6 +221,7 @@ func show_restoration_ceremony(curio_id: String, stage: int) -> void:
 	row.add_child(art)
 
 	var copy := VBoxContainer.new()
+	copy.name = "Copy"
 	copy.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	copy.add_theme_constant_override("separation", 5)
 	row.add_child(copy)
@@ -243,6 +246,7 @@ func show_restoration_ceremony(curio_id: String, stage: int) -> void:
 	copy.add_child(body)
 
 	var button := Button.new()
+	button.name = "Continue"
 	button.text = "CONTINUE"
 	button.custom_minimum_size = Vector2(0, 50)
 	button.add_theme_font_size_override("font_size", 18)

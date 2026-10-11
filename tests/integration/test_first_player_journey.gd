@@ -58,6 +58,7 @@ func _run() -> void:
 	_expect(str(app.current_route_name()) == "gameplay", "prestart must enter gameplay")
 	var gameplay = app.current_screen()
 	_expect(str(gameplay.current_level_id) == "ch01_level_001", "gameplay must load canonical Level 1")
+	_expect(gameplay.get_node_or_null("ProductNavigation") == null and gameplay.get_node_or_null("BottomNavigation") == null, "gameplay must remain a focused play surface without meta bottom navigation")
 	_expect(gameplay.show_pause(), "Level 1 must expose a safe pause state")
 	_expect(gameplay.pause_overlay.visible, "pause overlay must become visible")
 	_expect(str(app.current_route_name()) == "gameplay", "pause must not change the product route")
@@ -101,8 +102,13 @@ func _run() -> void:
 
 	var restoration_overlay: Control = awakened_house.get_node_or_null("RestorationOverlay") as Control
 	_expect(restoration_overlay != null, "first-time Level 1 win must enter the same-camera House restoration state")
+	var restoration_continue: Button = awakened_house.get_node_or_null("RestorationOverlay/CeremonyCard/CeremonyContent/CeremonyRow/Copy/Continue") as Button
+	_expect(restoration_continue != null, "House restoration must expose a focused Continue CTA")
+	if restoration_continue != null:
+		restoration_continue.emit_signal("pressed")
+	await process_frame
 	var house_curios_nav: Button = awakened_house.get_node_or_null("ProductNavigation/Scroll/Items/NavCurios") as Button
-	_expect(house_curios_nav != null, "House global navigation must expose Curios")
+	_expect(house_curios_nav != null and house_curios_nav.visible, "House navigation must return after restoration completes")
 	if house_curios_nav != null:
 		house_curios_nav.emit_signal("pressed")
 	await process_frame
