@@ -1,8 +1,6 @@
 class_name Match3ChapterMap
 extends Control
 
-const PieceAssetLoader = preload("res://src/match3/presentation/piece_asset_loader.gd")
-
 signal back_requested
 signal level_requested(level_number: int)
 
@@ -18,27 +16,12 @@ signal level_requested(level_number: int)
 var progress
 
 func _ready() -> void:
-	_install_world_backdrop()
 	back_button.pressed.connect(func(): back_requested.emit())
 	route_view.level_requested.connect(func(level_number: int): level_requested.emit(level_number))
 	route_view.visible_route_levels = visible_route_levels
 	route_view.set_canonical_level_cap(canonical_level_cap)
 	_refresh()
 	call_deferred("_focus_frontier")
-
-func _install_world_backdrop() -> void:
-	if get_node_or_null("ChapterWorldBackdrop") != null:
-		return
-	var art := TextureRect.new()
-	art.name = "ChapterWorldBackdrop"
-	art.texture = PieceAssetLoader.ornament("res://assets/world/ch01_curio_boutique/curio_boutique_moonlit_backdrop.svg")
-	art.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
-	art.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_COVERED
-	art.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
-	art.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	art.modulate = Color(0.90, 0.74, 0.84, 0.38)
-	add_child(art)
-	move_child(art, 1)
 
 func set_progress(value) -> void:
 	progress = value
