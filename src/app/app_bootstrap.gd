@@ -249,7 +249,6 @@ func show_weekly_missions() -> bool:
 	var empty := PanelContainer.new()
 	empty.name = "MissionEmptyState"
 	empty.custom_minimum_size = Vector2(0, 430)
-	empty.size_flags_vertical = Control.SIZE_EXPAND_FILL
 	var empty_style := StyleBoxFlat.new()
 	empty_style.bg_color = Color("#14101B", 0.82)
 	empty_style.border_color = Color("#9B6FA6", 0.72)
@@ -581,9 +580,9 @@ func show_feature_preview(feature: String) -> bool:
 		layout.add_child(shop_note)
 	if is_events:
 		entries = [
-			{"icon":"☾", "art":"res://assets/pieces/moon_sigil.svg", "title":"MOONLIGHT MARKET", "body":"The opening cabinet set is restored. The House is ready for a future moonlit event." if opening_complete else "Awaken the three opening displays to restore the Curio House.", "status":"OPENING CHAPTER COMPLETE · FUTURE MARKET EVENT REMAINS SEALED" if opening_complete else "CHAPTER PROGRESS TRACKED · MARKET EVENT NOT YET ACTIVE"},
-			{"icon":"♜", "art":"res://assets/pieces/crow.svg", "title":"THE LOST RELICS", "body":"A raven has spotted a sealed cabinet.", "status":"UPPER CABINETS SEALED · FUTURE JOURNEY" if opening_complete else "LOCKED · COMPLETE THE OPENING CHAPTER"},
-			{"icon":"✧", "art":"res://assets/pieces/pentagram.svg", "title":"WEEKLY RITUALS", "body":"Weekly ritual challenges will live here.", "status":"FUTURE FEATURE · NO CLAIMABLE REWARDS"}
+			{"icon":"☾", "art":"res://assets/curios/ch01_curio_moon_cameo_awakened_v01.svg", "title":"MOONLIGHT MARKET", "body":"The opening cabinet set is restored. The House is ready for a future moonlit event." if opening_complete else "Awaken the three opening displays to restore the Curio House.", "status":"OPENING CHAPTER COMPLETE · FUTURE MARKET EVENT REMAINS SEALED" if opening_complete else "CHAPTER PROGRESS TRACKED · MARKET EVENT NOT YET ACTIVE"},
+			{"icon":"♜", "art":"res://assets/curios/ch01_curio_moth_reliquary.svg", "title":"THE LOST RELICS", "body":"A sealed reliquary marks a future cabinet journey.", "status":"UPPER CABINETS SEALED · FUTURE JOURNEY" if opening_complete else "LOCKED · COMPLETE THE OPENING CHAPTER"},
+			{"icon":"✧", "art":"res://assets/curios/ch01_curio_thorned_locket.svg", "title":"WEEKLY RITUALS", "body":"Weekly ritual challenges will live here when a live mission feed exists.", "status":"FUTURE FEATURE · NO CLAIMABLE REWARDS"}
 		]
 	elif is_profile:
 		entries = [

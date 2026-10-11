@@ -1057,6 +1057,9 @@
       "transparent": false,
       "variants": [
         "event_center_hero",
+        "event_card_moon",
+        "event_card_moth",
+        "event_card_locket",
         "weekly_offline_reward"
       ],
       "reuse": "retention_family_truthful_existing_curio_art",
@@ -1092,11 +1095,14 @@
       "state_paths": {
         "event_center_completed": "assets/curios/ch01_curio_moon_cameo_awakened_v01.webp",
         "event_center_coming_soon": "assets/curios/ch01_curio_moon_cameo_sealed_v01.webp",
+        "event_card_moon": "assets/curios/ch01_curio_moon_cameo_awakened_v01.webp",
+        "event_card_moth": "assets/curios/ch01_curio_moth_reliquary.png",
+        "event_card_locket": "assets/curios/ch01_curio_thorned_locket.png",
         "weekly_offline_locked": "assets/curios/ch01_curio_moon_cameo_sealed_v01.webp",
         "weekly_live_reward": "reserved_until_live_mission_data_exists"
       },
       "technical_policy": "existing_first_party_content_art_only__no_fabricated_event_or_reward_state",
-      "provenance": "AKILTA first-party Moon Cameo art is deliberately reused as a truthful retention-family content anchor after Golden Loop acceptance. It does not represent a live event, claimable reward, price or countdown; live-specific event artwork remains unavailable until real content exists."
+      "provenance": "AKILTA first-party opening Curio art is deliberately reused as a truthful retention-family content anchor after Golden Loop acceptance. Event cards reference Moon Cameo, Moth Reliquary and Thorned Locket as House-world context only; they do not represent a live event, claimable reward, price or countdown. Live-specific event artwork remains unavailable until real content exists."
     },
     {
       "asset_id": "shop_offer_art",
