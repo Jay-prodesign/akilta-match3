@@ -181,9 +181,16 @@ func _run() -> void:
 		_expect(level2.continue_after_win(), "Level 2 win must save progression")
 		await process_frame
 		await process_frame
+		_expect(str(app.current_route_name()) == "restoration", "first-time Level 2 reward must enter S07 restoration before House")
+		var level2_restoration: Button = app.current_screen().get_node_or_null("RestorationOverlay/CeremonyCard/CeremonyContent/CeremonyRow/Copy/Continue") as Button
+		_expect(level2_restoration != null, "Level 2 restoration must expose Continue")
+		if level2_restoration != null:
+			level2_restoration.emit_signal("pressed")
+		await process_frame
+		_expect(str(app.current_route_name()) == "house", "Level 2 restoration Continue must return to S01 House")
 		_expect(int(app.progress.highest_level_unlocked) == 3, "Level 2 win must unlock Level 3")
 		_expect(app.progress.curios.has("moth_reliquary"), "Level 2 reward must persist")
-		_expect(app.show_chapters(), "House must reopen chapter selection after Level 2")
+		_expect(app.show_chapters(), "House must reopen chapter selection after Level 2 restoration")
 		await process_frame
 		app.current_screen().get_node("Layout/ChapterGrid/CurioBoutiqueButton").emit_signal("pressed")
 		await process_frame
@@ -215,6 +222,13 @@ func _run() -> void:
 			_expect(level3.continue_after_win(), "Level 3 win must save progression")
 			await process_frame
 			await process_frame
+			_expect(str(app.current_route_name()) == "restoration", "first-time Level 3 reward must enter S07 restoration before House")
+			var level3_restoration: Button = app.current_screen().get_node_or_null("RestorationOverlay/CeremonyCard/CeremonyContent/CeremonyRow/Copy/Continue") as Button
+			_expect(level3_restoration != null, "Level 3 restoration must expose Continue")
+			if level3_restoration != null:
+				level3_restoration.emit_signal("pressed")
+			await process_frame
+			_expect(str(app.current_route_name()) == "house", "Level 3 restoration Continue must return to S01 House")
 			_expect(app.progress.curios.has("thorned_locket"), "Level 3 must grant Thorned Locket")
 			_expect(int(app.progress.house_stage) >= 3, "Level 3 must restore House stage 3")
 			_expect(not app.show_prestart(4), "Level 4 must remain inaccessible after Level 3 win")
