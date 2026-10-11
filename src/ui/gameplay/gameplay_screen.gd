@@ -76,6 +76,8 @@ func _ready() -> void:
 	_install_hud_plate()
 	_build_top_resource_bar()
 	_build_booster_tray()
+	call_deferred("_position_booster_tray")
+	resized.connect(_position_booster_tray)
 	_build_result_reward_values()
 	_build_result_proclamation()
 	if board_view.has_signal("swap_requested"):
@@ -704,10 +706,10 @@ func _build_booster_tray() -> void:
 	panel.name = "BoosterTray"
 	panel.anchor_left = 0.055
 	panel.anchor_right = 0.945
-	panel.anchor_top = 1.0
-	panel.anchor_bottom = 1.0
-	panel.offset_top = -190.0
-	panel.offset_bottom = -128.0
+	panel.anchor_top = 0.0
+	panel.anchor_bottom = 0.0
+	panel.offset_top = 760.0
+	panel.offset_bottom = 822.0
 	panel.z_index = 18
 	var shell := StyleBoxFlat.new()
 	shell.bg_color = Color("#100B16", 0.985)
@@ -722,9 +724,21 @@ func _build_booster_tray() -> void:
 	var row := HBoxContainer.new()
 	row.add_theme_constant_override("separation", 6)
 	panel.add_child(row)
-	_add_booster_button(row, "☾ HINT", "res://assets/pieces/moon_sigil.svg", _use_hint_boost)
-	_add_booster_button(row, "⚗ +3 MOVES", "res://assets/pieces/potion.svg", _use_potion_boost)
-	_add_booster_button(row, "✦ RETRY", "res://assets/pieces/skull.svg", _use_retry_boost)
+	_add_booster_button(row, "HINT", "res://assets/pieces/moon_sigil.svg", _use_hint_boost)
+	_add_booster_button(row, "+3 MOVES", "res://assets/pieces/potion.svg", _use_potion_boost)
+	_add_booster_button(row, "RETRY", "res://assets/pieces/skull.svg", _use_retry_boost)
+
+func _position_booster_tray() -> void:
+	if _booster_tray == null or hint_label == null or not is_node_ready():
+		return
+	var hint_rect := hint_label.get_global_rect()
+	var screen_rect := get_global_rect()
+	var top := hint_rect.end.y - screen_rect.position.y + 12.0
+	_booster_tray.anchor_top = 0.0
+	_booster_tray.anchor_bottom = 0.0
+	_booster_tray.offset_top = top
+	_booster_tray.offset_bottom = top + 62.0
+
 
 func _add_booster_button(parent: HBoxContainer, caption: String, art_path: String, action: Callable) -> void:
 	var button := Button.new()
