@@ -60,17 +60,10 @@ static func attach(screen: Control, active_section: String, handler: Callable, c
 		var action := String(item["id"])
 		var button := Button.new()
 		button.name = "Nav" + action.capitalize()
-		button.text = String(item["label"])
-		button.icon = PieceAssetLoader.ornament(String(item["icon"]))
-		button.expand_icon = true
-		button.icon_alignment = HORIZONTAL_ALIGNMENT_CENTER
-		button.add_theme_constant_override("icon_max_width", 24)
+		button.text = ""
 		button.tooltip_text = action.capitalize()
-		button.custom_minimum_size = Vector2(0, 54)
+		button.custom_minimum_size = Vector2(0, 58)
 		button.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-		button.add_theme_font_size_override("font_size", 13)
-		button.add_theme_color_override("font_color", Color("#F4E5D3"))
-		button.add_theme_color_override("font_hover_color", Color("#FFF1D9"))
 		var normal := StyleBoxFlat.new()
 		normal.bg_color = Color("#211728")
 		normal.border_color = Color("#9B7B91", 0.54)
@@ -84,6 +77,30 @@ static func attach(screen: Control, active_section: String, handler: Callable, c
 		button.add_theme_stylebox_override("hover", active)
 		button.add_theme_stylebox_override("pressed", active)
 		button.add_theme_stylebox_override("focus", active)
+		var stack := VBoxContainer.new()
+		stack.name = "Content"
+		stack.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+		stack.alignment = BoxContainer.ALIGNMENT_CENTER
+		stack.add_theme_constant_override("separation", 0)
+		stack.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		button.add_child(stack)
+		var icon := TextureRect.new()
+		icon.name = "Icon"
+		icon.custom_minimum_size = Vector2(28, 28)
+		icon.texture = PieceAssetLoader.ornament(String(item["icon"]))
+		icon.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+		icon.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+		icon.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		icon.modulate = Color("#F0CE8A") if action == active_section else Color("#C9B5C8")
+		stack.add_child(icon)
+		var caption := Label.new()
+		caption.name = "Label"
+		caption.text = String(item["label"])
+		caption.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+		caption.add_theme_font_size_override("font_size", 10)
+		caption.add_theme_color_override("font_color", Color("#F4E5D3") if action == active_section else Color("#CDBFC9"))
+		caption.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		stack.add_child(caption)
 		if handler.is_valid():
 			button.pressed.connect(handler.bind(action))
 		row.add_child(button)
