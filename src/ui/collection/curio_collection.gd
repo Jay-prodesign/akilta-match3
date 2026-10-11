@@ -243,8 +243,8 @@ func _open_curio_detail(curio_id: String) -> void:
 	card.name = "CurioDetailCard"
 	card.anchor_left = 0.07
 	card.anchor_right = 0.93
-	card.anchor_top = 0.10
-	card.anchor_bottom = 0.76
+	card.anchor_top = 0.12
+	card.anchor_bottom = 0.54
 	var shell := StyleBoxFlat.new()
 	shell.bg_color = Color("#0D0912", 0.965)
 	shell.border_color = Color("#D5AD70", 0.88 if awakened else 0.38)
@@ -273,7 +273,7 @@ func _open_curio_detail(curio_id: String) -> void:
 
 	var art := TextureRect.new()
 	art.name = "HeroArt"
-	art.custom_minimum_size = Vector2(0, 270)
+	art.custom_minimum_size = Vector2(0, 360)
 	art.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
 	art.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
 	art.texture = _detail_texture(curio_id, awakened)
