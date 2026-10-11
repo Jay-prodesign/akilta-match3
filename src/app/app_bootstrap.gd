@@ -142,6 +142,8 @@ func start_level(level_number: int = 1) -> bool:
 		screen.level_exit_requested.connect(_on_level_exit_requested)
 	if screen.has_signal("feedback_requested"):
 		screen.feedback_requested.connect(_on_gameplay_feedback_requested)
+	if screen.has_signal("settings_requested"):
+		screen.settings_requested.connect(show_settings)
 	return true
 
 func complete_level_win(transaction_id: String, level_id: String, curio_id: String = "moon_cameo", house_stage_reward: int = -1) -> bool:

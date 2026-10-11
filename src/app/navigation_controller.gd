@@ -52,7 +52,7 @@ func go(to: int, payload: Dictionary = {}) -> bool:
 	_route = to
 	_transition_id += 1
 	_last_payload = payload.duplicate(true)
-	if from == Route.HOUSE and _settings_open:
+	if _settings_open:
 		_settings_open = false
 		settings_changed.emit(false)
 	route_changed.emit(from, to, _last_payload.duplicate(true))
@@ -63,7 +63,7 @@ func is_settings_open() -> bool:
 	return _settings_open
 
 func open_settings() -> bool:
-	if _in_transition or _route != Route.HOUSE or _settings_open:
+	if _in_transition or not (_route in [Route.HOUSE, Route.GAMEPLAY]) or _settings_open:
 		return false
 	_settings_open = true
 	settings_changed.emit(true)

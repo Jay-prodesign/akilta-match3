@@ -275,6 +275,16 @@ theme_override_styles/hover = SubResource("PauseUtility")
 theme_override_styles/pressed = SubResource("PauseUtility")
 text = "RESTART LEVEL"
 
+[node name="Settings" type="Button" parent="PauseOverlay/Card/Content"]
+custom_minimum_size = Vector2(0, 60)
+layout_mode = 2
+theme_override_colors/font_color = Color(0.945, 0.91, 0.866, 1)
+theme_override_font_sizes/font_size = 19
+theme_override_styles/normal = SubResource("PauseUtility")
+theme_override_styles/hover = SubResource("PauseUtility")
+theme_override_styles/pressed = SubResource("PauseUtility")
+text = "AUDIO & ACCESSIBILITY"
+
 [node name="Exit" type="Button" parent="PauseOverlay/Card/Content"]
 custom_minimum_size = Vector2(0, 64)
 layout_mode = 2

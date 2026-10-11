@@ -5,6 +5,7 @@ signal level_won(level_id: String, curio_id: String, house_stage_reward: int)
 signal level_exit_requested
 signal feedback_requested(kind: String)
 signal navigation_requested(section: String)
+signal settings_requested
 
 const BoardState = preload("res://src/match3/domain/board_state.gd")
 const MoveFinder = preload("res://src/match3/domain/move_finder.gd")
@@ -56,6 +57,7 @@ var _result_reward_values: Control
 @onready var pause_overlay: Control = $PauseOverlay
 @onready var pause_resume: Button = $PauseOverlay/Card/Content/Resume
 @onready var pause_retry: Button = $PauseOverlay/Card/Content/Retry
+@onready var pause_settings: Button = $PauseOverlay/Card/Content/Settings
 @onready var pause_exit: Button = $PauseOverlay/Card/Content/Exit
 @onready var hint_label: Label = $Layout/Hint
 @onready var awakening_title: Label = $Layout/Awakening/Content/Label
@@ -88,6 +90,7 @@ func _ready() -> void:
 	pause_button.pressed.connect(show_pause)
 	pause_resume.pressed.connect(resume_level)
 	pause_retry.pressed.connect(_on_pause_retry)
+	pause_settings.pressed.connect(func(): settings_requested.emit())
 	pause_exit.pressed.connect(_on_pause_exit)
 	pause_overlay.visible = false
 	result_overlay.visible = false
