@@ -18,7 +18,11 @@ const PieceAssetLoader = preload("res://src/match3/presentation/piece_asset_load
 const BACKDROP_PATH := "res://assets/world/ch01_curio_boutique/curio_boutique_moonlit_backdrop.svg"
 var _backdrop: Texture2D
 const CAT_PORTRAIT_PATH := "res://assets/pieces/black_cat.svg"
+const MOTH_RELIQUARY_PATH := "res://assets/curios/ch01_curio_moth_reliquary.svg"
+const THORNED_LOCKET_PATH := "res://assets/curios/ch01_curio_thorned_locket.svg"
 var _cat_portrait: Texture2D
+var _moth_reliquary: Texture2D
+var _thorned_locket: Texture2D
 
 func _ready() -> void:
 	var background_file := FileAccess.open(BACKDROP_PATH, FileAccess.READ)
@@ -33,6 +37,8 @@ func _ready() -> void:
 		if image.load_svg_from_string(file.get_as_text(), 1.0) == OK and not image.is_empty():
 			_cat_portrait = ImageTexture.create_from_image(image)
 		file.close()
+	_moth_reliquary = PieceAssetLoader.ornament(MOTH_RELIQUARY_PATH)
+	_thorned_locket = PieceAssetLoader.ornament(THORNED_LOCKET_PATH)
 	queue_redraw()
 
 var house_stage: int = 0
@@ -64,6 +70,7 @@ func _draw() -> void:
 		draw_texture_rect(_backdrop, room, false)
 		_draw_cat_portrait(room)
 		_draw_candle_props(room)
+		_draw_authored_restoration_curios(room)
 	else:
 		_draw_wall_panels(room)
 		_draw_ambient_light(room)
@@ -77,6 +84,53 @@ func _draw() -> void:
 		_draw_floor(room)
 	if house_stage >= 1:
 		_draw_awakened_sparkles(room)
+
+
+func restoration_contract() -> Dictionary:
+	return {
+		"stage": house_stage,
+		"moth_reliquary_visible": house_stage >= 2 and curios.has("moth_reliquary") and _moth_reliquary != null,
+		"thorned_locket_visible": house_stage >= 3 and curios.has("thorned_locket") and _thorned_locket != null,
+	}
+
+func _draw_authored_restoration_curios(room: Rect2) -> void:
+	# The authored backdrop owns the room architecture, but progression rewards must
+	# still become physical objects in that room. Keep the Moon Cameo as its shared
+	# Control overlay and layer later reliquaries into the side display niches.
+	if house_stage >= 2 and curios.has("moth_reliquary") and _moth_reliquary != null:
+		_draw_restored_relic(
+			room,
+			_moth_reliquary,
+			Vector2(room.position.x + room.size.x * 0.82, room.position.y + room.size.y * 0.48),
+			Color(CYAN, 0.32)
+		)
+	if house_stage >= 3 and curios.has("thorned_locket") and _thorned_locket != null:
+		_draw_restored_relic(
+			room,
+			_thorned_locket,
+			Vector2(room.position.x + room.size.x * 0.18, room.position.y + room.size.y * 0.49),
+			Color(ROSE, 0.34)
+		)
+
+func _draw_restored_relic(room: Rect2, texture: Texture2D, center: Vector2, glow_color: Color) -> void:
+	if texture == null:
+		return
+	var frame_size := Vector2(room.size.x * 0.155, room.size.y * 0.205)
+	var frame := Rect2(center - frame_size * 0.5, frame_size)
+	var glow := glow_color
+	draw_circle(center, frame_size.x * 0.78, Color(glow.r, glow.g, glow.b, 0.055))
+	draw_rect(frame.grow(5.0), Color("#0D0911", 0.82), true)
+	draw_rect(frame.grow(3.0), Color(GOLD, 0.72), false, 2.0)
+	draw_rect(frame, Color("#211525", 0.78), true)
+	var texture_size := texture.get_size()
+	if texture_size.x <= 0.0 or texture_size.y <= 0.0:
+		return
+	var max_size := frame_size * 0.78
+	var fitted_scale: float = minf(max_size.x / texture_size.x, max_size.y / texture_size.y)
+	var fitted_size := texture_size * fitted_scale
+	var relic_rect := Rect2(center - fitted_size * 0.5, fitted_size)
+	draw_texture_rect(texture, relic_rect, false)
+	draw_arc(center, frame_size.x * 0.49, 0.0, TAU, 36, Color(GOLD, 0.34), 1.5)
 
 func _draw_ambient_light(room: Rect2) -> void:
 	var moon_center := Vector2(room.get_center().x, room.position.y + room.size.y * 0.18)

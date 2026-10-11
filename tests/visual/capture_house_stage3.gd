@@ -27,6 +27,26 @@ func _capture() -> void:
 	await process_frame
 	await process_frame
 
+	var room_view = screen.get_node_or_null("Layout/RoomView")
+	if room_view == null or not room_view.has_method("restoration_contract"):
+		printerr("CAPTURE_FAIL: House stage 3 restoration contract missing")
+		quit(1)
+		return
+	var restoration: Dictionary = room_view.restoration_contract()
+	if not bool(restoration.get("moth_reliquary_visible", false)):
+		printerr("CAPTURE_FAIL: stage 3 House must visibly restore the Moth Reliquary")
+		quit(1)
+		return
+	if not bool(restoration.get("thorned_locket_visible", false)):
+		printerr("CAPTURE_FAIL: stage 3 House must visibly restore the Thorned Locket")
+		quit(1)
+		return
+	var headline: Label = screen.get_node("Layout/Headline")
+	if headline.text != "Three displays breathe in the moonlight.":
+		printerr("CAPTURE_FAIL: stage 3 House copy does not reflect full opening restoration")
+		quit(1)
+		return
+
 	var viewport: Viewport = screen.get_viewport()
 	var image: Image = viewport.get_texture().get_image()
 	if image == null or image.is_empty():
