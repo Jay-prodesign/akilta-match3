@@ -45,7 +45,7 @@ func _ready() -> void:
 	world_art.texture = ScreenArt.texture("chapters_bg_curio_house")
 	world_art.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
 	world_art.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_COVERED
-	world_art.modulate = Color(0.88, 0.84, 0.96, 0.90)
+	world_art.modulate = Color(0.96, 0.92, 1.0, 0.98)
 	add_child(world_art)
 	move_child(world_art, 0)
 
@@ -54,7 +54,7 @@ func _ready() -> void:
 	veil.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	veil.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	veil.z_index = 0
-	veil.color = Color(0.025, 0.02, 0.05, 0.24)
+	veil.color = Color(0.025, 0.02, 0.05, 0.16)
 	add_child(veil)
 
 	_resource_bar = TopResourceBar.attach(self, progress)
@@ -94,7 +94,7 @@ func _ready() -> void:
 	var eyebrow := Label.new()
 	eyebrow.text = "THE HOUSE AND ITS CHAPTERS"
 	eyebrow.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	eyebrow.add_theme_font_size_override("font_size", 13)
+	eyebrow.add_theme_font_size_override("font_size", 16)
 	eyebrow.add_theme_color_override("font_color", Color("#D5AD70"))
 	eyebrow.add_theme_color_override("font_outline_color", Color("#080710", 0.92))
 	eyebrow.add_theme_constant_override("outline_size", 3)
@@ -103,7 +103,7 @@ func _ready() -> void:
 	var title := Label.new()
 	title.text = "CHOOSE A WING"
 	title.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	title.add_theme_font_size_override("font_size", 32)
+	title.add_theme_font_size_override("font_size", 40)
 	title.add_theme_color_override("font_color", Color("#FFF0D8"))
 	title.add_theme_color_override("font_outline_color", Color("#080710", 0.94))
 	title.add_theme_constant_override("outline_size", 4)
@@ -117,7 +117,7 @@ func _ready() -> void:
 	detail.name = "ChapterSummary"
 	detail.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	detail.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-	detail.add_theme_font_size_override("font_size", 16)
+	detail.add_theme_font_size_override("font_size", 20)
 	detail.add_theme_color_override("font_color", Color("#F0DCCB"))
 	detail.add_theme_color_override("font_outline_color", Color("#080710", 0.86))
 	detail.add_theme_constant_override("outline_size", 2)
@@ -144,10 +144,10 @@ func _ready() -> void:
 		button.custom_minimum_size = Vector2.ZERO
 		button.expand_icon = true
 		button.icon_alignment = HORIZONTAL_ALIGNMENT_LEFT
-		button.add_theme_font_size_override("font_size", 20 if id == "curio_boutique" else 17)
+		button.add_theme_font_size_override("font_size", 27 if id == "curio_boutique" else 21)
 		if id == "curio_boutique":
 			button.icon = PieceAssetLoader.ornament("res://assets/curios/ch01_curio_moon_cameo_awakened_v01.svg")
-			button.add_theme_constant_override("icon_max_width", 122)
+			button.add_theme_constant_override("icon_max_width", 156)
 			button.pressed.connect(func(): chapter_requested.emit("curio_boutique"))
 		else:
 			button.disabled = true
@@ -165,7 +165,7 @@ func _ready() -> void:
 	lock_reason.name = "LockReason"
 	lock_reason.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	lock_reason.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-	lock_reason.add_theme_font_size_override("font_size", 14)
+	lock_reason.add_theme_font_size_override("font_size", 17)
 	lock_reason.add_theme_color_override("font_color", Color("#BFA5D8"))
 	lock_reason.add_theme_color_override("font_outline_color", Color("#080710", 0.82))
 	lock_reason.add_theme_constant_override("outline_size", 2)
@@ -230,19 +230,19 @@ func _layout_chapter_hotspots(grid: Control, buttons: Array[Button]) -> void:
 			button.position = Vector2(grid.size.x * float(button.get_meta("map_x")), grid.size.y * float(button.get_meta("map_y")))
 			button.size = Vector2(grid.size.x * float(button.get_meta("map_w")), grid.size.y * float(button.get_meta("map_h")))
 			var current := String(button.get_meta("chapter_id", "")) == "curio_boutique"
-			button.add_theme_font_size_override("font_size", 22 if current else 17)
-			button.add_theme_constant_override("icon_max_width", 126 if current else 0)
+			button.add_theme_font_size_override("font_size", 27 if current else 21)
+			button.add_theme_constant_override("icon_max_width", 156 if current else 0)
 
 func _apply_current_style(button: Button, state: String) -> void:
 	button.disabled = false
 	button.add_theme_color_override("font_color", Color("#FFF7E9"))
 	var box := StyleBoxFlat.new()
-	box.bg_color = Color("#25172C", 0.94)
+	box.bg_color = Color("#25172C", 0.86)
 	box.border_color = Color("#F2D49A", 0.98)
 	if state == "current_partial":
-		box.bg_color = Color("#30203A", 0.96)
+		box.bg_color = Color("#30203A", 0.88)
 	elif state == "current_complete":
-		box.bg_color = Color("#1B2227", 0.96)
+		box.bg_color = Color("#1B2227", 0.88)
 		box.border_color = Color("#E4C67F")
 	box.set_border_width_all(2)
 	box.set_corner_radius_all(14)
@@ -257,10 +257,10 @@ func _apply_current_style(button: Button, state: String) -> void:
 	button.add_theme_stylebox_override("focus", hover)
 
 func _apply_locked_style(button: Button) -> void:
-	button.add_theme_color_override("font_disabled_color", Color("#C9BCCB"))
+	button.add_theme_color_override("font_disabled_color", Color("#E1D4E2"))
 	var box := StyleBoxFlat.new()
-	box.bg_color = Color("#0F1017", 0.86)
-	box.border_color = Color("#756779", 0.58)
+	box.bg_color = Color("#0F1017", 0.72)
+	box.border_color = Color("#A68CAB", 0.48)
 	box.set_border_width_all(1)
 	box.set_corner_radius_all(12)
 	box.shadow_color = Color(0, 0, 0, 0.42)
