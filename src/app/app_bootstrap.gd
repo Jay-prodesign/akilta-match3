@@ -618,6 +618,15 @@ func _install_north_star_backdrop(screen: Node) -> void:
 	if screen.has_node("NorthStarBackdrop"):
 		return
 	var art_path := "res://assets/world/ch01_curio_boutique/curio_boutique_moonlit_backdrop.svg"
+	match String(screen.name):
+		"GameplayScreen":
+			art_path = "res://assets/world/ch01_curio_boutique/north_star_gameplay_backdrop.svg"
+		"HouseHome":
+			art_path = "res://assets/world/ch01_curio_boutique/house_hub_final.svg"
+		"ChapterSelect":
+			art_path = "res://assets/world/ch01_curio_boutique/north_star_splash.svg"
+		"ChapterMap":
+			art_path = "res://assets/world/ch01_curio_boutique/curio_boutique_moonlit_backdrop.svg"
 	var file := FileAccess.open(art_path, FileAccess.READ)
 	if file == null:
 		return
@@ -632,7 +641,7 @@ func _install_north_star_backdrop(screen: Node) -> void:
 	backdrop.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
 	backdrop.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_COVERED
 	backdrop.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
-	backdrop.modulate = Color(0.72, 0.76, 0.95, 0.28 if screen.name == "GameplayScreen" else 0.52)
+	backdrop.modulate = Color(0.88, 0.82, 0.92, 0.22 if screen.name == "GameplayScreen" else (0.34 if screen.name == "HouseHome" else 0.46))
 	backdrop.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	backdrop.z_index = -100
 	(screen as Control).add_child(backdrop)

@@ -75,10 +75,10 @@ func _ready() -> void:
 	world_art.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	world_art.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	world_art.z_index = -1
-	world_art.texture = PieceAssetLoader.ornament("res://assets/world/ch01_curio_boutique/north_star_splash.svg")
+	world_art.texture = PieceAssetLoader.ornament("res://assets/world/ch01_curio_boutique/chapter_world_map.svg")
 	world_art.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
 	world_art.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_COVERED
-	world_art.modulate = Color(0.90, 0.82, 0.90, 0.72)
+	world_art.modulate = Color(0.90, 0.82, 0.90, 0.58)
 	add_child(world_art)
 	move_child(world_art, 0)
 
