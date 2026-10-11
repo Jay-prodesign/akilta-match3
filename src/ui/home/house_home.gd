@@ -31,6 +31,7 @@ var _resource_bar: PanelContainer
 var _returning_player: bool = false
 var _returning_banner: PanelContainer
 var _returning_label: Label
+var _reduced_motion: bool = false
 
 func _ready() -> void:
 	play_button.pressed.connect(_on_play_pressed)
@@ -53,6 +54,9 @@ func set_progress(value) -> void:
 func set_returning_player(value: bool) -> void:
 	_returning_player = value
 	_refresh()
+
+func apply_presentation_settings(state: Dictionary) -> void:
+	_reduced_motion = bool(state.get("reduced_motion", false))
 
 func _refresh() -> void:
 	var stage: int = 0
@@ -218,7 +222,7 @@ func show_restoration_ceremony(curio_id: String, stage: int) -> void:
 	panel.anchor_left = 0.10
 	panel.anchor_right = 0.90
 	panel.anchor_top = 0.57
-	panel.anchor_bottom = 0.77
+	panel.anchor_bottom = 0.71
 	var shell := StyleBoxFlat.new()
 	shell.bg_color = Color("#09070D", 0.985)
 	shell.border_color = Color("#D5AD70", 0.88)
@@ -311,25 +315,54 @@ func show_restoration_ceremony(curio_id: String, stage: int) -> void:
 	)
 	copy.add_child(button)
 
-	_animate_restoration_state(stage, current_curios)
+	_animate_restoration_state(curio_id, stage, current_curios)
 
-func _animate_restoration_state(stage: int, current_curios: Array[String]) -> void:
+func _animate_restoration_state(curio_id: String, stage: int, current_curios: Array[String]) -> void:
 	await get_tree().process_frame
 	if not is_instance_valid(self):
 		return
-	room_view.modulate = Color(0.70, 0.64, 0.82, 1)
 	room_view.set_house_state(stage, current_curios)
+	room_view.modulate = Color.WHITE
+	if _reduced_motion:
+		return
+
+	room_view.modulate = Color(0.70, 0.64, 0.82, 1)
 	var restored_curio := room_view.get_node_or_null("MoonCameoOverlay") as Control
-	if restored_curio != null and restored_curio.visible:
+	if restored_curio != null and restored_curio.visible and stage == 1:
 		restored_curio.pivot_offset = restored_curio.size * 0.5
 		restored_curio.scale = Vector2(0.52, 0.52)
 		restored_curio.modulate = Color(1.0, 1.0, 1.0, 0.0)
+
+	var awakening_echo: TextureRect
+	if stage >= 2:
+		awakening_echo = TextureRect.new()
+		awakening_echo.name = "RestorationAwakeningEcho"
+		awakening_echo.texture = _curio_texture(curio_id)
+		awakening_echo.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+		awakening_echo.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+		awakening_echo.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		awakening_echo.z_index = 8
+		var side := minf(room_view.size.x * 0.20, room_view.size.y * 0.20)
+		awakening_echo.size = Vector2(side, side)
+		var y_ratio := 0.38 if stage == 2 else 0.49
+		var center := Vector2(room_view.size.x * 0.84, room_view.size.y * y_ratio)
+		awakening_echo.position = center - awakening_echo.size * 0.5
+		awakening_echo.pivot_offset = awakening_echo.size * 0.5
+		awakening_echo.scale = Vector2(0.60, 0.60)
+		awakening_echo.modulate = Color(1.0, 0.94, 0.78, 0.0)
+		room_view.add_child(awakening_echo)
+
 	var tween := create_tween()
 	tween.set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_OUT)
 	tween.tween_property(room_view, "modulate", Color.WHITE, 0.55)
-	if restored_curio != null and restored_curio.visible:
+	if restored_curio != null and restored_curio.visible and stage == 1:
 		tween.parallel().tween_property(restored_curio, "modulate", Color.WHITE, 0.34)
 		tween.parallel().tween_property(restored_curio, "scale", Vector2.ONE, 0.56).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
+	if awakening_echo != null:
+		tween.parallel().tween_property(awakening_echo, "modulate", Color(1.0, 0.94, 0.78, 0.94), 0.28)
+		tween.parallel().tween_property(awakening_echo, "scale", Vector2(1.08, 1.08), 0.48).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
+		tween.tween_property(awakening_echo, "modulate", Color(1.0, 0.94, 0.78, 0.0), 0.26)
+		tween.tween_callback(awakening_echo.queue_free)
 
 func _curio_texture(curio_id: String) -> Texture2D:
 	var path := "res://assets/curios/ch01_curio_moon_cameo_awakened_v01.svg"

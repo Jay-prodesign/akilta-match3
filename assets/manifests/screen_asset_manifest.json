@@ -995,11 +995,14 @@
       "aspect_ratio": "full_region",
       "transparent": true,
       "variants": [
-        "stage01"
+        "stage01_moon_cameo",
+        "stage02_moth_reliquary",
+        "stage03_thorned_locket",
+        "reduced_motion_instant"
       ],
       "reuse": "House",
       "priority": "P0",
-      "production_status": "required",
+      "production_status": "runtime_connected_house_restoration_vfx",
       "architecture_owned": true,
       "contract_owners": [
         {
@@ -1012,7 +1015,9 @@
             "reduced_motion"
           ]
         }
-      ]
+      ],
+      "technical_policy": "runtime_transform_and_alpha_feedback_over_contract_owned_restored_curio_art__reduced_motion_resolves_immediately",
+      "provenance": "S07 awakening feedback is runtime VFX over the exact restored Curio identity. Stage 1 animates the canonical Moon Cameo world node; stages 2–3 animate a temporary echo of the same raster-first Curio artwork at its House cabinet niche. Reduced Motion skips scaling/tween feedback and resolves directly to the restored world state."
     },
     {
       "asset_id": "chapter_world_house",
