@@ -8,6 +8,7 @@ on:
       - ".github/workflows/p0-headless.yml"
       - "src/app/**"
       - "src/ui/home/**"
+      - "src/ui/splash/**"
       - "src/ui/map/**"
       - "src/ui/gameplay/**"
       - "src/ui/prestart/**"
@@ -21,6 +22,7 @@ on:
       - "assets/manifests/screen_asset_manifest.json"
       - "tests/unit/test_screen_state_architecture.gd"
       - "tests/unit/test_save_progress.gd"
+      - "tests/unit/test_first_party_shell.gd"
       - "tests/integration/test_first_player_journey.gd"
       - "tests/integration/test_opening_two_level_journey.gd"
   # Milestone trigger: canonical Golden Loop architecture + playable journey verification (2026-10-11).

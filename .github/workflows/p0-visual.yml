@@ -10,12 +10,14 @@ on:
       - "tests/visual/capture_level1_failure.gd"
       - "src/app/**"
       - "src/ui/home/**"
+      - "src/ui/splash/**"
       - "src/ui/map/**"
       - "src/ui/gameplay/**"
       - "src/ui/prestart/**"
       - "src/ui/collection/**"
       - "src/world/**"
       - "src/ui/shared/screen_art_registry.gd"
+      - "assets/manifests/screen_asset_manifest.json"
       - "assets/world/ch01_curio_boutique/**"
   # Expensive rendered verification is milestone-based. Functional CI runs
   # continuously; this workflow is for Golden Loop render evidence only.
