@@ -298,6 +298,15 @@ func continue_after_win() -> bool:
 		level_won.emit(current_level_id, current_reward_curio, current_house_stage_reward)
 	return true
 
+func restore_reward_claim() -> void:
+	# A failed durable write must not consume the one-shot Continue action.
+	# The player remains on the win result and may retry the same claim.
+	_pending_win = true
+	result_overlay.visible = true
+	result_action.disabled = false
+	result_action.text = "RETRY REWARD"
+	result_detail.text = "The House could not save your reward. Your win is still here; try again."
+
 func retry_current_level() -> bool:
 	if current_level_path == "":
 		return false
