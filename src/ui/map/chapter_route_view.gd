@@ -221,8 +221,8 @@ func _resolve_frontier_level() -> int:
 		return -1
 	for level_number in range(1, canonical_level_cap + 1):
 		var level_id := "ch01_level_%03d" % level_number
-		var completed := progress != null and progress.completed_levels.has(level_id)
-		var open := progress == null or level_number <= int(progress.highest_level_unlocked)
+		var completed: bool = progress != null and bool(progress.completed_levels.has(level_id))
+		var open: bool = progress == null or level_number <= int(progress.highest_level_unlocked)
 		if open and not completed:
 			return level_number
 	return -1
