@@ -169,11 +169,14 @@ func _play_level(app: Node, level_number: int) -> bool:
 	if route_view == null:
 		_fail(app, "Chapter route view missing before Level %d" % level_number)
 		return false
-	if route_view.get_level_center(10).y >= 260.0 or route_view.get_level_center(3).y <= 340.0:
+	if route_view.get_level_center(10).y >= 300.0 or route_view.get_level_center(3).y <= 540.0:
 		_fail(app, "Future cabinets must stay compact above the authored opening trio")
 		return false
-	if route_view.custom_minimum_size.y < 1000.0 or route_view.custom_minimum_size.y > 1120.0:
-		_fail(app, "Chapter route must fill one bounded mobile map panel without becoming a long scroll")
+	if route_view.custom_minimum_size.y < 1450.0 or route_view.custom_minimum_size.y > 1520.0:
+		_fail(app, "Chapter route must fill one bounded portrait map panel without becoming a scroll journey")
+		return false
+	if route_view.get_level_center(1).y <= route_view.custom_minimum_size.y * 0.82:
+		_fail(app, "Level 1 must anchor the lower map so the authored route uses the full panel")
 		return false
 	if route_view.custom_minimum_size.x < 860.0 or route_view.custom_minimum_size.x > 960.0:
 		_fail(app, "Chapter route must use the portrait width while staying inside the logical viewport")
