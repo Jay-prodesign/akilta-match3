@@ -175,6 +175,7 @@ func configure_level(value: int) -> bool:
 		ritual_art.set("relic_id", curio_id)
 		var level_art := ritual_art.get_node_or_null("LevelArtwork") as TextureRect
 		if level_art != null:
-			level_art.visible = level_number == 1
+			level_art.visible = true
+			level_art.texture = PieceAssetLoader.ornament("res://assets/world/ch01_curio_boutique/ch01_prestart_moonlit_cabinet_v01.svg" if level_number == 1 else "res://assets/world/ch01_curio_boutique/curio_boutique_moonlit_backdrop.svg")
 		ritual_art.queue_redraw()
 	return true
