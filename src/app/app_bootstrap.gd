@@ -212,7 +212,7 @@ func show_weekly_missions() -> bool:
 	world_art.texture = ScreenArt.texture("events_bg_curio_house")
 	world_art.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
 	world_art.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_COVERED
-	world_art.modulate = Color(0.44, 0.40, 0.58, 0.30)
+	world_art.modulate = Color(0.48, 0.44, 0.62, 0.40)
 	world_art.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	screen.add_child(world_art)
 	var layout := VBoxContainer.new()
@@ -249,6 +249,7 @@ func show_weekly_missions() -> bool:
 	var empty := PanelContainer.new()
 	empty.name = "MissionEmptyState"
 	empty.custom_minimum_size = Vector2(0, 430)
+	empty.size_flags_vertical = Control.SIZE_EXPAND_FILL
 	var empty_style := StyleBoxFlat.new()
 	empty_style.bg_color = Color("#14101B", 0.97)
 	empty_style.border_color = Color("#9B6FA6", 0.72)
