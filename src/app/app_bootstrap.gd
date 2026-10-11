@@ -141,6 +141,12 @@ func show_feature_preview(feature: String) -> bool:
 	# First-party, non-monetized preview: all controls are navigable, purchases remain disabled.
 	if navigation == null or navigation.current() != NavigationScript.Route.HOUSE:
 		return false
+	# Reopening Events or Shop must replace the existing preview, not stack
+	# opaque full-screen overlays and strand earlier back buttons.
+	for existing in screen_host.get_children():
+		if existing.name == "FeaturePreview":
+			screen_host.remove_child(existing)
+			existing.queue_free()
 	var overlay := Control.new()
 	overlay.name = "FeaturePreview"
 	overlay.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
@@ -285,7 +291,10 @@ func show_feature_preview(feature: String) -> bool:
 	back.add_theme_stylebox_override("normal", back_style)
 	back.add_theme_stylebox_override("hover", back_style)
 	layout.add_child(back)
-	back.pressed.connect(func(): overlay.queue_free())
+	back.pressed.connect(func():
+		if is_instance_valid(overlay):
+			overlay.queue_free()
+	)
 	# Explicit card typography is intentionally retained; applying the global theme
 	# after construction would shrink these feature panels below mobile reading size.
 	return true
