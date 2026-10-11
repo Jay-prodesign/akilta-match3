@@ -174,7 +174,32 @@ func _run() -> void:
 		_expect(app.show_prestart(3), "Level 3 prestart must open")
 		_expect(app.start_level(3), "Level 3 gameplay must load")
 		_expect(str(app.current_screen().current_level_id) == "ch01_level_003", "Level 3 must use authored Thornlight board")
-		_expect(app.show_house(), "Level 3 exit must safely return to House")
+		var level3 = app.current_screen()
+		var level3_file = FileAccess.open("res://content/levels/ch01/level_003.json", FileAccess.READ)
+		_expect(level3_file != null, "Level 3 authored teaching moves must be available")
+		if level3_file != null:
+			var level3_data = JSON.parse_string(level3_file.get_as_text())
+			level3_file.close()
+			if level3_data is Dictionary:
+				for move in level3_data.get("teaching_moves", []):
+					var trace3 = level3.attempt_swap(Vector2i(int(move[0]), int(move[1])), Vector2i(int(move[2]), int(move[3])))
+					_expect(trace3 != null and trace3.accepted, "Level 3 teaching move must be accepted")
+					var board3 = level3.get_node_or_null("Layout/BoardView")
+					if board3 != null and board3.has_method("is_motion_active") and bool(board3.is_motion_active()) and board3.has_signal("trace_motion_finished"):
+						await board3.trace_motion_finished
+					await process_frame
+					if level3.result_overlay.visible:
+						break
+		_expect(level3.result_overlay.visible, "Level 3 must reach the Thorned Locket reward")
+		if level3.result_overlay.visible:
+			_expect(level3.continue_after_win(), "Level 3 win must save progression")
+			await process_frame
+			await process_frame
+			_expect(app.progress.curios.has("thorned_locket"), "Level 3 must grant Thorned Locket")
+			_expect(int(app.progress.house_stage) >= 3, "Level 3 must restore House stage 3")
+			_expect(not app.show_prestart(4), "Level 4 must remain inaccessible after Level 3 win")
+		else:
+			_expect(app.show_house(), "unfinished Level 3 must safely return to House")
 	else:
 		_expect(app.show_house(), "unfinished Level 2 must safely return to House")
 
@@ -194,6 +219,9 @@ func _run() -> void:
 	_expect(restored.curios.count("moon_cameo") == 1, "relaunch must preserve Moon Cameo")
 	if int(restored.highest_level_unlocked) >= 3:
 		_expect(restored.curios.count("moth_reliquary") == 1, "relaunch must preserve earned Moth Reliquary exactly once")
+	if restored.completed_levels.has("ch01_level_003"):
+		_expect(restored.curios.count("thorned_locket") == 1, "relaunch must preserve Thorned Locket exactly once")
+		_expect(int(restored.house_stage) >= 3, "relaunch must preserve House stage 3")
 	relaunched.queue_free()
 	await process_frame
 	_cleanup()
