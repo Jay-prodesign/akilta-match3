@@ -1,6 +1,7 @@
 extends SceneTree
 
 const CONTRACT := "res://assets/manifests/screen_contracts.json"
+const ASSET_MANIFEST := "res://assets/manifests/screen_asset_manifest.json"
 const EXPECTED_SCREENS := ["S00","S01","S02","S03","S04","S05","S06","S07","S08","S09","S10","S11","S12"]
 const EXPECTED_OVERLAYS := ["O01","O02","O03","O04","O05","O06","O07"]
 const GOLDEN := ["S01","S03","S04","S05","S06","S07","S01"]
@@ -70,7 +71,64 @@ func _run() -> void:
 	var prestart: Dictionary = screens.get("S04", {})
 	_expect(Array(prestart.get("entry", [])).has("S03"), "Prestart must be owned by the chapter route")
 	_expect(not Array(prestart.get("entry", [])).has("S01_fast_continue"), "House must not bypass the route directly into Prestart")
+
+	# P0 art production may only follow canonical Screen -> Region -> Block -> Slot -> State ownership.
+	var manifest := _read_json(ASSET_MANIFEST)
+	_expect(not manifest.is_empty(), "screen asset manifest must parse")
+	if not manifest.is_empty():
+		var gate: Dictionary = manifest.get("asset_production_gate", {})
+		_expect(String(gate.get("status", "")) == "LOCKED_TO_GOLDEN_LOOP_ONLY", "asset production must stay locked to Golden Loop")
+		_expect(Array(gate.get("golden_loop", [])) == GOLDEN, "asset gate must use the canonical Golden Loop")
+		for raw_asset in manifest.get("assets", []):
+			if not raw_asset is Dictionary:
+				continue
+			var asset: Dictionary = raw_asset
+			if not bool(asset.get("architecture_owned", false)):
+				continue
+			var owners: Array = asset.get("contract_owners", [])
+			_expect(not owners.is_empty(), "%s must declare canonical contract owners" % String(asset.get("asset_id", "<asset>")))
+			for raw_owner in owners:
+				if not raw_owner is Dictionary:
+					_fail("%s has invalid contract owner" % String(asset.get("asset_id", "<asset>")))
+					continue
+				var owner: Dictionary = raw_owner
+				var slot := _find_slot(screens, owner)
+				var chain := "%s -> %s -> %s -> %s" % [String(owner.get("screen","")), String(owner.get("region","")), String(owner.get("block","")), String(owner.get("slot",""))]
+				_expect(not slot.is_empty(), "%s points to missing canonical slot %s" % [String(asset.get("asset_id","<asset>")), chain])
+				if not slot.is_empty():
+					var allowed: Array = slot.get("states", [])
+					for state in owner.get("states", []):
+						_expect(allowed.has(state), "%s claims invalid state %s on %s" % [String(asset.get("asset_id","<asset>")), String(state), chain])
 	_finish()
+
+func _read_json(path: String) -> Dictionary:
+	if not FileAccess.file_exists(path):
+		return {}
+	var file := FileAccess.open(path, FileAccess.READ)
+	if file == null:
+		return {}
+	var parsed: Variant = JSON.parse_string(file.get_as_text())
+	file.close()
+	return parsed if parsed is Dictionary else {}
+
+func _find_slot(screens: Dictionary, owner: Dictionary) -> Dictionary:
+	var screen: Dictionary = screens.get(String(owner.get("screen", "")), {})
+	for raw_region in screen.get("regions", []):
+		if not raw_region is Dictionary:
+			continue
+		var region: Dictionary = raw_region
+		if String(region.get("id", "")) != String(owner.get("region", "")):
+			continue
+		for raw_block in region.get("blocks", []):
+			if not raw_block is Dictionary:
+				continue
+			var block: Dictionary = raw_block
+			if String(block.get("id", "")) != String(owner.get("block", "")):
+				continue
+			for raw_slot in block.get("slots", []):
+				if raw_slot is Dictionary and String(raw_slot.get("id", "")) == String(owner.get("slot", "")):
+					return raw_slot
+	return {}
 
 func _expect(condition: bool, message: String) -> void:
 	if not condition:
