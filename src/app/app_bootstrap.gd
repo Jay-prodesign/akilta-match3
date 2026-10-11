@@ -18,6 +18,7 @@ const Typography = preload("res://src/ui/theme/typography.gd")
 const CurioMaterials = preload("res://src/ui/theme/curio_materials.gd")
 const PieceAssetLoader = preload("res://src/match3/presentation/piece_asset_loader.gd")
 const ProductNavigation = preload("res://src/ui/shared/product_navigation.gd")
+const ScreenArt = preload("res://src/ui/shared/screen_art_registry.gd")
 
 @export var environment: String = "development"
 @export var save_path_override: String = ""
@@ -221,6 +222,16 @@ func show_feature_preview(feature: String) -> bool:
 	backdrop.color = Color("#0A0C16")
 	backdrop.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	overlay.add_child(backdrop)
+	var world_art := TextureRect.new()
+	world_art.name = "FeatureWorldArt"
+	world_art.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	world_art.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	var world_art_id := "events_bg_curio_house" if feature_key == "events" else ("profile_bg_curio_house" if feature_key == "profile" else "shop_bg_curio_house")
+	world_art.texture = ScreenArt.texture(world_art_id)
+	world_art.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+	world_art.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_COVERED
+	world_art.modulate = Color(0.58, 0.52, 0.70, 0.42) if feature_key == "events" else (Color(0.68, 0.58, 0.50, 0.36) if feature_key == "shop" else Color(0.52, 0.60, 0.74, 0.38))
+	overlay.add_child(world_art)
 	var layout := VBoxContainer.new()
 	layout.name = "FeatureLayout"
 	layout.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)

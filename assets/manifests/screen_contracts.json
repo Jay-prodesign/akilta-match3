@@ -1350,6 +1350,27 @@
       "shell": "meta",
       "regions": [
         {
+          "id": "world",
+          "blocks": [
+            {
+              "id": "event_environment",
+              "slots": [
+                {
+                  "id": "environment",
+                  "layer": "background_art",
+                  "states": [
+                    "live",
+                    "coming_soon",
+                    "locked",
+                    "completed",
+                    "empty"
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
           "id": "header",
           "blocks": [
             {
@@ -1479,6 +1500,29 @@
       "shell": "meta",
       "regions": [
         {
+          "id": "world",
+          "blocks": [
+            {
+              "id": "shop_environment",
+              "slots": [
+                {
+                  "id": "environment",
+                  "layer": "background_art",
+                  "states": [
+                    "review_disabled",
+                    "catalog_loading",
+                    "available",
+                    "unavailable",
+                    "purchase_in_progress",
+                    "purchase_success",
+                    "purchase_failure"
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
           "id": "header",
           "blocks": [
             {
@@ -1601,6 +1645,25 @@
       ],
       "shell": "meta_or_modal",
       "regions": [
+        {
+          "id": "world",
+          "blocks": [
+            {
+              "id": "keeper_environment",
+              "slots": [
+                {
+                  "id": "environment",
+                  "layer": "background_art",
+                  "states": [
+                    "profile_summary",
+                    "settings_open",
+                    "settings_changed"
+                  ]
+                }
+              ]
+            }
+          ]
+        },
         {
           "id": "profile",
           "blocks": [

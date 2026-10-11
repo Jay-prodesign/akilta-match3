@@ -1288,6 +1288,138 @@
       ],
       "current_path": "assets/world/ch01_curio_boutique/hub_bg_grandhall.webp",
       "provenance": "AKILTA first-party authored House environment reused for the Chapter Select shell while future wing-specific art remains sealed"
+    },
+    {
+      "asset_id": "events_bg_curio_house",
+      "screen": [
+        "S10"
+      ],
+      "block": "event_environment",
+      "slot": "environment",
+      "state": [
+        "live",
+        "coming_soon",
+        "locked",
+        "completed",
+        "empty"
+      ],
+      "type": "background_art",
+      "dimensions": "1080x1500_runtime_reuse",
+      "aspect_ratio": "portrait_cover",
+      "transparent": false,
+      "variants": [
+        "internal_review"
+      ],
+      "reuse": "declared_reuse_of_S03_curio_boutique_environment",
+      "priority": "P1",
+      "production_status": "runtime_connected_declared_reuse_candidate",
+      "technical_policy": "authored_raster_only_no_svg_fallback",
+      "architecture_owned": true,
+      "contract_owners": [
+        {
+          "screen": "S10",
+          "region": "world",
+          "block": "event_environment",
+          "slot": "environment",
+          "states": [
+            "live",
+            "coming_soon",
+            "locked",
+            "completed",
+            "empty"
+          ]
+        }
+      ],
+      "current_path": "assets/world/ch01_curio_boutique/chapter_route_curio_boutique.webp",
+      "provenance": "AKILTA first-party authored Curio Boutique environment reused for truthful Event Center shell continuity"
+    },
+    {
+      "asset_id": "shop_bg_curio_house",
+      "screen": [
+        "S11"
+      ],
+      "block": "shop_environment",
+      "slot": "environment",
+      "state": [
+        "review_disabled",
+        "catalog_loading",
+        "available",
+        "unavailable",
+        "purchase_in_progress",
+        "purchase_success",
+        "purchase_failure"
+      ],
+      "type": "background_art",
+      "dimensions": "shared_authored_raster_runtime",
+      "aspect_ratio": "portrait_cover",
+      "transparent": false,
+      "variants": [
+        "internal_review_disabled"
+      ],
+      "reuse": "declared_reuse_of_S01_grand_hall_environment",
+      "priority": "P1",
+      "production_status": "runtime_connected_declared_reuse_candidate",
+      "technical_policy": "authored_raster_only_no_svg_fallback",
+      "architecture_owned": true,
+      "contract_owners": [
+        {
+          "screen": "S11",
+          "region": "world",
+          "block": "shop_environment",
+          "slot": "environment",
+          "states": [
+            "review_disabled",
+            "catalog_loading",
+            "available",
+            "unavailable",
+            "purchase_in_progress",
+            "purchase_success",
+            "purchase_failure"
+          ]
+        }
+      ],
+      "current_path": "assets/world/ch01_curio_boutique/hub_bg_grandhall.webp",
+      "provenance": "AKILTA first-party authored House environment reused for truthful disabled Shop shell continuity"
+    },
+    {
+      "asset_id": "profile_bg_curio_house",
+      "screen": [
+        "S12"
+      ],
+      "block": "keeper_environment",
+      "slot": "environment",
+      "state": [
+        "profile_summary",
+        "settings_open",
+        "settings_changed"
+      ],
+      "type": "background_art",
+      "dimensions": "shared_authored_raster_runtime",
+      "aspect_ratio": "portrait_cover",
+      "transparent": false,
+      "variants": [
+        "internal_review"
+      ],
+      "reuse": "declared_reuse_of_S01_grand_hall_environment",
+      "priority": "P1",
+      "production_status": "runtime_connected_declared_reuse_candidate",
+      "technical_policy": "authored_raster_only_no_svg_fallback",
+      "architecture_owned": true,
+      "contract_owners": [
+        {
+          "screen": "S12",
+          "region": "world",
+          "block": "keeper_environment",
+          "slot": "environment",
+          "states": [
+            "profile_summary",
+            "settings_open",
+            "settings_changed"
+          ]
+        }
+      ],
+      "current_path": "assets/world/ch01_curio_boutique/hub_bg_grandhall.webp",
+      "provenance": "AKILTA first-party authored House environment reused for Keeper/Profile shell continuity"
     }
   ],
   "vertical_slice_art_policy": {
@@ -1300,7 +1432,10 @@
       "prestart_ch01_level01_art",
       "gameplay_bg_curio_boutique",
       "reliquary_bg_curio_boutique",
-      "chapters_bg_curio_house"
+      "chapters_bg_curio_house",
+      "events_bg_curio_house",
+      "shop_bg_curio_house",
+      "profile_bg_curio_house"
     ],
     "current_integrated_raster_assets": [
       "assets/world/ch01_curio_boutique/hub_bg_grandhall.webp",
@@ -1320,7 +1455,10 @@
       "gameplay_bg_curio_boutique",
       "chapter_route_curio_boutique",
       "reliquary_bg_curio_boutique",
-      "chapters_bg_curio_house"
+      "chapters_bg_curio_house",
+      "events_bg_curio_house",
+      "shop_bg_curio_house",
+      "profile_bg_curio_house"
     ]
   },
   "architecture_contract": "content/product/screen_state_architecture.json",
