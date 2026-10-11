@@ -30,10 +30,9 @@ var _store
 var _current_screen: Node
 var _settings_screen: Node
 var _pending_level_number: int = 0
-## The shell renders three map nodes; progression exposes only the founder-approved frontier.
-const TEST_LEVEL_COUNT := 3
-const FOUNDER_APPROVED_LEVEL_COUNT := 1
-# Founder approval gate: do not expose authored Level 2+ until Level 1 is reviewed.
+## Founder-authorized internal review exposes three provisional levels.
+## This does not confer D-024B/D-027 shipping or final-art approval.
+const INTERNAL_REVIEW_LEVEL_COUNT := 3
 
 @onready var screen_host: Node = $ScreenHost
 
@@ -81,7 +80,7 @@ func show_map() -> bool:
 	if not navigation.go(NavigationScript.Route.MAP):
 		return false
 	var screen: Node = MapScene.instantiate()
-	screen.set("canonical_level_cap", FOUNDER_APPROVED_LEVEL_COUNT)
+	screen.set("canonical_level_cap", INTERNAL_REVIEW_LEVEL_COUNT)
 	_show_screen(screen)
 	screen.set_progress(progress)
 	screen.back_requested.connect(_on_map_back)
@@ -89,7 +88,7 @@ func show_map() -> bool:
 	return true
 
 func show_prestart(level_number: int) -> bool:
-	if level_number < 1 or level_number > FOUNDER_APPROVED_LEVEL_COUNT or navigation.current() != NavigationScript.Route.MAP:
+	if level_number < 1 or level_number > INTERNAL_REVIEW_LEVEL_COUNT or navigation.current() != NavigationScript.Route.MAP:
 		return false
 	if not navigation.go(NavigationScript.Route.PRESTART, {"level": level_number}):
 		return false
@@ -103,7 +102,7 @@ func show_prestart(level_number: int) -> bool:
 	return true
 
 func start_level(level_number: int = 1) -> bool:
-	if level_number < 1 or level_number > FOUNDER_APPROVED_LEVEL_COUNT or navigation.current() != NavigationScript.Route.PRESTART:
+	if level_number < 1 or level_number > INTERNAL_REVIEW_LEVEL_COUNT or navigation.current() != NavigationScript.Route.PRESTART:
 		return false
 	var level_path: String = _level_path(level_number)
 	if not FileAccess.file_exists(level_path):
@@ -321,7 +320,7 @@ func close_settings() -> bool:
 func _render_house() -> void:
 	var screen: Node = HouseScene.instantiate()
 	_show_screen(screen)
-	screen.set_available_level_count(FOUNDER_APPROVED_LEVEL_COUNT)
+	screen.set_available_level_count(INTERNAL_REVIEW_LEVEL_COUNT)
 	screen.set_progress(progress)
 	screen.collection_requested.connect(show_collection)
 	screen.map_requested.connect(show_chapters)
@@ -343,7 +342,7 @@ func _on_map_back() -> void:
 func _on_prestart_back() -> void:
 	if navigation.go(NavigationScript.Route.MAP, {"via": "prestart_back"}):
 		var screen: Node = MapScene.instantiate()
-		screen.set("canonical_level_cap", FOUNDER_APPROVED_LEVEL_COUNT)
+		screen.set("canonical_level_cap", INTERNAL_REVIEW_LEVEL_COUNT)
 		_show_screen(screen)
 		screen.set_progress(progress)
 		screen.back_requested.connect(_on_map_back)
