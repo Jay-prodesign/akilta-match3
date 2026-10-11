@@ -61,22 +61,22 @@ horizontal_alignment = 1
 [node name="Title" type="Label" parent="Layout"]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.945, 0.91, 0.866, 1)
-theme_override_font_sizes/font_size = 42
+theme_override_font_sizes/font_size = 36
 text = "Curio Boutique"
 horizontal_alignment = 1
 
 [node name="Progress" type="Label" parent="Layout"]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.851, 0.71, 0.416, 1)
-theme_override_font_sizes/font_size = 22
-text = "CURIO BOUTIQUE · 0 AWAKENINGS"
+theme_override_font_sizes/font_size = 18
+text = "CURIO BOUTIQUE · 0 / 3 DISPLAYS AWAKENED"
 horizontal_alignment = 1
 
 [node name="Intro" type="Label" parent="Layout"]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.851, 0.804, 0.835, 1)
-theme_override_font_sizes/font_size = 22
-text = "Follow the sealed displays through the Boutique. The opening three are authored; Level 1 opens first, and the next cabinets await its review."
+theme_override_font_sizes/font_size = 16
+text = "Restore the opening three displays. Each ritual unlocks the next cabinet and leaves a Curio behind in the House."
 horizontal_alignment = 1
 autowrap_mode = 2
 
@@ -91,7 +91,7 @@ horizontal_scroll_mode = 0
 vertical_scroll_mode = 1
 
 [node name="RouteView" type="Control" parent="Layout/RoutePanel/Scroll"]
-custom_minimum_size = Vector2(960, 1500)
+custom_minimum_size = Vector2(460, 1500)
 layout_mode = 2
 size_flags_horizontal = 3
 mouse_filter = 0

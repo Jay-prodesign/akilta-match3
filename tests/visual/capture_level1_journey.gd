@@ -51,6 +51,14 @@ func _capture() -> void:
 	await _frames(3)
 	if String(app.current_route_name()) != "map":
 		return _fail(app, "Curio Boutique -> Chapter Map failed")
+	var map_screen = app.current_screen()
+	var route_view: Control = map_screen.get_node_or_null("Layout/RoutePanel/Scroll/RouteView") as Control if map_screen != null else null
+	if route_view == null or route_view.custom_minimum_size.x > 500.0:
+		return _fail(app, "chapter route must fit the 540px mobile review width without a desktop-width canvas")
+	for level_number in [1, 2, 3]:
+		var level_label: Label = route_view.get_node_or_null("Label%d" % level_number) as Label
+		if level_label == null or level_label.text.strip_edges() == "":
+			return _fail(app, "opening level %d must have readable map identity" % level_number)
 	if not await _save(app, "journey-02-chapter-map.png"):
 		return
 

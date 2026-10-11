@@ -13,7 +13,7 @@ const INK := Color("#100D12")
 
 @export var canonical_level_cap: int = 1
 @export var visible_route_levels: int = 10
-@export var route_width: float = 960.0
+@export var route_width: float = 460.0
 @export var vertical_spacing: float = 126.0
 @export var top_margin: float = 150.0
 @export var bottom_margin: float = 155.0
@@ -58,7 +58,7 @@ func _build_route() -> void:
 
 		var button := Button.new()
 		button.name = "Level%d" % level_number
-		var diameter := 122.0 if level_number == 1 else (112.0 if level_number <= 3 else 88.0)
+		var diameter := 96.0 if level_number == 1 else (88.0 if level_number <= 3 else 70.0)
 		button.position = center - Vector2.ONE * diameter * 0.5
 		button.size = Vector2.ONE * diameter
 		button.focus_mode = Control.FOCUS_ALL
@@ -69,10 +69,10 @@ func _build_route() -> void:
 
 		var label := Label.new()
 		label.name = "Label%d" % level_number
-		label.size = Vector2(270.0, 64.0)
+		label.size = Vector2(176.0, 58.0)
 		label.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
 		label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-		label.add_theme_font_size_override("font_size", 26 if level_number <= 3 else 20)
+		label.add_theme_font_size_override("font_size", 18 if level_number <= 3 else 15)
 		label.add_theme_color_override("font_color", BONE if level_number == 1 else Color("#D2C4D7"))
 		var on_right := center.x < route_width * 0.5
 		if on_right:
@@ -88,7 +88,7 @@ func _build_route() -> void:
 
 func _center_for(level_number: int, content_height: float) -> Vector2:
 	var index := float(level_number - 1)
-	var wave := sin(index * 1.24) * 92.0
+	var wave := sin(index * 1.24) * 54.0
 	var x := route_width * 0.5 + wave
 	var y := content_height - bottom_margin - index * vertical_spacing
 	return Vector2(x, y)
@@ -159,7 +159,7 @@ func _apply_node_style(button: Button, completed: bool, open: bool) -> void:
 	button.add_theme_stylebox_override("disabled", box)
 	button.add_theme_color_override("font_color", BONE if open else Color("#D2C4D7"))
 	button.add_theme_color_override("font_disabled_color", Color("#B6A6B9"))
-	button.add_theme_font_size_override("font_size", 40 if button.name == "Level1" else (32 if int(button.name.trim_prefix("Level")) <= 3 else 27))
+	button.add_theme_font_size_override("font_size", 30 if button.name == "Level1" else (27 if int(button.name.trim_prefix("Level")) <= 3 else 22))
 
 func _draw() -> void:
 	var content := Rect2(Vector2.ZERO, size)
@@ -188,7 +188,7 @@ func _draw() -> void:
 	var route_color := Color(GOLD)
 	route_color.a = 0.28
 	if route_points.size() > 1:
-		draw_polyline(route_points, route_color, 4.0, true)
+		draw_polyline(route_points, route_color, 3.0, true)
 
 	# House-native route seals replace generic three-star/candy-map shorthand.
 	for level_number in range(1, visible_route_levels):
@@ -203,8 +203,8 @@ func _draw() -> void:
 	# Narrow shelf/alcove hints prevent the scroll from feeling like an empty list.
 	for shelf_index in range(5):
 		var y := 220.0 + float(shelf_index) * 250.0
-		var left := Rect2(42.0, y, 82.0, 44.0)
-		var right := Rect2(size.x - 124.0, y + 92.0, 82.0, 44.0)
+		var left := Rect2(24.0, y, 58.0, 40.0)
+		var right := Rect2(size.x - 82.0, y + 92.0, 58.0, 40.0)
 		draw_rect(left, Color("#201624"), true)
 		draw_rect(right, Color("#201624"), true)
 		draw_line(left.position + Vector2(0, left.size.y), left.end, Color(GOLD, 0.15), 1.5)
@@ -212,6 +212,6 @@ func _draw() -> void:
 
 	# Entry threshold anchors Level 1 to the House below.
 	var first_center := get_level_center(1)
-	var threshold := Rect2(size.x * 0.35, first_center.y + 90.0, size.x * 0.30, 38.0)
+	var threshold := Rect2(size.x * 0.31, first_center.y + 78.0, size.x * 0.38, 34.0)
 	draw_rect(threshold, Color("#211725"), true)
 	draw_line(threshold.position, threshold.position + Vector2(threshold.size.x, 0), Color(GOLD, 0.30), 2.0)
