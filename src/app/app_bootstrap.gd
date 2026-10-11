@@ -227,11 +227,14 @@ func show_feature_preview(feature: String) -> bool:
 	var entries: Array[Dictionary]
 	var is_events := feature.to_lower() == "events"
 	var is_profile := feature.to_lower() == "profile"
+	var completed_count := mini(int(progress.completed_levels.size()) if progress != null else 0, INTERNAL_REVIEW_LEVEL_COUNT)
+	var collected_count := mini(int(progress.curios.size()) if progress != null else 0, INTERNAL_REVIEW_LEVEL_COUNT)
+	var restored_stage := int(progress.house_stage) if progress != null else 0
+	var opening_complete := completed_count >= INTERNAL_REVIEW_LEVEL_COUNT and collected_count >= INTERNAL_REVIEW_LEVEL_COUNT and restored_stage >= INTERNAL_REVIEW_LEVEL_COUNT
 	if is_events:
-		var completed_count := mini(int(progress.completed_levels.size()) if progress != null else 0, INTERNAL_REVIEW_LEVEL_COUNT)
 		var progress_label := Label.new()
 		progress_label.name = "ChapterRitualProgress"
-		progress_label.text = "OPENING RITUAL  ·  %d / %d DISPLAYS AWAKENED" % [completed_count, INTERNAL_REVIEW_LEVEL_COUNT]
+		progress_label.text = ("OPENING RITUAL COMPLETE  ·  %d / %d DISPLAYS AWAKENED" if opening_complete else "OPENING RITUAL  ·  %d / %d DISPLAYS AWAKENED") % [completed_count, INTERNAL_REVIEW_LEVEL_COUNT]
 		progress_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 		progress_label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 		progress_label.add_theme_color_override("font_color", Color("#D5AD70"))
@@ -264,18 +267,15 @@ func show_feature_preview(feature: String) -> bool:
 		layout.add_child(shop_note)
 	if is_events:
 		entries = [
-			{"icon":"☾", "art":"res://assets/pieces/moon_sigil.svg", "title":"MOONLIGHT MARKET", "body":"Awaken the three opening displays to restore the Curio House.", "status":"CHAPTER PROGRESS TRACKED · MARKET EVENT NOT YET ACTIVE"},
-			{"icon":"♜", "art":"res://assets/pieces/crow.svg", "title":"THE LOST RELICS", "body":"A raven has spotted a sealed cabinet.", "status":"LOCKED · COMPLETE THE OPENING CHAPTER"},
-			{"icon":"✧", "art":"res://assets/pieces/pentagram.svg", "title":"WEEKLY RITUALS", "body":"Your weekly ritual streak will live here.", "status":"PREVIEW · NO CLAIMABLE REWARDS"}
+			{"icon":"☾", "art":"res://assets/pieces/moon_sigil.svg", "title":"MOONLIGHT MARKET", "body":"The opening cabinet set is restored. The House is ready for a future moonlit event." if opening_complete else "Awaken the three opening displays to restore the Curio House.", "status":"OPENING CHAPTER COMPLETE · FUTURE MARKET EVENT REMAINS SEALED" if opening_complete else "CHAPTER PROGRESS TRACKED · MARKET EVENT NOT YET ACTIVE"},
+			{"icon":"♜", "art":"res://assets/pieces/crow.svg", "title":"THE LOST RELICS", "body":"A raven has spotted a sealed cabinet.", "status":"UPPER CABINETS SEALED · FUTURE JOURNEY" if opening_complete else "LOCKED · COMPLETE THE OPENING CHAPTER"},
+			{"icon":"✧", "art":"res://assets/pieces/pentagram.svg", "title":"WEEKLY RITUALS", "body":"Weekly ritual challenges will live here.", "status":"FUTURE FEATURE · NO CLAIMABLE REWARDS"}
 		]
 	elif is_profile:
-		var cleared := mini(int(progress.completed_levels.size()) if progress != null else 0, INTERNAL_REVIEW_LEVEL_COUNT)
-		var collected := mini(int(progress.curios.size()) if progress != null else 0, INTERNAL_REVIEW_LEVEL_COUNT)
-		var restored := int(progress.house_stage) if progress != null else 0
 		entries = [
-			{"icon":"☾", "art":"res://assets/pieces/moon_sigil.svg", "title":"CHAPTER PROGRESS", "body":"%d of %d opening rituals completed." % [cleared, INTERNAL_REVIEW_LEVEL_COUNT], "status":"YOUR SAVED JOURNEY"},
-			{"icon":"✦", "art":"res://assets/curios/ch01_curio_moon_cameo_awakened_v01.svg", "title":"RELIQUARY", "body":"%d of %d opening curios awakened." % [collected, INTERNAL_REVIEW_LEVEL_COUNT], "status":"RELICS RECOVERED"},
-			{"icon":"⌂", "art":"res://assets/world/ch01_curio_boutique/curio_boutique_moonlit_backdrop.svg", "title":"HOUSE RESTORATION", "body":"Restoration stage %d." % restored, "status":"PROGRESS SAVED ON THIS DEVICE"}
+			{"icon":"☾", "art":"res://assets/pieces/moon_sigil.svg", "title":"CHAPTER PROGRESS", "body":"Opening chapter complete · %d of %d rituals." % [completed_count, INTERNAL_REVIEW_LEVEL_COUNT] if opening_complete else "%d of %d opening rituals completed." % [completed_count, INTERNAL_REVIEW_LEVEL_COUNT], "status":"FIRST CABINET SET RESTORED" if opening_complete else "YOUR SAVED JOURNEY"},
+			{"icon":"✦", "art":"res://assets/curios/ch01_curio_moon_cameo_awakened_v01.svg", "title":"RELIQUARY", "body":"%d of %d opening curios awakened." % [collected_count, INTERNAL_REVIEW_LEVEL_COUNT], "status":"OPENING SET COMPLETE" if opening_complete else "RELICS RECOVERED"},
+			{"icon":"⌂", "art":"res://assets/world/ch01_curio_boutique/curio_boutique_moonlit_backdrop.svg", "title":"HOUSE RESTORATION", "body":"Restoration stage %d." % restored_stage, "status":"OPENING RESTORATION COMPLETE" if opening_complete else "PROGRESS SAVED ON THIS DEVICE"}
 		]
 	else:
 		entries = [
