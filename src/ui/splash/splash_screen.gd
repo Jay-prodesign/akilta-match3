@@ -79,7 +79,12 @@ func _style_enter_button() -> void:
 	enter_button.add_theme_stylebox_override("normal", normal)
 	enter_button.add_theme_stylebox_override("hover", hover)
 	enter_button.add_theme_stylebox_override("pressed", hover)
+	var disabled := normal.duplicate() as StyleBoxFlat
+	disabled.bg_color = Color("#1B1420", 0.94)
+	disabled.border_color = Color("#A88B66", 0.72)
+	enter_button.add_theme_stylebox_override("disabled", disabled)
 	enter_button.add_theme_color_override("font_color", Color("#F4E5D3"))
+	enter_button.add_theme_color_override("font_disabled_color", Color("#E7D2BC"))
 	enter_button.add_theme_color_override("font_hover_color", Color("#FFF1D9"))
 	enter_button.add_theme_font_size_override("font_size", 25)
 	enter_button.custom_minimum_size.y = maxf(enter_button.custom_minimum_size.y, 64.0)
