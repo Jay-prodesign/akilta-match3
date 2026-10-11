@@ -145,6 +145,15 @@ func _build_completion_banner() -> void:
 func show_restoration_ceremony(curio_id: String, stage: int) -> void:
 	if get_node_or_null("RestorationOverlay") != null:
 		return
+	var product_nav := get_node_or_null("ProductNavigation") as Control
+	if product_nav != null:
+		product_nav.visible = false
+	play_button.visible = false
+	curio_label.get_parent().visible = false
+	headline.visible = false
+	detail.visible = false
+	if _completion_banner != null:
+		_completion_banner.visible = false
 	var current_curios: Array[String] = []
 	if progress != null:
 		for item in progress.curios:
@@ -167,12 +176,12 @@ func show_restoration_ceremony(curio_id: String, stage: int) -> void:
 
 	var panel := PanelContainer.new()
 	panel.name = "CeremonyCard"
-	panel.anchor_left = 0.08
-	panel.anchor_right = 0.92
-	panel.anchor_top = 0.62
-	panel.anchor_bottom = 0.88
+	panel.anchor_left = 0.10
+	panel.anchor_right = 0.90
+	panel.anchor_top = 0.58
+	panel.anchor_bottom = 0.84
 	var shell := StyleBoxFlat.new()
-	shell.bg_color = Color("#0B0810", 0.94)
+	shell.bg_color = Color("#09070D", 0.985)
 	shell.border_color = Color("#D5AD70", 0.88)
 	shell.set_border_width_all(2)
 	shell.set_corner_radius_all(14)
@@ -185,9 +194,21 @@ func show_restoration_ceremony(curio_id: String, stage: int) -> void:
 	panel.add_theme_stylebox_override("panel", shell)
 	overlay.add_child(panel)
 
+	var ceremony := VBoxContainer.new()
+	ceremony.add_theme_constant_override("separation", 7)
+	panel.add_child(ceremony)
+	var section := Label.new()
+	section.text = "HOUSE RESTORATION"
+	section.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	section.add_theme_color_override("font_color", Color("#D5AD70"))
+	section.add_theme_font_size_override("font_size", 14)
+	ceremony.add_child(section)
+	var divider := HSeparator.new()
+	divider.modulate = Color("#D5AD70", 0.45)
+	ceremony.add_child(divider)
 	var row := HBoxContainer.new()
 	row.add_theme_constant_override("separation", 14)
-	panel.add_child(row)
+	ceremony.add_child(row)
 
 	var art := TextureRect.new()
 	art.name = "RestoredCurioArt"
@@ -236,21 +257,28 @@ func show_restoration_ceremony(curio_id: String, stage: int) -> void:
 	button.add_theme_color_override("font_color", Color("#FFF0D8"))
 	button.pressed.connect(func():
 		overlay.queue_free()
+		play_button.visible = true
+		curio_label.get_parent().visible = true
+		headline.visible = true
+		detail.visible = true
+		if product_nav != null:
+			product_nav.visible = true
+		_refresh()
 		restoration_finished.emit()
 	)
 	copy.add_child(button)
 
-	_animate_restoration_state(stage, current_curios, overlay)
+	_animate_restoration_state(stage, current_curios)
 
-func _animate_restoration_state(stage: int, current_curios: Array[String], overlay: Control) -> void:
-	await get_tree().create_timer(0.12).timeout
+func _animate_restoration_state(stage: int, current_curios: Array[String]) -> void:
+	await get_tree().process_frame
 	if not is_instance_valid(self):
 		return
+	room_view.modulate = Color(0.70, 0.64, 0.82, 1)
 	room_view.set_house_state(stage, current_curios)
-	if overlay != null and is_instance_valid(overlay):
-		overlay.modulate = Color(1, 1, 1, 0)
-		var tween := create_tween()
-		tween.tween_property(overlay, "modulate", Color.WHITE, 0.28)
+	var tween := create_tween()
+	tween.set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_OUT)
+	tween.tween_property(room_view, "modulate", Color.WHITE, 0.55)
 
 func _curio_texture(curio_id: String) -> Texture2D:
 	var path := "res://assets/curios/ch01_curio_moon_cameo_awakened_v01.svg"
