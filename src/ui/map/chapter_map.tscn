@@ -76,7 +76,7 @@ horizontal_alignment = 1
 layout_mode = 2
 theme_override_colors/font_color = Color(0.851, 0.804, 0.835, 1)
 theme_override_font_sizes/font_size = 16
-text = "Restore the opening three displays. Each ritual unlocks the next cabinet and leaves a Curio behind in the House."
+text = "Complete the opening three rituals to restore the first cabinet set. Upper cabinets remain visible but sealed for later journeys."
 horizontal_alignment = 1
 autowrap_mode = 2
 
@@ -91,7 +91,7 @@ horizontal_scroll_mode = 0
 vertical_scroll_mode = 1
 
 [node name="RouteView" type="Control" parent="Layout/RoutePanel/Scroll"]
-custom_minimum_size = Vector2(460, 1500)
+custom_minimum_size = Vector2(460, 1180)
 layout_mode = 2
 size_flags_horizontal = 3
 mouse_filter = 0
@@ -103,4 +103,4 @@ layout_mode = 2
 theme_override_colors/font_color = Color(0.945, 0.91, 0.866, 1)
 theme_override_font_sizes/font_size = 20
 theme_override_styles/normal = SubResource("Back")
-text = "BACK TO THE HOUSE"
+text = "BACK TO CHAPTERS"
