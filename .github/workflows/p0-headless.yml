@@ -5,6 +5,7 @@ on:
     branches:
       - p0/bootstrap
       - p1/events-weekly-missions
+      - p1/returning-player-resume
     paths:
       - ".github/workflows/p0-headless.yml"
       - "src/app/**"
@@ -28,6 +29,7 @@ on:
       - "tests/integration/test_first_player_journey.gd"
       - "tests/integration/test_level1_gameplay.gd"
       - "tests/integration/test_opening_two_level_journey.gd"
+      - "tests/integration/test_returning_player_resume.gd"
   # Milestone trigger: canonical Golden Loop architecture + playable journey verification (2026-10-11).
   # Run the full milestone checks deliberately, not on every development commit.
   workflow_dispatch:
@@ -233,6 +235,18 @@ jobs:
           if [ "$status" -ne 0 ]; then exit "$status"; fi
           if grep -Eq "SCRIPT ERROR:|(^| )ERROR:|TEST_FAIL:" <<<"$output"; then exit 1; fi
           grep -Fq "TEST_PASS: opening Levels 2 and 3 runtime gameplay and reward contracts" <<<"$output"
+
+      - name: Run returning-player relaunch resume journey
+        shell: bash
+        run: |
+          set +e
+          output=$(timeout 45s ./godot --headless --path . -s res://tests/integration/test_returning_player_resume.gd 2>&1)
+          status=$?
+          set -e
+          printf '%s\n' "$output"
+          if [ "$status" -ne 0 ]; then exit "$status"; fi
+          if grep -Eq "SCRIPT ERROR:|(^| )ERROR:|TEST_FAIL:" <<<"$output"; then exit 1; fi
+          grep -Fq "TEST_PASS: returning player relaunch resume journey" <<<"$output"
 
       - name: Run first-party audio bus routing
         shell: bash
