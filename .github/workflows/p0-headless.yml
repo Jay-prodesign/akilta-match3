@@ -6,7 +6,7 @@ on:
       - p0/bootstrap
     paths:
       - ".github/workflows/p0-headless.yml"
-  # Milestone trigger: screen-owned House art + focused slice + reward contract verification (2026-10-11).
+  # Milestone trigger: screen-owned House + Prestart + Gameplay vertical-slice verification (2026-10-11).
   # Run the full milestone checks deliberately, not on every development commit.
   workflow_dispatch:
 
