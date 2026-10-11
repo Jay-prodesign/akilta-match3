@@ -6,6 +6,11 @@ on:
       - p0/bootstrap
     paths:
       - ".github/workflows/p0-headless.yml"
+      - "src/app/**"
+      - "src/ui/gameplay/**"
+      - "src/ui/prestart/**"
+      - "src/match3/presentation/board_view.gd"
+      - "tests/integration/test_opening_two_level_journey.gd"
   # Milestone trigger: reference-slice shell/nav/pause/settings verification (2026-10-11).
   # Run the full milestone checks deliberately, not on every development commit.
   workflow_dispatch:
