@@ -50,8 +50,8 @@ func _capture() -> void:
 	var locket_card: PanelContainer = collection.get_node_or_null("Layout/Cards/Slot3") as PanelContainer
 	var moth_state: Label = collection.get_node_or_null("Layout/Cards/Slot2/Content/Copy/State") as Label
 	var locket_state: Label = collection.get_node_or_null("Layout/Cards/Slot3/Content/Copy/State") as Label
-	if moth_card == null or locket_card == null or moth_card.custom_minimum_size.y < 140.0 or locket_card.custom_minimum_size.y < 140.0:
-		return _fail(app, "final Reliquary must give Levels 2 and 3 meaningful visual reward cards")
+	if moth_card == null or locket_card == null or moth_card.custom_minimum_size.y < 170.0 or locket_card.custom_minimum_size.y < 170.0:
+		return _fail(app, "final Reliquary must give Levels 2 and 3 full-size visual reward cards")
 	if moth_state == null or moth_state.text != "AWAKENED · RELIC 02":
 		return _fail(app, "final Reliquary must show Moth Reliquary as awakened")
 	if locket_state == null or locket_state.text != "AWAKENED · RELIC 03":

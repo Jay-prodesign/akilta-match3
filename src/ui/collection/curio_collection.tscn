@@ -88,11 +88,11 @@ autowrap_mode = 2
 [node name="Cards" type="VBoxContainer" parent="Layout"]
 layout_mode = 2
 size_flags_vertical = 3
-theme_override_constants/separation = 10
-alignment = 0
+theme_override_constants/separation = 14
+alignment = 1
 
 [node name="MoonCard" type="PanelContainer" parent="Layout/Cards"]
-custom_minimum_size = Vector2(0, 210)
+custom_minimum_size = Vector2(0, 220)
 layout_mode = 2
 theme_override_styles/panel = SubResource("Card")
 
@@ -146,7 +146,7 @@ text = "SEALED BEHIND · MOONLIT CABINET"
 horizontal_alignment = 1
 
 [node name="Slot2" type="PanelContainer" parent="Layout/Cards"]
-custom_minimum_size = Vector2(0, 150)
+custom_minimum_size = Vector2(0, 180)
 layout_mode = 2
 theme_override_styles/panel = SubResource("Sealed")
 
@@ -195,7 +195,7 @@ theme_override_font_sizes/font_size = 12
 text = "SEALED BEHIND · WAX DISPLAY"
 
 [node name="Slot3" type="PanelContainer" parent="Layout/Cards"]
-custom_minimum_size = Vector2(0, 150)
+custom_minimum_size = Vector2(0, 180)
 layout_mode = 2
 theme_override_styles/panel = SubResource("Sealed")
 

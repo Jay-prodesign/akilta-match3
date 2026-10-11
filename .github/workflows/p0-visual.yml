@@ -6,7 +6,7 @@ on:
       - p0/bootstrap
     paths:
       - ".github/workflows/p0-visual.yml"
-  # Milestone trigger: compact sealed future-cabinet cluster + authored opening path (2026-10-11).
+  # Milestone trigger: full-height balanced three-Curio Reliquary composition (2026-10-11).
   # Run the full milestone checks deliberately, not on every development commit.
   workflow_dispatch:
 
