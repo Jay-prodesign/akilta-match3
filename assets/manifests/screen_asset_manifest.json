@@ -466,7 +466,7 @@
       ],
       "reuse": "global",
       "priority": "P0",
-      "production_status": "raster_material_candidate_runtime_validation",
+      "production_status": "production_family_candidate_runtime_validation",
       "current_path": "assets/pieces/moon_sigil.webp",
       "architecture_owned": true,
       "contract_owners": [
@@ -485,7 +485,7 @@
       ],
       "source_silhouette_path": "assets/pieces/moon_sigil.svg",
       "technical_policy": "webp_raster_first_runtime__canonical_family_identity__svg_owned_fallback",
-      "provenance": "AKILTA first-party offline materialization pass from the canonical authored silhouette: transparent raster, directional light, depth/bevel and soft shadow. Requires rendered board validation before approval."
+      "provenance": "AKILTA first-party S05 eight-piece production family candidate: transparent WebP, shared moonlit directional light, antique-gold edge language and dark-romantic gothic reliquary material treatment. Candidate remains subject to rendered board/play validation before approval."
     },
     {
       "asset_id": "piece_rose",
@@ -508,7 +508,7 @@
       ],
       "reuse": "global",
       "priority": "P0",
-      "production_status": "raster_material_candidate_runtime_validation",
+      "production_status": "production_family_candidate_runtime_validation",
       "current_path": "assets/pieces/thorn_rose.webp",
       "architecture_owned": true,
       "contract_owners": [
@@ -527,7 +527,7 @@
       ],
       "source_silhouette_path": "assets/pieces/thorn_rose.svg",
       "technical_policy": "webp_raster_first_runtime__canonical_family_identity__svg_owned_fallback",
-      "provenance": "AKILTA first-party offline materialization pass from the canonical authored silhouette: transparent raster, directional light, depth/bevel and soft shadow. Requires rendered board validation before approval."
+      "provenance": "AKILTA first-party S05 eight-piece production family candidate: transparent WebP, shared moonlit directional light, antique-gold edge language and dark-romantic gothic reliquary material treatment. Candidate remains subject to rendered board/play validation before approval."
     },
     {
       "asset_id": "piece_moth",
@@ -550,7 +550,7 @@
       ],
       "reuse": "global",
       "priority": "P0",
-      "production_status": "raster_material_candidate_runtime_validation",
+      "production_status": "production_family_candidate_runtime_validation",
       "current_path": "assets/pieces/luna_moth.webp",
       "architecture_owned": true,
       "contract_owners": [
@@ -569,7 +569,7 @@
       ],
       "source_silhouette_path": "assets/pieces/luna_moth.svg",
       "technical_policy": "webp_raster_first_runtime__canonical_family_identity__svg_owned_fallback",
-      "provenance": "AKILTA first-party offline materialization pass from the canonical authored silhouette: transparent raster, directional light, depth/bevel and soft shadow. Requires rendered board validation before approval."
+      "provenance": "AKILTA first-party S05 eight-piece production family candidate: transparent WebP, shared moonlit directional light, antique-gold edge language and dark-romantic gothic reliquary material treatment. Candidate remains subject to rendered board/play validation before approval."
     },
     {
       "asset_id": "piece_key",
@@ -592,7 +592,7 @@
       ],
       "reuse": "global",
       "priority": "P0",
-      "production_status": "raster_material_candidate_runtime_validation",
+      "production_status": "production_family_candidate_runtime_validation",
       "current_path": "assets/pieces/curio_key.webp",
       "architecture_owned": true,
       "contract_owners": [
@@ -611,7 +611,7 @@
       ],
       "source_silhouette_path": "assets/pieces/curio_key.svg",
       "technical_policy": "webp_raster_first_runtime__canonical_family_identity__svg_owned_fallback",
-      "provenance": "AKILTA first-party offline materialization pass from the canonical authored silhouette: transparent raster, directional light, depth/bevel and soft shadow. Requires rendered board validation before approval."
+      "provenance": "AKILTA first-party S05 eight-piece production family candidate: transparent WebP, shared moonlit directional light, antique-gold edge language and dark-romantic gothic reliquary material treatment. Candidate remains subject to rendered board/play validation before approval."
     },
     {
       "asset_id": "piece_ivy",
@@ -634,7 +634,7 @@
       ],
       "reuse": "global",
       "priority": "P0",
-      "production_status": "raster_material_candidate_runtime_validation",
+      "production_status": "production_family_candidate_runtime_validation",
       "current_path": "assets/pieces/night_ivy.webp",
       "architecture_owned": true,
       "contract_owners": [
@@ -653,7 +653,7 @@
       ],
       "source_silhouette_path": "assets/pieces/night_ivy.svg",
       "technical_policy": "webp_raster_first_runtime__canonical_family_identity__svg_owned_fallback",
-      "provenance": "AKILTA first-party offline materialization pass from the canonical authored silhouette: transparent raster, directional light, depth/bevel and soft shadow. Requires rendered board validation before approval."
+      "provenance": "AKILTA first-party S05 eight-piece production family candidate: transparent WebP, shared moonlit directional light, antique-gold edge language and dark-romantic gothic reliquary material treatment. Candidate remains subject to rendered board/play validation before approval."
     },
     {
       "asset_id": "gameplay_bg_curio_boutique",
@@ -1435,6 +1435,132 @@
       ],
       "current_path": "assets/world/ch01_curio_boutique/hub_bg_grandhall.webp",
       "provenance": "AKILTA first-party authored House environment reused for Keeper/Profile shell continuity"
+    },
+    {
+      "asset_id": "piece_cat",
+      "screen": [
+        "S05"
+      ],
+      "block": "match_board",
+      "slot": "base_pieces",
+      "state": [
+        "idle",
+        "selected_runtime",
+        "matched_runtime"
+      ],
+      "type": "gameplay_asset",
+      "dimensions": "128x128_webp_runtime_candidate",
+      "aspect_ratio": "1:1",
+      "transparent": true,
+      "variants": [
+        "ringless"
+      ],
+      "reuse": "global",
+      "priority": "P0",
+      "production_status": "production_family_candidate_runtime_validation",
+      "current_path": "assets/pieces/black_cat.webp",
+      "architecture_owned": true,
+      "contract_owners": [
+        {
+          "screen": "S05",
+          "region": "board",
+          "block": "match_board",
+          "slot": "base_pieces",
+          "states": [
+            "idle",
+            "selected",
+            "matched",
+            "moving"
+          ]
+        }
+      ],
+      "source_silhouette_path": "assets/pieces/black_cat.svg",
+      "technical_policy": "webp_raster_first_runtime__canonical_family_identity__svg_owned_fallback",
+      "provenance": "AKILTA first-party S05 eight-piece production family candidate: transparent WebP, shared moonlit directional light, antique-gold edge language and dark-romantic gothic reliquary material treatment. Candidate remains subject to rendered board/play validation before approval."
+    },
+    {
+      "asset_id": "piece_candle",
+      "screen": [
+        "S05"
+      ],
+      "block": "match_board",
+      "slot": "base_pieces",
+      "state": [
+        "idle",
+        "selected_runtime",
+        "matched_runtime"
+      ],
+      "type": "gameplay_asset",
+      "dimensions": "128x128_webp_runtime_candidate",
+      "aspect_ratio": "1:1",
+      "transparent": true,
+      "variants": [
+        "ringless"
+      ],
+      "reuse": "global",
+      "priority": "P0",
+      "production_status": "production_family_candidate_runtime_validation",
+      "current_path": "assets/pieces/candle.webp",
+      "architecture_owned": true,
+      "contract_owners": [
+        {
+          "screen": "S05",
+          "region": "board",
+          "block": "match_board",
+          "slot": "base_pieces",
+          "states": [
+            "idle",
+            "selected",
+            "matched",
+            "moving"
+          ]
+        }
+      ],
+      "source_silhouette_path": "assets/pieces/candle.svg",
+      "technical_policy": "webp_raster_first_runtime__canonical_family_identity__svg_owned_fallback",
+      "provenance": "AKILTA first-party S05 eight-piece production family candidate: transparent WebP, shared moonlit directional light, antique-gold edge language and dark-romantic gothic reliquary material treatment. Candidate remains subject to rendered board/play validation before approval."
+    },
+    {
+      "asset_id": "piece_skull",
+      "screen": [
+        "S05"
+      ],
+      "block": "match_board",
+      "slot": "base_pieces",
+      "state": [
+        "idle",
+        "selected_runtime",
+        "matched_runtime"
+      ],
+      "type": "gameplay_asset",
+      "dimensions": "128x128_webp_runtime_candidate",
+      "aspect_ratio": "1:1",
+      "transparent": true,
+      "variants": [
+        "ringless"
+      ],
+      "reuse": "global",
+      "priority": "P0",
+      "production_status": "production_family_candidate_runtime_validation",
+      "current_path": "assets/pieces/skull.webp",
+      "architecture_owned": true,
+      "contract_owners": [
+        {
+          "screen": "S05",
+          "region": "board",
+          "block": "match_board",
+          "slot": "base_pieces",
+          "states": [
+            "idle",
+            "selected",
+            "matched",
+            "moving"
+          ]
+        }
+      ],
+      "source_silhouette_path": "assets/pieces/skull.svg",
+      "technical_policy": "webp_raster_first_runtime__canonical_family_identity__svg_owned_fallback",
+      "provenance": "AKILTA first-party S05 eight-piece production family candidate: transparent WebP, shared moonlit directional light, antique-gold edge language and dark-romantic gothic reliquary material treatment. Candidate remains subject to rendered board/play validation before approval."
     }
   ],
   "vertical_slice_art_policy": {
