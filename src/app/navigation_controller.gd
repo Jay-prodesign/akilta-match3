@@ -28,11 +28,11 @@ enum Route {
 
 const _EDGES := {
 	Route.BOOT: [Route.HOUSE],
-	Route.HOUSE: [Route.COLLECTION, Route.CHAPTERS, Route.PRESTART, Route.EVENTS, Route.SHOP, Route.PROFILE_SETTINGS],
+	Route.HOUSE: [Route.COLLECTION, Route.CHAPTERS, Route.MAP, Route.EVENTS, Route.SHOP, Route.PROFILE_SETTINGS],
 	Route.COLLECTION: [Route.HOUSE],
 	Route.CHAPTERS: [Route.HOUSE, Route.MAP],
 	Route.MAP: [Route.CHAPTERS, Route.HOUSE, Route.PRESTART],
-	Route.PRESTART: [Route.HOUSE, Route.MAP, Route.GAMEPLAY],
+	Route.PRESTART: [Route.MAP, Route.GAMEPLAY],
 	Route.GAMEPLAY: [Route.WIN_REWARDS, Route.HOUSE],
 	Route.WIN_REWARDS: [Route.RESTORATION, Route.HOUSE],
 	Route.RESTORATION: [Route.HOUSE],
@@ -113,8 +113,5 @@ func back() -> String:
 		Route.MAP:
 			return "chapters" if go(Route.CHAPTERS, {"via": "back"}) else "none"
 		Route.PRESTART:
-			var origin: int = int(_last_payload.get("origin", Route.HOUSE))
-			if origin == Route.MAP:
-				return "map" if go(Route.MAP, {"via": "back"}) else "none"
-			return "house" if go(Route.HOUSE, {"via": "back"}) else "none"
+			return "map" if go(Route.MAP, {"via": "back"}) else "none"
 	return "none"
