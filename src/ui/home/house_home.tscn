@@ -94,25 +94,25 @@ layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
-offset_left = 28.0
-offset_top = 54.0
-offset_right = -28.0
+offset_left = 16.0
+offset_top = 52.0
+offset_right = -16.0
 offset_bottom = -12.0
 grow_horizontal = 2
 grow_vertical = 2
-theme_override_constants/separation = 8
+theme_override_constants/separation = 10
 
 [node name="Eyebrow" type="Label" parent="Layout"]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.663, 0.6, 0.659, 1)
-theme_override_font_sizes/font_size = 24
+theme_override_font_sizes/font_size = 18
 text = "THE HOUSE · CURIO BOUTIQUE"
 horizontal_alignment = 1
 
 [node name="Headline" type="Label" parent="Layout"]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.945, 0.91, 0.866, 1)
-theme_override_font_sizes/font_size = 32
+theme_override_font_sizes/font_size = 28
 text = "The Curio Boutique sleeps."
 horizontal_alignment = 1
 autowrap_mode = 2
@@ -125,13 +125,13 @@ theme_override_styles/panel = SubResource("CurioChip")
 [node name="Label" type="Label" parent="Layout/CurioChip"]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.851, 0.71, 0.416, 1)
-theme_override_font_sizes/font_size = 24
+theme_override_font_sizes/font_size = 18
 text = "DORMANT DISPLAY"
 horizontal_alignment = 1
 vertical_alignment = 1
 
 [node name="RoomView" type="Control" parent="Layout"]
-custom_minimum_size = Vector2(0, 390)
+custom_minimum_size = Vector2(0, 230)
 layout_mode = 2
 size_flags_vertical = 3
 clip_contents = true
@@ -155,7 +155,7 @@ glow_strength = 0.88
 [node name="Detail" type="Label" parent="Layout"]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.851, 0.804, 0.835, 1)
-theme_override_font_sizes/font_size = 24
+theme_override_font_sizes/font_size = 18
 text = "Win a puzzle to wake the first display."
 horizontal_alignment = 1
 autowrap_mode = 2
@@ -175,7 +175,7 @@ custom_minimum_size = Vector2(0, 44)
 layout_mode = 2
 size_flags_horizontal = 3
 theme_override_colors/font_color = Color(0.851, 0.71, 0.416, 1)
-theme_override_font_sizes/font_size = 24
+theme_override_font_sizes/font_size = 18
 theme_override_styles/normal = SubResource("SecondaryButton")
 theme_override_styles/hover = SubResource("SecondaryButton")
 theme_override_styles/pressed = SubResource("SecondaryButton")
@@ -186,7 +186,7 @@ custom_minimum_size = Vector2(0, 52)
 layout_mode = 2
 size_flags_horizontal = 3
 theme_override_colors/font_color = Color(0.851, 0.804, 0.835, 1)
-theme_override_font_sizes/font_size = 24
+theme_override_font_sizes/font_size = 18
 theme_override_styles/normal = SubResource("SecondaryButton")
 theme_override_styles/hover = SubResource("SecondaryButton")
 theme_override_styles/pressed = SubResource("SecondaryButton")
@@ -198,7 +198,7 @@ layout_mode = 2
 theme_override_colors/font_color = Color(0.0627, 0.051, 0.0706, 1)
 theme_override_colors/font_hover_color = Color(0.0627, 0.051, 0.0706, 1)
 theme_override_colors/font_pressed_color = Color(0.0627, 0.051, 0.0706, 1)
-theme_override_font_sizes/font_size = 24
+theme_override_font_sizes/font_size = 18
 theme_override_styles/normal = SubResource("ButtonNormal")
 theme_override_styles/hover = SubResource("ButtonHover")
 theme_override_styles/pressed = SubResource("ButtonPressed")
