@@ -6,7 +6,7 @@ on:
       - p0/bootstrap
     paths:
       - ".github/workflows/p0-visual.yml"
-  # Milestone trigger: visible Level 2/3 House restoration consequences (2026-10-11).
+  # Milestone trigger: unified compact mobile navigation + complete shell/profile evidence (2026-10-11).
   # Run the full milestone checks deliberately, not on every development commit.
   workflow_dispatch:
 
@@ -56,6 +56,7 @@ jobs:
           test -s artifacts/journey-08-settings.png
           test -s artifacts/journey-09-events.png
           test -s artifacts/journey-10-shop.png
+          test -s artifacts/journey-11-profile.png
 
       - name: Render Level 1 fail and retry
         shell: bash
@@ -178,6 +179,7 @@ jobs:
             artifacts/journey-08-settings.png
             artifacts/journey-09-events.png
             artifacts/journey-10-shop.png
+            artifacts/journey-11-profile.png
             artifacts/level1-fail-result.png
             artifacts/level1-retry-restored.png
             artifacts/level2-gameplay.png

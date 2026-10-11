@@ -6,7 +6,7 @@ on:
       - p0/bootstrap
     paths:
       - ".github/workflows/p0-headless.yml"
-  # Milestone trigger: prestart navigation unwind + real splash capture recovery (2026-10-11).
+  # Milestone trigger: unified compact mobile navigation + complete shell/profile evidence (2026-10-11).
   # Run the full milestone checks deliberately, not on every development commit.
   workflow_dispatch:
 

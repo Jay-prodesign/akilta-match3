@@ -50,7 +50,7 @@ static func attach(screen: Control, active_section: String, handler: Callable, c
 
 	var row := HBoxContainer.new()
 	row.name = "Items"
-	row.add_theme_constant_override("separation", 4)
+	row.add_theme_constant_override("separation", 2)
 	row.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	scroll.add_child(row)
 
@@ -60,9 +60,9 @@ static func attach(screen: Control, active_section: String, handler: Callable, c
 		button.name = "Nav" + action.capitalize()
 		button.text = String(item["label"])
 		button.tooltip_text = action.capitalize()
-		button.custom_minimum_size = Vector2(94, 46)
+		button.custom_minimum_size = Vector2(80, 46)
 		button.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-		button.add_theme_font_size_override("font_size", 14)
+		button.add_theme_font_size_override("font_size", 12)
 		button.add_theme_color_override("font_color", Color("#F4E5D3"))
 		button.add_theme_color_override("font_hover_color", Color("#FFF1D9"))
 		var normal := StyleBoxFlat.new()

@@ -97,7 +97,7 @@ func _build_navigation_dock() -> void:
 	$Layout.add_child(dock_scroll)
 	var dock := HBoxContainer.new()
 	dock.name = "BottomNavigation"
-	dock.add_theme_constant_override("separation", 4)
+	dock.add_theme_constant_override("separation", 2)
 	dock_scroll.add_child(dock)
 	for entry in [
 		{"title": "HOUSE", "action": "house"},
@@ -110,9 +110,9 @@ func _build_navigation_dock() -> void:
 		var button := Button.new()
 		button.text = String(entry["title"])
 		button.name = "Dock" + String(entry["action"]).capitalize()
-		button.custom_minimum_size = Vector2(92, 56)
+		button.custom_minimum_size = Vector2(80, 54)
 		button.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-		button.add_theme_font_size_override("font_size", 15)
+		button.add_theme_font_size_override("font_size", 12)
 		button.tooltip_text = String(entry["title"])
 		var action := String(entry["action"])
 		button.pressed.connect(func(): _navigate_dock(action))

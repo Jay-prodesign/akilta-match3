@@ -154,6 +154,17 @@ func _capture() -> void:
 		return
 	app.get_node("ScreenHost/FeaturePreview/FeatureLayout/BackToHouse").emit_signal("pressed")
 	await _frames(2)
+	if not app.show_feature_preview("Profile"):
+		return _fail(app, "House -> Profile preview failed")
+	await _frames(3)
+	var profile_preview: Node = app.get_node_or_null("ScreenHost/FeaturePreview")
+	var profile_art_nodes: Array[Node] = profile_preview.find_children("FeatureArtwork", "TextureRect", true, false) if profile_preview != null else []
+	if profile_art_nodes.size() != 3:
+		return _fail(app, "Profile must render saved journey, reliquary and House restoration cards")
+	if not await _save(app, "journey-11-profile.png"):
+		return
+	app.get_node("ScreenHost/FeaturePreview/FeatureLayout/BackToHouse").emit_signal("pressed")
+	await _frames(2)
 
 	print("CAPTURE_PASS: complete Level 1 player journey")
 	app.queue_free()

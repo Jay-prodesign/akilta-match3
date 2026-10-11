@@ -395,14 +395,14 @@ func _build_bottom_navigation() -> void:
 	nav_scroll.vertical_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
 	panel.add_child(nav_scroll)
 	var row := HBoxContainer.new()
-	row.add_theme_constant_override("separation", 4)
+	row.add_theme_constant_override("separation", 2)
 	nav_scroll.add_child(row)
 	for item in [{"label":"⌂ HOUSE","id":"house"},{"label":"✦ CURIOS","id":"curios"},{"label":"☾ MAP","id":"map"},{"label":"✧ EVENTS","id":"events"},{"label":"◇ SHOP","id":"shop"},{"label":"⚙ PROFILE","id":"profile"}]:
 		var button := Button.new()
 		button.text = String(item["label"])
-		button.custom_minimum_size = Vector2(96, 46)
+		button.custom_minimum_size = Vector2(80, 46)
 		button.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-		button.add_theme_font_size_override("font_size", 14)
+		button.add_theme_font_size_override("font_size", 12)
 		button.add_theme_color_override("font_color", Color("#F4E5D3"))
 		var button_style := StyleBoxFlat.new()
 		button_style.bg_color = Color("#251529")
