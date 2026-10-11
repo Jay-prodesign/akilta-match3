@@ -7,6 +7,13 @@ signal trace_motion_finished
 const PieceVisuals = preload("res://src/match3/presentation/piece_visuals.gd")
 const PieceAssetLoader = preload("res://src/match3/presentation/piece_asset_loader.gd")
 const KENNEY_FRAME_PATH := "res://assets/candidate/third_party/kenney/fantasy-ui-borders/frame-024.png"
+const SPECIAL_ASSET_PATHS := {
+	"line_h": "res://assets/specials/gbl_special_line_h_idle_v01.svg",
+	"line_v": "res://assets/specials/gbl_special_line_v_idle_v01.svg",
+	"area": "res://assets/specials/gbl_special_area_idle_v01.svg",
+	"smart": "res://assets/specials/gbl_special_smart_idle_v01.svg",
+	"global": "res://assets/specials/gbl_special_global_idle_v01.svg",
+}
 
 const INK := Color("#080C15")
 const VELVET := Color("#101320")
@@ -848,6 +855,14 @@ func _draw_lacquered_leaf_piece(c: Vector2, r: float, color: Color) -> void:
 
 func _draw_special_mark(rect: Rect2, kind: String) -> void:
 	var center := rect.get_center()
+	var asset_path := String(SPECIAL_ASSET_PATHS.get(kind, ""))
+	if asset_path != "":
+		var token := PieceAssetLoader.ornament(asset_path)
+		if token != null:
+			var scale_factor := 0.78 if kind == "global" else 0.68
+			var asset_size := minf(rect.size.x, rect.size.y) * scale_factor
+			draw_texture_rect(token, Rect2(center - Vector2.ONE * asset_size * 0.5, Vector2.ONE * asset_size), false)
+			return
 	var full_r := rect.size.x * 0.39
 	var halo := Color(GOLD)
 	halo.a = 0.20
