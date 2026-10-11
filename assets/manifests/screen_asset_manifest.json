@@ -1212,12 +1212,53 @@
       "current_path": "assets/world/ch01_curio_boutique/chapter_route_curio_boutique.webp",
       "current_runtime_dimensions": "1080x1500_webp",
       "provenance": "AKILTA first-party authored S03 environment reused inside the same Curio Boutique world for Golden Loop S08 verification; no new art identity introduced"
+    },
+    {
+      "asset_id": "splash_bg_curio_boutique",
+      "screen": [
+        "S00"
+      ],
+      "block": "environment",
+      "slot": "background_art",
+      "state": [
+        "loading",
+        "ready",
+        "recoverable_error"
+      ],
+      "type": "background_art",
+      "dimensions": "shared_authored_raster_runtime",
+      "aspect_ratio": "portrait_cover",
+      "transparent": false,
+      "variants": [
+        "cold_start"
+      ],
+      "reuse": "declared_reuse_of_S01_grand_hall_environment",
+      "priority": "P0",
+      "production_status": "runtime_connected_declared_reuse_candidate",
+      "technical_policy": "authored_raster_only_no_svg_fallback",
+      "architecture_owned": true,
+      "contract_owners": [
+        {
+          "screen": "S00",
+          "region": "world",
+          "block": "environment",
+          "slot": "background_art",
+          "states": [
+            "loading",
+            "ready",
+            "recoverable_error"
+          ]
+        }
+      ],
+      "current_path": "assets/world/ch01_curio_boutique/hub_bg_grandhall.webp",
+      "provenance": "AKILTA first-party authored House environment reused for cold-start continuity; replaces legacy north_star_splash.svg world-art fallback"
     }
   ],
   "vertical_slice_art_policy": {
     "status": "ACTIVE",
     "rule": "Golden Loop world surfaces House -> Chapter Route -> Level Pre-start -> Gameplay -> Win/Rewards -> House Restoration -> House -> Curio verification use authored raster environment art where the screen contract owns a background slot; SVG/procedural world illustration is forbidden.",
     "required_runtime_asset_ids": [
+      "splash_bg_curio_boutique",
       "hub_bg_grandhall",
       "prestart_bg_curio_boutique",
       "prestart_ch01_level01_art",
@@ -1234,6 +1275,7 @@
     ],
     "note": "Authored raster reference-slice candidates are wired into Godot with no SVG world-art fallback. Current repo copies are transport previews; they are not final-resolution approval assets.",
     "runtime_connected": [
+      "splash_bg_curio_boutique",
       "hub_bg_grandhall",
       "prestart_bg_curio_boutique",
       "prestart_ch01_level01_art",

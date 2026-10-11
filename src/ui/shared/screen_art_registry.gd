@@ -6,6 +6,7 @@ extends RefCounted
 const ART := {
 	"chapter_route_curio_boutique": "res://assets/world/ch01_curio_boutique/chapter_route_curio_boutique.webp",
 	"reliquary_bg_curio_boutique": "res://assets/world/ch01_curio_boutique/chapter_route_curio_boutique.webp",
+	"splash_bg_curio_boutique": "res://assets/world/ch01_curio_boutique/hub_bg_grandhall.webp",
 	"hub_bg_grandhall": "res://assets/world/ch01_curio_boutique/hub_bg_grandhall.webp",
 	"prestart_bg_curio_boutique": "res://assets/world/ch01_curio_boutique/prestart_bg_curio_boutique.webp",
 	"prestart_ch01_level01_art": "res://assets/world/ch01_curio_boutique/prestart_level01_cabinet.webp",
