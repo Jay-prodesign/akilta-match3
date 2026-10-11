@@ -178,8 +178,8 @@ func show_restoration_ceremony(curio_id: String, stage: int) -> void:
 	panel.name = "CeremonyCard"
 	panel.anchor_left = 0.10
 	panel.anchor_right = 0.90
-	panel.anchor_top = 0.58
-	panel.anchor_bottom = 0.84
+	panel.anchor_top = 0.57
+	panel.anchor_bottom = 0.77
 	var shell := StyleBoxFlat.new()
 	shell.bg_color = Color("#09070D", 0.985)
 	shell.border_color = Color("#D5AD70", 0.88)
