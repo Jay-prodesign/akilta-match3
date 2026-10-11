@@ -518,6 +518,7 @@ func _on_map_back() -> void:
 
 func _on_prestart_back() -> void:
 	if navigation.go(NavigationScript.Route.HOUSE, {"via": "prestart_back"}):
+		_pending_level_number = 0
 		_render_house()
 
 func _on_prestart_start(level_number: int) -> void:
