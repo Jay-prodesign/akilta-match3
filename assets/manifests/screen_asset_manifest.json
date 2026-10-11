@@ -1575,9 +1575,6 @@
     },
     {
       "asset_id": "blocker_wax_seal",
-      "screens": [
-        "S05"
-      ],
       "type": "gameplay_asset",
       "dimensions": "256x256_webp_transparent_state_pair",
       "aspect_ratio": "1:1",
@@ -1593,10 +1590,10 @@
       "architecture_owned": true,
       "contract_owners": [
         {
-          "screen_id": "S05",
-          "region_id": "board",
-          "block_id": "match_board",
-          "slot_id": "blockers",
+          "screen": "S05",
+          "region": "board",
+          "block": "match_board",
+          "slot": "blockers",
           "states": [
             "normal",
             "damaged",
@@ -1614,7 +1611,17 @@
         "assets/blockers/ch01_blocker_wax_seal_cracked_v01.svg"
       ],
       "technical_policy": "webp_raster_first_runtime__wax_seal_semantics__owned_svg_fallback",
-      "provenance": "AKILTA first-party Wax Seal production state pair derived from the Curio House seal language; raster runtime art replaces the temporary skull marker. Render/play validation required before approval."
+      "provenance": "AKILTA first-party Wax Seal production state pair derived from the Curio House seal language; raster runtime art replaces the temporary skull marker. Render/play validation required before approval.",
+      "screen": [
+        "S05"
+      ],
+      "block": "match_board",
+      "slot": "blockers",
+      "state": [
+        "normal",
+        "damaged",
+        "cleared"
+      ]
     }
   ],
   "vertical_slice_art_policy": {
