@@ -1,7 +1,7 @@
 {
   "schema_version": 2,
   "product": "AKILTA Match-3",
-  "authority": "North Star Product Board -> product architecture -> screen/block/slot contracts -> asset production",
+  "authority": "North Star Product Board -> canonical product architecture -> Screen/Region/Block/Slot/State contracts -> implementation -> architecture-owned asset production",
   "north_star_role": "product_architecture_source",
   "production_mode": "screen_state_contract_first",
   "bulk_art_authorized": false,
@@ -10,6 +10,7 @@
     "id": "GOLDEN_LOOP_01",
     "sequence": [
       "S01",
+      "S03",
       "S04",
       "S05",
       "S06",
@@ -18,13 +19,15 @@
     ],
     "acceptance": [
       "route_continuity",
+      "chapter_route_is_part_of_normal_next_action",
       "durable_progress_before_restoration_animation",
       "same_camera_house_before_after",
       "live_component_ui",
       "no_generic_svg_world_fallback",
       "rendered_godot_verification"
     ],
-    "downstream_expansion_blocked_until_accepted": true
+    "downstream_expansion_blocked_until_accepted": true,
+    "status": "implementation_in_progress"
   },
   "route_map": {
     "BOOT": "S00",
@@ -168,7 +171,7 @@
       ],
       "exit": [
         "S02",
-        "S04",
+        "S03",
         "S08",
         "S10",
         "S11",
@@ -500,6 +503,7 @@
       "name": "Chapter Detail / Curio Boutique Route",
       "job": "Choose an available display/level inside the active chapter.",
       "entry": [
+        "S01",
         "S02",
         "S04"
       ],
@@ -513,7 +517,7 @@
         "progress_2_3",
         "progress_3_3"
       ],
-      "priority": "P1",
+      "priority": "P0",
       "regions": [
         {
           "id": "header",
@@ -651,11 +655,9 @@
       "name": "Level Pre-start",
       "job": "Understand level objective, reward, move budget, aids, then start intentionally.",
       "entry": [
-        "S01",
         "S03"
       ],
       "exit": [
-        "S01",
         "S03",
         "S05"
       ],
@@ -2270,5 +2272,10 @@
       ]
     }
   ],
-  "next_work_rule": "highest_priority_incomplete_screen_contract -> required_blocks -> required_slots -> implementation -> rendered_verification -> missing_asset_production"
+  "next_work_rule": "highest_priority_incomplete_screen_contract -> required_blocks -> required_slots -> implementation -> rendered_verification -> missing_asset_production",
+  "architecture_source_of_truth": "content/product/screen_state_architecture.json",
+  "asset_production_gate": {
+    "status": "golden_loop_only",
+    "rule": "No new art may be produced unless a missing Golden Loop Screen -> Region -> Block -> Slot -> State requires it. Downstream/bulk art remains blocked until Golden Loop acceptance."
+  }
 }
