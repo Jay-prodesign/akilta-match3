@@ -301,7 +301,8 @@
       "deprecated_candidate_path": "assets/world/ch01_curio_boutique/ch01_world_house_hub_stage00_v01.svg",
       "technical_policy": "raster_only_no_svg_fallback",
       "current_runtime_dimensions": "450x500_webp_review_runtime",
-      "source_resolution": "240x267 transport preview; replace with production-resolution master after visual approval"
+      "source_resolution": "900x1000",
+      "contract_owner": "S01 -> world -> house_hero -> environment -> stage00"
     },
     {
       "asset_id": "hub_black_cat_character",
@@ -379,7 +380,8 @@
       "deprecated_candidate_path": "assets/world/ch01_curio_boutique/ch01_prestart_moonlit_cabinet_v01.svg",
       "technical_policy": "raster_only_no_svg_fallback",
       "current_runtime_dimensions": "420x747_source_cropped_by_runtime",
-      "source_resolution": "240x180 transport preview; production-resolution master retained outside repo pending binary handoff"
+      "source_resolution": "1024x768",
+      "contract_owner": "S04 -> primary_panel -> ritual_panel -> level_art -> first_attempt"
     },
     {
       "asset_id": "piece_moon",
@@ -525,7 +527,8 @@
       "deprecated_candidate_path": "assets/world/ch01_curio_boutique/ch01_world_gameplay_level01_v01.svg",
       "technical_policy": "raster_only_no_svg_fallback",
       "current_runtime_dimensions": "420x747_webp_review_runtime",
-      "source_resolution": "200x356 transport preview; production-resolution master retained outside repo pending binary handoff"
+      "source_resolution": "576x1024",
+      "contract_owner": "S05 -> world -> gameplay_environment -> background -> chapter01"
     },
     {
       "asset_id": "gameplay_board_frame",
@@ -778,7 +781,8 @@
       "current_path": "assets/world/ch01_curio_boutique/prestart_bg_curio_boutique.webp",
       "technical_policy": "raster_only_no_svg_fallback",
       "current_runtime_dimensions": "420x747_webp_review_runtime",
-      "source_resolution": "200x356 transport preview; production-resolution master retained outside repo pending binary handoff"
+      "source_resolution": "576x1024",
+      "contract_owner": "S04 -> world -> prestart_environment -> background -> default"
     },
     {
       "asset_id": "prestart_ch01_shared_art",
@@ -866,5 +870,15 @@
     ],
     "rule": "No new or polished art outside a missing Golden Loop screen/block/slot/state until Golden Loop acceptance.",
     "existing_non_golden_candidates": "frozen_do_not_polish"
+  },
+  "golden_loop_asset_slots": {
+    "status": "ONLY_CONTRACT_OWNED_P0_SLOTS_ALLOWED",
+    "connected": [
+      "S01 -> world -> house_hero -> environment -> stage00",
+      "S04 -> world -> prestart_environment -> background -> default",
+      "S04 -> primary_panel -> ritual_panel -> level_art -> first_attempt",
+      "S05 -> world -> gameplay_environment -> background -> chapter01"
+    ],
+    "bulk_art_authorized": false
   }
 }
