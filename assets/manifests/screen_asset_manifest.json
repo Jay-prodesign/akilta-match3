@@ -1121,10 +1121,7 @@
       "aspect_ratio": "1:1",
       "transparent": true,
       "variants": [
-        "featured_sealed_preview",
-        "cabinet_preview_moon",
-        "cabinet_preview_moth",
-        "cabinet_preview_locket"
+        "featured_sealed_preview"
       ],
       "reuse": "shop_review_disabled_truthful_existing_curio_art",
       "priority": "P1",
@@ -1146,13 +1143,10 @@
       ],
       "state_paths": {
         "featured_review_disabled": "assets/curios/ch01_curio_moth_reliquary.png",
-        "cabinet_preview_moon": "assets/curios/ch01_curio_moon_cameo_sealed_v01.webp",
-        "cabinet_preview_moth": "assets/curios/ch01_curio_moth_reliquary.png",
-        "cabinet_preview_locket": "assets/curios/ch01_curio_thorned_locket.png",
         "available": "reserved_until_real_catalog_and_commerce_exist"
       },
       "technical_policy": "existing_first_party_content_art_only__review_disabled_never_implies_purchase_availability",
-      "provenance": "AKILTA first-party opening Curio art is reused only as sealed internal-review Shop preview artwork. It does not represent a purchasable SKU, price, bundle entitlement, catalog availability or payment state."
+      "provenance": "AKILTA first-party Moth Reliquary art is reused only in the canonical S11 featured_offer.offer_art slot as a sealed internal-review preview. The unavailable offer grid remains structural UI and carries no unowned content artwork. Nothing here represents a purchasable SKU, price, entitlement, catalog availability or payment state."
     },
     {
       "asset_id": "prestart_bg_curio_boutique",
