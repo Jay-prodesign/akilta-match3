@@ -92,27 +92,28 @@ func _build_navigation_dock() -> void:
 	dock_scroll.name = "BottomNavigationScroll"
 	dock_scroll.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	dock_scroll.custom_minimum_size = Vector2(0, 64)
-	dock_scroll.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_AUTO
+	dock_scroll.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
 	dock_scroll.vertical_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
 	$Layout.add_child(dock_scroll)
 	var dock := HBoxContainer.new()
 	dock.name = "BottomNavigation"
 	dock.add_theme_constant_override("separation", 2)
+	dock.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	dock_scroll.add_child(dock)
 	for entry in [
-		{"title": "HOUSE", "action": "house"},
-		{"title": "CURIOS", "action": "curios"},
-		{"title": "MAP", "action": "map"},
-		{"title": "EVENTS", "action": "events"},
-		{"title": "SHOP", "action": "shop"},
-		{"title": "PROFILE", "action": "profile"}
+		{"title": "⌂ HOUSE", "action": "house"},
+		{"title": "✦ CURIOS", "action": "curios"},
+		{"title": "☾ MAP", "action": "map"},
+		{"title": "✧ EVENTS", "action": "events"},
+		{"title": "◇ SHOP", "action": "shop"},
+		{"title": "♙ PROFILE", "action": "profile"}
 	]:
 		var button := Button.new()
 		button.text = String(entry["title"])
 		button.name = "Dock" + String(entry["action"]).capitalize()
-		button.custom_minimum_size = Vector2(80, 54)
+		button.custom_minimum_size = Vector2(0, 54)
 		button.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-		button.add_theme_font_size_override("font_size", 12)
+		button.add_theme_font_size_override("font_size", 13)
 		button.tooltip_text = String(entry["title"])
 		var action := String(entry["action"])
 		button.pressed.connect(func(): _navigate_dock(action))

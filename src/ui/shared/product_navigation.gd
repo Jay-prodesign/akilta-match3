@@ -62,7 +62,7 @@ static func attach(screen: Control, active_section: String, handler: Callable, c
 		button.tooltip_text = action.capitalize()
 		button.custom_minimum_size = Vector2(80, 46)
 		button.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-		button.add_theme_font_size_override("font_size", 12)
+		button.add_theme_font_size_override("font_size", 13)
 		button.add_theme_color_override("font_color", Color("#F4E5D3"))
 		button.add_theme_color_override("font_hover_color", Color("#FFF1D9"))
 		var normal := StyleBoxFlat.new()

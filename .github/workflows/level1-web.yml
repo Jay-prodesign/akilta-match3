@@ -6,7 +6,7 @@ on:
       - p0/bootstrap
     paths:
       - ".github/workflows/level1-web.yml"
-  # Milestone trigger: unified compact mobile navigation + complete shell/profile evidence (2026-10-11).
+  # Milestone trigger: full-width mobile nav + cleaner prestart + real 3/3 completion state (2026-10-11).
   # Run the full milestone build deliberately, not on every development commit.
   workflow_dispatch:
 

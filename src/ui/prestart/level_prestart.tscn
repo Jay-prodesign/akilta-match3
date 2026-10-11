@@ -56,28 +56,30 @@ offset_left = 42.0
 offset_top = 52.0
 offset_right = -42.0
 offset_bottom = -52.0
-theme_override_constants/separation = 18
+theme_override_constants/separation = 26
 alignment = 1
 
 [node name="Eyebrow" type="Label" parent="Layout"]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.663, 0.6, 0.659, 1)
-theme_override_font_sizes/font_size = 21
-text = "CURIO BOUTIQUE · BEFORE THE DOOR OPENS"
+custom_minimum_size = Vector2(0, 42)
+theme_override_font_sizes/font_size = 18
+text = "CURIO BOUTIQUE · RITUAL PREVIEW"
 horizontal_alignment = 1
+vertical_alignment = 1
 
 [node name="Card" type="PanelContainer" parent="Layout"]
-custom_minimum_size = Vector2(0, 880)
+custom_minimum_size = Vector2(0, 840)
 layout_mode = 2
 theme_override_styles/panel = SubResource("Card")
 
 [node name="Content" type="VBoxContainer" parent="Layout/Card"]
 layout_mode = 2
-theme_override_constants/separation = 22
+theme_override_constants/separation = 18
 alignment = 1
 
 [node name="RitualArt" type="Control" parent="Layout/Card/Content"]
-custom_minimum_size = Vector2(0, 300)
+custom_minimum_size = Vector2(0, 260)
 layout_mode = 2
 mouse_filter = 2
 script = ExtResource("2_cameo")
@@ -94,14 +96,14 @@ horizontal_alignment = 1
 [node name="Title" type="Label" parent="Layout/Card/Content"]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.945, 0.91, 0.866, 1)
-theme_override_font_sizes/font_size = 46
+theme_override_font_sizes/font_size = 42
 text = "Moonlit Cabinet"
 horizontal_alignment = 1
 
 [node name="Objective" type="Label" parent="Layout/Card/Content"]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.851, 0.804, 0.835, 1)
-theme_override_font_sizes/font_size = 24
+theme_override_font_sizes/font_size = 22
 text = "GOAL · GATHER 6 MOON SIGILS"
 horizontal_alignment = 1
 
@@ -122,7 +124,7 @@ horizontal_alignment = 1
 [node name="Note" type="Label" parent="Layout/Card/Content"]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.663, 0.6, 0.659, 1)
-theme_override_font_sizes/font_size = 20
+theme_override_font_sizes/font_size = 18
 text = "Wake the Moon Cameo. The first cabinet will remember this victory every time you return to the House."
 horizontal_alignment = 1
 autowrap_mode = 2

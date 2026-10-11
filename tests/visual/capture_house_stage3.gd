@@ -18,6 +18,9 @@ func _capture() -> void:
 	progress.curios.append("moon_cameo")
 	progress.curios.append("moth_reliquary")
 	progress.curios.append("thorned_locket")
+	progress.completed_levels.append("ch01_level_001")
+	progress.completed_levels.append("ch01_level_002")
+	progress.completed_levels.append("ch01_level_003")
 
 	var screen = packed.instantiate()
 	root.add_child(screen)
@@ -44,6 +47,11 @@ func _capture() -> void:
 	var headline: Label = screen.get_node("Layout/Headline")
 	if headline.text != "Three displays breathe in the moonlight.":
 		printerr("CAPTURE_FAIL: stage 3 House copy does not reflect full opening restoration")
+		quit(1)
+		return
+	var play_button: Button = screen.get_node("Layout/PlayButton")
+	if play_button.text != "REVISIT CURIO MAP":
+		printerr("CAPTURE_FAIL: completed opening chapter must return to the Curio map")
 		quit(1)
 		return
 
