@@ -234,7 +234,7 @@ func _open_curio_detail(curio_id: String) -> void:
 	_detail_overlay = overlay
 
 	var veil := ColorRect.new()
-	veil.color = Color(0.015, 0.01, 0.025, 0.86)
+	veil.color = Color(0.015, 0.01, 0.025, 0.62)
 	veil.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	veil.mouse_filter = Control.MOUSE_FILTER_STOP
 	overlay.add_child(veil)
@@ -243,10 +243,10 @@ func _open_curio_detail(curio_id: String) -> void:
 	card.name = "CurioDetailCard"
 	card.anchor_left = 0.07
 	card.anchor_right = 0.93
-	card.anchor_top = 0.17
-	card.anchor_bottom = 0.52
+	card.anchor_top = 0.10
+	card.anchor_bottom = 0.76
 	var shell := StyleBoxFlat.new()
-	shell.bg_color = Color("#0D0912", 0.995)
+	shell.bg_color = Color("#0D0912", 0.965)
 	shell.border_color = Color("#D5AD70", 0.88 if awakened else 0.38)
 	shell.set_border_width_all(2)
 	shell.set_corner_radius_all(20)
@@ -261,7 +261,7 @@ func _open_curio_detail(curio_id: String) -> void:
 
 	var content := VBoxContainer.new()
 	content.name = "Content"
-	content.add_theme_constant_override("separation", 9)
+	content.add_theme_constant_override("separation", 11)
 	card.add_child(content)
 
 	var kicker := Label.new()
@@ -273,7 +273,7 @@ func _open_curio_detail(curio_id: String) -> void:
 
 	var art := TextureRect.new()
 	art.name = "HeroArt"
-	art.custom_minimum_size = Vector2(0, 150)
+	art.custom_minimum_size = Vector2(0, 270)
 	art.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
 	art.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
 	art.texture = _detail_texture(curio_id, awakened)
