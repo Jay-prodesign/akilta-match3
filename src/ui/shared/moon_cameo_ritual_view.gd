@@ -89,14 +89,7 @@ func _draw_wax_seal(center: Vector2, r: float) -> void:
 func _load_texture(path: String) -> Texture2D:
 	if _textures.has(path):
 		return _textures[path]
-	var file := FileAccess.open(path, FileAccess.READ)
-	if file == null:
-		return null
-	var source := file.get_as_text()
-	file.close()
-	var image := Image.new()
-	if image.load_svg_from_string(source, 1.0) != OK or image.is_empty():
-		return null
-	var texture := ImageTexture.create_from_image(image)
-	_textures[path] = texture
+	var texture := PieceAssetLoader.ornament(path)
+	if texture != null:
+		_textures[path] = texture
 	return texture
