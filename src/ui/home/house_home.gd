@@ -90,7 +90,7 @@ func _build_navigation_dock() -> void:
 	var dock_scroll := ScrollContainer.new()
 	dock_scroll.name = "BottomNavigationScroll"
 	dock_scroll.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	dock_scroll.custom_minimum_size = Vector2(0, 60)
+	dock_scroll.custom_minimum_size = Vector2(0, 64)
 	dock_scroll.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_AUTO
 	dock_scroll.vertical_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
 	$Layout.add_child(dock_scroll)
@@ -109,7 +109,7 @@ func _build_navigation_dock() -> void:
 		var button := Button.new()
 		button.text = String(entry["title"])
 		button.name = "Dock" + String(entry["action"]).capitalize()
-		button.custom_minimum_size = Vector2(94, 54)
+		button.custom_minimum_size = Vector2(92, 56)
 		button.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 		button.add_theme_font_size_override("font_size", 15)
 		button.tooltip_text = String(entry["title"])
@@ -144,8 +144,8 @@ func _navigate_dock(action: String) -> void:
 func _build_resource_bar() -> void:
 	var panel := PanelContainer.new()
 	panel.name = "ResourceBar"
-	panel.anchor_left = 0.05
-	panel.anchor_right = 0.95
+	panel.anchor_left = 0.02
+	panel.anchor_right = 0.98
 	panel.anchor_top = 0.0
 	panel.anchor_bottom = 0.0
 	panel.offset_top = 5.0
@@ -160,7 +160,7 @@ func _build_resource_bar() -> void:
 	add_child(panel)
 	var row := HBoxContainer.new()
 	row.alignment = BoxContainer.ALIGNMENT_CENTER
-	row.add_theme_constant_override("separation", 22)
+	row.add_theme_constant_override("separation", 4)
 	panel.add_child(row)
 	for value in ["☾ CURIO HOUSE", "✦ CHAPTER ONE", "✧ 0 / 3 RITUALS"]:
 		var label := Label.new()
@@ -168,7 +168,7 @@ func _build_resource_bar() -> void:
 		label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 		label.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
 		label.add_theme_color_override("font_color", Color("#F4E5D3"))
-		label.add_theme_font_size_override("font_size", 16)
+		label.add_theme_font_size_override("font_size", 12)
 		label.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 		row.add_child(label)
 		if value.begins_with("✧"):
