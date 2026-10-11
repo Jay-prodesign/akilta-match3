@@ -841,7 +841,7 @@
         "awakened"
       ],
       "type": "content_artwork",
-      "dimensions": "512x512_svg_or_png",
+      "dimensions": "512x512_webp_transparent_state_pair",
       "aspect_ratio": "1:1",
       "transparent": true,
       "variants": [
@@ -849,8 +849,8 @@
       ],
       "reuse": "vertical_slice",
       "priority": "P0",
-      "production_status": "candidate",
-      "current_path": "assets/curios/ch01_curio_moon_cameo_awakened_v01.svg",
+      "production_status": "production_state_pair_candidate_runtime_validation",
+      "current_path": "assets/curios/ch01_curio_moon_cameo_awakened_v01.webp",
       "architecture_owned": true,
       "contract_owners": [
         {
@@ -896,7 +896,18 @@
             "restored"
           ]
         }
-      ]
+      ],
+      "state_paths": {
+        "sealed": "assets/curios/ch01_curio_moon_cameo_sealed_v01.webp",
+        "awakening": "runtime_transition_between_sealed_and_awakened",
+        "awakened": "assets/curios/ch01_curio_moon_cameo_awakened_v01.webp"
+      },
+      "source_silhouette_paths": [
+        "assets/curios/ch01_curio_moon_cameo_sealed_v01.svg",
+        "assets/curios/ch01_curio_moon_cameo_awakened_v01.svg"
+      ],
+      "technical_policy": "webp_raster_first_runtime__shared_semantic_object_across_S04_S06_S07_S08__owned_svg_fallback",
+      "provenance": "AKILTA first-party Moon Cameo production state pair, composed from the approved S05 gothic reliquary material family. The same semantic object is used from sealed prestart/result state through awakened reward, House restoration and Curio collection; rendered Golden Loop validation required before approval."
     },
     {
       "asset_id": "vfx_match_clear",
