@@ -88,5 +88,8 @@ func back() -> String:
 		Route.MAP:
 			return "house" if go(Route.HOUSE, {"via": "back"}) else "none"
 		Route.PRESTART:
+			var origin: int = int(_last_payload.get("origin", Route.HOUSE))
+			if origin == Route.MAP:
+				return "map" if go(Route.MAP, {"via": "back"}) else "none"
 			return "house" if go(Route.HOUSE, {"via": "back"}) else "none"
 	return "none"
