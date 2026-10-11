@@ -21,6 +21,8 @@ on:
       - "src/ui/collection/**"
       - "src/world/**"
       - "src/ui/shared/**"
+      - "src/settings/**"
+      - "src/ui/settings/**"
       - "src/match3/presentation/**"
       - "assets/pieces/**"
       - "assets/manifests/screen_asset_manifest.json"
