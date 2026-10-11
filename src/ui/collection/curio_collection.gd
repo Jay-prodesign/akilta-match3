@@ -33,6 +33,7 @@ func _ready() -> void:
 	_install_moon_art()
 	_install_reward_art(slot2_number, "res://assets/curios/ch01_curio_moth_reliquary.svg")
 	_install_reward_art(slot3_number, "res://assets/curios/ch01_curio_thorned_locket.svg")
+	_install_collection_atmosphere()
 	_refresh()
 
 func set_progress(value) -> void:
@@ -103,3 +104,28 @@ func _install_reward_art(label: Label, path: String) -> void:
 	art.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
 	art.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	label.add_child(art)
+
+func _install_collection_atmosphere() -> void:
+	var backdrop := TextureRect.new()
+	backdrop.name = "ReliquaryMoonlitBackdrop"
+	backdrop.texture = PieceAssetLoader.ornament("res://assets/world/ch01_curio_boutique/curio_boutique_moonlit_backdrop.svg")
+	backdrop.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+	backdrop.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_COVERED
+	backdrop.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	backdrop.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	backdrop.modulate = Color(0.72, 0.64, 0.79, 0.18)
+	add_child(backdrop)
+	move_child(backdrop, 1)
+	var action := StyleBoxFlat.new()
+	action.bg_color = Color("#35213B")
+	action.border_color = Color("#D5AD70")
+	action.set_border_width_all(2)
+	action.set_corner_radius_all(12)
+	var hover := action.duplicate() as StyleBoxFlat
+	hover.bg_color = Color("#56305A")
+	back_button.add_theme_stylebox_override("normal", action)
+	back_button.add_theme_stylebox_override("hover", hover)
+	back_button.add_theme_stylebox_override("pressed", hover)
+	back_button.add_theme_color_override("font_color", Color("#F4E5D3"))
+	back_button.add_theme_color_override("font_hover_color", Color("#F4E5D3"))
+	back_button.custom_minimum_size.y = maxf(back_button.custom_minimum_size.y, 56.0)
