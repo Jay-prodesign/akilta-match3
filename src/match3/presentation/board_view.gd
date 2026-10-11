@@ -854,43 +854,39 @@ func _draw_lacquered_leaf_piece(c: Vector2, r: float, color: Color) -> void:
 	draw_circle(dew - Vector2(r * 0.015, r * 0.015), r * 0.025, Color(BONE, 0.88))
 
 func _draw_special_mark(rect: Rect2, kind: String) -> void:
-	var center := rect.get_center()
-	var asset_path := String(SPECIAL_ASSET_PATHS.get(kind, ""))
-	if asset_path != "":
-		var token := PieceAssetLoader.ornament(asset_path)
+	var paths := {
+		"line_h": "res://assets/specials/gbl_special_line_h_idle_v01.svg",
+		"line_v": "res://assets/specials/gbl_special_line_v_idle_v01.svg",
+		"area": "res://assets/specials/gbl_special_area_idle_v01.svg",
+		"smart": "res://assets/specials/gbl_special_smart_idle_v01.svg",
+		"global": "res://assets/specials/gbl_special_global_idle_v01.svg",
+	}
+	var path := String(paths.get(kind, ""))
+	if path != "":
+		var token := PieceAssetLoader.ornament(path)
 		if token != null:
-			var scale_factor := 0.78 if kind == "global" else 0.68
-			var asset_size := minf(rect.size.x, rect.size.y) * scale_factor
-			draw_texture_rect(token, Rect2(center - Vector2.ONE * asset_size * 0.5, Vector2.ONE * asset_size), false)
+			# Special state is a deliberate gameplay token, not a tiny sticker. It
+			# overlays the base family while preserving enough silhouette context to
+			# keep the originating piece readable during creation/trigger teaching.
+			var extent := minf(rect.size.x, rect.size.y) * 0.72
+			var center := rect.get_center()
+			draw_texture_rect(token, Rect2(center - Vector2.ONE * extent * 0.5, Vector2.ONE * extent), false)
 			return
-	var full_r := rect.size.x * 0.39
-	var halo := Color(GOLD)
-	halo.a = 0.20
-	if kind == "global":
-		draw_circle(center, full_r * 1.04, halo, false, max(2.0, rect.size.x * 0.035))
-		draw_arc(center, full_r * 0.88, 0.0, TAU, 40, GOLD, max(2.0, rect.size.x * 0.025))
-		for angle in [0.0, PI * 0.5, PI, PI * 1.5]:
-			var direction := Vector2(cos(angle), sin(angle))
-			draw_line(center + direction * full_r * 0.88, center + direction * full_r * 1.16, GOLD, max(2.0, rect.size.x * 0.025))
-		return
-	if kind == "line_h":
-		draw_line(center + Vector2(-full_r, 0), center + Vector2(full_r, 0), GOLD, max(3.0, rect.size.x * 0.055))
-		draw_line(center + Vector2(-full_r, -rect.size.y * 0.08), center + Vector2(full_r, -rect.size.y * 0.08), Color(1,1,1,0.35), 1.5)
-		return
-	if kind == "line_v":
-		draw_line(center + Vector2(0, -full_r), center + Vector2(0, full_r), GOLD, max(3.0, rect.size.x * 0.055))
-		draw_line(center + Vector2(rect.size.x * 0.08, -full_r), center + Vector2(rect.size.x * 0.08, full_r), Color(1,1,1,0.35), 1.5)
-		return
-	if kind == "area":
-		draw_arc(center, full_r * 0.74, 0.0, TAU, 32, GOLD, max(2.0, rect.size.x * 0.035))
-		for angle in [PI * 0.25, PI * 0.75, PI * 1.25, PI * 1.75]:
-			var direction := Vector2(cos(angle), sin(angle))
-			draw_line(center + direction * full_r * 0.40, center + direction * full_r * 0.96, GOLD, 2.0)
-		return
-	if kind == "smart":
-		draw_arc(center, full_r * 0.70, PI * 0.10, PI * 0.90, 24, GOLD, 2.5)
-		draw_arc(center, full_r * 0.70, PI * 1.10, PI * 1.90, 24, GOLD, 2.5)
-		draw_circle(center, full_r * 0.15, GOLD)
+	# Exact-state procedural fallback only. Never substitute a different special.
+	var center := rect.get_center()
+	var full_r := rect.size.x * 0.34
+	var fallback := Color(GOLD, 0.82)
+	match kind:
+		"line_h":
+			draw_line(center + Vector2(-full_r, 0), center + Vector2(full_r, 0), fallback, 3.0)
+		"line_v":
+			draw_line(center + Vector2(0, -full_r), center + Vector2(0, full_r), fallback, 3.0)
+		"area":
+			draw_arc(center, full_r * 0.72, 0.0, TAU, 24, fallback, 2.5)
+		"smart":
+			draw_circle(center, full_r * 0.20, fallback)
+		"global":
+			draw_arc(center, full_r * 0.82, 0.0, TAU, 28, fallback, 2.5)
 
 func _draw_wax_seal(rect: Rect2, hp: int) -> void:
 	var center := rect.position + Vector2(rect.size.x * 0.23, rect.size.y * 0.76)
