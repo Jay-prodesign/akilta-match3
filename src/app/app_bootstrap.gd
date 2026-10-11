@@ -184,6 +184,14 @@ func show_feature_preview(feature: String) -> bool:
 	layout.add_theme_constant_override("separation", 16)
 	layout.alignment = BoxContainer.ALIGNMENT_BEGIN
 	overlay.add_child(layout)
+	var feature_key := feature.to_lower()
+	var is_events := feature_key == "events"
+	var is_profile := feature_key == "profile"
+	var completed_count := mini(int(progress.completed_levels.size()) if progress != null else 0, INTERNAL_REVIEW_LEVEL_COUNT)
+	var collected_count := mini(int(progress.curios.size()) if progress != null else 0, INTERNAL_REVIEW_LEVEL_COUNT)
+	var restored_stage := int(progress.house_stage) if progress != null else 0
+	var opening_complete := completed_count >= INTERNAL_REVIEW_LEVEL_COUNT and collected_count >= INTERNAL_REVIEW_LEVEL_COUNT and restored_stage >= INTERNAL_REVIEW_LEVEL_COUNT
+
 	var world_art := TextureRect.new()
 	world_art.name = "WorldBackdrop"
 	world_art.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
@@ -191,7 +199,7 @@ func show_feature_preview(feature: String) -> bool:
 	world_art.texture = PieceAssetLoader.ornament("res://assets/world/ch01_curio_boutique/curio_boutique_moonlit_backdrop.svg")
 	world_art.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
 	world_art.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_COVERED
-	world_art.modulate = Color(0.88, 0.80, 0.88, 0.30)
+	world_art.modulate = Color(0.82, 0.76, 0.98, 0.34) if is_events else (Color(0.94, 0.78, 0.66, 0.30) if not is_profile else Color(0.72, 0.82, 0.98, 0.32))
 	overlay.add_child(world_art)
 	overlay.move_child(world_art, 1)
 	var eyebrow := Label.new()
@@ -202,18 +210,69 @@ func show_feature_preview(feature: String) -> bool:
 	layout.add_child(eyebrow)
 	var title := Label.new()
 	title.name = "FeatureTitle"
-	title.text = "THE KEEPER" if feature.to_lower() == "profile" else ("WEEKLY RITUALS" if feature.to_lower() == "events" else "THE CURIO EMPORIUM")
+	title.text = "THE KEEPER" if is_profile else ("WEEKLY RITUALS" if is_events else "THE CURIO EMPORIUM")
 	title.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	title.add_theme_color_override("font_color", Color("#F4E5D3"))
 	title.add_theme_font_size_override("font_size", 30)
 	layout.add_child(title)
 	var detail := Label.new()
-	detail.text = "Your journey through the House of Curios." if feature.to_lower() == "profile" else ("A new moonlit challenge arrives each week." if feature.to_lower() == "events" else "Spend no real money in this preview build.")
+	detail.text = "Your restored curios, House progress and preferences." if is_profile else ("Seasonal rituals will gather here when the upper cabinets awaken." if is_events else "A sealed preview of the House economy. Nothing here can charge you.")
 	detail.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	detail.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	detail.add_theme_color_override("font_color", Color("#D8C6C3"))
 	detail.add_theme_font_size_override("font_size", 17)
 	layout.add_child(detail)
+
+	var hero := PanelContainer.new()
+	hero.name = "FeatureHero"
+	hero.custom_minimum_size = Vector2(0, 124)
+	var hero_style := StyleBoxFlat.new()
+	hero_style.bg_color = Color("#171321", 0.96)
+	hero_style.border_color = Color("#9B6FA6", 0.82) if is_events else (Color("#D5AD70", 0.86) if not is_profile else Color("#8796C7", 0.82))
+	hero_style.set_border_width_all(1)
+	hero_style.set_corner_radius_all(14)
+	hero_style.content_margin_left = 14
+	hero_style.content_margin_right = 14
+	hero_style.content_margin_top = 10
+	hero_style.content_margin_bottom = 10
+	hero.add_theme_stylebox_override("panel", hero_style)
+	layout.add_child(hero)
+	var hero_row := HBoxContainer.new()
+	hero_row.add_theme_constant_override("separation", 14)
+	hero.add_child(hero_row)
+	var hero_art := TextureRect.new()
+	hero_art.name = "FeatureHeroArtwork"
+	hero_art.custom_minimum_size = Vector2(88, 88)
+	hero_art.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+	hero_art.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+	hero_art.texture = PieceAssetLoader.ornament("res://assets/pieces/moon_sigil.svg" if is_events else ("res://assets/curios/ch01_curio_moth_reliquary.svg" if not is_profile else "res://assets/curios/ch01_curio_moon_cameo_awakened_v01.svg"))
+	hero_row.add_child(hero_art)
+	var hero_copy := VBoxContainer.new()
+	hero_copy.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	hero_copy.alignment = BoxContainer.ALIGNMENT_CENTER
+	hero_copy.add_theme_constant_override("separation", 4)
+	hero_row.add_child(hero_copy)
+	var hero_kicker := Label.new()
+	hero_kicker.name = "FeatureHeroKicker"
+	hero_kicker.text = ("OPENING RITUAL COMPLETE" if opening_complete else "OPENING RITUAL IN PROGRESS") if is_events else ("EMPORIUM PREVIEW · SEALED" if not is_profile else ("FIRST CABINET SET RESTORED" if opening_complete else "KEEPER RECORD"))
+	hero_kicker.add_theme_color_override("font_color", Color("#D5AD70"))
+	hero_kicker.add_theme_font_size_override("font_size", 13)
+	hero_copy.add_child(hero_kicker)
+	var hero_title := Label.new()
+	hero_title.name = "FeatureHeroTitle"
+	hero_title.text = ("%d / %d DISPLAYS AWAKENED" % [completed_count, INTERNAL_REVIEW_LEVEL_COUNT]) if is_events else ("NO PURCHASES ENABLED" if not is_profile else ("%d CURIOS · RESTORATION STAGE %d" % [collected_count, restored_stage]))
+	hero_title.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	hero_title.add_theme_color_override("font_color", Color("#FFF0D8"))
+	hero_title.add_theme_font_size_override("font_size", 21)
+	hero_copy.add_child(hero_title)
+	var hero_body := Label.new()
+	hero_body.name = "FeatureHeroBody"
+	hero_body.text = ("The House remembers every completed display; future weekly events remain sealed." if is_events else ("Future offers will live in this cabinet only after economy and purchase systems are production-ready." if not is_profile else "Your opening journey is stored locally and reflected across the House, map and Reliquary."))
+	hero_body.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	hero_body.add_theme_color_override("font_color", Color("#CFC0CF"))
+	hero_body.add_theme_font_size_override("font_size", 14)
+	hero_copy.add_child(hero_body)
+
 	var card_scroll := ScrollContainer.new()
 	card_scroll.name = "FeatureCardScroll"
 	card_scroll.size_flags_vertical = Control.SIZE_EXPAND_FILL
@@ -225,12 +284,6 @@ func show_feature_preview(feature: String) -> bool:
 	cards.add_theme_constant_override("separation", 10)
 	card_scroll.add_child(cards)
 	var entries: Array[Dictionary]
-	var is_events := feature.to_lower() == "events"
-	var is_profile := feature.to_lower() == "profile"
-	var completed_count := mini(int(progress.completed_levels.size()) if progress != null else 0, INTERNAL_REVIEW_LEVEL_COUNT)
-	var collected_count := mini(int(progress.curios.size()) if progress != null else 0, INTERNAL_REVIEW_LEVEL_COUNT)
-	var restored_stage := int(progress.house_stage) if progress != null else 0
-	var opening_complete := completed_count >= INTERNAL_REVIEW_LEVEL_COUNT and collected_count >= INTERNAL_REVIEW_LEVEL_COUNT and restored_stage >= INTERNAL_REVIEW_LEVEL_COUNT
 	if is_events:
 		var progress_label := Label.new()
 		progress_label.name = "ChapterRitualProgress"
@@ -279,16 +332,19 @@ func show_feature_preview(feature: String) -> bool:
 		]
 	else:
 		entries = [
-			{"icon":"◉", "art":"res://assets/pieces/pentagram.svg", "title":"COIN SATCHEL", "body":"Soft currency for future House restoration.", "status":"NOT FOR SALE · ECONOMY PREVIEW"},
-			{"icon":"◇", "art":"res://assets/pieces/potion.svg", "title":"MOONSTONE GEMS", "body":"Premium currency concept; no payment flow.", "status":"NOT FOR SALE · NO REAL-MONEY PURCHASES"},
-			{"icon":"✦", "art":"res://assets/curios/ch01_curio_moth_reliquary.svg", "title":"STARTER RELIQUARY", "body":"A future bundle of curios and boosters.", "status":"LOCKED · STORE NOT CONNECTED"}
+			{"icon":"◉", "art":"res://assets/pieces/pentagram.svg", "title":"CANDLELIGHT KIT", "body":"A future soft-currency cabinet for restoration supplies.", "status":"SEALED · ECONOMY PREVIEW ONLY"},
+			{"icon":"◇", "art":"res://assets/pieces/potion.svg", "title":"MOONSTONE CACHE", "body":"A future premium-currency cabinet. No price or payment flow is active.", "status":"SEALED · NO REAL-MONEY PURCHASES"},
+			{"icon":"✦", "art":"res://assets/curios/ch01_curio_moth_reliquary.svg", "title":"RESTORER'S RELIQUARY", "body":"A future curated bundle surface for boosters and curios.", "status":"SEALED · STORE NOT CONNECTED"}
 		]
+	var card_index := 0
 	for entry in entries:
 		var card := PanelContainer.new()
-		card.custom_minimum_size = Vector2(0, 158)
+		card_index += 1
+		card.name = "FeatureCard%d" % card_index
+		card.custom_minimum_size = Vector2(0, 150)
 		var panel_style := StyleBoxFlat.new()
 		panel_style.bg_color = Color("#171321")
-		panel_style.border_color = Color("#D5AD70", 0.58)
+		panel_style.border_color = Color("#9B6FA6", 0.58) if is_events else (Color("#D5AD70", 0.62) if not is_profile else Color("#8796C7", 0.58))
 		panel_style.set_border_width_all(1)
 		panel_style.set_corner_radius_all(10)
 		panel_style.content_margin_left = 14
