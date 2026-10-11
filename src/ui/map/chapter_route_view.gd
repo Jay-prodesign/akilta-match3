@@ -150,7 +150,11 @@ func _apply_node_style(button: Button, completed: bool, open: bool) -> void:
 		box.bg_color = Color("#302538")
 		box.border_color = Color("#9A83A0")
 	button.add_theme_stylebox_override("normal", box)
-	button.add_theme_stylebox_override("hover", box)
+	var hover_style := box.duplicate() as StyleBoxFlat
+	hover_style.border_color = Color("#F4D995") if open else box.border_color
+	hover_style.shadow_size = 16 if open else 6
+	button.add_theme_stylebox_override("hover", hover_style)
+	button.add_theme_stylebox_override("focus", hover_style)
 	button.add_theme_stylebox_override("pressed", box)
 	button.add_theme_stylebox_override("disabled", box)
 	button.add_theme_color_override("font_color", BONE if open else Color("#D2C4D7"))
