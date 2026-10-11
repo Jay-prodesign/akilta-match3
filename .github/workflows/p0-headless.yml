@@ -25,6 +25,7 @@ on:
       - "tests/unit/test_save_progress.gd"
       - "tests/unit/test_first_party_shell.gd"
       - "tests/integration/test_first_player_journey.gd"
+      - "tests/integration/test_level1_gameplay.gd"
       - "tests/integration/test_opening_two_level_journey.gd"
   # Milestone trigger: canonical Golden Loop architecture + playable journey verification (2026-10-11).
   # Run the full milestone checks deliberately, not on every development commit.
