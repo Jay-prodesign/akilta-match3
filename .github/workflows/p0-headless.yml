@@ -4,10 +4,7 @@ on:
   push:
     branches:
       - p0/bootstrap
-      - p1/events-weekly-missions
-      - p1/profile-settings
-      - p1/returning-player-resume-v2
-      - p1/shop-preview
+      - "p1/**"
     paths:
       - ".github/workflows/p0-headless.yml"
       - "src/app/**"
@@ -22,6 +19,7 @@ on:
       - "src/world/**"
       - "src/match3/presentation/**"
       - "assets/pieces/**"
+      - "assets/curios/**"
       - "src/ui/shared/**"
       - "src/settings/**"
       - "src/ui/settings/**"

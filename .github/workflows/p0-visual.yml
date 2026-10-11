@@ -4,10 +4,7 @@ on:
   push:
     branches:
       - p0/bootstrap
-      - p1/events-weekly-missions
-      - p1/profile-settings
-      - p1/returning-player-resume-v2
-      - p1/shop-preview
+      - "p1/**"
     paths:
       - ".github/workflows/p0-visual.yml"
       - "tests/visual/capture_level1_journey.gd"
@@ -28,6 +25,7 @@ on:
       - "src/ui/settings/**"
       - "src/match3/presentation/**"
       - "assets/pieces/**"
+      - "assets/curios/**"
       - "assets/manifests/screen_asset_manifest.json"
       - "assets/world/ch01_curio_boutique/**"
   # Expensive rendered verification is milestone-based. Functional CI runs
@@ -113,6 +111,8 @@ jobs:
           test -s artifacts/progression-level2-gameplay.png
           test -s artifacts/progression-level3-gameplay.png
           test -s artifacts/progression-final-reliquary.png
+          test -s artifacts/progression-final-reliquary-moth-detail.png
+          test -s artifacts/progression-final-reliquary-thorned-detail.png
           test -s artifacts/progression-final-events.png
           test -s artifacts/progression-final-weekly-missions.png
           test -s artifacts/progression-final-shop.png
@@ -184,6 +184,8 @@ jobs:
             artifacts/progression-level2-result.png
             artifacts/progression-level3-result.png
             artifacts/progression-final-reliquary.png
+            artifacts/progression-final-reliquary-moth-detail.png
+            artifacts/progression-final-reliquary-thorned-detail.png
             artifacts/progression-final-events.png
             artifacts/progression-final-weekly-missions.png
             artifacts/progression-final-shop.png
