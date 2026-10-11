@@ -89,7 +89,7 @@ func show_map() -> bool:
 	return true
 
 func show_prestart(level_number: int) -> bool:
-	if level_number < 1 or level_number > INTERNAL_REVIEW_LEVEL_COUNT or level_number > int(progress.highest_level_unlocked) or navigation.current() != NavigationScript.Route.MAP:
+	if level_number < 1 or level_number > INTERNAL_REVIEW_LEVEL_COUNT or level_number > int(progress.highest_level_unlocked) or (navigation.current() != NavigationScript.Route.MAP and navigation.current() != NavigationScript.Route.HOUSE):
 		return false
 	# Reject missing or malformed content while preserving the current map.
 	var level_file := FileAccess.open(_level_path(level_number), FileAccess.READ)
@@ -104,8 +104,7 @@ func show_prestart(level_number: int) -> bool:
 	var screen: Node = PrestartScene.instantiate()
 	_show_screen(screen)
 	if not screen.configure_level(level_number):
-		# PRESTART cannot jump directly to HOUSE. Recover through MAP so a
-		# malformed late-stage prestart cannot strand the player on a dead route.
+		# Recover to House if prestart configuration fails.
 		_ensure_house_route()
 		return false
 	_pending_level_number = level_number
@@ -516,14 +515,8 @@ func _on_map_back() -> void:
 		show_chapters()
 
 func _on_prestart_back() -> void:
-	if navigation.go(NavigationScript.Route.MAP, {"via": "prestart_back"}):
-		var screen: Node = MapScene.instantiate()
-		screen.set("canonical_level_cap", INTERNAL_REVIEW_LEVEL_COUNT)
-		_show_screen(screen)
-		screen.set_progress(progress)
-		_install_product_navigation(screen, "map")
-		screen.back_requested.connect(_on_map_back)
-		screen.level_requested.connect(show_prestart)
+	if navigation.go(NavigationScript.Route.HOUSE, {"via": "prestart_back"}):
+		_render_house()
 
 func _on_prestart_start(level_number: int) -> void:
 	if level_number == _pending_level_number:
@@ -677,8 +670,7 @@ func _on_splash_continue() -> void:
 func _on_house_play_requested(level_number: int) -> void:
 	if navigation.current() != NavigationScript.Route.HOUSE:
 		return
-	if show_map():
-		show_prestart(level_number)
+	show_prestart(level_number)
 
 func show_chapters() -> bool:
 	if navigation == null or navigation.current() != NavigationScript.Route.HOUSE:
