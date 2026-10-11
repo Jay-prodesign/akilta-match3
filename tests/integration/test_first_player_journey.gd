@@ -153,7 +153,7 @@ func _run() -> void:
 				var trace2 = level2.attempt_swap(Vector2i(int(move[0]), int(move[1])), Vector2i(int(move[2]), int(move[3])))
 				_expect(trace2 != null and trace2.accepted, "Level 2 teaching move must be accepted")
 				var board2 = level2.get_node_or_null("Layout/BoardView")
-				if board2 != null and board2.has_method("is_motion_active") and board2.is_motion_active():
+				if board2 != null and board2.has_method("is_motion_active") and bool(board2.is_motion_active()) and board2.has_signal("trace_motion_finished"):
 					await board2.trace_motion_finished
 				await process_frame
 				if level2.result_overlay.visible:
@@ -190,8 +190,11 @@ func _run() -> void:
 	await process_frame
 	var restored = relaunched.get("progress")
 	_expect(str(relaunched.current_route_name()) == "house", "relaunch must return to House")
-	_expect(int(restored.house_stage) == 1, "relaunch must preserve House stage")
+	_expect(int(restored.house_stage) >= 1, "relaunch must preserve House awakening stage")
+	_expect(int(restored.highest_level_unlocked) >= 2, "relaunch must preserve unlocked review level")
 	_expect(restored.curios.count("moon_cameo") == 1, "relaunch must preserve Moon Cameo")
+	if int(restored.highest_level_unlocked) >= 3:
+		_expect(restored.curios.count("moth_reliquary") == 1, "relaunch must preserve earned Moth Reliquary exactly once")
 	relaunched.queue_free()
 	await process_frame
 	_cleanup()
@@ -211,7 +214,7 @@ func _fail(message: String) -> void:
 
 func _finish() -> void:
 	if failures.is_empty():
-		print("TEST_PASS: complete Level 1 shell journey")
+		print("TEST_PASS: complete three-level review shell journey")
 		quit(0)
 		return
 	for failure in failures:
