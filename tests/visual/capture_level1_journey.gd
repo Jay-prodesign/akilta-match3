@@ -52,9 +52,16 @@ func _capture() -> void:
 	if String(app.current_route_name()) != "map":
 		return _fail(app, "Curio Boutique -> Chapter Map failed")
 	var map_screen = app.current_screen()
+	var route_panel: Control = map_screen.get_node_or_null("Layout/RoutePanel") as Control if map_screen != null else null
 	var route_view: Control = map_screen.get_node_or_null("Layout/RoutePanel/Scroll/RouteView") as Control if map_screen != null else null
-	if route_view == null or route_view.custom_minimum_size.x > 500.0:
-		return _fail(app, "chapter route must fit the 540px mobile review width without a desktop-width canvas")
+	if route_panel == null or route_view == null:
+		return _fail(app, "chapter route composition missing")
+	if route_view.custom_minimum_size.x < 860.0 or route_view.custom_minimum_size.x > 960.0:
+		return _fail(app, "chapter route must use the portrait width without overflowing the 1080 logical viewport")
+	if route_view.custom_minimum_size.y < 1000.0 or route_view.custom_minimum_size.y > 1120.0:
+		return _fail(app, "chapter route must carry the opening journey as the map's primary composition")
+	if route_panel.size.y < app.get_viewport().get_visible_rect().size.y * 0.45:
+		return _fail(app, "chapter route panel must occupy meaningful vertical space on mobile")
 	for level_number in [1, 2, 3]:
 		var level_label: Label = route_view.get_node_or_null("Label%d" % level_number) as Label
 		if level_label == null or level_label.text.strip_edges() == "":
