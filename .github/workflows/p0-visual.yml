@@ -8,6 +8,7 @@ on:
     paths:
       - ".github/workflows/p0-visual.yml"
       - "tests/visual/capture_level1_journey.gd"
+      - "tests/visual/capture_splash_states.gd"
       - "tests/visual/capture_level1_failure.gd"
       - "tests/visual/capture_three_level_progression.gd"
       - "tests/visual/capture_chapter_select_states.gd"
@@ -54,6 +55,23 @@ jobs:
           unzip -q godot.zip
           mv Godot_v4.7.2-stable_linux.x86_64 godot
           chmod +x godot
+
+      - name: Render S00 boot states
+        shell: bash
+        run: |
+          set -uo pipefail
+          set +e
+          output=$(LIBGL_ALWAYS_SOFTWARE=1 xvfb-run -a ./godot --audio-driver Dummy --path . -s res://tests/visual/capture_splash_states.gd 2>&1)
+          status=$?
+          set -e
+          printf '%s\n' "$output"
+          if [ "$status" -ne 0 ]; then exit "$status"; fi
+          if grep -Eq "SCRIPT ERROR:|(^| )ERROR:|CAPTURE_FAIL:" <<<"$output"; then exit 1; fi
+          grep -Fq "CAPTURE_PASS: S00 boot state progression" <<<"$output"
+          test -s artifacts/splash-00-loading.png
+          test -s artifacts/splash-01-ready.png
+          test -s artifacts/splash-02-recovered.png
+          test -s artifacts/splash-03-update-required.png
 
       - name: Render canonical Golden Playable Loop
         shell: bash
@@ -193,6 +211,10 @@ jobs:
         with:
           name: golden-playable-loop-evidence
           path: |
+            artifacts/splash-00-loading.png
+            artifacts/splash-01-ready.png
+            artifacts/splash-02-recovered.png
+            artifacts/splash-03-update-required.png
             artifacts/golden-00-splash.png
             artifacts/golden-01-house-dormant.png
             artifacts/golden-02-chapter-route.png
