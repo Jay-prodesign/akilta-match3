@@ -88,13 +88,16 @@ static func ornament(path: String) -> Texture2D:
 	if _ornaments.has(path):
 		return _ornaments[path]
 	# Production art is raster-first, but a malformed candidate must never make
-	# the canonical semantic object disappear. Prefer matching WebP; if decoding
-	# fails, fall back to the owned SVG source for that exact object.
+	# the canonical semantic object disappear. Prefer authored WebP, then PNG,
+	# and only then the owned SVG source for that exact object.
 	var candidates: Array[String] = []
 	if path.get_extension().to_lower() == "svg":
 		var webp_preferred := path.get_basename() + ".webp"
+		var png_preferred := path.get_basename() + ".png"
 		if FileAccess.file_exists(webp_preferred):
 			candidates.append(webp_preferred)
+		if FileAccess.file_exists(png_preferred):
+			candidates.append(png_preferred)
 	candidates.append(path)
 	for chosen in candidates:
 		if not FileAccess.file_exists(chosen):
