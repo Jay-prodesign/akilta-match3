@@ -574,6 +574,8 @@ func show_chapters() -> bool:
 		return false
 	var screen: Node = ChapterSelectScene.instantiate()
 	_show_screen(screen)
+	if screen.has_method("set_progress"):
+		screen.set_progress(progress)
 	_install_product_navigation(screen, "map")
 	screen.chapter_requested.connect(_on_chapter_selected)
 	screen.back_requested.connect(show_house)
