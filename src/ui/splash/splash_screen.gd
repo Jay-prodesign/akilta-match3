@@ -22,7 +22,7 @@ func _ready() -> void:
 func boot_state() -> String:
 	return _boot_state
 
-func set_boot_state(state: String, message: String = "") -> void:
+func set_boot_state(state: String, message: String = "", can_continue: bool = true) -> void:
 	if state not in ["loading", "ready", "recoverable_error"]:
 		return
 	_boot_state = state
@@ -42,12 +42,12 @@ func set_boot_state(state: String, message: String = "") -> void:
 			enter_button.disabled = false
 		"recoverable_error":
 			progress_label.visible = true
-			progress_label.text = "THE HOUSE RECOVERED SAFELY"
+			progress_label.text = "THE HOUSE NEEDS ATTENTION" if not can_continue else "THE HOUSE RECOVERED SAFELY"
 			recovery_message.visible = true
 			recovery_message.text = message if message != "" else "A local save issue was recovered. Review the restored state before continuing."
-			enter_button.text = "CONTINUE TO THE HOUSE"
+			enter_button.text = "UPDATE REQUIRED" if not can_continue else "CONTINUE TO THE HOUSE"
 			enter_button.visible = true
-			enter_button.disabled = false
+			enter_button.disabled = not can_continue
 
 func _install_splash_art() -> void:
 	var texture := ScreenArt.texture("splash_bg_curio_boutique")
