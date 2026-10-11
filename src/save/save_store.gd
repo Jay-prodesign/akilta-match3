@@ -11,6 +11,7 @@ const SCHEMA_VERSION := 1
 
 var save_path: String
 var write_blocked_reason: String = ""
+var last_load_status: String = "not_loaded"
 
 func _init(path: String = DEFAULT_PATH) -> void:
 	save_path = path
@@ -71,20 +72,35 @@ func save(data: Dictionary) -> bool:
 
 func load_or_default() -> Dictionary:
 	write_blocked_reason = ""
+	last_load_status = "not_loaded"
+	var primary_exists := FileAccess.file_exists(save_path)
 	var primary = _read_json(save_path)
 	if primary is Dictionary:
 		if _is_future_schema(primary):
 			write_blocked_reason = "future_schema"
+			last_load_status = "future_schema"
 		elif _validate_candidate(primary):
+			last_load_status = "primary"
 			return primary
+	elif primary_exists:
+		last_load_status = "primary_invalid"
 
-	var backup = _read_json(save_path + ".bak")
+	var backup_path := save_path + ".bak"
+	var backup = _read_json(backup_path)
 	if backup is Dictionary and _validate_candidate(backup):
+		last_load_status = "backup_recovered"
 		return backup
+	if primary_exists and last_load_status == "primary_invalid":
+		last_load_status = "default_after_invalid_primary"
+	elif not primary_exists:
+		last_load_status = "default_new"
 	return {}
 
 func is_write_blocked() -> bool:
 	return write_blocked_reason != ""
+
+func load_status() -> String:
+	return last_load_status
 
 func _validate_candidate(data: Dictionary) -> bool:
 	var version = _exact_int(data.get("schema_version", null))
