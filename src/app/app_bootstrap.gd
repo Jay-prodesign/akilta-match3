@@ -413,7 +413,7 @@ func show_feature_preview(feature: String) -> bool:
 	layout.add_child(eyebrow)
 	var title := Label.new()
 	title.name = "FeatureTitle"
-	title.text = "THE KEEPER" if is_profile else ("WEEKLY RITUALS" if is_events else "THE CURIO EMPORIUM")
+	title.text = "THE KEEPER" if is_profile else ("EVENT CENTER" if is_events else "THE CURIO EMPORIUM")
 	title.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	title.add_theme_color_override("font_color", Color("#FFF0D8"))
 	title.add_theme_color_override("font_outline_color", Color("#080710", 0.94))
@@ -421,7 +421,7 @@ func show_feature_preview(feature: String) -> bool:
 	title.add_theme_font_size_override("font_size", 38)
 	layout.add_child(title)
 	var detail := Label.new()
-	detail.text = "Your restored curios, House progress and preferences." if is_profile else ("Seasonal rituals will gather here when the upper cabinets awaken." if is_events else "A sealed preview of the House economy. Nothing here can charge you.")
+	detail.text = "Your restored curios, House progress and preferences." if is_profile else ("Seasonal events gather here; Weekly Rituals has its own truthful mission state." if is_events else "A sealed preview of the House economy. Nothing here can charge you.")
 	detail.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	detail.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	detail.add_theme_color_override("font_color", Color("#D8C6C3"))
