@@ -400,7 +400,8 @@ func _render_house() -> void:
 	screen.collection_requested.connect(show_collection)
 	screen.map_requested.connect(show_chapters)
 	screen.play_requested.connect(_on_house_play_requested)
-	screen.settings_requested.connect(func(): show_feature_preview("Profile"))
+	screen.settings_requested.connect(show_settings)
+	screen.profile_requested.connect(func(): show_feature_preview("Profile"))
 	if screen.has_signal("events_requested"):
 		screen.events_requested.connect(func(): show_feature_preview("Events"))
 	if screen.has_signal("shop_requested"):
@@ -470,7 +471,7 @@ func _on_gameplay_navigation_requested(section: String) -> void:
 		"shop":
 			show_feature_preview("Shop")
 		"profile":
-			show_settings()
+			show_feature_preview("Profile")
 
 func _install_north_star_backdrop(screen: Node) -> void:
 	if screen == null or not screen is Control:
