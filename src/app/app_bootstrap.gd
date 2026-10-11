@@ -149,6 +149,8 @@ func start_level(level_number: int = 1) -> bool:
 func complete_level_win(transaction_id: String, level_id: String, curio_id: String = "moon_cameo", house_stage_reward: int = -1) -> bool:
 	if progress == null:
 		progress = ProgressScript.new()
+	var curio_was_owned: bool = progress.curios.has(curio_id)
+	var previous_house_stage: int = int(progress.house_stage)
 	var candidate = ProgressScript.from_dict(progress.to_dict())
 	var applied: bool = bool(candidate.apply_level_win(transaction_id, level_id, curio_id, house_stage_reward))
 	if not applied:
@@ -156,10 +158,11 @@ func complete_level_win(transaction_id: String, level_id: String, curio_id: Stri
 	if not _store.save(candidate.to_dict()):
 		return false
 	progress = candidate
+	var restoration_needed := not curio_was_owned or int(candidate.house_stage) > previous_house_stage
 	if navigation.current() != NavigationScript.Route.HOUSE:
-		if not navigation.go(NavigationScript.Route.HOUSE, {"reason": "level_reward_restoration"}):
+		if not navigation.go(NavigationScript.Route.HOUSE, {"reason": "level_reward_restoration" if restoration_needed else "level_replay_complete"}):
 			return false
-	_render_house(true, curio_id, int(candidate.house_stage))
+	_render_house(restoration_needed, curio_id if restoration_needed else "", int(candidate.house_stage))
 	return true
 
 func show_feature_preview(feature: String) -> bool:
