@@ -47,8 +47,8 @@ func _run() -> void:
 	var splash = SplashScene.instantiate()
 	root.add_child(splash)
 	await process_frame
-	var splash_art: TextureRect = splash.get_node_or_null("NorthStarSplashArt")
-	_expect(splash_art != null and splash_art.texture != null, "splash must render original North Star castle illustration")
+	var splash_art: TextureRect = splash.get_node_or_null("SplashWorldArt")
+	_expect(splash_art != null and splash_art.texture != null, "splash must render authored raster House-world art")
 	_expect(splash.get_node_or_null("Layout/Enter") != null, "splash must provide a working enter control")
 	splash.queue_free()
 	await process_frame
