@@ -6,7 +6,7 @@ on:
       - p0/bootstrap
     paths:
       - ".github/workflows/p0-visual.yml"
-  # Milestone trigger: North Star complete opening-shell visual transformation (2026-10-11).
+  # Milestone trigger: final-direction ringless assets + complete chrome/environment correction (2026-10-11).
   # Run the full milestone checks deliberately, not on every development commit.
   workflow_dispatch:
 
