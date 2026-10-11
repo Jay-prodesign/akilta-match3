@@ -1,4 +1,4 @@
-name: Level 1 iPhone Web Build
+name: Three-Level Internal Review Web Build
 
 on:
   push:
@@ -38,7 +38,7 @@ jobs:
       - name: Import assets and parse project
         run: |
           "$GODOT" --headless --path . --editor --quit
-      - name: Export playable Web Level 1
+      - name: Export playable three-level review Web build
         run: |
           mkdir -p build/web
           "$GODOT" --headless --path . --export-release Web build/web/index.html
@@ -52,7 +52,7 @@ jobs:
       - name: Upload complete Web game
         uses: actions/upload-artifact@v4
         with:
-          name: cat-and-coven-level1-web
+          name: cat-and-coven-three-level-review-web
           path: build/web/
           if-no-files-found: error
           retention-days: 14
@@ -68,6 +68,6 @@ jobs:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
     steps:
-      - name: Publish Level 1 on GitHub Pages
+      - name: Publish three-level review on GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
