@@ -87,30 +87,33 @@ static func contract() -> Dictionary:
 static func ornament(path: String) -> Texture2D:
 	if _ornaments.has(path):
 		return _ornaments[path]
-	# Production gameplay art is raster-first. Use the validated WebP candidate;
-	# the canonical owned SVG remains compatibility fallback only. Unvalidated PNG
-	# intermediates must not stay in the import graph.
-	var chosen := path
+	# Production art is raster-first, but a malformed candidate must never make
+	# the canonical semantic object disappear. Prefer matching WebP; if decoding
+	# fails, fall back to the owned SVG source for that exact object.
+	var candidates: Array[String] = []
 	if path.get_extension().to_lower() == "svg":
 		var webp_preferred := path.get_basename() + ".webp"
 		if FileAccess.file_exists(webp_preferred):
-			chosen = webp_preferred
-	if not FileAccess.file_exists(chosen):
-		return null
-	var image := Image.new()
-	var err := ERR_FILE_UNRECOGNIZED
-	if chosen.get_extension().to_lower() == "png":
-		err = image.load_png_from_buffer(FileAccess.get_file_as_bytes(chosen))
-	elif chosen.get_extension().to_lower() == "webp":
-		err = image.load_webp_from_buffer(FileAccess.get_file_as_bytes(chosen))
-	elif chosen.get_extension().to_lower() == "svg":
-		var file := FileAccess.open(chosen, FileAccess.READ)
-		if file == null:
-			return null
-		err = image.load_svg_from_string(file.get_as_text(), 1.0)
-		file.close()
-	if err != OK or image.is_empty():
-		return null
-	var result := ImageTexture.create_from_image(image)
-	_ornaments[path] = result
-	return result
+			candidates.append(webp_preferred)
+	candidates.append(path)
+	for chosen in candidates:
+		if not FileAccess.file_exists(chosen):
+			continue
+		var image := Image.new()
+		var err := ERR_FILE_UNRECOGNIZED
+		match chosen.get_extension().to_lower():
+			"png":
+				err = image.load_png_from_buffer(FileAccess.get_file_as_bytes(chosen))
+			"webp":
+				err = image.load_webp_from_buffer(FileAccess.get_file_as_bytes(chosen))
+			"svg":
+				var file := FileAccess.open(chosen, FileAccess.READ)
+				if file != null:
+					err = image.load_svg_from_string(file.get_as_text(), 1.0)
+					file.close()
+		if err == OK and not image.is_empty():
+			var result := ImageTexture.create_from_image(image)
+			_ornaments[path] = result
+			return result
+	_failures[path] = candidates
+	return null
