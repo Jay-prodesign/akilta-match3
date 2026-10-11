@@ -1,7 +1,12 @@
 {
   "schema_version": 1,
-  "deprecated": true,
-  "canonical_source": "res://assets/manifests/screen_contracts.json",
-  "north_star_role": "product_architecture_source",
-  "reason": "Compatibility pointer only. A second full architecture tree is forbidden because it can drift from the canonical Screen -> Region -> Block -> Slot -> State contract."
+  "status": "DEPRECATED_NONCANONICAL_POINTER",
+  "product": "AKILTA Match-3",
+  "canonical_contract": "res://assets/manifests/screen_contracts.json",
+  "canonical_documentation": [
+    "res://docs/product/product-architecture.md",
+    "res://docs/product/screen-state-architecture.md",
+    "res://docs/product/screen-contracts.md"
+  ],
+  "rule": "Do not edit or derive implementation/assets from this legacy location. North Star product architecture and all Screen -> Region -> Block -> Slot -> State truth live in the canonical contract above."
 }
