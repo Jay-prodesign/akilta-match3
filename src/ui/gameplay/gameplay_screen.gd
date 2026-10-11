@@ -53,6 +53,8 @@ var _player_coins: int = 12340
 var _player_gems: int = 520
 var _result_proclamation: Label
 var _result_reward_values: Control
+var _result_reveal_fx: Control
+var _reduced_motion: bool = false
 
 @onready var world_backdrop: TextureRect = $WorldBackdrop
 @onready var eyebrow_label: Label = $Layout/Eyebrow
@@ -90,6 +92,7 @@ func _ready() -> void:
 	resized.connect(func(): call_deferred("_position_booster_tray"))
 	_build_result_reward_values()
 	_build_result_proclamation()
+	_install_reward_reveal_fx()
 	if board_view.has_signal("swap_requested"):
 		board_view.swap_requested.connect(_on_swap_requested)
 	if board_view.has_signal("trace_motion_finished"):
@@ -117,6 +120,7 @@ func set_player_resources(lives: int, coins: int, gems: int) -> void:
 		_resource_gem_label.text = _format_number(_player_gems)
 
 func apply_presentation_settings(state: Dictionary) -> void:
+	_reduced_motion = bool(state.get("reduced_motion", false))
 	if board_view != null and board_view.has_method("apply_presentation_settings"):
 		board_view.apply_presentation_settings(state)
 	haptics.apply_settings(state)
@@ -382,6 +386,8 @@ func _show_result_if_terminal(result: String) -> void:
 		if _booster_tray != null:
 			_booster_tray.visible = false
 		result_overlay.visible = true
+		if _result_reveal_fx != null and _result_reveal_fx.has_method("play"):
+			_result_reveal_fx.play(_reduced_motion or replay_mode)
 		result_state_changed.emit("won")
 	elif result == "failed":
 		haptics.request_terminal("failed")
@@ -402,8 +408,28 @@ func _show_result_if_terminal(result: String) -> void:
 			_result_proclamation.text = "The Curio remains sealed. The ritual can be attempted again."
 		if _booster_tray != null:
 			_booster_tray.visible = false
+		if _result_reveal_fx != null and _result_reveal_fx.has_method("stop"):
+			_result_reveal_fx.stop()
 		result_overlay.visible = true
 		result_state_changed.emit("failed")
+
+func _install_reward_reveal_fx() -> void:
+	if _result_reveal_fx != null:
+		return
+	var fx := RewardRevealFx.new()
+	fx.name = "RewardRevealFx"
+	fx.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	fx.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	result_overlay.add_child(fx)
+	result_overlay.move_child(fx, 1)
+	_result_reveal_fx = fx
+
+func feedback_vfx_contract() -> Dictionary:
+	return {
+		"match_clear": board_view.feedback_vfx_contract() if board_view != null and board_view.has_method("feedback_vfx_contract") else {},
+		"reward_reveal": _result_reveal_fx.contract() if _result_reveal_fx != null and _result_reveal_fx.has_method("contract") else {},
+		"reduced_motion": _reduced_motion
+	}
 
 func _configure_result_reward_copy(won: bool) -> void:
 	var reward_name := current_reward_curio.replace("_", " ").to_upper()
