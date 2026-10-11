@@ -1137,6 +1137,25 @@
       "shell": "meta",
       "regions": [
         {
+          "id": "world",
+          "blocks": [
+            {
+              "id": "reliquary_environment",
+              "slots": [
+                {
+                  "id": "environment",
+                  "layer": "background_art",
+                  "states": [
+                    "empty",
+                    "partial",
+                    "complete"
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
           "id": "header",
           "blocks": [
             {

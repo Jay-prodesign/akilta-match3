@@ -24,6 +24,7 @@ signal back_requested
 @onready var slot3_card: PanelContainer = $Layout/Cards/Slot3
 
 const PieceAssetLoader = preload("res://src/match3/presentation/piece_asset_loader.gd")
+const ScreenArt = preload("res://src/ui/shared/screen_art_registry.gd")
 
 const MOON_SEALED_PATH := "res://assets/curios/ch01_curio_moon_cameo_sealed_v01.svg"
 const MOON_AWAKENED_PATH := "res://assets/curios/ch01_curio_moon_cameo_awakened_v01.svg"
@@ -164,12 +165,12 @@ func _install_reward_art(label: Label, path: String) -> void:
 func _install_collection_atmosphere() -> void:
 	var backdrop := TextureRect.new()
 	backdrop.name = "ReliquaryMoonlitBackdrop"
-	backdrop.texture = PieceAssetLoader.ornament("res://assets/world/ch01_curio_boutique/curio_boutique_moonlit_backdrop.svg")
+	backdrop.texture = ScreenArt.texture("reliquary_bg_curio_boutique")
 	backdrop.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
 	backdrop.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_COVERED
 	backdrop.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	backdrop.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	backdrop.modulate = Color(0.78, 0.70, 0.84, 0.28)
+	backdrop.modulate = Color(0.76, 0.70, 0.82, 0.42)
 	add_child(backdrop)
 	move_child(backdrop, 1)
 	var action := StyleBoxFlat.new()
