@@ -458,7 +458,7 @@
         "matched_runtime"
       ],
       "type": "gameplay_asset",
-      "dimensions": "256x256_svg",
+      "dimensions": "128x128_png_runtime_candidate",
       "aspect_ratio": "1:1",
       "transparent": true,
       "variants": [
@@ -466,8 +466,8 @@
       ],
       "reuse": "global",
       "priority": "P0",
-      "production_status": "candidate_screen_validation",
-      "current_path": "assets/pieces/moon_sigil.svg",
+      "production_status": "raster_material_candidate_runtime_validation",
+      "current_path": "assets/pieces/moon_sigil.png",
       "architecture_owned": true,
       "contract_owners": [
         {
@@ -482,7 +482,10 @@
             "moving"
           ]
         }
-      ]
+      ],
+      "source_silhouette_path": "assets/pieces/moon_sigil.svg",
+      "technical_policy": "raster_first_runtime__canonical_family_identity__svg_source_retained_only_as_authored_silhouette_fallback",
+      "provenance": "AKILTA first-party offline materialization pass from the canonical authored silhouette: transparent raster, directional light, depth/bevel and soft shadow. Requires rendered board validation before approval."
     },
     {
       "asset_id": "piece_rose",
@@ -497,7 +500,7 @@
         "matched_runtime"
       ],
       "type": "gameplay_asset",
-      "dimensions": "256x256_svg",
+      "dimensions": "128x128_png_runtime_candidate",
       "aspect_ratio": "1:1",
       "transparent": true,
       "variants": [
@@ -505,8 +508,8 @@
       ],
       "reuse": "global",
       "priority": "P0",
-      "production_status": "candidate_screen_validation",
-      "current_path": "assets/pieces/thorn_rose.svg",
+      "production_status": "raster_material_candidate_runtime_validation",
+      "current_path": "assets/pieces/thorn_rose.png",
       "architecture_owned": true,
       "contract_owners": [
         {
@@ -521,7 +524,10 @@
             "moving"
           ]
         }
-      ]
+      ],
+      "source_silhouette_path": "assets/pieces/thorn_rose.svg",
+      "technical_policy": "raster_first_runtime__canonical_family_identity__svg_source_retained_only_as_authored_silhouette_fallback",
+      "provenance": "AKILTA first-party offline materialization pass from the canonical authored silhouette: transparent raster, directional light, depth/bevel and soft shadow. Requires rendered board validation before approval."
     },
     {
       "asset_id": "piece_moth",
@@ -536,7 +542,7 @@
         "matched_runtime"
       ],
       "type": "gameplay_asset",
-      "dimensions": "256x256_svg",
+      "dimensions": "128x128_png_runtime_candidate",
       "aspect_ratio": "1:1",
       "transparent": true,
       "variants": [
@@ -544,8 +550,8 @@
       ],
       "reuse": "global",
       "priority": "P0",
-      "production_status": "candidate_screen_validation",
-      "current_path": "assets/pieces/luna_moth.svg",
+      "production_status": "raster_material_candidate_runtime_validation",
+      "current_path": "assets/pieces/luna_moth.png",
       "architecture_owned": true,
       "contract_owners": [
         {
@@ -560,7 +566,10 @@
             "moving"
           ]
         }
-      ]
+      ],
+      "source_silhouette_path": "assets/pieces/luna_moth.svg",
+      "technical_policy": "raster_first_runtime__canonical_family_identity__svg_source_retained_only_as_authored_silhouette_fallback",
+      "provenance": "AKILTA first-party offline materialization pass from the canonical authored silhouette: transparent raster, directional light, depth/bevel and soft shadow. Requires rendered board validation before approval."
     },
     {
       "asset_id": "piece_key",
@@ -575,7 +584,7 @@
         "matched_runtime"
       ],
       "type": "gameplay_asset",
-      "dimensions": "256x256_svg",
+      "dimensions": "128x128_png_runtime_candidate",
       "aspect_ratio": "1:1",
       "transparent": true,
       "variants": [
@@ -583,8 +592,8 @@
       ],
       "reuse": "global",
       "priority": "P0",
-      "production_status": "candidate_screen_validation",
-      "current_path": "assets/pieces/curio_key.svg",
+      "production_status": "raster_material_candidate_runtime_validation",
+      "current_path": "assets/pieces/curio_key.png",
       "architecture_owned": true,
       "contract_owners": [
         {
@@ -599,7 +608,10 @@
             "moving"
           ]
         }
-      ]
+      ],
+      "source_silhouette_path": "assets/pieces/curio_key.svg",
+      "technical_policy": "raster_first_runtime__canonical_family_identity__svg_source_retained_only_as_authored_silhouette_fallback",
+      "provenance": "AKILTA first-party offline materialization pass from the canonical authored silhouette: transparent raster, directional light, depth/bevel and soft shadow. Requires rendered board validation before approval."
     },
     {
       "asset_id": "piece_ivy",
@@ -614,7 +626,7 @@
         "matched_runtime"
       ],
       "type": "gameplay_asset",
-      "dimensions": "256x256_svg",
+      "dimensions": "128x128_png_runtime_candidate",
       "aspect_ratio": "1:1",
       "transparent": true,
       "variants": [
@@ -622,8 +634,8 @@
       ],
       "reuse": "global",
       "priority": "P0",
-      "production_status": "candidate_screen_validation",
-      "current_path": "assets/pieces/night_ivy.svg",
+      "production_status": "raster_material_candidate_runtime_validation",
+      "current_path": "assets/pieces/night_ivy.png",
       "architecture_owned": true,
       "contract_owners": [
         {
@@ -638,7 +650,10 @@
             "moving"
           ]
         }
-      ]
+      ],
+      "source_silhouette_path": "assets/pieces/night_ivy.svg",
+      "technical_policy": "raster_first_runtime__canonical_family_identity__svg_source_retained_only_as_authored_silhouette_fallback",
+      "provenance": "AKILTA first-party offline materialization pass from the canonical authored silhouette: transparent raster, directional light, depth/bevel and soft shadow. Requires rendered board validation before approval."
     },
     {
       "asset_id": "gameplay_bg_curio_boutique",
