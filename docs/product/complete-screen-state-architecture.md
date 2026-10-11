@@ -2,7 +2,7 @@
 
 Status: **CANONICAL PRODUCT ARCHITECTURE · 2026-10-11**
 
-North Star is the source for the **whole product architecture**, not an asset prompt board. The canonical machine-readable contract is `content/product/screen_state_architecture.json`.
+North Star is the source for the **whole product architecture**, not an asset prompt board. The canonical machine-readable contract is `assets/manifests/screen_contracts.json`.
 
 ## Product loop
 
@@ -10,9 +10,9 @@ North Star is the source for the **whole product architecture**, not an asset pr
 
 The first acceptance path is intentionally smaller than the whole product:
 
-**S01 House Hub → S04 Level Pre-start → S05 Gameplay → S06 Win/Rewards → S07 House Restoration → S01 House Hub.**
+**S01 House Hub → S03 Curio Boutique Route → S04 Level Pre-start → S05 Gameplay → S06 Win/Rewards → S07 House Restoration → S01 House Hub.**
 
-This is the **Golden Playable Loop**. Chapters, Curios, Missions, Events, Shop, Profile and Splash remain part of the complete architecture, but they may not trigger bulk art production or create a competing visual system before the Golden Loop is accepted.
+This is the **Golden Playable Loop**. Cold start adds S00 before S01; Golden acceptance also verifies S01 → S08 → S01 after restoration. S02 Chapters remains the wing-switcher surface. Missions, Events, Shop and Profile stay architecture-complete but may not trigger art production or create a competing visual system before the Golden Loop is accepted.
 
 ## Architectural hierarchy
 
@@ -32,15 +32,15 @@ Only the last category authorizes asset production, and only after its screen/bl
 
 | ID | Surface | Priority | Product role |
 |---|---|---:|---|
-| S00 | Splash / Loading | P2 | first impression / boot |
+| S00 | Splash / Loading | P0 | first impression / boot |
 | S01 | House Hub | P0 | persistent emotional + progression anchor |
 | S02 | Chapters | P1 | choose House wing |
-| S03 | Chapter Detail / Route | P1 | choose level/display |
+| S03 | Chapter Detail / Route | P0 | choose level/display |
 | S04 | Level Pre-start | P0 | objective/reward/start decision |
 | S05 | Match-3 Gameplay | P0 | core puzzle |
 | S06 | Win / Rewards | P0 | reward + consequence |
 | S07 | House Restoration | P0 | persistent same-camera change |
-| S08 | Curio Collection | P1 | collection/progression inspection |
+| S08 | Curio Collection | P0 | collection/progression inspection |
 | S09 | Weekly Missions | P2 | recurring goals |
 | S10 | Event Center | P2 | live/coming content |
 | S11 | Shop | P2 | truthful economy surface |
@@ -53,3 +53,7 @@ Overlays O01–O07 cover Pause, Settings, Reward Reveal, Fail/Retry, Curio Detai
 `bulk_art_authorized = false` until the Golden Loop satisfies all acceptance conditions. Existing SVG/world candidates are reference/prototype material only and cannot define the product architecture.
 
 The next task is selected from **the highest-priority incomplete screen contract**, never from an asset wish-list.
+
+## Single source of truth
+
+`assets/manifests/screen_contracts.json` is the only canonical Screen → Region → Block → Slot → State architecture. The former `content/product/screen_state_architecture.json` is a compatibility pointer only. Asset production can be authorized only by the canonical contract and remains restricted to Golden Loop gaps until acceptance.

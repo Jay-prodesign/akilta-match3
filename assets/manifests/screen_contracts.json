@@ -1990,5 +1990,14 @@
     "S07 changes the same House state/camera and returns to S01.",
     "S08 reflects the exact Curio earned in S06/S07 and persists after relaunch.",
     "No random secondary-screen polish or bulk art is allowed before rendered Golden Loop acceptance."
-  ]
+  ],
+  "canonical": true,
+  "canonical_source": "assets/manifests/screen_contracts.json",
+  "north_star_role": "product_architecture_source",
+  "production_gate": {
+    "status": "GOLDEN_LOOP_ONLY",
+    "bulk_art_authorized": false,
+    "random_screen_asset_polish_authorized": false,
+    "rule": "Before Golden Loop acceptance, production is limited to missing authored-art assets owned by exact Golden Loop Screen -> Region -> Block -> Slot -> State contracts."
+  }
 }

@@ -42,7 +42,7 @@ Map has two levels:
 - **S02 Chapters** chooses a House wing.
 - **S03 Chapter Detail / Route** chooses a level inside the active wing.
 
-For the opening Golden Loop the current Curio Boutique may be entered directly from House into S03. S02 remains the canonical wing switcher.
+For the opening Golden Loop the House primary next-action enters the current Curio Boutique route at S03. S02 remains the canonical wing switcher reached from Map navigation. House never bypasses S03 to open S04 directly.
 
 ## State ownership
 
@@ -71,6 +71,9 @@ Replay skips restoration when nothing new is earned:
 Failure stays inside the puzzle session:
 **S05 → O03 Fail/Retry → S05**, with safe exit available.
 
+Post-restoration verification is part of Golden acceptance:
+**S01 House → S08 Curio Collection → S01 House**. The exact Curio earned in S06 and placed in S07 must appear in S08 and survive relaunch.
+
 ## Production gate
 
 Until the Golden Playable Loop is accepted:
@@ -82,5 +85,7 @@ Until the Golden Playable Loop is accepted:
 
 Existing candidate art may remain in the repository as implementation scaffolding. It must not drive architecture or be treated as final approval.
 
-Canonical machine-readable contract:
+Canonical machine-readable contract — the single Screen/State/Block/Slot source of truth:
 `assets/manifests/screen_contracts.json`.
+
+`content/product/screen_state_architecture.json` is retained only as a deprecated compatibility pointer and must never become a second architecture authority.
