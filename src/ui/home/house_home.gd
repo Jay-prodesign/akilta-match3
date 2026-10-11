@@ -10,7 +10,8 @@ signal shop_requested
 signal profile_requested
 
 const HouseState = preload("res://src/world/house_state.gd")
-const PieceAssetLoader = preload("res://src/match3/presentation/piece_asset_loader.gd")
+const ProductNavigation = preload("res://src/ui/shared/product_navigation.gd")
+const TopResourceBar = preload("res://src/ui/shared/top_resource_bar.gd")
 
 @onready var room_view = $Layout/RoomView
 @onready var headline: Label = $Layout/Headline
@@ -19,28 +20,20 @@ const PieceAssetLoader = preload("res://src/match3/presentation/piece_asset_load
 @onready var collection_button: Button = $Layout/ActionDock/Actions/CollectionButton
 @onready var settings_button: Button = $Layout/ActionDock/Actions/SettingsButton
 @onready var play_button: Button = $Layout/PlayButton
-@onready var house_overlay_kicker: Label = $Layout/RoomView/HouseOverlay/Copy/Kicker
-@onready var house_overlay_title: Label = $Layout/RoomView/HouseOverlay/Copy/Title
-@onready var house_overlay_body: Label = $Layout/RoomView/HouseOverlay/Copy/Body
 
 var progress
 var available_level_count: int = 1
-var _dock_buttons: Dictionary = {}
-var _chapter_status: Label
 var _completion_banner: PanelContainer
 var _completion_label: Label
-var _resource_curio_label: Label
-var _resource_life_label: Label
-var _resource_coin_label: Label
-var _resource_gem_label: Label
+var _resource_bar: PanelContainer
 
 func _ready() -> void:
 	play_button.pressed.connect(_on_play_pressed)
-	_build_resource_bar()
-	_build_completion_banner()
-	_build_navigation_dock()
 	collection_button.pressed.connect(func(): collection_requested.emit())
 	settings_button.pressed.connect(func(): settings_requested.emit())
+	_resource_bar = TopResourceBar.attach(self, progress, Callable(self, "_open_profile"))
+	ProductNavigation.attach(self, "house", Callable(self, "_navigate_dock"), NodePath("Layout"))
+	_build_completion_banner()
 
 func set_available_level_count(value: int) -> void:
 	available_level_count = max(0, value)
@@ -58,55 +51,44 @@ func _refresh() -> void:
 		stage = int(progress.house_stage)
 		for curio in progress.curios:
 			owned_curios.append(String(curio))
+
 	var state: Dictionary = HouseState.descriptor(stage)
 	headline.text = String(state.get("headline", "The Curio Boutique sleeps."))
 	detail.text = String(state.get("detail", ""))
 	room_view.set_house_state(stage, owned_curios)
+	TopResourceBar.refresh(_resource_bar, progress)
+
 	if stage >= 3:
-		curio_label.text = "3 CURIOS · FIRST CABINET SET"
+		curio_label.text = "FIRST CABINET SET · 3 / 3 CURIOS"
 	elif stage >= 2:
-		curio_label.text = "2 CURIOS · MOON CAMEO + MOTH RELIQUARY"
+		curio_label.text = "FIRST CABINET · 2 / 3 CURIOS"
 	elif stage >= 1:
-		curio_label.text = "CURIO 01 · MOON CAMEO AWAKENED"
+		curio_label.text = "MOON CAMEO · FIRST CURIO AWAKENED"
 	else:
-		curio_label.text = "DORMANT DISPLAY"
+		curio_label.text = "THE HOUSE AWAITS · 0 / 3 CURIOS"
+
 	collection_button.text = "RELIQUARY · %d / 3" % owned_curios.size()
 	var finished: int = mini(progress.completed_levels.size(), available_level_count) if progress != null else 0
 	var opening_complete := available_level_count > 0 and finished >= available_level_count and owned_curios.size() >= available_level_count and stage >= available_level_count
 	if _completion_banner != null:
 		_completion_banner.visible = opening_complete
 	if _completion_label != null:
-		_completion_label.text = "OPENING CABINET SET COMPLETE · %d / %d RITUALS · %d / %d CURIOS" % [finished, available_level_count, mini(owned_curios.size(), available_level_count), available_level_count]
-	if _chapter_status != null:
-		_chapter_status.text = "✦ OPENING SET COMPLETE" if opening_complete else "✦ %d / %d RITUALS" % [finished, available_level_count]
-	if opening_complete:
-		curio_label.text = "FIRST CABINET SET · 3 CURIOS AWAKENED"
-	if _resource_life_label != null:
-		_resource_life_label.text = "FULL" if progress == null or int(progress.lives) >= 5 else "%d / 5" % int(progress.lives)
-	if _resource_coin_label != null:
-		_resource_coin_label.text = "%s" % _format_number(int(progress.coins) if progress != null else 12340)
-	if _resource_gem_label != null:
-		_resource_gem_label.text = "%s" % _format_number(int(progress.gems) if progress != null else 520)
-	if house_overlay_kicker != null:
-		house_overlay_kicker.text = "OPENING CABINET RESTORED" if opening_complete else ("RESTORATION STAGE %d" % stage if stage > 0 else "THE HOUSE AWAITS")
-	if house_overlay_title != null:
-		house_overlay_title.text = "FIRST CABINET SET COMPLETE" if opening_complete else ("THE HOUSE REMEMBERS" if stage > 0 else "THE HOUSE AWAITS")
-	if house_overlay_body != null:
-		house_overlay_body.text = "Three Curios glow in their restored places." if opening_complete else ("A recovered Curio now lives here. Continue the ritual." if stage > 0 else "Wake the first cabinet and return its Curios.")
+		_completion_label.text = "OPENING CABINET SET COMPLETE · %d / %d" % [finished, available_level_count]
+
 	var next_level := int(progress.highest_level_unlocked) if progress != null else 1
 	var has_started: bool = progress != null and not progress.completed_levels.is_empty()
 	var level1_completed: bool = progress != null and progress.completed_levels.has("ch01_level_001")
 	play_button.disabled = available_level_count < 1
 	if has_started and next_level > 1 and next_level <= available_level_count:
-		play_button.text = "ENTER LEVEL %d" % next_level
+		play_button.text = "PLAY LEVEL %d" % next_level
 	elif opening_complete:
-		play_button.text = "REVISIT COMPLETED CURIO MAP"
+		play_button.text = "REVISIT CURIO BOUTIQUE"
 	elif level1_completed and next_level > available_level_count:
-		play_button.text = "REVISIT CURIO MAP"
+		play_button.text = "REVISIT CURIO BOUTIQUE"
 	elif next_level > available_level_count:
 		play_button.text = "MORE CURIOS STIR SOON"
 	else:
-		play_button.text = "OPEN CURIO MAP"
+		play_button.text = "PLAY LEVEL 1"
 
 func _on_play_pressed() -> void:
 	if available_level_count < 1:
@@ -115,17 +97,35 @@ func _on_play_pressed() -> void:
 	var has_started: bool = progress != null and not progress.completed_levels.is_empty()
 	if has_started and next_level > 1 and next_level <= available_level_count:
 		play_requested.emit(next_level)
+	elif next_level == 1 and not has_started:
+		play_requested.emit(1)
 	else:
 		map_requested.emit()
+
+func _open_profile() -> void:
+	profile_requested.emit()
+
+func _navigate_dock(action: String) -> void:
+	match action:
+		"house":
+			_refresh()
+		"curios":
+			collection_requested.emit()
+		"map":
+			map_requested.emit()
+		"events":
+			events_requested.emit()
+		"shop":
+			shop_requested.emit()
 
 func _build_completion_banner() -> void:
 	var panel := PanelContainer.new()
 	panel.name = "ChapterCompletionBanner"
-	panel.custom_minimum_size = Vector2(0, 46)
+	panel.custom_minimum_size = Vector2(0, 38)
 	panel.visible = false
 	var shell := StyleBoxFlat.new()
-	shell.bg_color = Color("#241628", 0.97)
-	shell.border_color = Color("#D5AD70", 0.88)
+	shell.bg_color = Color("#211426", 0.94)
+	shell.border_color = Color("#D5AD70", 0.78)
 	shell.set_border_width_all(1)
 	shell.set_corner_radius_all(10)
 	panel.add_theme_stylebox_override("panel", shell)
@@ -133,160 +133,10 @@ func _build_completion_banner() -> void:
 	label.name = "Label"
 	label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	label.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
-	label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-	label.add_theme_color_override("font_color", Color("#F4D995"))
+	label.add_theme_color_override("font_color", Color("#F2D08B"))
 	label.add_theme_font_size_override("font_size", 14)
 	panel.add_child(label)
 	$Layout.add_child(panel)
 	$Layout.move_child(panel, $Layout/CurioChip.get_index() + 1)
 	_completion_banner = panel
 	_completion_label = label
-
-func _build_navigation_dock() -> void:
-	# Touch-sized, gothic first-party navigation for the three-level internal review.
-	var dock_scroll := ScrollContainer.new()
-	dock_scroll.name = "BottomNavigationScroll"
-	dock_scroll.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	dock_scroll.custom_minimum_size = Vector2(0, 64)
-	dock_scroll.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
-	dock_scroll.vertical_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
-	$Layout.add_child(dock_scroll)
-	var dock := HBoxContainer.new()
-	dock.name = "BottomNavigation"
-	dock.add_theme_constant_override("separation", 2)
-	dock.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	dock_scroll.add_child(dock)
-	for entry in [
-		{"title": "HOUSE", "action": "house", "icon": "res://assets/ui/nav_house.svg"},
-		{"title": "CURIOS", "action": "curios", "icon": "res://assets/ui/nav_curios.svg"},
-		{"title": "MAP", "action": "map", "icon": "res://assets/ui/nav_map.svg"},
-		{"title": "EVENTS", "action": "events", "icon": "res://assets/ui/nav_events.svg"},
-		{"title": "SHOP", "action": "shop", "icon": "res://assets/ui/nav_shop.svg"}
-	]:
-		var button := Button.new()
-		button.text = String(entry["title"])
-		button.icon = PieceAssetLoader.ornament(String(entry["icon"]))
-		button.expand_icon = true
-		button.add_theme_constant_override("icon_max_width", 24)
-		button.name = "Dock" + String(entry["action"]).capitalize()
-		button.custom_minimum_size = Vector2(0, 56)
-		button.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-		button.add_theme_font_size_override("font_size", 15)
-		button.tooltip_text = String(entry["title"])
-		var action := String(entry["action"])
-		button.pressed.connect(func(): _navigate_dock(action))
-		var normal := StyleBoxFlat.new()
-		normal.bg_color = Color("#211728")
-		normal.border_color = Color("#9B7B91", 0.65)
-		normal.set_border_width_all(1)
-		normal.set_corner_radius_all(10)
-		var active := normal.duplicate() as StyleBoxFlat
-		active.bg_color = Color("#49304C")
-		active.border_color = Color("#D5AD70")
-		active.set_border_width_all(2)
-		button.add_theme_stylebox_override("normal", active if action == "house" else normal)
-		button.add_theme_stylebox_override("hover", active)
-		button.add_theme_stylebox_override("pressed", active)
-		button.add_theme_color_override("font_color", Color("#F4E5D3"))
-		button.add_theme_color_override("font_hover_color", Color("#FFF1D9"))
-		_dock_buttons[action] = button
-		dock.add_child(button)
-
-func _navigate_dock(action: String) -> void:
-	match action:
-		"curios": collection_requested.emit()
-		"map": map_requested.emit()
-		"events": events_requested.emit()
-		"shop": shop_requested.emit()
-		"profile": profile_requested.emit()
-		"house": _refresh()
-
-func _build_resource_bar() -> void:
-	var panel := PanelContainer.new()
-	panel.name = "ResourceBar"
-	panel.anchor_left = 0.02
-	panel.anchor_right = 0.98
-	panel.anchor_top = 0.0
-	panel.anchor_bottom = 0.0
-	panel.offset_top = 5.0
-	panel.offset_bottom = 58.0
-	panel.z_index = 10
-	var style := StyleBoxFlat.new()
-	style.bg_color = Color("#090810", 0.96)
-	style.border_color = Color("#D5AD70", 0.76)
-	style.set_border_width_all(1)
-	style.set_corner_radius_all(10)
-	style.shadow_color = Color(0, 0, 0, 0.35)
-	style.shadow_size = 7
-	panel.add_theme_stylebox_override("panel", style)
-	add_child(panel)
-	var row := HBoxContainer.new()
-	row.name = "Resources"
-	row.alignment = BoxContainer.ALIGNMENT_CENTER
-	row.add_theme_constant_override("separation", 5)
-	panel.add_child(row)
-	_resource_life_label = _add_resource_chip(row, "LifeResource", "res://assets/ui/ui_heart.svg", "FULL")
-	_resource_coin_label = _add_resource_chip(row, "CoinResource", "res://assets/ui/ui_coin.svg", "12,340")
-	_resource_gem_label = _add_resource_chip(row, "GemResource", "res://assets/ui/ui_gem.svg", "520")
-	var keeper := Button.new()
-	keeper.name = "KeeperProfile"
-	keeper.text = ""
-	keeper.icon = PieceAssetLoader.ornament("res://assets/ui/ui_profile.svg")
-	keeper.expand_icon = true
-	keeper.add_theme_constant_override("icon_max_width", 30)
-	keeper.tooltip_text = "Keeper profile"
-	keeper.custom_minimum_size = Vector2(54, 42)
-	var keeper_style := StyleBoxFlat.new()
-	keeper_style.bg_color = Color("#211728", 0.96)
-	keeper_style.border_color = Color("#D5AD70", 0.48)
-	keeper_style.set_border_width_all(1)
-	keeper_style.set_corner_radius_all(10)
-	keeper.add_theme_stylebox_override("normal", keeper_style)
-	keeper.add_theme_stylebox_override("hover", keeper_style)
-	keeper.add_theme_stylebox_override("pressed", keeper_style)
-	keeper.pressed.connect(func(): profile_requested.emit())
-	row.add_child(keeper)
-
-func _add_resource_chip(parent: HBoxContainer, node_name: String, icon_path: String, value: String) -> Label:
-	var chip := PanelContainer.new()
-	chip.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	var box := StyleBoxFlat.new()
-	box.bg_color = Color("#15111B", 0.92)
-	box.border_color = Color("#6F596E", 0.42)
-	box.set_border_width_all(1)
-	box.set_corner_radius_all(10)
-	box.content_margin_left = 6
-	box.content_margin_right = 8
-	box.content_margin_top = 4
-	box.content_margin_bottom = 4
-	chip.add_theme_stylebox_override("panel", box)
-	parent.add_child(chip)
-	var content := HBoxContainer.new()
-	content.alignment = BoxContainer.ALIGNMENT_CENTER
-	content.add_theme_constant_override("separation", 3)
-	chip.add_child(content)
-	var icon := TextureRect.new()
-	icon.custom_minimum_size = Vector2(28, 28)
-	icon.texture = PieceAssetLoader.ornament(icon_path)
-	icon.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
-	icon.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
-	icon.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	content.add_child(icon)
-	var label := Label.new()
-	label.name = node_name
-	label.text = value
-	label.add_theme_color_override("font_color", Color("#F4E5D3"))
-	label.add_theme_font_size_override("font_size", 14)
-	content.add_child(label)
-	return label
-
-func _format_number(value: int) -> String:
-	var digits := str(maxi(0, value))
-	var out := ""
-	var count := 0
-	for i in range(digits.length() - 1, -1, -1):
-		if count > 0 and count % 3 == 0:
-			out = "," + out
-		out = digits.substr(i, 1) + out
-		count += 1
-	return out

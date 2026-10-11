@@ -108,7 +108,6 @@ func show_prestart(level_number: int) -> bool:
 		# malformed late-stage prestart cannot strand the player on a dead route.
 		_ensure_house_route()
 		return false
-	_install_product_navigation(screen, "map")
 	_pending_level_number = level_number
 	screen.back_requested.connect(_on_prestart_back)
 	screen.start_requested.connect(_on_prestart_start)
@@ -614,6 +613,10 @@ func _on_gameplay_navigation_requested(section: String) -> void:
 
 func _install_north_star_backdrop(screen: Node) -> void:
 	if screen == null or not screen is Control:
+		return
+	# House owns a persistent same-camera world renderer; do not stack a second
+	# environment image behind it.
+	if String(screen.name) == "HouseHome":
 		return
 	if screen.has_node("NorthStarBackdrop"):
 		return

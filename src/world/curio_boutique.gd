@@ -65,12 +65,10 @@ func _draw() -> void:
 	)
 	draw_rect(room, VELVET, true)
 	if _backdrop != null:
-		# The authored environment owns the architecture; foreground light, velvet
-		# and props add the cinematic depth required by the North Star.
+		# The House screen owns one same-camera environment. Runtime layers add only
+		# stateful light and restored Curios; they must not duplicate painted props.
 		draw_texture_rect(_backdrop, room, false)
 		_draw_authored_atmosphere(room)
-		_draw_cat_portrait(room)
-		_draw_candle_props(room)
 		_draw_authored_restoration_curios(room)
 	else:
 		_draw_wall_panels(room)
@@ -88,42 +86,19 @@ func _draw() -> void:
 
 
 func _draw_authored_atmosphere(room: Rect2) -> void:
-	# Moonlight at the upper arch, warm candle pools at the shelves, and velvet
-	# foreground silhouettes create depth without repainting the authored room.
-	var moon_center := Vector2(room.get_center().x, room.position.y + room.size.y * 0.18)
+	var moon_center := Vector2(room.get_center().x, room.position.y + room.size.y * 0.19)
 	for i in range(5, 0, -1):
 		var glow := Color(LILAC)
-		glow.a = 0.010 + float(i) * 0.009
+		glow.a = 0.008 + float(i) * 0.008
 		draw_circle(moon_center, room.size.x * (0.10 + float(i) * 0.035), glow)
 	for side in [-1.0, 1.0]:
-		var warm_center := Vector2(room.get_center().x + side * room.size.x * 0.34, room.position.y + room.size.y * 0.58)
-		for i in range(4, 0, -1):
+		var warm_center := Vector2(room.get_center().x + side * room.size.x * 0.34, room.position.y + room.size.y * 0.64)
+		for i in range(3, 0, -1):
 			var warm := Color(GOLD)
-			warm.a = 0.010 + float(i) * 0.010
-			draw_circle(warm_center, room.size.x * (0.055 + float(i) * 0.030), warm)
-	var velvet := Color("#220D20", 0.78)
-	var left_curtain := PackedVector2Array([
-		room.position,
-		room.position + Vector2(room.size.x * 0.14, 0),
-		room.position + Vector2(room.size.x * 0.085, room.size.y * 0.76),
-		room.position + Vector2(0, room.size.y * 0.92)
-	])
-	var right_curtain := PackedVector2Array([
-		Vector2(room.end.x, room.position.y),
-		Vector2(room.end.x - room.size.x * 0.14, room.position.y),
-		Vector2(room.end.x - room.size.x * 0.085, room.position.y + room.size.y * 0.76),
-		Vector2(room.end.x, room.position.y + room.size.y * 0.92)
-	])
-	draw_colored_polygon(left_curtain, velvet)
-	draw_colored_polygon(right_curtain, velvet)
-	for p in [
-		Vector2(room.position.x + room.size.x * 0.22, room.position.y + room.size.y * 0.25),
-		Vector2(room.end.x - room.size.x * 0.20, room.position.y + room.size.y * 0.29),
-		Vector2(room.position.x + room.size.x * 0.30, room.position.y + room.size.y * 0.47),
-		Vector2(room.end.x - room.size.x * 0.27, room.position.y + room.size.y * 0.50)
-	]:
-		draw_circle(p, 2.2, Color(BONE, 0.72))
-		draw_circle(p, 8.0, Color(GOLD, 0.035))
+			warm.a = 0.008 + float(i) * 0.010
+			draw_circle(warm_center, room.size.x * (0.06 + float(i) * 0.035), warm)
+	if house_stage > 0:
+		_draw_awakened_sparkles(room)
 
 func restoration_contract() -> Dictionary:
 	return {

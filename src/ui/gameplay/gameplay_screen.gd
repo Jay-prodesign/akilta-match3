@@ -75,7 +75,6 @@ func _ready() -> void:
 	_install_hud_plate()
 	_build_top_resource_bar()
 	_build_booster_tray()
-	_build_bottom_navigation()
 	_build_result_proclamation()
 	if board_view.has_signal("swap_requested"):
 		board_view.swap_requested.connect(_on_swap_requested)
