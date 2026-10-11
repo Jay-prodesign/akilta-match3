@@ -48,6 +48,11 @@ func _install_level_artwork() -> void:
 	art.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
 	art.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_COVERED
 	art.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	# The cabinet artwork is the ritual backdrop. It must sit behind the parent
+	# MoonCameoRitualView so the canonical sealed/owned reward object remains a
+	# visible foreground slot instead of being covered by a child texture.
+	art.show_behind_parent = true
+	art.modulate = Color(0.88, 0.82, 0.90, 0.72)
 	art.texture = ScreenArt.texture("prestart_ch01_level01_art")
 	ritual_art.add_child(art)
 
