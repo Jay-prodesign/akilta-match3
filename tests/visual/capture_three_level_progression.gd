@@ -159,8 +159,11 @@ func _play_level(app: Node, level_number: int) -> bool:
 	if route_view == null:
 		_fail(app, "Chapter route view missing before Level %d" % level_number)
 		return false
-	if route_view.get_level_center(10).y >= 230.0 or route_view.get_level_center(3).y <= 300.0:
+	if route_view.get_level_center(10).y >= 140.0 or route_view.get_level_center(3).y <= 170.0:
 		_fail(app, "Future cabinets must stay compact above the authored opening trio")
+		return false
+	if route_view.custom_minimum_size.y > 500.0:
+		_fail(app, "Chapter route must fit a single mobile map panel without a long empty scroll")
 		return false
 	var level_button: Button = map.get_level_button(level_number)
 	if level_button == null or level_button.disabled:

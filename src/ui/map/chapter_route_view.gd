@@ -12,7 +12,7 @@ const PLUM := Color("#241A27")
 @export var visible_route_levels: int = 10
 @export var route_width: float = 460.0
 @export var top_margin: float = 120.0
-@export var bottom_margin: float = 92.0
+@export var bottom_margin: float = 38.0
 
 var progress
 var _level_buttons: Dictionary = {}
@@ -44,13 +44,13 @@ func _build_route() -> void:
 	_level_labels.clear()
 	_centers.clear()
 
-	var content_height := 820.0
+	var content_height := 480.0
 	custom_minimum_size = Vector2(route_width, content_height)
 	size = custom_minimum_size
 
 	var future_caption := Label.new()
 	future_caption.name = "FutureCabinetsCaption"
-	future_caption.position = Vector2(70.0, 28.0)
+	future_caption.position = Vector2(70.0, 12.0)
 	future_caption.size = Vector2(route_width - 140.0, 34.0)
 	future_caption.text = "UPPER CABINETS · SEALED FOR LATER"
 	future_caption.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
@@ -99,16 +99,15 @@ func _center_for(level_number: int, content_height: float) -> Vector2:
 		1:
 			return Vector2(route_width * 0.50, base_y)
 		2:
-			return Vector2(route_width * 0.36, base_y - 165.0)
+			return Vector2(route_width * 0.36, base_y - 120.0)
 		3:
-			return Vector2(route_width * 0.63, base_y - 330.0)
+			return Vector2(route_width * 0.63, base_y - 240.0)
 		_:
-			# Future Levels 4–10 remain present for progression contracts, but read as
-			# one sealed upper-cabinet cluster rather than a second competing journey.
+			# Future Levels 4–10 stay visible as one compact sealed cabinet cluster.
 			var future_index := level_number - 4
 			if future_index < 4:
-				return Vector2(117.5 + float(future_index) * 75.0, 126.0)
-			return Vector2(140.0 + float(future_index - 4) * 90.0, 182.0)
+				return Vector2(117.5 + float(future_index) * 75.0, 68.0)
+			return Vector2(140.0 + float(future_index - 4) * 90.0, 112.0)
 
 func _request(level_number: int) -> void:
 	if level_number <= canonical_level_cap and (progress == null or level_number <= int(progress.highest_level_unlocked)):
@@ -187,11 +186,11 @@ func _draw() -> void:
 	draw_rect(wall, Color("#151019"), true)
 	draw_rect(wall, Color(GOLD, 0.15), false, 2.0)
 
-	var future_zone := Rect2(54.0, 72.0, size.x - 108.0, 150.0)
+	var future_zone := Rect2(54.0, 42.0, size.x - 108.0, 112.0)
 	draw_rect(future_zone, Color("#110E15", 0.72), true)
 	draw_rect(future_zone, Color(LILAC, 0.13), false, 1.2)
 
-	var moon_center := Vector2(size.x * 0.50, 150.0)
+	var moon_center := Vector2(size.x * 0.50, 92.0)
 	draw_circle(moon_center, 46.0, Color(LILAC, 0.055))
 	draw_arc(moon_center, 35.0, 0.0, TAU, 42, Color(GOLD, 0.20), 1.5)
 
@@ -205,7 +204,7 @@ func _draw() -> void:
 		draw_circle(p, 8.0, PLUM)
 		draw_arc(p, 8.0, 0.0, TAU, 18, Color(GOLD, 0.52), 1.2)
 
-	var future_hub := Vector2(route_width * 0.50, 238.0)
+	var future_hub := Vector2(route_width * 0.50, 166.0)
 	draw_line(get_level_center(3), future_hub, Color(GOLD, 0.16), 1.8, true)
 	draw_circle(future_hub, 7.0, PLUM)
 	draw_arc(future_hub, 7.0, 0.0, TAU, 18, Color(GOLD, 0.30), 1.2)

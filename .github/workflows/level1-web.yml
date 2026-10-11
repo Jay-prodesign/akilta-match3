@@ -6,7 +6,7 @@ on:
       - p0/bootstrap
     paths:
       - ".github/workflows/level1-web.yml"
-  # Milestone trigger: clean terminal and pause gameplay hierarchy (2026-10-11).
+  # Milestone trigger: single-panel opening map + clean terminal gameplay states (2026-10-11).
   # Run the full milestone build deliberately, not on every development commit.
   workflow_dispatch:
 
