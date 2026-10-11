@@ -41,21 +41,27 @@ horizontal_alignment = 1
 
 [node name="Brand" type="Label" parent="Layout"]
 layout_mode = 2
-theme_override_colors/font_color = Color(0.957, 0.898, 0.788, 1)
+theme_override_colors/font_color = Color(0.985, 0.94, 0.86, 1)
+theme_override_colors/font_outline_color = Color(0.015, 0.01, 0.022, 0.98)
+theme_override_constants/outline_size = 7
 theme_override_font_sizes/font_size = 60
 text = "CAT & COVEN"
 horizontal_alignment = 1
 
 [node name="Subtitle" type="Label" parent="Layout"]
 layout_mode = 2
-theme_override_colors/font_color = Color(0.835, 0.678, 0.439, 1)
+theme_override_colors/font_color = Color(0.92, 0.78, 0.52, 1)
+theme_override_colors/font_outline_color = Color(0.015, 0.01, 0.022, 0.96)
+theme_override_constants/outline_size = 5
 theme_override_font_sizes/font_size = 26
 text = "THE HOUSE OF CURIOS"
 horizontal_alignment = 1
 
 [node name="Story" type="Label" parent="Layout"]
 layout_mode = 2
-theme_override_colors/font_color = Color(0.847, 0.776, 0.765, 1)
+theme_override_colors/font_color = Color(0.94, 0.88, 0.86, 1)
+theme_override_colors/font_outline_color = Color(0.015, 0.01, 0.022, 0.98)
+theme_override_constants/outline_size = 5
 theme_override_font_sizes/font_size = 22
 text = "The House remembers what you restore.\nWake the first relic."
 horizontal_alignment = 1
