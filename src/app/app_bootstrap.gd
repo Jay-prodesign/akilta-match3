@@ -238,16 +238,6 @@ func show_feature_preview(feature: String) -> bool:
 	var restored_stage := int(progress.house_stage) if progress != null else 0
 	var opening_complete := completed_count >= INTERNAL_REVIEW_LEVEL_COUNT and collected_count >= INTERNAL_REVIEW_LEVEL_COUNT and restored_stage >= INTERNAL_REVIEW_LEVEL_COUNT
 
-	var world_art := TextureRect.new()
-	world_art.name = "WorldBackdrop"
-	world_art.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
-	world_art.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	world_art.texture = PieceAssetLoader.ornament("res://assets/world/ch01_curio_boutique/curio_boutique_moonlit_backdrop.svg")
-	world_art.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
-	world_art.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_COVERED
-	world_art.modulate = Color(0.82, 0.76, 0.98, 0.34) if is_events else (Color(0.94, 0.78, 0.66, 0.30) if not is_profile else Color(0.72, 0.82, 0.98, 0.32))
-	overlay.add_child(world_art)
-	overlay.move_child(world_art, 1)
 	var eyebrow := Label.new()
 	eyebrow.text = "THE HOUSE OF CURIOS  ·  AKILTA"
 	eyebrow.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
@@ -277,7 +267,7 @@ func show_feature_preview(feature: String) -> bool:
 
 	var hero := PanelContainer.new()
 	hero.name = "FeatureHero"
-	hero.custom_minimum_size = Vector2(0, 190)
+	hero.custom_minimum_size = Vector2(0, 150)
 	var hero_style := StyleBoxFlat.new()
 	hero_style.bg_color = Color("#171321", 0.96)
 	hero_style.border_color = Color("#9B6FA6", 0.82) if is_events else (Color("#D5AD70", 0.86) if not is_profile else Color("#8796C7", 0.82))
@@ -295,13 +285,6 @@ func show_feature_preview(feature: String) -> bool:
 	hero_row.name = "HeroRow"
 	hero_row.add_theme_constant_override("separation", 14)
 	hero.add_child(hero_row)
-	var hero_art := TextureRect.new()
-	hero_art.name = "FeatureHeroArtwork"
-	hero_art.custom_minimum_size = Vector2(132, 132)
-	hero_art.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
-	hero_art.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
-	hero_art.texture = PieceAssetLoader.ornament("res://assets/pieces/moon_sigil.svg" if is_events else ("res://assets/curios/ch01_curio_moth_reliquary.svg" if not is_profile else "res://assets/curios/ch01_curio_moon_cameo_awakened_v01.svg"))
-	hero_row.add_child(hero_art)
 	var hero_copy := VBoxContainer.new()
 	hero_copy.name = "HeroCopy"
 	hero_copy.size_flags_horizontal = Control.SIZE_EXPAND_FILL
@@ -399,7 +382,7 @@ func show_feature_preview(feature: String) -> bool:
 		var card := PanelContainer.new()
 		card_index += 1
 		card.name = "FeatureCard%d" % card_index
-		card.custom_minimum_size = Vector2(0, 246)
+		card.custom_minimum_size = Vector2(0, 190)
 		var panel_style := StyleBoxFlat.new()
 		panel_style.bg_color = Color("#171321")
 		panel_style.border_color = Color("#9B6FA6", 0.58) if is_events else (Color("#D5AD70", 0.62) if not is_profile else Color("#8796C7", 0.58))
@@ -417,26 +400,6 @@ func show_feature_preview(feature: String) -> bool:
 		row.size_flags_vertical = Control.SIZE_EXPAND_FILL
 		row.add_theme_constant_override("separation", 18)
 		card.add_child(row)
-		var art_frame := PanelContainer.new()
-		art_frame.custom_minimum_size = Vector2(138, 138)
-		var art_style := StyleBoxFlat.new()
-		art_style.bg_color = Color("#0E0D19")
-		art_style.border_color = Color("#D5AD70", 0.40)
-		art_style.set_border_width_all(2)
-		art_style.set_corner_radius_all(16)
-		art_style.shadow_color = Color(0, 0, 0, 0.40)
-		art_style.shadow_size = 8
-		art_frame.add_theme_stylebox_override("panel", art_style)
-		row.add_child(art_frame)
-		var art := TextureRect.new()
-		art.name = "FeatureArtwork"
-		art.custom_minimum_size = Vector2(124, 124)
-		art.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-		art.size_flags_vertical = Control.SIZE_EXPAND_FILL
-		art.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
-		art.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
-		art.texture = PieceAssetLoader.ornament(String(entry.get("art", "")))
-		art_frame.add_child(art)
 		var copy := VBoxContainer.new()
 		copy.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 		copy.size_flags_vertical = Control.SIZE_EXPAND_FILL
@@ -504,8 +467,9 @@ func show_feature_preview(feature: String) -> bool:
 	layout.add_child(back)
 	back.pressed.connect(_dismiss_feature_preview)
 	_install_product_navigation(overlay, feature.to_lower(), NodePath("FeatureLayout"))
-	# Explicit card typography is intentionally retained; applying the global theme
-	# after construction would shrink these feature panels below mobile reading size.
+	# Secondary destinations intentionally use only contract-owned structural UI
+	# while their content art/economy/event assets are unavailable. Do not decorate
+	# locked shells with unrelated world or piece artwork.
 	return true
 
 func show_settings() -> bool:
