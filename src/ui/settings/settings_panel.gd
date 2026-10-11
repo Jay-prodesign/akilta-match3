@@ -3,6 +3,8 @@ extends Control
 
 signal close_requested
 
+const PieceAssetLoader = preload("res://src/match3/presentation/piece_asset_loader.gd")
+
 @onready var master_toggle: CheckButton = $Card/Content/Master
 @onready var music_toggle: CheckButton = $Card/Content/Music
 @onready var sfx_toggle: CheckButton = $Card/Content/SFX
@@ -15,6 +17,7 @@ var settings
 
 func _ready() -> void:
 	_style_settings_overlay()
+	_install_house_sigil()
 	close_button.pressed.connect(func(): close_requested.emit())
 	master_toggle.toggled.connect(func(on): _set_setting("master_muted", not on))
 	music_toggle.toggled.connect(func(on): _set_setting("music_muted", not on))
@@ -61,3 +64,19 @@ func _style_settings_overlay() -> void:
 	close_button.add_theme_stylebox_override("pressed", hover)
 	close_button.add_theme_color_override("font_color", Color("#F4E5D3"))
 	close_button.add_theme_color_override("font_hover_color", Color("#F4E5D3"))
+
+
+func _install_house_sigil() -> void:
+	var content := get_node_or_null("Card/Content") as VBoxContainer
+	if content == null or content.has_node("HouseSigil"):
+		return
+	var sigil := TextureRect.new()
+	sigil.name = "HouseSigil"
+	sigil.custom_minimum_size = Vector2(0, 72)
+	sigil.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+	sigil.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+	sigil.texture = PieceAssetLoader.ornament("res://assets/pieces/moon_sigil.svg")
+	sigil.modulate = Color("#E8C987")
+	sigil.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	content.add_child(sigil)
+	content.move_child(sigil, 3)
