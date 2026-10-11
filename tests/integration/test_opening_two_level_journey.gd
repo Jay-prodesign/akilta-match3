@@ -33,15 +33,20 @@ func _run() -> void:
 	primary_play.emit_signal("pressed")
 	await process_frame
 	await process_frame
-	_expect(str(app.current_route_name()) == "prestart", "new-player House CTA must enter focused Level 1 prestart directly")
-	_expect(str(app.current_screen().name) == "LevelPrestart", "focused Level 1 prestart must replace chapter-selection ceremony")
+	_expect(str(app.current_route_name()) == "map", "new-player House CTA must enter the current Curio Boutique route")
+	var first_map = app.current_screen()
+	_expect(first_map.get_level_button(1) != null and not first_map.get_level_button(1).disabled, "current route must expose Level 1")
+	first_map.get_level_button(1).emit_signal("pressed")
+	await process_frame
+	_expect(str(app.current_route_name()) == "prestart", "Level 1 route node must enter focused prestart")
+	_expect(str(app.current_screen().name) == "LevelPrestart", "focused Level 1 prestart must follow the route")
 	var back_button: Button = app.current_screen().get_node("Layout/Back")
 	back_button.emit_signal("pressed")
 	await process_frame
-	_expect(str(app.current_route_name()) == "house", "prestart back must return to House")
-	app.current_screen().get_node("Layout/PlayButton").emit_signal("pressed")
+	_expect(str(app.current_route_name()) == "map", "prestart back must return to the Curio Boutique route")
+	app.current_screen().get_level_button(1).emit_signal("pressed")
 	await process_frame
-	_expect(str(app.current_route_name()) == "prestart", "House must reopen prestart after back")
+	_expect(str(app.current_route_name()) == "prestart", "route must reopen Level 1 prestart after back")
 	_expect(not app.show_prestart(2), "direct navigation must not bypass earned progression")
 	_expect(not app.start_level(2), "direct gameplay entry must not bypass earned progression")
 	_expect(str(app.current_route_name()) == "prestart", "rejected Level 2 navigation must preserve focused Level 1 prestart")
@@ -69,7 +74,7 @@ func _run() -> void:
 	await process_frame
 	_expect(str(app.current_route_name()) == "house", "restoration Continue must return to House")
 	var replay_button: Button = app.current_screen().get_node("Layout/PlayButton")
-	_expect(not replay_button.disabled and replay_button.text == "PLAY LEVEL 2", "House must offer the next provisional review level after restoration completes")
+	_expect(not replay_button.disabled and replay_button.text == "CONTINUE CURIO BOUTIQUE", "House must offer the next provisional review level after restoration completes")
 	_expect(app.show_chapters(), "House must reopen chapter selection after Level 1 restoration")
 	await process_frame
 	var replay_chapters = app.current_screen()
@@ -104,7 +109,7 @@ func _run() -> void:
 	_expect(str(relaunched.current_route_name()) == "house", "relaunch splash must enter House")
 	_expect(restored != null and int(restored.house_stage) == 1, "relaunch must preserve Level 1 House restoration")
 	_expect(restored != null and restored.curios.count("moon_cameo") == 1, "relaunch must preserve Moon Cameo exactly once")
-	_expect(relaunched.current_screen().get_node("Layout/PlayButton").text == "PLAY LEVEL 2", "saved House must offer unlocked Level 2")
+	_expect(relaunched.current_screen().get_node("Layout/PlayButton").text == "CONTINUE CURIO BOUTIQUE", "saved House must offer unlocked Level 2")
 	relaunched.queue_free()
 	await process_frame
 	_cleanup()
