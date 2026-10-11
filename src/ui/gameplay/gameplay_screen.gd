@@ -654,8 +654,8 @@ func _build_booster_tray() -> void:
 	panel.anchor_right = 0.945
 	panel.anchor_top = 1.0
 	panel.anchor_bottom = 1.0
-	panel.offset_top = -146.0
-	panel.offset_bottom = -84.0
+	panel.offset_top = -74.0
+	panel.offset_bottom = -12.0
 	panel.z_index = 18
 	var shell := StyleBoxFlat.new()
 	shell.bg_color = Color("#100B16", 0.985)

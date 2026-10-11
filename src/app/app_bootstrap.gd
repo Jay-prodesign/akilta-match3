@@ -155,7 +155,11 @@ func complete_level_win(transaction_id: String, level_id: String, curio_id: Stri
 	if not _store.save(candidate.to_dict()):
 		return false
 	progress = candidate
-	return show_house()
+	if navigation.current() != NavigationScript.Route.HOUSE:
+		if not navigation.go(NavigationScript.Route.HOUSE, {"reason": "level_reward_restoration"}):
+			return false
+	_render_house(true, curio_id, int(candidate.house_stage))
+	return true
 
 func show_feature_preview(feature: String) -> bool:
 	# First-party, non-monetized preview: all controls are navigable, purchases remain disabled.
@@ -486,11 +490,13 @@ func close_settings() -> bool:
 	_settings_screen = null
 	return true
 
-func _render_house() -> void:
+func _render_house(restoration_mode: bool = false, curio_id: String = "", restoration_stage: int = 0) -> void:
 	var screen: Node = HouseScene.instantiate()
 	_show_screen(screen)
 	screen.set_available_level_count(INTERNAL_REVIEW_LEVEL_COUNT)
 	screen.set_progress(progress)
+	if restoration_mode and screen.has_method("show_restoration_ceremony"):
+		screen.show_restoration_ceremony(curio_id, restoration_stage)
 	screen.collection_requested.connect(show_collection)
 	screen.map_requested.connect(show_chapters)
 	screen.play_requested.connect(_on_house_play_requested)
@@ -616,7 +622,7 @@ func _install_north_star_backdrop(screen: Node) -> void:
 		return
 	# House owns a persistent same-camera world renderer; do not stack a second
 	# environment image behind it.
-	if String(screen.name) == "HouseHome":
+	if String(screen.name) in ["HouseHome", "LevelPrestart", "GameplayScreen"]:
 		return
 	if screen.has_node("NorthStarBackdrop"):
 		return

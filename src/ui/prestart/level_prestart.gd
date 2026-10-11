@@ -28,12 +28,12 @@ func _ready() -> void:
 func _install_world_backdrop() -> void:
 	var art := TextureRect.new()
 	art.name = "NorthStarWorldBackdrop"
-	art.texture = PieceAssetLoader.ornament("res://assets/world/ch01_curio_boutique/curio_boutique_moonlit_backdrop.svg")
+	art.texture = PieceAssetLoader.ornament("res://assets/world/ch01_curio_boutique/house_hub_final.svg")
 	art.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
 	art.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_COVERED
 	art.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	art.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	art.modulate = Color(0.88, 0.76, 0.82, 0.46)
+	art.modulate = Color(0.74, 0.70, 0.82, 0.34)
 	add_child(art)
 	move_child(art, 1)
 
@@ -43,7 +43,7 @@ func _build_ritual_aids() -> void:
 		return
 	var panel := PanelContainer.new()
 	panel.name = "RitualAids"
-	panel.custom_minimum_size = Vector2(0, 94)
+	panel.custom_minimum_size = Vector2(0, 86)
 	var shell := StyleBoxFlat.new()
 	shell.bg_color = Color("#120D18", 0.94)
 	shell.border_color = Color("#D5AD70", 0.46)
@@ -62,7 +62,7 @@ func _build_ritual_aids() -> void:
 	panel.add_child(column)
 	var heading := Label.new()
 	heading.name = "RitualAidsHeading"
-	heading.text = "RITUAL AIDS · AVAILABLE IN LEVEL"
+	heading.text = "AVAILABLE AIDS"
 	heading.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	heading.add_theme_color_override("font_color", Color("#D5AD70"))
 	heading.add_theme_font_size_override("font_size", 14)
@@ -77,7 +77,7 @@ func _build_ritual_aids() -> void:
 		{"label":"RETRY", "art":"res://assets/pieces/skull.svg"}
 	]:
 		var chip := PanelContainer.new()
-		chip.custom_minimum_size = Vector2(0, 48)
+		chip.custom_minimum_size = Vector2(0, 44)
 		chip.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 		var chip_style := StyleBoxFlat.new()
 		chip_style.bg_color = Color("#28142D", 0.96)
