@@ -726,6 +726,8 @@ func _render_house(restoration_mode: bool = false, curio_id: String = "", restor
 	var screen: Node = HouseScene.instantiate()
 	_show_screen(screen)
 	screen.set_available_level_count(INTERNAL_REVIEW_LEVEL_COUNT)
+	if screen.has_method("apply_presentation_settings"):
+		screen.apply_presentation_settings(user_settings.get_presentation_state())
 	screen.set_progress(progress)
 	if screen.has_method("set_returning_player"):
 		screen.set_returning_player(returning_player)

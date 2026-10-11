@@ -31,6 +31,7 @@ on:
       - "tests/integration/test_first_player_journey.gd"
       - "tests/integration/test_chapter_select_states.gd"
       - "tests/integration/test_chapter_route_frontier.gd"
+      - "tests/integration/test_restoration_presentation.gd"
       - "tests/integration/test_level1_gameplay.gd"
       - "tests/integration/test_opening_two_level_journey.gd"
       - "tests/integration/test_returning_player_resume.gd"
@@ -215,6 +216,18 @@ jobs:
           if [ "$status" -ne 0 ]; then exit "$status"; fi
           if grep -Eq "SCRIPT ERROR:|(^| )ERROR:|TEST_FAIL:" <<<"$output"; then exit 1; fi
           grep -Fq "TEST_PASS: S03 current frontier state contract" <<<"$output"
+
+      - name: Run S07 restoration presentation contract
+        shell: bash
+        run: |
+          set +e
+          output=$(timeout 35s ./godot --headless --path . -s res://tests/integration/test_restoration_presentation.gd 2>&1)
+          status=$?
+          set -e
+          printf '%s\n' "$output"
+          if [ "$status" -ne 0 ]; then exit "$status"; fi
+          if grep -Eq "SCRIPT ERROR:|(^| )ERROR:|TEST_FAIL:" <<<"$output"; then exit 1; fi
+          grep -Fq "TEST_PASS: S07 restoration presentation and reduced-motion contract" <<<"$output"
 
       - name: Run complete three-level review shell journey
         shell: bash
