@@ -6,7 +6,7 @@ on:
       - p0/bootstrap
     paths:
       - ".github/workflows/p0-visual.yml"
-  # Milestone trigger: compact complete Level 1 reference-slice visual verification (2026-10-11).
+  # Milestone trigger: reference-slice shell/nav/pause/settings visual verification (2026-10-11).
   # Run the full milestone checks deliberately, not on every development commit.
   workflow_dispatch:
 
