@@ -70,7 +70,7 @@ func _refresh() -> void:
 	if has_started and next_level > 1 and next_level <= available_level_count:
 		play_button.text = "ENTER LEVEL %d" % next_level
 	elif level1_completed and next_level > available_level_count:
-		play_button.text = "REPLAY LEVEL 1"
+		play_button.text = "REVISIT CURIO MAP"
 	elif next_level > available_level_count:
 		play_button.text = "MORE CURIOS STIR SOON"
 	else:
