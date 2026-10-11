@@ -142,7 +142,42 @@ func _run() -> void:
 	_expect(app.show_prestart(2), "authorized Level 2 must open its own prestart")
 	_expect(app.start_level(2), "authorized Level 2 must enter gameplay")
 	_expect(str(app.current_screen().current_level_id) == "ch01_level_002", "Level 2 must load its authored Wax Seal board")
-	_expect(app.show_house(), "internal review Level 2 must return safely to House without a reward")
+	var level2 = app.current_screen()
+	var level2_file = FileAccess.open("res://content/levels/ch01/level_002.json", FileAccess.READ)
+	_expect(level2_file != null, "Level 2 authored teaching moves must be available")
+	if level2_file != null:
+		var level2_data = JSON.parse_string(level2_file.get_as_text())
+		level2_file.close()
+		if level2_data is Dictionary:
+			for move in level2_data.get("teaching_moves", []):
+				var trace2 = level2.attempt_swap(Vector2i(int(move[0]), int(move[1])), Vector2i(int(move[2]), int(move[3])))
+				_expect(trace2 != null and trace2.accepted, "Level 2 teaching move must be accepted")
+				var board2 = level2.get_node_or_null("Layout/BoardView")
+				if board2 != null and board2.has_method("is_motion_active") and board2.is_motion_active():
+					await board2.trace_motion_finished
+				await process_frame
+				if level2.result_overlay.visible:
+					break
+	_expect(level2.result_overlay.visible, "Level 2 must reach the Moth Reliquary reward")
+	if level2.result_overlay.visible:
+		_expect(level2.continue_after_win(), "Level 2 win must save progression")
+		await process_frame
+		await process_frame
+		_expect(int(app.progress.highest_level_unlocked) == 3, "Level 2 win must unlock Level 3")
+		_expect(app.progress.curios.has("moth_reliquary"), "Level 2 reward must persist")
+		app.current_screen().get_node("Layout/PlayButton").emit_signal("pressed")
+		await process_frame
+		app.current_screen().get_node("Layout/ChapterGrid/CurioBoutiqueButton").emit_signal("pressed")
+		await process_frame
+		var third_map = app.current_screen()
+		_expect(third_map.get_level_button(3) != null and not third_map.get_level_button(3).disabled, "Level 3 must unlock on the map")
+		_expect(third_map.get_level_button(4) != null and third_map.get_level_button(4).disabled, "Level 4 must remain sealed")
+		_expect(app.show_prestart(3), "Level 3 prestart must open")
+		_expect(app.start_level(3), "Level 3 gameplay must load")
+		_expect(str(app.current_screen().current_level_id) == "ch01_level_003", "Level 3 must use authored Thornlight board")
+		_expect(app.show_house(), "Level 3 exit must safely return to House")
+	else:
+		_expect(app.show_house(), "unfinished Level 2 must safely return to House")
 
 	app.queue_free()
 	await process_frame
