@@ -705,7 +705,7 @@
       ],
       "reuse": "Chapters",
       "priority": "P1",
-      "production_status": "candidate_requires_screen_validation",
+      "production_status": "frozen_existing_candidate_do_not_polish_until_golden_loop_acceptance",
       "current_path": "assets/world/ch01_curio_boutique/chapter_world_map.svg"
     },
     {
@@ -730,7 +730,7 @@
       ],
       "reuse": "event_specific",
       "priority": "P2",
-      "production_status": "blocked_until_vertical_slice_acceptance"
+      "production_status": "blocked_until_golden_loop_acceptance"
     },
     {
       "asset_id": "shop_offer_art",
@@ -838,5 +838,33 @@
     "golden_loop": "S01>S04>S05>S06>S07>S01",
     "status": "ARCHITECTURE_AND_RUNTIME_ROUTE_RECONCILIATION_IN_PROGRESS",
     "rule": "Only authored-art slots owned by the canonical screen/state contract may enter production. No downstream bulk art before Golden Loop acceptance."
+  },
+  "architecture_source": {
+    "authority": "North Star Product Board interpreted through product architecture",
+    "contract": "assets/manifests/screen_contracts.json",
+    "derivation_order": [
+      "product_loop",
+      "screen_state_architecture",
+      "screen_contracts",
+      "global_shell",
+      "asset_plan",
+      "asset_manifest",
+      "golden_loop",
+      "downstream_expansion"
+    ]
+  },
+  "asset_production_gate": {
+    "status": "LOCKED_TO_GOLDEN_LOOP_ONLY",
+    "golden_loop": [
+      "S01",
+      "S03",
+      "S04",
+      "S05",
+      "S06",
+      "S07",
+      "S01"
+    ],
+    "rule": "No new or polished art outside a missing Golden Loop screen/block/slot/state until Golden Loop acceptance.",
+    "existing_non_golden_candidates": "frozen_do_not_polish"
   }
 }

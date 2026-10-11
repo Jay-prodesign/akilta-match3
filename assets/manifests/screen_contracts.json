@@ -1,0 +1,1959 @@
+{
+  "schema_version": 2,
+  "product": "AKILTA Match-3",
+  "authority": "North Star Product Board interpreted as product architecture, not an asset reference",
+  "hierarchy": "screen -> region -> block -> slot -> state -> component/asset",
+  "golden_playable_loop": [
+    "S01",
+    "S03",
+    "S04",
+    "S05",
+    "S06",
+    "S07",
+    "S01"
+  ],
+  "cold_start_prefix": [
+    "S00",
+    "S01"
+  ],
+  "replay_loop": [
+    "S01",
+    "S03",
+    "S04",
+    "S05",
+    "S06",
+    "S01"
+  ],
+  "failure_loop": [
+    "S05",
+    "O03",
+    "S05"
+  ],
+  "screens": {
+    "S00": {
+      "name": "Splash / Loading",
+      "purpose": "Enter the world, load durable player state, establish tone and reach the House safely.",
+      "entry": [
+        "cold_boot",
+        "relaunch"
+      ],
+      "exits": [
+        "S01"
+      ],
+      "states": [
+        "loading",
+        "ready",
+        "recoverable_error"
+      ],
+      "systems": [
+        "save",
+        "audio_bootstrap",
+        "settings",
+        "branding"
+      ],
+      "shell": "none",
+      "regions": [
+        {
+          "id": "world",
+          "blocks": [
+            {
+              "id": "environment",
+              "slots": [
+                {
+                  "id": "background_art",
+                  "layer": "background_art",
+                  "states": [
+                    "loading",
+                    "ready",
+                    "recoverable_error"
+                  ]
+                },
+                {
+                  "id": "brand_mark",
+                  "layer": "structural_ui",
+                  "states": [
+                    "loading",
+                    "ready"
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "entry",
+          "blocks": [
+            {
+              "id": "loading_or_enter",
+              "slots": [
+                {
+                  "id": "progress",
+                  "layer": "structural_ui",
+                  "states": [
+                    "loading"
+                  ]
+                },
+                {
+                  "id": "enter_cta",
+                  "layer": "structural_ui",
+                  "states": [
+                    "ready"
+                  ]
+                },
+                {
+                  "id": "recovery_message",
+                  "layer": "structural_ui",
+                  "states": [
+                    "recoverable_error"
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    "S01": {
+      "name": "House Hub",
+      "purpose": "Show persistent House state, player resources and the next meaningful action.",
+      "entry": [
+        "S00",
+        "S07",
+        "shell_return",
+        "relaunch_resume"
+      ],
+      "exits": [
+        "S03",
+        "S08",
+        "S10",
+        "S11",
+        "S12"
+      ],
+      "states": [
+        "dormant",
+        "stage01",
+        "stage02",
+        "stage03",
+        "returning_player"
+      ],
+      "systems": [
+        "progression",
+        "resources",
+        "curios",
+        "house_state",
+        "navigation"
+      ],
+      "shell": "meta",
+      "regions": [
+        {
+          "id": "header",
+          "blocks": [
+            {
+              "id": "global_header",
+              "slots": [
+                {
+                  "id": "lives",
+                  "layer": "functional_icon",
+                  "states": [
+                    "normal",
+                    "low",
+                    "full"
+                  ]
+                },
+                {
+                  "id": "coins",
+                  "layer": "functional_icon",
+                  "states": [
+                    "normal"
+                  ]
+                },
+                {
+                  "id": "gems",
+                  "layer": "functional_icon",
+                  "states": [
+                    "normal"
+                  ]
+                },
+                {
+                  "id": "profile_settings",
+                  "layer": "functional_icon",
+                  "states": [
+                    "normal",
+                    "pressed"
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "world",
+          "blocks": [
+            {
+              "id": "house_hero",
+              "slots": [
+                {
+                  "id": "full_environment",
+                  "layer": "background_art",
+                  "states": [
+                    "dormant",
+                    "stage01",
+                    "stage02",
+                    "stage03"
+                  ]
+                },
+                {
+                  "id": "character_world_layer",
+                  "layer": "content_artwork",
+                  "states": [
+                    "idle",
+                    "attention",
+                    "celebrate"
+                  ]
+                },
+                {
+                  "id": "restoration_slots",
+                  "layer": "content_artwork",
+                  "states": [
+                    "empty",
+                    "restored"
+                  ]
+                },
+                {
+                  "id": "ambient_world_fx",
+                  "layer": "runtime_vfx",
+                  "states": [
+                    "normal",
+                    "awakening"
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "next_action",
+          "blocks": [
+            {
+              "id": "progress_summary",
+              "slots": [
+                {
+                  "id": "chapter_progress",
+                  "layer": "structural_ui",
+                  "states": [
+                    "normal",
+                    "complete"
+                  ]
+                },
+                {
+                  "id": "curio_progress",
+                  "layer": "structural_ui",
+                  "states": [
+                    "normal",
+                    "complete"
+                  ]
+                }
+              ]
+            },
+            {
+              "id": "primary_cta",
+              "slots": [
+                {
+                  "id": "next_level_or_map",
+                  "layer": "structural_ui",
+                  "states": [
+                    "enabled",
+                    "disabled",
+                    "complete"
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "navigation",
+          "blocks": [
+            {
+              "id": "bottom_navigation",
+              "slots": [
+                {
+                  "id": "house",
+                  "layer": "functional_icon",
+                  "states": [
+                    "selected"
+                  ]
+                },
+                {
+                  "id": "curios",
+                  "layer": "functional_icon",
+                  "states": [
+                    "normal",
+                    "pressed"
+                  ]
+                },
+                {
+                  "id": "map",
+                  "layer": "functional_icon",
+                  "states": [
+                    "normal",
+                    "pressed"
+                  ]
+                },
+                {
+                  "id": "events",
+                  "layer": "functional_icon",
+                  "states": [
+                    "normal",
+                    "pressed",
+                    "disabled"
+                  ]
+                },
+                {
+                  "id": "shop",
+                  "layer": "functional_icon",
+                  "states": [
+                    "normal",
+                    "pressed",
+                    "disabled"
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    "S02": {
+      "name": "Chapters",
+      "purpose": "Choose a House wing while preserving visible long-term progression.",
+      "entry": [
+        "S01",
+        "bottom_nav_map"
+      ],
+      "exits": [
+        "S03",
+        "S01"
+      ],
+      "states": [
+        "first_wing_open",
+        "current_partial",
+        "current_complete",
+        "future_wings_locked"
+      ],
+      "systems": [
+        "chapter_unlocks",
+        "progression"
+      ],
+      "shell": "meta",
+      "regions": [
+        {
+          "id": "header",
+          "blocks": [
+            {
+              "id": "global_header",
+              "slots": [
+                {
+                  "id": "resources",
+                  "layer": "structural_ui",
+                  "states": [
+                    "normal"
+                  ]
+                },
+                {
+                  "id": "back",
+                  "layer": "functional_icon",
+                  "states": [
+                    "normal",
+                    "pressed"
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "world",
+          "blocks": [
+            {
+              "id": "chapter_world",
+              "slots": [
+                {
+                  "id": "full_background",
+                  "layer": "background_art",
+                  "states": [
+                    "default"
+                  ]
+                },
+                {
+                  "id": "chapter_hotspots",
+                  "layer": "structural_ui",
+                  "states": [
+                    "open",
+                    "current",
+                    "locked",
+                    "complete"
+                  ]
+                },
+                {
+                  "id": "lock_reason",
+                  "layer": "structural_ui",
+                  "states": [
+                    "locked"
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "navigation",
+          "blocks": [
+            {
+              "id": "bottom_navigation",
+              "slots": [
+                {
+                  "id": "map",
+                  "layer": "functional_icon",
+                  "states": [
+                    "selected"
+                  ]
+                },
+                {
+                  "id": "other_tabs",
+                  "layer": "functional_icon",
+                  "states": [
+                    "normal",
+                    "pressed"
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    "S03": {
+      "name": "Chapter Detail / Route",
+      "purpose": "Choose the next level inside the active House wing and understand opening progress.",
+      "entry": [
+        "S02",
+        "S01_next_action"
+      ],
+      "exits": [
+        "S04",
+        "S02",
+        "S01"
+      ],
+      "states": [
+        "opening_0_3",
+        "opening_1_3",
+        "opening_2_3",
+        "opening_3_3",
+        "node_current",
+        "node_available",
+        "node_completed",
+        "node_locked"
+      ],
+      "systems": [
+        "level_unlocks",
+        "progression",
+        "chapter_content"
+      ],
+      "shell": "meta",
+      "regions": [
+        {
+          "id": "header",
+          "blocks": [
+            {
+              "id": "chapter_header",
+              "slots": [
+                {
+                  "id": "title",
+                  "layer": "structural_ui",
+                  "states": [
+                    "normal"
+                  ]
+                },
+                {
+                  "id": "progress",
+                  "layer": "structural_ui",
+                  "states": [
+                    "opening_0_3",
+                    "opening_1_3",
+                    "opening_2_3",
+                    "opening_3_3"
+                  ]
+                },
+                {
+                  "id": "back",
+                  "layer": "functional_icon",
+                  "states": [
+                    "normal",
+                    "pressed"
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "route",
+          "blocks": [
+            {
+              "id": "chapter_route",
+              "slots": [
+                {
+                  "id": "environment",
+                  "layer": "background_art",
+                  "states": [
+                    "default"
+                  ]
+                },
+                {
+                  "id": "route_path",
+                  "layer": "structural_ui",
+                  "states": [
+                    "normal"
+                  ]
+                },
+                {
+                  "id": "level_nodes",
+                  "layer": "structural_ui",
+                  "states": [
+                    "current",
+                    "available",
+                    "completed",
+                    "locked"
+                  ]
+                },
+                {
+                  "id": "frontier_focus",
+                  "layer": "state_asset",
+                  "states": [
+                    "current"
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "navigation",
+          "blocks": [
+            {
+              "id": "bottom_navigation",
+              "slots": [
+                {
+                  "id": "map",
+                  "layer": "functional_icon",
+                  "states": [
+                    "selected"
+                  ]
+                },
+                {
+                  "id": "other_tabs",
+                  "layer": "functional_icon",
+                  "states": [
+                    "normal",
+                    "pressed"
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    "S04": {
+      "name": "Level Pre-start",
+      "purpose": "Explain objective, move budget, consequence and optional truthful aids before play.",
+      "entry": [
+        "S03",
+        "S01_fast_continue"
+      ],
+      "exits": [
+        "S05",
+        "S03",
+        "S01"
+      ],
+      "states": [
+        "first_attempt",
+        "replay",
+        "aids_available",
+        "aids_disabled"
+      ],
+      "systems": [
+        "level_content",
+        "objectives",
+        "boosters",
+        "reward_definition"
+      ],
+      "shell": "focused",
+      "regions": [
+        {
+          "id": "context",
+          "blocks": [
+            {
+              "id": "context_header",
+              "slots": [
+                {
+                  "id": "back",
+                  "layer": "functional_icon",
+                  "states": [
+                    "normal",
+                    "pressed"
+                  ]
+                },
+                {
+                  "id": "level_identity",
+                  "layer": "structural_ui",
+                  "states": [
+                    "first_attempt",
+                    "replay"
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "primary",
+          "blocks": [
+            {
+              "id": "primary_ritual_panel",
+              "slots": [
+                {
+                  "id": "level_art",
+                  "layer": "content_artwork",
+                  "states": [
+                    "first_attempt",
+                    "replay"
+                  ]
+                },
+                {
+                  "id": "objective",
+                  "layer": "structural_ui",
+                  "states": [
+                    "normal"
+                  ]
+                },
+                {
+                  "id": "move_budget",
+                  "layer": "structural_ui",
+                  "states": [
+                    "normal"
+                  ]
+                },
+                {
+                  "id": "reward_curio",
+                  "layer": "content_artwork",
+                  "states": [
+                    "sealed",
+                    "owned_replay"
+                  ]
+                },
+                {
+                  "id": "house_consequence",
+                  "layer": "structural_ui",
+                  "states": [
+                    "first_attempt",
+                    "replay"
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "actions",
+          "blocks": [
+            {
+              "id": "aid_or_booster_row",
+              "slots": [
+                {
+                  "id": "hint",
+                  "layer": "gameplay_asset",
+                  "states": [
+                    "available",
+                    "disabled"
+                  ]
+                },
+                {
+                  "id": "plus_moves",
+                  "layer": "gameplay_asset",
+                  "states": [
+                    "available",
+                    "disabled"
+                  ]
+                }
+              ]
+            },
+            {
+              "id": "primary_cta",
+              "slots": [
+                {
+                  "id": "play",
+                  "layer": "structural_ui",
+                  "states": [
+                    "enabled",
+                    "pressed",
+                    "disabled"
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "world",
+          "blocks": [
+            {
+              "id": "full_screen_background",
+              "slots": [
+                {
+                  "id": "environment",
+                  "layer": "background_art",
+                  "states": [
+                    "first_attempt",
+                    "replay"
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    "S05": {
+      "name": "Match-3 Gameplay",
+      "purpose": "Solve the active puzzle with clear objectives, readable pieces and recoverable session controls.",
+      "entry": [
+        "S04",
+        "retry"
+      ],
+      "exits": [
+        "S06",
+        "O03",
+        "O01",
+        "S01"
+      ],
+      "states": [
+        "playing",
+        "teaching",
+        "swap",
+        "cascade",
+        "special_created",
+        "special_triggered",
+        "blocker_damaged",
+        "objective_complete",
+        "paused",
+        "won",
+        "failed"
+      ],
+      "systems": [
+        "board",
+        "moves",
+        "objectives",
+        "specials",
+        "blockers",
+        "feedback",
+        "session"
+      ],
+      "shell": "gameplay",
+      "regions": [
+        {
+          "id": "hud",
+          "blocks": [
+            {
+              "id": "gameplay_header",
+              "slots": [
+                {
+                  "id": "level",
+                  "layer": "structural_ui",
+                  "states": [
+                    "normal"
+                  ]
+                },
+                {
+                  "id": "moves",
+                  "layer": "structural_ui",
+                  "states": [
+                    "normal",
+                    "low"
+                  ]
+                },
+                {
+                  "id": "objective_remaining",
+                  "layer": "structural_ui",
+                  "states": [
+                    "normal",
+                    "complete"
+                  ]
+                },
+                {
+                  "id": "pause",
+                  "layer": "functional_icon",
+                  "states": [
+                    "normal",
+                    "pressed"
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "board",
+          "blocks": [
+            {
+              "id": "match_board",
+              "slots": [
+                {
+                  "id": "board_field",
+                  "layer": "structural_ui",
+                  "states": [
+                    "normal",
+                    "high_contrast"
+                  ]
+                },
+                {
+                  "id": "base_pieces",
+                  "layer": "gameplay_asset",
+                  "states": [
+                    "idle",
+                    "selected",
+                    "matched",
+                    "moving"
+                  ]
+                },
+                {
+                  "id": "specials",
+                  "layer": "gameplay_asset",
+                  "states": [
+                    "created",
+                    "armed",
+                    "triggered"
+                  ]
+                },
+                {
+                  "id": "blockers",
+                  "layer": "gameplay_asset",
+                  "states": [
+                    "normal",
+                    "damaged",
+                    "cleared"
+                  ]
+                },
+                {
+                  "id": "board_fx",
+                  "layer": "runtime_vfx",
+                  "states": [
+                    "match",
+                    "cascade",
+                    "special",
+                    "objective_complete"
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "actions",
+          "blocks": [
+            {
+              "id": "booster_row",
+              "slots": [
+                {
+                  "id": "hint",
+                  "layer": "gameplay_asset",
+                  "states": [
+                    "available",
+                    "disabled",
+                    "pressed"
+                  ]
+                },
+                {
+                  "id": "plus_moves",
+                  "layer": "gameplay_asset",
+                  "states": [
+                    "available",
+                    "disabled",
+                    "pressed"
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "world",
+          "blocks": [
+            {
+              "id": "full_screen_background",
+              "slots": [
+                {
+                  "id": "environment",
+                  "layer": "background_art",
+                  "states": [
+                    "playing",
+                    "won",
+                    "failed"
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    "S06": {
+      "name": "Win / Rewards",
+      "purpose": "Make success, earned reward and persistent House consequence unambiguous before continuation.",
+      "entry": [
+        "S05_won"
+      ],
+      "exits": [
+        "S07",
+        "S01_replay"
+      ],
+      "states": [
+        "first_time_reveal",
+        "first_time_ready",
+        "replay_reveal",
+        "replay_ready"
+      ],
+      "systems": [
+        "reward_transaction",
+        "curio_unlock",
+        "resources",
+        "progression"
+      ],
+      "shell": "result_overlay",
+      "regions": [
+        {
+          "id": "context",
+          "blocks": [
+            {
+              "id": "dimmed_gameplay",
+              "slots": [
+                {
+                  "id": "backdrop_context",
+                  "layer": "state_asset",
+                  "states": [
+                    "first_time_reveal",
+                    "replay_reveal"
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "result",
+          "blocks": [
+            {
+              "id": "result_panel",
+              "slots": [
+                {
+                  "id": "result_title",
+                  "layer": "structural_ui",
+                  "states": [
+                    "reveal",
+                    "ready"
+                  ]
+                },
+                {
+                  "id": "reward_curio",
+                  "layer": "content_artwork",
+                  "states": [
+                    "sealed",
+                    "awakening",
+                    "awakened",
+                    "replay_owned"
+                  ]
+                },
+                {
+                  "id": "reward_values",
+                  "layer": "structural_ui",
+                  "states": [
+                    "earned",
+                    "replay"
+                  ]
+                },
+                {
+                  "id": "house_consequence",
+                  "layer": "structural_ui",
+                  "states": [
+                    "first_time",
+                    "replay"
+                  ]
+                },
+                {
+                  "id": "continue",
+                  "layer": "structural_ui",
+                  "states": [
+                    "enabled",
+                    "pressed"
+                  ]
+                },
+                {
+                  "id": "reward_fx",
+                  "layer": "runtime_vfx",
+                  "states": [
+                    "reveal",
+                    "reduced_motion"
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    "S07": {
+      "name": "House Restoration",
+      "purpose": "Show the exact persistent House change caused by a first-time win using the same House camera.",
+      "entry": [
+        "S06_first_time"
+      ],
+      "exits": [
+        "S01"
+      ],
+      "states": [
+        "before",
+        "awakening",
+        "after",
+        "already_restored_bypass"
+      ],
+      "systems": [
+        "house_state",
+        "curio_placement",
+        "save",
+        "feedback"
+      ],
+      "shell": "ceremony",
+      "regions": [
+        {
+          "id": "world",
+          "blocks": [
+            {
+              "id": "house_hero",
+              "slots": [
+                {
+                  "id": "full_environment",
+                  "layer": "background_art",
+                  "states": [
+                    "before",
+                    "after"
+                  ]
+                },
+                {
+                  "id": "restored_curio_slot",
+                  "layer": "content_artwork",
+                  "states": [
+                    "empty",
+                    "awakening",
+                    "restored"
+                  ]
+                },
+                {
+                  "id": "character_world_layer",
+                  "layer": "content_artwork",
+                  "states": [
+                    "attention",
+                    "celebrate"
+                  ]
+                },
+                {
+                  "id": "awakening_fx",
+                  "layer": "runtime_vfx",
+                  "states": [
+                    "play",
+                    "reduced_motion"
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "ceremony",
+          "blocks": [
+            {
+              "id": "change_summary",
+              "slots": [
+                {
+                  "id": "curio_identity",
+                  "layer": "content_artwork",
+                  "states": [
+                    "awakening",
+                    "restored"
+                  ]
+                },
+                {
+                  "id": "change_copy",
+                  "layer": "structural_ui",
+                  "states": [
+                    "after"
+                  ]
+                },
+                {
+                  "id": "continue",
+                  "layer": "structural_ui",
+                  "states": [
+                    "enabled",
+                    "pressed"
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    "S08": {
+      "name": "Curio Collection",
+      "purpose": "Inspect owned Curios, understand missing Curios and open detail without inventing progress.",
+      "entry": [
+        "S01",
+        "bottom_nav_curios"
+      ],
+      "exits": [
+        "S01",
+        "O04"
+      ],
+      "states": [
+        "empty",
+        "partial",
+        "complete",
+        "curio_locked",
+        "curio_awakened",
+        "detail_open"
+      ],
+      "systems": [
+        "curio_inventory",
+        "progression"
+      ],
+      "shell": "meta",
+      "regions": [
+        {
+          "id": "header",
+          "blocks": [
+            {
+              "id": "collection_header",
+              "slots": [
+                {
+                  "id": "title",
+                  "layer": "structural_ui",
+                  "states": [
+                    "normal"
+                  ]
+                },
+                {
+                  "id": "count",
+                  "layer": "structural_ui",
+                  "states": [
+                    "empty",
+                    "partial",
+                    "complete"
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "collection",
+          "blocks": [
+            {
+              "id": "curio_grid",
+              "slots": [
+                {
+                  "id": "curio_cards",
+                  "layer": "content_artwork",
+                  "states": [
+                    "locked",
+                    "awakened"
+                  ]
+                },
+                {
+                  "id": "empty_state",
+                  "layer": "structural_ui",
+                  "states": [
+                    "empty"
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "navigation",
+          "blocks": [
+            {
+              "id": "bottom_navigation",
+              "slots": [
+                {
+                  "id": "curios",
+                  "layer": "functional_icon",
+                  "states": [
+                    "selected"
+                  ]
+                },
+                {
+                  "id": "other_tabs",
+                  "layer": "functional_icon",
+                  "states": [
+                    "normal",
+                    "pressed"
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    "S09": {
+      "name": "Weekly Missions",
+      "purpose": "Show weekly goals and truthful claim state only when live mission data exists.",
+      "entry": [
+        "S10",
+        "house_entry_point"
+      ],
+      "exits": [
+        "S01",
+        "S10"
+      ],
+      "states": [
+        "active",
+        "in_progress",
+        "claimable",
+        "claimed",
+        "reset_empty",
+        "offline"
+      ],
+      "systems": [
+        "missions",
+        "timers",
+        "rewards"
+      ],
+      "shell": "meta",
+      "regions": [
+        {
+          "id": "header",
+          "blocks": [
+            {
+              "id": "mission_header",
+              "slots": [
+                {
+                  "id": "title",
+                  "layer": "structural_ui",
+                  "states": [
+                    "normal"
+                  ]
+                },
+                {
+                  "id": "timer",
+                  "layer": "structural_ui",
+                  "states": [
+                    "active",
+                    "offline"
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "missions",
+          "blocks": [
+            {
+              "id": "mission_list",
+              "slots": [
+                {
+                  "id": "mission_card",
+                  "layer": "structural_ui",
+                  "states": [
+                    "in_progress",
+                    "claimable",
+                    "claimed"
+                  ]
+                },
+                {
+                  "id": "reward",
+                  "layer": "content_artwork",
+                  "states": [
+                    "locked",
+                    "claimable",
+                    "claimed"
+                  ]
+                },
+                {
+                  "id": "empty_state",
+                  "layer": "structural_ui",
+                  "states": [
+                    "reset_empty",
+                    "offline"
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    "S10": {
+      "name": "Event Center",
+      "purpose": "Discover active or upcoming events and enter only eligible real content.",
+      "entry": [
+        "S01",
+        "bottom_nav_events"
+      ],
+      "exits": [
+        "S01",
+        "S09",
+        "event_content"
+      ],
+      "states": [
+        "live",
+        "coming_soon",
+        "locked",
+        "completed",
+        "empty"
+      ],
+      "systems": [
+        "events",
+        "eligibility",
+        "timers",
+        "rewards"
+      ],
+      "shell": "meta",
+      "regions": [
+        {
+          "id": "header",
+          "blocks": [
+            {
+              "id": "event_header",
+              "slots": [
+                {
+                  "id": "title",
+                  "layer": "structural_ui",
+                  "states": [
+                    "normal"
+                  ]
+                },
+                {
+                  "id": "status",
+                  "layer": "structural_ui",
+                  "states": [
+                    "live",
+                    "coming_soon",
+                    "empty"
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "events",
+          "blocks": [
+            {
+              "id": "event_cards",
+              "slots": [
+                {
+                  "id": "hero_art",
+                  "layer": "content_artwork",
+                  "states": [
+                    "live",
+                    "coming_soon",
+                    "locked",
+                    "completed"
+                  ]
+                },
+                {
+                  "id": "timer",
+                  "layer": "structural_ui",
+                  "states": [
+                    "live",
+                    "coming_soon"
+                  ]
+                },
+                {
+                  "id": "reward_metadata",
+                  "layer": "structural_ui",
+                  "states": [
+                    "live",
+                    "completed"
+                  ]
+                },
+                {
+                  "id": "cta",
+                  "layer": "structural_ui",
+                  "states": [
+                    "enabled",
+                    "disabled"
+                  ]
+                },
+                {
+                  "id": "empty_state",
+                  "layer": "structural_ui",
+                  "states": [
+                    "empty"
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "navigation",
+          "blocks": [
+            {
+              "id": "bottom_navigation",
+              "slots": [
+                {
+                  "id": "events",
+                  "layer": "functional_icon",
+                  "states": [
+                    "selected"
+                  ]
+                },
+                {
+                  "id": "other_tabs",
+                  "layer": "functional_icon",
+                  "states": [
+                    "normal",
+                    "pressed"
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    "S11": {
+      "name": "Shop",
+      "purpose": "Present economy surfaces truthfully; no enabled payment interaction before real commerce is connected.",
+      "entry": [
+        "S01",
+        "bottom_nav_shop"
+      ],
+      "exits": [
+        "S01"
+      ],
+      "states": [
+        "review_disabled",
+        "catalog_loading",
+        "available",
+        "unavailable",
+        "purchase_in_progress",
+        "purchase_success",
+        "purchase_failure"
+      ],
+      "systems": [
+        "economy",
+        "commerce"
+      ],
+      "shell": "meta",
+      "regions": [
+        {
+          "id": "header",
+          "blocks": [
+            {
+              "id": "shop_header",
+              "slots": [
+                {
+                  "id": "title",
+                  "layer": "structural_ui",
+                  "states": [
+                    "normal"
+                  ]
+                },
+                {
+                  "id": "currency_summary",
+                  "layer": "structural_ui",
+                  "states": [
+                    "normal"
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "catalog",
+          "blocks": [
+            {
+              "id": "featured_offer",
+              "slots": [
+                {
+                  "id": "offer_art",
+                  "layer": "content_artwork",
+                  "states": [
+                    "available",
+                    "unavailable",
+                    "review_disabled"
+                  ]
+                },
+                {
+                  "id": "price_or_disabled_truth",
+                  "layer": "structural_ui",
+                  "states": [
+                    "available",
+                    "review_disabled"
+                  ]
+                },
+                {
+                  "id": "cta",
+                  "layer": "structural_ui",
+                  "states": [
+                    "enabled",
+                    "disabled",
+                    "loading"
+                  ]
+                }
+              ]
+            },
+            {
+              "id": "offer_grid",
+              "slots": [
+                {
+                  "id": "offer_cards",
+                  "layer": "structural_ui",
+                  "states": [
+                    "loading",
+                    "available",
+                    "unavailable"
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "navigation",
+          "blocks": [
+            {
+              "id": "bottom_navigation",
+              "slots": [
+                {
+                  "id": "shop",
+                  "layer": "functional_icon",
+                  "states": [
+                    "selected"
+                  ]
+                },
+                {
+                  "id": "other_tabs",
+                  "layer": "functional_icon",
+                  "states": [
+                    "normal",
+                    "pressed"
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    "S12": {
+      "name": "Profile / Settings",
+      "purpose": "Show player progress and control local experience preferences.",
+      "entry": [
+        "S01_header",
+        "meta_header"
+      ],
+      "exits": [
+        "origin_screen"
+      ],
+      "states": [
+        "profile_summary",
+        "settings_open",
+        "settings_changed"
+      ],
+      "systems": [
+        "player_progress",
+        "settings",
+        "accessibility"
+      ],
+      "shell": "meta_or_modal",
+      "regions": [
+        {
+          "id": "profile",
+          "blocks": [
+            {
+              "id": "profile_summary",
+              "slots": [
+                {
+                  "id": "identity",
+                  "layer": "structural_ui",
+                  "states": [
+                    "normal"
+                  ]
+                },
+                {
+                  "id": "level_progress",
+                  "layer": "structural_ui",
+                  "states": [
+                    "normal"
+                  ]
+                },
+                {
+                  "id": "curio_progress",
+                  "layer": "structural_ui",
+                  "states": [
+                    "normal"
+                  ]
+                },
+                {
+                  "id": "house_progress",
+                  "layer": "structural_ui",
+                  "states": [
+                    "normal"
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "settings",
+          "blocks": [
+            {
+              "id": "settings_controls",
+              "slots": [
+                {
+                  "id": "master_audio",
+                  "layer": "structural_ui",
+                  "states": [
+                    "on",
+                    "off"
+                  ]
+                },
+                {
+                  "id": "music",
+                  "layer": "structural_ui",
+                  "states": [
+                    "on",
+                    "off"
+                  ]
+                },
+                {
+                  "id": "sfx",
+                  "layer": "structural_ui",
+                  "states": [
+                    "on",
+                    "off"
+                  ]
+                },
+                {
+                  "id": "haptics",
+                  "layer": "structural_ui",
+                  "states": [
+                    "on",
+                    "off"
+                  ]
+                },
+                {
+                  "id": "reduced_motion",
+                  "layer": "structural_ui",
+                  "states": [
+                    "on",
+                    "off"
+                  ]
+                },
+                {
+                  "id": "high_contrast",
+                  "layer": "structural_ui",
+                  "states": [
+                    "on",
+                    "off"
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  },
+  "overlays": {
+    "O01": {
+      "name": "Pause",
+      "owner": [
+        "S05"
+      ],
+      "states": [
+        "open"
+      ],
+      "blocks": [
+        {
+          "id": "pause_panel",
+          "slots": [
+            {
+              "id": "resume",
+              "states": [
+                "enabled"
+              ]
+            },
+            {
+              "id": "retry",
+              "states": [
+                "enabled"
+              ]
+            },
+            {
+              "id": "settings",
+              "states": [
+                "enabled"
+              ]
+            },
+            {
+              "id": "exit",
+              "states": [
+                "enabled"
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    "O02": {
+      "name": "Settings Modal",
+      "owner": [
+        "S01",
+        "S05",
+        "S12"
+      ],
+      "states": [
+        "open",
+        "changed"
+      ],
+      "blocks": [
+        {
+          "id": "settings_panel",
+          "slots": [
+            {
+              "id": "audio_controls",
+              "states": [
+                "on",
+                "off"
+              ]
+            },
+            {
+              "id": "accessibility_controls",
+              "states": [
+                "on",
+                "off"
+              ]
+            },
+            {
+              "id": "close",
+              "states": [
+                "enabled"
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    "O03": {
+      "name": "Fail / Retry",
+      "owner": [
+        "S05"
+      ],
+      "states": [
+        "out_of_moves",
+        "failed_objective"
+      ],
+      "blocks": [
+        {
+          "id": "fail_panel",
+          "slots": [
+            {
+              "id": "reason",
+              "states": [
+                "visible"
+              ]
+            },
+            {
+              "id": "retry",
+              "states": [
+                "enabled"
+              ]
+            },
+            {
+              "id": "exit",
+              "states": [
+                "enabled"
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    "O04": {
+      "name": "Curio Detail",
+      "owner": [
+        "S08"
+      ],
+      "states": [
+        "locked",
+        "awakened"
+      ],
+      "blocks": [
+        {
+          "id": "curio_detail",
+          "slots": [
+            {
+              "id": "hero_art",
+              "states": [
+                "locked",
+                "awakened"
+              ]
+            },
+            {
+              "id": "name",
+              "states": [
+                "visible"
+              ]
+            },
+            {
+              "id": "origin",
+              "states": [
+                "visible"
+              ]
+            },
+            {
+              "id": "lore",
+              "states": [
+                "visible"
+              ]
+            },
+            {
+              "id": "close",
+              "states": [
+                "enabled"
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    "O05": {
+      "name": "Locked Explanation",
+      "owner": [
+        "S02",
+        "S03",
+        "S08",
+        "S10"
+      ],
+      "states": [
+        "locked"
+      ],
+      "blocks": [
+        {
+          "id": "locked_panel",
+          "slots": [
+            {
+              "id": "reason",
+              "states": [
+                "visible"
+              ]
+            },
+            {
+              "id": "requirement",
+              "states": [
+                "visible"
+              ]
+            },
+            {
+              "id": "close",
+              "states": [
+                "enabled"
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    "O06": {
+      "name": "Confirmation",
+      "owner": [
+        "S05",
+        "S11",
+        "S12"
+      ],
+      "states": [
+        "destructive_or_high_impact_only"
+      ],
+      "blocks": [
+        {
+          "id": "confirmation_panel",
+          "slots": [
+            {
+              "id": "message",
+              "states": [
+                "visible"
+              ]
+            },
+            {
+              "id": "confirm",
+              "states": [
+                "enabled"
+              ]
+            },
+            {
+              "id": "cancel",
+              "states": [
+                "enabled"
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    "O07": {
+      "name": "Recovery",
+      "owner": [
+        "S00",
+        "S05",
+        "S11"
+      ],
+      "states": [
+        "recoverable_error"
+      ],
+      "blocks": [
+        {
+          "id": "recovery_panel",
+          "slots": [
+            {
+              "id": "message",
+              "states": [
+                "visible"
+              ]
+            },
+            {
+              "id": "retry",
+              "states": [
+                "enabled"
+              ]
+            },
+            {
+              "id": "safe_exit",
+              "states": [
+                "enabled"
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  }
+}

@@ -1,186 +1,87 @@
-# AKILTA Match-3 — Screen-First Visual Production Pipeline
+# AKILTA Match-3 — Screen-First Product & Visual Production Pipeline
 
-Status: ACTIVE PRODUCT EXECUTION CONTRACT · 2026-10-11  
-Authority: North Star Product Board + current Match-3 product truth.  
-Purpose: stop isolated art production and force visual implementation to follow product dependency order.
+Status: **ACTIVE PRODUCT EXECUTION CONTRACT · 2026-10-11**
 
-## 1. Non-negotiable production rule
+## 1. North Star authority
 
-A generated image is not a screen. An asset is never produced because it looks useful in isolation.
+The North Star is the source of the **product architecture** first and the visual language second.
 
-Every visual task must resolve this chain before work starts:
+Derivation order is locked:
 
-**SCREEN → REGION → BLOCK → SLOT → STATE → ASSET / COMPONENT → IMPLEMENTATION → RENDERED VERIFICATION**
+**PRODUCT LOOP → COMPLETE SCREEN/STATE ARCHITECTURE → SCREEN CONTRACTS → GLOBAL SHELL → ASSET LAYER PLAN → ASSET MANIFEST → GOLDEN PLAYABLE LOOP → RENDERED VERIFICATION → DOWNSTREAM EXPANSION**
 
-If an asset has no exact Screen/Block/Slot/State owner, it is not ready for production.
+A generated image is never a screen.
 
-The North Star board is the target experience language, not a literal screenshot template. The app must preserve:
-- dark romantic gothic atmosphere;
-- living House progression;
-- black / antique gold / plum material language;
-- moon, candle, thorn rose and black-cat motifs;
-- readable portrait mobile UI;
-- premium coherent presentation;
-- code-driven interactive UI, not rasterized phone screenshots.
+## 2. Production ownership chain
 
-## 2. Complete screen inventory
+Before any asset work:
 
-### S00 — Splash / Loading
-Player job: enter the world and understand tone immediately.
-Entry: app boot / relaunch.
-Exit: House Hub.
-States: loading, ready-to-enter, recoverable load error.
-Systems: save load, audio bootstrap, branding.
+**SCREEN → REGION → BLOCK → SLOT → STATE**
 
-### S01 — House Hub
-Player job: understand persistent House state, next useful action and current resources.
-Entry: splash, gameplay completion, back from shell screens.
-Exit: Chapters, Curios, Events, Shop, Profile/Settings.
-States: dormant, stage01, stage02, stage03/opening-complete, returning-player.
-Systems: progression, curios, resources, global navigation, settings.
+Then and only then:
 
-### S02 — Chapters
-Player job: choose a House wing.
-Entry: House/Map navigation.
-Exit: Chapter Detail, House.
-States: first chapter available, later wings locked, current chapter partially restored, chapter complete.
-Systems: chapter unlock state, progression.
+**COMPONENT / ASSET → IMPLEMENTATION → RENDERED VERIFICATION**
 
-### S03 — Chapter Detail / Curio Boutique Route
-Player job: choose a level/display inside the current chapter.
-Entry: Chapters.
-Exit: Level Pre-start, Chapters.
-States: 0/3, 1/3, 2/3, 3/3 opening progress; level current/available/completed/locked; future displays sealed.
-Systems: level unlocks, completion state, chapter art/profile.
+No exact owner = no asset production.
 
-### S04 — Level Pre-start
-Player job: understand objective, move budget, reward and optional aids; start intentionally.
-Entry: Chapter Detail.
-Exit: Gameplay, Chapter Detail.
-States: first attempt, replay, booster/aids available, unavailable/disabled.
-Systems: level content, objective, reward definition, boosters.
+## 3. Canonical product loop
 
-### S05 — Match-3 Gameplay
-Player job: solve the active puzzle.
-Entry: Pre-start.
-Exit: Win/Rewards or Fail/Retry, pause, House via explicit exit.
-States: playing, teaching/hint, swap, cascade, special-created, special-triggered, blocker-damaged, objective-complete, paused, won, failed.
-Systems: deterministic board, objectives, moves, specials, blockers, resources, VFX/audio/haptics.
+**HOUSE → CURRENT CHAPTER ROUTE → PRE-START → MATCH-3 → WIN/REWARD → RESTORE HOUSE → HOUSE**
 
-### S06 — Win / Rewards
-Player job: understand success, reward and persistent consequence.
-Entry: Gameplay won.
-Exit: Restoration ceremony / House.
-States: first-time reward, replay completion, reward reveal, continue.
-Systems: exactly-once reward transaction, curio unlock, resources, progression.
+Cold boot adds Splash. Fail/retry remains inside Gameplay. Replay does not re-award persistent progress.
 
-### S07 — House Restoration
-Player job: see what physically changed in the House because of the level win.
-Entry: first-time Win/Rewards.
-Exit: House Hub.
-States: before, awakening transition, after, already-restored/replay bypass.
-Systems: House stage, curio placement, motion/audio/haptics, save continuity.
+## 4. Screen/state map
 
-### S08 — Curio Collection
-Player job: inspect collected Curios and understand missing ones.
-Entry: global nav / House.
-Exit: House, optional Curio detail.
-States: empty, partial, complete, curio locked, curio awakened, detail.
-Systems: progression, curio metadata, chapter origin.
+Canonical definitions:
+- `docs/product/product-architecture.md`
+- `docs/product/screen-state-architecture.md`
+- `assets/manifests/screen_contracts.json`
 
-### S09 — Weekly Missions
-Player job: understand weekly goals and claim earned rewards.
-Entry: House/Event surfaces.
-Exit: House / Events.
-States: active, in-progress, claimable, claimed, reset/empty, offline-safe.
-Systems: mission state, timers, rewards. No fake claim behavior before backend/live contract exists.
+These override prototype-driven assumptions.
 
-### S10 — Event Center
-Player job: discover active/coming events and enter eligible content.
-Entry: global nav.
-Exit: Event detail/gameplay, House.
-States: live, coming soon, locked, completed, empty/no-live-event.
-Systems: event schedule, eligibility, rewards.
+## 5. Global UI shell
 
-### S11 — Shop
-Player job: understand purchasable/earnable offers without deceptive controls.
-Entry: global nav.
-Exit: House.
-States: catalog loading, available offer, unavailable/disabled, purchase-in-progress, success, failure, restore where applicable.
-Systems: economy/IAP only after commercial gate. Internal review must clearly disable real purchasing.
+Reusable code/component system owns:
+header, resource chips, bottom navigation, panels, buttons, cards, modals, progress, locked treatment, typography and state feedback.
 
-### S12 — Profile / Settings
-Player job: inspect player identity/progress and control experience settings.
-Entry: header/profile affordance.
-Exit: previous screen / House.
-States: profile summary, settings modal, audio on/off, haptics, reduced motion, high contrast, support/privacy later.
-Systems: player progress, preferences, accessibility.
+Environment images never own live UI text, counters, navigation or buttons.
 
-## 3. Overlay / modal inventory
+## 6. Asset layers
 
-- O01 Pause: resume, retry, settings, exit.
-- O02 Settings: audio/music/SFX/haptics/reduced-motion/high-contrast.
-- O03 Win/Reward reveal: sits above gameplay but is a distinct product state.
-- O04 Fail/Retry: retry primary; no shaming copy.
-- O05 Curio detail: art, name, origin, state, lore.
-- O06 Locked explanation: tells player why a chapter/level/feature is unavailable.
-- O07 Confirmation only where destructive/high-impact action exists.
+A. environment/background art  
+B. structural UI  
+C. content artwork  
+D. gameplay assets  
+E. functional icons  
+F. state assets  
+G. runtime VFX
 
-No modal may invent its own visual system.
+## 7. Golden Playable Loop gate
 
-## 4. Navigation contract
+P0 sequence:
 
-Primary bottom navigation is globally consistent where appropriate:
-**House / Curios / Map / Events / Shop**.
+**S01 House → S03 Route → S04 Pre-start → S05 Gameplay → S06 Win → S07 Restoration → S01 House**
 
-Profile/Settings belongs to the top/header utility area, not as a sixth primary tab.
+The detailed acceptance contract is `docs/product/golden-playable-loop.md`.
 
-Gameplay may visually minimize global chrome, but must preserve safe pause/exit/recovery. It must not duplicate unrelated navigation components over the board.
+Until accepted:
+- no random downstream polish;
+- no bulk art;
+- no event/shop/mission art production;
+- no second-chapter art expansion;
+- no isolated decorative asset campaign.
 
-Back behavior:
-- Chapters → House.
-- Chapter Detail → Chapters.
-- Pre-start → Chapter Detail.
-- Collection / Events / Shop → House or previous shell state.
-- Settings closes to origin screen.
-- Gameplay exit requires an explicit player action and returns safely to House/current progression.
+## 8. North Star visual invariants
 
-## 5. Dependency order
+When an architecture-owned slot requires art, preserve:
+dark romantic gothic world, living House, black/antique-gold/plum material language, moon/candle/rose/black-cat motifs, readable portrait UI and premium cohesive presentation.
 
-Production order is now:
+This is a quality constraint on architecture-owned art—not a reason to generate art before the architecture calls for it.
 
-1. complete screen inventory;
-2. screen contracts;
-3. global UI shell + design system;
-4. asset layer plan;
-5. asset production manifest;
-6. reference vertical slice;
-7. only then downstream screen expansion.
+## 9. Next-work selection
 
-Reference vertical slice:
-**House Hub → Level Pre-start → Gameplay → Win/Rewards → House Restoration → House Hub**.
+Always:
 
-No downstream screen is allowed to become the source of a new visual system before this slice establishes the reusable grammar.
+**highest-priority incomplete Golden Loop contract → missing block/slot behavior → implementation → focused verification → next dependency**
 
-## 6. Vertical-slice acceptance
-
-The reference slice is not accepted until all are true:
-- House feels like the emotional anchor, not a menu with a wallpaper;
-- top resources and bottom navigation are structurally consistent;
-- Pre-start communicates objective/reward with the same panel/button grammar;
-- Gameplay pieces are standalone readable illustrated objects, not circular medallions or candy tokens;
-- board chrome supports, rather than competes with, pieces;
-- result communicates reward and persistent consequence;
-- restoration visibly changes the same House camera/state;
-- animations explain state changes;
-- no obvious placeholder/prototype cards, Unicode icon substitutes or temporary backgrounds remain in the slice;
-- all interactive text/buttons/counters are live UI components;
-- screenshots are produced from the actual Godot app and compared back to the North Star.
-
-## 7. Next-work selection rule
-
-Always select:
-
-**highest-priority incomplete screen contract → required blocks → missing assets → implementation → rendered verification**
-
-Never select “an asset to make” in isolation.
+Only after functional Golden Loop acceptance may the same rule expand to S02/S08/S09/S10/S11/S12.
