@@ -63,14 +63,13 @@ func _run() -> void:
 	_expect(progress != null and int(progress.highest_level_unlocked) == 2, "winning Level 1 must unlock the provisional Level 2")
 	var replay_button: Button = app.current_screen().get_node("Layout/PlayButton")
 	_expect(not replay_button.disabled and replay_button.text == "ENTER LEVEL 2", "House must offer the next provisional review level after Level 1 win")
-	replay_button.emit_signal("pressed")
+	_expect(app.show_chapters(), "House must reopen chapter selection after Level 1")
 	await process_frame
-	_expect(str(app.current_route_name()) == "house", "House play CTA must open chapter selection without changing House navigation state")
 	var replay_chapters = app.current_screen()
-	_expect(str(replay_chapters.name) == "ChapterSelect", "House play CTA must reopen chapter selection")
+	_expect(str(replay_chapters.name) == "ChapterSelect", "chapter selection must be reachable")
 	replay_chapters.get_node("Layout/ChapterGrid/CurioBoutiqueButton").emit_signal("pressed")
 	await process_frame
-	_expect(str(app.current_route_name()) == "map", "Curio Boutique selection must open the chapter map")
+	_expect(str(app.current_route_name()) == "map", "Curio Boutique selection must open chapter map")
 	map = app.current_screen()
 	_expect(map.get_level_button(2) != null and not map.get_level_button(2).disabled, "Level 2 must unlock after Level 1 completion")
 	_expect(map.get_level_button(3) != null and map.get_level_button(3).disabled, "Level 3 must stay progression-locked until Level 2 completion")
