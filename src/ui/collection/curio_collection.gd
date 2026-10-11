@@ -55,23 +55,26 @@ func _refresh() -> void:
 	moon_state.text = "AWAKENED · RELIC 01" if has_moon else "DORMANT · RELIC 01"
 	moon_detail.text = "Moonlight remembers your first victory." if has_moon else "Win Level 1 to wake the first relic."
 	moon_origin.text = "RECOVERED FROM · MOONLIT CABINET" if has_moon else "SEALED BEHIND · MOONLIT CABINET"
-	moon_card.modulate = Color.WHITE if has_moon else Color(0.58, 0.54, 0.62, 0.72)
+	moon_card.modulate = Color.WHITE
+	_apply_moon_card_style(has_moon)
 	var has_moth := curios.has("moth_reliquary")
 	var has_locket := curios.has("thorned_locket")
 	slot2_name.text = "MOTH RELIQUARY" if has_moth else "SEALED · MOTH RELIQUARY"
 	slot2_hint.text = "Recovered from the sealed side cabinet." if has_moth else "Clear both wax seals in Level 2."
 	slot2_state.text = "AWAKENED · RELIC 02" if has_moth else "DORMANT · RELIC 02"
 	slot2_origin.text = "RECOVERED FROM · SEALED DISPLAY" if has_moth else "SEALED BEHIND · WAX DISPLAY"
-	slot2_number.modulate = Color.WHITE if has_moth else Color(0.55, 0.51, 0.60, 0.72)
-	slot2_card.modulate = Color.WHITE if has_moth else Color(0.66, 0.62, 0.72, 0.82)
+	slot2_number.modulate = Color.WHITE if has_moth else Color(0.78, 0.74, 0.82, 0.88)
+	slot2_card.modulate = Color.WHITE
 	_apply_reward_card_style(slot2_card, has_moth, Color("#9BBED0"))
+	_apply_reward_copy_style(slot2_name, slot2_hint, slot2_state, slot2_origin, has_moth)
 	slot3_name.text = "THORNED LOCKET" if has_locket else "SEALED · THORNED LOCKET"
 	slot3_hint.text = "A moon-beam sigil opened its thorned clasp." if has_locket else "Create and trigger a line special in Level 3."
 	slot3_state.text = "AWAKENED · RELIC 03" if has_locket else "DORMANT · RELIC 03"
 	slot3_origin.text = "RECOVERED FROM · THORNLIGHT ARRANGEMENT" if has_locket else "SEALED BEHIND · THORNLIGHT"
-	slot3_number.modulate = Color.WHITE if has_locket else Color(0.55, 0.51, 0.60, 0.72)
-	slot3_card.modulate = Color.WHITE if has_locket else Color(0.66, 0.62, 0.72, 0.82)
+	slot3_number.modulate = Color.WHITE if has_locket else Color(0.78, 0.74, 0.82, 0.88)
+	slot3_card.modulate = Color.WHITE
 	_apply_reward_card_style(slot3_card, has_locket, Color("#C98BA8"))
+	_apply_reward_copy_style(slot3_name, slot3_hint, slot3_state, slot3_origin, has_locket)
 	if _moon_art != null:
 		_moon_art.texture = _load_moon_texture(MOON_AWAKENED_PATH if has_moon else MOON_SEALED_PATH)
 		_moon_art.modulate = Color.WHITE if has_moon else Color(0.75, 0.70, 0.81, 0.78)
@@ -79,19 +82,46 @@ func _refresh() -> void:
 		moon_ritual.set("glow_strength", 0.82 if has_moon else 0.18)
 		moon_ritual.queue_redraw()
 
+func _apply_moon_card_style(awakened: bool) -> void:
+	if moon_card == null:
+		return
+	var box := StyleBoxFlat.new()
+	box.bg_color = Color("#17111C", 0.985) if awakened else Color("#100D14", 0.97)
+	box.border_color = Color("#D5AD70", 0.92 if awakened else 0.38)
+	box.set_border_width_all(2)
+	box.set_corner_radius_all(18)
+	box.content_margin_left = 16
+	box.content_margin_right = 16
+	box.content_margin_top = 12
+	box.content_margin_bottom = 12
+	box.shadow_color = Color(0, 0, 0, 0.46)
+	box.shadow_size = 10
+	moon_card.add_theme_stylebox_override("panel", box)
+	moon_state.add_theme_color_override("font_color", Color("#F2D08B") if awakened else Color("#BDAFC3"))
+	moon_detail.add_theme_color_override("font_color", Color("#EFE2E8") if awakened else Color("#C8BACB"))
+	moon_origin.add_theme_color_override("font_color", Color("#BDAFC3"))
+
 func _apply_reward_card_style(card: PanelContainer, awakened: bool, accent: Color) -> void:
 	if card == null:
 		return
 	var box := StyleBoxFlat.new()
-	box.bg_color = Color("#151019", 0.98) if awakened else Color("#100D14", 0.96)
-	box.border_color = Color(accent.r, accent.g, accent.b, 0.76 if awakened else 0.28)
+	box.bg_color = Color("#17111C", 0.98) if awakened else Color("#100D14", 0.97)
+	box.border_color = Color(accent.r, accent.g, accent.b, 0.82 if awakened else 0.42)
 	box.set_border_width_all(2 if awakened else 1)
 	box.set_corner_radius_all(18)
-	box.content_margin_left = 12
-	box.content_margin_right = 12
-	box.content_margin_top = 10
-	box.content_margin_bottom = 10
+	box.content_margin_left = 16
+	box.content_margin_right = 16
+	box.content_margin_top = 12
+	box.content_margin_bottom = 12
+	box.shadow_color = Color(0, 0, 0, 0.30)
+	box.shadow_size = 6
 	card.add_theme_stylebox_override("panel", box)
+
+func _apply_reward_copy_style(name_label: Label, hint_label: Label, state_label: Label, origin_label: Label, awakened: bool) -> void:
+	name_label.add_theme_color_override("font_color", Color("#F4E5D3") if awakened else Color("#D3C4D2"))
+	hint_label.add_theme_color_override("font_color", Color("#E0D1D8") if awakened else Color("#BFAFC4"))
+	state_label.add_theme_color_override("font_color", Color("#F2D08B") if awakened else Color("#BDAFC3"))
+	origin_label.add_theme_color_override("font_color", Color("#BDAFC3") if awakened else Color("#9F91A5"))
 
 func _install_moon_art() -> void:
 	if moon_ritual == null:
@@ -139,7 +169,7 @@ func _install_collection_atmosphere() -> void:
 	backdrop.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_COVERED
 	backdrop.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	backdrop.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	backdrop.modulate = Color(0.72, 0.64, 0.79, 0.18)
+	backdrop.modulate = Color(0.78, 0.70, 0.84, 0.28)
 	add_child(backdrop)
 	move_child(backdrop, 1)
 	var action := StyleBoxFlat.new()
@@ -217,10 +247,10 @@ func _open_curio_detail(curio_id: String) -> void:
 
 	var card := PanelContainer.new()
 	card.name = "CurioDetailCard"
-	card.anchor_left = 0.08
-	card.anchor_right = 0.92
-	card.anchor_top = 0.14
-	card.anchor_bottom = 0.84
+	card.anchor_left = 0.07
+	card.anchor_right = 0.93
+	card.anchor_top = 0.17
+	card.anchor_bottom = 0.66
 	var shell := StyleBoxFlat.new()
 	shell.bg_color = Color("#0D0912", 0.995)
 	shell.border_color = Color("#D5AD70", 0.88 if awakened else 0.38)
@@ -249,7 +279,7 @@ func _open_curio_detail(curio_id: String) -> void:
 
 	var art := TextureRect.new()
 	art.name = "HeroArt"
-	art.custom_minimum_size = Vector2(0, 220)
+	art.custom_minimum_size = Vector2(0, 168)
 	art.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
 	art.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
 	art.texture = _detail_texture(curio_id, awakened)
@@ -261,7 +291,7 @@ func _open_curio_detail(curio_id: String) -> void:
 	title.text = String(data.get("name", "UNKNOWN CURIO"))
 	title.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	title.add_theme_color_override("font_color", Color("#F4E5D3"))
-	title.add_theme_font_size_override("font_size", 27)
+	title.add_theme_font_size_override("font_size", 31)
 	content.add_child(title)
 
 	var state := Label.new()
@@ -269,7 +299,7 @@ func _open_curio_detail(curio_id: String) -> void:
 	state.text = "AWAKENED · OWNED" if awakened else "LOCKED · NOT YET RECOVERED"
 	state.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	state.add_theme_color_override("font_color", Color("#F2D08B") if awakened else Color("#A995B0"))
-	state.add_theme_font_size_override("font_size", 15)
+	state.add_theme_font_size_override("font_size", 17)
 	content.add_child(state)
 
 	var origin := Label.new()
@@ -278,7 +308,7 @@ func _open_curio_detail(curio_id: String) -> void:
 	origin.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	origin.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	origin.add_theme_color_override("font_color", Color("#B4A2B7"))
-	origin.add_theme_font_size_override("font_size", 13)
+	origin.add_theme_font_size_override("font_size", 15)
 	content.add_child(origin)
 
 	var lore := Label.new()
@@ -287,7 +317,7 @@ func _open_curio_detail(curio_id: String) -> void:
 	lore.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	lore.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	lore.add_theme_color_override("font_color", Color("#DDD0D7"))
-	lore.add_theme_font_size_override("font_size", 15)
+	lore.add_theme_font_size_override("font_size", 17)
 	content.add_child(lore)
 
 	var close := Button.new()
