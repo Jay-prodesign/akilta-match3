@@ -55,16 +55,21 @@ func _run() -> void:
 	_expect(progress != null and int(progress.house_stage) == 1, "Level 1 must awaken House stage 1")
 	_expect(progress != null and progress.curios.has("moon_cameo"), "Level 1 must grant the Moon Cameo")
 	_expect(progress != null and int(progress.highest_level_unlocked) == 2, "winning Level 1 must unlock the provisional Level 2")
+	var restoration_continue: Button = app.current_screen().get_node_or_null("RestorationOverlay/CeremonyCard/CeremonyContent/CeremonyRow/Copy/Continue") as Button
+	_expect(restoration_continue != null, "Level 1 completion must enter the House restoration screen state")
+	if restoration_continue != null:
+		restoration_continue.emit_signal("pressed")
+	await process_frame
 	var replay_button: Button = app.current_screen().get_node("Layout/PlayButton")
-	_expect(not replay_button.disabled and replay_button.text == "PLAY LEVEL 2", "House must offer the next provisional review level after Level 1 win")
-	_expect(app.show_chapters(), "House must reopen chapter selection after Level 1")
+	_expect(not replay_button.disabled and replay_button.text == "PLAY LEVEL 2", "House must offer the next provisional review level after restoration completes")
+	_expect(app.show_chapters(), "House must reopen chapter selection after Level 1 restoration")
 	await process_frame
 	var replay_chapters = app.current_screen()
 	_expect(str(replay_chapters.name) == "ChapterSelect", "chapter selection must be reachable")
 	replay_chapters.get_node("Layout/ChapterGrid/CurioBoutiqueButton").emit_signal("pressed")
 	await process_frame
 	_expect(str(app.current_route_name()) == "map", "Curio Boutique selection must open chapter map")
-	map = app.current_screen()
+	var map = app.current_screen()
 	_expect(map.get_level_button(2) != null and not map.get_level_button(2).disabled, "Level 2 must unlock after Level 1 completion")
 	_expect(map.get_level_button(3) != null and map.get_level_button(3).disabled, "Level 3 must stay progression-locked until Level 2 completion")
 	_expect(app.show_prestart(2), "Level 2 prestart must be accessible in the internal review after Level 1 win")
