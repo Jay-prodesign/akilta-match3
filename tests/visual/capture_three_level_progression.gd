@@ -96,7 +96,16 @@ func _capture() -> void:
 	if not app.show_chapters():
 		return _fail(app, "completed House -> Chapters failed")
 	await _frames(2)
-	app.current_screen().get_node("Layout/ChapterGrid/CurioBoutiqueButton").emit_signal("pressed")
+	var completed_chapters = app.current_screen()
+	var completed_boutique: Button = completed_chapters.get_node_or_null("Layout/ChapterGrid/CurioBoutiqueButton") as Button
+	var completed_summary: Label = completed_chapters.get_node_or_null("Layout/ChapterSummary") as Label
+	if completed_boutique == null or not completed_boutique.text.contains("RESTORED · 3 / 3 · FIRST CABINET SET"):
+		return _fail(app, "completed Chapter Select must identify the restored 3/3 Curio Boutique")
+	if completed_summary == null or not completed_summary.text.begins_with("The opening wing is restored"):
+		return _fail(app, "completed Chapter Select must describe the restored opening wing")
+	if not await _save(app, "progression-final-chapters.png"):
+		return
+	completed_boutique.emit_signal("pressed")
 	await _frames(3)
 	var completed_map = app.current_screen()
 	var progress_label: Label = completed_map.get_node_or_null("Layout/Progress") as Label
@@ -125,8 +134,20 @@ func _play_level(app: Node, level_number: int) -> bool:
 	await _frames(2)
 	var chapters = app.current_screen()
 	var boutique := chapters.get_node_or_null("Layout/ChapterGrid/CurioBoutiqueButton") as Button if chapters != null else null
+	var chapter_summary: Label = chapters.get_node_or_null("Layout/ChapterSummary") as Label if chapters != null else null
+	var completed_before := level_number - 1
 	if boutique == null or boutique.disabled:
 		_fail(app, "Curio Boutique entry missing before Level %d" % level_number)
+		return false
+	if completed_before == 0:
+		if not boutique.text.contains("OPENING RITUALS · 0 / 3"):
+			_fail(app, "Chapter Select must begin at 0 / 3 before Level 1")
+			return false
+	elif not boutique.text.contains("%d / 3 DISPLAYS AWAKENED · CONTINUE" % completed_before):
+		_fail(app, "Chapter Select must reflect %d / 3 progress before Level %d" % [completed_before, level_number])
+		return false
+	if chapter_summary == null:
+		_fail(app, "Chapter Select progression summary missing before Level %d" % level_number)
 		return false
 	boutique.emit_signal("pressed")
 	await _frames(2)
