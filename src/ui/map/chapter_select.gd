@@ -7,18 +7,31 @@ signal chapter_requested(chapter_id: String)
 const PieceAssetLoader = preload("res://src/match3/presentation/piece_asset_loader.gd")
 
 func _layout_chapter_hotspots(grid: Control, buttons: Array[Button]) -> void:
-	for button in buttons:
-		button.position = Vector2(grid.size.x * float(button.get_meta("map_x")), grid.size.y * float(button.get_meta("map_y")))
-		button.size = Vector2(grid.size.x * float(button.get_meta("map_w")), grid.size.y * float(button.get_meta("map_h")))
+	var compact := grid.size.x < 680.0
+	var count := buttons.size()
+	for i in range(count):
+		var button := buttons[i]
+		if compact:
+			var spacing := 9.0
+			var card_height := maxf(64.0, (grid.size.y - spacing * float(count - 1)) / float(count))
+			button.position = Vector2(0, float(i) * (card_height + spacing))
+			button.size = Vector2(grid.size.x, card_height)
+			button.add_theme_font_size_override("font_size", 15)
+			button.add_theme_constant_override("icon_max_width", 58)
+		else:
+			button.position = Vector2(grid.size.x * float(button.get_meta("map_x")), grid.size.y * float(button.get_meta("map_y")))
+			button.size = Vector2(grid.size.x * float(button.get_meta("map_w")), grid.size.y * float(button.get_meta("map_h")))
+			button.add_theme_font_size_override("font_size", 24)
+			button.add_theme_constant_override("icon_max_width", 104)
 
 func _ready() -> void:
 	var layout := VBoxContainer.new()
 	layout.name = "Layout"
 	layout.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
-	layout.offset_left = 28
-	layout.offset_right = -28
-	layout.offset_top = 34
-	layout.offset_bottom = -28
+	layout.offset_left = 16
+	layout.offset_right = -16
+	layout.offset_top = 22
+	layout.offset_bottom = -16
 	layout.add_theme_constant_override("separation", 14)
 	layout.z_index = 10
 	layout.modulate = Color.WHITE
@@ -46,14 +59,14 @@ func _ready() -> void:
 	var title := Label.new()
 	title.text = "Choose a Wing"
 	title.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	title.add_theme_font_size_override("font_size", 42)
+	title.add_theme_font_size_override("font_size", 34)
 	title.add_theme_color_override("font_color", Color("#FFF0D8"))
 	layout.add_child(title)
 
 	var detail := Label.new()
 	detail.text = "Explore, restore and unlock new wings."
 	detail.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	detail.add_theme_font_size_override("font_size", 22)
+	detail.add_theme_font_size_override("font_size", 17)
 	detail.add_theme_color_override("font_color", Color("#E8C987"))
 	layout.add_child(detail)
 
@@ -78,7 +91,7 @@ func _ready() -> void:
 		button.set_meta("map_y", float(data["y"]))
 		button.set_meta("map_w", float(data["w"]))
 		button.set_meta("map_h", float(data["h"]))
-		button.custom_minimum_size = Vector2(240, 110)
+		button.custom_minimum_size = Vector2.ZERO
 		button.disabled = not bool(data["open"])
 		button.text = "%s\n%s%s" % [String(data["name"]), String(data["detail"]), "" if bool(data["open"]) else "\nSEALED WING"]
 		button.icon = PieceAssetLoader.ornament(String(data.get("art", "")))
