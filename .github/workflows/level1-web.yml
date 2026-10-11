@@ -6,7 +6,7 @@ on:
       - p0/bootstrap
     paths:
       - ".github/workflows/level1-web.yml"
-  # Milestone trigger: North Star opening-experience visual transformation review build (2026-10-11).
+  # Milestone trigger: completed North Star opening-shell internal review build (2026-10-11).
   # Run the full milestone build deliberately, not on every development commit.
   workflow_dispatch:
 
