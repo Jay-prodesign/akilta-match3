@@ -28,7 +28,7 @@ func _ready() -> void:
 func _install_world_backdrop() -> void:
 	var art := TextureRect.new()
 	art.name = "NorthStarWorldBackdrop"
-	art.texture = PieceAssetLoader.ornament("res://assets/world/ch01_curio_boutique/house_hub_final.svg")
+	art.texture = PieceAssetLoader.ornament("res://assets/world/ch01_curio_boutique/ch01_world_house_hub_stage00_v01.svg")
 	art.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
 	art.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_COVERED
 	art.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)

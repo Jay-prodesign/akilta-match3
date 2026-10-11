@@ -15,7 +15,7 @@ const ROSE := Color("#C7728F")
 const LEAF := Color("#8BAF7C")
 
 const PieceAssetLoader = preload("res://src/match3/presentation/piece_asset_loader.gd")
-const BACKDROP_PATH := "res://assets/world/ch01_curio_boutique/house_hub_final.svg"
+const BACKDROP_PATH := "res://assets/world/ch01_curio_boutique/ch01_world_house_hub_stage00_v01.svg"
 var _backdrop: Texture2D
 const CAT_PORTRAIT_PATH := "res://assets/pieces/black_cat.svg"
 const MOTH_RELIQUARY_PATH := "res://assets/curios/ch01_curio_moth_reliquary.svg"

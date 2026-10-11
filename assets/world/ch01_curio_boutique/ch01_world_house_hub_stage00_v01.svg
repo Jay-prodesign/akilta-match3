@@ -1,0 +1,170 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1080" height="1920" viewBox="0 0 1080 1920">
+<defs>
+  <linearGradient id="sky" x2="0" y2="1"><stop stop-color="#07101f"/><stop offset=".55" stop-color="#17243a"/><stop offset="1" stop-color="#0a0b12"/></linearGradient>
+  <linearGradient id="stone" x2="1" y2="1"><stop stop-color="#3d3347"/><stop offset=".35" stop-color="#211927"/><stop offset="1" stop-color="#0b0b12"/></linearGradient>
+  <linearGradient id="wood" x2="1" y2="1"><stop stop-color="#5a303b"/><stop offset=".5" stop-color="#2a1724"/><stop offset="1" stop-color="#0b0a10"/></linearGradient>
+  <linearGradient id="gold" x2="1" y2="1"><stop stop-color="#f2d89a"/><stop offset=".5" stop-color="#bd8b50"/><stop offset="1" stop-color="#5a3724"/></linearGradient>
+  <linearGradient id="velvet" x2="0" y2="1"><stop stop-color="#5b173e"/><stop offset=".55" stop-color="#351126"/><stop offset="1" stop-color="#150914"/></linearGradient>
+  <radialGradient id="moon"><stop stop-color="#fff1d6"/><stop offset=".48" stop-color="#c9c2e1"/><stop offset="1" stop-color="#6f6f9b"/></radialGradient>
+  <radialGradient id="warm"><stop stop-color="#ffc96c" stop-opacity=".44"/><stop offset=".5" stop-color="#e59c4a" stop-opacity=".12"/><stop offset="1" stop-color="#e59c4a" stop-opacity="0"/></radialGradient>
+  <radialGradient id="lilac"><stop stop-color="#bda9e8" stop-opacity=".24"/><stop offset="1" stop-color="#7d6aa8" stop-opacity="0"/></radialGradient>
+  <filter id="blur30"><feGaussianBlur stdDeviation="30"/></filter>
+  <filter id="blur12"><feGaussianBlur stdDeviation="12"/></filter>
+  <pattern id="wallPattern" width="56" height="56" patternUnits="userSpaceOnUse">
+    <path d="M0 28h56M28 0v56" stroke="#8b6d82" stroke-opacity=".05" stroke-width="2"/>
+    <circle cx="28" cy="28" r="10" fill="none" stroke="#b38d62" stroke-opacity=".035" stroke-width="2"/>
+  </pattern>
+</defs>
+
+<rect width="1080" height="1920" fill="#060810"/>
+<rect width="1080" height="1920" fill="url(#sky)"/>
+<rect width="1080" height="1920" fill="url(#wallPattern)"/>
+
+<!-- moonlit central nave -->
+<ellipse cx="540" cy="420" rx="360" ry="390" fill="url(#lilac)" filter="url(#blur30)"/>
+<path d="M302 950V450Q302 128 540 104Q778 128 778 450V950Z" fill="#0b0d17" stroke="#08070d" stroke-width="38"/>
+<path d="M332 934V466Q332 170 540 144Q748 170 748 466V934Z" fill="url(#stone)" stroke="url(#gold)" stroke-width="8"/>
+
+<!-- tall moon window -->
+<path d="M422 612V365Q422 208 540 194Q658 208 658 365V612Z" fill="#101826" stroke="#0b0b12" stroke-width="22"/>
+<path d="M444 596V374Q444 240 540 224Q636 240 636 374V596Z" fill="#1f3348" stroke="#b48a5a" stroke-width="6"/>
+<circle cx="540" cy="352" r="105" fill="url(#moon)"/>
+<circle cx="540" cy="352" r="160" fill="#bba5e4" opacity=".08" filter="url(#blur12)"/>
+<path d="M540 224v372M444 404h192" stroke="#bb8f5a" stroke-width="5" opacity=".8"/>
+<path d="M463 580 617 260M617 580 463 260" stroke="#755f64" stroke-width="2" opacity=".38"/>
+
+<!-- side gallery arches -->
+<g fill="#10101a" stroke="#3b2b3d" stroke-width="16">
+  <path d="M0 1010V554Q0 286 196 265Q392 286 392 554V1010Z"/>
+  <path d="M688 1010V554Q688 286 884 265Q1080 286 1080 554V1010Z"/>
+</g>
+<g fill="#18121d" stroke="#9c7456" stroke-width="5">
+  <path d="M24 990V574Q24 330 196 304Q368 330 368 574V990Z"/>
+  <path d="M712 990V574Q712 330 884 304Q1056 330 1056 574V990Z"/>
+</g>
+
+<!-- side shelves and frames -->
+<g stroke="#b68858" stroke-width="4" fill="none">
+  <rect x="58" y="520" width="260" height="340" rx="18"/>
+  <rect x="762" y="520" width="260" height="340" rx="18"/>
+  <path d="M58 630h260M58 745h260M762 630h260M762 745h260"/>
+</g>
+<g fill="#251724" stroke="#967354" stroke-width="4">
+  <rect x="90" y="368" width="170" height="120" rx="8"/>
+  <rect x="820" y="368" width="170" height="120" rx="8"/>
+</g>
+<!-- rose portrait -->
+<g transform="translate(175 428)">
+  <circle r="40" fill="#5d1734"/>
+  <g fill="#a72f58" stroke="#d87e8f" stroke-width="2">
+    <ellipse cy="-23" rx="18" ry="28"/><ellipse cx="25" cy="-5" rx="18" ry="28" transform="rotate(55)"/>
+    <ellipse cx="15" cy="25" rx="18" ry="28" transform="rotate(105)"/><ellipse cx="-20" cy="20" rx="18" ry="28" transform="rotate(150)"/>
+    <ellipse cx="-28" cy="-10" rx="18" ry="28" transform="rotate(210)"/>
+  </g>
+  <circle r="12" fill="#e9a1ad"/>
+</g>
+<!-- moth portrait -->
+<g transform="translate(905 428)" fill="#7fb6ba" stroke="#d5c28e" stroke-width="2">
+  <path d="M0 4C-18-31-55-39-67-10c-10 24 16 49 57 45Z"/>
+  <path d="M0 4C18-31 55-39 67-10c10 24-16 49-57 45Z"/>
+  <ellipse cy="14" rx="8" ry="38" fill="#ba9f58"/>
+</g>
+
+<!-- balcony -->
+<path d="M0 910H1080" stroke="url(#gold)" stroke-width="10"/>
+<path d="M0 944H1080" stroke="#76523e" stroke-width="5"/>
+<g stroke="#a17752" stroke-width="4">
+  <path d="M38 910v120M92 910v120M146 910v120M200 910v120M254 910v120M826 910v120M880 910v120M934 910v120M988 910v120M1042 910v120"/>
+</g>
+
+<!-- central cabinet -->
+<g>
+  <rect x="388" y="690" width="304" height="414" rx="8" fill="#110b13" stroke="#7f5b3d" stroke-width="10"/>
+  <rect x="408" y="710" width="264" height="360" rx="6" fill="#251426" stroke="#c08a57" stroke-width="4"/>
+  <path d="M434 738h212v226H434Z" fill="#180e19" stroke="#b1835a" stroke-width="3"/>
+  <path d="M452 756h176v190H452Z" fill="#34152d"/>
+  <path d="M448 975h184v62H448Z" fill="#120d14" stroke="#866044" stroke-width="3"/>
+  <circle cx="540" cy="1007" r="7" fill="#d4ad68"/>
+  <path d="M430 698c31-56 75-84 110-84s79 28 110 84" fill="#1b111b" stroke="#a57952" stroke-width="7"/>
+</g>
+
+<!-- grand split staircase -->
+<path d="M96 1600 380 1060h160L250 1600Z" fill="url(#wood)" stroke="url(#gold)" stroke-width="9"/>
+<path d="M984 1600 700 1060H540l290 540Z" fill="url(#wood)" stroke="url(#gold)" stroke-width="9"/>
+<g stroke="#b98a59" stroke-width="5" opacity=".85">
+  <path d="M125 1544h165M150 1487h170M180 1430h174M210 1373h180M240 1316h188M955 1544H790M930 1487H760M900 1430H726M870 1373H690M840 1316H652"/>
+</g>
+<g fill="none" stroke="#c19a69" stroke-width="5">
+  <path d="M87 1600 370 1048M993 1600 710 1048"/>
+  <path d="M120 1550 396 1048M960 1550 684 1048"/>
+</g>
+
+<!-- floor and runner -->
+<path d="M0 1510H1080V1920H0Z" fill="#090a10"/>
+<path d="M386 1132h308l184 788H202Z" fill="#271124"/>
+<path d="M432 1132h216l130 788H302Z" fill="url(#velvet)"/>
+<g fill="none" stroke="#a87d54" stroke-width="3" opacity=".45">
+  <ellipse cx="540" cy="1360" rx="74" ry="40"/>
+  <ellipse cx="540" cy="1550" rx="94" ry="50"/>
+  <ellipse cx="540" cy="1760" rx="124" ry="65"/>
+</g>
+
+<!-- chandelier -->
+<g stroke="url(#gold)" stroke-width="6" fill="none">
+  <path d="M540 0v128"/>
+  <path d="M430 144h220"/>
+  <path d="M450 144c0 70 40 108 90 118 50-10 90-48 90-118"/>
+  <path d="M472 166v58M608 166v58"/>
+</g>
+<g fill="#fff0b7">
+  <path d="M472 208c-13 19-10 38 0 50 10-12 13-31 0-50Z"/>
+  <path d="M608 208c-13 19-10 38 0 50 10-12 13-31 0-50Z"/>
+</g>
+
+<!-- candles and warm pools -->
+<g opacity=".95">
+  <ellipse cx="112" cy="1240" rx="180" ry="260" fill="url(#warm)" filter="url(#blur12)"/>
+  <ellipse cx="968" cy="1240" rx="180" ry="260" fill="url(#warm)" filter="url(#blur12)"/>
+</g>
+<g fill="#e9d8b9" stroke="#8a6045" stroke-width="3">
+  <rect x="82" y="1192" width="36" height="150" rx="4"/>
+  <rect x="962" y="1192" width="36" height="150" rx="4"/>
+  <rect x="147" y="1300" width="28" height="110" rx="4"/>
+  <rect x="905" y="1300" width="28" height="110" rx="4"/>
+</g>
+<g fill="#ffd27d">
+  <path d="M100 1160c-22 30-16 55 0 70 16-15 22-40 0-70Z"/>
+  <path d="M980 1160c-22 30-16 55 0 70 16-15 22-40 0-70Z"/>
+  <path d="M161 1273c-17 22-12 41 0 53 12-12 17-31 0-53Z"/>
+  <path d="M919 1273c-17 22-12 41 0 53 12-12 17-31 0-53Z"/>
+</g>
+
+<!-- black cat world character -->
+<g transform="translate(742 1080)">
+  <ellipse cx="76" cy="248" rx="92" ry="20" fill="#000" opacity=".48"/>
+  <path d="M14 100 6 24l48 39 30-48 34 48 48-39-10 77c28 46 22 104-12 139-24 25-57 37-91 37-39 0-72-14-93-42-27-37-29-90-9-135Z" fill="#05070d" stroke="#665276" stroke-width="5"/>
+  <path d="m24 84 4-39 29 23m91 16-4-39-29 23" fill="#4a183a" stroke="#a86f79" stroke-width="3"/>
+  <ellipse cx="55" cy="126" rx="25" ry="15" fill="#e4b044"/><ellipse cx="115" cy="126" rx="25" ry="15" fill="#e4b044"/>
+  <ellipse cx="56" cy="126" rx="5" ry="14" fill="#090a10"/><ellipse cx="114" cy="126" rx="5" ry="14" fill="#090a10"/>
+  <path d="m74 162 11 9 11-9-11-8Z" fill="#b55a78"/>
+  <path d="M84 172v14q-17 14-32 1m32-1q17 14 32 1" fill="none" stroke="#8e7487" stroke-width="3"/>
+  <path d="M54 204q31 20 63 0" fill="none" stroke="url(#gold)" stroke-width="5"/>
+  <path d="m78 205 8 13 9-13-9-7Z" fill="#d5ad70"/>
+</g>
+
+<!-- foreground roses/books -->
+<g fill="#6d1938" stroke="#c77b83" stroke-width="3">
+  <circle cx="72" cy="1786" r="42"/><circle cx="124" cy="1824" r="35"/><circle cx="1004" cy="1788" r="44"/><circle cx="948" cy="1828" r="35"/>
+</g>
+<g fill="#241626" stroke="#8f6548" stroke-width="3">
+  <rect x="34" y="1832" width="210" height="34" rx="5"/><rect x="64" y="1794" width="195" height="32" rx="5"/>
+  <rect x="836" y="1834" width="210" height="34" rx="5"/><rect x="820" y="1796" width="196" height="32" rx="5"/>
+</g>
+
+<!-- tiny dust points -->
+<g fill="#f4d899" opacity=".72">
+  <circle cx="146" cy="716" r="3"/><circle cx="250" cy="624" r="2"/><circle cx="360" cy="844" r="3"/><circle cx="718" cy="814" r="2"/><circle cx="826" cy="670" r="3"/><circle cx="934" cy="754" r="2"/>
+</g>
+
+<rect x="22" y="22" width="1036" height="1876" rx="12" fill="none" stroke="#c09a68" stroke-opacity=".22" stroke-width="3"/>
+</svg>
