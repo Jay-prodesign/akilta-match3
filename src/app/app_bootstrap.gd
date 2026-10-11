@@ -90,12 +90,17 @@ func show_map() -> bool:
 func show_prestart(level_number: int) -> bool:
 	if level_number < 1 or level_number > INTERNAL_REVIEW_LEVEL_COUNT or level_number > int(progress.highest_level_unlocked) or navigation.current() != NavigationScript.Route.MAP:
 		return false
-	if not navigation.go(NavigationScript.Route.PRESTART, {"level": level_number}):
+	# Validate authored content before mutating route or replacing the visible map.
+	if not FileAccess.file_exists(_level_path(level_number)):
 		return false
 	var screen: Node = PrestartScene.instantiate()
-	_show_screen(screen)
 	if not screen.configure_level(level_number):
+		screen.free()
 		return false
+	if not navigation.go(NavigationScript.Route.PRESTART, {"level": level_number}):
+		screen.free()
+		return false
+	_show_screen(screen)
 	_pending_level_number = level_number
 	screen.back_requested.connect(_on_prestart_back)
 	screen.start_requested.connect(_on_prestart_start)
