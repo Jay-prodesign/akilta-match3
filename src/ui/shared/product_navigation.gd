@@ -7,7 +7,7 @@ const ITEMS := [
 	{"label": "☾ MAP", "id": "map"},
 	{"label": "✧ EVENTS", "id": "events"},
 	{"label": "◇ SHOP", "id": "shop"},
-	{"label": "⚙ PROFILE", "id": "profile"},
+	{"label": "♙ PROFILE", "id": "profile"},
 ]
 
 static func attach(screen: Control, active_section: String, handler: Callable, content_path: NodePath = NodePath("Layout")) -> PanelContainer:
@@ -43,7 +43,7 @@ static func attach(screen: Control, active_section: String, handler: Callable, c
 
 	var scroll := ScrollContainer.new()
 	scroll.name = "Scroll"
-	scroll.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_AUTO
+	scroll.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
 	scroll.vertical_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
 	scroll.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	panel.add_child(scroll)
@@ -60,7 +60,7 @@ static func attach(screen: Control, active_section: String, handler: Callable, c
 		button.name = "Nav" + action.capitalize()
 		button.text = String(item["label"])
 		button.tooltip_text = action.capitalize()
-		button.custom_minimum_size = Vector2(80, 46)
+		button.custom_minimum_size = Vector2(0, 46)
 		button.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 		button.add_theme_font_size_override("font_size", 13)
 		button.add_theme_color_override("font_color", Color("#F4E5D3"))

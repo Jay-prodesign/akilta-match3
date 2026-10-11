@@ -34,6 +34,7 @@ var _pending_terminal_result: String = ""
 var _pending_hud_refresh: bool = false
 var haptics = HapticsController.new()
 var _potion_used_for_attempt := false
+var _level_badge_label: Label
 
 @onready var world_backdrop: TextureRect = $WorldBackdrop
 @onready var eyebrow_label: Label = $Layout/Eyebrow
@@ -97,6 +98,7 @@ func load_level_path(path: String, seed_value: int = 1001) -> bool:
 	current_seed = seed_value
 	_potion_used_for_attempt = false
 	current_level_id = String(parsed.get("id", ""))
+	_update_level_badge()
 	current_reward_curio = String(parsed.get("reward_curio", ""))
 	current_house_stage_reward = int(parsed.get("house_stage_reward", 0))
 	current_objective_type = String(parsed.get("objective", "collect_family"))
@@ -128,6 +130,15 @@ func load_level_path(path: String, seed_value: int = 1001) -> bool:
 		result_ritual.queue_redraw()
 	_refresh_hud()
 	return true
+
+func _update_level_badge() -> void:
+	if _level_badge_label == null:
+		return
+	var parts: PackedStringArray = current_level_id.split("_")
+	var level_number := 1
+	if not parts.is_empty():
+		level_number = maxi(1, int(parts[parts.size() - 1]))
+	_level_badge_label.text = "◇ LEVEL %d" % level_number
 
 func _apply_level_art_profile(profile: String) -> void:
 	# The board symbols, room tint, and heading accents move together by chapter beat.
@@ -426,7 +437,7 @@ func _build_bottom_navigation() -> void:
 	row.add_theme_constant_override("separation", 2)
 	row.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	nav_scroll.add_child(row)
-	for item in [{"label":"⌂ HOUSE","id":"house"},{"label":"✦ CURIOS","id":"curios"},{"label":"☾ MAP","id":"map"},{"label":"✧ EVENTS","id":"events"},{"label":"◇ SHOP","id":"shop"},{"label":"⚙ PROFILE","id":"profile"}]:
+	for item in [{"label":"⌂ HOUSE","id":"house"},{"label":"✦ CURIOS","id":"curios"},{"label":"☾ MAP","id":"map"},{"label":"✧ EVENTS","id":"events"},{"label":"◇ SHOP","id":"shop"},{"label":"♙ PROFILE","id":"profile"}]:
 		var button := Button.new()
 		button.text = String(item["label"])
 		button.custom_minimum_size = Vector2(0, 46)
@@ -460,17 +471,21 @@ func _build_top_resource_bar() -> void:
 	panel.add_theme_stylebox_override("panel", style)
 	add_child(panel)
 	var row := HBoxContainer.new()
+	row.name = "Resources"
 	row.alignment = BoxContainer.ALIGNMENT_CENTER
-	row.add_theme_constant_override("separation", 26)
+	row.add_theme_constant_override("separation", 12)
 	panel.add_child(row)
-	for value in ["☾ CURIO BOUTIQUE", "✦ CHAPTER ONE", "◇ PREVIEW"]:
+	for value in ["☾ CURIO BOUTIQUE", "✦ CHAPTER ONE", "◇ LEVEL 1"]:
 		var label := Label.new()
 		label.text = value
 		label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 		label.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
 		label.add_theme_color_override("font_color", Color("#F4E5D3"))
-		label.add_theme_font_size_override("font_size", 16)
+		label.add_theme_font_size_override("font_size", 14)
 		label.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		if value.begins_with("◇"):
+			label.name = "LevelBadge"
+			_level_badge_label = label
 		row.add_child(label)
 
 func _build_booster_tray() -> void:

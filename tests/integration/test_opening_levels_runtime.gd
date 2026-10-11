@@ -43,6 +43,9 @@ func _run_level(entry: Dictionary) -> void:
 		screen.queue_free()
 		await process_frame
 		return
+	var level_badge: Label = screen.get_node_or_null("ResourceBar/Resources/LevelBadge")
+	if level_badge == null or level_badge.text != "◇ LEVEL %d" % number:
+		failures.append("Level %d top resource bar must identify the active level" % number)
 
 	var moves: Array = level_data.get("teaching_moves", [])
 	for raw_move in moves:
