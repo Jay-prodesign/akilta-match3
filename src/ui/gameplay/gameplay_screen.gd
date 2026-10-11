@@ -29,6 +29,7 @@ var current_objective_target: int = 6
 var current_initial_blocker_count: int = 0
 var current_win_title: String = "THE CABINET STIRS"
 var current_win_detail: String = "Something in the Curio Boutique has awakened."
+var current_retry_hint: String = ""
 var _pending_win: bool = false
 var _pending_terminal_result: String = ""
 var _pending_hud_refresh: bool = false
@@ -109,6 +110,7 @@ func load_level_path(path: String, seed_value: int = 1001) -> bool:
 	current_initial_blocker_count = blockers_data.size() if blockers_data is Array else 0
 	current_win_title = String(parsed.get("win_title", "THE CABINET STIRS"))
 	current_win_detail = String(parsed.get("win_detail", "Something in the Curio Boutique has awakened."))
+	current_retry_hint = String(parsed.get("retry_hint", ""))
 	eyebrow_label.text = String(parsed.get("eyebrow", "CURIO BOUTIQUE"))
 	title_label.text = String(parsed.get("title", "Hidden Display"))
 	hint_label.text = String(parsed.get("hint", "Swipe a sigil."))
@@ -344,7 +346,7 @@ func _show_result_if_terminal(result: String) -> void:
 		feedback_requested.emit("fail")
 		_pending_win = false
 		result_title.text = "THE ROOM WAITS"
-		result_detail.text = "The House keeps its secrets. Try another arrangement."
+		result_detail.text = "The House keeps its secrets. %s" % current_retry_hint if current_retry_hint != "" else "The House keeps its secrets. Try another arrangement."
 		_configure_result_reward_copy(false)
 		if result_ritual != null:
 			result_ritual.set("mode", "fail")

@@ -26,6 +26,7 @@
   "title": "Thornlight Arrangement",
   "eyebrow": "CURIO BOUTIQUE · FORM A MOON BEAM",
   "hint": "Slide the center moon down. Four moon sigils will bind into a line sigil.",
+  "retry_hint": "Build a four-Moon line sigil, then trigger the Moon Beam before your moves run out.",
   "win_title": "THE BEAM FINDS A KEY",
   "win_detail": "A Thorned Locket slips free from the velvet lining.",
   "reward_curio": "thorned_locket",

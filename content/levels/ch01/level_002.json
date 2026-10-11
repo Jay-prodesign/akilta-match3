@@ -19,6 +19,7 @@
   "title": "Sealed Display",
   "eyebrow": "CURIO BOUTIQUE · WAX SEALS",
   "hint": "Match beside a wax seal to crack it. One precise swipe opens both.",
+  "retry_hint": "Match beside each wax seal; one precise Moon match can crack both seals.",
   "win_title": "THE SEALS GIVE WAY",
   "win_detail": "A Moth Reliquary answers from the side cabinet.",
   "reward_curio": "moth_reliquary",
