@@ -44,6 +44,7 @@ var _player_lives: int = 5
 var _player_coins: int = 12340
 var _player_gems: int = 520
 var _result_proclamation: Label
+var _result_reward_values: Control
 
 @onready var world_backdrop: TextureRect = $WorldBackdrop
 @onready var eyebrow_label: Label = $Layout/Eyebrow
@@ -75,6 +76,7 @@ func _ready() -> void:
 	_install_hud_plate()
 	_build_top_resource_bar()
 	_build_booster_tray()
+	_build_result_reward_values()
 	_build_result_proclamation()
 	if board_view.has_signal("swap_requested"):
 		board_view.swap_requested.connect(_on_swap_requested)
@@ -356,7 +358,9 @@ func _show_result_if_terminal(result: String) -> void:
 			result_ritual.set("relic_id", current_reward_curio)
 			result_ritual.set("glow_strength", 0.75)
 			result_ritual.queue_redraw()
-		result_action.text = "RETURN TO THE HOUSE"
+		result_action.text = "CONTINUE"
+		if _result_reward_values != null:
+			_result_reward_values.visible = true
 		if _result_proclamation != null:
 			_result_proclamation.text = "The recovered Curio now changes the House."
 		if _booster_tray != null:
@@ -375,6 +379,8 @@ func _show_result_if_terminal(result: String) -> void:
 			result_ritual.set("glow_strength", 0.12)
 			result_ritual.queue_redraw()
 		result_action.text = "TRY AGAIN"
+		if _result_reward_values != null:
+			_result_reward_values.visible = false
 		if _result_proclamation != null:
 			_result_proclamation.text = "The Curio remains sealed. The ritual can be attempted again."
 		if _booster_tray != null:
@@ -387,7 +393,7 @@ func _configure_result_reward_copy(won: bool) -> void:
 		reward_name = "HIDDEN CURIO"
 	if won:
 		var relic_number := maxi(1, current_house_stage_reward)
-		result_eyebrow.text = "CURIO RECOVERED · RELIC %02d" % relic_number
+		result_eyebrow.text = "LEVEL COMPLETE · RELIC %02d" % relic_number
 		result_reward_name.text = "%s · %s" % [
 			reward_name,
 			"AWAKENED" if current_reward_curio == "moon_cameo" else "RECOVERED"
@@ -423,6 +429,52 @@ func _on_board_trace_motion_finished() -> void:
 	_pending_terminal_result = ""
 	_show_result_if_terminal(result)
 
+
+func _build_result_reward_values() -> void:
+	var content := get_node_or_null("ResultOverlay/Card/Content") as VBoxContainer
+	if content == null or content.get_node_or_null("ResultRewardValues") != null:
+		return
+	var row := HBoxContainer.new()
+	row.name = "ResultRewardValues"
+	row.custom_minimum_size = Vector2(0, 56)
+	row.alignment = BoxContainer.ALIGNMENT_CENTER
+	row.add_theme_constant_override("separation", 10)
+	var reward_index := result_reward_name.get_index()
+	content.add_child(row)
+	content.move_child(row, reward_index + 1)
+	_add_reward_value(row, "res://assets/ui/ui_coin.svg", "+120")
+	_add_reward_value(row, "res://assets/ui/ui_gem.svg", "+1")
+	_result_reward_values = row
+
+func _add_reward_value(parent: HBoxContainer, icon_path: String, value: String) -> void:
+	var panel := PanelContainer.new()
+	panel.custom_minimum_size = Vector2(136, 50)
+	var box := StyleBoxFlat.new()
+	box.bg_color = Color("#17101D", 0.94)
+	box.border_color = Color("#D5AD70", 0.44)
+	box.set_border_width_all(1)
+	box.set_corner_radius_all(12)
+	box.content_margin_left = 10
+	box.content_margin_right = 12
+	box.content_margin_top = 6
+	box.content_margin_bottom = 6
+	panel.add_theme_stylebox_override("panel", box)
+	parent.add_child(panel)
+	var row := HBoxContainer.new()
+	row.alignment = BoxContainer.ALIGNMENT_CENTER
+	row.add_theme_constant_override("separation", 6)
+	panel.add_child(row)
+	var icon := TextureRect.new()
+	icon.custom_minimum_size = Vector2(32, 32)
+	icon.texture = PieceAssetLoader.ornament(icon_path)
+	icon.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+	icon.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+	row.add_child(icon)
+	var label := Label.new()
+	label.text = value
+	label.add_theme_color_override("font_color", Color("#F4D995"))
+	label.add_theme_font_size_override("font_size", 20)
+	row.add_child(label)
 
 func _build_result_proclamation() -> void:
 	var content := get_node_or_null("ResultOverlay/Card/Content") as VBoxContainer
