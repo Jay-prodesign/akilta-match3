@@ -1252,6 +1252,42 @@
       ],
       "current_path": "assets/world/ch01_curio_boutique/hub_bg_grandhall.webp",
       "provenance": "AKILTA first-party authored House environment reused for cold-start continuity; replaces legacy north_star_splash.svg world-art fallback"
+    },
+    {
+      "asset_id": "chapters_bg_curio_house",
+      "screen": [
+        "S02"
+      ],
+      "block": "chapter_world",
+      "slot": "full_background",
+      "state": [
+        "default"
+      ],
+      "type": "background_art",
+      "dimensions": "shared_authored_raster_runtime",
+      "aspect_ratio": "portrait_cover",
+      "transparent": false,
+      "variants": [
+        "opening_wing"
+      ],
+      "reuse": "declared_reuse_of_S01_grand_hall_environment",
+      "priority": "P0",
+      "production_status": "runtime_connected_declared_reuse_candidate",
+      "technical_policy": "authored_raster_only_no_svg_fallback",
+      "architecture_owned": true,
+      "contract_owners": [
+        {
+          "screen": "S02",
+          "region": "world",
+          "block": "chapter_world",
+          "slot": "full_background",
+          "states": [
+            "default"
+          ]
+        }
+      ],
+      "current_path": "assets/world/ch01_curio_boutique/hub_bg_grandhall.webp",
+      "provenance": "AKILTA first-party authored House environment reused for the Chapter Select shell while future wing-specific art remains sealed"
     }
   ],
   "vertical_slice_art_policy": {
@@ -1263,7 +1299,8 @@
       "prestart_bg_curio_boutique",
       "prestart_ch01_level01_art",
       "gameplay_bg_curio_boutique",
-      "reliquary_bg_curio_boutique"
+      "reliquary_bg_curio_boutique",
+      "chapters_bg_curio_house"
     ],
     "current_integrated_raster_assets": [
       "assets/world/ch01_curio_boutique/hub_bg_grandhall.webp",
@@ -1282,7 +1319,8 @@
       "prestart_ch01_shared_art",
       "gameplay_bg_curio_boutique",
       "chapter_route_curio_boutique",
-      "reliquary_bg_curio_boutique"
+      "reliquary_bg_curio_boutique",
+      "chapters_bg_curio_house"
     ]
   },
   "architecture_contract": "content/product/screen_state_architecture.json",

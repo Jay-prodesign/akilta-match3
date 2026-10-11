@@ -5,6 +5,7 @@ signal back_requested
 signal chapter_requested(chapter_id: String)
 
 const PieceAssetLoader = preload("res://src/match3/presentation/piece_asset_loader.gd")
+const ScreenArt = preload("res://src/ui/shared/screen_art_registry.gd")
 const OPENING_LEVEL_COUNT := 3
 
 var progress
@@ -75,10 +76,10 @@ func _ready() -> void:
 	world_art.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	world_art.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	world_art.z_index = -1
-	world_art.texture = PieceAssetLoader.ornament("res://assets/world/ch01_curio_boutique/chapter_world_map.svg")
+	world_art.texture = ScreenArt.texture("chapters_bg_curio_house")
 	world_art.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
 	world_art.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_COVERED
-	world_art.modulate = Color(0.90, 0.82, 0.90, 0.58)
+	world_art.modulate = Color(0.82, 0.76, 0.90, 0.72)
 	add_child(world_art)
 	move_child(world_art, 0)
 
