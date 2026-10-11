@@ -6,6 +6,7 @@ on:
       - p0/bootstrap
       - p1/events-weekly-missions
       - p1/profile-settings
+      - p1/shop-preview
     paths:
       - ".github/workflows/p0-headless.yml"
       - "src/app/**"
