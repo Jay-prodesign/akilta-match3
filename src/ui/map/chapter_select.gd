@@ -5,6 +5,39 @@ signal back_requested
 signal chapter_requested(chapter_id: String)
 
 const PieceAssetLoader = preload("res://src/match3/presentation/piece_asset_loader.gd")
+const OPENING_LEVEL_COUNT := 3
+
+var progress
+var _curio_boutique_button: Button
+var _chapter_summary: Label
+
+func set_progress(value) -> void:
+	progress = value
+	_refresh_progress_state()
+
+func _refresh_progress_state() -> void:
+	if _curio_boutique_button == null or _chapter_summary == null:
+		return
+	var completed := 0
+	var collected := 0
+	var restored := 0
+	if progress != null:
+		completed = mini(int(progress.completed_levels.size()), OPENING_LEVEL_COUNT)
+		collected = mini(int(progress.curios.size()), OPENING_LEVEL_COUNT)
+		restored = int(progress.house_stage)
+	var opening_complete := completed >= OPENING_LEVEL_COUNT and collected >= OPENING_LEVEL_COUNT and restored >= OPENING_LEVEL_COUNT
+	if opening_complete:
+		_curio_boutique_button.text = "CURIO BOUTIQUE\nRESTORED · 3 / 3 · FIRST CABINET SET"
+		_chapter_summary.text = "The opening wing is restored. Revisit its rituals or explore the sealed wings waiting beyond."
+		_curio_boutique_button.tooltip_text = "Curio Boutique · opening cabinet set restored · Levels 1–3 replayable"
+	elif completed > 0:
+		_curio_boutique_button.text = "CURIO BOUTIQUE\n%d / %d DISPLAYS AWAKENED · CONTINUE" % [completed, OPENING_LEVEL_COUNT]
+		_chapter_summary.text = "%d of %d opening displays are awake. Continue restoring the Curio Boutique." % [completed, OPENING_LEVEL_COUNT]
+		_curio_boutique_button.tooltip_text = "Curio Boutique · %d / %d opening displays awakened" % [completed, OPENING_LEVEL_COUNT]
+	else:
+		_curio_boutique_button.text = "CURIO BOUTIQUE\nOPENING RITUALS · 0 / 3"
+		_chapter_summary.text = "Restore the Curio Boutique first. Other wings remain sealed for later journeys."
+		_curio_boutique_button.tooltip_text = "Curio Boutique · opening rituals · Levels 1–3"
 
 func _layout_chapter_hotspots(grid: Control, buttons: Array[Button]) -> void:
 	var compact := grid.size.x < 680.0
@@ -64,11 +97,14 @@ func _ready() -> void:
 	layout.add_child(title)
 
 	var detail := Label.new()
-	detail.text = "Explore, restore and unlock new wings."
+	detail.name = "ChapterSummary"
+	detail.text = "Restore the Curio Boutique first. Other wings remain sealed for later journeys."
 	detail.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	detail.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	detail.add_theme_font_size_override("font_size", 17)
 	detail.add_theme_color_override("font_color", Color("#E8C987"))
 	layout.add_child(detail)
+	_chapter_summary = detail
 
 	var grid := Control.new()
 	grid.name = "ChapterGrid"
@@ -87,6 +123,8 @@ func _ready() -> void:
 	for data in chapters:
 		var button := Button.new()
 		button.name = "CurioBoutiqueButton" if String(data["id"]) == "curio_boutique" else "Chapter_" + String(data["id"])
+		if String(data["id"]) == "curio_boutique":
+			_curio_boutique_button = button
 		button.set_meta("map_x", float(data["x"]))
 		button.set_meta("map_y", float(data["y"]))
 		button.set_meta("map_w", float(data["w"]))
@@ -129,3 +167,4 @@ func _ready() -> void:
 	back.add_theme_font_size_override("font_size", 20)
 	back.pressed.connect(func(): back_requested.emit())
 	layout.add_child(back)
+	_refresh_progress_state()
