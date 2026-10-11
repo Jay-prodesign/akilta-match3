@@ -64,22 +64,26 @@ func _capture() -> void:
 	if not app.show_feature_preview("Events"):
 		return _fail(app, "completed House -> Events failed")
 	await _frames(3)
-	var event_progress: Label = app.get_node_or_null("ScreenHost/FeaturePreview/FeatureLayout/ChapterRitualProgress") as Label
-	var event_hero_kicker: Label = app.get_node_or_null("ScreenHost/FeaturePreview/FeatureLayout/FeatureHero/HeroRow/HeroCopy/FeatureHeroKicker") as Label
-	var event_hero_title: Label = app.get_node_or_null("ScreenHost/FeaturePreview/FeatureLayout/FeatureHero/HeroRow/HeroCopy/FeatureHeroTitle") as Label
+	if String(app.current_route_name()) != "events" or app.current_screen() == null or app.current_screen().name != "EventsScreen":
+		return _fail(app, "Events must render as its own S10 route-backed screen")
+	var event_progress: Label = app.current_screen().get_node_or_null("FeatureLayout/ChapterRitualProgress") as Label
+	var event_hero_kicker: Label = app.current_screen().get_node_or_null("FeatureLayout/FeatureHero/HeroRow/HeroCopy/FeatureHeroKicker") as Label
+	var event_hero_title: Label = app.current_screen().get_node_or_null("FeatureLayout/FeatureHero/HeroRow/HeroCopy/FeatureHeroTitle") as Label
 	if event_progress == null or not event_progress.text.begins_with("OPENING RITUAL COMPLETE") or not event_progress.text.contains("3 / 3 DISPLAYS AWAKENED"):
 		return _fail(app, "Events does not expose the completed opening ritual state")
 	if event_hero_kicker == null or event_hero_kicker.text != "OPENING RITUAL COMPLETE" or event_hero_title == null or not event_hero_title.text.contains("3 / 3 DISPLAYS AWAKENED"):
 		return _fail(app, "completed Events hero does not resolve to the 3/3 ritual state")
 	if not await _save(app, "progression-final-events.png"):
 		return
-	app.get_node("ScreenHost/FeaturePreview/FeatureLayout/BackToHouse").emit_signal("pressed")
+	app.current_screen().get_node("FeatureLayout/BackToHouse").emit_signal("pressed")
 	await _frames(3)
 
 	if not app.show_feature_preview("Profile"):
 		return _fail(app, "completed House -> Profile failed")
 	await _frames(3)
-	var profile = app.get_node_or_null("ScreenHost/FeaturePreview")
+	if String(app.current_route_name()) != "profile_settings" or app.current_screen() == null or app.current_screen().name != "ProfileSettingsScreen":
+		return _fail(app, "Profile must render as its own S12 route-backed screen")
+	var profile = app.current_screen()
 	var profile_copy := ""
 	if profile != null:
 		for node in profile.find_children("", "Label", true, false):
@@ -92,15 +96,15 @@ func _capture() -> void:
 		return _fail(app, "Profile does not expose the restored first cabinet set")
 	if not profile_copy.contains("OPENING RESTORATION COMPLETE"):
 		return _fail(app, "Profile does not expose completed House restoration")
-	var profile_hero_kicker: Label = app.get_node_or_null("ScreenHost/FeaturePreview/FeatureLayout/FeatureHero/HeroRow/HeroCopy/FeatureHeroKicker") as Label
-	var profile_hero_title: Label = app.get_node_or_null("ScreenHost/FeaturePreview/FeatureLayout/FeatureHero/HeroRow/HeroCopy/FeatureHeroTitle") as Label
+	var profile_hero_kicker: Label = app.current_screen().get_node_or_null("FeatureLayout/FeatureHero/HeroRow/HeroCopy/FeatureHeroKicker") as Label
+	var profile_hero_title: Label = app.current_screen().get_node_or_null("FeatureLayout/FeatureHero/HeroRow/HeroCopy/FeatureHeroTitle") as Label
 	if profile_hero_kicker == null or profile_hero_kicker.text != "FIRST CABINET SET RESTORED":
 		return _fail(app, "completed Profile hero must identify the restored first cabinet set")
 	if profile_hero_title == null or not profile_hero_title.text.contains("3 CURIOS · RESTORATION STAGE 3"):
 		return _fail(app, "completed Profile hero must summarize 3 curios and stage 3")
 	if not await _save(app, "progression-final-profile.png"):
 		return
-	app.get_node("ScreenHost/FeaturePreview/FeatureLayout/BackToHouse").emit_signal("pressed")
+	app.current_screen().get_node("FeatureLayout/BackToHouse").emit_signal("pressed")
 	await _frames(3)
 
 	if not app.show_chapters():

@@ -179,19 +179,38 @@ func complete_level_win(transaction_id: String, level_id: String, curio_id: Stri
 	return true
 
 func show_feature_preview(feature: String) -> bool:
-	# First-party, non-monetized preview: all controls are navigable, purchases remain disabled.
-	if navigation == null or navigation.current() != NavigationScript.Route.HOUSE:
+	# Truthful internal-review destinations are real product routes/screens.
+	# Events and Shop remain unavailable for live actions, but they are not
+	# overlays pretending the player is still on the House route.
+	if navigation == null:
 		return false
-	# Reopening Events or Shop must replace the existing preview, not stack
-	# opaque full-screen overlays and strand earlier back buttons.
-	for existing in screen_host.get_children():
-		if existing.name == "FeaturePreview":
-			screen_host.remove_child(existing)
-			existing.queue_free()
+	var feature_key := feature.to_lower()
+	var target_route := -1
+	var screen_name := ""
+	match feature_key:
+		"events":
+			target_route = NavigationScript.Route.EVENTS
+			screen_name = "EventsScreen"
+		"shop":
+			target_route = NavigationScript.Route.SHOP
+			screen_name = "ShopScreen"
+		"profile":
+			target_route = NavigationScript.Route.PROFILE_SETTINGS
+			screen_name = "ProfileSettingsScreen"
+		_:
+			return false
+	if navigation.current() != NavigationScript.Route.HOUSE and navigation.current() != target_route:
+		if not _ensure_house_route():
+			return false
+	if navigation.current() == NavigationScript.Route.HOUSE:
+		if not navigation.go(target_route, {"via": "product_navigation", "screen": feature_key}):
+			return false
+	elif navigation.current() != target_route:
+		return false
 	var overlay := Control.new()
-	overlay.name = "FeaturePreview"
+	overlay.name = screen_name
 	overlay.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
-	screen_host.add_child(overlay)
+	_show_screen(overlay)
 	var backdrop := ColorRect.new()
 	backdrop.color = Color("#0A0C16")
 	backdrop.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
@@ -206,7 +225,6 @@ func show_feature_preview(feature: String) -> bool:
 	layout.add_theme_constant_override("separation", 12)
 	layout.alignment = BoxContainer.ALIGNMENT_BEGIN
 	overlay.add_child(layout)
-	var feature_key := feature.to_lower()
 	var is_events := feature_key == "events"
 	var is_profile := feature_key == "profile"
 	var completed_count := mini(int(progress.completed_levels.size()) if progress != null else 0, INTERNAL_REVIEW_LEVEL_COUNT)
@@ -463,11 +481,7 @@ func show_feature_preview(feature: String) -> bool:
 		preferences.add_theme_stylebox_override("hover", preferences_hover)
 		preferences.add_theme_stylebox_override("pressed", preferences_hover)
 		layout.add_child(preferences)
-		preferences.pressed.connect(func():
-			if is_instance_valid(overlay):
-				overlay.queue_free()
-			show_settings()
-		)
+		preferences.pressed.connect(func(): show_settings())
 	var back := Button.new()
 	back.name = "BackToHouse"
 	back.text = "RETURN TO THE HOUSE"
@@ -593,10 +607,13 @@ func _install_product_navigation(screen: Node, active_section: String, content_p
 		ProductNavigation.attach(screen as Control, active_section, Callable(self, "_on_shell_navigation_requested"), content_path)
 
 func _dismiss_feature_preview() -> void:
-	var overlay := screen_host.get_node_or_null("FeaturePreview")
-	if overlay != null:
-		screen_host.remove_child(overlay)
-		overlay.queue_free()
+	if navigation == null:
+		return
+	if navigation.current() in [NavigationScript.Route.EVENTS, NavigationScript.Route.SHOP, NavigationScript.Route.PROFILE_SETTINGS]:
+		if navigation.go(NavigationScript.Route.HOUSE, {"via": "feature_back"}):
+			_render_house()
+	elif navigation.current() == NavigationScript.Route.HOUSE:
+		_render_house()
 
 func _ensure_house_route() -> bool:
 	if navigation == null:

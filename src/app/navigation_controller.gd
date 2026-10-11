@@ -86,7 +86,7 @@ func is_settings_open() -> bool:
 	return _settings_open
 
 func open_settings() -> bool:
-	if _in_transition or not (_route in [Route.HOUSE, Route.GAMEPLAY]) or _settings_open:
+	if _in_transition or not (_route in [Route.HOUSE, Route.GAMEPLAY, Route.PROFILE_SETTINGS]) or _settings_open:
 		return false
 	_settings_open = true
 	settings_changed.emit(true)
@@ -114,4 +114,6 @@ func back() -> String:
 			return "chapters" if go(Route.CHAPTERS, {"via": "back"}) else "none"
 		Route.PRESTART:
 			return "map" if go(Route.MAP, {"via": "back"}) else "none"
+		Route.EVENTS, Route.SHOP, Route.PROFILE_SETTINGS:
+			return "house" if go(Route.HOUSE, {"via": "back"}) else "none"
 	return "none"

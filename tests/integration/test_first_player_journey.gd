@@ -129,17 +129,19 @@ func _run() -> void:
 		collection_nav.get_node("Scroll/Items/NavEvents").emit_signal("pressed")
 	await process_frame
 	await process_frame
-	_expect(str(app.current_route_name()) == "house", "secondary navigation must return to House authority before opening Events")
-	var events_preview = app.get_node_or_null("ScreenHost/FeaturePreview")
-	_expect(events_preview != null and events_preview.get_node("FeatureLayout/FeatureTitle").text == "WEEKLY RITUALS", "Events tab must open from shared product navigation")
-	_expect(events_preview != null and events_preview.get_node_or_null("ProductNavigation") != null, "Events preview must retain shared product navigation")
+	_expect(str(app.current_route_name()) == "events", "Events destination must own a real route instead of masquerading as House")
+	var events_preview = app.current_screen()
+	_expect(events_preview != null and events_preview.name == "EventsScreen" and events_preview.get_node("FeatureLayout/FeatureTitle").text == "WEEKLY RITUALS", "Events tab must open as the S10 shell screen")
+	_expect(events_preview != null and events_preview.get_node_or_null("ProductNavigation") != null, "Events screen must retain shared product navigation")
 	if events_preview != null:
 		events_preview.get_node("ProductNavigation/Scroll/Items/NavShop").emit_signal("pressed")
 	await process_frame
 	await process_frame
-	var shop_preview = app.get_node_or_null("ScreenHost/FeaturePreview")
-	_expect(shop_preview != null and shop_preview.get_node("FeatureLayout/FeatureTitle").text == "THE CURIO EMPORIUM", "Shop must open directly from Events navigation")
-	_expect(shop_preview != null and shop_preview.get_node_or_null("ProductNavigation") != null, "Shop preview must retain shared product navigation")
+	_expect(str(app.current_route_name()) == "shop", "Shop destination must own a real route")
+	var shop_preview = app.current_screen()
+	_expect(shop_preview != null and shop_preview.name == "ShopScreen" and shop_preview.get_node("FeatureLayout/FeatureTitle").text == "THE CURIO EMPORIUM", "Shop must open directly from Events navigation")
+	_expect(shop_preview != null and shop_preview.get_node_or_null("ProductNavigation") != null, "Shop screen must retain shared product navigation")
+	_expect(shop_preview != null and shop_preview.get_node_or_null("FeatureLayout/NoPurchasesNotice") != null, "Shop must truthfully expose that purchases are disabled")
 	if shop_preview != null:
 		shop_preview.get_node("ProductNavigation/Scroll/Items/NavHouse").emit_signal("pressed")
 	await process_frame
@@ -253,20 +255,30 @@ func _run() -> void:
 			_expect(completion_label != null and completion_label.text.contains("OPENING CABINET SET COMPLETE"), "completed House banner must name the opening cabinet completion")
 			_expect(app.show_feature_preview("Events"), "completed House must open Events")
 			await process_frame
-			var completed_event_progress: Label = app.get_node_or_null("ScreenHost/FeaturePreview/FeatureLayout/ChapterRitualProgress")
+			_expect(str(app.current_route_name()) == "events", "completed House must enter the Events route")
+			var completed_event_progress: Label = app.current_screen().get_node_or_null("FeatureLayout/ChapterRitualProgress")
 			_expect(completed_event_progress != null and completed_event_progress.text.begins_with("OPENING RITUAL COMPLETE"), "Events must reflect the completed 3/3 opening ritual")
-			app.get_node("ScreenHost/FeaturePreview/FeatureLayout/BackToHouse").emit_signal("pressed")
+			app.current_screen().get_node("FeatureLayout/BackToHouse").emit_signal("pressed")
 			await process_frame
 			_expect(app.show_feature_preview("Profile"), "completed House must open Profile")
 			await process_frame
-			var profile_preview = app.get_node_or_null("ScreenHost/FeaturePreview")
+			_expect(str(app.current_route_name()) == "profile_settings", "Profile must own the S12 route")
+			var profile_preview = app.current_screen()
 			var profile_copy := ""
 			if profile_preview != null:
 				for label_node in profile_preview.find_children("", "Label", true, false):
 					profile_copy += (label_node as Label).text + "\n"
 			_expect(profile_copy.contains("FIRST CABINET SET RESTORED"), "Profile must summarize the completed opening chapter")
 			_expect(profile_copy.contains("OPENING RESTORATION COMPLETE"), "Profile must summarize the completed House restoration")
-			app.get_node("ScreenHost/FeaturePreview/FeatureLayout/BackToHouse").emit_signal("pressed")
+			var profile_settings_button: Button = profile_preview.get_node_or_null("FeatureLayout/ProfileSettings") as Button
+			_expect(profile_settings_button != null, "Profile must expose its real Settings state")
+			if profile_settings_button != null:
+				profile_settings_button.emit_signal("pressed")
+				await process_frame
+				_expect(app.navigation.is_settings_open(), "Profile Settings must open without leaving S12")
+				_expect(str(app.current_route_name()) == "profile_settings", "Settings modal must preserve the Profile route")
+				_expect(app.close_settings(), "Profile Settings must close cleanly")
+			app.current_screen().get_node("FeatureLayout/BackToHouse").emit_signal("pressed")
 			await process_frame
 		else:
 			_expect(app.show_house(), "unfinished Level 3 must safely return to House")
