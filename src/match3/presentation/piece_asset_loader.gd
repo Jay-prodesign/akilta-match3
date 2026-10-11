@@ -1,13 +1,15 @@
 class_name Match3PieceAssetLoader
 extends RefCounted
 
-# North Star board art mapped onto the deterministic five-family gameplay IDs.
+# North Star board art mapped onto deterministic gameplay families.
+# Family identity is invariant across visual profiles; profiles may change treatment later,
+# but a moth can never become a cat, a key a potion, or ivy a pentagram.
 const PATHS := {
 	"moon": "res://assets/pieces/moon_sigil.svg",
 	"rose": "res://assets/pieces/thorn_rose.svg",
-	"moth": "res://assets/pieces/crow.svg",
-	"key": "res://assets/pieces/potion.svg",
-	"leaf": "res://assets/pieces/pentagram.svg",
+	"moth": "res://assets/pieces/luna_moth.svg",
+	"key": "res://assets/pieces/curio_key.svg",
+	"leaf": "res://assets/pieces/night_ivy.svg",
 	"cat": "res://assets/pieces/black_cat.svg",
 	"candle": "res://assets/pieces/candle.svg",
 	"skull": "res://assets/pieces/skull.svg",
@@ -33,9 +35,9 @@ const PROFILE_PATHS := {
 	"curio_boutique_opening": {
 		"moon": "res://assets/pieces/moon_sigil.svg",
 		"rose": "res://assets/pieces/thorn_rose.svg",
-		"moth": "res://assets/pieces/crow.svg",
-		"key": "res://assets/pieces/potion.svg",
-		"leaf": "res://assets/pieces/pentagram.svg",
+		"moth": "res://assets/pieces/luna_moth.svg",
+		"key": "res://assets/pieces/curio_key.svg",
+		"leaf": "res://assets/pieces/night_ivy.svg",
 		"cat": "res://assets/pieces/black_cat.svg",
 		"candle": "res://assets/pieces/candle.svg",
 		"skull": "res://assets/pieces/skull.svg"
@@ -43,19 +45,19 @@ const PROFILE_PATHS := {
 	"sealed_display": {
 		"moon": "res://assets/pieces/moon_sigil.svg",
 		"rose": "res://assets/pieces/thorn_rose.svg",
-		"moth": "res://assets/pieces/black_cat.svg",
-		"key": "res://assets/pieces/candle.svg",
-		"leaf": "res://assets/pieces/skull.svg",
+		"moth": "res://assets/pieces/luna_moth.svg",
+		"key": "res://assets/pieces/curio_key.svg",
+		"leaf": "res://assets/pieces/night_ivy.svg",
 		"cat": "res://assets/pieces/black_cat.svg",
 		"candle": "res://assets/pieces/candle.svg",
 		"skull": "res://assets/pieces/skull.svg"
 	},
 	"thornlight_arrangement": {
 		"moon": "res://assets/pieces/moon_sigil.svg",
-		"rose": "res://assets/pieces/black_cat.svg",
-		"moth": "res://assets/pieces/crow.svg",
-		"key": "res://assets/pieces/potion.svg",
-		"leaf": "res://assets/pieces/candle.svg",
+		"rose": "res://assets/pieces/thorn_rose.svg",
+		"moth": "res://assets/pieces/luna_moth.svg",
+		"key": "res://assets/pieces/curio_key.svg",
+		"leaf": "res://assets/pieces/night_ivy.svg",
 		"cat": "res://assets/pieces/black_cat.svg",
 		"candle": "res://assets/pieces/candle.svg",
 		"skull": "res://assets/pieces/skull.svg"

@@ -3,6 +3,7 @@ extends SceneTree
 const Navigation = preload("res://src/app/navigation_controller.gd")
 const Settings = preload("res://src/settings/user_settings.gd")
 const BoardView = preload("res://src/match3/presentation/board_view.gd")
+const PieceAssets = preload("res://src/match3/presentation/piece_asset_loader.gd")
 const SplashScene = preload("res://src/ui/splash/splash_screen.tscn")
 const TEST_SETTINGS := "user://match3_first_party_shell_settings.json"
 
@@ -44,6 +45,18 @@ func _run() -> void:
 	_expect(bool(presentation.get("high_contrast", false)), "high contrast must reach gameplay presentation")
 	_expect(bool(board.motion_contract().get("reduced_motion_supported", false)), "board motion contract must declare reduced-motion support")
 	board.free()
+	var canonical_piece_paths := {
+		"moon": "res://assets/pieces/moon_sigil.svg",
+		"rose": "res://assets/pieces/thorn_rose.svg",
+		"moth": "res://assets/pieces/luna_moth.svg",
+		"key": "res://assets/pieces/curio_key.svg",
+		"leaf": "res://assets/pieces/night_ivy.svg",
+	}
+	for family in canonical_piece_paths:
+		_expect(String(PieceAssets.PATHS.get(family, "")) == String(canonical_piece_paths[family]), "piece family identity must stay invariant: %s" % family)
+		for profile in PieceAssets.PROFILE_PATHS:
+			var profile_paths: Dictionary = PieceAssets.PROFILE_PATHS[profile]
+			_expect(String(profile_paths.get(family, "")) == String(canonical_piece_paths[family]), "piece family identity must stay invariant across level profiles: %s / %s" % [profile, family])
 	var splash = SplashScene.instantiate()
 	root.add_child(splash)
 	await process_frame
