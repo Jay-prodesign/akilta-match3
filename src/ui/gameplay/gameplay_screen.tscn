@@ -116,7 +116,7 @@ horizontal_alignment = 1
 
 [node name="HUD" type="HBoxContainer" parent="Layout"]
 layout_mode = 2
-theme_override_constants/separation = 24
+theme_override_constants/separation = 8
 
 [node name="Objective" type="Label" parent="Layout/HUD"]
 layout_mode = 2
@@ -124,7 +124,7 @@ size_flags_horizontal = 3
 theme_override_colors/font_color = Color(0.749, 0.647, 0.847, 1)
 theme_override_colors/font_outline_color = Color(0.03, 0.02, 0.04, 0.9)
 theme_override_constants/outline_size = 3
-theme_override_font_sizes/font_size = 34
+theme_override_font_sizes/font_size = 21
 text = "Gather Moon sigils  0/6"
 
 [node name="Moves" type="Label" parent="Layout/HUD"]
@@ -159,7 +159,7 @@ layout_mode = 2
 theme_override_colors/font_color = Color(0.851, 0.804, 0.835, 1)
 theme_override_colors/font_outline_color = Color(0.03, 0.02, 0.04, 0.92)
 theme_override_constants/outline_size = 3
-theme_override_font_sizes/font_size = 26
+theme_override_font_sizes/font_size = 17
 text = "Slide the moon sigil right. Wake the cabinet in one luminous move."
 horizontal_alignment = 1
 autowrap_mode = 2
