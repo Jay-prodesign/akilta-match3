@@ -711,6 +711,15 @@ func _draw_piece(rect: Rect2, family: String, descriptor: Dictionary) -> void:
 	var texture := PieceAssetLoader.texture_for_profile(_visual_profile, family)
 	if texture != null:
 		var asset_rect := rect.grow(rect.size.x * 0.06)
+		# The current Curio Key material candidate is intentionally dark-metal, which
+		# collapses into the board at phone scale. Give only that semantic family a
+		# restrained value-separation field; this is gameplay readability treatment,
+		# not replacement artwork.
+		if family == "key":
+			var center := rect.get_center()
+			var radius := minf(rect.size.x, rect.size.y) * 0.31
+			draw_circle(center, radius, Color("#D3A34E", 0.13))
+			draw_arc(center, radius * 0.98, 0.0, TAU, 32, Color("#F2D08B", 0.52), maxf(1.4, rect.size.x * 0.022))
 		draw_texture_rect(texture, asset_rect, false)
 		return
 	var color: Color = descriptor["color"]

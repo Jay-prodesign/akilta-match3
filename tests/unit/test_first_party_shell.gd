@@ -64,7 +64,7 @@ func _run() -> void:
 	_expect(String(moth_visual.get("display_name", "")) == "Luna Moth" and String(moth_visual.get("silhouette", "")) == "luna_moth", "piece semantics must describe Luna Moth")
 	_expect(String(key_visual.get("display_name", "")) == "Curio Key" and String(key_visual.get("silhouette", "")) == "antique_key", "piece semantics must describe Curio Key")
 	_expect(String(ivy_visual.get("display_name", "")) == "Night Ivy" and String(ivy_visual.get("silhouette", "")) == "ivy_leaf", "piece semantics must describe Night Ivy")
-	_expect(String(PieceAssets.RASTER_OVERRIDES.get(PieceAssets.PATHS["key"], "")).ends_with("curio_key.png"), "Curio Key must use the readable raster override while the material candidate is too dark")
+	_expect(float(key_visual.get("value", 0.0)) >= 0.75, "Curio Key readability contract must reserve a high-value treatment against the dark board")
 	var splash = SplashScene.instantiate()
 	root.add_child(splash)
 	await process_frame
