@@ -14,6 +14,7 @@ signal close_requested
 var settings
 
 func _ready() -> void:
+	_style_settings_overlay()
 	close_button.pressed.connect(func(): close_requested.emit())
 	master_toggle.toggled.connect(func(on): _set_setting("master_muted", not on))
 	music_toggle.toggled.connect(func(on): _set_setting("music_muted", not on))
@@ -36,3 +37,27 @@ func bind_settings(value) -> void:
 func _set_setting(key: String, value) -> void:
 	if settings != null:
 		settings.set_value(key, value)
+
+func _style_settings_overlay() -> void:
+	var card := get_node_or_null("Card") as PanelContainer
+	if card != null:
+		var panel := StyleBoxFlat.new()
+		panel.bg_color = Color("#121322")
+		panel.border_color = Color("#D5AD70", 0.82)
+		panel.set_border_width_all(2)
+		panel.set_corner_radius_all(18)
+		panel.shadow_color = Color(0, 0, 0, 0.7)
+		panel.shadow_size = 24
+		card.add_theme_stylebox_override("panel", panel)
+	var close_style := StyleBoxFlat.new()
+	close_style.bg_color = Color("#512957")
+	close_style.border_color = Color("#D5AD70")
+	close_style.set_border_width_all(2)
+	close_style.set_corner_radius_all(10)
+	var hover := close_style.duplicate() as StyleBoxFlat
+	hover.bg_color = Color("#69366F")
+	close_button.add_theme_stylebox_override("normal", close_style)
+	close_button.add_theme_stylebox_override("hover", hover)
+	close_button.add_theme_stylebox_override("pressed", hover)
+	close_button.add_theme_color_override("font_color", Color("#F4E5D3"))
+	close_button.add_theme_color_override("font_hover_color", Color("#F4E5D3"))
