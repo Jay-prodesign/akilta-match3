@@ -100,9 +100,18 @@ func restoration_contract() -> Dictionary:
 	}
 
 func _draw_authored_restoration_curios(room: Rect2) -> void:
-	# The authored backdrop owns the room architecture, but progression rewards must
-	# still become physical objects in that room. Moon Cameo occupies the authored
-	# right-side cabinet niche; later reliquaries use the remaining display niches.
+	# The authored backdrop owns the room architecture. Progression must still read
+	# as a persistent world change, so the restored cabinet becomes a luminous
+	# display zone and each earned Curio occupies a real, readable niche.
+	if house_stage >= 1:
+		var cabinet_center := Vector2(room.position.x + room.size.x * 0.84, room.position.y + room.size.y * 0.37)
+		var stage_strength := clampf(float(house_stage) / 3.0, 0.0, 1.0)
+		for i in range(5, 0, -1):
+			var cabinet_glow := Color(GOLD)
+			cabinet_glow.a = (0.010 + float(i) * 0.008) * (0.72 + stage_strength * 0.58)
+			draw_circle(cabinet_center, room.size.x * (0.075 + float(i) * 0.026), cabinet_glow)
+	# Moon Cameo occupies the authored right-side cabinet niche; later reliquaries
+	# use the remaining display niches without becoming floating UI tokens.
 	if house_stage >= 1 and curios.has("moon_cameo"):
 		var moon_niche := Vector2(room.position.x + room.size.x * 0.83, room.position.y + room.size.y * 0.27)
 		for i in range(4, 0, -1):
@@ -114,14 +123,14 @@ func _draw_authored_restoration_curios(room: Rect2) -> void:
 		_draw_restored_relic(
 			room,
 			_moth_reliquary,
-			Vector2(room.position.x + room.size.x * 0.84, room.position.y + room.size.y * 0.36),
+			Vector2(room.position.x + room.size.x * 0.84, room.position.y + room.size.y * 0.38),
 			Color(CYAN, 0.32)
 		)
 	if house_stage >= 3 and curios.has("thorned_locket") and _thorned_locket != null:
 		_draw_restored_relic(
 			room,
 			_thorned_locket,
-			Vector2(room.position.x + room.size.x * 0.84, room.position.y + room.size.y * 0.44),
+			Vector2(room.position.x + room.size.x * 0.84, room.position.y + room.size.y * 0.49),
 			Color(ROSE, 0.34)
 		)
 
@@ -130,12 +139,12 @@ func _draw_restored_relic(room: Rect2, texture: Texture2D, center: Vector2, glow
 		return
 	# Keep later rewards embedded in the authored right-side cabinet stack instead
 	# of reading as large floating UI tokens over furniture.
-	var relic_size := room.size.x * 0.082
+	var relic_size := room.size.x * 0.125
 	var frame_size := Vector2(relic_size, relic_size)
 	var frame := Rect2(center - frame_size * 0.5, frame_size)
 	var glow := glow_color
-	draw_circle(center, relic_size * 0.82, Color(glow.r, glow.g, glow.b, 0.055))
-	draw_circle(center, relic_size * 0.62, Color(glow.r, glow.g, glow.b, 0.024))
+	draw_circle(center, relic_size * 0.96, Color(glow.r, glow.g, glow.b, 0.090))
+	draw_circle(center, relic_size * 0.72, Color(glow.r, glow.g, glow.b, 0.045))
 	var texture_size := texture.get_size()
 	if texture_size.x <= 0.0 or texture_size.y <= 0.0:
 		return
