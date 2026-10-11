@@ -216,79 +216,29 @@ func _apply_node_style(button: Button, completed: bool, open: bool) -> void:
 	button.add_theme_font_size_override("font_size", 46 if level_number == 1 else (40 if level_number <= 3 else 15))
 
 func _draw() -> void:
+	# S03 owns route STRUCTURE only. Environment imagery belongs to the
+	# chapter_route/environment slot and must be authored art, never a
+	# procedurally illustrated cabinet/moon/room in this Control.
 	var content := Rect2(Vector2.ZERO, size)
-	draw_rect(content, Color("#090711", 0.82), true)
+	draw_rect(content, Color("#090711", 0.34), true)
 
-	# A tall reliquary arch lets the underlying House art remain perceptible.
-	var wall := Rect2(22.0, 24.0, maxf(0.0, size.x - 44.0), maxf(0.0, size.y - 48.0))
-	draw_rect(wall, Color("#151019", 0.72), true)
-	draw_rect(wall, Color(GOLD, 0.28), false, 2.0)
-	var arch_center := Vector2(size.x * 0.50, 260.0)
-	draw_arc(arch_center, size.x * 0.43, PI, TAU, 72, Color(GOLD, 0.22), 3.0)
-	draw_arc(arch_center, size.x * 0.39, PI, TAU, 72, Color(LILAC, 0.12), 2.0)
-	draw_line(Vector2(size.x * 0.07, 260.0), Vector2(size.x * 0.07, size.y - 60.0), Color(GOLD, 0.10), 2.0)
-	draw_line(Vector2(size.x * 0.93, 260.0), Vector2(size.x * 0.93, size.y - 60.0), Color(GOLD, 0.10), 2.0)
-
-	# Moon window / sealed upper cabinets.
-	var future_zone := Rect2(size.x * 0.08, 70.0, size.x * 0.84, 230.0)
-	draw_rect(future_zone, Color("#0D0A12", 0.70), true)
-	draw_rect(future_zone, Color(LILAC, 0.16), false, 1.2)
-	var moon_center := Vector2(size.x * 0.50, 194.0)
-	for i in range(4, 0, -1):
-		draw_circle(moon_center, 52.0 + float(i) * 18.0, Color(LILAC, 0.010 + 0.010 * float(i)))
-	draw_arc(moon_center, 66.0, 0.0, TAU, 52, Color(GOLD, 0.30), 2.0)
-	draw_circle(moon_center - Vector2(8, 0), 42.0, Color("#B7A5D0", 0.18))
-	draw_circle(moon_center + Vector2(11, -5), 39.0, Color("#0D0A12", 0.84))
-
-	# Future nodes are tiny sealed cabinet doors rather than equal-weight levels.
-	for level_number in range(4, visible_route_levels + 1):
-		var fc := get_level_center(level_number)
-		var cabinet := Rect2(fc - Vector2(38, 46), Vector2(76, 92))
-		draw_rect(cabinet, Color("#100C14", 0.90), true)
-		draw_rect(cabinet, Color(LILAC, 0.18), false, 1.1)
-		draw_arc(Vector2(fc.x, cabinet.position.y + 22), 23.0, PI, TAU, 22, Color(GOLD, 0.14), 1.2)
-
-	# The authored opening path gets nearly all visual weight.
+	# Opening route: live component geometry over authored environment art.
 	for level_number in range(1, 3):
 		var a := get_level_center(level_number)
 		var b := get_level_center(level_number + 1)
-		draw_line(a, b, Color("#4B362A", 0.88), 10.0, true)
-		draw_line(a, b, Color(GOLD, 0.68), 4.0, true)
+		draw_line(a, b, Color("#160F1B", 0.88), 12.0, true)
+		draw_line(a, b, Color(GOLD, 0.74), 4.0, true)
 		for step in [0.33, 0.66]:
 			var p := a.lerp(b, float(step))
-			draw_circle(p, 13.0, Color("#130D18"))
-			draw_arc(p, 13.0, 0.0, TAU, 24, Color(GOLD, 0.72), 2.0)
+			draw_circle(p, 12.0, Color("#130D18", 0.94))
+			draw_arc(p, 12.0, 0.0, TAU, 24, Color(GOLD, 0.72), 2.0)
 			draw_circle(p, 3.0, Color("#F1D8A2"))
 
+	# Future levels remain visibly connected but subordinate to the opening
+	# three-level journey. Their lock/state styling is owned by live buttons.
 	var future_hub := Vector2(route_width * 0.50, 385.0)
-	draw_line(get_level_center(3), future_hub, Color(GOLD, 0.26), 2.0, true)
-	draw_circle(future_hub, 9.0, PLUM)
-	draw_arc(future_hub, 9.0, 0.0, TAU, 18, Color(GOLD, 0.42), 1.5)
+	draw_line(get_level_center(3), future_hub, Color(GOLD, 0.24), 2.0, true)
+	draw_circle(future_hub, 8.0, Color("#130D18", 0.90))
+	draw_arc(future_hub, 8.0, 0.0, TAU, 18, Color(GOLD, 0.38), 1.5)
 	for level_number in range(4, visible_route_levels + 1):
-		draw_line(future_hub, get_level_center(level_number), Color(LILAC, 0.095), 1.2, true)
-
-	# Three large display alcoves: each ritual is a physical place in the Boutique.
-	for level_number in range(1, 4):
-		var center := get_level_center(level_number)
-		var accent := Color(GOLD, 0.26)
-		if level_number == 2:
-			accent = Color(CYAN, 0.26)
-		elif level_number == 3:
-			accent = Color(ROSE, 0.28)
-		var alcove := Rect2(center.x - 365.0, center.y - 112.0, 730.0, 224.0)
-		draw_rect(alcove, Color("#130D18", 0.64), true)
-		draw_rect(alcove, accent, false, 1.6)
-		var top_center := Vector2(alcove.get_center().x, alcove.position.y + 8)
-		draw_arc(top_center, alcove.size.x * 0.20, PI, TAU, 40, Color(GOLD, 0.20), 2.0)
-		# candle pools and a few dust sparks make the path feel inhabited.
-		for side in [-1.0, 1.0]:
-			var flame := Vector2(alcove.get_center().x + side * alcove.size.x * 0.40, alcove.end.y - 36.0)
-			draw_circle(flame, 34.0, Color(GOLD, 0.035))
-			draw_line(flame + Vector2(0, 8), flame + Vector2(0, 28), Color("#E7D4B4"), 5.0)
-			draw_colored_polygon(PackedVector2Array([flame + Vector2(0,-14), flame + Vector2(7,1), flame + Vector2(0,8), flame + Vector2(-7,1)]), Color("#F1B760"))
-
-	var first_center := get_level_center(1)
-	var threshold := Rect2(size.x * 0.24, first_center.y + 118.0, size.x * 0.52, 48.0)
-	draw_rect(threshold, Color("#211725", 0.92), true)
-	draw_line(threshold.position, threshold.position + Vector2(threshold.size.x, 0), Color(GOLD, 0.46), 2.0)
-	draw_line(Vector2(threshold.position.x + 30, threshold.end.y), Vector2(threshold.end.x - 30, threshold.end.y), Color(GOLD, 0.12), 1.0)
+		draw_line(future_hub, get_level_center(level_number), Color(LILAC, 0.11), 1.2, true)
