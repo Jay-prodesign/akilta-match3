@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - p0/bootstrap
+      - p1/events-weekly-missions
     paths:
       - ".github/workflows/p0-headless.yml"
       - "src/app/**"

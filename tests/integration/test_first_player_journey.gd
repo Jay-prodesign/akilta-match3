@@ -146,8 +146,28 @@ func _run() -> void:
 	await process_frame
 	_expect(str(app.current_route_name()) == "events", "Events destination must own a real route instead of masquerading as House")
 	var events_preview = app.current_screen()
-	_expect(events_preview != null and events_preview.name == "EventsScreen" and events_preview.get_node("FeatureLayout/FeatureTitle").text == "WEEKLY RITUALS", "Events tab must open as the S10 shell screen")
+	_expect(events_preview != null and events_preview.name == "EventsScreen" and events_preview.get_node("FeatureLayout/FeatureTitle").text == "EVENT CENTER", "Events tab must open as the S10 Event Center screen")
 	_expect(events_preview != null and events_preview.get_node_or_null("ProductNavigation") != null, "Events screen must retain shared product navigation")
+	if events_preview != null:
+		var weekly_action: Button = events_preview.get_node_or_null("FeatureLayout/WeeklyMissionsAction") as Button
+		_expect(weekly_action != null, "Event Center must expose the S09 Weekly Rituals destination")
+		if weekly_action != null:
+			weekly_action.emit_signal("pressed")
+			await process_frame
+			await process_frame
+			_expect(str(app.current_route_name()) == "missions", "Weekly Rituals must own the S09 MISSIONS route")
+			var mission_screen = app.current_screen()
+			_expect(mission_screen != null and mission_screen.name == "WeeklyMissionsScreen", "S09 must render as its own route-backed screen")
+			var mission_timer: Label = mission_screen.get_node_or_null("MissionLayout/MissionTimer") as Label if mission_screen != null else null
+			var mission_truth: Label = mission_screen.get_node_or_null("MissionLayout/MissionEmptyState/EmptyContent/MissionEmptyStateTruth") as Label if mission_screen != null else null
+			_expect(mission_timer != null and mission_timer.text.contains("OFFLINE"), "S09 must disclose unavailable live reset timing")
+			_expect(mission_truth != null and mission_truth.text.contains("NOTHING TO CLAIM"), "S09 must not fabricate claimable weekly rewards")
+			if mission_screen != null:
+				mission_screen.get_node("MissionLayout/ReturnToEvents").emit_signal("pressed")
+				await process_frame
+				await process_frame
+			_expect(str(app.current_route_name()) == "events", "S09 back must return to S10 Event Center")
+			events_preview = app.current_screen()
 	if events_preview != null:
 		events_preview.get_node("ProductNavigation/Scroll/Items/NavShop").emit_signal("pressed")
 	await process_frame

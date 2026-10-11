@@ -75,6 +75,28 @@ func _capture() -> void:
 		return _fail(app, "completed Events hero does not resolve to the 3/3 ritual state")
 	if not await _save(app, "progression-final-events.png"):
 		return
+	var weekly_button: Button = app.current_screen().get_node_or_null("FeatureLayout/WeeklyMissionsAction") as Button
+	if weekly_button == null:
+		return _fail(app, "Event Center must expose the S09 Weekly Rituals destination")
+	weekly_button.emit_signal("pressed")
+	await _frames(3)
+	if String(app.current_route_name()) != "missions" or app.current_screen() == null or app.current_screen().name != "WeeklyMissionsScreen":
+		return _fail(app, "Weekly Missions must render as its own S09 route-backed screen")
+	var mission_timer: Label = app.current_screen().get_node_or_null("MissionLayout/MissionTimer") as Label
+	var mission_truth: Label = app.current_screen().get_node_or_null("MissionLayout/MissionEmptyState/EmptyContent/MissionEmptyStateTruth") as Label
+	var mission_art: TextureRect = app.current_screen().get_node_or_null("MissionLayout/MissionEmptyState/EmptyContent/MissionRewardArt") as TextureRect
+	if mission_timer == null or not mission_timer.text.contains("OFFLINE"):
+		return _fail(app, "Weekly Missions must expose offline timer truth when no live feed exists")
+	if mission_truth == null or not mission_truth.text.contains("NOTHING TO CLAIM"):
+		return _fail(app, "Weekly Missions must not fabricate claimable rewards")
+	if mission_art == null or mission_art.texture == null:
+		return _fail(app, "Weekly Missions empty state must retain authored content artwork")
+	if not await _save(app, "progression-final-weekly-missions.png"):
+		return
+	app.current_screen().get_node("MissionLayout/ReturnToEvents").emit_signal("pressed")
+	await _frames(3)
+	if String(app.current_route_name()) != "events" or app.current_screen() == null or app.current_screen().name != "EventsScreen":
+		return _fail(app, "Weekly Missions -> Event Center return failed")
 	app.current_screen().get_node("FeatureLayout/BackToHouse").emit_signal("pressed")
 	await _frames(3)
 

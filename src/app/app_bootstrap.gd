@@ -185,6 +185,160 @@ func complete_level_win(transaction_id: String, level_id: String, curio_id: Stri
 		_render_house(false, "", int(candidate.house_stage))
 	return true
 
+func show_weekly_missions() -> bool:
+	if navigation == null:
+		return false
+	if navigation.current() == NavigationScript.Route.HOUSE:
+		if not navigation.go(NavigationScript.Route.MISSIONS, {"via": "house_entry_point"}):
+			return false
+	elif navigation.current() == NavigationScript.Route.EVENTS:
+		if not navigation.go(NavigationScript.Route.MISSIONS, {"via": "event_center"}):
+			return false
+	elif navigation.current() != NavigationScript.Route.MISSIONS:
+		return false
+	var screen := Control.new()
+	screen.name = "WeeklyMissionsScreen"
+	screen.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	_show_screen(screen)
+	var backdrop := ColorRect.new()
+	backdrop.color = Color("#090A13")
+	backdrop.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	screen.add_child(backdrop)
+	var world_art := TextureRect.new()
+	world_art.name = "MissionWorldArt"
+	world_art.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	world_art.texture = ScreenArt.texture("events_bg_curio_house")
+	world_art.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+	world_art.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_COVERED
+	world_art.modulate = Color(0.44, 0.40, 0.58, 0.30)
+	world_art.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	screen.add_child(world_art)
+	var layout := VBoxContainer.new()
+	layout.name = "MissionLayout"
+	layout.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	layout.offset_left = 22
+	layout.offset_top = 72
+	layout.offset_right = -22
+	layout.offset_bottom = -28
+	layout.add_theme_constant_override("separation", 14)
+	screen.add_child(layout)
+	var eyebrow := Label.new()
+	eyebrow.text = "THE HOUSE OF CURIOS · WEEKLY ALTAR"
+	eyebrow.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	eyebrow.add_theme_color_override("font_color", Color("#D5AD70"))
+	eyebrow.add_theme_font_size_override("font_size", 15)
+	layout.add_child(eyebrow)
+	var title := Label.new()
+	title.name = "MissionTitle"
+	title.text = "WEEKLY RITUALS"
+	title.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	title.add_theme_color_override("font_color", Color("#FFF0D8"))
+	title.add_theme_color_override("font_outline_color", Color("#080710", 0.92))
+	title.add_theme_constant_override("outline_size", 4)
+	title.add_theme_font_size_override("font_size", 38)
+	layout.add_child(title)
+	var timer := Label.new()
+	timer.name = "MissionTimer"
+	timer.text = "OFFLINE · LIVE RESET TIME UNAVAILABLE"
+	timer.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	timer.add_theme_color_override("font_color", Color("#BFA5D8"))
+	timer.add_theme_font_size_override("font_size", 16)
+	layout.add_child(timer)
+	var empty := PanelContainer.new()
+	empty.name = "MissionEmptyState"
+	empty.custom_minimum_size = Vector2(0, 390)
+	var empty_style := StyleBoxFlat.new()
+	empty_style.bg_color = Color("#14101B", 0.97)
+	empty_style.border_color = Color("#9B6FA6", 0.72)
+	empty_style.set_border_width_all(2)
+	empty_style.set_corner_radius_all(18)
+	empty_style.content_margin_left = 22
+	empty_style.content_margin_right = 22
+	empty_style.content_margin_top = 20
+	empty_style.content_margin_bottom = 20
+	empty_style.shadow_color = Color(0, 0, 0, 0.48)
+	empty_style.shadow_size = 12
+	empty.add_theme_stylebox_override("panel", empty_style)
+	layout.add_child(empty)
+	var empty_content := VBoxContainer.new()
+	empty_content.name = "EmptyContent"
+	empty_content.alignment = BoxContainer.ALIGNMENT_CENTER
+	empty_content.add_theme_constant_override("separation", 10)
+	empty.add_child(empty_content)
+	var emblem := TextureRect.new()
+	emblem.name = "MissionRewardArt"
+	emblem.custom_minimum_size = Vector2(0, 170)
+	emblem.texture = PieceAssetLoader.ornament("res://assets/pieces/moon_sigil.svg")
+	emblem.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+	emblem.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+	emblem.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	empty_content.add_child(emblem)
+	var empty_title := Label.new()
+	empty_title.text = "THE WEEKLY ALTAR IS QUIET"
+	empty_title.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	empty_title.add_theme_color_override("font_color", Color("#F4E5D3"))
+	empty_title.add_theme_font_size_override("font_size", 28)
+	empty_content.add_child(empty_title)
+	var empty_body := Label.new()
+	empty_body.text = "No live weekly mission feed is connected. Mission timers, progress and rewards are intentionally not fabricated."
+	empty_body.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	empty_body.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	empty_body.add_theme_color_override("font_color", Color("#D8C6C3"))
+	empty_body.add_theme_font_size_override("font_size", 18)
+	empty_content.add_child(empty_body)
+	var empty_state := Label.new()
+	empty_state.name = "MissionEmptyStateTruth"
+	empty_state.text = "RESET / OFFLINE STATE · NOTHING TO CLAIM"
+	empty_state.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	empty_state.add_theme_color_override("font_color", Color("#D5AD70"))
+	empty_state.add_theme_font_size_override("font_size", 15)
+	empty_content.add_child(empty_state)
+	var record := Label.new()
+	var completed_count := mini(int(progress.completed_levels.size()) if progress != null else 0, INTERNAL_REVIEW_LEVEL_COUNT)
+	record.name = "MissionOpeningRecord"
+	record.text = "OPENING CABINET RECORD · %d / %d DISPLAYS AWAKENED" % [completed_count, INTERNAL_REVIEW_LEVEL_COUNT]
+	record.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	record.add_theme_color_override("font_color", Color("#BFA5D8"))
+	record.add_theme_font_size_override("font_size", 16)
+	layout.add_child(record)
+	var events_button := Button.new()
+	events_button.name = "ReturnToEvents"
+	events_button.text = "RETURN TO EVENT CENTER"
+	events_button.custom_minimum_size.y = 62
+	_style_meta_action(events_button, true)
+	layout.add_child(events_button)
+	events_button.pressed.connect(_on_missions_back)
+	var house_button := Button.new()
+	house_button.name = "ReturnToHouse"
+	house_button.text = "RETURN TO HOUSE"
+	house_button.custom_minimum_size.y = 56
+	_style_meta_action(house_button, false)
+	layout.add_child(house_button)
+	house_button.pressed.connect(_on_missions_house)
+	return true
+
+func _style_meta_action(button: Button, primary: bool) -> void:
+	var normal := StyleBoxFlat.new()
+	normal.bg_color = Color("#4A2848") if primary else Color("#211827")
+	normal.border_color = Color("#D5AD70") if primary else Color("#8D7694")
+	normal.set_border_width_all(2 if primary else 1)
+	normal.set_corner_radius_all(12)
+	var hover := normal.duplicate() as StyleBoxFlat
+	hover.bg_color = Color("#61385B") if primary else Color("#34263D")
+	button.add_theme_stylebox_override("normal", normal)
+	button.add_theme_stylebox_override("hover", hover)
+	button.add_theme_stylebox_override("pressed", hover)
+	button.add_theme_color_override("font_color", Color("#FFF0D8"))
+	button.add_theme_font_size_override("font_size", 19)
+
+func _on_missions_back() -> void:
+	if navigation != null and navigation.current() == NavigationScript.Route.MISSIONS and navigation.go(NavigationScript.Route.EVENTS, {"via": "missions_back"}):
+		show_feature_preview("Events")
+
+func _on_missions_house() -> void:
+	if navigation != null and navigation.current() == NavigationScript.Route.MISSIONS and navigation.go(NavigationScript.Route.HOUSE, {"via": "missions_house"}):
+		_render_house()
+
 func show_feature_preview(feature: String) -> bool:
 	# Truthful internal-review destinations are real product routes/screens.
 	# Events and Shop remain unavailable for live actions, but they are not
@@ -259,7 +413,7 @@ func show_feature_preview(feature: String) -> bool:
 	layout.add_child(eyebrow)
 	var title := Label.new()
 	title.name = "FeatureTitle"
-	title.text = "THE KEEPER" if is_profile else ("WEEKLY RITUALS" if is_events else "THE CURIO EMPORIUM")
+	title.text = "THE KEEPER" if is_profile else ("EVENT CENTER" if is_events else "THE CURIO EMPORIUM")
 	title.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	title.add_theme_color_override("font_color", Color("#FFF0D8"))
 	title.add_theme_color_override("font_outline_color", Color("#080710", 0.94))
@@ -267,7 +421,7 @@ func show_feature_preview(feature: String) -> bool:
 	title.add_theme_font_size_override("font_size", 38)
 	layout.add_child(title)
 	var detail := Label.new()
-	detail.text = "Your restored curios, House progress and preferences." if is_profile else ("Seasonal rituals will gather here when the upper cabinets awaken." if is_events else "A sealed preview of the House economy. Nothing here can charge you.")
+	detail.text = "Your restored curios, House progress and preferences." if is_profile else ("Seasonal events gather here; Weekly Rituals has its own truthful mission state." if is_events else "A sealed preview of the House economy. Nothing here can charge you.")
 	detail.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	detail.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	detail.add_theme_color_override("font_color", Color("#D8C6C3"))
@@ -296,6 +450,15 @@ func show_feature_preview(feature: String) -> bool:
 	hero_row.name = "HeroRow"
 	hero_row.add_theme_constant_override("separation", 14)
 	hero.add_child(hero_row)
+	if is_events:
+		var event_hero_art := TextureRect.new()
+		event_hero_art.name = "EventHeroArt"
+		event_hero_art.custom_minimum_size = Vector2(150, 128)
+		event_hero_art.texture = PieceAssetLoader.ornament("res://assets/curios/ch01_curio_moon_cameo_awakened_v01.svg")
+		event_hero_art.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+		event_hero_art.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+		event_hero_art.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		hero_row.add_child(event_hero_art)
 	var hero_copy := VBoxContainer.new()
 	hero_copy.name = "HeroCopy"
 	hero_copy.size_flags_horizontal = Control.SIZE_EXPAND_FILL
@@ -361,6 +524,13 @@ func show_feature_preview(feature: String) -> bool:
 		ritual_progress.add_theme_stylebox_override("background", track)
 		ritual_progress.add_theme_stylebox_override("fill", fill)
 		layout.add_child(ritual_progress)
+		var weekly_button := Button.new()
+		weekly_button.name = "WeeklyMissionsAction"
+		weekly_button.text = "OPEN WEEKLY RITUALS"
+		weekly_button.custom_minimum_size.y = 60
+		_style_meta_action(weekly_button, true)
+		layout.add_child(weekly_button)
+		weekly_button.pressed.connect(show_weekly_missions)
 	elif not is_profile:
 		var shop_note := Label.new()
 		shop_note.name = "NoPurchasesNotice"
@@ -411,6 +581,14 @@ func show_feature_preview(feature: String) -> bool:
 		row.size_flags_vertical = Control.SIZE_EXPAND_FILL
 		row.add_theme_constant_override("separation", 18)
 		card.add_child(row)
+		var card_art := TextureRect.new()
+		card_art.name = "CardArt%d" % card_index
+		card_art.custom_minimum_size = Vector2(96, 96)
+		card_art.texture = PieceAssetLoader.ornament(String(entry.get("art", "")))
+		card_art.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+		card_art.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+		card_art.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		row.add_child(card_art)
 		var copy := VBoxContainer.new()
 		copy.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 		copy.size_flags_vertical = Control.SIZE_EXPAND_FILL
