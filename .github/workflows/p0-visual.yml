@@ -6,7 +6,7 @@ on:
       - p0/bootstrap
     paths:
       - ".github/workflows/p0-visual.yml"
-  # Milestone trigger: authored prestart story matches each opening Curio reward (2026-10-11).
+  # Milestone trigger: real Level 1→2→3 progression journey + final 3/3 shell evidence (2026-10-11).
   # Run the full milestone checks deliberately, not on every development commit.
   workflow_dispatch:
 
@@ -57,6 +57,32 @@ jobs:
           test -s artifacts/journey-09-events.png
           test -s artifacts/journey-10-shop.png
           test -s artifacts/journey-11-profile.png
+
+      - name: Render real three-level progression journey
+        shell: bash
+        run: |
+          set -uo pipefail
+          set +e
+          output=$(LIBGL_ALWAYS_SOFTWARE=1 xvfb-run -a ./godot --audio-driver Dummy --path . -s res://tests/visual/capture_three_level_progression.gd 2>&1)
+          status=$?
+          set -e
+          printf '%s\n' "$output"
+          if [ "$status" -ne 0 ]; then exit "$status"; fi
+          if grep -Eq "SCRIPT ERROR:|(^| )ERROR:|CAPTURE_FAIL:" <<<"$output"; then exit 1; fi
+          grep -Fq "CAPTURE_PASS: real three-level progression journey" <<<"$output"
+          test -s artifacts/progression-map-before-level1.png
+          test -s artifacts/progression-map-before-level2.png
+          test -s artifacts/progression-map-before-level3.png
+          test -s artifacts/progression-level1-result.png
+          test -s artifacts/progression-level2-result.png
+          test -s artifacts/progression-level3-result.png
+          test -s artifacts/progression-house-stage1.png
+          test -s artifacts/progression-house-stage2.png
+          test -s artifacts/progression-house-stage3.png
+          test -s artifacts/progression-final-reliquary.png
+          test -s artifacts/progression-final-events.png
+          test -s artifacts/progression-final-profile.png
+          test -s artifacts/progression-final-map.png
 
       - name: Render Level 1 fail and retry
         shell: bash
@@ -162,6 +188,27 @@ jobs:
           if grep -Eq "SCRIPT ERROR:|(^| )ERROR:|CAPTURE_FAIL:" <<<"$output"; then exit 1; fi
           grep -Fq "CAPTURE_PASS:" <<<"$output"
           test -s artifacts/house-stage3.png
+
+      - name: Upload real three-level progression evidence
+        uses: actions/upload-artifact@v4
+        with:
+          name: three-level-progression-evidence
+          path: |
+            artifacts/progression-map-before-level1.png
+            artifacts/progression-map-before-level2.png
+            artifacts/progression-map-before-level3.png
+            artifacts/progression-level1-result.png
+            artifacts/progression-level2-result.png
+            artifacts/progression-level3-result.png
+            artifacts/progression-house-stage1.png
+            artifacts/progression-house-stage2.png
+            artifacts/progression-house-stage3.png
+            artifacts/progression-final-reliquary.png
+            artifacts/progression-final-events.png
+            artifacts/progression-final-profile.png
+            artifacts/progression-final-map.png
+          if-no-files-found: error
+          retention-days: 14
 
       - name: Upload complete Level 1 journey evidence
         uses: actions/upload-artifact@v4
