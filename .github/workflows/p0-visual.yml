@@ -6,7 +6,7 @@ on:
       - p0/bootstrap
     paths:
       - ".github/workflows/p0-visual.yml"
-  # Milestone trigger: screen-first production contract + vertical-slice baseline visual verification (2026-10-11).
+  # Milestone trigger: House→Prestart→Gameplay→Win→Restoration screen-contract visual verification (2026-10-11).
   # Run the full milestone checks deliberately, not on every development commit.
   workflow_dispatch:
 
