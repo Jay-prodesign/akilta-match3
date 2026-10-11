@@ -50,6 +50,7 @@ func _run() -> void:
 		await board_view.trace_motion_finished
 	_expect(gameplay.result_overlay.visible, "failure must show a result overlay after resolution")
 	_expect(gameplay.result_action.text == "TRY AGAIN", "failure result must offer Try Again")
+	_expect(gameplay.result_detail.text.contains("Moon sigils"), "Level 1 failure must give authored Moon-sigil retry assistance")
 	var fail_ritual: Control = gameplay.get_node("ResultOverlay/Card/Content/RewardRitual")
 	_expect(String(fail_ritual.get("mode")) == "fail", "failure must keep Moon Cameo visually sealed rather than showing an awakened reward")
 	_expect(int(app.progress.house_stage) == 0, "failure must not advance House")

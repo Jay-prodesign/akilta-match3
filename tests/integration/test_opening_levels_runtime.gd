@@ -33,6 +33,13 @@ func _run_level(entry: Dictionary) -> void:
 	if not level_data is Dictionary:
 		failures.append("Level %d content must parse" % number)
 		return
+	var retry_hint := String(level_data.get("retry_hint", ""))
+	if retry_hint.length() < 24:
+		failures.append("Level %d must define meaningful authored retry assistance" % number)
+	if number == 2 and not retry_hint.contains("wax seal"):
+		failures.append("Level 2 retry assistance must teach Wax Seal recovery")
+	if number == 3 and not retry_hint.contains("Moon Beam"):
+		failures.append("Level 3 retry assistance must teach Moon Beam recovery")
 
 	var screen = GameplayScene.instantiate()
 	root.add_child(screen)

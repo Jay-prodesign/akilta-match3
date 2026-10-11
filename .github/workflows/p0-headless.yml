@@ -6,7 +6,7 @@ on:
       - p0/bootstrap
     paths:
       - ".github/workflows/p0-headless.yml"
-  # Milestone trigger: single-panel opening map + progression contracts (2026-10-11).
+  # Milestone trigger: authored Level 1–3 failure assistance + recovery guidance (2026-10-11).
   # Run the full milestone checks deliberately, not on every development commit.
   workflow_dispatch:
 

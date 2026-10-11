@@ -6,7 +6,7 @@ on:
       - p0/bootstrap
     paths:
       - ".github/workflows/p0-visual.yml"
-  # Milestone trigger: single-panel opening route + compact sealed future cluster (2026-10-11).
+  # Milestone trigger: authored Level 1–3 failure assistance + clean recovery states (2026-10-11).
   # Run the full milestone checks deliberately, not on every development commit.
   workflow_dispatch:
 
