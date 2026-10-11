@@ -7,6 +7,7 @@ signal map_requested
 signal settings_requested
 signal events_requested
 signal shop_requested
+signal profile_requested
 
 const HouseState = preload("res://src/world/house_state.gd")
 
@@ -138,7 +139,7 @@ func _navigate_dock(action: String) -> void:
 		"map": map_requested.emit()
 		"events": events_requested.emit()
 		"shop": shop_requested.emit()
-		"profile": settings_requested.emit()
+		"profile": profile_requested.emit()
 		"house": _refresh()
 
 func _build_resource_bar() -> void:
