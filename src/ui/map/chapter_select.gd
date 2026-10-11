@@ -189,18 +189,18 @@ func _refresh_progress_state() -> void:
 	var state := "first_wing_open"
 	if opening_complete:
 		state = "current_complete"
-		current.text = "CURIO BOUTIQUE\nRESTORED · 3 / 3 · REVISIT"
+		current.text = "CURIO BOUTIQUE\nRESTORED · 3 / 3 · FIRST CABINET SET"
 		current.tooltip_text = "Curio Boutique · first cabinet set restored · Levels 1–3 replayable"
 		_chapter_summary.text = "The first wing is restored. Revisit its rituals while the deeper House remains sealed."
 		_lock_reason.text = "FIVE WINGS REMAIN SEALED · FUTURE CHAPTERS"
 	elif completed > 0:
 		state = "current_partial"
-		current.text = "CURIO BOUTIQUE\nCURRENT WING · %d / %d · CONTINUE" % [completed, OPENING_LEVEL_COUNT]
+		current.text = "CURIO BOUTIQUE\n%d / %d DISPLAYS AWAKENED · CONTINUE" % [completed, OPENING_LEVEL_COUNT]
 		current.tooltip_text = "Curio Boutique · %d / %d opening displays awakened" % [completed, OPENING_LEVEL_COUNT]
 		_chapter_summary.text = "%d of %d displays are awake. Continue the Curio Boutique restoration." % [completed, OPENING_LEVEL_COUNT]
 		_lock_reason.text = "RESTORE THE CURRENT WING · FUTURE WINGS STAY SEALED"
 	else:
-		current.text = "CURIO BOUTIQUE\nOPEN WING · 0 / 3 · BEGIN"
+		current.text = "CURIO BOUTIQUE\nOPENING RITUALS · 0 / 3"
 		current.tooltip_text = "Curio Boutique · opening rituals · Levels 1–3"
 		_chapter_summary.text = "The Curio Boutique is the House's first open wing. Begin its three opening rituals."
 		_lock_reason.text = "FUTURE WINGS ARE SEALED UNTIL LATER CHAPTERS"
