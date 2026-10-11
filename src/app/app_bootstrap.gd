@@ -99,7 +99,8 @@ func show_prestart(level_number: int) -> bool:
 	level_file.close()
 	if not level_data is Dictionary:
 		return false
-	if not navigation.go(NavigationScript.Route.PRESTART, {"level": level_number}):
+	var entry_route: int = navigation.current()
+	if not navigation.go(NavigationScript.Route.PRESTART, {"level": level_number, "origin": entry_route}):
 		return false
 	var screen: Node = PrestartScene.instantiate()
 	_show_screen(screen)
@@ -108,6 +109,7 @@ func show_prestart(level_number: int) -> bool:
 		_ensure_house_route()
 		return false
 	_pending_level_number = level_number
+	screen.back_button.text = "BACK TO MAP" if entry_route == NavigationScript.Route.MAP else "BACK TO HOUSE"
 	screen.back_requested.connect(_on_prestart_back)
 	screen.start_requested.connect(_on_prestart_start)
 	return true
@@ -520,9 +522,23 @@ func _on_map_back() -> void:
 		show_chapters()
 
 func _on_prestart_back() -> void:
-	if navigation.go(NavigationScript.Route.HOUSE, {"via": "prestart_back"}):
-		_pending_level_number = 0
-		_render_house()
+	var origin: int = int(navigation.last_payload().get("origin", NavigationScript.Route.HOUSE))
+	_pending_level_number = 0
+	if origin == NavigationScript.Route.MAP:
+		if navigation.go(NavigationScript.Route.MAP, {"via": "prestart_back"}):
+			_render_map_from_prestart()
+	else:
+		if navigation.go(NavigationScript.Route.HOUSE, {"via": "prestart_back"}):
+			_render_house()
+
+func _render_map_from_prestart() -> void:
+	var screen: Node = MapScene.instantiate()
+	screen.set("canonical_level_cap", INTERNAL_REVIEW_LEVEL_COUNT)
+	_show_screen(screen)
+	screen.set_progress(progress)
+	_install_product_navigation(screen, "map")
+	screen.back_requested.connect(_on_map_back)
+	screen.level_requested.connect(show_prestart)
 
 func _on_prestart_start(level_number: int) -> void:
 	if level_number == _pending_level_number:
