@@ -88,7 +88,7 @@ func show_map() -> bool:
 	return true
 
 func show_prestart(level_number: int) -> bool:
-	if level_number < 1 or level_number > int(progress.highest_level_unlocked) or navigation.current() != NavigationScript.Route.MAP:
+	if level_number < 1 or level_number > INTERNAL_REVIEW_LEVEL_COUNT or level_number > int(progress.highest_level_unlocked) or navigation.current() != NavigationScript.Route.MAP:
 		return false
 	if not navigation.go(NavigationScript.Route.PRESTART, {"level": level_number}):
 		return false
@@ -102,7 +102,7 @@ func show_prestart(level_number: int) -> bool:
 	return true
 
 func start_level(level_number: int = 1) -> bool:
-	if level_number < 1 or level_number > int(progress.highest_level_unlocked) or navigation.current() != NavigationScript.Route.PRESTART:
+	if level_number < 1 or level_number > INTERNAL_REVIEW_LEVEL_COUNT or level_number > int(progress.highest_level_unlocked) or navigation.current() != NavigationScript.Route.PRESTART:
 		return false
 	var level_path: String = _level_path(level_number)
 	if not FileAccess.file_exists(level_path):
