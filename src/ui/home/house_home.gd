@@ -28,6 +28,9 @@ var available_level_count: int = 1
 var _completion_banner: PanelContainer
 var _completion_label: Label
 var _resource_bar: PanelContainer
+var _returning_player: bool = false
+var _returning_banner: PanelContainer
+var _returning_label: Label
 
 func _ready() -> void:
 	play_button.pressed.connect(_on_play_pressed)
@@ -35,6 +38,7 @@ func _ready() -> void:
 	settings_button.pressed.connect(func(): settings_requested.emit())
 	_resource_bar = TopResourceBar.attach(self, progress, Callable(self, "_open_profile"))
 	ProductNavigation.attach(self, "house", Callable(self, "_navigate_dock"), NodePath("Layout"))
+	_build_returning_banner()
 	_build_completion_banner()
 
 func set_available_level_count(value: int) -> void:
@@ -44,6 +48,10 @@ func set_available_level_count(value: int) -> void:
 
 func set_progress(value) -> void:
 	progress = value
+	_refresh()
+
+func set_returning_player(value: bool) -> void:
+	_returning_player = value
 	_refresh()
 
 func _refresh() -> void:
@@ -71,14 +79,21 @@ func _refresh() -> void:
 
 	collection_button.text = "RELIQUARY · %d / 3" % owned_curios.size()
 	var finished: int = mini(progress.completed_levels.size(), available_level_count) if progress != null else 0
+	var has_started: bool = progress != null and not progress.completed_levels.is_empty()
 	var opening_complete := available_level_count > 0 and finished >= available_level_count and owned_curios.size() >= available_level_count and stage >= available_level_count
+	if _returning_banner != null:
+		_returning_banner.visible = _returning_player and has_started
+	if _returning_label != null:
+		if opening_complete:
+			_returning_label.text = "WELCOME BACK · FIRST CABINET RESTORED"
+		else:
+			_returning_label.text = "WELCOME BACK · %d / %d CURIOS AWAKENED" % [owned_curios.size(), available_level_count]
 	if _completion_banner != null:
-		_completion_banner.visible = opening_complete
+		_completion_banner.visible = opening_complete and not _returning_player
 	if _completion_label != null:
 		_completion_label.text = "OPENING CABINET SET COMPLETE · %d / %d" % [finished, available_level_count]
 
 	var next_level := int(progress.highest_level_unlocked) if progress != null else 1
-	var has_started: bool = progress != null and not progress.completed_levels.is_empty()
 	var level1_completed: bool = progress != null and progress.completed_levels.has("ch01_level_001")
 	play_button.disabled = available_level_count < 1
 	if has_started and next_level > 1 and next_level <= available_level_count:
@@ -119,6 +134,29 @@ func _navigate_dock(action: String) -> void:
 			events_requested.emit()
 		"shop":
 			shop_requested.emit()
+
+func _build_returning_banner() -> void:
+	var panel := PanelContainer.new()
+	panel.name = "ReturningPlayerBanner"
+	panel.custom_minimum_size = Vector2(0, 42)
+	panel.visible = false
+	var shell := StyleBoxFlat.new()
+	shell.bg_color = Color("#17111F", 0.96)
+	shell.border_color = Color("#BFA5D8", 0.72)
+	shell.set_border_width_all(1)
+	shell.set_corner_radius_all(10)
+	panel.add_theme_stylebox_override("panel", shell)
+	var label := Label.new()
+	label.name = "Label"
+	label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	label.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
+	label.add_theme_color_override("font_color", Color("#F2D08B"))
+	label.add_theme_font_size_override("font_size", 14)
+	panel.add_child(label)
+	$Layout.add_child(panel)
+	$Layout.move_child(panel, $Layout/CurioChip.get_index() + 1)
+	_returning_banner = panel
+	_returning_label = label
 
 func _build_completion_banner() -> void:
 	var panel := PanelContainer.new()

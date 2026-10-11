@@ -141,11 +141,21 @@ func _capture() -> void:
 	if String(app.current_route_name()) != "shop" or app.current_screen() == null or app.current_screen().name != "ShopScreen":
 		return _fail(app, "Shop must render as its own S11 route-backed screen")
 	var shop_notice: Label = app.current_screen().get_node_or_null("FeatureLayout/NoPurchasesNotice") as Label
+	var shop_currency: Label = app.current_screen().get_node_or_null("FeatureLayout/ShopCurrencySummary") as Label
+	var shop_truth: Label = app.current_screen().get_node_or_null("FeatureLayout/ShopCurrencyTruth") as Label
 	var shop_hero_title: Label = app.current_screen().get_node_or_null("FeatureLayout/FeatureHero/HeroRow/HeroCopy/FeatureHeroTitle") as Label
+	var shop_art: TextureRect = app.current_screen().get_node_or_null("FeatureLayout/FeatureHero/HeroRow/ShopFeaturedOfferArt") as TextureRect
+	var shop_disabled_action: Button = app.current_screen().get_node_or_null("FeatureLayout/FeatureHero/HeroRow/HeroCopy/ShopDisabledAction") as Button
 	if shop_notice == null or not shop_notice.text.contains("NO PURCHASES OR PAYMENTS"):
 		return _fail(app, "Shop must truthfully expose that purchases are disabled")
+	if shop_currency == null or not shop_currency.text.contains("HOUSE COINS  12700") or not shop_currency.text.contains("MOONSTONES  523"):
+		return _fail(app, "Shop currency summary must reflect persisted review balances")
+	if shop_truth == null or not shop_truth.text.contains("NOT PURCHASABLE"):
+		return _fail(app, "Shop currency summary must not imply commerce availability")
 	if shop_hero_title == null or shop_hero_title.text != "NO PURCHASES ENABLED":
 		return _fail(app, "Shop hero must remain an admitted unavailable state")
+	if shop_art == null or shop_art.texture == null or shop_disabled_action == null or not shop_disabled_action.disabled:
+		return _fail(app, "Shop featured offer must provide art with a disabled commerce CTA")
 	if not await _save(app, "progression-final-shop.png"):
 		return
 	app.current_screen().get_node("FeatureLayout/BackToHouse").emit_signal("pressed")
@@ -189,11 +199,25 @@ func _capture() -> void:
 	var settings_panel = app.get_node_or_null("ScreenHost/SettingsPanel")
 	if settings_panel == null:
 		return _fail(app, "Settings modal surface missing")
+	var settings_close: Button = settings_panel.get_node_or_null("Card/Content/Close") as Button
+	if settings_close == null or settings_close.text != "RETURN TO PROFILE":
+		return _fail(app, "Profile Settings must return to its origin screen")
+	var reduced_toggle: CheckButton = settings_panel.get_node_or_null("Card/Content/Reduced") as CheckButton
+	var saved_note: Label = settings_panel.get_node_or_null("Card/Content/SavedNote") as Label
+	if reduced_toggle == null or saved_note == null:
+		return _fail(app, "Settings changed-state controls missing")
+	reduced_toggle.button_pressed = true
+	reduced_toggle.emit_signal("toggled", true)
+	await _frames(2)
+	if not saved_note.text.contains("SAVED ON THIS DEVICE") or not saved_note.text.contains("REDUCED MOTION UPDATED"):
+		return _fail(app, "Settings changed state must confirm persisted preference")
 	if not await _save(app, "progression-final-settings.png"):
 		return
 	if not app.close_settings():
 		return _fail(app, "Profile Settings modal failed to close")
 	await _frames(2)
+	if String(app.current_route_name()) != "profile_settings" or app.current_screen() != profile:
+		return _fail(app, "closing Settings must preserve and reveal the Profile origin")
 	app.current_screen().get_node("FeatureLayout/BackToHouse").emit_signal("pressed")
 	await _frames(3)
 

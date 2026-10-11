@@ -32,6 +32,7 @@ var _store
 var _current_screen: Node
 var _settings_screen: Node
 var _pending_level_number: int = 0
+var _returning_player_entry: bool = false
 ## Founder-authorized internal review exposes three provisional levels.
 ## This does not confer D-024B/D-027 shipping or final-art approval.
 const INTERNAL_REVIEW_LEVEL_COUNT := 3
@@ -42,6 +43,7 @@ func _ready() -> void:
 	var path: String = save_path_override if save_path_override != "" else SaveStoreScript.DEFAULT_PATH
 	_store = SaveStoreScript.new(path)
 	progress = ProgressScript.from_dict(_store.load_or_default())
+	_returning_player_entry = _has_durable_progress(progress)
 	navigation = NavigationScript.new()
 	user_settings = UserSettingsScript.new()
 	var settings_path := settings_path_override if settings_path_override != "" else UserSettingsScript.DEFAULT_PATH
@@ -328,7 +330,9 @@ func _style_meta_action(button: Button, primary: bool) -> void:
 	button.add_theme_stylebox_override("normal", normal)
 	button.add_theme_stylebox_override("hover", hover)
 	button.add_theme_stylebox_override("pressed", hover)
+	button.add_theme_stylebox_override("disabled", normal)
 	button.add_theme_color_override("font_color", Color("#FFF0D8"))
+	button.add_theme_color_override("font_disabled_color", Color("#CFC0CF"))
 	button.add_theme_font_size_override("font_size", 19)
 
 func _on_missions_back() -> void:
@@ -429,6 +433,23 @@ func show_feature_preview(feature: String) -> bool:
 	detail.add_theme_constant_override("outline_size", 2)
 	detail.add_theme_font_size_override("font_size", 18)
 	layout.add_child(detail)
+	if not is_profile and not is_events:
+		var currency_summary := Label.new()
+		currency_summary.name = "ShopCurrencySummary"
+		currency_summary.text = "HOUSE COINS  %d  ·  MOONSTONES  %d" % [int(progress.coins) if progress != null else 0, int(progress.gems) if progress != null else 0]
+		currency_summary.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+		currency_summary.add_theme_color_override("font_color", Color("#F2D08B"))
+		currency_summary.add_theme_color_override("font_outline_color", Color("#080710", 0.86))
+		currency_summary.add_theme_constant_override("outline_size", 2)
+		currency_summary.add_theme_font_size_override("font_size", 17)
+		layout.add_child(currency_summary)
+		var currency_truth := Label.new()
+		currency_truth.name = "ShopCurrencyTruth"
+		currency_truth.text = "LOCAL REVIEW BALANCES · NOT PURCHASABLE"
+		currency_truth.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+		currency_truth.add_theme_color_override("font_color", Color("#BFA5D8"))
+		currency_truth.add_theme_font_size_override("font_size", 13)
+		layout.add_child(currency_truth)
 
 	var hero := PanelContainer.new()
 	hero.name = "FeatureHero"
@@ -459,6 +480,15 @@ func show_feature_preview(feature: String) -> bool:
 		event_hero_art.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
 		event_hero_art.mouse_filter = Control.MOUSE_FILTER_IGNORE
 		hero_row.add_child(event_hero_art)
+	elif not is_profile:
+		var shop_hero_art := TextureRect.new()
+		shop_hero_art.name = "ShopFeaturedOfferArt"
+		shop_hero_art.custom_minimum_size = Vector2(150, 128)
+		shop_hero_art.texture = PieceAssetLoader.ornament("res://assets/curios/ch01_curio_moth_reliquary.svg")
+		shop_hero_art.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+		shop_hero_art.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+		shop_hero_art.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		hero_row.add_child(shop_hero_art)
 	var hero_copy := VBoxContainer.new()
 	hero_copy.name = "HeroCopy"
 	hero_copy.size_flags_horizontal = Control.SIZE_EXPAND_FILL
@@ -487,6 +517,14 @@ func show_feature_preview(feature: String) -> bool:
 	hero_body.add_theme_color_override("font_color", Color("#CFC0CF"))
 	hero_body.add_theme_font_size_override("font_size", 16)
 	hero_copy.add_child(hero_body)
+	if not is_profile and not is_events:
+		var disabled_action := Button.new()
+		disabled_action.name = "ShopDisabledAction"
+		disabled_action.text = "COMMERCE NOT CONNECTED"
+		disabled_action.custom_minimum_size.y = 52
+		_style_meta_action(disabled_action, false)
+		disabled_action.disabled = true
+		hero_copy.add_child(disabled_action)
 
 	var card_scroll := ScrollContainer.new()
 	card_scroll.name = "FeatureCardScroll"
@@ -668,6 +706,8 @@ func show_settings() -> bool:
 	screen_host.add_child(_settings_screen)
 	Typography.apply(_settings_screen)
 	CurioMaterials.apply(_settings_screen)
+	if _settings_screen.has_method("set_return_context"):
+		_settings_screen.set_return_context(navigation.route_name().to_lower())
 	_settings_screen.bind_settings(user_settings)
 	_settings_screen.close_requested.connect(close_settings)
 	return true
@@ -680,11 +720,13 @@ func close_settings() -> bool:
 	_settings_screen = null
 	return true
 
-func _render_house(restoration_mode: bool = false, curio_id: String = "", restoration_stage: int = 0) -> void:
+func _render_house(restoration_mode: bool = false, curio_id: String = "", restoration_stage: int = 0, returning_player: bool = false) -> void:
 	var screen: Node = HouseScene.instantiate()
 	_show_screen(screen)
 	screen.set_available_level_count(INTERNAL_REVIEW_LEVEL_COUNT)
 	screen.set_progress(progress)
+	if screen.has_method("set_returning_player"):
+		screen.set_returning_player(returning_player)
 	if restoration_mode and screen.has_method("show_restoration_ceremony"):
 		screen.show_restoration_ceremony(curio_id, restoration_stage)
 		if screen.has_signal("restoration_finished"):
@@ -851,7 +893,9 @@ func _on_splash_continue() -> void:
 			return
 	elif navigation.current() != NavigationScript.Route.HOUSE:
 		return
-	_render_house()
+	var returning_player := _returning_player_entry
+	_returning_player_entry = false
+	_render_house(false, "", 0, returning_player)
 
 func _on_house_play_requested(_level_number: int) -> void:
 	if navigation.current() != NavigationScript.Route.HOUSE:
@@ -878,3 +922,9 @@ func _render_chapters() -> bool:
 func _on_chapter_selected(chapter_id: String) -> void:
 	if chapter_id == "curio_boutique":
 		show_map()
+
+
+func _has_durable_progress(value) -> bool:
+	if value == null:
+		return false
+	return int(value.house_stage) > 0 or not value.completed_levels.is_empty() or not value.curios.is_empty()
