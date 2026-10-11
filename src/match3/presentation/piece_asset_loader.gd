@@ -74,7 +74,7 @@ static func contract() -> Dictionary:
 	for family in PATHS:
 		loaded[family] = texture(String(family)) != null
 	return {
-		"source": "AKILTA authored raster assets (legacy SVG fallback)",
+		"source": "AKILTA first-party authored raster assets with owned SVG compatibility fallback",
 		"status": "raster_first_piece_contract",
 		"paid_dependency": false,
 		"fallback": "owned_procedural_renderer",
