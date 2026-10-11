@@ -811,7 +811,10 @@ func _on_gameplay_result_state_changed(kind: String) -> void:
 func _on_level_won(level_id: String, curio_id: String, house_stage_reward: int) -> void:
 	_pending_level_number = 0
 	var transaction_id := "win:first:%s" % level_id
-	complete_level_win(transaction_id, level_id, curio_id, house_stage_reward)
+	if not complete_level_win(transaction_id, level_id, curio_id, house_stage_reward):
+		# Keep the visible reward claim retryable when persistence fails.
+		if _current_screen != null and is_instance_valid(_current_screen) and _current_screen.has_method("restore_reward_claim"):
+			_current_screen.restore_reward_claim()
 
 func _on_level_replay_finished(level_id: String) -> void:
 	_pending_level_number = 0
