@@ -1,4 +1,4 @@
-name: P0 Three-Level Review Verification
+name: P0 Three-Level Review Verification — Visual Polish Check
 
 on:
   push:
