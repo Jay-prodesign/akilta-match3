@@ -34,7 +34,7 @@ const MOTION_PROFILE := {
 	"spawn_end": 0.90
 }
 
-@export var cell_gap: float = 4.0
+@export var cell_gap: float = 6.0
 @export var board_frame_padding: float = 18.0
 @export var swipe_threshold: float = 24.0
 
@@ -530,8 +530,9 @@ func _draw_tap_selection() -> void:
 	if not board_state.in_bounds(_tap_selected):
 		return
 	var center := _cell_center(_tap_selected)
-	var radius := float(_board_geometry()["cell_size"]) * 0.48
-	draw_arc(center, radius, 0.0, TAU, 40, GOLD, 3.0)
+	var half := float(_board_geometry()["cell_size"]) * 0.45
+	var rect := Rect2(center - Vector2.ONE * half, Vector2.ONE * half * 2.0)
+	draw_rect(rect, Color(GOLD, 0.92), false, 3.0)
 
 func _draw_teaching_cue() -> void:
 	if not _teaching_active or _motion_active or board_state == null:
@@ -546,18 +547,22 @@ func _draw_teaching_cue() -> void:
 	var glow := Color(LILAC)
 	glow.a = (0.28 if _high_contrast else 0.16) * _teaching_pulse
 
-	# A House-native ritual thread replaces a generic tutorial hand/arrow.
+	# A restrained gold thread and square focus corners keep the tutorial cue
+	# separate from the piece artwork. No circular halo is drawn around pieces.
 	draw_line(start, finish, thread, maxf(2.0, cell_size * 0.035))
-	draw_arc(start, cell_size * 0.34, 0.0, TAU, 32, thread, maxf(2.0, cell_size * 0.025))
-	draw_arc(finish, cell_size * 0.40, 0.0, TAU, 32, thread, maxf(2.0, cell_size * 0.030))
-	draw_circle(finish, cell_size * 0.12, glow)
-
-	# Increasing seal-dots communicate direction without importing an arrow icon.
-	for i in range(1, 5):
-		var t := float(i) / 5.0
-		var p := start.lerp(finish, t)
-		var r := cell_size * (0.018 + 0.008 * float(i))
-		draw_circle(p, r, thread)
+	for center in [start, finish]:
+		var half := cell_size * 0.34
+		var focus_rect := Rect2(center - Vector2.ONE * half, Vector2.ONE * half * 2.0)
+		draw_rect(focus_rect, thread, false, maxf(2.0, cell_size * 0.025))
+	var direction := (finish - start).normalized()
+	var side := Vector2(-direction.y, direction.x)
+	var tip := finish - direction * cell_size * 0.12
+	draw_colored_polygon(PackedVector2Array([
+		finish,
+		tip + side * cell_size * 0.08,
+		tip - side * cell_size * 0.08
+	]), thread)
+	draw_rect(Rect2(finish - Vector2.ONE * cell_size * 0.13, Vector2.ONE * cell_size * 0.26), glow, false, 2.0)
 
 func _draw_feedback() -> void:
 	if _feedback_strength <= 0.001:
@@ -664,11 +669,7 @@ func _motion_piece_in_flight(pos: Vector2i) -> bool:
 func _draw_cell(rect: Rect2, pos: Vector2i) -> void:
 	var radius := rect.size.x * 0.18
 	draw_style_box(_cell_box(radius), rect)
-	var inner := rect.grow(-rect.size.x * 0.055)
-	var inner_line := Color(GOLD)
-	inner_line.a = 0.16 if _high_contrast else 0.035
-	draw_rect(inner, inner_line, false, 1.0)
-	var inset := rect.grow(-rect.size.x * 0.10)
+	var inset := rect.grow(-rect.size.x * 0.045)
 	var family: String = String(board_state.get_cell(pos))
 	var special: String = String(board_state.get_special(pos))
 	if _motion_active and not _motion_initial_cells.is_empty():
@@ -690,17 +691,17 @@ func _draw_cell(rect: Rect2, pos: Vector2i) -> void:
 
 func _cell_box(radius: float) -> StyleBoxFlat:
 	var box := StyleBoxFlat.new()
-	var fill := Color("#17121D")
+	var fill := Color("#16111B", 0.94)
 	if _visual_profile == "sealed_display":
-		fill = Color("#131923")
+		fill = Color("#111923", 0.94)
 	elif _visual_profile == "thornlight_arrangement":
-		fill = Color("#1D111A")
+		fill = Color("#1B1018", 0.94)
 	box.bg_color = fill
-	box.border_color = Color(GOLD, 0.16 if not _high_contrast else 0.32)
-	box.set_border_width_all(1)
-	box.set_corner_radius_all(int(maxf(5.0, radius * 0.40)))
-	box.shadow_color = Color(0, 0, 0, 0.22)
-	box.shadow_size = 3
+	box.border_color = Color(GOLD, 0.22) if _high_contrast else Color(0, 0, 0, 0)
+	box.set_border_width_all(1 if _high_contrast else 0)
+	box.set_corner_radius_all(int(maxf(5.0, radius * 0.28)))
+	box.shadow_color = Color(0, 0, 0, 0.24)
+	box.shadow_size = 2
 	return box
 
 func _draw_piece(rect: Rect2, family: String, descriptor: Dictionary) -> void:
@@ -708,7 +709,7 @@ func _draw_piece(rect: Rect2, family: String, descriptor: Dictionary) -> void:
 		return
 	var texture := PieceAssetLoader.texture_for_profile(_visual_profile, family)
 	if texture != null:
-		var asset_rect := rect.grow(rect.size.x * 0.16)
+		var asset_rect := rect.grow(rect.size.x * 0.06)
 		draw_texture_rect(texture, asset_rect, false)
 		return
 	var color: Color = descriptor["color"]
@@ -729,31 +730,10 @@ func _draw_piece(rect: Rect2, family: String, descriptor: Dictionary) -> void:
 		"leaf":
 			_draw_lacquered_leaf_piece(c, r, color)
 
-func _draw_piece_material_backing(c: Vector2, r: float, color: Color, material: String) -> void:
-	var shadow := Color(0.0, 0.0, 0.0, 0.34)
-	draw_circle(c + Vector2(r * 0.05, r * 0.08), r * 1.08, shadow)
-	var aura := Color(color)
-	aura.a = 0.11
-	draw_circle(c, r * 1.12, aura)
-	var bezel := Color("#18131C")
-	draw_circle(c, r * 1.03, bezel)
-	var rim := Color(color.lightened(0.16))
-	rim.a = 0.54
-	draw_arc(c, r * 0.98, 0.0, TAU, 44, rim, maxf(1.2, r * 0.045))
-	var inner := Color("#241C29")
-	if material == "antique_metal":
-		inner = Color("#2D251D")
-	elif material == "spectral_glass":
-		inner = Color("#1B272B")
-	elif material == "lacquered_leaf":
-		inner = Color("#1B261D")
-	elif material == "carved_wine_enamel":
-		inner = Color("#2B1822")
-	draw_circle(c, r * 0.86, inner)
-	var gloss := Color(1, 1, 1, 0.10)
-	draw_arc(c - Vector2(r * 0.06, r * 0.06), r * 0.70, PI * 1.10, PI * 1.62, 18, gloss, maxf(1.0, r * 0.05))
-	var bottom_shade := Color(0, 0, 0, 0.18)
-	draw_arc(c + Vector2(0, r * 0.06), r * 0.72, PI * 0.12, PI * 0.88, 20, bottom_shade, maxf(1.0, r * 0.06))
+func _draw_piece_material_backing(_c: Vector2, _r: float, _color: Color, _material: String) -> void:
+	# Final-direction pieces are freestanding illustrated objects. Fallback
+	# rendering must never add a circular bezel/medallion around them.
+	pass
 
 func _draw_moonstone_piece(c: Vector2, r: float, color: Color) -> void:
 	var moon_c := c - Vector2(r * 0.08, 0)

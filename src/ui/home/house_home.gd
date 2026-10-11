@@ -10,6 +10,7 @@ signal shop_requested
 signal profile_requested
 
 const HouseState = preload("res://src/world/house_state.gd")
+const PieceAssetLoader = preload("res://src/match3/presentation/piece_asset_loader.gd")
 
 @onready var room_view = $Layout/RoomView
 @onready var headline: Label = $Layout/Headline
@@ -29,6 +30,9 @@ var _chapter_status: Label
 var _completion_banner: PanelContainer
 var _completion_label: Label
 var _resource_curio_label: Label
+var _resource_life_label: Label
+var _resource_coin_label: Label
+var _resource_gem_label: Label
 
 func _ready() -> void:
 	play_button.pressed.connect(_on_play_pressed)
@@ -77,8 +81,12 @@ func _refresh() -> void:
 		_chapter_status.text = "✦ OPENING SET COMPLETE" if opening_complete else "✦ %d / %d RITUALS" % [finished, available_level_count]
 	if opening_complete:
 		curio_label.text = "FIRST CABINET SET · 3 CURIOS AWAKENED"
-	if _resource_curio_label != null:
-		_resource_curio_label.text = "✦ %d / %d CURIOS" % [mini(owned_curios.size(), available_level_count), available_level_count]
+	if _resource_life_label != null:
+		_resource_life_label.text = "FULL" if progress == null or int(progress.lives) >= 5 else "%d / 5" % int(progress.lives)
+	if _resource_coin_label != null:
+		_resource_coin_label.text = "%s" % _format_number(int(progress.coins) if progress != null else 12340)
+	if _resource_gem_label != null:
+		_resource_gem_label.text = "%s" % _format_number(int(progress.gems) if progress != null else 520)
 	if house_overlay_kicker != null:
 		house_overlay_kicker.text = "OPENING CABINET RESTORED" if opening_complete else ("RESTORATION STAGE %d" % stage if stage > 0 else "THE HOUSE AWAITS")
 	if house_overlay_title != null:
@@ -149,14 +157,17 @@ func _build_navigation_dock() -> void:
 	dock.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	dock_scroll.add_child(dock)
 	for entry in [
-		{"title": "⌂ HOUSE", "action": "house"},
-		{"title": "✦ CURIOS", "action": "curios"},
-		{"title": "☾ MAP", "action": "map"},
-		{"title": "✧ EVENTS", "action": "events"},
-		{"title": "◇ SHOP", "action": "shop"}
+		{"title": "HOUSE", "action": "house", "icon": "res://assets/ui/nav_house.svg"},
+		{"title": "CURIOS", "action": "curios", "icon": "res://assets/ui/nav_curios.svg"},
+		{"title": "MAP", "action": "map", "icon": "res://assets/ui/nav_map.svg"},
+		{"title": "EVENTS", "action": "events", "icon": "res://assets/ui/nav_events.svg"},
+		{"title": "SHOP", "action": "shop", "icon": "res://assets/ui/nav_shop.svg"}
 	]:
 		var button := Button.new()
 		button.text = String(entry["title"])
+		button.icon = PieceAssetLoader.ornament(String(entry["icon"]))
+		button.expand_icon = true
+		button.add_theme_constant_override("icon_max_width", 24)
 		button.name = "Dock" + String(entry["action"]).capitalize()
 		button.custom_minimum_size = Vector2(0, 56)
 		button.size_flags_horizontal = Control.SIZE_EXPAND_FILL
@@ -198,44 +209,36 @@ func _build_resource_bar() -> void:
 	panel.anchor_top = 0.0
 	panel.anchor_bottom = 0.0
 	panel.offset_top = 5.0
-	panel.offset_bottom = 50.0
+	panel.offset_bottom = 58.0
 	panel.z_index = 10
 	var style := StyleBoxFlat.new()
-	style.bg_color = Color("#0B0D17", 0.94)
-	style.border_color = Color("#D5AD70", 0.68)
+	style.bg_color = Color("#090810", 0.96)
+	style.border_color = Color("#D5AD70", 0.76)
 	style.set_border_width_all(1)
-	style.set_corner_radius_all(8)
+	style.set_corner_radius_all(10)
+	style.shadow_color = Color(0, 0, 0, 0.35)
+	style.shadow_size = 7
 	panel.add_theme_stylebox_override("panel", style)
 	add_child(panel)
 	var row := HBoxContainer.new()
 	row.name = "Resources"
 	row.alignment = BoxContainer.ALIGNMENT_CENTER
-	row.add_theme_constant_override("separation", 4)
+	row.add_theme_constant_override("separation", 5)
 	panel.add_child(row)
-	for value in ["♥ FULL", "✦ 0 / 3 CURIOS", "✧ 0 / 3 RITUALS"]:
-		var label := Label.new()
-		label.text = value
-		label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-		label.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
-		label.add_theme_color_override("font_color", Color("#F4E5D3"))
-		label.add_theme_font_size_override("font_size", 15)
-		label.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-		row.add_child(label)
-		if value.begins_with("✦"):
-			label.name = "CurioResource"
-			_resource_curio_label = label
-		if value.begins_with("✧"):
-			label.name = "ChapterStatus"
-			_chapter_status = label
+	_resource_life_label = _add_resource_chip(row, "LifeResource", "res://assets/ui/ui_heart.svg", "FULL")
+	_resource_coin_label = _add_resource_chip(row, "CoinResource", "res://assets/ui/ui_coin.svg", "12,340")
+	_resource_gem_label = _add_resource_chip(row, "GemResource", "res://assets/ui/ui_gem.svg", "520")
 	var keeper := Button.new()
 	keeper.name = "KeeperProfile"
-	keeper.text = "♙ KEEPER"
-	keeper.custom_minimum_size = Vector2(138, 38)
-	keeper.add_theme_font_size_override("font_size", 14)
-	keeper.add_theme_color_override("font_color", Color("#F4E5D3"))
+	keeper.text = ""
+	keeper.icon = PieceAssetLoader.ornament("res://assets/ui/ui_profile.svg")
+	keeper.expand_icon = true
+	keeper.add_theme_constant_override("icon_max_width", 30)
+	keeper.tooltip_text = "Keeper profile"
+	keeper.custom_minimum_size = Vector2(54, 42)
 	var keeper_style := StyleBoxFlat.new()
-	keeper_style.bg_color = Color("#251529", 0.96)
-	keeper_style.border_color = Color("#D5AD70", 0.56)
+	keeper_style.bg_color = Color("#211728", 0.96)
+	keeper_style.border_color = Color("#D5AD70", 0.48)
 	keeper_style.set_border_width_all(1)
 	keeper_style.set_corner_radius_all(10)
 	keeper.add_theme_stylebox_override("normal", keeper_style)
@@ -243,3 +246,47 @@ func _build_resource_bar() -> void:
 	keeper.add_theme_stylebox_override("pressed", keeper_style)
 	keeper.pressed.connect(func(): profile_requested.emit())
 	row.add_child(keeper)
+
+func _add_resource_chip(parent: HBoxContainer, node_name: String, icon_path: String, value: String) -> Label:
+	var chip := PanelContainer.new()
+	chip.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	var box := StyleBoxFlat.new()
+	box.bg_color = Color("#15111B", 0.92)
+	box.border_color = Color("#6F596E", 0.42)
+	box.set_border_width_all(1)
+	box.set_corner_radius_all(10)
+	box.content_margin_left = 6
+	box.content_margin_right = 8
+	box.content_margin_top = 4
+	box.content_margin_bottom = 4
+	chip.add_theme_stylebox_override("panel", box)
+	parent.add_child(chip)
+	var content := HBoxContainer.new()
+	content.alignment = BoxContainer.ALIGNMENT_CENTER
+	content.add_theme_constant_override("separation", 3)
+	chip.add_child(content)
+	var icon := TextureRect.new()
+	icon.custom_minimum_size = Vector2(28, 28)
+	icon.texture = PieceAssetLoader.ornament(icon_path)
+	icon.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+	icon.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+	icon.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	content.add_child(icon)
+	var label := Label.new()
+	label.name = node_name
+	label.text = value
+	label.add_theme_color_override("font_color", Color("#F4E5D3"))
+	label.add_theme_font_size_override("font_size", 14)
+	content.add_child(label)
+	return label
+
+func _format_number(value: int) -> String:
+	var digits := str(maxi(0, value))
+	var out := ""
+	var count := 0
+	for i in range(digits.length() - 1, -1, -1):
+		if count > 0 and count % 3 == 0:
+			out = "," + out
+		out = digits.substr(i, 1) + out
+		count += 1
+	return out

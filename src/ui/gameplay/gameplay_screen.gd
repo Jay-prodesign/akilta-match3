@@ -37,6 +37,12 @@ var haptics = HapticsController.new()
 var _potion_used_for_attempt := false
 var _level_badge_label: Label
 var _booster_tray: PanelContainer
+var _resource_life_label: Label
+var _resource_coin_label: Label
+var _resource_gem_label: Label
+var _player_lives: int = 5
+var _player_coins: int = 12340
+var _player_gems: int = 520
 var _result_proclamation: Label
 
 @onready var world_backdrop: TextureRect = $WorldBackdrop
@@ -84,6 +90,17 @@ func _ready() -> void:
 	result_overlay.visible = false
 	if FileAccess.file_exists(default_level_path):
 		load_level_path(default_level_path, default_seed)
+
+func set_player_resources(lives: int, coins: int, gems: int) -> void:
+	_player_lives = clampi(lives, 0, 5)
+	_player_coins = maxi(0, coins)
+	_player_gems = maxi(0, gems)
+	if _resource_life_label != null:
+		_resource_life_label.text = "FULL" if _player_lives >= 5 else "%d / 5" % _player_lives
+	if _resource_coin_label != null:
+		_resource_coin_label.text = _format_number(_player_coins)
+	if _resource_gem_label != null:
+		_resource_gem_label.text = _format_number(_player_gems)
 
 func apply_presentation_settings(state: Dictionary) -> void:
 	if board_view != null and board_view.has_method("apply_presentation_settings"):
@@ -146,7 +163,7 @@ func _update_level_badge() -> void:
 	var level_number := 1
 	if not parts.is_empty():
 		level_number = maxi(1, int(parts[parts.size() - 1]))
-	_level_badge_label.text = "◇ LEVEL %d" % level_number
+	_level_badge_label.text = "LEVEL %d" % level_number
 
 func _apply_level_art_profile(profile: String) -> void:
 	# The board symbols, room tint, and heading accents move together by chapter beat.
@@ -524,9 +541,18 @@ func _build_bottom_navigation() -> void:
 	row.add_theme_constant_override("separation", 2)
 	row.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	nav_scroll.add_child(row)
-	for item in [{"label":"⌂ HOUSE","id":"house"},{"label":"✦ CURIOS","id":"curios"},{"label":"☾ MAP","id":"map"},{"label":"✧ EVENTS","id":"events"},{"label":"◇ SHOP","id":"shop"}]:
+	for item in [
+		{"label":"HOUSE","id":"house","icon":"res://assets/ui/nav_house.svg"},
+		{"label":"CURIOS","id":"curios","icon":"res://assets/ui/nav_curios.svg"},
+		{"label":"MAP","id":"map","icon":"res://assets/ui/nav_map.svg"},
+		{"label":"EVENTS","id":"events","icon":"res://assets/ui/nav_events.svg"},
+		{"label":"SHOP","id":"shop","icon":"res://assets/ui/nav_shop.svg"}
+	]:
 		var button := Button.new()
 		button.text = String(item["label"])
+		button.icon = PieceAssetLoader.ornament(String(item["icon"]))
+		button.expand_icon = true
+		button.add_theme_constant_override("icon_max_width", 24)
 		button.custom_minimum_size = Vector2(0, 52)
 		button.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 		button.add_theme_font_size_override("font_size", 15)
@@ -549,7 +575,7 @@ func _build_top_resource_bar() -> void:
 	panel.anchor_top = 0.0
 	panel.anchor_bottom = 0.0
 	panel.offset_top = 6.0
-	panel.offset_bottom = 50.0
+	panel.offset_bottom = 54.0
 	var style := StyleBoxFlat.new()
 	style.bg_color = Color("#08070D", 0.96)
 	style.border_color = Color("#D5AD70", 0.78)
@@ -562,20 +588,65 @@ func _build_top_resource_bar() -> void:
 	var row := HBoxContainer.new()
 	row.name = "Resources"
 	row.alignment = BoxContainer.ALIGNMENT_CENTER
-	row.add_theme_constant_override("separation", 12)
+	row.add_theme_constant_override("separation", 5)
 	panel.add_child(row)
-	for value in ["♥ FULL", "✦ CURIO BOUTIQUE", "☾ CHAPTER I", "◇ LEVEL 1"]:
-		var label := Label.new()
-		label.text = value
-		label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-		label.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
-		label.add_theme_color_override("font_color", Color("#F4E5D3"))
-		label.add_theme_font_size_override("font_size", 16)
-		label.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-		if value.begins_with("◇"):
-			label.name = "LevelBadge"
-			_level_badge_label = label
-		row.add_child(label)
+	_resource_life_label = _add_resource_chip(row, "LifeResource", "res://assets/ui/ui_heart.svg", "FULL")
+	_resource_coin_label = _add_resource_chip(row, "CoinResource", "res://assets/ui/ui_coin.svg", _format_number(_player_coins))
+	_resource_gem_label = _add_resource_chip(row, "GemResource", "res://assets/ui/ui_gem.svg", _format_number(_player_gems))
+	var level := Label.new()
+	level.name = "LevelBadge"
+	level.text = "LEVEL 1"
+	level.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	level.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
+	level.add_theme_color_override("font_color", Color("#D5AD70"))
+	level.add_theme_font_size_override("font_size", 13)
+	level.custom_minimum_size = Vector2(84, 0)
+	row.add_child(level)
+	_level_badge_label = level
+
+func _add_resource_chip(parent: HBoxContainer, node_name: String, icon_path: String, value: String) -> Label:
+	var chip := PanelContainer.new()
+	chip.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	var box := StyleBoxFlat.new()
+	box.bg_color = Color("#15111B", 0.92)
+	box.border_color = Color("#6F596E", 0.42)
+	box.set_border_width_all(1)
+	box.set_corner_radius_all(10)
+	box.content_margin_left = 5
+	box.content_margin_right = 7
+	box.content_margin_top = 3
+	box.content_margin_bottom = 3
+	chip.add_theme_stylebox_override("panel", box)
+	parent.add_child(chip)
+	var content := HBoxContainer.new()
+	content.alignment = BoxContainer.ALIGNMENT_CENTER
+	content.add_theme_constant_override("separation", 2)
+	chip.add_child(content)
+	var icon := TextureRect.new()
+	icon.custom_minimum_size = Vector2(26, 26)
+	icon.texture = PieceAssetLoader.ornament(icon_path)
+	icon.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+	icon.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+	icon.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	content.add_child(icon)
+	var label := Label.new()
+	label.name = node_name
+	label.text = value
+	label.add_theme_color_override("font_color", Color("#F4E5D3"))
+	label.add_theme_font_size_override("font_size", 13)
+	content.add_child(label)
+	return label
+
+func _format_number(value: int) -> String:
+	var digits := str(maxi(0, value))
+	var out := ""
+	var count := 0
+	for i in range(digits.length() - 1, -1, -1):
+		if count > 0 and count % 3 == 0:
+			out = "," + out
+		out = digits.substr(i, 1) + out
+		count += 1
+	return out
 
 func _build_booster_tray() -> void:
 	var panel := PanelContainer.new()

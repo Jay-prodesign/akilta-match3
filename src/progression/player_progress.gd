@@ -6,6 +6,9 @@ const SCHEMA_VERSION := 1
 var schema_version: int = SCHEMA_VERSION
 var highest_level_unlocked: int = 1
 var house_stage: int = 0
+var lives: int = 5
+var coins: int = 12340
+var gems: int = 520
 var completed_levels: Array[String] = []
 var curios: Array[String] = []
 var processed_transactions: Array[String] = []
@@ -15,6 +18,9 @@ static func from_dict(data: Dictionary):
 	progress.schema_version = int(data.get("schema_version", SCHEMA_VERSION))
 	progress.highest_level_unlocked = max(1, int(data.get("highest_level_unlocked", 1)))
 	progress.house_stage = max(0, int(data.get("house_stage", 0)))
+	progress.lives = clampi(int(data.get("lives", 5)), 0, 5)
+	progress.coins = max(0, int(data.get("coins", 12340)))
+	progress.gems = max(0, int(data.get("gems", 520)))
 	for level_id in data.get("completed_levels", []):
 		_append_unique(progress.completed_levels, String(level_id))
 	for curio_id in data.get("curios", []):
@@ -28,6 +34,9 @@ func to_dict() -> Dictionary:
 		"schema_version": schema_version,
 		"highest_level_unlocked": highest_level_unlocked,
 		"house_stage": house_stage,
+		"lives": lives,
+		"coins": coins,
+		"gems": gems,
 		"completed_levels": completed_levels.duplicate(),
 		"curios": curios.duplicate(),
 		"processed_transactions": processed_transactions.duplicate()
@@ -44,6 +53,10 @@ func apply_level_win(transaction_id: String, level_id: String, curio_id: String 
 	var stage_reward: int = house_stage_reward if house_stage_reward >= 0 else level_number
 	house_stage = max(house_stage, stage_reward)
 	highest_level_unlocked = max(highest_level_unlocked, level_number + 1)
+	# Opening-review economy: each first-time transaction grants the reward
+	# shown by the win surface. The transaction ledger keeps it exactly-once.
+	coins += 120
+	gems += 1
 	return true
 
 static func _append_unique(values: Array[String], value: String) -> void:

@@ -1,12 +1,13 @@
 class_name Match3ProductNavigation
 extends RefCounted
 
+const PieceAssetLoader = preload("res://src/match3/presentation/piece_asset_loader.gd")
 const ITEMS := [
-	{"label": "⌂ HOUSE", "id": "house"},
-	{"label": "✦ CURIOS", "id": "curios"},
-	{"label": "☾ MAP", "id": "map"},
-	{"label": "✧ EVENTS", "id": "events"},
-	{"label": "◇ SHOP", "id": "shop"},
+	{"label": "HOUSE", "id": "house", "icon": "res://assets/ui/nav_house.svg"},
+	{"label": "CURIOS", "id": "curios", "icon": "res://assets/ui/nav_curios.svg"},
+	{"label": "MAP", "id": "map", "icon": "res://assets/ui/nav_map.svg"},
+	{"label": "EVENTS", "id": "events", "icon": "res://assets/ui/nav_events.svg"},
+	{"label": "SHOP", "id": "shop", "icon": "res://assets/ui/nav_shop.svg"},
 ]
 
 static func attach(screen: Control, active_section: String, handler: Callable, content_path: NodePath = NodePath("Layout")) -> PanelContainer:
@@ -60,10 +61,14 @@ static func attach(screen: Control, active_section: String, handler: Callable, c
 		var button := Button.new()
 		button.name = "Nav" + action.capitalize()
 		button.text = String(item["label"])
+		button.icon = PieceAssetLoader.ornament(String(item["icon"]))
+		button.expand_icon = true
+		button.icon_alignment = HORIZONTAL_ALIGNMENT_CENTER
+		button.add_theme_constant_override("icon_max_width", 24)
 		button.tooltip_text = action.capitalize()
 		button.custom_minimum_size = Vector2(0, 54)
 		button.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-		button.add_theme_font_size_override("font_size", 15)
+		button.add_theme_font_size_override("font_size", 13)
 		button.add_theme_color_override("font_color", Color("#F4E5D3"))
 		button.add_theme_color_override("font_hover_color", Color("#FFF1D9"))
 		var normal := StyleBoxFlat.new()

@@ -87,7 +87,7 @@ static func contract() -> Dictionary:
 		loaded[family] = texture(String(family)) != null
 	return {
 		"source": "AKILTA first-party original SVG",
-		"status": "north_star_eight_symbol_set_v3",
+		"status": "north_star_ringless_symbol_set_v4",
 		"paid_dependency": false,
 		"fallback": "owned_procedural_renderer",
 		"families": loaded,
