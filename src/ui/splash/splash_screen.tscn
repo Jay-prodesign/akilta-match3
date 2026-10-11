@@ -68,7 +68,7 @@ horizontal_alignment = 1
 autowrap_mode = 2
 
 [node name="BootState" type="PanelContainer" parent="Layout"]
-custom_minimum_size = Vector2(0, 96)
+custom_minimum_size = Vector2(0, 128)
 layout_mode = 2
 
 [node name="StateContent" type="VBoxContainer" parent="Layout/BootState"]
@@ -91,7 +91,8 @@ layout_mode = 2
 theme_override_colors/font_color = Color(0.94, 0.88, 0.86, 1)
 theme_override_colors/font_outline_color = Color(0.015, 0.01, 0.022, 0.96)
 theme_override_constants/outline_size = 3
-theme_override_font_sizes/font_size = 16
+custom_minimum_size = Vector2(0, 48)
+theme_override_font_sizes/font_size = 19
 text = "A local save issue was recovered."
 horizontal_alignment = 1
 autowrap_mode = 2
