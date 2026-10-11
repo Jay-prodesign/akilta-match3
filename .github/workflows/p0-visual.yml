@@ -8,6 +8,13 @@ on:
       - ".github/workflows/p0-visual.yml"
       - "tests/visual/capture_level1_journey.gd"
       - "tests/visual/capture_level1_failure.gd"
+      - "src/ui/home/**"
+      - "src/ui/map/**"
+      - "src/ui/gameplay/**"
+      - "src/ui/prestart/**"
+      - "src/world/**"
+      - "src/ui/shared/screen_art_registry.gd"
+      - "assets/world/ch01_curio_boutique/**"
   # Expensive rendered verification is milestone-based. Functional CI runs
   # continuously; this workflow is for Golden Loop render evidence only.
   workflow_dispatch:
