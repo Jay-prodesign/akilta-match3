@@ -1,0 +1,36 @@
+name: Materialize Special token pass
+
+on:
+  push:
+    branches:
+      - p0/bootstrap
+    paths:
+      - ".github/workflows/materialize-specials.yml"
+      - "assets/staging/special_raster_pass.zip"
+
+permissions:
+  contents: write
+
+jobs:
+  materialize:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install special token raster assets
+        shell: bash
+        run: |
+          set -euo pipefail
+          unzip -o assets/staging/special_raster_pass.zip -d assets/specials
+          test -s assets/specials/gbl_special_line_h_idle_v01.webp
+          test -s assets/specials/gbl_special_line_v_idle_v01.webp
+          test -s assets/specials/gbl_special_area_idle_v01.webp
+          test -s assets/specials/gbl_special_smart_idle_v01.webp
+          test -s assets/specials/gbl_special_global_idle_v01.webp
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add assets/specials/*.webp
+          git rm -f assets/staging/special_raster_pass.zip .github/workflows/materialize-specials.yml
+          if git diff --cached --quiet; then exit 0; fi
+          git commit -m "Install special token raster assets"
+          git push origin HEAD:p0/bootstrap
