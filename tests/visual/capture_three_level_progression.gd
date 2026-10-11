@@ -154,11 +154,25 @@ func _capture() -> void:
 	var settings_panel = app.get_node_or_null("ScreenHost/SettingsPanel")
 	if settings_panel == null:
 		return _fail(app, "Settings modal surface missing")
+	var settings_close: Button = settings_panel.get_node_or_null("Card/Content/Close") as Button
+	if settings_close == null or settings_close.text != "RETURN TO PROFILE":
+		return _fail(app, "Profile Settings must return to its origin screen")
+	var reduced_toggle: CheckButton = settings_panel.get_node_or_null("Card/Content/Reduced") as CheckButton
+	var saved_note: Label = settings_panel.get_node_or_null("Card/Content/SavedNote") as Label
+	if reduced_toggle == null or saved_note == null:
+		return _fail(app, "Settings changed-state controls missing")
+	reduced_toggle.button_pressed = true
+	reduced_toggle.emit_signal("toggled", true)
+	await _frames(2)
+	if not saved_note.text.contains("SAVED ON THIS DEVICE") or not saved_note.text.contains("REDUCED MOTION UPDATED"):
+		return _fail(app, "Settings changed state must confirm persisted preference")
 	if not await _save(app, "progression-final-settings.png"):
 		return
 	if not app.close_settings():
 		return _fail(app, "Profile Settings modal failed to close")
 	await _frames(2)
+	if String(app.current_route_name()) != "profile_settings" or app.current_screen() != profile:
+		return _fail(app, "closing Settings must preserve and reveal the Profile origin")
 	app.current_screen().get_node("FeatureLayout/BackToHouse").emit_signal("pressed")
 	await _frames(3)
 
