@@ -22,6 +22,16 @@ func _capture() -> void:
 	app.settings_path_override = SETTINGS_PATH
 	root.add_child(app)
 	await _frames(3)
+	if String(app.current_route_name()) != "boot":
+		return _fail(app, "failure capture must begin on splash")
+	var splash = app.current_screen()
+	var enter := splash.get_node_or_null("Layout/Enter") as Button if splash != null else null
+	if enter == null:
+		return _fail(app, "failure capture splash enter control missing")
+	enter.emit_signal("pressed")
+	await _frames(3)
+	if String(app.current_route_name()) != "house":
+		return _fail(app, "failure capture splash did not enter House")
 	if not app.show_map() or not app.show_prestart(1) or not app.start_level(1):
 		return _fail(app, "failed to enter Level 1")
 	await _frames(3)
