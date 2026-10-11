@@ -12,7 +12,7 @@ const PLUM := Color("#241A27")
 @export var visible_route_levels: int = 10
 @export var route_width: float = 940.0
 @export var top_margin: float = 320.0
-@export var bottom_margin: float = 160.0
+@export var bottom_margin: float = 170.0
 
 var progress
 var _level_buttons: Dictionary = {}
@@ -44,7 +44,7 @@ func _build_route() -> void:
 	_level_labels.clear()
 	_centers.clear()
 
-	var content_height := 1060.0
+	var content_height := 1500.0
 	custom_minimum_size = Vector2(route_width, content_height)
 	size = custom_minimum_size
 
@@ -99,15 +99,15 @@ func _center_for(level_number: int, content_height: float) -> Vector2:
 		1:
 			return Vector2(route_width * 0.50, base_y)
 		2:
-			return Vector2(route_width * 0.34, base_y - 250.0)
+			return Vector2(route_width * 0.34, base_y - 370.0)
 		3:
-			return Vector2(route_width * 0.66, base_y - 490.0)
+			return Vector2(route_width * 0.66, base_y - 720.0)
 		_:
 			# Future Levels 4–10 stay visible as one compact sealed cabinet cluster.
 			var future_index := level_number - 4
 			if future_index < 4:
-				return Vector2(route_width * (0.20 + float(future_index) * 0.20), 138.0)
-			return Vector2(route_width * (0.30 + float(future_index - 4) * 0.20), 220.0)
+				return Vector2(route_width * (0.20 + float(future_index) * 0.20), 158.0)
+			return Vector2(route_width * (0.30 + float(future_index - 4) * 0.20), 250.0)
 
 func _request(level_number: int) -> void:
 	if level_number <= canonical_level_cap and (progress == null or level_number <= int(progress.highest_level_unlocked)):
@@ -190,7 +190,7 @@ func _draw() -> void:
 	draw_rect(future_zone, Color("#110E15", 0.72), true)
 	draw_rect(future_zone, Color(LILAC, 0.13), false, 1.2)
 
-	var moon_center := Vector2(size.x * 0.50, 174.0)
+	var moon_center := Vector2(size.x * 0.50, 195.0)
 	draw_circle(moon_center, 82.0, Color(LILAC, 0.050))
 	draw_arc(moon_center, 64.0, 0.0, TAU, 52, Color(GOLD, 0.18), 2.0)
 
@@ -204,7 +204,7 @@ func _draw() -> void:
 		draw_circle(p, 11.0, PLUM)
 		draw_arc(p, 11.0, 0.0, TAU, 18, Color(GOLD, 0.52), 1.8)
 
-	var future_hub := Vector2(route_width * 0.50, 305.0)
+	var future_hub := Vector2(route_width * 0.50, 385.0)
 	draw_line(get_level_center(3), future_hub, Color(GOLD, 0.16), 1.8, true)
 	draw_circle(future_hub, 7.0, PLUM)
 	draw_arc(future_hub, 7.0, 0.0, TAU, 18, Color(GOLD, 0.30), 1.2)
