@@ -89,7 +89,7 @@ func show_map() -> bool:
 	return true
 
 func show_prestart(level_number: int) -> bool:
-	if level_number < 1 or level_number > INTERNAL_REVIEW_LEVEL_COUNT or level_number > int(progress.highest_level_unlocked) or (navigation.current() != NavigationScript.Route.MAP and navigation.current() != NavigationScript.Route.HOUSE):
+	if level_number < 1 or level_number > INTERNAL_REVIEW_LEVEL_COUNT or level_number > int(progress.highest_level_unlocked) or navigation.current() != NavigationScript.Route.MAP:
 		return false
 	# Reject missing or malformed content while preserving the current map.
 	var level_file := FileAccess.open(_level_path(level_number), FileAccess.READ)
@@ -539,14 +539,9 @@ func _on_map_back() -> void:
 		_render_chapters()
 
 func _on_prestart_back() -> void:
-	var origin: int = int(navigation.last_payload().get("origin", NavigationScript.Route.HOUSE))
 	_pending_level_number = 0
-	if origin == NavigationScript.Route.MAP:
-		if navigation.go(NavigationScript.Route.MAP, {"via": "prestart_back"}):
-			_render_map_from_prestart()
-	else:
-		if navigation.go(NavigationScript.Route.HOUSE, {"via": "prestart_back"}):
-			_render_house()
+	if navigation.go(NavigationScript.Route.MAP, {"via": "prestart_back"}):
+		_render_map_from_prestart()
 
 func _render_map_from_prestart() -> void:
 	var screen: Node = MapScene.instantiate()
@@ -674,10 +669,10 @@ func _on_splash_continue() -> void:
 		return
 	_render_house()
 
-func _on_house_play_requested(level_number: int) -> void:
+func _on_house_play_requested(_level_number: int) -> void:
 	if navigation.current() != NavigationScript.Route.HOUSE:
 		return
-	show_prestart(level_number)
+	show_map()
 
 func show_chapters() -> bool:
 	if navigation == null or navigation.current() != NavigationScript.Route.HOUSE:
