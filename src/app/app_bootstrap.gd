@@ -181,6 +181,13 @@ func start_level(level_number: int = 1) -> bool:
 	return true
 
 func complete_level_win(transaction_id: String, level_id: String, curio_id: String = "moon_cameo", house_stage_reward: int = -1) -> bool:
+	# Reward acknowledgement is only valid from the visible win/rewards route.
+	# Never persist a transaction first and reject its navigation afterwards:
+	# that strands an already-claimed Curio without the restoration ceremony.
+	if navigation == null or navigation.current() != NavigationScript.Route.WIN_REWARDS:
+		return false
+	if _store == null:
+		return false
 	if progress == null:
 		progress = ProgressScript.new()
 	var curio_was_owned: bool = progress.curios.has(curio_id)
