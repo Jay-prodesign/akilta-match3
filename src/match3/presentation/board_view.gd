@@ -34,8 +34,8 @@ const MOTION_PROFILE := {
 	"spawn_end": 0.90
 }
 
-@export var cell_gap: float = 8.0
-@export var board_frame_padding: float = 14.0
+@export var cell_gap: float = 4.0
+@export var board_frame_padding: float = 18.0
 @export var swipe_threshold: float = 24.0
 
 var board_state
@@ -493,7 +493,10 @@ func cell_at_local(position: Vector2) -> Vector2i:
 	return pos
 
 func _draw() -> void:
-	draw_rect(Rect2(Vector2.ZERO, size), INK, true)
+	draw_rect(Rect2(Vector2.ZERO, size), Color("#090711"), true)
+	var ambient := Color(GOLD)
+	ambient.a = 0.025
+	draw_circle(Vector2(size.x * 0.5, size.y * 0.44), minf(size.x, size.y) * 0.44, ambient)
 	if board_state == null:
 		_draw_empty_state()
 		return
@@ -596,15 +599,15 @@ func _board_geometry() -> Dictionary:
 	return {"origin": Vector2(origin_x, origin_y), "cell_size": cell_size}
 
 func _draw_board_frame(rect: Rect2) -> void:
-	var shadow := rect.grow(7.0)
-	draw_rect(shadow, Color(0.02, 0.015, 0.025, 0.72), true)
-	draw_rect(rect, Color("#18131C"), true)
+	var shadow := rect.grow(10.0)
+	draw_rect(shadow, Color(0.015, 0.01, 0.02, 0.82), true)
+	draw_rect(rect, Color("#100B15"), true)
 	var outer := Color(GOLD)
-	outer.a = 0.62 if _high_contrast else 0.34
-	draw_rect(rect, outer, false, 2.0)
-	var inner := Color(LILAC)
-	inner.a = 0.13
-	draw_rect(rect.grow(-5.0), inner, false, 1.0)
+	outer.a = 0.94 if _high_contrast else 0.72
+	draw_rect(rect, outer, false, 3.0)
+	var inner := Color(GOLD)
+	inner.a = 0.42 if _high_contrast else 0.24
+	draw_rect(rect.grow(-7.0), inner, false, 1.5)
 	var mark_color := Color(GOLD)
 	mark_color.a = 0.5
 	var mark := minf(rect.size.x, rect.size.y) * 0.035
@@ -639,7 +642,7 @@ func _draw_board_frame(rect: Rect2) -> void:
 	# Curio House color/material identity remains owned by this renderer.
 	if _candidate_frame_texture != null:
 		var ornament_tint := Color(GOLD)
-		ornament_tint.a = 0.42
+		ornament_tint.a = 0.68
 		draw_texture_rect(_candidate_frame_texture, rect.grow(10.0), false, ornament_tint)
 
 func _motion_piece_in_flight(pos: Vector2i) -> bool:
@@ -662,10 +665,10 @@ func _draw_cell(rect: Rect2, pos: Vector2i) -> void:
 	var radius := rect.size.x * 0.18
 	draw_style_box(_cell_box(radius), rect)
 	var inner := rect.grow(-rect.size.x * 0.055)
-	var inner_line := Color(LILAC)
-	inner_line.a = 0.20 if _high_contrast else 0.07
+	var inner_line := Color(GOLD)
+	inner_line.a = 0.16 if _high_contrast else 0.035
 	draw_rect(inner, inner_line, false, 1.0)
-	var inset := rect.grow(-rect.size.x * 0.13)
+	var inset := rect.grow(-rect.size.x * 0.10)
 	var family: String = String(board_state.get_cell(pos))
 	var special: String = String(board_state.get_special(pos))
 	if _motion_active and not _motion_initial_cells.is_empty():
@@ -687,10 +690,17 @@ func _draw_cell(rect: Rect2, pos: Vector2i) -> void:
 
 func _cell_box(radius: float) -> StyleBoxFlat:
 	var box := StyleBoxFlat.new()
-	box.bg_color = Color("#2A2230")
-	box.border_color = Color(0.835, 0.678, 0.439, 0.24)
+	var fill := Color("#17121D")
+	if _visual_profile == "sealed_display":
+		fill = Color("#131923")
+	elif _visual_profile == "thornlight_arrangement":
+		fill = Color("#1D111A")
+	box.bg_color = fill
+	box.border_color = Color(GOLD, 0.16 if not _high_contrast else 0.32)
 	box.set_border_width_all(1)
-	box.set_corner_radius_all(int(maxf(6.0, radius * 0.52)))
+	box.set_corner_radius_all(int(maxf(5.0, radius * 0.40)))
+	box.shadow_color = Color(0, 0, 0, 0.22)
+	box.shadow_size = 3
 	return box
 
 func _draw_piece(rect: Rect2, family: String, descriptor: Dictionary) -> void:
@@ -698,7 +708,7 @@ func _draw_piece(rect: Rect2, family: String, descriptor: Dictionary) -> void:
 		return
 	var texture := PieceAssetLoader.texture_for_profile(_visual_profile, family)
 	if texture != null:
-		var asset_rect := rect.grow(rect.size.x * 0.08)
+		var asset_rect := rect.grow(rect.size.x * 0.16)
 		draw_texture_rect(texture, asset_rect, false)
 		return
 	var color: Color = descriptor["color"]

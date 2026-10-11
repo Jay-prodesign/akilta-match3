@@ -18,6 +18,9 @@ const HouseState = preload("res://src/world/house_state.gd")
 @onready var collection_button: Button = $Layout/ActionDock/Actions/CollectionButton
 @onready var settings_button: Button = $Layout/ActionDock/Actions/SettingsButton
 @onready var play_button: Button = $Layout/PlayButton
+@onready var house_overlay_kicker: Label = $Layout/RoomView/HouseOverlay/Copy/Kicker
+@onready var house_overlay_title: Label = $Layout/RoomView/HouseOverlay/Copy/Title
+@onready var house_overlay_body: Label = $Layout/RoomView/HouseOverlay/Copy/Body
 
 var progress
 var available_level_count: int = 1
@@ -25,6 +28,7 @@ var _dock_buttons: Dictionary = {}
 var _chapter_status: Label
 var _completion_banner: PanelContainer
 var _completion_label: Label
+var _resource_curio_label: Label
 
 func _ready() -> void:
 	play_button.pressed.connect(_on_play_pressed)
@@ -73,6 +77,14 @@ func _refresh() -> void:
 		_chapter_status.text = "✦ OPENING SET COMPLETE" if opening_complete else "✦ %d / %d RITUALS" % [finished, available_level_count]
 	if opening_complete:
 		curio_label.text = "FIRST CABINET SET · 3 CURIOS AWAKENED"
+	if _resource_curio_label != null:
+		_resource_curio_label.text = "✦ %d / %d CURIOS" % [mini(owned_curios.size(), available_level_count), available_level_count]
+	if house_overlay_kicker != null:
+		house_overlay_kicker.text = "OPENING CABINET RESTORED" if opening_complete else ("RESTORATION STAGE %d" % stage if stage > 0 else "THE HOUSE AWAITS")
+	if house_overlay_title != null:
+		house_overlay_title.text = "FIRST CABINET SET COMPLETE" if opening_complete else ("THE HOUSE REMEMBERS" if stage > 0 else "THE HOUSE AWAITS")
+	if house_overlay_body != null:
+		house_overlay_body.text = "Three Curios glow in their restored places." if opening_complete else ("A recovered Curio now lives here. Continue the ritual." if stage > 0 else "Wake the first cabinet and return its Curios.")
 	var next_level := int(progress.highest_level_unlocked) if progress != null else 1
 	var has_started: bool = progress != null and not progress.completed_levels.is_empty()
 	var level1_completed: bool = progress != null and progress.completed_levels.has("ch01_level_001")
@@ -141,15 +153,14 @@ func _build_navigation_dock() -> void:
 		{"title": "✦ CURIOS", "action": "curios"},
 		{"title": "☾ MAP", "action": "map"},
 		{"title": "✧ EVENTS", "action": "events"},
-		{"title": "◇ SHOP", "action": "shop"},
-		{"title": "♙ PROFILE", "action": "profile"}
+		{"title": "◇ SHOP", "action": "shop"}
 	]:
 		var button := Button.new()
 		button.text = String(entry["title"])
 		button.name = "Dock" + String(entry["action"]).capitalize()
-		button.custom_minimum_size = Vector2(0, 54)
+		button.custom_minimum_size = Vector2(0, 56)
 		button.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-		button.add_theme_font_size_override("font_size", 13)
+		button.add_theme_font_size_override("font_size", 15)
 		button.tooltip_text = String(entry["title"])
 		var action := String(entry["action"])
 		button.pressed.connect(func(): _navigate_dock(action))
@@ -187,7 +198,7 @@ func _build_resource_bar() -> void:
 	panel.anchor_top = 0.0
 	panel.anchor_bottom = 0.0
 	panel.offset_top = 5.0
-	panel.offset_bottom = 43.0
+	panel.offset_bottom = 50.0
 	panel.z_index = 10
 	var style := StyleBoxFlat.new()
 	style.bg_color = Color("#0B0D17", 0.94)
@@ -201,15 +212,34 @@ func _build_resource_bar() -> void:
 	row.alignment = BoxContainer.ALIGNMENT_CENTER
 	row.add_theme_constant_override("separation", 4)
 	panel.add_child(row)
-	for value in ["☾ CURIO HOUSE", "✦ CHAPTER ONE", "✧ 0 / 3 RITUALS"]:
+	for value in ["♥ FULL", "✦ 0 / 3 CURIOS", "✧ 0 / 3 RITUALS"]:
 		var label := Label.new()
 		label.text = value
 		label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 		label.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
 		label.add_theme_color_override("font_color", Color("#F4E5D3"))
-		label.add_theme_font_size_override("font_size", 12)
+		label.add_theme_font_size_override("font_size", 15)
 		label.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 		row.add_child(label)
+		if value.begins_with("✦"):
+			label.name = "CurioResource"
+			_resource_curio_label = label
 		if value.begins_with("✧"):
 			label.name = "ChapterStatus"
 			_chapter_status = label
+	var keeper := Button.new()
+	keeper.name = "KeeperProfile"
+	keeper.text = "♙ KEEPER"
+	keeper.custom_minimum_size = Vector2(138, 38)
+	keeper.add_theme_font_size_override("font_size", 14)
+	keeper.add_theme_color_override("font_color", Color("#F4E5D3"))
+	var keeper_style := StyleBoxFlat.new()
+	keeper_style.bg_color = Color("#251529", 0.96)
+	keeper_style.border_color = Color("#D5AD70", 0.56)
+	keeper_style.set_border_width_all(1)
+	keeper_style.set_corner_radius_all(10)
+	keeper.add_theme_stylebox_override("normal", keeper_style)
+	keeper.add_theme_stylebox_override("hover", keeper_style)
+	keeper.add_theme_stylebox_override("pressed", keeper_style)
+	keeper.pressed.connect(func(): profile_requested.emit())
+	row.add_child(keeper)

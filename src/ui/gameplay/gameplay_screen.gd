@@ -65,6 +65,7 @@ var _booster_tray: PanelContainer
 func _ready() -> void:
 	world_backdrop.texture = PieceAssetLoader.ornament("res://assets/world/ch01_curio_boutique/curio_boutique_moonlit_backdrop.svg")
 	_install_candidate_divider()
+	_install_hud_plate()
 	_build_top_resource_bar()
 	_build_booster_tray()
 	_build_bottom_navigation()
@@ -422,6 +423,35 @@ func _install_candidate_divider() -> void:
 	layout.move_child(divider, min(2, layout.get_child_count() - 1))
 
 
+func _install_hud_plate() -> void:
+	var layout := get_node_or_null("Layout") as VBoxContainer
+	var hud := get_node_or_null("Layout/HUD") as HBoxContainer
+	if layout == null or hud == null or layout.get_node_or_null("HUDPlate") != null:
+		return
+	var index := hud.get_index()
+	layout.remove_child(hud)
+	var plate := PanelContainer.new()
+	plate.name = "HUDPlate"
+	plate.custom_minimum_size = Vector2(0, 78)
+	var shell := StyleBoxFlat.new()
+	shell.bg_color = Color("#120D18", 0.97)
+	shell.border_color = Color("#D5AD70", 0.72)
+	shell.set_border_width_all(2)
+	shell.set_corner_radius_all(14)
+	shell.content_margin_left = 16
+	shell.content_margin_right = 12
+	shell.content_margin_top = 9
+	shell.content_margin_bottom = 9
+	shell.shadow_color = Color(0, 0, 0, 0.52)
+	shell.shadow_size = 10
+	plate.add_theme_stylebox_override("panel", shell)
+	layout.add_child(plate)
+	layout.move_child(plate, index)
+	plate.add_child(hud)
+	hud.add_theme_constant_override("separation", 16)
+	objective_label.add_theme_color_override("font_color", Color("#E4CDEB"))
+	moves_label.add_theme_color_override("font_color", Color("#F2C66D"))
+
 func _build_bottom_navigation() -> void:
 	var panel := PanelContainer.new()
 	panel.name = "BottomNavigation"
@@ -429,9 +459,9 @@ func _build_bottom_navigation() -> void:
 	panel.anchor_right = 1.0
 	panel.anchor_top = 1.0
 	panel.anchor_bottom = 1.0
-	panel.offset_left = 14.0
-	panel.offset_right = -14.0
-	panel.offset_top = -66.0
+	panel.offset_left = 12.0
+	panel.offset_right = -12.0
+	panel.offset_top = -76.0
 	panel.offset_bottom = -8.0
 	panel.z_index = 20
 	var style := StyleBoxFlat.new()
@@ -450,12 +480,12 @@ func _build_bottom_navigation() -> void:
 	row.add_theme_constant_override("separation", 2)
 	row.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	nav_scroll.add_child(row)
-	for item in [{"label":"⌂ HOUSE","id":"house"},{"label":"✦ CURIOS","id":"curios"},{"label":"☾ MAP","id":"map"},{"label":"✧ EVENTS","id":"events"},{"label":"◇ SHOP","id":"shop"},{"label":"♙ PROFILE","id":"profile"}]:
+	for item in [{"label":"⌂ HOUSE","id":"house"},{"label":"✦ CURIOS","id":"curios"},{"label":"☾ MAP","id":"map"},{"label":"✧ EVENTS","id":"events"},{"label":"◇ SHOP","id":"shop"}]:
 		var button := Button.new()
 		button.text = String(item["label"])
-		button.custom_minimum_size = Vector2(0, 46)
+		button.custom_minimum_size = Vector2(0, 52)
 		button.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-		button.add_theme_font_size_override("font_size", 13)
+		button.add_theme_font_size_override("font_size", 15)
 		button.add_theme_color_override("font_color", Color("#F4E5D3"))
 		var button_style := StyleBoxFlat.new()
 		button_style.bg_color = Color("#251529")
@@ -470,17 +500,19 @@ func _build_bottom_navigation() -> void:
 func _build_top_resource_bar() -> void:
 	var panel := PanelContainer.new()
 	panel.name = "ResourceBar"
-	panel.anchor_left = 0.04
-	panel.anchor_right = 0.96
+	panel.anchor_left = 0.025
+	panel.anchor_right = 0.975
 	panel.anchor_top = 0.0
 	panel.anchor_bottom = 0.0
 	panel.offset_top = 6.0
-	panel.offset_bottom = 46.0
+	panel.offset_bottom = 50.0
 	var style := StyleBoxFlat.new()
-	style.bg_color = Color("#0B0D17", 0.94)
-	style.border_color = Color("#D5AD70", 0.68)
+	style.bg_color = Color("#08070D", 0.96)
+	style.border_color = Color("#D5AD70", 0.78)
 	style.set_border_width_all(1)
-	style.set_corner_radius_all(8)
+	style.set_corner_radius_all(12)
+	style.shadow_color = Color(0, 0, 0, 0.44)
+	style.shadow_size = 8
 	panel.add_theme_stylebox_override("panel", style)
 	add_child(panel)
 	var row := HBoxContainer.new()
@@ -488,13 +520,13 @@ func _build_top_resource_bar() -> void:
 	row.alignment = BoxContainer.ALIGNMENT_CENTER
 	row.add_theme_constant_override("separation", 12)
 	panel.add_child(row)
-	for value in ["☾ CURIO BOUTIQUE", "✦ CHAPTER ONE", "◇ LEVEL 1"]:
+	for value in ["♥ FULL", "✦ CURIO BOUTIQUE", "☾ CHAPTER I", "◇ LEVEL 1"]:
 		var label := Label.new()
 		label.text = value
 		label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 		label.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
 		label.add_theme_color_override("font_color", Color("#F4E5D3"))
-		label.add_theme_font_size_override("font_size", 14)
+		label.add_theme_font_size_override("font_size", 16)
 		label.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 		if value.begins_with("◇"):
 			label.name = "LevelBadge"
@@ -504,18 +536,20 @@ func _build_top_resource_bar() -> void:
 func _build_booster_tray() -> void:
 	var panel := PanelContainer.new()
 	panel.name = "BoosterTray"
-	panel.anchor_left = 0.08
-	panel.anchor_right = 0.92
+	panel.anchor_left = 0.055
+	panel.anchor_right = 0.945
 	panel.anchor_top = 1.0
 	panel.anchor_bottom = 1.0
-	panel.offset_top = -124.0
-	panel.offset_bottom = -72.0
+	panel.offset_top = -146.0
+	panel.offset_bottom = -84.0
 	panel.z_index = 18
 	var shell := StyleBoxFlat.new()
-	shell.bg_color = Color("#101320", 0.97)
-	shell.border_color = Color("#D5AD70", 0.72)
-	shell.set_border_width_all(1)
-	shell.set_corner_radius_all(8)
+	shell.bg_color = Color("#100B16", 0.985)
+	shell.border_color = Color("#D5AD70", 0.82)
+	shell.set_border_width_all(2)
+	shell.set_corner_radius_all(18)
+	shell.shadow_color = Color(0, 0, 0, 0.48)
+	shell.shadow_size = 10
 	panel.add_theme_stylebox_override("panel", shell)
 	add_child(panel)
 	_booster_tray = panel
@@ -529,17 +563,17 @@ func _build_booster_tray() -> void:
 func _add_booster_button(parent: HBoxContainer, caption: String, art_path: String, action: Callable) -> void:
 	var button := Button.new()
 	button.text = caption
-	button.custom_minimum_size = Vector2(0, 42)
+	button.custom_minimum_size = Vector2(0, 54)
 	button.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	button.add_theme_font_size_override("font_size", 12)
+	button.add_theme_font_size_override("font_size", 14)
 	button.add_theme_color_override("font_color", Color("#F4E5D3"))
 	button.icon = PieceAssetLoader.ornament(art_path)
 	button.expand_icon = true
 	var box := StyleBoxFlat.new()
-	box.bg_color = Color("#251529")
-	box.border_color = Color("#D5AD70", 0.38)
-	box.set_border_width_all(1)
-	box.set_corner_radius_all(6)
+	box.bg_color = Color("#35153E", 0.98)
+	box.border_color = Color("#D5AD70", 0.72)
+	box.set_border_width_all(2)
+	box.set_corner_radius_all(26)
 	button.add_theme_stylebox_override("normal", box)
 	button.add_theme_stylebox_override("hover", box)
 	button.pressed.connect(action)

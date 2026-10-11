@@ -1,4 +1,4 @@
-[gd_scene load_steps=10 format=3]
+[gd_scene load_steps=11 format=3]
 
 [ext_resource type="Script" path="res://src/ui/home/house_home.gd" id="1_home"]
 [ext_resource type="Script" path="res://src/world/curio_boutique.gd" id="2_room"]
@@ -71,6 +71,20 @@ corner_radius_top_right = 14
 corner_radius_bottom_right = 14
 corner_radius_bottom_left = 14
 
+[sub_resource type="StyleBoxFlat" id="RoomOverlayPanel"]
+bg_color = Color(0.035, 0.024, 0.043, 0.86)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.835, 0.678, 0.439, 0.62)
+corner_radius_top_left = 14
+corner_radius_top_right = 14
+corner_radius_bottom_right = 14
+corner_radius_bottom_left = 14
+shadow_color = Color(0, 0, 0, 0.56)
+shadow_size = 12
+
 [node name="HouseHome" type="Control"]
 layout_mode = 3
 anchors_preset = 15
@@ -94,38 +108,42 @@ layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
-offset_left = 16.0
-offset_top = 52.0
-offset_right = -16.0
-offset_bottom = -12.0
+offset_left = 18.0
+offset_top = 54.0
+offset_right = -18.0
+offset_bottom = -84.0
 grow_horizontal = 2
 grow_vertical = 2
-theme_override_constants/separation = 10
+theme_override_constants/separation = 8
 
 [node name="Eyebrow" type="Label" parent="Layout"]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.663, 0.6, 0.659, 1)
-theme_override_font_sizes/font_size = 18
+theme_override_colors/font_outline_color = Color(0.035, 0.025, 0.045, 0.9)
+theme_override_constants/outline_size = 3
+theme_override_font_sizes/font_size = 20
 text = "THE HOUSE · CURIO BOUTIQUE"
 horizontal_alignment = 1
 
 [node name="Headline" type="Label" parent="Layout"]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.945, 0.91, 0.866, 1)
-theme_override_font_sizes/font_size = 28
+theme_override_colors/font_outline_color = Color(0.035, 0.025, 0.045, 0.95)
+theme_override_constants/outline_size = 5
+theme_override_font_sizes/font_size = 40
 text = "The Curio Boutique sleeps."
 horizontal_alignment = 1
 autowrap_mode = 2
 
 [node name="CurioChip" type="PanelContainer" parent="Layout"]
-custom_minimum_size = Vector2(0, 42)
+custom_minimum_size = Vector2(0, 48)
 layout_mode = 2
 theme_override_styles/panel = SubResource("CurioChip")
 
 [node name="Label" type="Label" parent="Layout/CurioChip"]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.851, 0.71, 0.416, 1)
-theme_override_font_sizes/font_size = 18
+theme_override_font_sizes/font_size = 20
 text = "DORMANT DISPLAY"
 horizontal_alignment = 1
 vertical_alignment = 1
@@ -136,6 +154,47 @@ layout_mode = 2
 size_flags_vertical = 3
 clip_contents = true
 script = ExtResource("2_room")
+
+[node name="HouseOverlay" type="PanelContainer" parent="Layout/RoomView"]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.17
+anchor_top = 0.66
+anchor_right = 0.83
+anchor_bottom = 0.84
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+theme_override_styles/panel = SubResource("RoomOverlayPanel")
+
+[node name="Copy" type="VBoxContainer" parent="Layout/RoomView/HouseOverlay"]
+layout_mode = 2
+theme_override_constants/separation = 3
+alignment = 1
+
+[node name="Kicker" type="Label" parent="Layout/RoomView/HouseOverlay/Copy"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.835, 0.678, 0.439, 1)
+theme_override_font_sizes/font_size = 15
+text = "CURIO HOUSE"
+horizontal_alignment = 1
+
+[node name="Title" type="Label" parent="Layout/RoomView/HouseOverlay/Copy"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.975, 0.91, 0.79, 1)
+theme_override_colors/font_outline_color = Color(0.02, 0.015, 0.025, 0.92)
+theme_override_constants/outline_size = 4
+theme_override_font_sizes/font_size = 30
+text = "THE HOUSE AWAITS"
+horizontal_alignment = 1
+
+[node name="Body" type="Label" parent="Layout/RoomView/HouseOverlay/Copy"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.86, 0.80, 0.82, 1)
+theme_override_font_sizes/font_size = 15
+text = "Wake the first cabinet and return its Curios."
+horizontal_alignment = 1
+autowrap_mode = 2
 
 [node name="MoonCameoOverlay" type="Control" parent="Layout/RoomView"]
 visible = false
@@ -155,13 +214,15 @@ glow_strength = 0.88
 [node name="Detail" type="Label" parent="Layout"]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.851, 0.804, 0.835, 1)
-theme_override_font_sizes/font_size = 18
+theme_override_colors/font_outline_color = Color(0.03, 0.02, 0.04, 0.9)
+theme_override_constants/outline_size = 3
+theme_override_font_sizes/font_size = 20
 text = "Win a puzzle to wake the first display."
 horizontal_alignment = 1
 autowrap_mode = 2
 
 [node name="ActionDock" type="PanelContainer" parent="Layout"]
-custom_minimum_size = Vector2(0, 58)
+custom_minimum_size = Vector2(0, 66)
 layout_mode = 2
 theme_override_styles/panel = SubResource("ActionDock")
 
@@ -193,12 +254,12 @@ theme_override_styles/pressed = SubResource("SecondaryButton")
 text = "SETTINGS"
 
 [node name="PlayButton" type="Button" parent="Layout"]
-custom_minimum_size = Vector2(0, 54)
+custom_minimum_size = Vector2(0, 64)
 layout_mode = 2
 theme_override_colors/font_color = Color(0.0627, 0.051, 0.0706, 1)
 theme_override_colors/font_hover_color = Color(0.0627, 0.051, 0.0706, 1)
 theme_override_colors/font_pressed_color = Color(0.0627, 0.051, 0.0706, 1)
-theme_override_font_sizes/font_size = 18
+theme_override_font_sizes/font_size = 21
 theme_override_styles/normal = SubResource("ButtonNormal")
 theme_override_styles/hover = SubResource("ButtonHover")
 theme_override_styles/pressed = SubResource("ButtonPressed")

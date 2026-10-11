@@ -65,9 +65,10 @@ func _draw() -> void:
 	)
 	draw_rect(room, VELVET, true)
 	if _backdrop != null:
-		# The authored environment already contains the architecture, moon window,
-		# shelves and cabinet. Do not stack the old procedural arches over it.
+		# The authored environment owns the architecture; foreground light, velvet
+		# and props add the cinematic depth required by the North Star.
 		draw_texture_rect(_backdrop, room, false)
+		_draw_authored_atmosphere(room)
 		_draw_cat_portrait(room)
 		_draw_candle_props(room)
 		_draw_authored_restoration_curios(room)
@@ -85,6 +86,44 @@ func _draw() -> void:
 	if house_stage >= 1:
 		_draw_awakened_sparkles(room)
 
+
+func _draw_authored_atmosphere(room: Rect2) -> void:
+	# Moonlight at the upper arch, warm candle pools at the shelves, and velvet
+	# foreground silhouettes create depth without repainting the authored room.
+	var moon_center := Vector2(room.get_center().x, room.position.y + room.size.y * 0.18)
+	for i in range(5, 0, -1):
+		var glow := Color(LILAC)
+		glow.a = 0.010 + float(i) * 0.009
+		draw_circle(moon_center, room.size.x * (0.10 + float(i) * 0.035), glow)
+	for side in [-1.0, 1.0]:
+		var warm_center := Vector2(room.get_center().x + side * room.size.x * 0.34, room.position.y + room.size.y * 0.58)
+		for i in range(4, 0, -1):
+			var warm := Color(GOLD)
+			warm.a = 0.010 + float(i) * 0.010
+			draw_circle(warm_center, room.size.x * (0.055 + float(i) * 0.030), warm)
+	var velvet := Color("#220D20", 0.78)
+	var left_curtain := PackedVector2Array([
+		room.position,
+		room.position + Vector2(room.size.x * 0.14, 0),
+		room.position + Vector2(room.size.x * 0.085, room.size.y * 0.76),
+		room.position + Vector2(0, room.size.y * 0.92)
+	])
+	var right_curtain := PackedVector2Array([
+		Vector2(room.end.x, room.position.y),
+		Vector2(room.end.x - room.size.x * 0.14, room.position.y),
+		Vector2(room.end.x - room.size.x * 0.085, room.position.y + room.size.y * 0.76),
+		Vector2(room.end.x, room.position.y + room.size.y * 0.92)
+	])
+	draw_colored_polygon(left_curtain, velvet)
+	draw_colored_polygon(right_curtain, velvet)
+	for p in [
+		Vector2(room.position.x + room.size.x * 0.22, room.position.y + room.size.y * 0.25),
+		Vector2(room.end.x - room.size.x * 0.20, room.position.y + room.size.y * 0.29),
+		Vector2(room.position.x + room.size.x * 0.30, room.position.y + room.size.y * 0.47),
+		Vector2(room.end.x - room.size.x * 0.27, room.position.y + room.size.y * 0.50)
+	]:
+		draw_circle(p, 2.2, Color(BONE, 0.72))
+		draw_circle(p, 8.0, Color(GOLD, 0.035))
 
 func restoration_contract() -> Dictionary:
 	return {
@@ -476,7 +515,7 @@ func _draw_cat_portrait(room: Rect2) -> void:
 	if _cat_portrait == null:
 		return
 	# First-party black-cat portrait is part of the House scene, not only the board.
-	var portrait_size := Vector2(room.size.x * 0.15, room.size.y * 0.16)
+	var portrait_size := Vector2(room.size.x * 0.18, room.size.y * 0.19)
 	var center := Vector2(room.get_center().x, room.position.y + room.size.y * 0.77)
 	var portrait := Rect2(center - portrait_size * 0.5, portrait_size)
 	draw_rect(portrait.grow(5.0), Color("#100B15"), true)
@@ -487,7 +526,7 @@ func _draw_candle_props(room: Rect2) -> void:
 	var candle := PieceAssetLoader.ornament("res://assets/pieces/candle.svg")
 	if candle == null:
 		return
-	var prop_size := Vector2(room.size.x * 0.105, room.size.y * 0.13)
+	var prop_size := Vector2(room.size.x * 0.125, room.size.y * 0.155)
 	for side in [-1.0, 1.0]:
 		var center := Vector2(room.get_center().x + side * room.size.x * 0.405, room.position.y + room.size.y * 0.76)
 		draw_texture_rect(candle, Rect2(center - prop_size * 0.5, prop_size), false)
