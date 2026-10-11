@@ -99,7 +99,7 @@ func _run() -> void:
 	_expect(awakened_cameo.visible, "awakened House must display the same shared Moon Cameo component")
 	_expect(String(awakened_cameo.get("mode")) == "house", "House relic must use the shared Moon Cameo house mode")
 
-	var restoration_overlay := awakened_house.get_node_or_null("RestorationOverlay")
+	var restoration_overlay: Control = awakened_house.get_node_or_null("RestorationOverlay") as Control
 	_expect(restoration_overlay != null, "first-time Level 1 win must enter the same-camera House restoration state")
 	var house_curios_nav: Button = awakened_house.get_node_or_null("ProductNavigation/Scroll/Items/NavCurios") as Button
 	_expect(house_curios_nav != null, "House global navigation must expose Curios")
