@@ -403,10 +403,21 @@ func show_feature_preview(feature: String) -> bool:
 	if is_profile:
 		var preferences := Button.new()
 		preferences.name = "ProfileSettings"
-		preferences.text = "AUDIO & ACCESSIBILITY SETTINGS"
+		preferences.text = "⚙  AUDIO & ACCESSIBILITY"
 		preferences.custom_minimum_size.y = 52
 		preferences.add_theme_color_override("font_color", Color("#F4E5D3"))
 		preferences.add_theme_font_size_override("font_size", 18)
+		var preferences_style := StyleBoxFlat.new()
+		preferences_style.bg_color = Color("#211728", 0.98)
+		preferences_style.border_color = Color("#8796C7", 0.82)
+		preferences_style.set_border_width_all(1)
+		preferences_style.set_corner_radius_all(8)
+		var preferences_hover := preferences_style.duplicate() as StyleBoxFlat
+		preferences_hover.bg_color = Color("#352A45")
+		preferences_hover.border_color = Color("#D5AD70")
+		preferences.add_theme_stylebox_override("normal", preferences_style)
+		preferences.add_theme_stylebox_override("hover", preferences_hover)
+		preferences.add_theme_stylebox_override("pressed", preferences_hover)
 		layout.add_child(preferences)
 		preferences.pressed.connect(func():
 			if is_instance_valid(overlay):
