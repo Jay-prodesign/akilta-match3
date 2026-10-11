@@ -1033,8 +1033,10 @@
       ],
       "reuse": "Chapters",
       "priority": "P1",
-      "production_status": "frozen_until_golden_loop_acceptance",
-      "current_path": "assets/world/ch01_curio_boutique/chapter_world_map.svg"
+      "production_status": "superseded_after_golden_loop_acceptance",
+      "current_path": "assets/world/ch01_curio_boutique/chapter_world_map.svg",
+      "deprecated_candidate_path": "assets/world/ch01_curio_boutique/chapter_world_map.svg",
+      "provenance": "Legacy SVG chapter-world candidate retained for provenance only; superseded by the authored raster S02 background."
     },
     {
       "asset_id": "missions_event_art",
@@ -1296,9 +1298,9 @@
       "variants": [
         "opening_wing"
       ],
-      "reuse": "declared_reuse_of_S01_grand_hall_environment",
+      "reuse": "shared_world_family_with_S03__distinct_S02_composition",
       "priority": "P0",
-      "production_status": "runtime_connected_declared_reuse_candidate",
+      "production_status": "runtime_connected_authored_raster",
       "technical_policy": "authored_raster_only_no_svg_fallback",
       "architecture_owned": true,
       "contract_owners": [
@@ -1312,8 +1314,8 @@
           ]
         }
       ],
-      "current_path": "assets/world/ch01_curio_boutique/hub_bg_grandhall.webp",
-      "provenance": "AKILTA first-party authored House environment reused for the Chapter Select shell while future wing-specific art remains sealed"
+      "current_path": "assets/world/ch01_curio_boutique/chapter_route_curio_boutique.webp",
+      "provenance": "AKILTA first-party authored moonlit chapter-world environment used by S02 Chapters to establish the House wings and castle context; replaces the former S01 grand-hall reuse after Golden Loop acceptance."
     },
     {
       "asset_id": "events_bg_curio_house",

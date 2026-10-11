@@ -10,6 +10,7 @@ on:
       - "tests/visual/capture_level1_journey.gd"
       - "tests/visual/capture_level1_failure.gd"
       - "tests/visual/capture_three_level_progression.gd"
+      - "tests/visual/capture_chapter_select_states.gd"
       - "tests/visual/capture_level3_special.gd"
       - "tests/visual/capture_returning_player_resume.gd"
       - "src/app/**"
@@ -150,6 +151,22 @@ jobs:
           test -s artifacts/returning-01-house-resume.png
           test -s artifacts/returning-02-map-frontier.png
 
+      - name: Render S02 Chapters production states
+        shell: bash
+        run: |
+          set -uo pipefail
+          set +e
+          output=$(LIBGL_ALWAYS_SOFTWARE=1 xvfb-run -a ./godot --audio-driver Dummy --path . -s res://tests/visual/capture_chapter_select_states.gd 2>&1)
+          status=$?
+          set -e
+          printf '%s\n' "$output"
+          if [ "$status" -ne 0 ]; then exit "$status"; fi
+          if grep -Eq "SCRIPT ERROR:|(^| )ERROR:|CAPTURE_FAIL:" <<<"$output"; then exit 1; fi
+          grep -Fq "CAPTURE_PASS: S02 Chapters production states" <<<"$output"
+          test -s artifacts/chapters-00-first-wing.png
+          test -s artifacts/chapters-01-current-partial.png
+          test -s artifacts/chapters-02-current-complete.png
+
       - name: Upload Golden Loop render evidence
         uses: actions/upload-artifact@v4
         with:
@@ -192,6 +209,9 @@ jobs:
             artifacts/progression-final-profile.png
             artifacts/progression-final-settings.png
             artifacts/progression-final-chapters.png
+            artifacts/chapters-00-first-wing.png
+            artifacts/chapters-01-current-partial.png
+            artifacts/chapters-02-current-complete.png
             artifacts/progression-final-map.png
           if-no-files-found: error
           retention-days: 14
