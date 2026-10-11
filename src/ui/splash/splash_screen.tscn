@@ -67,6 +67,35 @@ text = "The House remembers what you restore.\nWake the first relic."
 horizontal_alignment = 1
 autowrap_mode = 2
 
+[node name="BootState" type="PanelContainer" parent="Layout"]
+custom_minimum_size = Vector2(0, 96)
+layout_mode = 2
+
+[node name="StateContent" type="VBoxContainer" parent="Layout/BootState"]
+layout_mode = 2
+theme_override_constants/separation = 8
+alignment = 1
+
+[node name="Progress" type="Label" parent="Layout/BootState/StateContent"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.835, 0.678, 0.439, 1)
+theme_override_colors/font_outline_color = Color(0.015, 0.01, 0.022, 0.96)
+theme_override_constants/outline_size = 4
+theme_override_font_sizes/font_size = 18
+text = "WAKING THE HOUSE…"
+horizontal_alignment = 1
+
+[node name="RecoveryMessage" type="Label" parent="Layout/BootState/StateContent"]
+visible = false
+layout_mode = 2
+theme_override_colors/font_color = Color(0.94, 0.88, 0.86, 1)
+theme_override_colors/font_outline_color = Color(0.015, 0.01, 0.022, 0.96)
+theme_override_constants/outline_size = 3
+theme_override_font_sizes/font_size = 16
+text = "A local save issue was recovered."
+horizontal_alignment = 1
+autowrap_mode = 2
+
 [node name="Enter" type="Button" parent="Layout"]
 custom_minimum_size = Vector2(0, 68)
 layout_mode = 2
