@@ -181,7 +181,7 @@ func show_feature_preview(feature: String) -> bool:
 	layout.offset_top = 24
 	layout.offset_right = -18
 	layout.offset_bottom = -20
-	layout.add_theme_constant_override("separation", 16)
+	layout.add_theme_constant_override("separation", 12)
 	layout.alignment = BoxContainer.ALIGNMENT_BEGIN
 	overlay.add_child(layout)
 	var feature_key := feature.to_lower()
@@ -206,35 +206,43 @@ func show_feature_preview(feature: String) -> bool:
 	eyebrow.text = "THE HOUSE OF CURIOS  ·  AKILTA"
 	eyebrow.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	eyebrow.add_theme_color_override("font_color", Color("#D5AD70"))
-	eyebrow.add_theme_font_size_override("font_size", 13)
+	eyebrow.add_theme_color_override("font_outline_color", Color("#080710", 0.92))
+	eyebrow.add_theme_constant_override("outline_size", 3)
+	eyebrow.add_theme_font_size_override("font_size", 15)
 	layout.add_child(eyebrow)
 	var title := Label.new()
 	title.name = "FeatureTitle"
 	title.text = "THE KEEPER" if is_profile else ("WEEKLY RITUALS" if is_events else "THE CURIO EMPORIUM")
 	title.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	title.add_theme_color_override("font_color", Color("#F4E5D3"))
-	title.add_theme_font_size_override("font_size", 30)
+	title.add_theme_color_override("font_color", Color("#FFF0D8"))
+	title.add_theme_color_override("font_outline_color", Color("#080710", 0.94))
+	title.add_theme_constant_override("outline_size", 5)
+	title.add_theme_font_size_override("font_size", 38)
 	layout.add_child(title)
 	var detail := Label.new()
 	detail.text = "Your restored curios, House progress and preferences." if is_profile else ("Seasonal rituals will gather here when the upper cabinets awaken." if is_events else "A sealed preview of the House economy. Nothing here can charge you.")
 	detail.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	detail.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	detail.add_theme_color_override("font_color", Color("#D8C6C3"))
-	detail.add_theme_font_size_override("font_size", 17)
+	detail.add_theme_color_override("font_outline_color", Color("#080710", 0.82))
+	detail.add_theme_constant_override("outline_size", 2)
+	detail.add_theme_font_size_override("font_size", 18)
 	layout.add_child(detail)
 
 	var hero := PanelContainer.new()
 	hero.name = "FeatureHero"
-	hero.custom_minimum_size = Vector2(0, 124)
+	hero.custom_minimum_size = Vector2(0, 190)
 	var hero_style := StyleBoxFlat.new()
 	hero_style.bg_color = Color("#171321", 0.96)
 	hero_style.border_color = Color("#9B6FA6", 0.82) if is_events else (Color("#D5AD70", 0.86) if not is_profile else Color("#8796C7", 0.82))
-	hero_style.set_border_width_all(1)
-	hero_style.set_corner_radius_all(14)
-	hero_style.content_margin_left = 14
-	hero_style.content_margin_right = 14
-	hero_style.content_margin_top = 10
-	hero_style.content_margin_bottom = 10
+	hero_style.set_border_width_all(2)
+	hero_style.set_corner_radius_all(16)
+	hero_style.content_margin_left = 18
+	hero_style.content_margin_right = 18
+	hero_style.content_margin_top = 14
+	hero_style.content_margin_bottom = 14
+	hero_style.shadow_color = Color(0, 0, 0, 0.48)
+	hero_style.shadow_size = 12
 	hero.add_theme_stylebox_override("panel", hero_style)
 	layout.add_child(hero)
 	var hero_row := HBoxContainer.new()
@@ -243,7 +251,7 @@ func show_feature_preview(feature: String) -> bool:
 	hero.add_child(hero_row)
 	var hero_art := TextureRect.new()
 	hero_art.name = "FeatureHeroArtwork"
-	hero_art.custom_minimum_size = Vector2(88, 88)
+	hero_art.custom_minimum_size = Vector2(132, 132)
 	hero_art.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
 	hero_art.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
 	hero_art.texture = PieceAssetLoader.ornament("res://assets/pieces/moon_sigil.svg" if is_events else ("res://assets/curios/ch01_curio_moth_reliquary.svg" if not is_profile else "res://assets/curios/ch01_curio_moon_cameo_awakened_v01.svg"))
@@ -258,21 +266,23 @@ func show_feature_preview(feature: String) -> bool:
 	hero_kicker.name = "FeatureHeroKicker"
 	hero_kicker.text = ("OPENING RITUAL COMPLETE" if opening_complete else "OPENING RITUAL IN PROGRESS") if is_events else ("EMPORIUM PREVIEW · SEALED" if not is_profile else ("FIRST CABINET SET RESTORED" if opening_complete else "KEEPER RECORD"))
 	hero_kicker.add_theme_color_override("font_color", Color("#D5AD70"))
-	hero_kicker.add_theme_font_size_override("font_size", 13)
+	hero_kicker.add_theme_font_size_override("font_size", 15)
 	hero_copy.add_child(hero_kicker)
 	var hero_title := Label.new()
 	hero_title.name = "FeatureHeroTitle"
 	hero_title.text = ("%d / %d DISPLAYS AWAKENED" % [completed_count, INTERNAL_REVIEW_LEVEL_COUNT]) if is_events else ("NO PURCHASES ENABLED" if not is_profile else ("%d CURIOS · RESTORATION STAGE %d" % [collected_count, restored_stage]))
 	hero_title.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	hero_title.add_theme_color_override("font_color", Color("#FFF0D8"))
-	hero_title.add_theme_font_size_override("font_size", 21)
+	hero_title.add_theme_color_override("font_outline_color", Color("#080710", 0.90))
+	hero_title.add_theme_constant_override("outline_size", 3)
+	hero_title.add_theme_font_size_override("font_size", 25)
 	hero_copy.add_child(hero_title)
 	var hero_body := Label.new()
 	hero_body.name = "FeatureHeroBody"
 	hero_body.text = ("The House remembers every completed display; future weekly events remain sealed." if is_events else ("Future offers will live in this cabinet only after economy and purchase systems are production-ready." if not is_profile else "Your opening journey is stored locally and reflected across the House, map and Reliquary."))
 	hero_body.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	hero_body.add_theme_color_override("font_color", Color("#CFC0CF"))
-	hero_body.add_theme_font_size_override("font_size", 14)
+	hero_body.add_theme_font_size_override("font_size", 16)
 	hero_copy.add_child(hero_body)
 
 	var card_scroll := ScrollContainer.new()
@@ -343,34 +353,38 @@ func show_feature_preview(feature: String) -> bool:
 		var card := PanelContainer.new()
 		card_index += 1
 		card.name = "FeatureCard%d" % card_index
-		card.custom_minimum_size = Vector2(0, 150)
+		card.custom_minimum_size = Vector2(0, 246)
 		var panel_style := StyleBoxFlat.new()
 		panel_style.bg_color = Color("#171321")
 		panel_style.border_color = Color("#9B6FA6", 0.58) if is_events else (Color("#D5AD70", 0.62) if not is_profile else Color("#8796C7", 0.58))
-		panel_style.set_border_width_all(1)
-		panel_style.set_corner_radius_all(10)
-		panel_style.content_margin_left = 14
-		panel_style.content_margin_right = 14
-		panel_style.content_margin_top = 10
-		panel_style.content_margin_bottom = 10
+		panel_style.set_border_width_all(2)
+		panel_style.set_corner_radius_all(14)
+		panel_style.content_margin_left = 16
+		panel_style.content_margin_right = 16
+		panel_style.content_margin_top = 14
+		panel_style.content_margin_bottom = 14
+		panel_style.shadow_color = Color(0, 0, 0, 0.34)
+		panel_style.shadow_size = 8
 		card.add_theme_stylebox_override("panel", panel_style)
 		cards.add_child(card)
 		var row := HBoxContainer.new()
 		row.size_flags_vertical = Control.SIZE_EXPAND_FILL
-		row.add_theme_constant_override("separation", 12)
+		row.add_theme_constant_override("separation", 18)
 		card.add_child(row)
 		var art_frame := PanelContainer.new()
-		art_frame.custom_minimum_size = Vector2(76, 76)
+		art_frame.custom_minimum_size = Vector2(138, 138)
 		var art_style := StyleBoxFlat.new()
 		art_style.bg_color = Color("#0E0D19")
 		art_style.border_color = Color("#D5AD70", 0.40)
-		art_style.set_border_width_all(1)
-		art_style.set_corner_radius_all(10)
+		art_style.set_border_width_all(2)
+		art_style.set_corner_radius_all(16)
+		art_style.shadow_color = Color(0, 0, 0, 0.40)
+		art_style.shadow_size = 8
 		art_frame.add_theme_stylebox_override("panel", art_style)
 		row.add_child(art_frame)
 		var art := TextureRect.new()
 		art.name = "FeatureArtwork"
-		art.custom_minimum_size = Vector2(68, 68)
+		art.custom_minimum_size = Vector2(124, 124)
 		art.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 		art.size_flags_vertical = Control.SIZE_EXPAND_FILL
 		art.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
@@ -381,18 +395,26 @@ func show_feature_preview(feature: String) -> bool:
 		copy.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 		copy.size_flags_vertical = Control.SIZE_EXPAND_FILL
 		copy.alignment = BoxContainer.ALIGNMENT_CENTER
-		copy.add_theme_constant_override("separation", 5)
+		copy.add_theme_constant_override("separation", 6)
 		row.add_child(copy)
+		var card_kicker := Label.new()
+		card_kicker.name = "CardKicker%d" % card_index
+		card_kicker.text = ("%s %02d" % ["RITUAL" if is_events else ("RECORD" if is_profile else "SEALED CABINET"), card_index])
+		card_kicker.add_theme_color_override("font_color", Color("#D5AD70"))
+		card_kicker.add_theme_font_size_override("font_size", 13)
+		copy.add_child(card_kicker)
 		var card_title := Label.new()
 		card_title.text = String(entry["title"])
 		card_title.add_theme_color_override("font_color", Color("#F4E5D3"))
-		card_title.add_theme_font_size_override("font_size", 19)
+		card_title.add_theme_color_override("font_outline_color", Color("#080710", 0.88))
+		card_title.add_theme_constant_override("outline_size", 2)
+		card_title.add_theme_font_size_override("font_size", 23)
 		copy.add_child(card_title)
 		var card_body := Label.new()
 		card_body.text = String(entry["body"])
 		card_body.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 		card_body.add_theme_color_override("font_color", Color("#D8C6C3"))
-		card_body.add_theme_font_size_override("font_size", 16)
+		card_body.add_theme_font_size_override("font_size", 17)
 		copy.add_child(card_body)
 		var status := Label.new()
 		status.text = String(entry["status"])
@@ -404,7 +426,7 @@ func show_feature_preview(feature: String) -> bool:
 		var preferences := Button.new()
 		preferences.name = "ProfileSettings"
 		preferences.text = "⚙  AUDIO & ACCESSIBILITY"
-		preferences.custom_minimum_size.y = 52
+		preferences.custom_minimum_size.y = 60
 		preferences.add_theme_color_override("font_color", Color("#F4E5D3"))
 		preferences.add_theme_font_size_override("font_size", 18)
 		var preferences_style := StyleBoxFlat.new()
@@ -427,7 +449,7 @@ func show_feature_preview(feature: String) -> bool:
 	var back := Button.new()
 	back.name = "BackToHouse"
 	back.text = "RETURN TO THE HOUSE"
-	back.custom_minimum_size = Vector2(0, 48)
+	back.custom_minimum_size = Vector2(0, 58)
 	back.add_theme_color_override("font_color", Color("#F4E5D3"))
 	back.add_theme_font_size_override("font_size", 22)
 	var back_style := StyleBoxFlat.new()
