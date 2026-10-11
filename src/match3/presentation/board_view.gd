@@ -878,16 +878,20 @@ func _draw_special_mark(rect: Rect2, kind: String) -> void:
 		draw_circle(center, full_r * 0.15, GOLD)
 
 func _draw_wax_seal(rect: Rect2, hp: int) -> void:
-	var c := rect.position + Vector2(rect.size.x * 0.22, rect.size.y * 0.78)
-	var r := rect.size.x * 0.12
-	draw_circle(c, r * 1.15, Color("#7D3048"))
-	draw_circle(c, r * 0.68, Color("#C7728F"))
-	var skull := PieceAssetLoader.ornament("res://assets/pieces/skull.svg")
-	if skull != null:
-		draw_texture_rect(skull, Rect2(c - Vector2.ONE * r * 1.4, Vector2.ONE * r * 2.8), false)
-	for i in range(max(1, hp)):
-		var y := c.y + (float(i) - float(hp - 1) * 0.5) * 4.0
-		draw_line(Vector2(c.x - r * 0.38, y), Vector2(c.x + r * 0.38, y), INK, 1.5)
+	var center := rect.position + Vector2(rect.size.x * 0.23, rect.size.y * 0.76)
+	var asset_size := minf(rect.size.x, rect.size.y) * 0.42
+	var seal := PieceAssetLoader.ornament("res://assets/blockers/ch01_blocker_wax_seal_intact_v01.svg")
+	if seal != null:
+		draw_texture_rect(seal, Rect2(center - Vector2.ONE * asset_size * 0.5, Vector2.ONE * asset_size), false)
+		if hp > 1:
+			for i in range(hp - 1):
+				var mark_y := center.y + asset_size * 0.22 + float(i) * 3.0
+				draw_line(Vector2(center.x - asset_size * 0.12, mark_y), Vector2(center.x + asset_size * 0.12, mark_y), Color("#F1D296", 0.72), 1.5)
+		return
+	# Exact semantic fallback only; never substitute another gameplay family.
+	var r := asset_size * 0.40
+	draw_circle(center, r, Color("#7D3048"))
+	draw_arc(center, r * 0.82, 0.0, TAU, 28, Color("#D5AD70"), 2.0)
 
 
 func _phase_progress(start_clock: float, end_clock: float) -> float:
