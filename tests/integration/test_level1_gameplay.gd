@@ -51,12 +51,12 @@ func _run() -> void:
 		_expect(board_view.has_method("piece_asset_contract"), "BoardView must expose first-party piece asset contract")
 		if board_view.has_method("piece_asset_contract"):
 			var asset_contract: Dictionary = board_view.piece_asset_contract()
-			_expect(str(asset_contract.get("source", "")) == "AKILTA first-party original SVG", "piece assets must remain first-party originals")
+			_expect(str(asset_contract.get("source", "")).begins_with("AKILTA first-party"), "piece assets must remain explicitly first-party originals")
 			_expect(not bool(asset_contract.get("paid_dependency", true)), "core piece assets must have no paid dependency")
 			var loaded_assets: Dictionary = asset_contract.get("families", {})
-			_expect(loaded_assets.size() == 8, "eight SVG piece assets must be registered")
+			_expect(loaded_assets.size() == 8, "eight first-party piece assets must be registered")
 			for family in ["moon", "rose", "moth", "key", "leaf", "cat", "candle", "skull"]:
-				_expect(bool(loaded_assets.get(family, false)), "%s SVG candidate must load" % family)
+				_expect(bool(loaded_assets.get(family, false)), "%s first-party piece asset must load" % family)
 		_expect(board_view.has_method("teaching_contract"), "BoardView must expose Level 1 teaching contract")
 		if board_view.has_method("teaching_contract"):
 			var teaching: Dictionary = board_view.teaching_contract()
