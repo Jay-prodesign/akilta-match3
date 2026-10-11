@@ -6,7 +6,8 @@ on:
       - p0/bootstrap
     paths:
       - ".github/workflows/level1-web.yml"
-  # Run the full milestone checks deliberately, not on every development commit.
+  # Milestone trigger: prestart route recovery + continuous shell navigation (2026-10-11).
+  # Run the full milestone build deliberately, not on every development commit.
   workflow_dispatch:
 
 permissions:

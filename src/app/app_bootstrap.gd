@@ -104,8 +104,11 @@ func show_prestart(level_number: int) -> bool:
 	var screen: Node = PrestartScene.instantiate()
 	_show_screen(screen)
 	if not screen.configure_level(level_number):
-		show_house()
+		# PRESTART cannot jump directly to HOUSE. Recover through MAP so a
+		# malformed late-stage prestart cannot strand the player on a dead route.
+		_ensure_house_route()
 		return false
+	_install_product_navigation(screen, "map")
 	_pending_level_number = level_number
 	screen.back_requested.connect(_on_prestart_back)
 	screen.start_requested.connect(_on_prestart_start)
@@ -471,6 +474,11 @@ func _ensure_house_route() -> bool:
 		return false
 	if navigation.current() == NavigationScript.Route.HOUSE:
 		return true
+	# Most shell routes can return directly. PRESTART is intentionally stricter
+	# in NavigationController, so unwind one legal edge before entering HOUSE.
+	if navigation.current() == NavigationScript.Route.PRESTART:
+		if not navigation.go(NavigationScript.Route.MAP, {"via": "product_navigation"}):
+			return false
 	return show_house()
 
 func _on_shell_navigation_requested(section: String) -> void:

@@ -64,6 +64,28 @@ func _run() -> void:
 	await process_frame
 	_expect(str(app.current_route_name()) == "prestart", "Level 1 selection must open prestart")
 	var prestart = app.current_screen()
+	var prestart_nav = prestart.get_node_or_null("ProductNavigation")
+	_expect(prestart_nav != null, "prestart must keep the product bottom navigation available")
+	if prestart_nav != null:
+		var nav_house := prestart_nav.get_node_or_null("Scroll/Items/NavHouse") as Button
+		_expect(nav_house != null, "prestart bottom navigation must expose House")
+		if nav_house != null:
+			nav_house.emit_signal("pressed")
+			await process_frame
+			await process_frame
+			_expect(str(app.current_route_name()) == "house", "prestart House navigation must unwind safely without stranding the route")
+			_expect(app.show_chapters(), "House must reopen chapters after leaving prestart from bottom navigation")
+			await process_frame
+			app.current_screen().get_node("Layout/ChapterGrid/CurioBoutiqueButton").emit_signal("pressed")
+			await process_frame
+			var reopened_map = app.current_screen()
+			var reopened_level1: Button = reopened_map.get_level_button(1)
+			_expect(reopened_level1 != null and not reopened_level1.disabled, "Level 1 must remain selectable after prestart navigation recovery")
+			if reopened_level1 != null:
+				reopened_level1.emit_signal("pressed")
+				await process_frame
+			prestart = app.current_screen()
+			_expect(str(app.current_route_name()) == "prestart", "Level 1 prestart must reopen after shell navigation recovery")
 	var objective: Label = prestart.get_node("Layout/Card/Content/Objective")
 	_expect(objective.text == "GOAL · GATHER 6 MOON SIGILS", "prestart must reflect the canonical Level 1 collect-family objective")
 	var start_button: Button = prestart.get_node("Layout/Card/Content/Start")
