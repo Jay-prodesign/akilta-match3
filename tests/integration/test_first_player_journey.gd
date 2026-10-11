@@ -48,8 +48,8 @@ func _run() -> void:
 	var level1_button: Button = map.get_level_button(1)
 	var level2_button: Button = map.get_level_button(2)
 	_expect(level1_button != null and not level1_button.disabled, "Level 1 must be selectable")
-	_expect(level2_button != null and level2_button.disabled, "Level 2 must remain sealed until Level 1 receives founder approval")
-	_expect(map.get_level_button(3) != null and map.get_level_button(3).disabled, "Level 3 must remain sealed until Level 1 receives founder approval")
+	_expect(level2_button != null and level2_button.disabled, "Level 2 remains progression-locked until Level 1 is won")
+	_expect(map.get_level_button(3) != null and map.get_level_button(3).disabled, "Level 3 remains progression-locked until Level 2 is won")
 	_expect(map.get_level_button(4) != null and map.get_level_button(4).disabled, "Level 4 and later must remain sealed beyond the three-level playtest scope")
 
 	level1_button.emit_signal("pressed")
@@ -127,6 +127,22 @@ func _run() -> void:
 	_expect(shop_preview.get_node("FeatureLayout/FeatureTitle").text == "THE CURIO EMPORIUM", "Shop tab must show the North Star emporium screen")
 	shop_preview.get_node("FeatureLayout/BackToHouse").emit_signal("pressed")
 	await process_frame
+
+	# Founder-authorized internal review unlocks Level 2 after Level 1, but keeps Level 4+ sealed.
+	var house_after_win = app.current_screen()
+	house_after_win.get_node("Layout/PlayButton").emit_signal("pressed")
+	await process_frame
+	var chapters_after_win = app.current_screen()
+	chapters_after_win.get_node("Layout/ChapterGrid/CurioBoutiqueButton").emit_signal("pressed")
+	await process_frame
+	var review_map = app.current_screen()
+	_expect(review_map.get_level_button(2) != null and not review_map.get_level_button(2).disabled, "winning Level 1 must unlock Level 2 in the authorized internal review")
+	_expect(review_map.get_level_button(3) != null and review_map.get_level_button(3).disabled, "Level 3 remains progression-gated until Level 2 is won")
+	_expect(review_map.get_level_button(4) != null and review_map.get_level_button(4).disabled, "Level 4 remains sealed outside internal review")
+	_expect(app.show_prestart(2), "authorized Level 2 must open its own prestart")
+	_expect(app.start_level(2), "authorized Level 2 must enter gameplay")
+	_expect(str(app.current_screen().current_level_id) == "ch01_level_002", "Level 2 must load its authored Wax Seal board")
+	_expect(app.show_house(), "internal review Level 2 must return safely to House without a reward")
 
 	app.queue_free()
 	await process_frame
