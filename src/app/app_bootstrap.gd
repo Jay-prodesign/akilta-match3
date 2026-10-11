@@ -251,7 +251,7 @@ func show_weekly_missions() -> bool:
 	empty.custom_minimum_size = Vector2(0, 430)
 	empty.size_flags_vertical = Control.SIZE_EXPAND_FILL
 	var empty_style := StyleBoxFlat.new()
-	empty_style.bg_color = Color("#14101B", 0.97)
+	empty_style.bg_color = Color("#14101B", 0.82)
 	empty_style.border_color = Color("#9B6FA6", 0.72)
 	empty_style.set_border_width_all(2)
 	empty_style.set_corner_radius_all(18)
@@ -270,7 +270,7 @@ func show_weekly_missions() -> bool:
 	empty.add_child(empty_content)
 	var emblem := TextureRect.new()
 	emblem.name = "MissionRewardArt"
-	emblem.custom_minimum_size = Vector2(0, 210)
+	emblem.custom_minimum_size = Vector2(0, 300)
 	emblem.texture = PieceAssetLoader.ornament("res://assets/curios/ch01_curio_moon_cameo_sealed_v01.svg")
 	emblem.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
 	emblem.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
@@ -280,7 +280,7 @@ func show_weekly_missions() -> bool:
 	empty_title.text = "THE WEEKLY ALTAR IS QUIET"
 	empty_title.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	empty_title.add_theme_color_override("font_color", Color("#F4E5D3"))
-	empty_title.add_theme_font_size_override("font_size", 28)
+	empty_title.add_theme_font_size_override("font_size", 31)
 	empty_content.add_child(empty_title)
 	var empty_body := Label.new()
 	empty_body.text = "No live weekly mission feed is connected. Mission timers, progress and rewards are intentionally not fabricated."
