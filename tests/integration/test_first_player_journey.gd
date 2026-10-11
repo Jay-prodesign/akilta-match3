@@ -40,52 +40,16 @@ func _run() -> void:
 	_expect(app.navigation.is_settings_open(), "House settings must open")
 	_expect(app.close_settings(), "settings must close cleanly")
 
-	var map_button: Button = house.get_node("Layout/PlayButton")
-	map_button.emit_signal("pressed")
+	var play_button: Button = house.get_node("Layout/PlayButton")
+	play_button.emit_signal("pressed")
 	await process_frame
-	_expect(str(app.current_route_name()) == "house", "chapter selector remains in House navigation state")
-	var chapters = app.current_screen()
-	_expect(str(chapters.name) == "ChapterSelect", "House Play CTA must open chapter selection")
-	_expect(chapters.get_node_or_null("ProductNavigation") != null, "Chapter Select must retain the shared product navigation")
-	chapters.get_node("Layout/ChapterGrid/CurioBoutiqueButton").emit_signal("pressed")
 	await process_frame
-	_expect(str(app.current_route_name()) == "map", "Curio Boutique selection must open its level map")
-	var map = app.current_screen()
-	_expect(str(map.name) == "ChapterMap", "Curio Boutique must open the authored chapter map")
-	_expect(map.get_node_or_null("ProductNavigation") != null, "Chapter Map must retain the shared product navigation")
-	var level1_button: Button = map.get_level_button(1)
-	var level2_button: Button = map.get_level_button(2)
-	_expect(level1_button != null and not level1_button.disabled, "Level 1 must be selectable")
-	_expect(level2_button != null and level2_button.disabled, "Level 2 remains progression-locked until Level 1 is won")
-	_expect(map.get_level_button(3) != null and map.get_level_button(3).disabled, "Level 3 remains progression-locked until Level 2 is won")
-	_expect(map.get_level_button(4) != null and map.get_level_button(4).disabled, "Level 4 and later must remain sealed beyond the three-level playtest scope")
-
-	level1_button.emit_signal("pressed")
-	await process_frame
-	_expect(str(app.current_route_name()) == "prestart", "Level 1 selection must open prestart")
+	_expect(str(app.current_route_name()) == "prestart", "House primary CTA must enter the focused Level 1 pre-start")
 	var prestart = app.current_screen()
-	var prestart_nav = prestart.get_node_or_null("ProductNavigation")
-	_expect(prestart_nav != null, "prestart must keep the product bottom navigation available")
-	if prestart_nav != null:
-		var nav_house := prestart_nav.get_node_or_null("Scroll/Items/NavHouse") as Button
-		_expect(nav_house != null, "prestart bottom navigation must expose House")
-		if nav_house != null:
-			nav_house.emit_signal("pressed")
-			await process_frame
-			await process_frame
-			_expect(str(app.current_route_name()) == "house", "prestart House navigation must unwind safely without stranding the route")
-			_expect(app.show_chapters(), "House must reopen chapters after leaving prestart from bottom navigation")
-			await process_frame
-			app.current_screen().get_node("Layout/ChapterGrid/CurioBoutiqueButton").emit_signal("pressed")
-			await process_frame
-			var reopened_map = app.current_screen()
-			var reopened_level1: Button = reopened_map.get_level_button(1)
-			_expect(reopened_level1 != null and not reopened_level1.disabled, "Level 1 must remain selectable after prestart navigation recovery")
-			if reopened_level1 != null:
-				reopened_level1.emit_signal("pressed")
-				await process_frame
-			prestart = app.current_screen()
-			_expect(str(app.current_route_name()) == "prestart", "Level 1 prestart must reopen after shell navigation recovery")
+	_expect(str(prestart.name) == "LevelPrestart", "House primary CTA must open the Level 1 screen contract")
+	_expect(prestart.get_node_or_null("ProductNavigation") == null, "pre-start must not carry the meta bottom navigation")
+	var prestart_back: Button = prestart.get_node_or_null("Layout/Back") as Button
+	_expect(prestart_back != null, "pre-start must own a focused back affordance")
 	var objective: Label = prestart.get_node("Layout/Card/Content/Objective")
 	_expect(objective.text == "GOAL · GATHER 6 MOON SIGILS", "prestart must reflect the canonical Level 1 collect-family objective")
 	var start_button: Button = prestart.get_node("Layout/Card/Content/Start")
@@ -135,8 +99,12 @@ func _run() -> void:
 	_expect(awakened_cameo.visible, "awakened House must display the same shared Moon Cameo component")
 	_expect(String(awakened_cameo.get("mode")) == "house", "House relic must use the shared Moon Cameo house mode")
 
-	var collection_button: Button = awakened_house.get_node("Layout/ActionDock/Actions/CollectionButton")
-	collection_button.emit_signal("pressed")
+	var restoration_overlay := awakened_house.get_node_or_null("RestorationOverlay")
+	_expect(restoration_overlay != null, "first-time Level 1 win must enter the same-camera House restoration state")
+	var collection_nav: Button = awakened_house.get_node_or_null("ProductNavigation/Scroll/Items/NavCurios") as Button
+	_expect(collection_nav != null, "House global navigation must expose Curios")
+	if collection_nav != null:
+		collection_nav.emit_signal("pressed")
 	await process_frame
 	_expect(str(app.current_route_name()) == "collection", "House Curios control must open collection")
 	var collection = app.current_screen()

@@ -50,8 +50,8 @@ func _capture() -> void:
 		quit(1)
 		return
 	var play_button: Button = screen.get_node("Layout/PlayButton")
-	if play_button.text != "REVISIT COMPLETED CURIO MAP":
-		printerr("CAPTURE_FAIL: completed opening chapter must return to the completed Curio map")
+	if play_button.text != "REVISIT CURIO BOUTIQUE":
+		printerr("CAPTURE_FAIL: completed opening chapter must return to the restored Curio Boutique")
 		quit(1)
 		return
 	var completion_banner: PanelContainer = screen.get_node_or_null("Layout/ChapterCompletionBanner")
