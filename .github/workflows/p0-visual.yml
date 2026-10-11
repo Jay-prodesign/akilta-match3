@@ -17,7 +17,7 @@ on:
       - "src/ui/prestart/**"
       - "src/ui/collection/**"
       - "src/world/**"
-      - "src/ui/shared/screen_art_registry.gd"
+      - "src/ui/shared/**"
       - "src/match3/presentation/**"
       - "assets/pieces/**"
       - "assets/manifests/screen_asset_manifest.json"
