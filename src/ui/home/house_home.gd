@@ -84,6 +84,7 @@ func _build_navigation_dock() -> void:
 	# Persistent, touch-sized first-party navigation; Level 1 remains the only open level pending founder approval.
 	var dock_scroll := ScrollContainer.new()
 	dock_scroll.name = "BottomNavigationScroll"
+	dock_scroll.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	dock_scroll.custom_minimum_size = Vector2(0, 60)
 	dock_scroll.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_AUTO
 	dock_scroll.vertical_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
@@ -105,6 +106,7 @@ func _build_navigation_dock() -> void:
 		button.custom_minimum_size = Vector2(94, 54)
 		button.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 		button.add_theme_font_size_override("font_size", 15)
+		button.tooltip_text = String(entry["title"])
 		var action := String(entry["action"])
 		button.pressed.connect(func(): _navigate_dock(action))
 		dock.add_child(button)
