@@ -312,7 +312,20 @@ func _run() -> void:
 				await process_frame
 				_expect(app.navigation.is_settings_open(), "Profile Settings must open without leaving S12")
 				_expect(str(app.current_route_name()) == "profile_settings", "Settings modal must preserve the Profile route")
+				var settings_panel = app.get_node_or_null("ScreenHost/SettingsPanel")
+				var settings_close: Button = settings_panel.get_node_or_null("Card/Content/Close") as Button if settings_panel != null else null
+				var reduced: CheckButton = settings_panel.get_node_or_null("Card/Content/Reduced") as CheckButton if settings_panel != null else null
+				var saved_note: Label = settings_panel.get_node_or_null("Card/Content/SavedNote") as Label if settings_panel != null else null
+				_expect(settings_close != null and settings_close.text == "RETURN TO PROFILE", "Profile-origin Settings must return to Profile")
+				_expect(reduced != null and saved_note != null, "Settings controls and saved-state feedback must exist")
+				if reduced != null:
+					reduced.button_pressed = true
+					reduced.emit_signal("toggled", true)
+					await process_frame
+				_expect(bool(app.user_settings.get_value("reduced_motion", false)), "Settings change must persist into user settings")
+				_expect(saved_note != null and saved_note.text.contains("SAVED ON THIS DEVICE"), "Settings changed state must visibly confirm persistence")
 				_expect(app.close_settings(), "Profile Settings must close cleanly")
+				_expect(app.current_screen() == profile_preview and str(app.current_route_name()) == "profile_settings", "closing Settings must reveal the original Profile screen")
 			app.current_screen().get_node("FeatureLayout/BackToHouse").emit_signal("pressed")
 			await process_frame
 		else:
