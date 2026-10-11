@@ -1,4 +1,4 @@
-name: P0 Headless Verification
+name: P0 Three-Level Review Verification
 
 on:
   push:
@@ -158,7 +158,7 @@ jobs:
           if grep -Eq "SCRIPT ERROR:|(^| )ERROR:" <<<"$output"; then exit 1; fi
           grep -Fq "TEST_PASS: AKILTA first-party shell contracts" <<<"$output"
 
-      - name: Run complete Level 1 shell journey
+      - name: Run complete three-level review shell journey
         shell: bash
         run: |
           set +e
@@ -170,7 +170,7 @@ jobs:
           if grep -Eq "SCRIPT ERROR:|(^| )ERROR:" <<<"$output"; then exit 1; fi
           grep -Fq "TEST_PASS: complete three-level review shell journey" <<<"$output"
 
-      - name: Run Level 1 approval gate and replay journey
+      - name: Run Level 1 unlock and replay journey
         shell: bash
         run: |
           set +e
