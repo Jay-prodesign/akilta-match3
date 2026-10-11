@@ -11,6 +11,7 @@ const PieceAssetLoader = preload("res://src/match3/presentation/piece_asset_load
 @onready var objective_label: Label = $Layout/Card/Content/Objective
 @onready var moves_label: Label = $Layout/Card/Content/Moves
 @onready var reward_label: Label = $Layout/Card/Content/Reward
+@onready var note_label: Label = $Layout/Card/Content/Note
 @onready var ritual_art: Control = $Layout/Card/Content/RitualArt
 @onready var start_button: Button = $Layout/Card/Content/Start
 @onready var back_button: Button = $Layout/Back
@@ -88,6 +89,8 @@ func configure_level(value: int) -> bool:
 	var curio_id := String(data.get("reward_curio", "moon_cameo"))
 	var curio := curio_id.replace("_", " ").capitalize()
 	reward_label.text = "REWARD · %s" % curio.to_upper()
+	if note_label != null:
+		note_label.text = String(data.get("prestart_note", "Recover %s. The House will remember this ritual when you return." % curio))
 	if ritual_art != null:
 		ritual_art.set("relic_id", curio_id)
 		ritual_art.queue_redraw()

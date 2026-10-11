@@ -150,7 +150,14 @@ func _capture() -> void:
 		await process_frame
 		await process_frame
 		var prestart_art = prestart.get_node_or_null("Layout/Card/Content/RitualArt")
+		var prestart_note: Label = prestart.get_node_or_null("Layout/Card/Content/Note") as Label
 		var expected_prestart_relic := "moth_reliquary" if level_number == 2 else "thorned_locket"
+		var expected_note_fragment := "Moth Reliquary" if level_number == 2 else "Thorned Locket"
+		if prestart_note == null or not prestart_note.text.contains(expected_note_fragment):
+			printerr("CAPTURE_FAIL: Level %d prestart story does not match its Curio reward" % level_number)
+			prestart.queue_free()
+			quit(1)
+			return
 		if prestart_art == null or str(prestart_art.get("relic_id")) != expected_prestart_relic:
 			printerr("CAPTURE_FAIL: Level %d prestart art does not match its reward" % level_number)
 			prestart.queue_free()
