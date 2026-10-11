@@ -296,11 +296,12 @@
       ],
       "reuse": "House_and_Restoration",
       "priority": "P0",
-      "production_status": "produced_integrated_reference_slice_v01",
+      "production_status": "candidate_runtime_connected_raster",
       "current_path": "assets/world/ch01_curio_boutique/hub_bg_grandhall.webp",
       "deprecated_candidate_path": "assets/world/ch01_curio_boutique/ch01_world_house_hub_stage00_v01.svg",
-      "technical_policy": "authored_raster_only_no_svg_fallback",
-      "current_runtime_dimensions": "450x500_webp_review_runtime"
+      "technical_policy": "raster_only_no_svg_fallback",
+      "current_runtime_dimensions": "450x500_webp_review_runtime",
+      "source_resolution": "240x267 transport preview; replace with production-resolution master after visual approval"
     },
     {
       "asset_id": "hub_black_cat_character",
@@ -791,6 +792,9 @@
       "assets/world/ch01_curio_boutique/prestart_bg_curio_boutique.webp",
       "assets/world/ch01_curio_boutique/gameplay_bg_curio_boutique.webp"
     ],
-    "note": "These are authored raster reference-slice v01 assets wired into Godot. Legacy SVG world art remains deprecated and is not a runtime fallback for S01/S04/S05."
+    "note": "These are authored raster reference-slice v01 assets wired into Godot. Legacy SVG world art remains deprecated and is not a runtime fallback for S01/S04/S05.",
+    "runtime_connected": [
+      "hub_bg_grandhall"
+    ]
   }
 }
