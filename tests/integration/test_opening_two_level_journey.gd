@@ -35,6 +35,13 @@ func _run() -> void:
 	await process_frame
 	_expect(str(app.current_route_name()) == "prestart", "new-player House CTA must enter focused Level 1 prestart directly")
 	_expect(str(app.current_screen().name) == "LevelPrestart", "focused Level 1 prestart must replace chapter-selection ceremony")
+	var back_button: Button = app.current_screen().get_node("Layout/Back")
+	back_button.emit_signal("pressed")
+	await process_frame
+	_expect(str(app.current_route_name()) == "house", "prestart back must return to House")
+	app.current_screen().get_node("Layout/PlayButton").emit_signal("pressed")
+	await process_frame
+	_expect(str(app.current_route_name()) == "prestart", "House must reopen prestart after back")
 	_expect(not app.show_prestart(2), "direct navigation must not bypass earned progression")
 	_expect(not app.start_level(2), "direct gameplay entry must not bypass earned progression")
 	_expect(str(app.current_route_name()) == "prestart", "rejected Level 2 navigation must preserve focused Level 1 prestart")
