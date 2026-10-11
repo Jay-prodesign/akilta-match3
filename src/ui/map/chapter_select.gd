@@ -12,8 +12,8 @@ func _layout_chapter_hotspots(grid: Control, buttons: Array[Button]) -> void:
 	for i in range(count):
 		var button := buttons[i]
 		if compact:
-			var spacing := 9.0
-			var card_height := maxf(64.0, (grid.size.y - spacing * float(count - 1)) / float(count))
+			var spacing := 6.0
+			var card_height := maxf(50.0, (grid.size.y - spacing * float(count - 1)) / float(count))
 			button.position = Vector2(0, float(i) * (card_height + spacing))
 			button.size = Vector2(grid.size.x, card_height)
 			button.add_theme_font_size_override("font_size", 15)
@@ -32,7 +32,7 @@ func _ready() -> void:
 	layout.offset_right = -16
 	layout.offset_top = 22
 	layout.offset_bottom = -16
-	layout.add_theme_constant_override("separation", 14)
+	layout.add_theme_constant_override("separation", 8)
 	layout.z_index = 10
 	layout.modulate = Color.WHITE
 	add_child(layout)
@@ -52,7 +52,7 @@ func _ready() -> void:
 	var eyebrow := Label.new()
 	eyebrow.text = "THE HOUSE AND ITS CHAPTERS"
 	eyebrow.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	eyebrow.add_theme_font_size_override("font_size", 20)
+	eyebrow.add_theme_font_size_override("font_size", 14)
 	eyebrow.add_theme_color_override("font_color", Color("#F0DCCB"))
 	layout.add_child(eyebrow)
 
@@ -93,7 +93,7 @@ func _ready() -> void:
 		button.set_meta("map_h", float(data["h"]))
 		button.custom_minimum_size = Vector2.ZERO
 		button.disabled = not bool(data["open"])
-		button.text = "%s\n%s%s" % [String(data["name"]), String(data["detail"]), "" if bool(data["open"]) else "\nSEALED WING"]
+		button.text = "%s\n%s" % [String(data["name"]), String(data["detail"]) if bool(data["open"]) else "SEALED · COMING SOON"]
 		button.icon = PieceAssetLoader.ornament(String(data.get("art", "")))
 		button.icon_alignment = HORIZONTAL_ALIGNMENT_LEFT
 		button.add_theme_constant_override("icon_max_width", 104)
@@ -125,7 +125,7 @@ func _ready() -> void:
 
 	var back := Button.new()
 	back.text = "BACK TO THE HOUSE"
-	back.custom_minimum_size = Vector2(0, 60)
+	back.custom_minimum_size = Vector2(0, 48)
 	back.add_theme_font_size_override("font_size", 20)
 	back.pressed.connect(func(): back_requested.emit())
 	layout.add_child(back)
