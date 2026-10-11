@@ -34,6 +34,7 @@ on:
       - "tests/integration/test_chapter_route_frontier.gd"
       - "tests/integration/test_restoration_presentation.gd"
       - "tests/integration/test_level1_gameplay.gd"
+      - "tests/integration/test_golden_feedback_vfx.gd"
       - "tests/integration/test_opening_two_level_journey.gd"
       - "tests/integration/test_returning_player_resume.gd"
   # Milestone trigger: canonical Golden Loop architecture + playable journey verification (2026-10-11).
@@ -181,6 +182,18 @@ jobs:
             echo "::error::Level 1 gameplay contract did not emit its PASS marker."
             exit 1
           fi
+
+      - name: Run Golden Loop feedback VFX contract
+        shell: bash
+        run: |
+          set +e
+          output=$(timeout 35s ./godot --headless --path . -s res://tests/integration/test_golden_feedback_vfx.gd 2>&1)
+          status=$?
+          set -e
+          printf '%s\n' "$output"
+          if [ "$status" -ne 0 ]; then exit "$status"; fi
+          if grep -Eq "SCRIPT ERROR:|(^| )ERROR:|TEST_FAIL:" <<<"$output"; then exit 1; fi
+          grep -Fq "TEST_PASS: Golden Loop match-clear and reward-reveal VFX contract" <<<"$output"
 
       - name: Run durable progression contract
         shell: bash

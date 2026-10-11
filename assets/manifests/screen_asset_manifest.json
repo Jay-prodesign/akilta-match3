@@ -928,7 +928,7 @@
       ],
       "reuse": "global",
       "priority": "P0",
-      "production_status": "required",
+      "production_status": "runtime_connected_match_clear_vfx",
       "architecture_owned": true,
       "contract_owners": [
         {
@@ -943,7 +943,9 @@
             "objective_complete"
           ]
         }
-      ]
+      ],
+      "technical_policy": "runtime_fragment_rays_rings_and_motes_over_exact_piece_art__trace_timed__reduced_motion_skips_animation",
+      "provenance": "AKILTA first-party runtime feedback over the canonical S05 piece family. Clear bursts are trace-timed at the actual resolved cells and do not replace piece identity; Reduced Motion resolves the same gameplay truth without decorative animation."
     },
     {
       "asset_id": "vfx_reward_reveal",
@@ -964,7 +966,7 @@
       ],
       "reuse": "global",
       "priority": "P0",
-      "production_status": "required",
+      "production_status": "runtime_connected_reward_reveal_vfx",
       "architecture_owned": true,
       "contract_owners": [
         {
@@ -977,7 +979,9 @@
             "reduced_motion"
           ]
         }
-      ]
+      ],
+      "technical_policy": "runtime_gold_lilac_relic_reveal_over_exact_reward_curio__first_time_win_only__reduced_motion_static_resolution",
+      "provenance": "AKILTA first-party S06 runtime reveal layered behind the exact reward Curio. First-time wins receive a short gold/lilac ritual burst; replay and Reduced Motion states preserve reward truth without decorative reveal motion."
     },
     {
       "asset_id": "vfx_house_awaken",
