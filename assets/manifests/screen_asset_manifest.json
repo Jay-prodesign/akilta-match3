@@ -1887,6 +1887,200 @@
       "source_silhouette_path": "assets/specials/gbl_special_global_idle_v01.svg",
       "technical_policy": "webp_raster_first_runtime__special_state_identity__owned_svg_fallback",
       "provenance": "AKILTA first-party S05 special-token production candidate. Replaces procedural line/star/eclipse marks with an authored antique-gold gothic gameplay token while preserving exact special semantics. Render/play validation required before approval."
+    },
+    {
+      "asset_id": "reward_moth_reliquary",
+      "screen": [
+        "S04",
+        "S06",
+        "S07",
+        "S08"
+      ],
+      "block": "reward_or_curio",
+      "slot": "moth_reliquary",
+      "state": [
+        "sealed",
+        "awakening",
+        "awakened",
+        "restored",
+        "locked",
+        "owned_replay",
+        "replay_owned"
+      ],
+      "type": "content_artwork",
+      "dimensions": "512x512_png_transparent_runtime_candidate",
+      "aspect_ratio": "1:1",
+      "transparent": true,
+      "variants": [
+        "same_semantic_object_all_screens",
+        "runtime_dormant_modulation"
+      ],
+      "reuse": "opening_chapter",
+      "priority": "P0",
+      "production_status": "rasterized_owned_art_candidate_runtime_validation",
+      "current_path": "assets/curios/ch01_curio_moth_reliquary.png",
+      "architecture_owned": true,
+      "contract_owners": [
+        {
+          "screen": "S04",
+          "region": "primary",
+          "block": "primary_ritual_panel",
+          "slot": "reward_curio",
+          "states": [
+            "sealed",
+            "owned_replay"
+          ]
+        },
+        {
+          "screen": "S06",
+          "region": "result",
+          "block": "result_panel",
+          "slot": "reward_curio",
+          "states": [
+            "sealed",
+            "awakening",
+            "awakened",
+            "replay_owned"
+          ]
+        },
+        {
+          "screen": "S07",
+          "region": "world",
+          "block": "house_hero",
+          "slot": "restored_curio_slot",
+          "states": [
+            "awakening",
+            "restored"
+          ]
+        },
+        {
+          "screen": "S07",
+          "region": "ceremony",
+          "block": "change_summary",
+          "slot": "curio_identity",
+          "states": [
+            "awakening",
+            "restored"
+          ]
+        },
+        {
+          "screen": "S08",
+          "region": "collection",
+          "block": "curio_grid",
+          "slot": "curio_cards",
+          "states": [
+            "locked",
+            "awakened"
+          ]
+        }
+      ],
+      "state_paths": {
+        "sealed": "assets/curios/ch01_curio_moth_reliquary.png",
+        "awakening": "runtime_transition_over_same_semantic_object",
+        "awakened": "assets/curios/ch01_curio_moth_reliquary.png",
+        "restored": "assets/curios/ch01_curio_moth_reliquary.png",
+        "locked": "runtime_dimmed_same_semantic_object"
+      },
+      "source_silhouette_path": "assets/curios/ch01_curio_moth_reliquary.svg",
+      "technical_policy": "png_raster_first_runtime__same_semantic_object__owned_svg_exact_fallback",
+      "provenance": "AKILTA first-party opening Curio identity rasterized from the existing owned canonical silhouette for deterministic runtime parity. This is a raster runtime candidate, not a claim of final illustrated-art approval; exact SVG remains fallback until a later authored raster replacement passes render review."
+    },
+    {
+      "asset_id": "reward_thorned_locket",
+      "screen": [
+        "S04",
+        "S06",
+        "S07",
+        "S08"
+      ],
+      "block": "reward_or_curio",
+      "slot": "thorned_locket",
+      "state": [
+        "sealed",
+        "awakening",
+        "awakened",
+        "restored",
+        "locked",
+        "owned_replay",
+        "replay_owned"
+      ],
+      "type": "content_artwork",
+      "dimensions": "512x512_png_transparent_runtime_candidate",
+      "aspect_ratio": "1:1",
+      "transparent": true,
+      "variants": [
+        "same_semantic_object_all_screens",
+        "runtime_dormant_modulation"
+      ],
+      "reuse": "opening_chapter",
+      "priority": "P0",
+      "production_status": "rasterized_owned_art_candidate_runtime_validation",
+      "current_path": "assets/curios/ch01_curio_thorned_locket.png",
+      "architecture_owned": true,
+      "contract_owners": [
+        {
+          "screen": "S04",
+          "region": "primary",
+          "block": "primary_ritual_panel",
+          "slot": "reward_curio",
+          "states": [
+            "sealed",
+            "owned_replay"
+          ]
+        },
+        {
+          "screen": "S06",
+          "region": "result",
+          "block": "result_panel",
+          "slot": "reward_curio",
+          "states": [
+            "sealed",
+            "awakening",
+            "awakened",
+            "replay_owned"
+          ]
+        },
+        {
+          "screen": "S07",
+          "region": "world",
+          "block": "house_hero",
+          "slot": "restored_curio_slot",
+          "states": [
+            "awakening",
+            "restored"
+          ]
+        },
+        {
+          "screen": "S07",
+          "region": "ceremony",
+          "block": "change_summary",
+          "slot": "curio_identity",
+          "states": [
+            "awakening",
+            "restored"
+          ]
+        },
+        {
+          "screen": "S08",
+          "region": "collection",
+          "block": "curio_grid",
+          "slot": "curio_cards",
+          "states": [
+            "locked",
+            "awakened"
+          ]
+        }
+      ],
+      "state_paths": {
+        "sealed": "assets/curios/ch01_curio_thorned_locket.png",
+        "awakening": "runtime_transition_over_same_semantic_object",
+        "awakened": "assets/curios/ch01_curio_thorned_locket.png",
+        "restored": "assets/curios/ch01_curio_thorned_locket.png",
+        "locked": "runtime_dimmed_same_semantic_object"
+      },
+      "source_silhouette_path": "assets/curios/ch01_curio_thorned_locket.svg",
+      "technical_policy": "png_raster_first_runtime__same_semantic_object__owned_svg_exact_fallback",
+      "provenance": "AKILTA first-party opening Curio identity rasterized from the existing owned canonical silhouette for deterministic runtime parity. This is a raster runtime candidate, not a claim of final illustrated-art approval; exact SVG remains fallback until a later authored raster replacement passes render review."
     }
   ],
   "vertical_slice_art_policy": {

@@ -65,6 +65,12 @@ func _run() -> void:
 	_expect(String(key_visual.get("display_name", "")) == "Curio Key" and String(key_visual.get("silhouette", "")) == "antique_key", "piece semantics must describe Curio Key")
 	_expect(String(ivy_visual.get("display_name", "")) == "Night Ivy" and String(ivy_visual.get("silhouette", "")) == "ivy_leaf", "piece semantics must describe Night Ivy")
 	_expect(float(key_visual.get("value", 0.0)) >= 0.75, "Curio Key readability contract must reserve a high-value treatment against the dark board")
+	var moth_relic_path := "res://assets/curios/ch01_curio_moth_reliquary.svg"
+	var thorned_locket_path := "res://assets/curios/ch01_curio_thorned_locket.svg"
+	_expect(PieceAssets.ornament(moth_relic_path) != null, "Moth Reliquary runtime art must load")
+	_expect(PieceAssets.resolved_path(moth_relic_path).ends_with(".png"), "Moth Reliquary must resolve to raster PNG before SVG fallback")
+	_expect(PieceAssets.ornament(thorned_locket_path) != null, "Thorned Locket runtime art must load")
+	_expect(PieceAssets.resolved_path(thorned_locket_path).ends_with(".png"), "Thorned Locket must resolve to raster PNG before SVG fallback")
 	var splash = SplashScene.instantiate()
 	root.add_child(splash)
 	await process_frame

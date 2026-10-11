@@ -18,6 +18,7 @@ const PATHS := {
 static var _textures: Dictionary = {}
 static var _failures: Dictionary = {}
 static var _ornaments: Dictionary = {}
+static var _resolved_paths: Dictionary = {}
 
 static func texture(family: String) -> Texture2D:
 	if _textures.has(family):
@@ -88,13 +89,16 @@ static func ornament(path: String) -> Texture2D:
 	if _ornaments.has(path):
 		return _ornaments[path]
 	# Production art is raster-first, but a malformed candidate must never make
-	# the canonical semantic object disappear. Prefer matching WebP; if decoding
-	# fails, fall back to the owned SVG source for that exact object.
+	# the canonical semantic object disappear. Prefer authored WebP, then PNG,
+	# and only then the owned SVG source for that exact object.
 	var candidates: Array[String] = []
 	if path.get_extension().to_lower() == "svg":
 		var webp_preferred := path.get_basename() + ".webp"
+		var png_preferred := path.get_basename() + ".png"
 		if FileAccess.file_exists(webp_preferred):
 			candidates.append(webp_preferred)
+		if FileAccess.file_exists(png_preferred):
+			candidates.append(png_preferred)
 	candidates.append(path)
 	for chosen in candidates:
 		if not FileAccess.file_exists(chosen):
@@ -114,6 +118,12 @@ static func ornament(path: String) -> Texture2D:
 		if err == OK and not image.is_empty():
 			var result := ImageTexture.create_from_image(image)
 			_ornaments[path] = result
+			_resolved_paths[path] = chosen
 			return result
 	_failures[path] = candidates
 	return null
+
+static func resolved_path(path: String) -> String:
+	if not _ornaments.has(path):
+		ornament(path)
+	return String(_resolved_paths.get(path, ""))

@@ -58,6 +58,41 @@ func _capture() -> void:
 		return _fail(app, "final Reliquary must show Thorned Locket as awakened")
 	if not await _save(app, "progression-final-reliquary.png"):
 		return
+
+	var moth_detail_button: Button = collection.get_node_or_null("Layout/Cards/Slot2/DetailActionLayer/InspectAction") as Button
+	if moth_detail_button == null:
+		return _fail(app, "Moth Reliquary detail action missing")
+	moth_detail_button.emit_signal("pressed")
+	await _frames(2)
+	var moth_detail_art: TextureRect = collection.get_node_or_null("CurioDetailOverlay/CurioDetailCard/Content/HeroArt") as TextureRect
+	var moth_detail_name: Label = collection.get_node_or_null("CurioDetailOverlay/CurioDetailCard/Content/Name") as Label
+	if moth_detail_art == null or moth_detail_art.texture == null or moth_detail_name == null or moth_detail_name.text != "MOTH RELIQUARY":
+		return _fail(app, "Moth Reliquary detail must render the awakened reward art")
+	if not await _save(app, "progression-final-reliquary-moth-detail.png"):
+		return
+	var moth_close: Button = collection.get_node_or_null("CurioDetailOverlay/CurioDetailCard/Content/Close") as Button
+	if moth_close == null:
+		return _fail(app, "Moth Reliquary detail close action missing")
+	moth_close.emit_signal("pressed")
+	await _frames(2)
+
+	var locket_detail_button: Button = collection.get_node_or_null("Layout/Cards/Slot3/DetailActionLayer/InspectAction") as Button
+	if locket_detail_button == null:
+		return _fail(app, "Thorned Locket detail action missing")
+	locket_detail_button.emit_signal("pressed")
+	await _frames(2)
+	var locket_detail_art: TextureRect = collection.get_node_or_null("CurioDetailOverlay/CurioDetailCard/Content/HeroArt") as TextureRect
+	var locket_detail_name: Label = collection.get_node_or_null("CurioDetailOverlay/CurioDetailCard/Content/Name") as Label
+	if locket_detail_art == null or locket_detail_art.texture == null or locket_detail_name == null or locket_detail_name.text != "THORNED LOCKET":
+		return _fail(app, "Thorned Locket detail must render the awakened reward art")
+	if not await _save(app, "progression-final-reliquary-thorned-detail.png"):
+		return
+	var locket_close: Button = collection.get_node_or_null("CurioDetailOverlay/CurioDetailCard/Content/Close") as Button
+	if locket_close == null:
+		return _fail(app, "Thorned Locket detail close action missing")
+	locket_close.emit_signal("pressed")
+	await _frames(2)
+
 	collection.get_node("Layout/Back").emit_signal("pressed")
 	await _frames(3)
 
