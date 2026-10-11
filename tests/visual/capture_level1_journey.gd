@@ -58,8 +58,8 @@ func _capture() -> void:
 		return _fail(app, "chapter route composition missing")
 	if route_view.custom_minimum_size.x < 860.0 or route_view.custom_minimum_size.x > 960.0:
 		return _fail(app, "chapter route must use the portrait width without overflowing the 1080 logical viewport")
-	if route_view.custom_minimum_size.y < 1000.0 or route_view.custom_minimum_size.y > 1120.0:
-		return _fail(app, "chapter route must carry the opening journey as the map's primary composition")
+	if route_view.custom_minimum_size.y < 1450.0 or route_view.custom_minimum_size.y > 1520.0:
+		return _fail(app, "chapter route must carry the opening journey across the full map panel")
 	if route_panel.size.y < app.get_viewport().get_visible_rect().size.y * 0.45:
 		return _fail(app, "chapter route panel must occupy meaningful vertical space on mobile")
 	for level_number in [1, 2, 3]:
