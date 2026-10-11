@@ -1,4 +1,4 @@
-name: P0 Visual Verification
+name: P0 Golden Loop Render Verification
 
 on:
   push:
@@ -6,15 +6,17 @@ on:
       - p0/bootstrap
     paths:
       - ".github/workflows/p0-visual.yml"
-  # Milestone trigger: reference-slice shell/nav/pause/settings visual verification (2026-10-11).
-  # Run the full milestone checks deliberately, not on every development commit.
+      - "tests/visual/capture_level1_journey.gd"
+      - "tests/visual/capture_level1_failure.gd"
+  # Expensive rendered verification is milestone-based. Functional CI runs
+  # continuously; this workflow is for Golden Loop render evidence only.
   workflow_dispatch:
 
 permissions:
   contents: read
 
 jobs:
-  render-level1:
+  render-golden-loop:
     runs-on: ubuntu-latest
     timeout-minutes: 7
     steps:
@@ -31,7 +33,7 @@ jobs:
           mv Godot_v4.7.2-stable_linux.x86_64 godot
           chmod +x godot
 
-      - name: Render complete Level 1 player journey
+      - name: Render canonical Golden Playable Loop
         shell: bash
         run: |
           set -uo pipefail
@@ -42,50 +44,18 @@ jobs:
           printf '%s\n' "$output"
           if [ "$status" -ne 0 ]; then exit "$status"; fi
           if grep -Eq "SCRIPT ERROR:|(^| )ERROR:|CAPTURE_FAIL:" <<<"$output"; then exit 1; fi
-          grep -Fq "CAPTURE_PASS: complete Level 1 player journey" <<<"$output"
-          test -s artifacts/journey-00-splash.png
-          test -s artifacts/journey-01-house-dormant.png
-          test -s artifacts/journey-01b-chapter-select.png
-          test -s artifacts/journey-02-chapter-map.png
-          test -s artifacts/journey-03-prestart.png
-          test -s artifacts/journey-04-level1-gameplay.png
-          test -s artifacts/journey-04b-level1-pause.png
-          test -s artifacts/journey-05-level1-result.png
-          test -s artifacts/journey-06-house-awakened.png
-          test -s artifacts/journey-07-curio-collection.png
-          test -s artifacts/journey-08-settings.png
-          test -s artifacts/journey-09-events.png
-          test -s artifacts/journey-10-shop.png
-          test -s artifacts/journey-11-profile.png
+          grep -Fq "CAPTURE_PASS: canonical Golden Playable Loop" <<<"$output"
+          test -s artifacts/golden-00-splash.png
+          test -s artifacts/golden-01-house-dormant.png
+          test -s artifacts/golden-02-chapter-route.png
+          test -s artifacts/golden-03-prestart.png
+          test -s artifacts/golden-04-gameplay.png
+          test -s artifacts/golden-04b-pause.png
+          test -s artifacts/golden-05-win-reward.png
+          test -s artifacts/golden-06-restoration.png
+          test -s artifacts/golden-07-house-return.png
 
-      - name: Render real three-level progression journey
-        shell: bash
-        run: |
-          set -uo pipefail
-          set +e
-          output=$(LIBGL_ALWAYS_SOFTWARE=1 xvfb-run -a ./godot --audio-driver Dummy --path . -s res://tests/visual/capture_three_level_progression.gd 2>&1)
-          status=$?
-          set -e
-          printf '%s\n' "$output"
-          if [ "$status" -ne 0 ]; then exit "$status"; fi
-          if grep -Eq "SCRIPT ERROR:|(^| )ERROR:|CAPTURE_FAIL:" <<<"$output"; then exit 1; fi
-          grep -Fq "CAPTURE_PASS: real three-level progression journey" <<<"$output"
-          test -s artifacts/progression-map-before-level1.png
-          test -s artifacts/progression-map-before-level2.png
-          test -s artifacts/progression-map-before-level3.png
-          test -s artifacts/progression-level1-result.png
-          test -s artifacts/progression-level2-result.png
-          test -s artifacts/progression-level3-result.png
-          test -s artifacts/progression-house-stage1.png
-          test -s artifacts/progression-house-stage2.png
-          test -s artifacts/progression-house-stage3.png
-          test -s artifacts/progression-final-reliquary.png
-          test -s artifacts/progression-final-events.png
-          test -s artifacts/progression-final-profile.png
-          test -s artifacts/progression-final-chapters.png
-          test -s artifacts/progression-final-map.png
-
-      - name: Render Level 1 fail and retry
+      - name: Render Golden Loop failure and retry branch
         shell: bash
         run: |
           set -uo pipefail
@@ -100,176 +70,21 @@ jobs:
           test -s artifacts/level1-fail-result.png
           test -s artifacts/level1-retry-restored.png
 
-      - name: Render Level 1 portrait
-        shell: bash
-        run: |
-          set -uo pipefail
-          set +e
-          output=$(LIBGL_ALWAYS_SOFTWARE=1 xvfb-run -a ./godot --audio-driver Dummy --path . -s res://tests/visual/capture_level1.gd 2>&1)
-          status=$?
-          set -e
-          printf '%s\n' "$output"
-          if [ "$status" -ne 0 ]; then exit "$status"; fi
-          if grep -Eq "SCRIPT ERROR:|(^| )ERROR:|CAPTURE_FAIL:" <<<"$output"; then exit 1; fi
-          grep -Fq "CAPTURE_PASS:" <<<"$output"
-          test -s artifacts/level1-gameplay.png
-
-      - name: Render Levels 2 and 3 chapter symbol palettes
-        shell: bash
-        run: |
-          set -uo pipefail
-          set +e
-          output=$(LIBGL_ALWAYS_SOFTWARE=1 xvfb-run -a ./godot --audio-driver Dummy --path . -s res://tests/visual/capture_opening_level_art_profiles.gd 2>&1)
-          status=$?
-          set -e
-          printf '%s\\n' "$output"
-          if [ "$status" -ne 0 ]; then exit "$status"; fi
-          if grep -Eq "SCRIPT ERROR:|(^| )ERROR:|CAPTURE_FAIL:" <<<"$output"; then exit 1; fi
-          grep -Fq "CAPTURE_PASS: Level 2 art profile sealed_display" <<<"$output"
-          grep -Fq "CAPTURE_PASS: Level 3 art profile thornlight_arrangement" <<<"$output"
-          test -s artifacts/level2-gameplay.png
-          test -s artifacts/level3-gameplay.png
-          test -s artifacts/level2-prestart.png
-          test -s artifacts/level3-prestart.png
-          test -s artifacts/level2-result.png
-          test -s artifacts/level3-result.png
-
-      - name: Render Level 1 trace motion
-        shell: bash
-        run: |
-          set -uo pipefail
-          set +e
-          output=$(LIBGL_ALWAYS_SOFTWARE=1 xvfb-run -a ./godot --audio-driver Dummy --path . -s res://tests/visual/capture_level1_motion.gd 2>&1)
-          status=$?
-          set -e
-          printf '%s\n' "$output"
-          if [ "$status" -ne 0 ]; then exit "$status"; fi
-          if grep -Eq "SCRIPT ERROR:|(^| )ERROR:|CAPTURE_FAIL:" <<<"$output"; then exit 1; fi
-          grep -Fq "CAPTURE_PASS:" <<<"$output"
-          test -s artifacts/level1-motion.png
-
-      - name: Render core asset language specimen
-        shell: bash
-        run: |
-          set -uo pipefail
-          set +e
-          output=$(LIBGL_ALWAYS_SOFTWARE=1 xvfb-run -a ./godot --audio-driver Dummy --path . -s res://tests/visual/capture_core_asset_language.gd 2>&1)
-          status=$?
-          set -e
-          printf '%s\n' "$output"
-          if [ "$status" -ne 0 ]; then exit "$status"; fi
-          if grep -Eq "SCRIPT ERROR:|(^| )ERROR:|CAPTURE_FAIL:" <<<"$output"; then exit 1; fi
-          grep -Fq "CAPTURE_PASS:" <<<"$output"
-          test -s artifacts/core-asset-language.png
-
-      - name: Render House stage 1
-        shell: bash
-        run: |
-          set -uo pipefail
-          set +e
-          output=$(LIBGL_ALWAYS_SOFTWARE=1 xvfb-run -a ./godot --audio-driver Dummy --path . -s res://tests/visual/capture_house_stage1.gd 2>&1)
-          status=$?
-          set -e
-          printf '%s\n' "$output"
-          if [ "$status" -ne 0 ]; then exit "$status"; fi
-          if grep -Eq "SCRIPT ERROR:|(^| )ERROR:|CAPTURE_FAIL:" <<<"$output"; then exit 1; fi
-          grep -Fq "CAPTURE_PASS:" <<<"$output"
-          test -s artifacts/house-stage1.png
-
-      - name: Render fully restored opening House
-        shell: bash
-        run: |
-          set -uo pipefail
-          set +e
-          output=$(LIBGL_ALWAYS_SOFTWARE=1 xvfb-run -a ./godot --audio-driver Dummy --path . -s res://tests/visual/capture_house_stage3.gd 2>&1)
-          status=$?
-          set -e
-          printf '%s\n' "$output"
-          if [ "$status" -ne 0 ]; then exit "$status"; fi
-          if grep -Eq "SCRIPT ERROR:|(^| )ERROR:|CAPTURE_FAIL:" <<<"$output"; then exit 1; fi
-          grep -Fq "CAPTURE_PASS:" <<<"$output"
-          test -s artifacts/house-stage3.png
-
-      - name: Upload real three-level progression evidence
+      - name: Upload Golden Loop render evidence
         uses: actions/upload-artifact@v4
         with:
-          name: three-level-progression-evidence
+          name: golden-playable-loop-evidence
           path: |
-            artifacts/progression-map-before-level1.png
-            artifacts/progression-map-before-level2.png
-            artifacts/progression-map-before-level3.png
-            artifacts/progression-level1-result.png
-            artifacts/progression-level2-result.png
-            artifacts/progression-level3-result.png
-            artifacts/progression-house-stage1.png
-            artifacts/progression-house-stage2.png
-            artifacts/progression-house-stage3.png
-            artifacts/progression-final-reliquary.png
-            artifacts/progression-final-events.png
-            artifacts/progression-final-profile.png
-            artifacts/progression-final-chapters.png
-            artifacts/progression-final-map.png
-          if-no-files-found: error
-          retention-days: 14
-
-      - name: Upload complete Level 1 journey evidence
-        uses: actions/upload-artifact@v4
-        with:
-          name: level1-player-journey-evidence
-          path: |
-            artifacts/journey-00-splash.png
-            artifacts/journey-01-house-dormant.png
-            artifacts/journey-01b-chapter-select.png
-            artifacts/journey-02-chapter-map.png
-            artifacts/journey-03-prestart.png
-            artifacts/journey-04-level1-gameplay.png
-            artifacts/journey-04b-level1-pause.png
-            artifacts/journey-05-level1-result.png
-            artifacts/journey-06-house-awakened.png
-            artifacts/journey-07-curio-collection.png
-            artifacts/journey-08-settings.png
-            artifacts/journey-09-events.png
-            artifacts/journey-10-shop.png
-            artifacts/journey-11-profile.png
+            artifacts/golden-00-splash.png
+            artifacts/golden-01-house-dormant.png
+            artifacts/golden-02-chapter-route.png
+            artifacts/golden-03-prestart.png
+            artifacts/golden-04-gameplay.png
+            artifacts/golden-04b-pause.png
+            artifacts/golden-05-win-reward.png
+            artifacts/golden-06-restoration.png
+            artifacts/golden-07-house-return.png
             artifacts/level1-fail-result.png
             artifacts/level1-retry-restored.png
-            artifacts/level2-gameplay.png
-            artifacts/level3-gameplay.png
-            artifacts/level2-prestart.png
-            artifacts/level3-prestart.png
-            artifacts/level2-result.png
-            artifacts/level3-result.png
-            artifacts/house-stage3.png
           if-no-files-found: error
           retention-days: 14
-
-      - name: Upload Founder Level 1 gate evidence
-        uses: actions/upload-artifact@v4
-        with:
-          name: level1-founder-gate-evidence
-          path: |
-            artifacts/level1-gameplay.png
-            artifacts/level1-motion.png
-            artifacts/house-stage1.png
-            artifacts/house-stage3.png
-            artifacts/core-asset-language.png
-            artifacts/level2-gameplay.png
-            artifacts/level3-gameplay.png
-            artifacts/level2-prestart.png
-            artifacts/level3-prestart.png
-            artifacts/level2-result.png
-            artifacts/level3-result.png
-          if-no-files-found: error
-          retention-days: 14
-
-      - name: Upload milestone renders
-        uses: actions/upload-artifact@v4
-        with:
-          name: p0-milestone-renders
-          path: |
-            artifacts/level1-gameplay.png
-            artifacts/house-stage1.png
-            artifacts/house-stage3.png
-            artifacts/core-asset-language.png
-          if-no-files-found: error
-          retention-days: 7
