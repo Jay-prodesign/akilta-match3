@@ -30,7 +30,7 @@ func _capture() -> void:
 			return _fail(app, "Level %d did not return to House" % level_number)
 		if int(app.progress.house_stage) < level_number:
 			return _fail(app, "Level %d did not advance House restoration" % level_number)
-		var expected_curio := ["moon_cameo", "moth_reliquary", "thorned_locket"][level_number - 1]
+		var expected_curio: String = String(["moon_cameo", "moth_reliquary", "thorned_locket"][level_number - 1])
 		if not app.progress.curios.has(expected_curio):
 			return _fail(app, "Level %d did not persist %s" % [level_number, expected_curio])
 		if not await _save(app, "progression-house-stage%d.png" % level_number):
