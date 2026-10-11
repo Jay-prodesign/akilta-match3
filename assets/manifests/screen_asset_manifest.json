@@ -1153,8 +1153,8 @@
       ],
       "reuse": "S03_curio_boutique",
       "priority": "P0",
-      "production_status": "required_by_golden_loop_not_yet_produced",
-      "technical_policy": "raster_only_no_svg_fallback",
+      "production_status": "candidate_runtime_connected_raster",
+      "technical_policy": "authored_raster_only_no_svg_fallback",
       "architecture_owned": true,
       "contract_owners": [
         {
@@ -1166,7 +1166,11 @@
             "default"
           ]
         }
-      ]
+      ],
+      "current_path": "assets/world/ch01_curio_boutique/chapter_route_curio_boutique.webp",
+      "current_runtime_dimensions": "1080x1500_webp",
+      "provenance": "AKILTA first-party generated environment candidate selected after canonical S03 ownership was locked",
+      "deprecated_candidate_path": "assets/world/ch01_curio_boutique/curio_boutique_moonlit_backdrop.svg"
     }
   ],
   "vertical_slice_art_policy": {
@@ -1183,7 +1187,8 @@
       "assets/world/ch01_curio_boutique/prestart_bg_curio_boutique.webp",
       "assets/world/ch01_curio_boutique/prestart_level01_cabinet.webp",
       "assets/world/ch01_curio_boutique/prestart_curio_boutique_shared.webp",
-      "assets/world/ch01_curio_boutique/gameplay_bg_curio_boutique.webp"
+      "assets/world/ch01_curio_boutique/gameplay_bg_curio_boutique.webp",
+      "assets/world/ch01_curio_boutique/chapter_route_curio_boutique.webp"
     ],
     "note": "Authored raster reference-slice candidates are wired into Godot with no SVG world-art fallback. Current repo copies are transport previews; they are not final-resolution approval assets.",
     "runtime_connected": [
@@ -1191,7 +1196,8 @@
       "prestart_bg_curio_boutique",
       "prestart_ch01_level01_art",
       "prestart_ch01_shared_art",
-      "gameplay_bg_curio_boutique"
+      "gameplay_bg_curio_boutique",
+      "chapter_route_curio_boutique"
     ]
   },
   "architecture_contract": "content/product/screen_state_architecture.json",
