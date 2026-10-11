@@ -7,7 +7,6 @@ const ITEMS := [
 	{"label": "☾ MAP", "id": "map"},
 	{"label": "✧ EVENTS", "id": "events"},
 	{"label": "◇ SHOP", "id": "shop"},
-	{"label": "♙ PROFILE", "id": "profile"},
 ]
 
 static func attach(screen: Control, active_section: String, handler: Callable, content_path: NodePath = NodePath("Layout")) -> PanelContainer:
@@ -19,7 +18,7 @@ static func attach(screen: Control, active_section: String, handler: Callable, c
 
 	var content := screen.get_node_or_null(content_path) as Control
 	if content != null and not bool(content.get_meta("product_nav_inset_applied", false)):
-		content.offset_bottom -= 70.0
+		content.offset_bottom -= 78.0
 		content.set_meta("product_nav_inset_applied", true)
 
 	var panel := PanelContainer.new()
@@ -30,14 +29,16 @@ static func attach(screen: Control, active_section: String, handler: Callable, c
 	panel.anchor_bottom = 1.0
 	panel.offset_left = 12.0
 	panel.offset_right = -12.0
-	panel.offset_top = -66.0
+	panel.offset_top = -76.0
 	panel.offset_bottom = -8.0
 	panel.z_index = 40
 	var shell := StyleBoxFlat.new()
-	shell.bg_color = Color("#0B0D17", 0.98)
-	shell.border_color = Color("#D5AD70", 0.76)
+	shell.bg_color = Color("#090810", 0.985)
+	shell.border_color = Color("#D5AD70", 0.82)
 	shell.set_border_width_all(1)
-	shell.set_corner_radius_all(10)
+	shell.set_corner_radius_all(12)
+	shell.shadow_color = Color(0, 0, 0, 0.44)
+	shell.shadow_size = 8
 	panel.add_theme_stylebox_override("panel", shell)
 	screen.add_child(panel)
 
@@ -60,9 +61,9 @@ static func attach(screen: Control, active_section: String, handler: Callable, c
 		button.name = "Nav" + action.capitalize()
 		button.text = String(item["label"])
 		button.tooltip_text = action.capitalize()
-		button.custom_minimum_size = Vector2(0, 46)
+		button.custom_minimum_size = Vector2(0, 54)
 		button.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-		button.add_theme_font_size_override("font_size", 13)
+		button.add_theme_font_size_override("font_size", 15)
 		button.add_theme_color_override("font_color", Color("#F4E5D3"))
 		button.add_theme_color_override("font_hover_color", Color("#FFF1D9"))
 		var normal := StyleBoxFlat.new()

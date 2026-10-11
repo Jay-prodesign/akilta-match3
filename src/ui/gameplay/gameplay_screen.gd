@@ -37,6 +37,7 @@ var haptics = HapticsController.new()
 var _potion_used_for_attempt := false
 var _level_badge_label: Label
 var _booster_tray: PanelContainer
+var _result_proclamation: Label
 
 @onready var world_backdrop: TextureRect = $WorldBackdrop
 @onready var eyebrow_label: Label = $Layout/Eyebrow
@@ -69,6 +70,7 @@ func _ready() -> void:
 	_build_top_resource_bar()
 	_build_booster_tray()
 	_build_bottom_navigation()
+	_build_result_proclamation()
 	if board_view.has_signal("swap_requested"):
 		board_view.swap_requested.connect(_on_swap_requested)
 	if board_view.has_signal("trace_motion_finished"):
@@ -339,6 +341,8 @@ func _show_result_if_terminal(result: String) -> void:
 			result_ritual.set("glow_strength", 0.75)
 			result_ritual.queue_redraw()
 		result_action.text = "RETURN TO THE HOUSE"
+		if _result_proclamation != null:
+			_result_proclamation.text = "The recovered Curio now changes the House."
 		if _booster_tray != null:
 			_booster_tray.visible = false
 		result_overlay.visible = true
@@ -355,6 +359,8 @@ func _show_result_if_terminal(result: String) -> void:
 			result_ritual.set("glow_strength", 0.12)
 			result_ritual.queue_redraw()
 		result_action.text = "TRY AGAIN"
+		if _result_proclamation != null:
+			_result_proclamation.text = "The Curio remains sealed. The ritual can be attempted again."
 		if _booster_tray != null:
 			_booster_tray.visible = false
 		result_overlay.visible = true
@@ -401,6 +407,44 @@ func _on_board_trace_motion_finished() -> void:
 	_pending_terminal_result = ""
 	_show_result_if_terminal(result)
 
+
+func _build_result_proclamation() -> void:
+	var content := get_node_or_null("ResultOverlay/Card/Content") as VBoxContainer
+	if content == null or content.get_node_or_null("ResultProclamation") != null:
+		return
+	var row := HBoxContainer.new()
+	row.name = "ResultProclamation"
+	row.custom_minimum_size = Vector2(0, 72)
+	row.alignment = BoxContainer.ALIGNMENT_CENTER
+	row.add_theme_constant_override("separation", 10)
+	var house_index := result_house_change.get_index()
+	content.add_child(row)
+	content.move_child(row, house_index + 1)
+	var cat := TextureRect.new()
+	cat.name = "KeeperCat"
+	cat.custom_minimum_size = Vector2(64, 64)
+	cat.texture = PieceAssetLoader.ornament("res://assets/pieces/black_cat.svg")
+	cat.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+	cat.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+	cat.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	row.add_child(cat)
+	var copy := VBoxContainer.new()
+	copy.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	copy.alignment = BoxContainer.ALIGNMENT_CENTER
+	row.add_child(copy)
+	var kicker := Label.new()
+	kicker.text = "THE HOUSE REMEMBERS"
+	kicker.add_theme_color_override("font_color", Color("#D5AD70"))
+	kicker.add_theme_font_size_override("font_size", 14)
+	copy.add_child(kicker)
+	var proclamation := Label.new()
+	proclamation.name = "ResultProclamationCopy"
+	proclamation.text = "A Curio has returned to its place."
+	proclamation.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	proclamation.add_theme_color_override("font_color", Color("#F4E5D3"))
+	proclamation.add_theme_font_size_override("font_size", 18)
+	copy.add_child(proclamation)
+	_result_proclamation = proclamation
 
 func _install_candidate_divider() -> void:
 	var layout := get_node_or_null("Layout")

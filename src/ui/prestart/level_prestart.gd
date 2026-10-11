@@ -20,6 +20,7 @@ var level_number: int = 1
 
 func _ready() -> void:
 	_install_world_backdrop()
+	_build_ritual_aids()
 	_style_ritual_actions()
 	start_button.pressed.connect(func(): start_requested.emit(level_number))
 	back_button.pressed.connect(func(): back_requested.emit())
@@ -32,9 +33,75 @@ func _install_world_backdrop() -> void:
 	art.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_COVERED
 	art.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	art.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	art.modulate = Color(0.78, 0.70, 0.80, 0.34)
+	art.modulate = Color(0.88, 0.76, 0.82, 0.46)
 	add_child(art)
 	move_child(art, 1)
+
+func _build_ritual_aids() -> void:
+	var content := get_node_or_null("Layout/Card/Content") as VBoxContainer
+	if content == null or content.get_node_or_null("RitualAids") != null:
+		return
+	var panel := PanelContainer.new()
+	panel.name = "RitualAids"
+	panel.custom_minimum_size = Vector2(0, 94)
+	var shell := StyleBoxFlat.new()
+	shell.bg_color = Color("#120D18", 0.94)
+	shell.border_color = Color("#D5AD70", 0.46)
+	shell.set_border_width_all(1)
+	shell.set_corner_radius_all(12)
+	shell.content_margin_left = 10
+	shell.content_margin_right = 10
+	shell.content_margin_top = 8
+	shell.content_margin_bottom = 8
+	panel.add_theme_stylebox_override("panel", shell)
+	var start_index := start_button.get_index()
+	content.add_child(panel)
+	content.move_child(panel, start_index)
+	var column := VBoxContainer.new()
+	column.add_theme_constant_override("separation", 5)
+	panel.add_child(column)
+	var heading := Label.new()
+	heading.name = "RitualAidsHeading"
+	heading.text = "RITUAL AIDS · AVAILABLE IN LEVEL"
+	heading.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	heading.add_theme_color_override("font_color", Color("#D5AD70"))
+	heading.add_theme_font_size_override("font_size", 14)
+	column.add_child(heading)
+	var row := HBoxContainer.new()
+	row.name = "AidRow"
+	row.add_theme_constant_override("separation", 6)
+	column.add_child(row)
+	for entry in [
+		{"label":"HINT", "art":"res://assets/pieces/moon_sigil.svg"},
+		{"label":"+3 MOVES", "art":"res://assets/pieces/potion.svg"},
+		{"label":"RETRY", "art":"res://assets/pieces/skull.svg"}
+	]:
+		var chip := PanelContainer.new()
+		chip.custom_minimum_size = Vector2(0, 48)
+		chip.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		var chip_style := StyleBoxFlat.new()
+		chip_style.bg_color = Color("#28142D", 0.96)
+		chip_style.border_color = Color("#D5AD70", 0.44)
+		chip_style.set_border_width_all(1)
+		chip_style.set_corner_radius_all(22)
+		chip.add_theme_stylebox_override("panel", chip_style)
+		row.add_child(chip)
+		var chip_row := HBoxContainer.new()
+		chip_row.alignment = BoxContainer.ALIGNMENT_CENTER
+		chip_row.add_theme_constant_override("separation", 4)
+		chip.add_child(chip_row)
+		var art := TextureRect.new()
+		art.custom_minimum_size = Vector2(30, 30)
+		art.texture = PieceAssetLoader.ornament(String(entry["art"]))
+		art.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+		art.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+		art.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		chip_row.add_child(art)
+		var caption := Label.new()
+		caption.text = String(entry["label"])
+		caption.add_theme_color_override("font_color", Color("#F4E5D3"))
+		caption.add_theme_font_size_override("font_size", 14)
+		chip_row.add_child(caption)
 
 func _style_ritual_actions() -> void:
 	var gold := Color("#D8B56A")
