@@ -67,6 +67,8 @@ static func attach(screen: Control, progress, profile_handler: Callable = Callab
 	profile.add_theme_stylebox_override("focus", profile_focus)
 	if profile_handler.is_valid():
 		profile.pressed.connect(profile_handler)
+	else:
+		profile.visible = false
 	row.add_child(profile)
 
 	refresh(panel, progress)
