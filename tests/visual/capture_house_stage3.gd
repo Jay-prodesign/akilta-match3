@@ -50,8 +50,19 @@ func _capture() -> void:
 		quit(1)
 		return
 	var play_button: Button = screen.get_node("Layout/PlayButton")
-	if play_button.text != "REVISIT CURIO MAP":
-		printerr("CAPTURE_FAIL: completed opening chapter must return to the Curio map")
+	if play_button.text != "REVISIT COMPLETED CURIO MAP":
+		printerr("CAPTURE_FAIL: completed opening chapter must return to the completed Curio map")
+		quit(1)
+		return
+	var completion_banner: PanelContainer = screen.get_node_or_null("Layout/ChapterCompletionBanner")
+	var completion_label: Label = screen.get_node_or_null("Layout/ChapterCompletionBanner/Label")
+	if completion_banner == null or not completion_banner.visible or completion_label == null or not completion_label.text.contains("OPENING CABINET SET COMPLETE"):
+		printerr("CAPTURE_FAIL: stage 3 House must visibly celebrate opening cabinet completion")
+		quit(1)
+		return
+	var chapter_status: Label = screen.get_node_or_null("ResourceBar/Resources/ChapterStatus")
+	if chapter_status == null or chapter_status.text != "✦ OPENING SET COMPLETE":
+		printerr("CAPTURE_FAIL: completed House resource bar must expose opening-set completion")
 		quit(1)
 		return
 
