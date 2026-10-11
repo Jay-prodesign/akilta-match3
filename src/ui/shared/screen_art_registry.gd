@@ -6,8 +6,8 @@ extends RefCounted
 const ART := {
 	"hub_bg_grandhall": "res://assets/world/ch01_curio_boutique/hub_bg_grandhall.webp",
 	"prestart_bg_curio_boutique": "res://assets/world/ch01_curio_boutique/prestart_bg_curio_boutique.webp",
-	"prestart_ch01_level01_art": "res://assets/world/ch01_curio_boutique/prestart_bg_curio_boutique.webp",
-	"prestart_ch01_shared_art": "res://assets/world/ch01_curio_boutique/prestart_bg_curio_boutique.webp",
+	"prestart_ch01_level01_art": "res://assets/world/ch01_curio_boutique/prestart_level01_cabinet.webp",
+	"prestart_ch01_shared_art": "res://assets/world/ch01_curio_boutique/prestart_curio_boutique_shared.webp",
 	"gameplay_bg_curio_boutique": "res://assets/world/ch01_curio_boutique/gameplay_bg_curio_boutique.webp",
 }
 

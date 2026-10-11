@@ -374,11 +374,12 @@
       ],
       "reuse": "Level1_prestart",
       "priority": "P0",
-      "production_status": "produced_integrated_reference_slice_v01",
-      "current_path": "assets/world/ch01_curio_boutique/prestart_bg_curio_boutique.webp",
+      "production_status": "candidate_runtime_connected_raster",
+      "current_path": "assets/world/ch01_curio_boutique/prestart_level01_cabinet.webp",
       "deprecated_candidate_path": "assets/world/ch01_curio_boutique/ch01_prestart_moonlit_cabinet_v01.svg",
-      "technical_policy": "authored_raster_only_no_svg_fallback",
-      "current_runtime_dimensions": "420x747_source_cropped_by_runtime"
+      "technical_policy": "raster_only_no_svg_fallback",
+      "current_runtime_dimensions": "420x747_source_cropped_by_runtime",
+      "source_resolution": "240x180 transport preview; production-resolution master retained outside repo pending binary handoff"
     },
     {
       "asset_id": "piece_moon",
@@ -519,11 +520,12 @@
       ],
       "reuse": "Gameplay_ch01",
       "priority": "P0",
-      "production_status": "produced_integrated_reference_slice_v01",
+      "production_status": "candidate_runtime_connected_raster",
       "current_path": "assets/world/ch01_curio_boutique/gameplay_bg_curio_boutique.webp",
       "deprecated_candidate_path": "assets/world/ch01_curio_boutique/ch01_world_gameplay_level01_v01.svg",
-      "technical_policy": "authored_raster_only_no_svg_fallback",
-      "current_runtime_dimensions": "420x747_webp_review_runtime"
+      "technical_policy": "raster_only_no_svg_fallback",
+      "current_runtime_dimensions": "420x747_webp_review_runtime",
+      "source_resolution": "200x356 transport preview; production-resolution master retained outside repo pending binary handoff"
     },
     {
       "asset_id": "gameplay_board_frame",
@@ -772,10 +774,36 @@
       ],
       "reuse": "Prestart_ch01",
       "priority": "P0",
-      "production_status": "produced_integrated_reference_slice_v01",
+      "production_status": "candidate_runtime_connected_raster",
       "current_path": "assets/world/ch01_curio_boutique/prestart_bg_curio_boutique.webp",
-      "technical_policy": "authored_raster_only_no_svg_fallback",
-      "current_runtime_dimensions": "420x747_webp_review_runtime"
+      "technical_policy": "raster_only_no_svg_fallback",
+      "current_runtime_dimensions": "420x747_webp_review_runtime",
+      "source_resolution": "200x356 transport preview; production-resolution master retained outside repo pending binary handoff"
+    },
+    {
+      "asset_id": "prestart_ch01_shared_art",
+      "screen": [
+        "S04"
+      ],
+      "block": "primary_ritual_panel",
+      "slot": "level_art",
+      "state": [
+        "level02",
+        "level03"
+      ],
+      "type": "content_artwork",
+      "dimensions": "1024x768_master",
+      "aspect_ratio": "4:3",
+      "transparent": false,
+      "variants": [
+        "shared_opening_levels"
+      ],
+      "reuse": "Opening_prestart",
+      "priority": "P0",
+      "production_status": "candidate_runtime_connected_raster",
+      "current_path": "assets/world/ch01_curio_boutique/prestart_curio_boutique_shared.webp",
+      "source_resolution": "240x180 transport preview; production-resolution master retained outside repo pending binary handoff",
+      "technical_policy": "raster_only_no_svg_fallback"
     }
   ],
   "vertical_slice_art_policy": {
@@ -790,11 +818,17 @@
     "current_integrated_raster_assets": [
       "assets/world/ch01_curio_boutique/hub_bg_grandhall.webp",
       "assets/world/ch01_curio_boutique/prestart_bg_curio_boutique.webp",
+      "assets/world/ch01_curio_boutique/prestart_level01_cabinet.webp",
+      "assets/world/ch01_curio_boutique/prestart_curio_boutique_shared.webp",
       "assets/world/ch01_curio_boutique/gameplay_bg_curio_boutique.webp"
     ],
-    "note": "These are authored raster reference-slice v01 assets wired into Godot. Legacy SVG world art remains deprecated and is not a runtime fallback for S01/S04/S05.",
+    "note": "Authored raster reference-slice candidates are wired into Godot with no SVG world-art fallback. Current repo copies are transport previews; they are not final-resolution approval assets.",
     "runtime_connected": [
-      "hub_bg_grandhall"
+      "hub_bg_grandhall",
+      "prestart_bg_curio_boutique",
+      "prestart_ch01_level01_art",
+      "prestart_ch01_shared_art",
+      "gameplay_bg_curio_boutique"
     ]
   }
 }
