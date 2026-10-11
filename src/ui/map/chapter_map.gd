@@ -8,6 +8,7 @@ signal level_requested(level_number: int)
 @export var visible_route_levels: int = 10
 
 @onready var chapter_progress: Label = $Layout/Progress
+@onready var intro: Label = $Layout/Intro
 @onready var scroll: ScrollContainer = $Layout/RoutePanel/Scroll
 @onready var route_view: Control = $Layout/RoutePanel/Scroll/RouteView
 @onready var back_button: Button = $Layout/Back
@@ -36,7 +37,15 @@ func _refresh() -> void:
 	if not is_node_ready():
 		return
 	var completed: int = int(progress.completed_levels.size()) if progress != null else 0
-	chapter_progress.text = "CURIO BOUTIQUE  ·  %d / %d DISPLAYS AWAKENED" % [mini(completed, canonical_level_cap), canonical_level_cap]
+	var awakened := mini(completed, canonical_level_cap)
+	chapter_progress.text = "CURIO BOUTIQUE  ·  %d / %d DISPLAYS AWAKENED" % [awakened, canonical_level_cap]
+	if intro != null:
+		if canonical_level_cap > 0 and awakened >= canonical_level_cap:
+			intro.text = "The opening cabinet set is restored. Revisit any awakened ritual while the upper cabinets remain sealed."
+		elif awakened > 0:
+			intro.text = "%d of %d displays are awake. The next cabinet has opened; continue the Curio Boutique ritual." % [awakened, canonical_level_cap]
+		else:
+			intro.text = "Complete the opening three rituals to restore the first cabinet set. Upper cabinets remain visible but sealed for later journeys."
 	route_view.set_progress(progress)
 
 func _focus_frontier() -> void:

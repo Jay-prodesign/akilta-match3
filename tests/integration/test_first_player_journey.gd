@@ -237,6 +237,20 @@ func _run() -> void:
 			_expect(app.progress.curios.has("thorned_locket"), "Level 3 must grant Thorned Locket")
 			_expect(int(app.progress.house_stage) >= 3, "Level 3 must restore House stage 3")
 			_expect(not app.show_prestart(4), "Level 4 must remain inaccessible after Level 3 win")
+			_expect(app.show_chapters(), "completed opening chapter must reopen chapter selection")
+			await process_frame
+			app.current_screen().get_node("Layout/ChapterGrid/CurioBoutiqueButton").emit_signal("pressed")
+			await process_frame
+			var completed_map = app.current_screen()
+			var completed_progress: Label = completed_map.get_node("Layout/Progress")
+			var completed_intro: Label = completed_map.get_node("Layout/Intro")
+			_expect(completed_progress.text.contains("3 / 3"), "completed Curio Boutique map must show 3 / 3 displays awakened")
+			_expect(completed_intro.text.begins_with("The opening cabinet set is restored"), "completed map must stop instructing the player to restore already-awakened displays")
+			var completed_route = completed_map.get_node("Layout/RoutePanel/Scroll/RouteView")
+			_expect(completed_route.get_node("Label2").text.contains("MOTH RELIQUARY RECOVERED"), "completed Level 2 map node must preserve its Curio consequence")
+			_expect(completed_route.get_node("Label3").text.contains("THORNED LOCKET RECOVERED"), "completed Level 3 map node must preserve its Curio consequence")
+			_expect(completed_map.get_level_button(4) != null and completed_map.get_level_button(4).disabled, "completed opening chapter must keep Level 4 sealed")
+			_expect(app.show_house(), "completed map must return safely to House")
 		else:
 			_expect(app.show_house(), "unfinished Level 3 must safely return to House")
 	else:
