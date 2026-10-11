@@ -6,11 +6,47 @@ signal continue_requested
 const ScreenArt = preload("res://src/ui/shared/screen_art_registry.gd")
 
 @onready var enter_button: Button = $Layout/Enter
+@onready var progress_label: Label = $Layout/BootState/Progress
+@onready var recovery_message: Label = $Layout/BootState/RecoveryMessage
+@onready var boot_state_panel: PanelContainer = $Layout/BootState
+
+var _boot_state: String = "loading"
 
 func _ready() -> void:
 	_install_splash_art()
 	_style_enter_button()
 	enter_button.pressed.connect(func(): continue_requested.emit())
+	set_boot_state("loading")
+
+func boot_state() -> String:
+	return _boot_state
+
+func set_boot_state(state: String, message: String = "") -> void:
+	if state not in ["loading", "ready", "recoverable_error"]:
+		return
+	_boot_state = state
+	match state:
+		"loading":
+			progress_label.visible = true
+			progress_label.text = "WAKING THE HOUSE…"
+			recovery_message.visible = false
+			enter_button.visible = false
+			enter_button.disabled = true
+		"ready":
+			progress_label.visible = true
+			progress_label.text = "THE HOUSE IS READY"
+			recovery_message.visible = false
+			enter_button.text = "ENTER THE HOUSE"
+			enter_button.visible = true
+			enter_button.disabled = false
+		"recoverable_error":
+			progress_label.visible = true
+			progress_label.text = "THE HOUSE RECOVERED SAFELY"
+			recovery_message.visible = true
+			recovery_message.text = message if message != "" else "A local save issue was recovered. Review the restored state before continuing."
+			enter_button.text = "CONTINUE TO THE HOUSE"
+			enter_button.visible = true
+			enter_button.disabled = false
 
 func _install_splash_art() -> void:
 	var texture := ScreenArt.texture("splash_bg_curio_boutique")
@@ -24,7 +60,6 @@ func _install_splash_art() -> void:
 	art.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	art.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	add_child(art)
-	# Authored world art sits below the existing Backdrop shade and UI.
 	move_child(art, 0)
 	var shade := get_node_or_null("Backdrop")
 	if shade is ColorRect:
