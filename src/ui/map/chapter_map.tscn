@@ -4,16 +4,18 @@
 [ext_resource type="Script" path="res://src/ui/map/chapter_route_view.gd" id="2_route"]
 
 [sub_resource type="StyleBoxFlat" id="Panel"]
-bg_color = Color(0.055, 0.043, 0.066, 0.98)
-border_width_left = 1
-border_width_top = 1
-border_width_right = 1
-border_width_bottom = 1
-border_color = Color(0.851, 0.71, 0.416, 0.34)
-corner_radius_top_left = 24
-corner_radius_top_right = 24
-corner_radius_bottom_right = 24
-corner_radius_bottom_left = 24
+bg_color = Color(0.035, 0.026, 0.045, 0.86)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.851, 0.71, 0.416, 0.72)
+corner_radius_top_left = 18
+corner_radius_top_right = 18
+corner_radius_bottom_right = 18
+corner_radius_bottom_left = 18
+shadow_color = Color(0, 0, 0, 0.58)
+shadow_size = 18
 
 [sub_resource type="StyleBoxFlat" id="Back"]
 bg_color = Color(0.12, 0.09, 0.14, 1)
@@ -53,29 +55,33 @@ theme_override_constants/separation = 10
 
 [node name="Eyebrow" type="Label" parent="Layout"]
 layout_mode = 2
-theme_override_colors/font_color = Color(0.663, 0.6, 0.659, 1)
-theme_override_font_sizes/font_size = 18
+theme_override_colors/font_color = Color(0.84, 0.73, 0.66, 1)
+theme_override_colors/font_outline_color = Color(0.03, 0.02, 0.04, 0.9)
+theme_override_constants/outline_size = 3
+theme_override_font_sizes/font_size = 20
 text = "THE HOUSE · CHAPTER I"
 horizontal_alignment = 1
 
 [node name="Title" type="Label" parent="Layout"]
 layout_mode = 2
-theme_override_colors/font_color = Color(0.945, 0.91, 0.866, 1)
-theme_override_font_sizes/font_size = 34
+theme_override_colors/font_color = Color(0.975, 0.91, 0.79, 1)
+theme_override_colors/font_outline_color = Color(0.03, 0.02, 0.04, 0.94)
+theme_override_constants/outline_size = 5
+theme_override_font_sizes/font_size = 42
 text = "Curio Boutique"
 horizontal_alignment = 1
 
 [node name="Progress" type="Label" parent="Layout"]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.851, 0.71, 0.416, 1)
-theme_override_font_sizes/font_size = 18
+theme_override_font_sizes/font_size = 20
 text = "CURIO BOUTIQUE · 0 / 3 DISPLAYS AWAKENED"
 horizontal_alignment = 1
 
 [node name="Intro" type="Label" parent="Layout"]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.851, 0.804, 0.835, 1)
-theme_override_font_sizes/font_size = 16
+theme_override_font_sizes/font_size = 17
 text = "Complete the opening three rituals to restore the first cabinet set. Upper cabinets remain visible but sealed for later journeys."
 horizontal_alignment = 1
 autowrap_mode = 2

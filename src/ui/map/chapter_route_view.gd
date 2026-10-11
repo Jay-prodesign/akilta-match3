@@ -7,6 +7,9 @@ const GOLD := Color("#D8B56A")
 const LILAC := Color("#BFA5D8")
 const BONE := Color("#F1E8DD")
 const PLUM := Color("#241A27")
+const CYAN := Color("#9BBED0")
+const ROSE := Color("#C98BA8")
+const PieceAssetLoader = preload("res://src/match3/presentation/piece_asset_loader.gd")
 
 @export var canonical_level_cap: int = 1
 @export var visible_route_levels: int = 10
@@ -54,8 +57,10 @@ func _build_route() -> void:
 	future_caption.size = Vector2(route_width * 0.76, 44.0)
 	future_caption.text = "UPPER CABINETS · SEALED FOR LATER"
 	future_caption.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	future_caption.add_theme_font_size_override("font_size", 18)
-	future_caption.add_theme_color_override("font_color", Color("#A993AE"))
+	future_caption.add_theme_font_size_override("font_size", 19)
+	future_caption.add_theme_color_override("font_color", Color("#D7B9D8"))
+	future_caption.add_theme_color_override("font_outline_color", Color("#090711", 0.92))
+	future_caption.add_theme_constant_override("outline_size", 3)
 	add_child(future_caption)
 
 	for level_number in range(1, visible_route_levels + 1):
@@ -78,8 +83,18 @@ func _build_route() -> void:
 		label.size = Vector2(280.0, 88.0)
 		label.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
 		label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-		label.add_theme_font_size_override("font_size", 24 if level_number == 1 else 22)
-		label.add_theme_color_override("font_color", BONE if level_number == 1 else Color("#D7CAD9"))
+		label.add_theme_font_size_override("font_size", 25 if level_number == 1 else 23)
+		label.add_theme_color_override("font_color", BONE if level_number == 1 else Color("#E0D2E2"))
+		label.add_theme_color_override("font_outline_color", Color("#07060B", 0.94))
+		label.add_theme_constant_override("outline_size", 3)
+		var label_plate := StyleBoxFlat.new()
+		label_plate.bg_color = Color("#100B16", 0.82)
+		label_plate.border_color = Color(GOLD, 0.30)
+		label_plate.set_border_width_all(1)
+		label_plate.set_corner_radius_all(10)
+		label_plate.content_margin_left = 12
+		label_plate.content_margin_right = 12
+		label.add_theme_stylebox_override("normal", label_plate)
 		label.visible = level_number <= 3
 		var on_right := center.x < route_width * 0.50
 		if on_right:
@@ -90,6 +105,8 @@ func _build_route() -> void:
 			label.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
 		add_child(label)
 		_level_labels[level_number] = label
+		if level_number <= 3:
+			_add_relic_art(level_number, center, diameter, on_right)
 
 	queue_redraw()
 
@@ -108,6 +125,26 @@ func _center_for(level_number: int, content_height: float) -> Vector2:
 			if future_index < 4:
 				return Vector2(route_width * (0.20 + float(future_index) * 0.20), 158.0)
 			return Vector2(route_width * (0.30 + float(future_index - 4) * 0.20), 250.0)
+
+func _add_relic_art(level_number: int, center: Vector2, diameter: float, label_on_right: bool) -> void:
+	var paths := {
+		1: "res://assets/curios/ch01_curio_moon_cameo_awakened_v01.svg",
+		2: "res://assets/curios/ch01_curio_moth_reliquary.svg",
+		3: "res://assets/curios/ch01_curio_thorned_locket.svg",
+	}
+	var art := TextureRect.new()
+	art.name = "RelicArt%d" % level_number
+	art.texture = PieceAssetLoader.ornament(String(paths.get(level_number, "")))
+	art.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+	art.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+	art.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	art.custom_minimum_size = Vector2(108, 108)
+	art.size = Vector2(108, 108)
+	var side := -1.0 if label_on_right else 1.0
+	art.position = center + Vector2(side * (diameter * 0.5 + 82.0), -54.0) - Vector2(54, 0)
+	art.modulate = Color(1, 1, 1, 0.94)
+	add_child(art)
+	move_child(art, max(0, get_child_count() - 3))
 
 func _request(level_number: int) -> void:
 	if level_number <= canonical_level_cap and (progress == null or level_number <= int(progress.highest_level_unlocked)):
@@ -180,44 +217,78 @@ func _apply_node_style(button: Button, completed: bool, open: bool) -> void:
 
 func _draw() -> void:
 	var content := Rect2(Vector2.ZERO, size)
-	draw_rect(content, Color("#0D0A10"), true)
+	draw_rect(content, Color("#090711", 0.82), true)
 
+	# A tall reliquary arch lets the underlying House art remain perceptible.
 	var wall := Rect2(22.0, 24.0, maxf(0.0, size.x - 44.0), maxf(0.0, size.y - 48.0))
-	draw_rect(wall, Color("#151019"), true)
-	draw_rect(wall, Color(GOLD, 0.15), false, 2.0)
+	draw_rect(wall, Color("#151019", 0.72), true)
+	draw_rect(wall, Color(GOLD, 0.28), false, 2.0)
+	var arch_center := Vector2(size.x * 0.50, 260.0)
+	draw_arc(arch_center, size.x * 0.43, PI, TAU, 72, Color(GOLD, 0.22), 3.0)
+	draw_arc(arch_center, size.x * 0.39, PI, TAU, 72, Color(LILAC, 0.12), 2.0)
+	draw_line(Vector2(size.x * 0.07, 260.0), Vector2(size.x * 0.07, size.y - 60.0), Color(GOLD, 0.10), 2.0)
+	draw_line(Vector2(size.x * 0.93, 260.0), Vector2(size.x * 0.93, size.y - 60.0), Color(GOLD, 0.10), 2.0)
 
-	var future_zone := Rect2(size.x * 0.08, 70.0, size.x * 0.84, 210.0)
-	draw_rect(future_zone, Color("#110E15", 0.72), true)
-	draw_rect(future_zone, Color(LILAC, 0.13), false, 1.2)
+	# Moon window / sealed upper cabinets.
+	var future_zone := Rect2(size.x * 0.08, 70.0, size.x * 0.84, 230.0)
+	draw_rect(future_zone, Color("#0D0A12", 0.70), true)
+	draw_rect(future_zone, Color(LILAC, 0.16), false, 1.2)
+	var moon_center := Vector2(size.x * 0.50, 194.0)
+	for i in range(4, 0, -1):
+		draw_circle(moon_center, 52.0 + float(i) * 18.0, Color(LILAC, 0.010 + 0.010 * float(i)))
+	draw_arc(moon_center, 66.0, 0.0, TAU, 52, Color(GOLD, 0.30), 2.0)
+	draw_circle(moon_center - Vector2(8, 0), 42.0, Color("#B7A5D0", 0.18))
+	draw_circle(moon_center + Vector2(11, -5), 39.0, Color("#0D0A12", 0.84))
 
-	var moon_center := Vector2(size.x * 0.50, 195.0)
-	draw_circle(moon_center, 82.0, Color(LILAC, 0.050))
-	draw_arc(moon_center, 64.0, 0.0, TAU, 52, Color(GOLD, 0.18), 2.0)
+	# Future nodes are tiny sealed cabinet doors rather than equal-weight levels.
+	for level_number in range(4, visible_route_levels + 1):
+		var fc := get_level_center(level_number)
+		var cabinet := Rect2(fc - Vector2(38, 46), Vector2(76, 92))
+		draw_rect(cabinet, Color("#100C14", 0.90), true)
+		draw_rect(cabinet, Color(LILAC, 0.18), false, 1.1)
+		draw_arc(Vector2(fc.x, cabinet.position.y + 22), 23.0, PI, TAU, 22, Color(GOLD, 0.14), 1.2)
 
-	# The authored opening path gets the visual weight. Future content is a compact
-	# sealed cluster, not seven more equally important steps.
+	# The authored opening path gets nearly all visual weight.
 	for level_number in range(1, 3):
 		var a := get_level_center(level_number)
 		var b := get_level_center(level_number + 1)
-		draw_line(a, b, Color(GOLD, 0.46), 6.0, true)
-		var p := a.lerp(b, 0.5)
-		draw_circle(p, 11.0, PLUM)
-		draw_arc(p, 11.0, 0.0, TAU, 18, Color(GOLD, 0.52), 1.8)
+		draw_line(a, b, Color("#4B362A", 0.88), 10.0, true)
+		draw_line(a, b, Color(GOLD, 0.68), 4.0, true)
+		for step in [0.33, 0.66]:
+			var p := a.lerp(b, float(step))
+			draw_circle(p, 13.0, Color("#130D18"))
+			draw_arc(p, 13.0, 0.0, TAU, 24, Color(GOLD, 0.72), 2.0)
+			draw_circle(p, 3.0, Color("#F1D8A2"))
 
 	var future_hub := Vector2(route_width * 0.50, 385.0)
-	draw_line(get_level_center(3), future_hub, Color(GOLD, 0.16), 1.8, true)
-	draw_circle(future_hub, 7.0, PLUM)
-	draw_arc(future_hub, 7.0, 0.0, TAU, 18, Color(GOLD, 0.30), 1.2)
+	draw_line(get_level_center(3), future_hub, Color(GOLD, 0.26), 2.0, true)
+	draw_circle(future_hub, 9.0, PLUM)
+	draw_arc(future_hub, 9.0, 0.0, TAU, 18, Color(GOLD, 0.42), 1.5)
 	for level_number in range(4, visible_route_levels + 1):
-		draw_line(future_hub, get_level_center(level_number), Color(LILAC, 0.075), 1.0, true)
+		draw_line(future_hub, get_level_center(level_number), Color(LILAC, 0.095), 1.2, true)
 
+	# Three large display alcoves: each ritual is a physical place in the Boutique.
 	for level_number in range(1, 4):
 		var center := get_level_center(level_number)
-		var alcove := Rect2(center.x - 350.0, center.y - 100.0, 700.0, 200.0)
-		draw_rect(alcove, Color("#1C141F", 0.42), true)
-		draw_rect(alcove, Color(GOLD, 0.12 if level_number > 1 else 0.20), false, 1.3)
+		var accent := Color(GOLD, 0.26)
+		if level_number == 2:
+			accent = Color(CYAN, 0.26)
+		elif level_number == 3:
+			accent = Color(ROSE, 0.28)
+		var alcove := Rect2(center.x - 365.0, center.y - 112.0, 730.0, 224.0)
+		draw_rect(alcove, Color("#130D18", 0.64), true)
+		draw_rect(alcove, accent, false, 1.6)
+		var top_center := Vector2(alcove.get_center().x, alcove.position.y + 8)
+		draw_arc(top_center, alcove.size.x * 0.20, PI, TAU, 40, Color(GOLD, 0.20), 2.0)
+		# candle pools and a few dust sparks make the path feel inhabited.
+		for side in [-1.0, 1.0]:
+			var flame := Vector2(alcove.get_center().x + side * alcove.size.x * 0.40, alcove.end.y - 36.0)
+			draw_circle(flame, 34.0, Color(GOLD, 0.035))
+			draw_line(flame + Vector2(0, 8), flame + Vector2(0, 28), Color("#E7D4B4"), 5.0)
+			draw_colored_polygon(PackedVector2Array([flame + Vector2(0,-14), flame + Vector2(7,1), flame + Vector2(0,8), flame + Vector2(-7,1)]), Color("#F1B760"))
 
 	var first_center := get_level_center(1)
-	var threshold := Rect2(size.x * 0.25, first_center.y + 112.0, size.x * 0.50, 42.0)
-	draw_rect(threshold, Color("#211725"), true)
-	draw_line(threshold.position, threshold.position + Vector2(threshold.size.x, 0), Color(GOLD, 0.30), 1.7)
+	var threshold := Rect2(size.x * 0.24, first_center.y + 118.0, size.x * 0.52, 48.0)
+	draw_rect(threshold, Color("#211725", 0.92), true)
+	draw_line(threshold.position, threshold.position + Vector2(threshold.size.x, 0), Color(GOLD, 0.46), 2.0)
+	draw_line(Vector2(threshold.position.x + 30, threshold.end.y), Vector2(threshold.end.x - 30, threshold.end.y), Color(GOLD, 0.12), 1.0)
