@@ -102,6 +102,26 @@ func _capture() -> void:
 			screen.queue_free()
 			quit(1)
 			return
+		var result_name: Label = screen.get_node("ResultOverlay/Card/Content/RewardName")
+		var result_eyebrow: Label = screen.get_node("ResultOverlay/Card/Content/Eyebrow")
+		var result_house_change: Label = screen.get_node("ResultOverlay/Card/Content/HouseChange")
+		var expected_name := "MOTH RELIQUARY · RECOVERED" if level_number == 2 else "THORNED LOCKET · RECOVERED"
+		var expected_relic := "RELIC 02" if level_number == 2 else "RELIC 03"
+		if result_name.text != expected_name or not result_eyebrow.text.ends_with(expected_relic):
+			printerr("CAPTURE_FAIL: Level %d result identifies the wrong Curio" % level_number)
+			screen.queue_free()
+			quit(1)
+			return
+		if level_number == 2 and not result_house_change.text.contains("Moth Reliquary"):
+			printerr("CAPTURE_FAIL: Level 2 result does not explain its House consequence")
+			screen.queue_free()
+			quit(1)
+			return
+		if level_number == 3 and not result_house_change.text.contains("Thorned Locket"):
+			printerr("CAPTURE_FAIL: Level 3 result does not explain its House consequence")
+			screen.queue_free()
+			quit(1)
+			return
 		await process_frame
 		var result_image: Image = screen.get_viewport().get_texture().get_image()
 		var result_path := ProjectSettings.globalize_path("res://artifacts/level%d-result.png" % level_number)

@@ -311,6 +311,7 @@ func _show_result_if_terminal(result: String) -> void:
 		_pending_win = true
 		result_title.text = current_win_title
 		result_detail.text = current_win_detail
+		_configure_result_reward_copy(true)
 		if result_ritual != null:
 			result_ritual.set("mode", "result")
 			result_ritual.set("relic_id", current_reward_curio)
@@ -324,12 +325,39 @@ func _show_result_if_terminal(result: String) -> void:
 		_pending_win = false
 		result_title.text = "THE ROOM WAITS"
 		result_detail.text = "The House keeps its secrets. Try another arrangement."
+		_configure_result_reward_copy(false)
 		if result_ritual != null:
 			result_ritual.set("mode", "fail")
+			result_ritual.set("relic_id", current_reward_curio)
 			result_ritual.set("glow_strength", 0.12)
 			result_ritual.queue_redraw()
 		result_action.text = "TRY AGAIN"
 		result_overlay.visible = true
+
+func _configure_result_reward_copy(won: bool) -> void:
+	var reward_name := current_reward_curio.replace("_", " ").to_upper()
+	if reward_name == "":
+		reward_name = "HIDDEN CURIO"
+	if won:
+		var relic_number := maxi(1, current_house_stage_reward)
+		result_eyebrow.text = "CURIO RECOVERED · RELIC %02d" % relic_number
+		result_reward_name.text = "%s · %s" % [
+			reward_name,
+			"AWAKENED" if current_reward_curio == "moon_cameo" else "RECOVERED"
+		]
+		match current_house_stage_reward:
+			1:
+				result_house_change.text = "The first cabinet remembers the Moon Cameo."
+			2:
+				result_house_change.text = "The side cabinet opens for the Moth Reliquary."
+			3:
+				result_house_change.text = "The Thorned Locket takes its place in the first cabinet set."
+			_:
+				result_house_change.text = "The House makes room for this Curio."
+	else:
+		result_eyebrow.text = "RITUAL UNFINISHED"
+		result_reward_name.text = "%s · STILL SEALED" % reward_name
+		result_house_change.text = "No Curio is added to the House until this arrangement is completed."
 
 func _on_result_action_pressed() -> void:
 	if _pending_win:

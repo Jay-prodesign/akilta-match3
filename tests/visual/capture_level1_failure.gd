@@ -48,6 +48,15 @@ func _capture() -> void:
 	await _frames(2)
 	if not gameplay.result_overlay.visible:
 		return _fail(app, "failure overlay missing")
+	var failure_eyebrow: Label = gameplay.get_node("ResultOverlay/Card/Content/Eyebrow")
+	var failure_reward: Label = gameplay.get_node("ResultOverlay/Card/Content/RewardName")
+	var failure_house_change: Label = gameplay.get_node("ResultOverlay/Card/Content/HouseChange")
+	if failure_eyebrow.text != "RITUAL UNFINISHED":
+		return _fail(app, "failed Level 1 must not claim a recovered Curio")
+	if failure_reward.text != "MOON CAMEO · STILL SEALED":
+		return _fail(app, "failed Level 1 must keep the Moon Cameo sealed")
+	if not failure_house_change.text.begins_with("No Curio is added"):
+		return _fail(app, "failed Level 1 must explain that House progression was not granted")
 	if not await _save(app, "level1-fail-result.png"):
 		return
 
