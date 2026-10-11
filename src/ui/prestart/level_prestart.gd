@@ -140,7 +140,7 @@ func _style_ritual_actions() -> void:
 		button.add_theme_font_size_override("font_size", 24 if button == start_button else 19)
 		button.custom_minimum_size.y = maxf(button.custom_minimum_size.y, 58.0)
 
-func configure_level(value: int) -> bool:
+func configure_level(value: int, replay: bool = false) -> bool:
 	level_number = value
 	var path := "res://content/levels/ch01/level_%03d.json" % level_number
 	if not FileAccess.file_exists(path):
@@ -168,11 +168,17 @@ func configure_level(value: int) -> bool:
 		objective_label.text = "GOAL · AWAKEN THE DISPLAY"
 	var curio_id := String(data.get("reward_curio", "moon_cameo"))
 	var curio := curio_id.replace("_", " ").capitalize()
-	reward_label.text = "REWARD · %s" % curio.to_upper()
-	if note_label != null:
-		note_label.text = String(data.get("prestart_note", "Recover %s. The House will remember this ritual when you return." % curio))
+	if replay:
+		reward_label.text = "OWNED CURIO · %s" % curio.to_upper()
+		if note_label != null:
+			note_label.text = "Replay this ritual for the puzzle itself. The Curio, House restoration and persistent rewards are already secured."
+	else:
+		reward_label.text = "REWARD · %s" % curio.to_upper()
+		if note_label != null:
+			note_label.text = String(data.get("prestart_note", "Recover %s. The House will remember this ritual when you return." % curio))
 	if ritual_art != null:
 		ritual_art.set("relic_id", curio_id)
+		ritual_art.set("mode", "replay" if replay else "prestart")
 		var level_art := ritual_art.get_node_or_null("LevelArtwork") as TextureRect
 		if level_art != null:
 			level_art.visible = true

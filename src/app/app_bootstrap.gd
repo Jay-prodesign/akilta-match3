@@ -104,7 +104,9 @@ func show_prestart(level_number: int) -> bool:
 		return false
 	var screen: Node = PrestartScene.instantiate()
 	_show_screen(screen)
-	if not screen.configure_level(level_number):
+	var level_id := String((level_data as Dictionary).get("id", ""))
+	var is_replay := progress.completed_levels.has(level_id)
+	if not screen.configure_level(level_number, is_replay):
 		# Recover to House if prestart configuration fails.
 		_ensure_house_route()
 		return false

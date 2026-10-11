@@ -117,6 +117,13 @@ func _run() -> void:
 	await process_frame
 	_expect(relaunched.show_prestart(1), "completed Level 1 must remain replayable from its route node")
 	await process_frame
+	var replay_prestart = relaunched.current_screen()
+	var replay_prestart_reward: Label = replay_prestart.get_node("Layout/Card/Content/Reward")
+	var replay_prestart_note: Label = replay_prestart.get_node("Layout/Card/Content/Note")
+	var replay_prestart_art: Control = replay_prestart.get_node("Layout/Card/Content/RitualArt")
+	_expect(replay_prestart_reward.text.begins_with("OWNED CURIO"), "replay pre-start must not present an already-owned Curio as a new reward")
+	_expect(replay_prestart_note.text.contains("persistent rewards are already secured"), "replay pre-start must truthfully explain exactly-once reward semantics")
+	_expect(String(replay_prestart_art.get("mode")) == "replay", "replay pre-start must render the owned Curio state instead of the sealed state")
 	_expect(relaunched.start_level(1), "completed Level 1 replay must enter gameplay")
 	await process_frame
 	var replay = relaunched.current_screen()
