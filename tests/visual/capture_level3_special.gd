@@ -22,6 +22,17 @@ func _capture() -> void:
 		printerr("CAPTURE_FAIL: Level 3 teaching move did not create special")
 		quit(1)
 		return
+	var board_view = screen.get_node_or_null("Layout/BoardView")
+	if board_view == null:
+		printerr("CAPTURE_FAIL: Level 3 board view missing")
+		quit(1)
+		return
+	# Capture the settled player-visible special state, not the first animation
+	# frame where the resolver is already final but presentation intentionally
+	# still shows the pre-move snapshot.
+	if board_view.has_method("is_motion_active") and bool(board_view.is_motion_active()):
+		await board_view.trace_motion_finished
+	await process_frame
 	await process_frame
 
 	var viewport: Viewport = screen.get_viewport()
