@@ -18,6 +18,8 @@ on:
       - "src/ui/collection/**"
       - "src/world/**"
       - "src/ui/shared/screen_art_registry.gd"
+      - "src/match3/presentation/**"
+      - "assets/pieces/**"
       - "assets/manifests/screen_asset_manifest.json"
       - "assets/world/ch01_curio_boutique/**"
   # Expensive rendered verification is milestone-based. Functional CI runs
@@ -99,6 +101,9 @@ jobs:
           test -s artifacts/progression-house-stage1.png
           test -s artifacts/progression-house-stage2.png
           test -s artifacts/progression-house-stage3.png
+          test -s artifacts/progression-level1-gameplay.png
+          test -s artifacts/progression-level2-gameplay.png
+          test -s artifacts/progression-level3-gameplay.png
           test -s artifacts/progression-final-reliquary.png
           test -s artifacts/progression-final-events.png
           test -s artifacts/progression-final-shop.png
@@ -128,6 +133,9 @@ jobs:
             artifacts/progression-house-stage1.png
             artifacts/progression-house-stage2.png
             artifacts/progression-house-stage3.png
+            artifacts/progression-level1-gameplay.png
+            artifacts/progression-level2-gameplay.png
+            artifacts/progression-level3-gameplay.png
             artifacts/progression-map-before-level1.png
             artifacts/progression-map-before-level2.png
             artifacts/progression-map-before-level3.png

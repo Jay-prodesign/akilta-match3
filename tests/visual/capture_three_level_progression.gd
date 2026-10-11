@@ -243,6 +243,8 @@ func _play_level(app: Node, level_number: int) -> bool:
 	if String(gameplay.current_level_id) != "ch01_level_%03d" % level_number:
 		_fail(app, "wrong authored gameplay loaded for Level %d" % level_number)
 		return false
+	if not await _save(app, "progression-level%d-gameplay.png" % level_number):
+		return false
 	var file := FileAccess.open("res://content/levels/ch01/level_%03d.json" % level_number, FileAccess.READ)
 	if file == null:
 		_fail(app, "Level %d content file missing" % level_number)
