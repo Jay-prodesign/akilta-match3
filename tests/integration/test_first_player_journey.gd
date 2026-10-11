@@ -129,8 +129,7 @@ func _run() -> void:
 	await process_frame
 
 	# Founder-authorized internal review unlocks Level 2 after Level 1, but keeps Level 4+ sealed.
-	var house_after_win = app.current_screen()
-	house_after_win.get_node("Layout/PlayButton").emit_signal("pressed")
+	_expect(app.show_chapters(), "House must reopen chapter selection for internal review")
 	await process_frame
 	var chapters_after_win = app.current_screen()
 	chapters_after_win.get_node("Layout/ChapterGrid/CurioBoutiqueButton").emit_signal("pressed")
@@ -165,7 +164,7 @@ func _run() -> void:
 		await process_frame
 		_expect(int(app.progress.highest_level_unlocked) == 3, "Level 2 win must unlock Level 3")
 		_expect(app.progress.curios.has("moth_reliquary"), "Level 2 reward must persist")
-		app.current_screen().get_node("Layout/PlayButton").emit_signal("pressed")
+		_expect(app.show_chapters(), "House must reopen chapter selection after Level 2")
 		await process_frame
 		app.current_screen().get_node("Layout/ChapterGrid/CurioBoutiqueButton").emit_signal("pressed")
 		await process_frame
