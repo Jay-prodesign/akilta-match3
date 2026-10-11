@@ -215,7 +215,7 @@ func show_restoration_ceremony(curio_id: String, stage: int) -> void:
 
 	var art := TextureRect.new()
 	art.name = "RestoredCurioArt"
-	art.custom_minimum_size = Vector2(124, 124)
+	art.custom_minimum_size = Vector2(184, 184)
 	art.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
 	art.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
 	art.texture = _curio_texture(curio_id)
