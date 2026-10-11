@@ -155,6 +155,13 @@ func _play_level(app: Node, level_number: int) -> bool:
 		_fail(app, "Chapter map missing before Level %d" % level_number)
 		return false
 	var map = app.current_screen()
+	var route_view = map.get_node_or_null("Layout/RoutePanel/Scroll/RouteView")
+	if route_view == null:
+		_fail(app, "Chapter route view missing before Level %d" % level_number)
+		return false
+	if route_view.get_level_center(10).y >= 230.0 or route_view.get_level_center(3).y <= 300.0:
+		_fail(app, "Future cabinets must stay compact above the authored opening trio")
+		return false
 	var level_button: Button = map.get_level_button(level_number)
 	if level_button == null or level_button.disabled:
 		_fail(app, "Level %d is not progression-unlocked" % level_number)

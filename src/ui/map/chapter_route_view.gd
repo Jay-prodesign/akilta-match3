@@ -12,7 +12,7 @@ const PLUM := Color("#241A27")
 @export var visible_route_levels: int = 10
 @export var route_width: float = 460.0
 @export var top_margin: float = 120.0
-@export var bottom_margin: float = 125.0
+@export var bottom_margin: float = 92.0
 
 var progress
 var _level_buttons: Dictionary = {}
@@ -44,7 +44,7 @@ func _build_route() -> void:
 	_level_labels.clear()
 	_centers.clear()
 
-	var content_height := 1180.0
+	var content_height := 820.0
 	custom_minimum_size = Vector2(route_width, content_height)
 	size = custom_minimum_size
 
@@ -64,7 +64,7 @@ func _build_route() -> void:
 
 		var button := Button.new()
 		button.name = "Level%d" % level_number
-		var diameter := 108.0 if level_number == 1 else (100.0 if level_number <= 3 else 42.0)
+		var diameter := 108.0 if level_number == 1 else (100.0 if level_number <= 3 else 36.0)
 		button.position = center - Vector2.ONE * diameter * 0.5
 		button.size = Vector2.ONE * diameter
 		button.focus_mode = Control.FOCUS_ALL
@@ -99,14 +99,16 @@ func _center_for(level_number: int, content_height: float) -> Vector2:
 		1:
 			return Vector2(route_width * 0.50, base_y)
 		2:
-			return Vector2(route_width * 0.37, base_y - 170.0)
+			return Vector2(route_width * 0.36, base_y - 165.0)
 		3:
-			return Vector2(route_width * 0.62, base_y - 340.0)
+			return Vector2(route_width * 0.63, base_y - 330.0)
 		_:
-			var future_index := float(level_number - 4)
-			var x := route_width * 0.50 + sin(future_index * 1.17) * 55.0
-			var y := base_y - 440.0 - future_index * 79.0
-			return Vector2(x, y)
+			# Future Levels 4–10 remain present for progression contracts, but read as
+			# one sealed upper-cabinet cluster rather than a second competing journey.
+			var future_index := level_number - 4
+			if future_index < 4:
+				return Vector2(117.5 + float(future_index) * 75.0, 126.0)
+			return Vector2(140.0 + float(future_index - 4) * 90.0, 182.0)
 
 func _request(level_number: int) -> void:
 	if level_number <= canonical_level_cap and (progress == null or level_number <= int(progress.highest_level_unlocked)):
@@ -148,7 +150,7 @@ func _caption(level_number: int, completed: bool) -> String:
 func _apply_node_style(button: Button, completed: bool, open: bool) -> void:
 	var box := StyleBoxFlat.new()
 	var level_number := int(button.name.trim_prefix("Level"))
-	var radius := 54 if level_number == 1 else (50 if level_number <= 3 else 21)
+	var radius := 54 if level_number == 1 else (50 if level_number <= 3 else 18)
 	box.set_corner_radius_all(radius)
 	box.set_border_width_all(3 if level_number <= 3 else 1)
 	box.shadow_color = Color(0, 0, 0, 0.46)
@@ -175,7 +177,7 @@ func _apply_node_style(button: Button, completed: bool, open: bool) -> void:
 	button.add_theme_stylebox_override("disabled", box)
 	button.add_theme_color_override("font_color", BONE if open else Color("#B8A8BC"))
 	button.add_theme_color_override("font_disabled_color", Color("#8D7F93"))
-	button.add_theme_font_size_override("font_size", 34 if level_number == 1 else (29 if level_number <= 3 else 13))
+	button.add_theme_font_size_override("font_size", 34 if level_number == 1 else (29 if level_number <= 3 else 11))
 
 func _draw() -> void:
 	var content := Rect2(Vector2.ZERO, size)
@@ -185,24 +187,30 @@ func _draw() -> void:
 	draw_rect(wall, Color("#151019"), true)
 	draw_rect(wall, Color(GOLD, 0.15), false, 2.0)
 
-	var future_zone := Rect2(82.0, 70.0, size.x - 164.0, 545.0)
+	var future_zone := Rect2(54.0, 72.0, size.x - 108.0, 150.0)
 	draw_rect(future_zone, Color("#110E15", 0.72), true)
 	draw_rect(future_zone, Color(LILAC, 0.13), false, 1.2)
 
-	var moon_center := Vector2(size.x * 0.50, 96.0)
-	draw_circle(moon_center, 40.0, Color(LILAC, 0.08))
-	draw_arc(moon_center, 31.0, 0.0, TAU, 42, Color(GOLD, 0.26), 1.7)
+	var moon_center := Vector2(size.x * 0.50, 150.0)
+	draw_circle(moon_center, 46.0, Color(LILAC, 0.055))
+	draw_arc(moon_center, 35.0, 0.0, TAU, 42, Color(GOLD, 0.20), 1.5)
 
-	for level_number in range(1, visible_route_levels):
+	# The authored opening path gets the visual weight. Future content is a compact
+	# sealed cluster, not seven more equally important steps.
+	for level_number in range(1, 3):
 		var a := get_level_center(level_number)
 		var b := get_level_center(level_number + 1)
-		var route_color := Color(GOLD, 0.42 if level_number < 3 else 0.12)
-		var width := 4.0 if level_number < 3 else 1.5
-		draw_line(a, b, route_color, width, true)
+		draw_line(a, b, Color(GOLD, 0.46), 4.0, true)
 		var p := a.lerp(b, 0.5)
-		var seal_radius := 8.0 if level_number < 3 else 4.0
-		draw_circle(p, seal_radius, PLUM)
-		draw_arc(p, seal_radius, 0.0, TAU, 18, Color(GOLD, 0.48 if level_number < 3 else 0.18), 1.2)
+		draw_circle(p, 8.0, PLUM)
+		draw_arc(p, 8.0, 0.0, TAU, 18, Color(GOLD, 0.52), 1.2)
+
+	var future_hub := Vector2(route_width * 0.50, 238.0)
+	draw_line(get_level_center(3), future_hub, Color(GOLD, 0.16), 1.8, true)
+	draw_circle(future_hub, 7.0, PLUM)
+	draw_arc(future_hub, 7.0, 0.0, TAU, 18, Color(GOLD, 0.30), 1.2)
+	for level_number in range(4, visible_route_levels + 1):
+		draw_line(future_hub, get_level_center(level_number), Color(LILAC, 0.075), 1.0, true)
 
 	for level_number in range(1, 4):
 		var center := get_level_center(level_number)
