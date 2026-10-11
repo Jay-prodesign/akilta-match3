@@ -350,7 +350,7 @@ func show_feature_preview(feature: String) -> bool:
 		preferences.pressed.connect(func():
 			if is_instance_valid(overlay):
 				overlay.queue_free()
-		show_settings()
+			show_settings()
 		)
 	var back := Button.new()
 	back.name = "BackToHouse"
