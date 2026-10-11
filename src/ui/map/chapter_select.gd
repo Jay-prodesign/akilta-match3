@@ -191,7 +191,7 @@ func _refresh_progress_state() -> void:
 		state = "current_complete"
 		current.text = "CURIO BOUTIQUE\nRESTORED · 3 / 3 · FIRST CABINET SET"
 		current.tooltip_text = "Curio Boutique · first cabinet set restored · Levels 1–3 replayable"
-		_chapter_summary.text = "The first wing is restored. Revisit its rituals while the deeper House remains sealed."
+		_chapter_summary.text = "The opening wing is restored. Revisit its rituals while the deeper House remains sealed."
 		_lock_reason.text = "FIVE WINGS REMAIN SEALED · FUTURE CHAPTERS"
 	elif completed > 0:
 		state = "current_partial"
