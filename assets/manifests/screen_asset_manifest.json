@@ -296,10 +296,11 @@
       ],
       "reuse": "House_and_Restoration",
       "priority": "P0",
-      "production_status": "required_raster_not_produced",
-      "current_path": "assets/world/ch01_curio_boutique/hub_bg_grandhall.png",
+      "production_status": "produced_integrated_reference_slice_v01",
+      "current_path": "assets/world/ch01_curio_boutique/hub_bg_grandhall.webp",
       "deprecated_candidate_path": "assets/world/ch01_curio_boutique/ch01_world_house_hub_stage00_v01.svg",
-      "technical_policy": "raster_only_no_svg_fallback"
+      "technical_policy": "authored_raster_only_no_svg_fallback",
+      "current_runtime_dimensions": "450x500_webp_review_runtime"
     },
     {
       "asset_id": "hub_black_cat_character",
@@ -372,10 +373,11 @@
       ],
       "reuse": "Level1_prestart",
       "priority": "P0",
-      "production_status": "required_raster_not_produced",
-      "current_path": "assets/world/ch01_curio_boutique/prestart_level01_cabinet.png",
+      "production_status": "produced_integrated_reference_slice_v01",
+      "current_path": "assets/world/ch01_curio_boutique/prestart_bg_curio_boutique.webp",
       "deprecated_candidate_path": "assets/world/ch01_curio_boutique/ch01_prestart_moonlit_cabinet_v01.svg",
-      "technical_policy": "raster_only_no_svg_fallback"
+      "technical_policy": "authored_raster_only_no_svg_fallback",
+      "current_runtime_dimensions": "420x747_source_cropped_by_runtime"
     },
     {
       "asset_id": "piece_moon",
@@ -516,10 +518,11 @@
       ],
       "reuse": "Gameplay_ch01",
       "priority": "P0",
-      "production_status": "required_raster_not_produced",
-      "current_path": "assets/world/ch01_curio_boutique/gameplay_bg_curio_boutique.png",
+      "production_status": "produced_integrated_reference_slice_v01",
+      "current_path": "assets/world/ch01_curio_boutique/gameplay_bg_curio_boutique.webp",
       "deprecated_candidate_path": "assets/world/ch01_curio_boutique/ch01_world_gameplay_level01_v01.svg",
-      "technical_policy": "raster_only_no_svg_fallback"
+      "technical_policy": "authored_raster_only_no_svg_fallback",
+      "current_runtime_dimensions": "420x747_webp_review_runtime"
     },
     {
       "asset_id": "gameplay_board_frame",
@@ -768,9 +771,10 @@
       ],
       "reuse": "Prestart_ch01",
       "priority": "P0",
-      "production_status": "required_raster_not_produced",
-      "current_path": "assets/world/ch01_curio_boutique/prestart_bg_curio_boutique.png",
-      "technical_policy": "raster_only_no_svg_fallback"
+      "production_status": "produced_integrated_reference_slice_v01",
+      "current_path": "assets/world/ch01_curio_boutique/prestart_bg_curio_boutique.webp",
+      "technical_policy": "authored_raster_only_no_svg_fallback",
+      "current_runtime_dimensions": "420x747_webp_review_runtime"
     }
   ],
   "vertical_slice_art_policy": {
@@ -781,6 +785,12 @@
       "prestart_bg_curio_boutique",
       "prestart_ch01_level01_art",
       "gameplay_bg_curio_boutique"
-    ]
+    ],
+    "current_integrated_raster_assets": [
+      "assets/world/ch01_curio_boutique/hub_bg_grandhall.webp",
+      "assets/world/ch01_curio_boutique/prestart_bg_curio_boutique.webp",
+      "assets/world/ch01_curio_boutique/gameplay_bg_curio_boutique.webp"
+    ],
+    "note": "These are authored raster reference-slice v01 assets wired into Godot. Legacy SVG world art remains deprecated and is not a runtime fallback for S01/S04/S05."
   }
 }
