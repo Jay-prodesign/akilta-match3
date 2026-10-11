@@ -43,7 +43,7 @@ func _capture() -> void:
 	var active_wing: Button = chapters.get_node("Layout/ChapterGrid/CurioBoutiqueButton") as Button
 	if active_wing == null or active_wing.disabled:
 		return _fail(app, "Curio Boutique must be the only playable opening wing")
-	for chapter_id in ["witch_atelier", "dark_vanity", "grand_hall", "moon_conservatory", "cemetery_garden"]:
+	for chapter_id in ["witch_atelier", "dark_vanity", "archive", "moon_conservatory", "cemetery_garden"]:
 		var sealed_wing: Button = chapters.get_node_or_null("Layout/ChapterGrid/Chapter_" + chapter_id) as Button
 		if sealed_wing == null or not sealed_wing.disabled:
 			return _fail(app, "Unreleased chapter must remain visibly sealed: %s" % chapter_id)
