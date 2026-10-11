@@ -9,6 +9,7 @@ on:
       - "tests/visual/capture_level1_journey.gd"
       - "tests/visual/capture_level1_failure.gd"
       - "tests/visual/capture_three_level_progression.gd"
+      - "tests/visual/capture_level3_special.gd"
       - "src/app/**"
       - "src/ui/home/**"
       - "src/ui/splash/**"
@@ -112,6 +113,20 @@ jobs:
           test -s artifacts/progression-final-chapters.png
           test -s artifacts/progression-final-map.png
 
+      - name: Render Level 3 special-state proof
+        shell: bash
+        run: |
+          set -uo pipefail
+          set +e
+          output=$(LIBGL_ALWAYS_SOFTWARE=1 xvfb-run -a ./godot --audio-driver Dummy --path . -s res://tests/visual/capture_level3_special.gd 2>&1)
+          status=$?
+          set -e
+          printf '%s\n' "$output"
+          if [ "$status" -ne 0 ]; then exit "$status"; fi
+          if grep -Eq "SCRIPT ERROR:|(^| )ERROR:|CAPTURE_FAIL:" <<<"$output"; then exit 1; fi
+          grep -Fq "CAPTURE_PASS:" <<<"$output"
+          test -s artifacts/level3-line-special.png
+
       - name: Upload Golden Loop render evidence
         uses: actions/upload-artifact@v4
         with:
@@ -136,6 +151,7 @@ jobs:
             artifacts/progression-level1-gameplay.png
             artifacts/progression-level2-gameplay.png
             artifacts/progression-level3-gameplay.png
+            artifacts/level3-line-special.png
             artifacts/progression-map-before-level1.png
             artifacts/progression-map-before-level2.png
             artifacts/progression-map-before-level3.png
