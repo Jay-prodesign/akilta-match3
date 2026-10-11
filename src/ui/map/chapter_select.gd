@@ -66,7 +66,7 @@ func _ready() -> void:
 		{"id":"curio_boutique","name":"CURIO BOUTIQUE","detail":"Rare finds · Levels 1–3","open":true,"glyph":"✦","art":"res://assets/curios/ch01_curio_moon_cameo_awakened_v01.svg","x":0.03,"y":0.16,"w":0.44,"h":0.14},
 		{"id":"witch_atelier","name":"WITCH ATELIER","detail":"Potions & experiments","open":false,"glyph":"⚗","art":"res://assets/pieces/potion.svg","x":0.53,"y":0.24,"w":0.44,"h":0.14},
 		{"id":"dark_vanity","name":"DARK VANITY","detail":"Mirrors & secrets","open":false,"glyph":"☽","art":"res://assets/pieces/moon_sigil.svg","x":0.03,"y":0.37,"w":0.42,"h":0.14},
-		{"id":"grand_hall","name":"GRAND HALL","detail":"Your restored House","open":false,"glyph":"⌂","art":"res://assets/world/ch01_curio_boutique/curio_boutique_moonlit_backdrop.svg","x":0.53,"y":0.45,"w":0.43,"h":0.14},
+		{"id":"archive","name":"THE ARCHIVE","detail":"Forgotten stories","open":false,"glyph":"⌂","art":"res://assets/world/ch01_curio_boutique/curio_boutique_moonlit_backdrop.svg","x":0.53,"y":0.45,"w":0.43,"h":0.14},
 		{"id":"moon_conservatory","name":"MOON CONSERVATORY","detail":"Celestial botanicals","open":false,"glyph":"❋","art":"res://assets/pieces/thorn_rose.svg","x":0.53,"y":0.64,"w":0.44,"h":0.14},
 		{"id":"cemetery_garden","name":"CEMETERY GARDEN","detail":"Resting beauties","open":false,"glyph":"✧","art":"res://assets/pieces/crow.svg","x":0.03,"y":0.73,"w":0.44,"h":0.14}
 	]
@@ -96,7 +96,11 @@ func _ready() -> void:
 		box.shadow_color = Color(0, 0, 0, 0.55)
 		box.shadow_size = 8
 		button.add_theme_stylebox_override("normal", box)
-		button.add_theme_stylebox_override("hover", box)
+		var hover_box := box.duplicate() as StyleBoxFlat
+		hover_box.bg_color = Color("#493052") if bool(data["open"]) else box.bg_color
+		hover_box.border_color = Color("#FFE4AA") if bool(data["open"]) else box.border_color
+		button.add_theme_stylebox_override("hover", hover_box)
+		button.add_theme_stylebox_override("focus", hover_box)
 		button.add_theme_stylebox_override("disabled", box)
 		if bool(data["open"]):
 			button.pressed.connect(func(): chapter_requested.emit(String(data["id"])))
