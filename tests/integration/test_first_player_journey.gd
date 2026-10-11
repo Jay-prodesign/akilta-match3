@@ -251,6 +251,28 @@ func _run() -> void:
 			_expect(completed_route.get_node("Label3").text.contains("THORNED LOCKET RECOVERED"), "completed Level 3 map node must preserve its Curio consequence")
 			_expect(completed_map.get_level_button(4) != null and completed_map.get_level_button(4).disabled, "completed opening chapter must keep Level 4 sealed")
 			_expect(app.show_house(), "completed map must return safely to House")
+			var completed_house = app.current_screen()
+			var completion_banner: PanelContainer = completed_house.get_node_or_null("Layout/ChapterCompletionBanner")
+			var completion_label: Label = completed_house.get_node_or_null("Layout/ChapterCompletionBanner/Label")
+			_expect(completion_banner != null and completion_banner.visible, "completed House must show the opening cabinet completion banner")
+			_expect(completion_label != null and completion_label.text.contains("OPENING CABINET SET COMPLETE"), "completed House banner must name the opening cabinet completion")
+			_expect(app.show_feature_preview("Events"), "completed House must open Events")
+			await process_frame
+			var completed_event_progress: Label = app.get_node_or_null("ScreenHost/FeaturePreview/FeatureLayout/ChapterRitualProgress")
+			_expect(completed_event_progress != null and completed_event_progress.text.begins_with("OPENING RITUAL COMPLETE"), "Events must reflect the completed 3/3 opening ritual")
+			app.get_node("ScreenHost/FeaturePreview/FeatureLayout/BackToHouse").emit_signal("pressed")
+			await process_frame
+			_expect(app.show_feature_preview("Profile"), "completed House must open Profile")
+			await process_frame
+			var profile_preview = app.get_node_or_null("ScreenHost/FeaturePreview")
+			var profile_copy := ""
+			if profile_preview != null:
+				for label_node in profile_preview.find_children("", "Label", true, false):
+					profile_copy += (label_node as Label).text + "\n"
+			_expect(profile_copy.contains("FIRST CABINET SET RESTORED"), "Profile must summarize the completed opening chapter")
+			_expect(profile_copy.contains("OPENING RESTORATION COMPLETE"), "Profile must summarize the completed House restoration")
+			app.get_node("ScreenHost/FeaturePreview/FeatureLayout/BackToHouse").emit_signal("pressed")
+			await process_frame
 		else:
 			_expect(app.show_house(), "unfinished Level 3 must safely return to House")
 	else:
