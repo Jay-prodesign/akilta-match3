@@ -85,11 +85,16 @@ func _capture() -> void:
 			return _fail(app, "North Star piece asset did not load: %s" % family)
 	if not gameplay.show_pause():
 		return _fail(app, "Level 1 pause did not open")
+	var booster_tray: PanelContainer = gameplay.get_node_or_null("BoosterTray") as PanelContainer
+	if booster_tray == null or booster_tray.visible:
+		return _fail(app, "Pause must suspend the gameplay booster tray")
 	await _frames(2)
 	if not await _save(app, "journey-04b-level1-pause.png"):
 		return
 	if not gameplay.resume_level():
 		return _fail(app, "Level 1 pause did not resume")
+	if booster_tray == null or not booster_tray.visible:
+		return _fail(app, "Resume must restore the gameplay booster tray")
 	await _frames(2)
 	var trace = gameplay.attempt_swap(Vector2i(1, 4), Vector2i(2, 4))
 	if trace == null or not bool(trace.accepted) or String(trace.result) != "won":
@@ -100,6 +105,8 @@ func _capture() -> void:
 	await _frames(2)
 	if not gameplay.result_overlay.visible:
 		return _fail(app, "Level 1 result did not appear")
+	if booster_tray != null and booster_tray.visible:
+		return _fail(app, "Win result must hide gameplay-only boosters")
 	if not await _save(app, "journey-05-level1-result.png"):
 		return
 

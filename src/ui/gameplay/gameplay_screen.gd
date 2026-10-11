@@ -35,6 +35,7 @@ var _pending_hud_refresh: bool = false
 var haptics = HapticsController.new()
 var _potion_used_for_attempt := false
 var _level_badge_label: Label
+var _booster_tray: PanelContainer
 
 @onready var world_backdrop: TextureRect = $WorldBackdrop
 @onready var eyebrow_label: Label = $Layout/Eyebrow
@@ -123,6 +124,8 @@ func load_level_path(path: String, seed_value: int = 1001) -> bool:
 	_pending_hud_refresh = false
 	pause_overlay.visible = false
 	result_overlay.visible = false
+	if _booster_tray != null:
+		_booster_tray.visible = true
 	if result_ritual != null:
 		result_ritual.set("mode", "result")
 		result_ritual.set("relic_id", current_reward_curio)
@@ -183,12 +186,16 @@ func show_pause() -> bool:
 	if board_view.has_method("is_motion_active") and bool(board_view.is_motion_active()):
 		return false
 	pause_overlay.visible = true
+	if _booster_tray != null:
+		_booster_tray.visible = false
 	return true
 
 func resume_level() -> bool:
 	if not pause_overlay.visible:
 		return false
 	pause_overlay.visible = false
+	if _booster_tray != null:
+		_booster_tray.visible = true
 	return true
 
 func _on_pause_retry() -> void:
@@ -329,6 +336,8 @@ func _show_result_if_terminal(result: String) -> void:
 			result_ritual.set("glow_strength", 0.75)
 			result_ritual.queue_redraw()
 		result_action.text = "RETURN TO THE HOUSE"
+		if _booster_tray != null:
+			_booster_tray.visible = false
 		result_overlay.visible = true
 	elif result == "failed":
 		haptics.request_terminal("failed")
@@ -343,6 +352,8 @@ func _show_result_if_terminal(result: String) -> void:
 			result_ritual.set("glow_strength", 0.12)
 			result_ritual.queue_redraw()
 		result_action.text = "TRY AGAIN"
+		if _booster_tray != null:
+			_booster_tray.visible = false
 		result_overlay.visible = true
 
 func _configure_result_reward_copy(won: bool) -> void:
@@ -505,6 +516,7 @@ func _build_booster_tray() -> void:
 	shell.set_corner_radius_all(8)
 	panel.add_theme_stylebox_override("panel", shell)
 	add_child(panel)
+	_booster_tray = panel
 	var row := HBoxContainer.new()
 	row.add_theme_constant_override("separation", 6)
 	panel.add_child(row)

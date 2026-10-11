@@ -102,6 +102,12 @@ func _capture() -> void:
 			screen.queue_free()
 			quit(1)
 			return
+		var booster_tray: PanelContainer = screen.get_node_or_null("BoosterTray") as PanelContainer
+		if booster_tray != null and booster_tray.visible:
+			printerr("CAPTURE_FAIL: Level %d result must hide gameplay-only boosters" % level_number)
+			screen.queue_free()
+			quit(1)
+			return
 		var result_name: Label = screen.get_node("ResultOverlay/Card/Content/RewardName")
 		var result_eyebrow: Label = screen.get_node("ResultOverlay/Card/Content/Eyebrow")
 		var result_house_change: Label = screen.get_node("ResultOverlay/Card/Content/HouseChange")

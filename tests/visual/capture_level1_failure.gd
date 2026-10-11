@@ -48,6 +48,9 @@ func _capture() -> void:
 	await _frames(2)
 	if not gameplay.result_overlay.visible:
 		return _fail(app, "failure overlay missing")
+	var booster_tray: PanelContainer = gameplay.get_node_or_null("BoosterTray") as PanelContainer
+	if booster_tray != null and booster_tray.visible:
+		return _fail(app, "failure result must hide gameplay-only boosters")
 	var failure_eyebrow: Label = gameplay.get_node("ResultOverlay/Card/Content/Eyebrow")
 	var failure_reward: Label = gameplay.get_node("ResultOverlay/Card/Content/RewardName")
 	var failure_house_change: Label = gameplay.get_node("ResultOverlay/Card/Content/HouseChange")
@@ -65,6 +68,8 @@ func _capture() -> void:
 	await _frames(3)
 	if gameplay.result_overlay.visible or int(gameplay.board_state.moves_remaining) != int(level_data["moves"]):
 		return _fail(app, "retry did not restore clean Level 1")
+	if booster_tray == null or not booster_tray.visible:
+		return _fail(app, "retry must restore gameplay boosters")
 	if not await _save(app, "level1-retry-restored.png"):
 		return
 
