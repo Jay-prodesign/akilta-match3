@@ -29,10 +29,17 @@ static func texture(asset_id: String) -> Texture2D:
 	if not FileAccess.file_exists(asset_path):
 		push_error("Missing required production screen art: %s -> %s" % [asset_id, asset_path])
 		return null
-	var resource := load(asset_path) as Texture2D
-	if resource == null:
-		push_error("Failed to load production screen art: %s -> %s" % [asset_id, asset_path])
+	var image := Image.new()
+	var bytes := FileAccess.get_file_as_bytes(asset_path)
+	var err := ERR_FILE_UNRECOGNIZED
+	if extension == "png":
+		err = image.load_png_from_buffer(bytes)
+	elif extension == "webp":
+		err = image.load_webp_from_buffer(bytes)
+	if err != OK or image.is_empty():
+		push_error("Failed to decode production screen art: %s -> %s" % [asset_id, asset_path])
 		return null
+	var resource := ImageTexture.create_from_image(image)
 	_cache[asset_id] = resource
 	return resource
 
