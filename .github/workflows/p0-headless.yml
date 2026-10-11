@@ -29,6 +29,7 @@ on:
       - "tests/unit/test_save_progress.gd"
       - "tests/unit/test_first_party_shell.gd"
       - "tests/integration/test_first_player_journey.gd"
+      - "tests/integration/test_splash_boot_states.gd"
       - "tests/integration/test_chapter_select_states.gd"
       - "tests/integration/test_chapter_route_frontier.gd"
       - "tests/integration/test_restoration_presentation.gd"
@@ -65,6 +66,18 @@ jobs:
         shell: bash
         run: |
           timeout 30s ./godot --headless --path . -s res://tests/unit/test_bootstrap.gd
+
+      - name: Run S00 boot state contract
+        shell: bash
+        run: |
+          set +e
+          output=$(timeout 35s ./godot --headless --path . -s res://tests/integration/test_splash_boot_states.gd 2>&1)
+          status=$?
+          set -e
+          printf '%s\n' "$output"
+          if [ "$status" -ne 0 ]; then exit "$status"; fi
+          if grep -Eq "SCRIPT ERROR:|(^| )ERROR:|TEST_FAIL:" <<<"$output"; then exit 1; fi
+          grep -Fq "TEST_PASS: S00 boot loading ready and recovery contract" <<<"$output"
 
       - name: Run canonical screen-state architecture contract
         shell: bash
