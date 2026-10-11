@@ -6,7 +6,7 @@ on:
       - p0/bootstrap
     paths:
       - ".github/workflows/p0-visual.yml"
-  # Milestone trigger: balanced three-relic Reliquary + real 3/3 progression evidence (2026-10-11).
+  # Milestone trigger: progression-aware chapter select from 0/3 to restored 3/3 (2026-10-11).
   # Run the full milestone checks deliberately, not on every development commit.
   workflow_dispatch:
 
@@ -82,6 +82,7 @@ jobs:
           test -s artifacts/progression-final-reliquary.png
           test -s artifacts/progression-final-events.png
           test -s artifacts/progression-final-profile.png
+          test -s artifacts/progression-final-chapters.png
           test -s artifacts/progression-final-map.png
 
       - name: Render Level 1 fail and retry
@@ -206,6 +207,7 @@ jobs:
             artifacts/progression-final-reliquary.png
             artifacts/progression-final-events.png
             artifacts/progression-final-profile.png
+            artifacts/progression-final-chapters.png
             artifacts/progression-final-map.png
           if-no-files-found: error
           retention-days: 14
