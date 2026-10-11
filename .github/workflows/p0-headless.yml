@@ -19,6 +19,7 @@ on:
       - "src/world/**"
       - "src/match3/presentation/**"
       - "assets/pieces/**"
+      - "assets/curios/**"
       - "src/ui/shared/**"
       - "assets/manifests/screen_contracts.json"
       - "assets/manifests/screen_asset_manifest.json"

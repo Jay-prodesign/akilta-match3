@@ -22,6 +22,7 @@ on:
       - "src/ui/shared/**"
       - "src/match3/presentation/**"
       - "assets/pieces/**"
+      - "assets/curios/**"
       - "assets/manifests/screen_asset_manifest.json"
       - "assets/world/ch01_curio_boutique/**"
   # Expensive rendered verification is milestone-based. Functional CI runs
