@@ -21,6 +21,7 @@ const HouseState = preload("res://src/world/house_state.gd")
 var progress
 var available_level_count: int = 1
 var _dock_buttons: Dictionary = {}
+var _chapter_status: Label
 
 func _ready() -> void:
 	play_button.pressed.connect(_on_play_pressed)
@@ -58,6 +59,9 @@ func _refresh() -> void:
 	else:
 		curio_label.text = "DORMANT DISPLAY"
 	collection_button.text = "RELIQUARY · %d / 3" % owned_curios.size()
+	if _chapter_status != null:
+		var finished: int = mini(progress.completed_levels.size(), available_level_count) if progress != null else 0
+		_chapter_status.text = "✦ %d / %d RITUALS" % [finished, available_level_count]
 	var next_level := int(progress.highest_level_unlocked) if progress != null else 1
 	var has_started: bool = progress != null and not progress.completed_levels.is_empty()
 	var level1_completed: bool = progress != null and progress.completed_levels.has("ch01_level_001")
@@ -158,7 +162,7 @@ func _build_resource_bar() -> void:
 	row.alignment = BoxContainer.ALIGNMENT_CENTER
 	row.add_theme_constant_override("separation", 22)
 	panel.add_child(row)
-	for value in ["☾ CURIO BOUTIQUE", "✦ CHAPTER ONE", "◇ PREVIEW"]:
+	for value in ["☾ CURIO HOUSE", "✦ CHAPTER ONE", "✧ 0 / 3 RITUALS"]:
 		var label := Label.new()
 		label.text = value
 		label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
@@ -167,3 +171,5 @@ func _build_resource_bar() -> void:
 		label.add_theme_font_size_override("font_size", 16)
 		label.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 		row.add_child(label)
+		if value.begins_with("✧"):
+			_chapter_status = label
