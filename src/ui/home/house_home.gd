@@ -13,6 +13,7 @@ signal restoration_finished
 const HouseState = preload("res://src/world/house_state.gd")
 const ProductNavigation = preload("res://src/ui/shared/product_navigation.gd")
 const TopResourceBar = preload("res://src/ui/shared/top_resource_bar.gd")
+const PieceAssetLoader = preload("res://src/match3/presentation/piece_asset_loader.gd")
 
 @onready var room_view = $Layout/RoomView
 @onready var headline: Label = $Layout/Headline
@@ -298,13 +299,7 @@ func _curio_texture(curio_id: String) -> Texture2D:
 		path = "res://assets/curios/ch01_curio_moth_reliquary.svg"
 	elif curio_id == "thorned_locket":
 		path = "res://assets/curios/ch01_curio_thorned_locket.svg"
-	var file := FileAccess.open(path, FileAccess.READ)
-	if file == null:
-		return null
-	var image := Image.new()
-	var err := image.load_svg_from_string(file.get_as_text(), 1.0)
-	file.close()
-	return ImageTexture.create_from_image(image) if err == OK and not image.is_empty() else null
+	return PieceAssetLoader.ornament(path)
 
 func _curio_name(curio_id: String) -> String:
 	match curio_id:
