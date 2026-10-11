@@ -1050,15 +1050,51 @@
         "complete"
       ],
       "type": "content_artwork",
-      "dimensions": "1024x576_master",
-      "aspect_ratio": "16:9",
+      "dimensions": "512x512_state_reuse_candidate",
+      "aspect_ratio": "1:1",
       "transparent": false,
       "variants": [
-        "per_event"
+        "event_center_hero",
+        "weekly_offline_reward"
       ],
-      "reuse": "event_specific",
-      "priority": "P2",
-      "production_status": "blocked_until_golden_loop_acceptance"
+      "reuse": "retention_family_truthful_existing_curio_art",
+      "priority": "P1",
+      "production_status": "runtime_connected_owned_content_art_candidate",
+      "current_path": "assets/curios/ch01_curio_moon_cameo_awakened_v01.webp",
+      "architecture_owned": true,
+      "contract_owners": [
+        {
+          "screen": "S09",
+          "region": "missions",
+          "block": "mission_list",
+          "slot": "reward",
+          "states": [
+            "locked",
+            "claimable",
+            "claimed"
+          ]
+        },
+        {
+          "screen": "S10",
+          "region": "events",
+          "block": "event_cards",
+          "slot": "hero_art",
+          "states": [
+            "live",
+            "coming_soon",
+            "locked",
+            "completed"
+          ]
+        }
+      ],
+      "state_paths": {
+        "event_center_completed": "assets/curios/ch01_curio_moon_cameo_awakened_v01.webp",
+        "event_center_coming_soon": "assets/curios/ch01_curio_moon_cameo_sealed_v01.webp",
+        "weekly_offline_locked": "assets/curios/ch01_curio_moon_cameo_sealed_v01.webp",
+        "weekly_live_reward": "reserved_until_live_mission_data_exists"
+      },
+      "technical_policy": "existing_first_party_content_art_only__no_fabricated_event_or_reward_state",
+      "provenance": "AKILTA first-party Moon Cameo art is deliberately reused as a truthful retention-family content anchor after Golden Loop acceptance. It does not represent a live event, claimable reward, price or countdown; live-specific event artwork remains unavailable until real content exists."
     },
     {
       "asset_id": "shop_offer_art",

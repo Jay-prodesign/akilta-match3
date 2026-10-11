@@ -248,7 +248,7 @@ func show_weekly_missions() -> bool:
 	layout.add_child(timer)
 	var empty := PanelContainer.new()
 	empty.name = "MissionEmptyState"
-	empty.custom_minimum_size = Vector2(0, 390)
+	empty.custom_minimum_size = Vector2(0, 430)
 	var empty_style := StyleBoxFlat.new()
 	empty_style.bg_color = Color("#14101B", 0.97)
 	empty_style.border_color = Color("#9B6FA6", 0.72)
@@ -269,8 +269,8 @@ func show_weekly_missions() -> bool:
 	empty.add_child(empty_content)
 	var emblem := TextureRect.new()
 	emblem.name = "MissionRewardArt"
-	emblem.custom_minimum_size = Vector2(0, 170)
-	emblem.texture = PieceAssetLoader.ornament("res://assets/pieces/moon_sigil.svg")
+	emblem.custom_minimum_size = Vector2(0, 210)
+	emblem.texture = PieceAssetLoader.ornament("res://assets/curios/ch01_curio_moon_cameo_sealed_v01.svg")
 	emblem.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
 	emblem.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
 	emblem.mouse_filter = Control.MOUSE_FILTER_IGNORE
@@ -453,7 +453,7 @@ func show_feature_preview(feature: String) -> bool:
 
 	var hero := PanelContainer.new()
 	hero.name = "FeatureHero"
-	hero.custom_minimum_size = Vector2(0, 150)
+	hero.custom_minimum_size = Vector2(0, 190) if is_events else Vector2(0, 150)
 	var hero_style := StyleBoxFlat.new()
 	hero_style.bg_color = Color("#171321", 0.96)
 	hero_style.border_color = Color("#9B6FA6", 0.82) if is_events else (Color("#D5AD70", 0.86) if not is_profile else Color("#8796C7", 0.82))
@@ -474,7 +474,7 @@ func show_feature_preview(feature: String) -> bool:
 	if is_events:
 		var event_hero_art := TextureRect.new()
 		event_hero_art.name = "EventHeroArt"
-		event_hero_art.custom_minimum_size = Vector2(150, 128)
+		event_hero_art.custom_minimum_size = Vector2(190, 160)
 		event_hero_art.texture = PieceAssetLoader.ornament("res://assets/curios/ch01_curio_moon_cameo_awakened_v01.svg")
 		event_hero_art.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
 		event_hero_art.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
@@ -601,7 +601,7 @@ func show_feature_preview(feature: String) -> bool:
 		var card := PanelContainer.new()
 		card_index += 1
 		card.name = "FeatureCard%d" % card_index
-		card.custom_minimum_size = Vector2(0, 190)
+		card.custom_minimum_size = Vector2(0, 210) if is_events else Vector2(0, 190)
 		var panel_style := StyleBoxFlat.new()
 		panel_style.bg_color = Color("#171321")
 		panel_style.border_color = Color("#9B6FA6", 0.58) if is_events else (Color("#D5AD70", 0.62) if not is_profile else Color("#8796C7", 0.58))
@@ -621,7 +621,7 @@ func show_feature_preview(feature: String) -> bool:
 		card.add_child(row)
 		var card_art := TextureRect.new()
 		card_art.name = "CardArt%d" % card_index
-		card_art.custom_minimum_size = Vector2(96, 96)
+		card_art.custom_minimum_size = Vector2(116, 116) if is_events else Vector2(96, 96)
 		card_art.texture = PieceAssetLoader.ornament(String(entry.get("art", "")))
 		card_art.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
 		card_art.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
@@ -694,9 +694,9 @@ func show_feature_preview(feature: String) -> bool:
 	layout.add_child(back)
 	back.pressed.connect(_dismiss_feature_preview)
 	_install_product_navigation(overlay, feature.to_lower(), NodePath("FeatureLayout"))
-	# Secondary destinations intentionally use only contract-owned structural UI
-	# while their content art/economy/event assets are unavailable. Do not decorate
-	# locked shells with unrelated world or piece artwork.
+	# Retention/meta destinations may use only contract-owned first-party content
+	# art. Live event/economy truth remains unavailable, so visual richness must
+	# never imply a claimable reward, price, countdown or active event.
 	return true
 
 func show_settings() -> bool:
