@@ -261,6 +261,7 @@ func show_weekly_missions() -> bool:
 	empty.add_theme_stylebox_override("panel", empty_style)
 	layout.add_child(empty)
 	var empty_content := VBoxContainer.new()
+	empty_content.name = "EmptyContent"
 	empty_content.alignment = BoxContainer.ALIGNMENT_CENTER
 	empty_content.add_theme_constant_override("separation", 10)
 	empty.add_child(empty_content)
