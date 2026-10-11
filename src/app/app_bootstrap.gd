@@ -483,7 +483,7 @@ func show_feature_preview(feature: String) -> bool:
 	elif not is_profile:
 		var shop_hero_art := TextureRect.new()
 		shop_hero_art.name = "ShopFeaturedOfferArt"
-		shop_hero_art.custom_minimum_size = Vector2(150, 128)
+		shop_hero_art.custom_minimum_size = Vector2(190, 160)
 		shop_hero_art.texture = PieceAssetLoader.ornament("res://assets/curios/ch01_curio_moth_reliquary.svg")
 		shop_hero_art.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
 		shop_hero_art.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
@@ -592,16 +592,16 @@ func show_feature_preview(feature: String) -> bool:
 		]
 	else:
 		entries = [
-			{"icon":"◉", "art":"res://assets/pieces/pentagram.svg", "title":"CANDLELIGHT KIT", "body":"A future soft-currency cabinet for restoration supplies.", "status":"SEALED · ECONOMY PREVIEW ONLY"},
-			{"icon":"◇", "art":"res://assets/pieces/potion.svg", "title":"MOONSTONE CACHE", "body":"A future premium-currency cabinet. No price or payment flow is active.", "status":"SEALED · NO REAL-MONEY PURCHASES"},
-			{"icon":"✦", "art":"res://assets/curios/ch01_curio_moth_reliquary.svg", "title":"RESTORER'S RELIQUARY", "body":"A future curated bundle surface for boosters and curios.", "status":"SEALED · STORE NOT CONNECTED"}
+			{"icon":"◉", "art":"res://assets/curios/ch01_curio_moon_cameo_sealed_v01.svg", "title":"CANDLELIGHT KIT", "body":"A future soft-currency cabinet for restoration supplies.", "status":"SEALED · ECONOMY PREVIEW ONLY"},
+			{"icon":"◇", "art":"res://assets/curios/ch01_curio_moth_reliquary.svg", "title":"MOONSTONE CACHE", "body":"A future premium-currency cabinet. No price or payment flow is active.", "status":"SEALED · NO REAL-MONEY PURCHASES"},
+			{"icon":"✦", "art":"res://assets/curios/ch01_curio_thorned_locket.svg", "title":"RESTORER'S RELIQUARY", "body":"A future curated bundle surface for boosters and curios.", "status":"SEALED · STORE NOT CONNECTED"}
 		]
 	var card_index := 0
 	for entry in entries:
 		var card := PanelContainer.new()
 		card_index += 1
 		card.name = "FeatureCard%d" % card_index
-		card.custom_minimum_size = Vector2(0, 210) if is_events else Vector2(0, 190)
+		card.custom_minimum_size = Vector2(0, 210) if is_events else (Vector2(0, 205) if not is_profile else Vector2(0, 190))
 		var panel_style := StyleBoxFlat.new()
 		panel_style.bg_color = Color("#171321")
 		panel_style.border_color = Color("#9B6FA6", 0.58) if is_events else (Color("#D5AD70", 0.62) if not is_profile else Color("#8796C7", 0.58))
@@ -621,7 +621,7 @@ func show_feature_preview(feature: String) -> bool:
 		card.add_child(row)
 		var card_art := TextureRect.new()
 		card_art.name = "CardArt%d" % card_index
-		card_art.custom_minimum_size = Vector2(116, 116) if is_events else Vector2(96, 96)
+		card_art.custom_minimum_size = Vector2(116, 116) if is_events else (Vector2(112, 112) if not is_profile else Vector2(96, 96))
 		card_art.texture = PieceAssetLoader.ornament(String(entry.get("art", "")))
 		card_art.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
 		card_art.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED

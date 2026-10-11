@@ -1109,22 +1109,50 @@
       "screen": [
         "S11"
       ],
-      "block": "offer_card",
+      "block": "featured_offer",
       "slot": "offer_art",
       "state": [
         "available",
-        "disabled"
+        "unavailable",
+        "review_disabled"
       ],
       "type": "content_artwork",
-      "dimensions": "768x768_master",
+      "dimensions": "512x512_state_reuse_candidate",
       "aspect_ratio": "1:1",
       "transparent": true,
       "variants": [
-        "per_offer"
+        "featured_sealed_preview",
+        "cabinet_preview_moon",
+        "cabinet_preview_moth",
+        "cabinet_preview_locket"
       ],
-      "reuse": "offer_specific",
-      "priority": "P3",
-      "production_status": "blocked_until_commercial_contract"
+      "reuse": "shop_review_disabled_truthful_existing_curio_art",
+      "priority": "P1",
+      "production_status": "runtime_connected_owned_content_art_review_disabled",
+      "current_path": "assets/curios/ch01_curio_moth_reliquary.png",
+      "architecture_owned": true,
+      "contract_owners": [
+        {
+          "screen": "S11",
+          "region": "catalog",
+          "block": "featured_offer",
+          "slot": "offer_art",
+          "states": [
+            "available",
+            "unavailable",
+            "review_disabled"
+          ]
+        }
+      ],
+      "state_paths": {
+        "featured_review_disabled": "assets/curios/ch01_curio_moth_reliquary.png",
+        "cabinet_preview_moon": "assets/curios/ch01_curio_moon_cameo_sealed_v01.webp",
+        "cabinet_preview_moth": "assets/curios/ch01_curio_moth_reliquary.png",
+        "cabinet_preview_locket": "assets/curios/ch01_curio_thorned_locket.png",
+        "available": "reserved_until_real_catalog_and_commerce_exist"
+      },
+      "technical_policy": "existing_first_party_content_art_only__review_disabled_never_implies_purchase_availability",
+      "provenance": "AKILTA first-party opening Curio art is reused only as sealed internal-review Shop preview artwork. It does not represent a purchasable SKU, price, bundle entitlement, catalog availability or payment state."
     },
     {
       "asset_id": "prestart_bg_curio_boutique",
