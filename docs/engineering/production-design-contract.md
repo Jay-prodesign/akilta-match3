@@ -127,7 +127,24 @@ Use risk-based, milestone-level review rather than micro-approval:
 The current procedural pieces, board styling and Curio Boutique drawing are production-direction prototypes. The architecture is intentionally separable enough that approved final assets/tokens/motion can replace presentation without replacing deterministic gameplay authority.
 
 
-## Current Execution Sequence — D-026
+## Screen-First Production Override — 2026-10-11
+
+The visual implementation sequence is now controlled by:
+- `docs/product/screen-first-visual-production-pipeline.md`
+- `docs/product/screen-contracts.md`
+- `docs/product/global-ui-shell-design-system.md`
+- `assets/manifests/screen_asset_manifest.json`
+
+These files supersede any older asset-first sequencing in this document.
+
+Do not generate or polish an isolated background, icon, game piece, frame, decoration or complete phone screenshot without an explicit Screen → Region → Block → Slot → State owner.
+
+The first visual proof target is the complete reference vertical slice:
+**House Hub → Level Pre-start → Gameplay → Win/Rewards → House Restoration → House Hub**.
+
+Only after that slice validates the global shell, reusable component grammar, content-art pipeline, gameplay asset language and motion/VFX behavior should visual production scale to later screens.
+
+## Historical Execution Sequence — D-026
 
 The prior procedural Level 1 is **D-024A structural evidence**, not the Founder art-direction candidate.
 

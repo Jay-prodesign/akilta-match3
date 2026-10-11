@@ -277,18 +277,22 @@ The finished app should read as one coherent **living gothic curiosity House**, 
 
 This destination is directionally locked. Exact downstream pixels remain intentionally unlocked until the finished Level 1 is Founder-approved.
 
-## 13. Current Level 1 Production Priority
+## 13. Current Production Priority — Screen-First Override
 
-1. five core piece candidate refinement;
-2. specials + Wax Seal state art;
-3. board/cell/frame material;
-4. Moon Cameo sealed/awakening/awakened consistency;
-5. Curio Boutique stage00/stage01 environment polish;
-6. map node/path/chrome polish;
-7. prestart/win/fail/collection/pause/settings surface polish;
-8. motion/VFX tuning;
-9. audio/haptic holistic pass;
-10. accessibility/readability + performance pass;
-11. D-027 finished-Level-1 evidence package.
+The former asset-first priority is retired. Do not refine pieces, backgrounds, frames or decorative assets in isolation.
 
-No Level 2+ art production before #11 is explicitly approved by Founder.
+Execution order is now:
+1. complete screen inventory;
+2. screen contracts;
+3. global shell/design system;
+4. asset layer plan;
+5. screen-owned asset production manifest;
+6. reference vertical slice: House Hub → Level Pre-start → Gameplay → Win/Rewards → House Restoration → House Hub;
+7. rendered North Star verification of that slice;
+8. only after the slice is coherent, expand dependency-order to Chapters → Curios → Missions → Events → Shop → Profile/Settings → Splash/onboarding polish.
+
+Every asset request must name its exact SCREEN → BLOCK → SLOT → STATE owner.
+
+Current asset files that were produced before this ordering are **candidate material only**. They may be reused if they satisfy the new screen contract, but their existence does not make them final or approved.
+
+No Level 2+ shipping-art scale-out before the reference vertical slice proves the reusable visual grammar.

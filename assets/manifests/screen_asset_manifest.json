@@ -1,0 +1,745 @@
+{
+  "schema_version": 1,
+  "product": "AKILTA Match-3",
+  "production_rule": "screen_block_slot_state_first",
+  "design_viewport": {
+    "width": 1080,
+    "height": 1920,
+    "orientation": "portrait"
+  },
+  "allowed_layers": [
+    "background_art",
+    "structural_ui",
+    "content_artwork",
+    "gameplay_asset",
+    "functional_icon",
+    "state_asset",
+    "runtime_vfx"
+  ],
+  "priority_order": [
+    "reference_vertical_slice",
+    "global_shell",
+    "chapters",
+    "curios",
+    "missions",
+    "events",
+    "shop",
+    "profile_settings",
+    "splash_polish"
+  ],
+  "assets": [
+    {
+      "asset_id": "gbl_shell_top_resource_frame",
+      "screen": [
+        "S01",
+        "S02",
+        "S03",
+        "S08",
+        "S09",
+        "S10",
+        "S11",
+        "S12"
+      ],
+      "block": "global_header",
+      "slot": "resource_bar_shell",
+      "state": [
+        "normal"
+      ],
+      "type": "structural_ui",
+      "dimensions": "scalable_9slice_512x512_master",
+      "aspect_ratio": "scalable",
+      "transparent": true,
+      "variants": [
+        "default",
+        "high_contrast"
+      ],
+      "reuse": "global",
+      "priority": "P0",
+      "production_status": "required"
+    },
+    {
+      "asset_id": "gbl_shell_bottom_nav_frame",
+      "screen": [
+        "S01",
+        "S02",
+        "S03",
+        "S08",
+        "S09",
+        "S10",
+        "S11"
+      ],
+      "block": "bottom_navigation",
+      "slot": "nav_shell",
+      "state": [
+        "normal"
+      ],
+      "type": "structural_ui",
+      "dimensions": "scalable_9slice_512x256_master",
+      "aspect_ratio": "scalable",
+      "transparent": true,
+      "variants": [
+        "default"
+      ],
+      "reuse": "global",
+      "priority": "P0",
+      "production_status": "required"
+    },
+    {
+      "asset_id": "gbl_nav_house",
+      "screen": [
+        "global"
+      ],
+      "block": "bottom_navigation",
+      "slot": "house_icon",
+      "state": [
+        "normal",
+        "selected",
+        "pressed",
+        "disabled"
+      ],
+      "type": "functional_icon",
+      "dimensions": "128x128_svg",
+      "aspect_ratio": "1:1",
+      "transparent": true,
+      "variants": [
+        "state_tint_runtime"
+      ],
+      "reuse": "global",
+      "priority": "P0",
+      "production_status": "candidate",
+      "current_path": "assets/ui/nav_house.svg"
+    },
+    {
+      "asset_id": "gbl_nav_curios",
+      "screen": [
+        "global"
+      ],
+      "block": "bottom_navigation",
+      "slot": "curios_icon",
+      "state": [
+        "normal",
+        "selected",
+        "pressed",
+        "disabled"
+      ],
+      "type": "functional_icon",
+      "dimensions": "128x128_svg",
+      "aspect_ratio": "1:1",
+      "transparent": true,
+      "variants": [
+        "state_tint_runtime"
+      ],
+      "reuse": "global",
+      "priority": "P0",
+      "production_status": "candidate",
+      "current_path": "assets/ui/nav_curios.svg"
+    },
+    {
+      "asset_id": "gbl_nav_map",
+      "screen": [
+        "global"
+      ],
+      "block": "bottom_navigation",
+      "slot": "map_icon",
+      "state": [
+        "normal",
+        "selected",
+        "pressed",
+        "disabled"
+      ],
+      "type": "functional_icon",
+      "dimensions": "128x128_svg",
+      "aspect_ratio": "1:1",
+      "transparent": true,
+      "variants": [
+        "state_tint_runtime"
+      ],
+      "reuse": "global",
+      "priority": "P0",
+      "production_status": "candidate",
+      "current_path": "assets/ui/nav_map.svg"
+    },
+    {
+      "asset_id": "gbl_nav_events",
+      "screen": [
+        "global"
+      ],
+      "block": "bottom_navigation",
+      "slot": "events_icon",
+      "state": [
+        "normal",
+        "selected",
+        "pressed",
+        "disabled"
+      ],
+      "type": "functional_icon",
+      "dimensions": "128x128_svg",
+      "aspect_ratio": "1:1",
+      "transparent": true,
+      "variants": [
+        "state_tint_runtime"
+      ],
+      "reuse": "global",
+      "priority": "P0",
+      "production_status": "candidate",
+      "current_path": "assets/ui/nav_events.svg"
+    },
+    {
+      "asset_id": "gbl_nav_shop",
+      "screen": [
+        "global"
+      ],
+      "block": "bottom_navigation",
+      "slot": "shop_icon",
+      "state": [
+        "normal",
+        "selected",
+        "pressed",
+        "disabled"
+      ],
+      "type": "functional_icon",
+      "dimensions": "128x128_svg",
+      "aspect_ratio": "1:1",
+      "transparent": true,
+      "variants": [
+        "state_tint_runtime"
+      ],
+      "reuse": "global",
+      "priority": "P0",
+      "production_status": "candidate",
+      "current_path": "assets/ui/nav_shop.svg"
+    },
+    {
+      "asset_id": "gbl_currency_life",
+      "screen": [
+        "global"
+      ],
+      "block": "global_header",
+      "slot": "life_icon",
+      "state": [
+        "normal",
+        "low",
+        "full"
+      ],
+      "type": "functional_icon",
+      "dimensions": "128x128_svg",
+      "aspect_ratio": "1:1",
+      "transparent": true,
+      "variants": [
+        "runtime_value"
+      ],
+      "reuse": "global",
+      "priority": "P0",
+      "production_status": "candidate",
+      "current_path": "assets/ui/ui_heart.svg"
+    },
+    {
+      "asset_id": "gbl_currency_coin",
+      "screen": [
+        "global"
+      ],
+      "block": "global_header",
+      "slot": "coin_icon",
+      "state": [
+        "normal"
+      ],
+      "type": "functional_icon",
+      "dimensions": "128x128_svg",
+      "aspect_ratio": "1:1",
+      "transparent": true,
+      "variants": [],
+      "reuse": "global",
+      "priority": "P0",
+      "production_status": "candidate",
+      "current_path": "assets/ui/ui_coin.svg"
+    },
+    {
+      "asset_id": "gbl_currency_gem",
+      "screen": [
+        "global"
+      ],
+      "block": "global_header",
+      "slot": "gem_icon",
+      "state": [
+        "normal"
+      ],
+      "type": "functional_icon",
+      "dimensions": "128x128_svg",
+      "aspect_ratio": "1:1",
+      "transparent": true,
+      "variants": [],
+      "reuse": "global",
+      "priority": "P0",
+      "production_status": "candidate",
+      "current_path": "assets/ui/ui_gem.svg"
+    },
+    {
+      "asset_id": "hub_bg_grandhall",
+      "screen": [
+        "S01",
+        "S07"
+      ],
+      "block": "house_hero",
+      "slot": "full_environment",
+      "state": [
+        "stage00",
+        "stage01",
+        "stage02",
+        "stage03"
+      ],
+      "type": "background_art",
+      "dimensions": "2160x2400_master__1080x1200_ship_region",
+      "aspect_ratio": "0.9:1",
+      "transparent": false,
+      "variants": [
+        "restoration_stages_same_camera"
+      ],
+      "reuse": "House_and_Restoration",
+      "priority": "P0",
+      "production_status": "candidate_requires_screen_validation",
+      "current_path": "assets/world/ch01_curio_boutique/house_hub_final.svg"
+    },
+    {
+      "asset_id": "hub_black_cat_character",
+      "screen": [
+        "S01",
+        "S07"
+      ],
+      "block": "house_hero",
+      "slot": "character_world_layer",
+      "state": [
+        "idle",
+        "attention",
+        "celebrate_optional"
+      ],
+      "type": "content_artwork",
+      "dimensions": "512x768_master",
+      "aspect_ratio": "2:3",
+      "transparent": true,
+      "variants": [
+        "pose_or_runtime_transform"
+      ],
+      "reuse": "House",
+      "priority": "P0",
+      "production_status": "required"
+    },
+    {
+      "asset_id": "gbl_primary_panel_frame",
+      "screen": [
+        "S04",
+        "S06",
+        "O01",
+        "O02"
+      ],
+      "block": "primary_panel",
+      "slot": "panel_frame",
+      "state": [
+        "normal",
+        "focused"
+      ],
+      "type": "structural_ui",
+      "dimensions": "512x512_9slice",
+      "aspect_ratio": "scalable",
+      "transparent": true,
+      "variants": [
+        "default",
+        "high_contrast"
+      ],
+      "reuse": "global",
+      "priority": "P0",
+      "production_status": "candidate",
+      "current_path": "assets/ui/chrome/gbl_ui_ritual_panel_9s_base_v01.svg"
+    },
+    {
+      "asset_id": "prestart_ch01_level01_art",
+      "screen": [
+        "S04"
+      ],
+      "block": "primary_ritual_panel",
+      "slot": "level_art",
+      "state": [
+        "first_attempt",
+        "replay"
+      ],
+      "type": "content_artwork",
+      "dimensions": "1024x768_master",
+      "aspect_ratio": "4:3",
+      "transparent": false,
+      "variants": [
+        "level01"
+      ],
+      "reuse": "Level1_prestart",
+      "priority": "P0",
+      "production_status": "required"
+    },
+    {
+      "asset_id": "piece_moon",
+      "screen": [
+        "S05"
+      ],
+      "block": "board",
+      "slot": "base_piece",
+      "state": [
+        "idle",
+        "selected_runtime",
+        "matched_runtime"
+      ],
+      "type": "gameplay_asset",
+      "dimensions": "256x256_svg",
+      "aspect_ratio": "1:1",
+      "transparent": true,
+      "variants": [
+        "ringless"
+      ],
+      "reuse": "global",
+      "priority": "P0",
+      "production_status": "candidate_screen_validation",
+      "current_path": "assets/pieces/moon_sigil.svg"
+    },
+    {
+      "asset_id": "piece_rose",
+      "screen": [
+        "S05"
+      ],
+      "block": "board",
+      "slot": "base_piece",
+      "state": [
+        "idle",
+        "selected_runtime",
+        "matched_runtime"
+      ],
+      "type": "gameplay_asset",
+      "dimensions": "256x256_svg",
+      "aspect_ratio": "1:1",
+      "transparent": true,
+      "variants": [
+        "ringless"
+      ],
+      "reuse": "global",
+      "priority": "P0",
+      "production_status": "candidate_screen_validation",
+      "current_path": "assets/pieces/thorn_rose.svg"
+    },
+    {
+      "asset_id": "piece_moth",
+      "screen": [
+        "S05"
+      ],
+      "block": "board",
+      "slot": "base_piece",
+      "state": [
+        "idle",
+        "selected_runtime",
+        "matched_runtime"
+      ],
+      "type": "gameplay_asset",
+      "dimensions": "256x256_svg",
+      "aspect_ratio": "1:1",
+      "transparent": true,
+      "variants": [
+        "ringless"
+      ],
+      "reuse": "global",
+      "priority": "P0",
+      "production_status": "candidate_screen_validation",
+      "current_path": "assets/pieces/luna_moth.svg"
+    },
+    {
+      "asset_id": "piece_key",
+      "screen": [
+        "S05"
+      ],
+      "block": "board",
+      "slot": "base_piece",
+      "state": [
+        "idle",
+        "selected_runtime",
+        "matched_runtime"
+      ],
+      "type": "gameplay_asset",
+      "dimensions": "256x256_svg",
+      "aspect_ratio": "1:1",
+      "transparent": true,
+      "variants": [
+        "ringless"
+      ],
+      "reuse": "global",
+      "priority": "P0",
+      "production_status": "candidate_screen_validation",
+      "current_path": "assets/pieces/curio_key.svg"
+    },
+    {
+      "asset_id": "piece_ivy",
+      "screen": [
+        "S05"
+      ],
+      "block": "board",
+      "slot": "base_piece",
+      "state": [
+        "idle",
+        "selected_runtime",
+        "matched_runtime"
+      ],
+      "type": "gameplay_asset",
+      "dimensions": "256x256_svg",
+      "aspect_ratio": "1:1",
+      "transparent": true,
+      "variants": [
+        "ringless"
+      ],
+      "reuse": "global",
+      "priority": "P0",
+      "production_status": "candidate_screen_validation",
+      "current_path": "assets/pieces/night_ivy.svg"
+    },
+    {
+      "asset_id": "gameplay_bg_curio_boutique",
+      "screen": [
+        "S05"
+      ],
+      "block": "full_screen_background",
+      "slot": "environment",
+      "state": [
+        "level01"
+      ],
+      "type": "background_art",
+      "dimensions": "2160x3840_master__1080x1920_ship",
+      "aspect_ratio": "9:16",
+      "transparent": false,
+      "variants": [
+        "chapter01"
+      ],
+      "reuse": "Gameplay_ch01",
+      "priority": "P0",
+      "production_status": "candidate_requires_recomposition",
+      "current_path": "assets/world/ch01_curio_boutique/north_star_gameplay_backdrop.svg"
+    },
+    {
+      "asset_id": "gameplay_board_frame",
+      "screen": [
+        "S05"
+      ],
+      "block": "board",
+      "slot": "outer_frame",
+      "state": [
+        "normal",
+        "high_contrast"
+      ],
+      "type": "structural_ui",
+      "dimensions": "512x512_9slice",
+      "aspect_ratio": "scalable",
+      "transparent": true,
+      "variants": [
+        "default"
+      ],
+      "reuse": "global",
+      "priority": "P0",
+      "production_status": "candidate",
+      "current_path": "assets/board/gbl_board_ritual_frame_9s_base_v01.svg"
+    },
+    {
+      "asset_id": "booster_hint",
+      "screen": [
+        "S04",
+        "S05"
+      ],
+      "block": "aid_or_booster_row",
+      "slot": "hint",
+      "state": [
+        "available",
+        "pressed",
+        "disabled"
+      ],
+      "type": "gameplay_asset",
+      "dimensions": "128x128_svg",
+      "aspect_ratio": "1:1",
+      "transparent": true,
+      "variants": [],
+      "reuse": "global",
+      "priority": "P0",
+      "production_status": "required"
+    },
+    {
+      "asset_id": "booster_plus_moves",
+      "screen": [
+        "S04",
+        "S05"
+      ],
+      "block": "aid_or_booster_row",
+      "slot": "plus_moves",
+      "state": [
+        "available",
+        "pressed",
+        "disabled"
+      ],
+      "type": "gameplay_asset",
+      "dimensions": "128x128_svg",
+      "aspect_ratio": "1:1",
+      "transparent": true,
+      "variants": [],
+      "reuse": "global",
+      "priority": "P0",
+      "production_status": "candidate",
+      "current_path": "assets/pieces/potion.svg"
+    },
+    {
+      "asset_id": "reward_moon_cameo",
+      "screen": [
+        "S04",
+        "S06",
+        "S07",
+        "S08"
+      ],
+      "block": "reward_or_curio",
+      "slot": "moon_cameo",
+      "state": [
+        "sealed",
+        "awakening",
+        "awakened"
+      ],
+      "type": "content_artwork",
+      "dimensions": "512x512_svg_or_png",
+      "aspect_ratio": "1:1",
+      "transparent": true,
+      "variants": [
+        "same_semantic_object_all_screens"
+      ],
+      "reuse": "vertical_slice",
+      "priority": "P0",
+      "production_status": "candidate",
+      "current_path": "assets/curios/ch01_curio_moon_cameo_awakened_v01.svg"
+    },
+    {
+      "asset_id": "vfx_match_clear",
+      "screen": [
+        "S05"
+      ],
+      "block": "board",
+      "slot": "matched_piece_fx",
+      "state": [
+        "play"
+      ],
+      "type": "runtime_vfx",
+      "dimensions": "runtime_or_256_mask",
+      "aspect_ratio": "local",
+      "transparent": true,
+      "variants": [
+        "family_tint"
+      ],
+      "reuse": "global",
+      "priority": "P0",
+      "production_status": "required"
+    },
+    {
+      "asset_id": "vfx_reward_reveal",
+      "screen": [
+        "S06"
+      ],
+      "block": "reward_hero",
+      "slot": "reward_glow",
+      "state": [
+        "play"
+      ],
+      "type": "runtime_vfx",
+      "dimensions": "runtime_or_512_mask",
+      "aspect_ratio": "local",
+      "transparent": true,
+      "variants": [
+        "gold_moon"
+      ],
+      "reuse": "global",
+      "priority": "P0",
+      "production_status": "required"
+    },
+    {
+      "asset_id": "vfx_house_awaken",
+      "screen": [
+        "S07"
+      ],
+      "block": "house_hero",
+      "slot": "awakening_fx",
+      "state": [
+        "play",
+        "reduced_motion"
+      ],
+      "type": "runtime_vfx",
+      "dimensions": "runtime",
+      "aspect_ratio": "full_region",
+      "transparent": true,
+      "variants": [
+        "stage01"
+      ],
+      "reuse": "House",
+      "priority": "P0",
+      "production_status": "required"
+    },
+    {
+      "asset_id": "chapter_world_house",
+      "screen": [
+        "S02"
+      ],
+      "block": "chapter_world",
+      "slot": "full_background",
+      "state": [
+        "default"
+      ],
+      "type": "background_art",
+      "dimensions": "2160x1800_master",
+      "aspect_ratio": "6:5",
+      "transparent": false,
+      "variants": [
+        "chapter_unlock_lighting_runtime"
+      ],
+      "reuse": "Chapters",
+      "priority": "P1",
+      "production_status": "candidate_requires_screen_validation",
+      "current_path": "assets/world/ch01_curio_boutique/chapter_world_map.svg"
+    },
+    {
+      "asset_id": "missions_event_art",
+      "screen": [
+        "S09",
+        "S10"
+      ],
+      "block": "mission_or_event_cards",
+      "slot": "card_hero",
+      "state": [
+        "live",
+        "locked",
+        "complete"
+      ],
+      "type": "content_artwork",
+      "dimensions": "1024x576_master",
+      "aspect_ratio": "16:9",
+      "transparent": false,
+      "variants": [
+        "per_event"
+      ],
+      "reuse": "event_specific",
+      "priority": "P2",
+      "production_status": "blocked_until_vertical_slice_acceptance"
+    },
+    {
+      "asset_id": "shop_offer_art",
+      "screen": [
+        "S11"
+      ],
+      "block": "offer_card",
+      "slot": "offer_art",
+      "state": [
+        "available",
+        "disabled"
+      ],
+      "type": "content_artwork",
+      "dimensions": "768x768_master",
+      "aspect_ratio": "1:1",
+      "transparent": true,
+      "variants": [
+        "per_offer"
+      ],
+      "reuse": "offer_specific",
+      "priority": "P3",
+      "production_status": "blocked_until_commercial_contract"
+    }
+  ]
+}
