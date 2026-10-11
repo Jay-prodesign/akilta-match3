@@ -15,7 +15,8 @@ const ROSE := Color("#C7728F")
 const LEAF := Color("#8BAF7C")
 
 const PieceAssetLoader = preload("res://src/match3/presentation/piece_asset_loader.gd")
-const BACKDROP_PATH := "res://assets/world/ch01_curio_boutique/ch01_world_house_hub_stage00_v01.svg"
+const ScreenArt = preload("res://src/ui/shared/screen_art_registry.gd")
+const BACKDROP_ASSET_ID := "hub_bg_grandhall"
 var _backdrop: Texture2D
 const CAT_PORTRAIT_PATH := "res://assets/pieces/black_cat.svg"
 const MOTH_RELIQUARY_PATH := "res://assets/curios/ch01_curio_moth_reliquary.svg"
@@ -25,12 +26,10 @@ var _moth_reliquary: Texture2D
 var _thorned_locket: Texture2D
 
 func _ready() -> void:
-	var background_file := FileAccess.open(BACKDROP_PATH, FileAccess.READ)
-	if background_file != null:
-		var background_image := Image.new()
-		if background_image.load_svg_from_string(background_file.get_as_text(), 1.0) == OK and not background_image.is_empty():
-			_backdrop = ImageTexture.create_from_image(background_image)
-		background_file.close()
+	# Screen-first rule: the House environment is authored raster art. Never fall
+	# back to a procedurally drawn room or an SVG environment when production art
+	# is missing; missing art must remain visible as a production failure.
+	_backdrop = ScreenArt.texture(BACKDROP_ASSET_ID)
 	var file := FileAccess.open(CAT_PORTRAIT_PATH, FileAccess.READ)
 	if file != null:
 		var image := Image.new()
@@ -71,16 +70,9 @@ func _draw() -> void:
 		_draw_authored_atmosphere(room)
 		_draw_authored_restoration_curios(room)
 	else:
-		_draw_wall_panels(room)
-		_draw_ambient_light(room)
-		_draw_arch(room)
-		_draw_moon_window(room)
-		_draw_wall_frames(room)
-		_draw_cat_portrait(room)
-		_draw_candle_props(room)
-		_draw_side_shelves(room)
-		_draw_central_cabinet(room)
-		_draw_floor(room)
+		# Intentionally no illustrative fallback. A flat underlay is allowed only
+		# so missing production art is obvious during review.
+		draw_rect(room, INK, true)
 	if house_stage >= 1:
 		_draw_awakened_sparkles(room)
 

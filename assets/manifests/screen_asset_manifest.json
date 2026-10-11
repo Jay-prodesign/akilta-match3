@@ -296,8 +296,10 @@
       ],
       "reuse": "House_and_Restoration",
       "priority": "P0",
-      "production_status": "candidate_requires_screen_validation",
-      "current_path": "assets/world/ch01_curio_boutique/ch01_world_house_hub_stage00_v01.svg"
+      "production_status": "required_raster_not_produced",
+      "current_path": "assets/world/ch01_curio_boutique/hub_bg_grandhall.png",
+      "deprecated_candidate_path": "assets/world/ch01_curio_boutique/ch01_world_house_hub_stage00_v01.svg",
+      "technical_policy": "raster_only_no_svg_fallback"
     },
     {
       "asset_id": "hub_black_cat_character",
@@ -370,8 +372,10 @@
       ],
       "reuse": "Level1_prestart",
       "priority": "P0",
-      "production_status": "candidate_screen_validation",
-      "current_path": "assets/world/ch01_curio_boutique/ch01_prestart_moonlit_cabinet_v01.svg"
+      "production_status": "required_raster_not_produced",
+      "current_path": "assets/world/ch01_curio_boutique/prestart_level01_cabinet.png",
+      "deprecated_candidate_path": "assets/world/ch01_curio_boutique/ch01_prestart_moonlit_cabinet_v01.svg",
+      "technical_policy": "raster_only_no_svg_fallback"
     },
     {
       "asset_id": "piece_moon",
@@ -512,8 +516,10 @@
       ],
       "reuse": "Gameplay_ch01",
       "priority": "P0",
-      "production_status": "candidate_requires_recomposition",
-      "current_path": "assets/world/ch01_curio_boutique/ch01_world_gameplay_level01_v01.svg"
+      "production_status": "required_raster_not_produced",
+      "current_path": "assets/world/ch01_curio_boutique/gameplay_bg_curio_boutique.png",
+      "deprecated_candidate_path": "assets/world/ch01_curio_boutique/ch01_world_gameplay_level01_v01.svg",
+      "technical_policy": "raster_only_no_svg_fallback"
     },
     {
       "asset_id": "gameplay_board_frame",
@@ -741,6 +747,40 @@
       "reuse": "offer_specific",
       "priority": "P3",
       "production_status": "blocked_until_commercial_contract"
+    },
+    {
+      "asset_id": "prestart_bg_curio_boutique",
+      "screen": [
+        "S04"
+      ],
+      "block": "full_screen_background",
+      "slot": "environment",
+      "state": [
+        "first_attempt",
+        "replay"
+      ],
+      "type": "background_art",
+      "dimensions": "2160x3840_master__1080x1920_ship",
+      "aspect_ratio": "9:16",
+      "transparent": false,
+      "variants": [
+        "chapter01"
+      ],
+      "reuse": "Prestart_ch01",
+      "priority": "P0",
+      "production_status": "required_raster_not_produced",
+      "current_path": "assets/world/ch01_curio_boutique/prestart_bg_curio_boutique.png",
+      "technical_policy": "raster_only_no_svg_fallback"
     }
-  ]
+  ],
+  "vertical_slice_art_policy": {
+    "status": "ACTIVE",
+    "rule": "House Hub -> Level Pre-start -> Gameplay -> Win/Rewards -> House Restoration -> House Hub uses authored raster environment art; world/background SVG and procedural illustrative fallbacks are forbidden.",
+    "required_runtime_asset_ids": [
+      "hub_bg_grandhall",
+      "prestart_bg_curio_boutique",
+      "prestart_ch01_level01_art",
+      "gameplay_bg_curio_boutique"
+    ]
+  }
 }

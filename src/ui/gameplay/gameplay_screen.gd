@@ -10,6 +10,7 @@ signal settings_requested
 const BoardState = preload("res://src/match3/domain/board_state.gd")
 const MoveFinder = preload("res://src/match3/domain/move_finder.gd")
 const PieceAssetLoader = preload("res://src/match3/presentation/piece_asset_loader.gd")
+const ScreenArt = preload("res://src/ui/shared/screen_art_registry.gd")
 const MoveResolver = preload("res://src/match3/domain/move_resolver.gd")
 const HapticsController = preload("res://src/feedback/haptics_controller.gd")
 const KENNEY_DIVIDER_PATH := "res://assets/candidate/third_party/kenney/fantasy-ui-borders/divider-004.png"
@@ -73,7 +74,8 @@ var _result_reward_values: Control
 @onready var result_action: Button = $ResultOverlay/Card/Content/Action
 
 func _ready() -> void:
-	world_backdrop.texture = PieceAssetLoader.ornament("res://assets/world/ch01_curio_boutique/ch01_world_gameplay_level01_v01.svg")
+	world_backdrop.texture = ScreenArt.texture("gameplay_bg_curio_boutique")
+	world_backdrop.modulate = Color.WHITE
 	_install_candidate_divider()
 	_install_hud_plate()
 	_build_top_resource_bar()
@@ -175,19 +177,19 @@ func _apply_level_art_profile(profile: String) -> void:
 	# The board symbols, room tint, and heading accents move together by chapter beat.
 	match profile:
 		"sealed_display":
-			world_backdrop.modulate = Color(0.76, 0.86, 0.96, 0.36)
+			world_backdrop.modulate = Color.WHITE
 			eyebrow_label.add_theme_color_override("font_color", Color("#9fb7d0"))
 			title_label.add_theme_color_override("font_color", Color("#f1e6d2"))
 			objective_label.add_theme_color_override("font_color", Color("#a8c6d2"))
 			moves_label.add_theme_color_override("font_color", Color("#d8c8a1"))
 		"thornlight_arrangement":
-			world_backdrop.modulate = Color(0.98, 0.72, 0.82, 0.36)
+			world_backdrop.modulate = Color.WHITE
 			eyebrow_label.add_theme_color_override("font_color", Color("#d9a0b8"))
 			title_label.add_theme_color_override("font_color", Color("#f5e6e2"))
 			objective_label.add_theme_color_override("font_color", Color("#c7a0df"))
 			moves_label.add_theme_color_override("font_color", Color("#e6bd83"))
 		_:
-			world_backdrop.modulate = Color(0.92, 0.82, 0.78, 0.34)
+			world_backdrop.modulate = Color.WHITE
 			eyebrow_label.add_theme_color_override("font_color", Color("#b7a5b8"))
 			title_label.add_theme_color_override("font_color", Color("#f1e8dc"))
 			objective_label.add_theme_color_override("font_color", Color("#bca1cf"))

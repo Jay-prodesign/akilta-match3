@@ -5,6 +5,7 @@ signal back_requested
 signal start_requested(level_number: int)
 
 const PieceAssetLoader = preload("res://src/match3/presentation/piece_asset_loader.gd")
+const ScreenArt = preload("res://src/ui/shared/screen_art_registry.gd")
 
 @onready var level_label: Label = $Layout/Card/Content/Level
 @onready var title_label: Label = $Layout/Card/Content/Title
@@ -29,12 +30,12 @@ func _ready() -> void:
 func _install_world_backdrop() -> void:
 	var art := TextureRect.new()
 	art.name = "NorthStarWorldBackdrop"
-	art.texture = PieceAssetLoader.ornament("res://assets/world/ch01_curio_boutique/ch01_world_house_hub_stage00_v01.svg")
+	art.texture = ScreenArt.texture("prestart_bg_curio_boutique")
 	art.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
 	art.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_COVERED
 	art.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	art.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	art.modulate = Color(0.74, 0.70, 0.82, 0.34)
+	art.modulate = Color.WHITE
 	add_child(art)
 	move_child(art, 1)
 
@@ -47,7 +48,7 @@ func _install_level_artwork() -> void:
 	art.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
 	art.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_COVERED
 	art.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	art.texture = PieceAssetLoader.ornament("res://assets/world/ch01_curio_boutique/ch01_prestart_moonlit_cabinet_v01.svg")
+	art.texture = ScreenArt.texture("prestart_ch01_level01_art")
 	ritual_art.add_child(art)
 
 func _build_ritual_aids() -> void:
@@ -175,6 +176,6 @@ func configure_level(value: int) -> bool:
 		var level_art := ritual_art.get_node_or_null("LevelArtwork") as TextureRect
 		if level_art != null:
 			level_art.visible = true
-			level_art.texture = PieceAssetLoader.ornament("res://assets/world/ch01_curio_boutique/ch01_prestart_moonlit_cabinet_v01.svg" if level_number == 1 else "res://assets/world/ch01_curio_boutique/curio_boutique_moonlit_backdrop.svg")
+			level_art.texture = ScreenArt.texture("prestart_ch01_level01_art" if level_number == 1 else "prestart_ch01_shared_art")
 		ritual_art.queue_redraw()
 	return true
