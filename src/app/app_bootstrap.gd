@@ -196,21 +196,19 @@ func complete_level_win(transaction_id: String, level_id: String, curio_id: Stri
 	var applied: bool = bool(candidate.apply_level_win(transaction_id, level_id, curio_id, house_stage_reward))
 	if not applied:
 		return false
+	var restoration_needed := not curio_was_owned or int(candidate.house_stage) > previous_house_stage
+	var destination := NavigationScript.Route.RESTORATION if restoration_needed else NavigationScript.Route.HOUSE
+	if not navigation.can_go(destination):
+		return false
 	if not _store.save(candidate.to_dict()):
 		return false
 	progress = candidate
-	var restoration_needed := not curio_was_owned or int(candidate.house_stage) > previous_house_stage
 	if restoration_needed:
-		if navigation.current() != NavigationScript.Route.WIN_REWARDS:
-			return false
 		if not navigation.go(NavigationScript.Route.RESTORATION, {"reason": "level_reward_restoration"}):
 			return false
 		_render_house(true, curio_id, int(candidate.house_stage))
 	else:
-		if navigation.current() == NavigationScript.Route.WIN_REWARDS:
-			if not navigation.go(NavigationScript.Route.HOUSE, {"reason": "level_replay_complete"}):
-				return false
-		elif navigation.current() != NavigationScript.Route.HOUSE:
+		if not navigation.go(NavigationScript.Route.HOUSE, {"reason": "level_replay_complete"}):
 			return false
 		_render_house(false, "", int(candidate.house_stage))
 	return true
