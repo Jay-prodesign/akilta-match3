@@ -1622,6 +1622,64 @@
         "damaged",
         "cleared"
       ]
+    },
+    {
+      "asset_id": "special_tokens",
+      "screen": [
+        "S05"
+      ],
+      "block": "match_board",
+      "slot": "specials",
+      "state": [
+        "created",
+        "armed",
+        "triggered"
+      ],
+      "type": "gameplay_asset",
+      "dimensions": "256x256_webp_transparent_variant_set",
+      "aspect_ratio": "1:1",
+      "transparent": true,
+      "variants": [
+        "line_h",
+        "line_v",
+        "area",
+        "smart",
+        "global"
+      ],
+      "reuse": "global",
+      "priority": "P0",
+      "production_status": "production_variant_set_candidate_runtime_validation",
+      "current_path": "assets/specials/gbl_special_global_idle_v01.webp",
+      "architecture_owned": true,
+      "contract_owners": [
+        {
+          "screen": "S05",
+          "region": "board",
+          "block": "match_board",
+          "slot": "specials",
+          "states": [
+            "created",
+            "armed",
+            "triggered"
+          ]
+        }
+      ],
+      "variant_paths": {
+        "line_h": "assets/specials/gbl_special_line_h_idle_v01.webp",
+        "line_v": "assets/specials/gbl_special_line_v_idle_v01.webp",
+        "area": "assets/specials/gbl_special_area_idle_v01.webp",
+        "smart": "assets/specials/gbl_special_smart_idle_v01.webp",
+        "global": "assets/specials/gbl_special_global_idle_v01.webp"
+      },
+      "source_silhouette_paths": [
+        "assets/specials/gbl_special_line_h_idle_v01.svg",
+        "assets/specials/gbl_special_line_v_idle_v01.svg",
+        "assets/specials/gbl_special_area_idle_v01.svg",
+        "assets/specials/gbl_special_smart_idle_v01.svg",
+        "assets/specials/gbl_special_global_idle_v01.svg"
+      ],
+      "technical_policy": "webp_raster_first_runtime__special_kind_identity__owned_svg_fallback",
+      "provenance": "AKILTA first-party S05 special-token raster set. Static special identity is asset-backed; trigger resonance and motion remain runtime VFX. Render/play validation required before approval."
     }
   ],
   "vertical_slice_art_policy": {
