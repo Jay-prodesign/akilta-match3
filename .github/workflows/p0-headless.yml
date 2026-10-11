@@ -6,7 +6,7 @@ on:
       - p0/bootstrap
     paths:
       - ".github/workflows/p0-headless.yml"
-  # Milestone trigger: balanced three-relic Reliquary + integrated completion state (2026-10-11).
+  # Milestone trigger: progression-aware chapter select from 0/3 to restored 3/3 (2026-10-11).
   # Run the full milestone checks deliberately, not on every development commit.
   workflow_dispatch:
 
