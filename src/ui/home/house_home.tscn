@@ -100,7 +100,7 @@ grow_vertical = 2
 theme_override_constants/separation = 6
 
 [node name="RoomView" type="Control" parent="Layout"]
-custom_minimum_size = Vector2(0, 520)
+custom_minimum_size = Vector2(0, 290)
 layout_mode = 2
 size_flags_vertical = 3
 clip_contents = true
