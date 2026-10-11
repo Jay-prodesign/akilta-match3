@@ -531,9 +531,13 @@ func show_feature_preview(feature: String) -> bool:
 	card_scroll.size_flags_vertical = Control.SIZE_EXPAND_FILL
 	card_scroll.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	card_scroll.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
+	if not is_events and not is_profile:
+		card_scroll.vertical_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
 	layout.add_child(card_scroll)
 	var cards := VBoxContainer.new()
 	cards.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	if not is_events and not is_profile:
+		cards.size_flags_vertical = Control.SIZE_EXPAND_FILL
 	cards.add_theme_constant_override("separation", 10)
 	card_scroll.add_child(cards)
 	var entries: Array[Dictionary]
@@ -602,6 +606,8 @@ func show_feature_preview(feature: String) -> bool:
 		card_index += 1
 		card.name = "FeatureCard%d" % card_index
 		card.custom_minimum_size = Vector2(0, 210) if is_events else (Vector2(0, 205) if not is_profile else Vector2(0, 190))
+		if not is_events and not is_profile:
+			card.size_flags_vertical = Control.SIZE_EXPAND_FILL
 		var panel_style := StyleBoxFlat.new()
 		panel_style.bg_color = Color("#171321")
 		panel_style.border_color = Color("#9B6FA6", 0.58) if is_events else (Color("#D5AD70", 0.62) if not is_profile else Color("#8796C7", 0.58))
