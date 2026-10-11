@@ -155,7 +155,7 @@ func _capture() -> void:
 	await _frames(3)
 	var event_preview: Node = app.get_node_or_null("ScreenHost/FeaturePreview")
 	var event_hero: PanelContainer = event_preview.get_node_or_null("FeatureLayout/FeatureHero") as PanelContainer if event_preview != null else null
-	var event_hero_title: Label = event_preview.get_node_or_null("FeatureLayout/FeatureHero/HBoxContainer/VBoxContainer/FeatureHeroTitle") as Label if event_preview != null else null
+	var event_hero_title: Label = event_preview.get_node_or_null("FeatureLayout/FeatureHero/HeroRow/HeroCopy/FeatureHeroTitle") as Label if event_preview != null else null
 	var event_art_nodes: Array[Node] = event_preview.find_children("FeatureArtwork", "TextureRect", true, false) if event_preview != null else []
 	if event_hero == null or event_hero_title == null or not event_hero_title.text.contains("1 / 3 DISPLAYS AWAKENED"):
 		return _fail(app, "Events must open with its authored ritual-status hero")
@@ -172,7 +172,7 @@ func _capture() -> void:
 		return _fail(app, "House -> Shop preview failed")
 	await _frames(3)
 	var shop_preview: Node = app.get_node_or_null("ScreenHost/FeaturePreview")
-	var shop_hero_title: Label = shop_preview.get_node_or_null("FeatureLayout/FeatureHero/HBoxContainer/VBoxContainer/FeatureHeroTitle") as Label if shop_preview != null else null
+	var shop_hero_title: Label = shop_preview.get_node_or_null("FeatureLayout/FeatureHero/HeroRow/HeroCopy/FeatureHeroTitle") as Label if shop_preview != null else null
 	var shop_art_nodes: Array[Node] = shop_preview.find_children("FeatureArtwork", "TextureRect", true, false) if shop_preview != null else []
 	if shop_hero_title == null or shop_hero_title.text != "NO PURCHASES ENABLED":
 		return _fail(app, "Shop must lead with an explicit no-purchase trust state")
@@ -189,7 +189,7 @@ func _capture() -> void:
 		return _fail(app, "House -> Profile preview failed")
 	await _frames(3)
 	var profile_preview: Node = app.get_node_or_null("ScreenHost/FeaturePreview")
-	var profile_hero_title: Label = profile_preview.get_node_or_null("FeatureLayout/FeatureHero/HBoxContainer/VBoxContainer/FeatureHeroTitle") as Label if profile_preview != null else null
+	var profile_hero_title: Label = profile_preview.get_node_or_null("FeatureLayout/FeatureHero/HeroRow/HeroCopy/FeatureHeroTitle") as Label if profile_preview != null else null
 	var profile_art_nodes: Array[Node] = profile_preview.find_children("FeatureArtwork", "TextureRect", true, false) if profile_preview != null else []
 	if profile_hero_title == null or not profile_hero_title.text.contains("1 CURIOS · RESTORATION STAGE 1"):
 		return _fail(app, "Profile must lead with the saved Keeper-state hero")
