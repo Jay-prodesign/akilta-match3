@@ -32,6 +32,7 @@ var _store
 var _current_screen: Node
 var _settings_screen: Node
 var _pending_level_number: int = 0
+var _returning_player_entry: bool = false
 ## Founder-authorized internal review exposes three provisional levels.
 ## This does not confer D-024B/D-027 shipping or final-art approval.
 const INTERNAL_REVIEW_LEVEL_COUNT := 3
@@ -42,6 +43,7 @@ func _ready() -> void:
 	var path: String = save_path_override if save_path_override != "" else SaveStoreScript.DEFAULT_PATH
 	_store = SaveStoreScript.new(path)
 	progress = ProgressScript.from_dict(_store.load_or_default())
+	_returning_player_entry = _has_durable_progress(progress)
 	navigation = NavigationScript.new()
 	user_settings = UserSettingsScript.new()
 	var settings_path := settings_path_override if settings_path_override != "" else UserSettingsScript.DEFAULT_PATH
@@ -680,11 +682,13 @@ func close_settings() -> bool:
 	_settings_screen = null
 	return true
 
-func _render_house(restoration_mode: bool = false, curio_id: String = "", restoration_stage: int = 0) -> void:
+func _render_house(restoration_mode: bool = false, curio_id: String = "", restoration_stage: int = 0, returning_player: bool = false) -> void:
 	var screen: Node = HouseScene.instantiate()
 	_show_screen(screen)
 	screen.set_available_level_count(INTERNAL_REVIEW_LEVEL_COUNT)
 	screen.set_progress(progress)
+	if screen.has_method("set_returning_player"):
+		screen.set_returning_player(returning_player)
 	if restoration_mode and screen.has_method("show_restoration_ceremony"):
 		screen.show_restoration_ceremony(curio_id, restoration_stage)
 		if screen.has_signal("restoration_finished"):
@@ -851,7 +855,9 @@ func _on_splash_continue() -> void:
 			return
 	elif navigation.current() != NavigationScript.Route.HOUSE:
 		return
-	_render_house()
+	var returning_player := _returning_player_entry
+	_returning_player_entry = false
+	_render_house(false, "", 0, returning_player)
 
 func _on_house_play_requested(_level_number: int) -> void:
 	if navigation.current() != NavigationScript.Route.HOUSE:
@@ -878,3 +884,9 @@ func _render_chapters() -> bool:
 func _on_chapter_selected(chapter_id: String) -> void:
 	if chapter_id == "curio_boutique":
 		show_map()
+
+
+func _has_durable_progress(value) -> bool:
+	if value == null:
+		return false
+	return int(value.house_stage) > 0 or not value.completed_levels.is_empty() or not value.curios.is_empty()
