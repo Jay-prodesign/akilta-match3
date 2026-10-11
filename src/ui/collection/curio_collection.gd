@@ -138,16 +138,9 @@ func _install_moon_art() -> void:
 func _load_moon_texture(path: String) -> Texture2D:
 	if _moon_textures.has(path):
 		return _moon_textures[path]
-	var file := FileAccess.open(path, FileAccess.READ)
-	if file == null:
-		return null
-	var svg := file.get_as_text()
-	file.close()
-	var image := Image.new()
-	if image.load_svg_from_string(svg, 1.0) != OK or image.is_empty():
-		return null
-	var texture := ImageTexture.create_from_image(image)
-	_moon_textures[path] = texture
+	var texture := PieceAssetLoader.ornament(path)
+	if texture != null:
+		_moon_textures[path] = texture
 	return texture
 
 func _install_reward_art(label: Label, path: String) -> void:
