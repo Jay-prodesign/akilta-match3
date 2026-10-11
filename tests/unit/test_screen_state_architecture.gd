@@ -1,10 +1,10 @@
 extends SceneTree
 
-const CONTRACT := "res://content/product/screen_state_architecture.json"
+const CONTRACT := "res://assets/manifests/screen_contracts.json"
 const EXPECTED_SCREENS := ["S00","S01","S02","S03","S04","S05","S06","S07","S08","S09","S10","S11","S12"]
 const EXPECTED_OVERLAYS := ["O01","O02","O03","O04","O05","O06","O07"]
-const GOLDEN := ["S01","S04","S05","S06","S07","S01"]
-const ALLOWED_POLICIES := ["component","authored_art","runtime","data","none"]
+const GOLDEN := ["S01","S03","S04","S05","S06","S07","S01"]
+const ALLOWED_LAYERS := ["background_art","structural_ui","content_artwork","gameplay_asset","functional_icon","state_asset","runtime_vfx"]
 
 var failures: Array[String] = []
 
@@ -13,7 +13,7 @@ func _init() -> void:
 
 func _run() -> void:
 	if not FileAccess.file_exists(CONTRACT):
-		_fail("screen/state architecture contract missing")
+		_fail("canonical screen contract missing")
 		_finish()
 		return
 	var file := FileAccess.open(CONTRACT, FileAccess.READ)
@@ -21,30 +21,27 @@ func _run() -> void:
 	if file != null:
 		file.close()
 	if not parsed is Dictionary:
-		_fail("screen/state architecture contract must parse as a dictionary")
+		_fail("canonical screen contract must parse as a dictionary")
 		_finish()
 		return
 	var data: Dictionary = parsed
-	_expect(String(data.get("north_star_role","")) == "product_architecture_source", "North Star must be product architecture authority")
-	_expect(not bool(data.get("bulk_art_authorized", true)), "bulk art must remain blocked before Golden Loop acceptance")
-	var golden: Dictionary = data.get("golden_playable_loop", {})
-	_expect(Array(golden.get("sequence", [])) == GOLDEN, "Golden Loop sequence must be House -> Prestart -> Gameplay -> Win -> Restoration -> House")
-	_expect(bool(golden.get("downstream_expansion_blocked_until_accepted", false)), "downstream expansion must be gated by Golden Loop acceptance")
+	_expect(String(data.get("authority","")).contains("product architecture"), "North Star must be interpreted as product architecture")
+	_expect(Array(data.get("golden_playable_loop", [])) == GOLDEN, "Golden loop must be House -> Route -> Prestart -> Gameplay -> Win -> Restoration -> House")
+	_expect(Array(data.get("cold_start_prefix", [])) == ["S00","S01"], "cold start must enter House through Splash")
+	_expect(Array(data.get("failure_loop", [])) == ["S05","O03","S05"], "failure path must remain inside gameplay through Fail/Retry")
 
-	var screen_ids: Array[String] = []
-	for raw in data.get("screens", []):
-		if not raw is Dictionary:
-			_fail("screen entry must be a dictionary")
-			continue
-		var screen: Dictionary = raw
-		var sid := String(screen.get("id",""))
-		screen_ids.append(sid)
-		_expect(String(screen.get("job","")).strip_edges() != "", "%s missing player job" % sid)
+	var screens: Dictionary = data.get("screens", {})
+	for expected in EXPECTED_SCREENS:
+		_expect(screens.has(expected), "missing canonical screen %s" % expected)
+	for sid in screens:
+		var screen: Dictionary = screens[sid]
+		_expect(String(screen.get("purpose","")).strip_edges() != "", "%s missing purpose" % sid)
 		_expect(not Array(screen.get("states",[])).is_empty(), "%s missing states" % sid)
 		_expect(not Array(screen.get("regions",[])).is_empty(), "%s missing regions" % sid)
 		for raw_region in screen.get("regions", []):
-			_expect(raw_region is Dictionary, "%s region must be dictionary" % sid)
-			if not raw_region is Dictionary: continue
+			if not raw_region is Dictionary:
+				_fail("%s region must be dictionary" % sid)
+				continue
 			var region: Dictionary = raw_region
 			_expect(not Array(region.get("blocks",[])).is_empty(), "%s/%s missing blocks" % [sid,String(region.get("id",""))])
 			for raw_block in region.get("blocks", []):
@@ -59,21 +56,20 @@ func _run() -> void:
 						continue
 					var slot: Dictionary = raw_slot
 					var owner := "%s -> %s -> %s -> %s" % [sid,String(region.get("id","")),String(block.get("id","")),String(slot.get("id",""))]
-					_expect(String(slot.get("kind","")).strip_edges() != "", "%s missing kind" % owner)
-					_expect(String(slot.get("layer","")).strip_edges() != "", "%s missing technical layer" % owner)
-					var policy := String(slot.get("asset_policy",""))
-					_expect(ALLOWED_POLICIES.has(policy), "%s invalid asset policy %s" % [owner,policy])
-					if policy == "authored_art":
-						_expect(not Array(slot.get("states",[])).is_empty(), "%s authored art requires explicit state ownership" % owner)
-	for expected in EXPECTED_SCREENS:
-		_expect(screen_ids.has(expected), "missing canonical screen %s" % expected)
+					_expect(String(slot.get("id","")).strip_edges() != "", "%s slot id missing" % owner)
+					_expect(not Array(slot.get("states",[])).is_empty(), "%s states missing" % owner)
+					if slot.has("layer"):
+						_expect(ALLOWED_LAYERS.has(String(slot.get("layer",""))), "%s invalid layer" % owner)
 
-	var overlay_ids: Array[String] = []
-	for raw in data.get("overlays", []):
-		if raw is Dictionary:
-			overlay_ids.append(String(raw.get("id","")))
+	var overlays: Dictionary = data.get("overlays", {})
 	for expected in EXPECTED_OVERLAYS:
-		_expect(overlay_ids.has(expected), "missing canonical overlay %s" % expected)
+		_expect(overlays.has(expected), "missing canonical overlay %s" % expected)
+
+	var house: Dictionary = screens.get("S01", {})
+	_expect(Array(house.get("exits", [])).has("S03"), "House must expose the current chapter route")
+	var prestart: Dictionary = screens.get("S04", {})
+	_expect(Array(prestart.get("entry", [])).has("S03"), "Prestart must be owned by the chapter route")
+	_expect(not Array(prestart.get("entry", [])).has("S01_fast_continue"), "House must not bypass the route directly into Prestart")
 	_finish()
 
 func _expect(condition: bool, message: String) -> void:
@@ -85,7 +81,7 @@ func _fail(message: String) -> void:
 
 func _finish() -> void:
 	if failures.is_empty():
-		print("TEST_PASS: complete screen/state architecture and slot ownership")
+		print("TEST_PASS: canonical complete screen/state/block/slot architecture")
 		quit(0)
 		return
 	for failure in failures:
