@@ -78,6 +78,22 @@ func _capture() -> void:
 	app.current_screen().get_node("FeatureLayout/BackToHouse").emit_signal("pressed")
 	await _frames(3)
 
+	if not app.show_feature_preview("Shop"):
+		return _fail(app, "completed House -> Shop failed")
+	await _frames(3)
+	if String(app.current_route_name()) != "shop" or app.current_screen() == null or app.current_screen().name != "ShopScreen":
+		return _fail(app, "Shop must render as its own S11 route-backed screen")
+	var shop_notice: Label = app.current_screen().get_node_or_null("FeatureLayout/NoPurchasesNotice") as Label
+	var shop_hero_title: Label = app.current_screen().get_node_or_null("FeatureLayout/FeatureHero/HeroRow/HeroCopy/FeatureHeroTitle") as Label
+	if shop_notice == null or not shop_notice.text.contains("NO PURCHASES OR PAYMENTS"):
+		return _fail(app, "Shop must truthfully expose that purchases are disabled")
+	if shop_hero_title == null or shop_hero_title.text != "NO PURCHASES ENABLED":
+		return _fail(app, "Shop hero must remain an admitted unavailable state")
+	if not await _save(app, "progression-final-shop.png"):
+		return
+	app.current_screen().get_node("FeatureLayout/BackToHouse").emit_signal("pressed")
+	await _frames(3)
+
 	if not app.show_feature_preview("Profile"):
 		return _fail(app, "completed House -> Profile failed")
 	await _frames(3)
@@ -104,6 +120,23 @@ func _capture() -> void:
 		return _fail(app, "completed Profile hero must summarize 3 curios and stage 3")
 	if not await _save(app, "progression-final-profile.png"):
 		return
+	var profile_settings_button: Button = profile.get_node_or_null("FeatureLayout/ProfileSettings") as Button
+	if profile_settings_button == null:
+		return _fail(app, "Profile must expose its Settings destination")
+	profile_settings_button.emit_signal("pressed")
+	await _frames(3)
+	if not app.navigation.is_settings_open():
+		return _fail(app, "Profile Settings modal must open without losing S12")
+	if String(app.current_route_name()) != "profile_settings":
+		return _fail(app, "Settings modal must preserve the Profile route")
+	var settings_panel = app.get_node_or_null("ScreenHost/SettingsPanel")
+	if settings_panel == null:
+		return _fail(app, "Settings modal surface missing")
+	if not await _save(app, "progression-final-settings.png"):
+		return
+	if not app.close_settings():
+		return _fail(app, "Profile Settings modal failed to close")
+	await _frames(2)
 	app.current_screen().get_node("FeatureLayout/BackToHouse").emit_signal("pressed")
 	await _frames(3)
 

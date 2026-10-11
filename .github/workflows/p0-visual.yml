@@ -8,6 +8,7 @@ on:
       - ".github/workflows/p0-visual.yml"
       - "tests/visual/capture_level1_journey.gd"
       - "tests/visual/capture_level1_failure.gd"
+      - "tests/visual/capture_three_level_progression.gd"
       - "src/app/**"
       - "src/ui/home/**"
       - "src/ui/splash/**"
@@ -83,6 +84,29 @@ jobs:
           test -s artifacts/level1-fail-result.png
           test -s artifacts/level1-retry-restored.png
 
+      - name: Render whole-product three-level review shell
+        shell: bash
+        run: |
+          set -uo pipefail
+          set +e
+          output=$(LIBGL_ALWAYS_SOFTWARE=1 xvfb-run -a ./godot --audio-driver Dummy --path . -s res://tests/visual/capture_three_level_progression.gd 2>&1)
+          status=$?
+          set -e
+          printf '%s\n' "$output"
+          if [ "$status" -ne 0 ]; then exit "$status"; fi
+          if grep -Eq "SCRIPT ERROR:|(^| )ERROR:|CAPTURE_FAIL:" <<<"$output"; then exit 1; fi
+          grep -Fq "CAPTURE_PASS: real three-level progression journey" <<<"$output"
+          test -s artifacts/progression-house-stage1.png
+          test -s artifacts/progression-house-stage2.png
+          test -s artifacts/progression-house-stage3.png
+          test -s artifacts/progression-final-reliquary.png
+          test -s artifacts/progression-final-events.png
+          test -s artifacts/progression-final-shop.png
+          test -s artifacts/progression-final-profile.png
+          test -s artifacts/progression-final-settings.png
+          test -s artifacts/progression-final-chapters.png
+          test -s artifacts/progression-final-map.png
+
       - name: Upload Golden Loop render evidence
         uses: actions/upload-artifact@v4
         with:
@@ -101,5 +125,21 @@ jobs:
             artifacts/golden-09-curio-detail.png
             artifacts/level1-fail-result.png
             artifacts/level1-retry-restored.png
+            artifacts/progression-house-stage1.png
+            artifacts/progression-house-stage2.png
+            artifacts/progression-house-stage3.png
+            artifacts/progression-map-before-level1.png
+            artifacts/progression-map-before-level2.png
+            artifacts/progression-map-before-level3.png
+            artifacts/progression-level1-result.png
+            artifacts/progression-level2-result.png
+            artifacts/progression-level3-result.png
+            artifacts/progression-final-reliquary.png
+            artifacts/progression-final-events.png
+            artifacts/progression-final-shop.png
+            artifacts/progression-final-profile.png
+            artifacts/progression-final-settings.png
+            artifacts/progression-final-chapters.png
+            artifacts/progression-final-map.png
           if-no-files-found: error
           retention-days: 14
