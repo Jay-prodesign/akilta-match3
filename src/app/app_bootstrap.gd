@@ -40,21 +40,42 @@ const INTERNAL_REVIEW_LEVEL_COUNT := 3
 @onready var screen_host: Node = $ScreenHost
 
 func _ready() -> void:
+	# S00 must be a real boot state, not a decorative gate shown after loading.
+	# Navigation exists immediately so the player is truthfully on BOOT while the
+	# first rendered frame exposes the canonical loading state.
+	navigation = NavigationScript.new()
+	_render_splash()
+	call_deferred("_complete_bootstrap")
+
+func _complete_bootstrap() -> void:
 	var path: String = save_path_override if save_path_override != "" else SaveStoreScript.DEFAULT_PATH
 	_store = SaveStoreScript.new(path)
-	progress = ProgressScript.from_dict(_store.load_or_default())
+	var loaded: Dictionary = _store.load_or_default()
+	progress = ProgressScript.from_dict(loaded)
 	_returning_player_entry = _has_durable_progress(progress)
-	navigation = NavigationScript.new()
+
 	user_settings = UserSettingsScript.new()
 	var settings_path := settings_path_override if settings_path_override != "" else UserSettingsScript.DEFAULT_PATH
 	user_settings.load_settings(settings_path)
 	user_settings.presentation_changed.connect(_on_presentation_settings_changed)
+
 	audio_director = AudioDirectorScript.new()
 	audio_director.name = "AudioDirector"
 	add_child(audio_director)
-	# Every platform enters through the authored first-impression surface.
-	# Navigation stays at BOOT until the player explicitly enters the House.
-	_render_splash()
+
+	var splash := _current_screen
+	if splash == null or not splash.has_method("set_boot_state"):
+		return
+	var load_status := String(_store.load_status())
+	match load_status:
+		"backup_recovered":
+			splash.set_boot_state("recoverable_error", "The primary House record could not be used. The last known good backup was restored.", true)
+		"default_after_invalid_primary":
+			splash.set_boot_state("recoverable_error", "The local House record was unreadable. A safe new record was prepared; the damaged file was not treated as progress.", true)
+		"future_schema":
+			splash.set_boot_state("recoverable_error", "This House record was created by a newer build. Update the game before entering so that record is not overwritten.", false)
+		_:
+			splash.set_boot_state("ready")
 
 func current_route_name() -> String:
 	return navigation.route_name().to_lower() if navigation != null else ""
@@ -890,7 +911,11 @@ func _render_splash() -> void:
 	screen.continue_requested.connect(_on_splash_continue)
 
 func _on_splash_continue() -> void:
-	if navigation == null:
+	if navigation == null or progress == null or user_settings == null:
+		return
+	if _store != null and _store.is_write_blocked():
+		return
+	if _current_screen != null and _current_screen.has_method("boot_state") and String(_current_screen.boot_state()) == "loading":
 		return
 	if navigation.current() == NavigationScript.Route.BOOT:
 		if not navigation.go(NavigationScript.Route.HOUSE, {"reason": "splash_continue"}):
