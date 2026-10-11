@@ -43,7 +43,10 @@ func to_dict() -> Dictionary:
 	}
 
 func apply_level_win(transaction_id: String, level_id: String, curio_id: String = "", house_stage_reward: int = -1) -> bool:
-	if transaction_id == "" or processed_transactions.has(transaction_id):
+	# Persistent level rewards are first-completion truth, not replay farming.
+	# Transaction idempotency protects retries of the same write; completed_levels
+	# independently protects the same level from receiving a fresh transaction id.
+	if transaction_id == "" or level_id == "" or processed_transactions.has(transaction_id) or completed_levels.has(level_id):
 		return false
 	processed_transactions.append(transaction_id)
 	_append_unique(completed_levels, level_id)
@@ -53,8 +56,8 @@ func apply_level_win(transaction_id: String, level_id: String, curio_id: String 
 	var stage_reward: int = house_stage_reward if house_stage_reward >= 0 else level_number
 	house_stage = max(house_stage, stage_reward)
 	highest_level_unlocked = max(highest_level_unlocked, level_number + 1)
-	# Opening-review economy: each first-time transaction grants the reward
-	# shown by the win surface. The transaction ledger keeps it exactly-once.
+	# Opening-review economy: each level grants its persistent completion reward
+	# exactly once. Replays may be played freely but do not mutate durable rewards.
 	coins += 120
 	gems += 1
 	return true

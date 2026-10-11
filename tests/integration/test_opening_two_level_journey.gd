@@ -110,6 +110,33 @@ func _run() -> void:
 	_expect(restored != null and int(restored.house_stage) == 1, "relaunch must preserve Level 1 House restoration")
 	_expect(restored != null and restored.curios.count("moon_cameo") == 1, "relaunch must preserve Moon Cameo exactly once")
 	_expect(relaunched.current_screen().get_node("Layout/PlayButton").text == "CONTINUE CURIO BOUTIQUE", "saved House must offer unlocked Level 2")
+	var replay_coins := int(restored.coins)
+	var replay_gems := int(restored.gems)
+	var replay_transactions := int(restored.processed_transactions.size())
+	_expect(relaunched.show_map(), "saved House must allow deliberate Level 1 replay from the route")
+	await process_frame
+	_expect(relaunched.show_prestart(1), "completed Level 1 must remain replayable from its route node")
+	await process_frame
+	_expect(relaunched.start_level(1), "completed Level 1 replay must enter gameplay")
+	await process_frame
+	var replay = relaunched.current_screen()
+	_expect(bool(replay.replay_mode), "completed Level 1 gameplay must enter explicit replay mode")
+	var replay_trace = replay.attempt_swap(Vector2i(1, 4), Vector2i(2, 4))
+	_expect(replay_trace != null and replay_trace.accepted and str(replay_trace.result) == "won", "Level 1 replay must remain fully playable")
+	await _await_board_motion(replay)
+	_expect(replay.result_overlay.visible, "replay win must still present an explicit result state")
+	_expect(replay.result_eyebrow.text.begins_with("REPLAY COMPLETE"), "replay result must not masquerade as a first-time reward")
+	var replay_values = replay.get_node_or_null("ResultOverlay/Card/Content/ResultRewardValues")
+	_expect(replay_values != null and not replay_values.visible, "replay result must not display duplicate persistent currency rewards")
+	_expect(replay.continue_after_win(), "replay result must return through its explicit completion action")
+	await process_frame
+	await process_frame
+	_expect(str(relaunched.current_route_name()) == "house", "replay completion must return directly to House without restoration")
+	_expect(relaunched.current_screen().get_node_or_null("RestorationOverlay") == null, "replay must not replay the House restoration ceremony")
+	var replayed_progress = relaunched.get("progress")
+	_expect(int(replayed_progress.coins) == replay_coins and int(replayed_progress.gems) == replay_gems, "replay must not mutate persistent currency")
+	_expect(int(replayed_progress.processed_transactions.size()) == replay_transactions, "replay must not add a persistent reward transaction")
+	_expect(replayed_progress.curios.count("moon_cameo") == 1, "replay must preserve exactly one Moon Cameo")
 	relaunched.queue_free()
 	await process_frame
 	_cleanup()

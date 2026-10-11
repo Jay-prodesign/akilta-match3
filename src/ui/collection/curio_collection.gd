@@ -31,6 +31,7 @@ var _moon_textures: Dictionary = {}
 
 var progress
 var _moon_art: TextureRect
+var _detail_overlay: Control
 
 func _ready() -> void:
 	back_button.pressed.connect(func(): back_requested.emit())
@@ -38,6 +39,7 @@ func _ready() -> void:
 	_install_reward_art(slot2_number, "res://assets/curios/ch01_curio_moth_reliquary.svg")
 	_install_reward_art(slot3_number, "res://assets/curios/ch01_curio_thorned_locket.svg")
 	_install_collection_atmosphere()
+	_install_card_actions()
 	_refresh()
 
 func set_progress(value) -> void:
@@ -153,3 +155,202 @@ func _install_collection_atmosphere() -> void:
 	back_button.add_theme_color_override("font_color", Color("#F4E5D3"))
 	back_button.add_theme_color_override("font_hover_color", Color("#F4E5D3"))
 	back_button.custom_minimum_size.y = maxf(back_button.custom_minimum_size.y, 56.0)
+
+
+func _install_card_actions() -> void:
+	_install_card_action(moon_card, "moon_cameo")
+	_install_card_action(slot2_card, "moth_reliquary")
+	_install_card_action(slot3_card, "thorned_locket")
+
+func _install_card_action(card: PanelContainer, curio_id: String) -> void:
+	if card == null or card.get_node_or_null("DetailActionLayer") != null:
+		return
+	var layer := Control.new()
+	layer.name = "DetailActionLayer"
+	layer.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	card.add_child(layer)
+	var button := Button.new()
+	button.name = "InspectAction"
+	button.text = "DETAILS"
+	button.anchor_left = 0.73
+	button.anchor_right = 0.97
+	button.anchor_top = 0.78
+	button.anchor_bottom = 0.96
+	button.grow_horizontal = Control.GROW_DIRECTION_BEGIN
+	button.grow_vertical = Control.GROW_DIRECTION_BEGIN
+	button.mouse_filter = Control.MOUSE_FILTER_STOP
+	button.mouse_default_cursor_shape = Control.CURSOR_POINTING_HAND
+	button.add_theme_font_size_override("font_size", 12)
+	var normal := StyleBoxFlat.new()
+	normal.bg_color = Color("#24172A", 0.96)
+	normal.border_color = Color("#D5AD70", 0.62)
+	normal.set_border_width_all(1)
+	normal.set_corner_radius_all(8)
+	var hover := normal.duplicate() as StyleBoxFlat
+	hover.bg_color = Color("#432348", 0.98)
+	button.add_theme_stylebox_override("normal", normal)
+	button.add_theme_stylebox_override("hover", hover)
+	button.add_theme_stylebox_override("pressed", hover)
+	button.add_theme_color_override("font_color", Color("#F4E5D3"))
+	layer.add_child(button)
+	button.pressed.connect(func(): _open_curio_detail(curio_id))
+
+func _open_curio_detail(curio_id: String) -> void:
+	_close_curio_detail()
+	var data := _curio_detail_data(curio_id)
+	if data.is_empty():
+		return
+	var awakened := _is_curio_awakened(curio_id)
+	var overlay := Control.new()
+	overlay.name = "CurioDetailOverlay"
+	overlay.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	overlay.z_index = 120
+	overlay.mouse_filter = Control.MOUSE_FILTER_STOP
+	add_child(overlay)
+	_detail_overlay = overlay
+
+	var veil := ColorRect.new()
+	veil.color = Color(0.015, 0.01, 0.025, 0.86)
+	veil.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	veil.mouse_filter = Control.MOUSE_FILTER_STOP
+	overlay.add_child(veil)
+
+	var card := PanelContainer.new()
+	card.name = "CurioDetailCard"
+	card.anchor_left = 0.08
+	card.anchor_right = 0.92
+	card.anchor_top = 0.14
+	card.anchor_bottom = 0.84
+	var shell := StyleBoxFlat.new()
+	shell.bg_color = Color("#0D0912", 0.995)
+	shell.border_color = Color("#D5AD70", 0.88 if awakened else 0.38)
+	shell.set_border_width_all(2)
+	shell.set_corner_radius_all(20)
+	shell.content_margin_left = 22
+	shell.content_margin_right = 22
+	shell.content_margin_top = 18
+	shell.content_margin_bottom = 18
+	shell.shadow_color = Color(0, 0, 0, 0.66)
+	shell.shadow_size = 18
+	card.add_theme_stylebox_override("panel", shell)
+	overlay.add_child(card)
+
+	var content := VBoxContainer.new()
+	content.name = "Content"
+	content.add_theme_constant_override("separation", 9)
+	card.add_child(content)
+
+	var kicker := Label.new()
+	kicker.text = "RELIQUARY · CURIO DETAIL"
+	kicker.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	kicker.add_theme_color_override("font_color", Color("#D5AD70"))
+	kicker.add_theme_font_size_override("font_size", 13)
+	content.add_child(kicker)
+
+	var art := TextureRect.new()
+	art.name = "HeroArt"
+	art.custom_minimum_size = Vector2(0, 220)
+	art.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+	art.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+	art.texture = _detail_texture(curio_id, awakened)
+	art.modulate = Color.WHITE if awakened else Color(0.58, 0.54, 0.62, 0.62)
+	content.add_child(art)
+
+	var title := Label.new()
+	title.name = "Name"
+	title.text = String(data.get("name", "UNKNOWN CURIO"))
+	title.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	title.add_theme_color_override("font_color", Color("#F4E5D3"))
+	title.add_theme_font_size_override("font_size", 27)
+	content.add_child(title)
+
+	var state := Label.new()
+	state.name = "State"
+	state.text = "AWAKENED · OWNED" if awakened else "LOCKED · NOT YET RECOVERED"
+	state.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	state.add_theme_color_override("font_color", Color("#F2D08B") if awakened else Color("#A995B0"))
+	state.add_theme_font_size_override("font_size", 15)
+	content.add_child(state)
+
+	var origin := Label.new()
+	origin.name = "Origin"
+	origin.text = String(data.get("origin_owned" if awakened else "origin_locked", ""))
+	origin.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	origin.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	origin.add_theme_color_override("font_color", Color("#B4A2B7"))
+	origin.add_theme_font_size_override("font_size", 13)
+	content.add_child(origin)
+
+	var lore := Label.new()
+	lore.name = "Lore"
+	lore.text = String(data.get("lore" if awakened else "requirement", ""))
+	lore.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	lore.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	lore.add_theme_color_override("font_color", Color("#DDD0D7"))
+	lore.add_theme_font_size_override("font_size", 15)
+	content.add_child(lore)
+
+	var close := Button.new()
+	close.name = "Close"
+	close.text = "RETURN TO RELIQUARY"
+	close.custom_minimum_size = Vector2(0, 54)
+	close.add_theme_font_size_override("font_size", 17)
+	var close_box := StyleBoxFlat.new()
+	close_box.bg_color = Color("#35213B")
+	close_box.border_color = Color("#D5AD70")
+	close_box.set_border_width_all(2)
+	close_box.set_corner_radius_all(10)
+	close.add_theme_stylebox_override("normal", close_box)
+	close.add_theme_stylebox_override("hover", close_box)
+	close.add_theme_stylebox_override("pressed", close_box)
+	close.add_theme_color_override("font_color", Color("#FFF0D8"))
+	content.add_child(close)
+	close.pressed.connect(_close_curio_detail)
+
+func _close_curio_detail() -> void:
+	if _detail_overlay != null and is_instance_valid(_detail_overlay):
+		_detail_overlay.queue_free()
+	_detail_overlay = null
+
+func _is_curio_awakened(curio_id: String) -> bool:
+	return progress != null and progress.curios.has(curio_id)
+
+func _detail_texture(curio_id: String, awakened: bool) -> Texture2D:
+	match curio_id:
+		"moon_cameo":
+			return _load_moon_texture(MOON_AWAKENED_PATH if awakened else MOON_SEALED_PATH)
+		"moth_reliquary":
+			return PieceAssetLoader.ornament("res://assets/curios/ch01_curio_moth_reliquary.svg")
+		"thorned_locket":
+			return PieceAssetLoader.ornament("res://assets/curios/ch01_curio_thorned_locket.svg")
+		_:
+			return null
+
+func _curio_detail_data(curio_id: String) -> Dictionary:
+	match curio_id:
+		"moon_cameo":
+			return {
+				"name": "MOON CAMEO",
+				"origin_owned": "RECOVERED FROM · MOONLIT CABINET · LEVEL 1",
+				"origin_locked": "SEALED BEHIND · MOONLIT CABINET",
+				"lore": "The first recovered Curio. Its moonlit face now remains visible in the restored House.",
+				"requirement": "Complete Level 1 to awaken the Moon Cameo and restore the first cabinet."
+			}
+		"moth_reliquary":
+			return {
+				"name": "MOTH RELIQUARY",
+				"origin_owned": "RECOVERED FROM · SEALED DISPLAY · LEVEL 2",
+				"origin_locked": "SEALED BEHIND · WAX DISPLAY",
+				"lore": "A recovered side-cabinet relic. Its display stays restored after the Level 2 ritual.",
+				"requirement": "Complete Level 2 by clearing both wax seals to recover the Moth Reliquary."
+			}
+		"thorned_locket":
+			return {
+				"name": "THORNED LOCKET",
+				"origin_owned": "RECOVERED FROM · THORNLIGHT ARRANGEMENT · LEVEL 3",
+				"origin_locked": "SEALED BEHIND · THORNLIGHT",
+				"lore": "The third opening Curio. Its restored place completes the first cabinet set.",
+				"requirement": "Complete Level 3 and its Moon Beam objective to recover the Thorned Locket."
+			}
+		_:
+			return {}

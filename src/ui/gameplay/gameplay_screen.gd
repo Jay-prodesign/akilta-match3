@@ -2,6 +2,7 @@ class_name Match3GameplayScreen
 extends Control
 
 signal level_won(level_id: String, curio_id: String, house_stage_reward: int)
+signal level_replay_finished(level_id: String)
 signal level_exit_requested
 signal feedback_requested(kind: String)
 signal navigation_requested(section: String)
@@ -21,6 +22,7 @@ const KENNEY_DIVIDER_PATH := "res://assets/candidate/third_party/kenney/fantasy-
 
 @export var default_level_path := "res://content/levels/ch01/level_001.json"
 @export var default_seed := 1001
+@export var replay_mode := false
 
 var board_state
 var last_trace
@@ -285,7 +287,10 @@ func continue_after_win() -> bool:
 	if not _pending_win:
 		return false
 	_pending_win = false
-	level_won.emit(current_level_id, current_reward_curio, current_house_stage_reward)
+	if replay_mode:
+		level_replay_finished.emit(current_level_id)
+	else:
+		level_won.emit(current_level_id, current_reward_curio, current_house_stage_reward)
 	return true
 
 func retry_current_level() -> bool:
@@ -361,19 +366,19 @@ func _show_result_if_terminal(result: String) -> void:
 		haptics.request_terminal("won")
 		feedback_requested.emit("win")
 		_pending_win = true
-		result_title.text = current_win_title
-		result_detail.text = current_win_detail
+		result_title.text = "RITUAL COMPLETE AGAIN" if replay_mode else current_win_title
+		result_detail.text = "This Curio already belongs to the House. Replaying does not grant the persistent reward again." if replay_mode else current_win_detail
 		_configure_result_reward_copy(true)
 		if result_ritual != null:
 			result_ritual.set("mode", "result")
 			result_ritual.set("relic_id", current_reward_curio)
 			result_ritual.set("glow_strength", 0.75)
 			result_ritual.queue_redraw()
-		result_action.text = "CONTINUE"
+		result_action.text = "RETURN TO HOUSE" if replay_mode else "CONTINUE"
 		if _result_reward_values != null:
-			_result_reward_values.visible = true
+			_result_reward_values.visible = not replay_mode
 		if _result_proclamation != null:
-			_result_proclamation.text = "The recovered Curio now changes the House."
+			_result_proclamation.text = "Replay complete · House state and owned Curios stay unchanged." if replay_mode else "The recovered Curio now changes the House."
 		if _booster_tray != null:
 			_booster_tray.visible = false
 		result_overlay.visible = true
@@ -406,6 +411,11 @@ func _configure_result_reward_copy(won: bool) -> void:
 		reward_name = "HIDDEN CURIO"
 	if won:
 		var relic_number := maxi(1, current_house_stage_reward)
+		if replay_mode:
+			result_eyebrow.text = "REPLAY COMPLETE · RELIC %02d" % relic_number
+			result_reward_name.text = "%s · ALREADY AWAKENED" % reward_name
+			result_house_change.text = "No new Curio, House restoration or persistent currency is granted on replay."
+			return
 		result_eyebrow.text = "LEVEL COMPLETE · RELIC %02d" % relic_number
 		result_reward_name.text = "%s · %s" % [
 			reward_name,

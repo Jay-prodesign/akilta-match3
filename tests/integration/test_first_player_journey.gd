@@ -123,6 +123,21 @@ func _run() -> void:
 	var collection = app.current_screen()
 	var moon_state: Label = collection.get_node("Layout/Cards/MoonCard/Content/State")
 	_expect(moon_state.text.begins_with("AWAKENED"), "Moon Cameo must be inspectable as awakened in collection")
+	var moon_details: Button = collection.get_node_or_null("Layout/Cards/MoonCard/DetailActionLayer/InspectAction") as Button
+	_expect(moon_details != null, "awakened Moon Cameo card must expose Curio Detail")
+	if moon_details != null:
+		moon_details.emit_signal("pressed")
+		await process_frame
+		var detail_state: Label = collection.get_node_or_null("CurioDetailOverlay/CurioDetailCard/Content/State") as Label
+		var detail_origin: Label = collection.get_node_or_null("CurioDetailOverlay/CurioDetailCard/Content/Origin") as Label
+		_expect(detail_state != null and detail_state.text.contains("AWAKENED"), "Curio Detail must verify owned state truthfully")
+		_expect(detail_origin != null and detail_origin.text.contains("LEVEL 1"), "Curio Detail must preserve the earned origin")
+		var detail_close: Button = collection.get_node_or_null("CurioDetailOverlay/CurioDetailCard/Content/Close") as Button
+		_expect(detail_close != null, "Curio Detail must be dismissible")
+		if detail_close != null:
+			detail_close.emit_signal("pressed")
+			await process_frame
+		_expect(collection.get_node_or_null("CurioDetailOverlay") == null, "closing Curio Detail must return to the Reliquary")
 	var collection_nav = collection.get_node_or_null("ProductNavigation")
 	_expect(collection_nav != null, "Curio Collection must retain the shared product navigation")
 	if collection_nav != null:

@@ -22,7 +22,12 @@ func _run() -> void:
 	_cleanup()
 
 	_expect(progress.apply_level_win("tx-level-001", "ch01_level_001", "moon_cameo"), "first win transaction must apply")
+	var first_reward_coins := int(progress.coins)
+	var first_reward_gems := int(progress.gems)
 	_expect(not progress.apply_level_win("tx-level-001", "ch01_level_001", "moon_cameo"), "same win transaction must be idempotent")
+	_expect(not progress.apply_level_win("tx-level-001-replay", "ch01_level_001", "moon_cameo"), "fresh transaction id must not duplicate a completed level reward")
+	_expect(int(progress.coins) == first_reward_coins and int(progress.gems) == first_reward_gems, "replay must not duplicate persistent currency rewards")
+	_expect(progress.processed_transactions.size() == 1, "replay must not create a second persistent reward transaction")
 	_expect(int(progress.house_stage) == 1, "first win must awaken House stage 1")
 	_expect(int(progress.highest_level_unlocked) == 2, "first win must unlock level 2")
 	_expect(progress.curios.count("moon_cameo") == 1, "Curio reward must exist exactly once")

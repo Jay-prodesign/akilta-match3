@@ -132,12 +132,16 @@ func start_level(level_number: int = 1) -> bool:
 	var screen: Node = GameplayScene.instantiate()
 	screen.set("default_level_path", level_path)
 	screen.set("default_seed", 1000 + level_number)
+	var level_id := String((level_data as Dictionary).get("id", ""))
+	screen.set("replay_mode", progress.completed_levels.has(level_id))
 	_show_screen(screen)
 	if screen.has_method("set_player_resources"):
 		screen.set_player_resources(int(progress.lives), int(progress.coins), int(progress.gems))
 	if screen.has_method("apply_presentation_settings"):
 		screen.apply_presentation_settings(user_settings.get_presentation_state())
 	screen.level_won.connect(_on_level_won)
+	if screen.has_signal("level_replay_finished"):
+		screen.level_replay_finished.connect(_on_level_replay_finished)
 	if screen.has_signal("navigation_requested"):
 		screen.navigation_requested.connect(_on_gameplay_navigation_requested)
 	if screen.has_signal("level_exit_requested"):
@@ -578,8 +582,16 @@ func _on_gameplay_result_state_changed(kind: String) -> void:
 		navigation.go(NavigationScript.Route.WIN_REWARDS, {"result": "won"})
 
 func _on_level_won(level_id: String, curio_id: String, house_stage_reward: int) -> void:
-	var transaction_id := "win:%s:%d" % [level_id, progress.processed_transactions.size() + 1]
+	_pending_level_number = 0
+	var transaction_id := "win:first:%s" % level_id
 	complete_level_win(transaction_id, level_id, curio_id, house_stage_reward)
+
+func _on_level_replay_finished(level_id: String) -> void:
+	_pending_level_number = 0
+	if navigation.current() != NavigationScript.Route.WIN_REWARDS or progress == null or not progress.completed_levels.has(level_id):
+		return
+	if navigation.go(NavigationScript.Route.HOUSE, {"reason": "level_replay_complete", "level": level_id}):
+		_render_house()
 
 func _on_gameplay_feedback_requested(kind: String) -> void:
 	if audio_director != null:
