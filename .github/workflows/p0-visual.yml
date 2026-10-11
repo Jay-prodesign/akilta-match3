@@ -6,7 +6,7 @@ on:
       - p0/bootstrap
     paths:
       - ".github/workflows/p0-visual.yml"
-  # Milestone trigger: real Level 1→2→3 progression journey + final 3/3 shell evidence (2026-10-11).
+  # Milestone trigger: three-level opening chapter integrated review candidate (2026-10-11).
   # Run the full milestone checks deliberately, not on every development commit.
   workflow_dispatch:
 
