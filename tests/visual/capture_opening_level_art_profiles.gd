@@ -106,8 +106,8 @@ func _capture() -> void:
 		var result_eyebrow: Label = screen.get_node("ResultOverlay/Card/Content/Eyebrow")
 		var result_house_change: Label = screen.get_node("ResultOverlay/Card/Content/HouseChange")
 		var expected_name := "MOTH RELIQUARY · RECOVERED" if level_number == 2 else "THORNED LOCKET · RECOVERED"
-		var expected_relic := "RELIC 02" if level_number == 2 else "RELIC 03"
-		if result_name.text != expected_name or not result_eyebrow.text.ends_with(expected_relic):
+		var expected_result_relic := "RELIC 02" if level_number == 2 else "RELIC 03"
+		if result_name.text != expected_name or not result_eyebrow.text.ends_with(expected_result_relic):
 			printerr("CAPTURE_FAIL: Level %d result identifies the wrong Curio" % level_number)
 			screen.queue_free()
 			quit(1)
