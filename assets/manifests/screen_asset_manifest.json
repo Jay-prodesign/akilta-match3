@@ -2151,6 +2151,43 @@
       "source_silhouette_path": "assets/curios/ch01_curio_thorned_locket.svg",
       "technical_policy": "png_raster_first_runtime__same_semantic_object__owned_svg_exact_fallback",
       "provenance": "AKILTA first-party opening Curio identity rasterized from the existing owned canonical silhouette for deterministic runtime parity. This is a raster runtime candidate, not a claim of final illustrated-art approval; exact SVG remains fallback until a later authored raster replacement passes render review."
+    },
+    {
+      "asset_id": "chapter_route_frontier_focus",
+      "screen": [
+        "S03"
+      ],
+      "block": "chapter_route",
+      "slot": "frontier_focus",
+      "state": [
+        "current"
+      ],
+      "type": "state_asset",
+      "dimensions": "128x128_webp_runtime_reuse",
+      "aspect_ratio": "1:1",
+      "transparent": true,
+      "variants": [
+        "current_frontier"
+      ],
+      "reuse": "declared_reuse_of_canonical_moon_sigil",
+      "priority": "P0",
+      "production_status": "runtime_connected_authored_state_asset",
+      "current_path": "assets/pieces/moon_sigil.webp",
+      "architecture_owned": true,
+      "contract_owners": [
+        {
+          "screen": "S03",
+          "region": "route",
+          "block": "chapter_route",
+          "slot": "frontier_focus",
+          "states": [
+            "current"
+          ]
+        }
+      ],
+      "source_silhouette_path": "assets/pieces/moon_sigil.svg",
+      "technical_policy": "webp_raster_first_runtime__semantic_moon_focus_marker__owned_svg_exact_fallback",
+      "provenance": "AKILTA first-party canonical moon sigil reused as the S03 current-frontier state marker. Runtime halo is focus VFX only; level-state truth remains owned by progression and the route contract."
     }
   ],
   "vertical_slice_art_policy": {
