@@ -139,7 +139,7 @@ func _draw_restored_relic(room: Rect2, texture: Texture2D, center: Vector2, glow
 		return
 	# Keep later rewards embedded in the authored right-side cabinet stack instead
 	# of reading as large floating UI tokens over furniture.
-	var relic_size := room.size.x * 0.125
+	var relic_size := room.size.x * 0.15
 	var frame_size := Vector2(relic_size, relic_size)
 	var frame := Rect2(center - frame_size * 0.5, frame_size)
 	var glow := glow_color

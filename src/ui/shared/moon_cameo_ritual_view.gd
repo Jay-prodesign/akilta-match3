@@ -46,7 +46,7 @@ func _draw() -> void:
 
 	var texture := _relic_texture(dormant)
 	if texture != null:
-		var extent := short * 0.62 if mode == "house" else minf(size.x * 0.32, size.y * 0.92)
+		var extent := short * 0.62 if mode == "house" else minf(size.x * 0.42, size.y * 0.92)
 		var rect := Rect2(center - Vector2.ONE * extent * 0.5, Vector2.ONE * extent)
 		draw_texture_rect(texture, rect, false)
 
