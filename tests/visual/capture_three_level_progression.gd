@@ -106,11 +106,21 @@ func _capture() -> void:
 	if String(app.current_route_name()) != "shop" or app.current_screen() == null or app.current_screen().name != "ShopScreen":
 		return _fail(app, "Shop must render as its own S11 route-backed screen")
 	var shop_notice: Label = app.current_screen().get_node_or_null("FeatureLayout/NoPurchasesNotice") as Label
+	var shop_currency: Label = app.current_screen().get_node_or_null("FeatureLayout/ShopCurrencySummary") as Label
+	var shop_truth: Label = app.current_screen().get_node_or_null("FeatureLayout/ShopCurrencyTruth") as Label
 	var shop_hero_title: Label = app.current_screen().get_node_or_null("FeatureLayout/FeatureHero/HeroRow/HeroCopy/FeatureHeroTitle") as Label
+	var shop_art: TextureRect = app.current_screen().get_node_or_null("FeatureLayout/FeatureHero/HeroRow/ShopFeaturedOfferArt") as TextureRect
+	var shop_disabled_action: Button = app.current_screen().get_node_or_null("FeatureLayout/FeatureHero/HeroRow/HeroCopy/ShopDisabledAction") as Button
 	if shop_notice == null or not shop_notice.text.contains("NO PURCHASES OR PAYMENTS"):
 		return _fail(app, "Shop must truthfully expose that purchases are disabled")
+	if shop_currency == null or not shop_currency.text.contains("HOUSE COINS  12700") or not shop_currency.text.contains("MOONSTONES  523"):
+		return _fail(app, "Shop currency summary must reflect persisted review balances")
+	if shop_truth == null or not shop_truth.text.contains("NOT PURCHASABLE"):
+		return _fail(app, "Shop currency summary must not imply commerce availability")
 	if shop_hero_title == null or shop_hero_title.text != "NO PURCHASES ENABLED":
 		return _fail(app, "Shop hero must remain an admitted unavailable state")
+	if shop_art == null or shop_art.texture == null or shop_disabled_action == null or not shop_disabled_action.disabled:
+		return _fail(app, "Shop featured offer must provide art with a disabled commerce CTA")
 	if not await _save(app, "progression-final-shop.png"):
 		return
 	app.current_screen().get_node("FeatureLayout/BackToHouse").emit_signal("pressed")

@@ -177,6 +177,14 @@ func _run() -> void:
 	_expect(shop_preview != null and shop_preview.name == "ShopScreen" and shop_preview.get_node("FeatureLayout/FeatureTitle").text == "THE CURIO EMPORIUM", "Shop must open directly from Events navigation")
 	_expect(shop_preview != null and shop_preview.get_node_or_null("ProductNavigation") != null, "Shop screen must retain shared product navigation")
 	_expect(shop_preview != null and shop_preview.get_node_or_null("FeatureLayout/NoPurchasesNotice") != null, "Shop must truthfully expose that purchases are disabled")
+	var shop_currency: Label = shop_preview.get_node_or_null("FeatureLayout/ShopCurrencySummary") as Label if shop_preview != null else null
+	var shop_truth: Label = shop_preview.get_node_or_null("FeatureLayout/ShopCurrencyTruth") as Label if shop_preview != null else null
+	var shop_offer_art: TextureRect = shop_preview.get_node_or_null("FeatureLayout/FeatureHero/HeroRow/ShopFeaturedOfferArt") as TextureRect if shop_preview != null else null
+	var shop_disabled_action: Button = shop_preview.get_node_or_null("FeatureLayout/FeatureHero/HeroRow/HeroCopy/ShopDisabledAction") as Button if shop_preview != null else null
+	_expect(shop_currency != null and shop_currency.text.contains("HOUSE COINS") and shop_currency.text.contains("MOONSTONES"), "Shop must expose real local currency balances")
+	_expect(shop_truth != null and shop_truth.text.contains("NOT PURCHASABLE"), "Shop balances must be explicitly non-purchasable")
+	_expect(shop_offer_art != null and shop_offer_art.texture != null, "Shop featured offer must own content artwork")
+	_expect(shop_disabled_action != null and shop_disabled_action.disabled, "Shop commerce CTA must remain disabled before commerce is connected")
 	if shop_preview != null:
 		shop_preview.get_node("ProductNavigation/Scroll/Items/NavHouse").emit_signal("pressed")
 	await process_frame
