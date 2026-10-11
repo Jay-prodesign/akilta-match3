@@ -1680,6 +1680,211 @@
       ],
       "technical_policy": "webp_raster_first_runtime__special_kind_identity__owned_svg_fallback",
       "provenance": "AKILTA first-party S05 special-token raster set. Static special identity is asset-backed; trigger resonance and motion remain runtime VFX. Render/play validation required before approval."
+    },
+    {
+      "asset_id": "special_line_h",
+      "screen": [
+        "S05"
+      ],
+      "block": "match_board",
+      "slot": "specials",
+      "state": [
+        "created",
+        "armed",
+        "triggered"
+      ],
+      "type": "gameplay_asset",
+      "dimensions": "256x256_webp_transparent",
+      "aspect_ratio": "1:1",
+      "transparent": true,
+      "variants": [
+        "line_h"
+      ],
+      "reuse": "global",
+      "priority": "P0",
+      "production_status": "production_special_candidate_runtime_validation",
+      "current_path": "assets/specials/gbl_special_line_h_idle_v01.webp",
+      "architecture_owned": true,
+      "contract_owners": [
+        {
+          "screen": "S05",
+          "region": "board",
+          "block": "match_board",
+          "slot": "specials",
+          "states": [
+            "created",
+            "armed",
+            "triggered"
+          ]
+        }
+      ],
+      "source_silhouette_path": "assets/specials/gbl_special_line_h_idle_v01.svg",
+      "technical_policy": "webp_raster_first_runtime__special_state_identity__owned_svg_fallback",
+      "provenance": "AKILTA first-party S05 special-token production candidate. Replaces procedural line/star/eclipse marks with an authored antique-gold gothic gameplay token while preserving exact special semantics. Render/play validation required before approval."
+    },
+    {
+      "asset_id": "special_line_v",
+      "screen": [
+        "S05"
+      ],
+      "block": "match_board",
+      "slot": "specials",
+      "state": [
+        "created",
+        "armed",
+        "triggered"
+      ],
+      "type": "gameplay_asset",
+      "dimensions": "256x256_webp_transparent",
+      "aspect_ratio": "1:1",
+      "transparent": true,
+      "variants": [
+        "line_v"
+      ],
+      "reuse": "global",
+      "priority": "P0",
+      "production_status": "production_special_candidate_runtime_validation",
+      "current_path": "assets/specials/gbl_special_line_v_idle_v01.webp",
+      "architecture_owned": true,
+      "contract_owners": [
+        {
+          "screen": "S05",
+          "region": "board",
+          "block": "match_board",
+          "slot": "specials",
+          "states": [
+            "created",
+            "armed",
+            "triggered"
+          ]
+        }
+      ],
+      "source_silhouette_path": "assets/specials/gbl_special_line_v_idle_v01.svg",
+      "technical_policy": "webp_raster_first_runtime__special_state_identity__owned_svg_fallback",
+      "provenance": "AKILTA first-party S05 special-token production candidate. Replaces procedural line/star/eclipse marks with an authored antique-gold gothic gameplay token while preserving exact special semantics. Render/play validation required before approval."
+    },
+    {
+      "asset_id": "special_area",
+      "screen": [
+        "S05"
+      ],
+      "block": "match_board",
+      "slot": "specials",
+      "state": [
+        "created",
+        "armed",
+        "triggered"
+      ],
+      "type": "gameplay_asset",
+      "dimensions": "256x256_webp_transparent",
+      "aspect_ratio": "1:1",
+      "transparent": true,
+      "variants": [
+        "area"
+      ],
+      "reuse": "global",
+      "priority": "P0",
+      "production_status": "production_special_candidate_runtime_validation",
+      "current_path": "assets/specials/gbl_special_area_idle_v01.webp",
+      "architecture_owned": true,
+      "contract_owners": [
+        {
+          "screen": "S05",
+          "region": "board",
+          "block": "match_board",
+          "slot": "specials",
+          "states": [
+            "created",
+            "armed",
+            "triggered"
+          ]
+        }
+      ],
+      "source_silhouette_path": "assets/specials/gbl_special_area_idle_v01.svg",
+      "technical_policy": "webp_raster_first_runtime__special_state_identity__owned_svg_fallback",
+      "provenance": "AKILTA first-party S05 special-token production candidate. Replaces procedural line/star/eclipse marks with an authored antique-gold gothic gameplay token while preserving exact special semantics. Render/play validation required before approval."
+    },
+    {
+      "asset_id": "special_smart",
+      "screen": [
+        "S05"
+      ],
+      "block": "match_board",
+      "slot": "specials",
+      "state": [
+        "created",
+        "armed",
+        "triggered"
+      ],
+      "type": "gameplay_asset",
+      "dimensions": "256x256_webp_transparent",
+      "aspect_ratio": "1:1",
+      "transparent": true,
+      "variants": [
+        "smart"
+      ],
+      "reuse": "global",
+      "priority": "P0",
+      "production_status": "production_special_candidate_runtime_validation",
+      "current_path": "assets/specials/gbl_special_smart_idle_v01.webp",
+      "architecture_owned": true,
+      "contract_owners": [
+        {
+          "screen": "S05",
+          "region": "board",
+          "block": "match_board",
+          "slot": "specials",
+          "states": [
+            "created",
+            "armed",
+            "triggered"
+          ]
+        }
+      ],
+      "source_silhouette_path": "assets/specials/gbl_special_smart_idle_v01.svg",
+      "technical_policy": "webp_raster_first_runtime__special_state_identity__owned_svg_fallback",
+      "provenance": "AKILTA first-party S05 special-token production candidate. Replaces procedural line/star/eclipse marks with an authored antique-gold gothic gameplay token while preserving exact special semantics. Render/play validation required before approval."
+    },
+    {
+      "asset_id": "special_global",
+      "screen": [
+        "S05"
+      ],
+      "block": "match_board",
+      "slot": "specials",
+      "state": [
+        "created",
+        "armed",
+        "triggered"
+      ],
+      "type": "gameplay_asset",
+      "dimensions": "256x256_webp_transparent",
+      "aspect_ratio": "1:1",
+      "transparent": true,
+      "variants": [
+        "global"
+      ],
+      "reuse": "global",
+      "priority": "P0",
+      "production_status": "production_special_candidate_runtime_validation",
+      "current_path": "assets/specials/gbl_special_global_idle_v01.webp",
+      "architecture_owned": true,
+      "contract_owners": [
+        {
+          "screen": "S05",
+          "region": "board",
+          "block": "match_board",
+          "slot": "specials",
+          "states": [
+            "created",
+            "armed",
+            "triggered"
+          ]
+        }
+      ],
+      "source_silhouette_path": "assets/specials/gbl_special_global_idle_v01.svg",
+      "technical_policy": "webp_raster_first_runtime__special_state_identity__owned_svg_fallback",
+      "provenance": "AKILTA first-party S05 special-token production candidate. Replaces procedural line/star/eclipse marks with an authored antique-gold gothic gameplay token while preserving exact special semantics. Render/play validation required before approval."
     }
   ],
   "vertical_slice_art_policy": {
