@@ -17,6 +17,7 @@ on:
       - "src/save/**"
       - "src/world/**"
       - "src/match3/presentation/**"
+      - "assets/pieces/**"
       - "src/ui/shared/screen_art_registry.gd"
       - "assets/manifests/screen_contracts.json"
       - "assets/manifests/screen_asset_manifest.json"

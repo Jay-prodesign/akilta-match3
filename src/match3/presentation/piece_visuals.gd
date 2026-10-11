@@ -10,7 +10,7 @@ const CONTRACT := {
 		"display_name": "Moon Sigil",
 		"material": "smoked_moonstone",
 		"world_role": "base_family",
-		"status": "first_party_svg_candidate_v2"
+		"status": "raster_material_candidate_runtime_validation"
 	},
 	"rose": {
 		"color": Color("#C7728F"),
@@ -20,37 +20,37 @@ const CONTRACT := {
 		"display_name": "Thorn Rose",
 		"material": "carved_wine_enamel",
 		"world_role": "base_family",
-		"status": "first_party_svg_candidate_v2"
+		"status": "raster_material_candidate_runtime_validation"
 	},
 	"moth": {
-		"color": Color("#77718E"),
-		"silhouette": "crow_profile",
-		"motif": "amber_crow_eye",
+		"color": Color("#83BDC0"),
+		"silhouette": "luna_moth",
+		"motif": "paired_wing_eye_spots",
 		"value": 0.74,
-		"display_name": "Moon Crow",
-		"material": "midnight_feather",
+		"display_name": "Luna Moth",
+		"material": "moonlit_cyan_enamel_and_antique_gold",
 		"world_role": "base_family",
-		"status": "first_party_svg_candidate_v2"
+		"status": "raster_material_candidate_runtime_validation"
 	},
 	"key": {
-		"color": Color("#45B88A"),
-		"silhouette": "apothecary_flask",
-		"motif": "emerald_elixir",
-		"value": 0.68,
-		"display_name": "Witchlight Potion",
-		"material": "emerald_glass_and_antique_gold",
+		"color": Color("#D3A34E"),
+		"silhouette": "antique_key",
+		"motif": "four_lobed_bow_and_notched_bit",
+		"value": 0.80,
+		"display_name": "Curio Key",
+		"material": "antique_gilt",
 		"world_role": "base_family",
-		"status": "first_party_svg_candidate_v2"
+		"status": "raster_readability_candidate_runtime_validation"
 	},
 	"leaf": {
-		"color": Color("#C6A2E8"),
-		"silhouette": "pentagram_medallion",
-		"motif": "arcane_star",
-		"value": 0.58,
-		"display_name": "Pentagram Sigil",
-		"material": "gilded_arcane_enamel",
+		"color": Color("#78AA63"),
+		"silhouette": "ivy_leaf",
+		"motif": "gilded_veins",
+		"value": 0.66,
+		"display_name": "Night Ivy",
+		"material": "lacquered_green_enamel",
 		"world_role": "base_family",
-		"status": "first_party_svg_candidate_v2"
+		"status": "raster_material_candidate_runtime_validation"
 	},
 	"cat": {
 		"color": Color("#24202D"),

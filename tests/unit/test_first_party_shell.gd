@@ -4,6 +4,7 @@ const Navigation = preload("res://src/app/navigation_controller.gd")
 const Settings = preload("res://src/settings/user_settings.gd")
 const BoardView = preload("res://src/match3/presentation/board_view.gd")
 const PieceAssets = preload("res://src/match3/presentation/piece_asset_loader.gd")
+const PieceVisuals = preload("res://src/match3/presentation/piece_visuals.gd")
 const SplashScene = preload("res://src/ui/splash/splash_screen.tscn")
 const TEST_SETTINGS := "user://match3_first_party_shell_settings.json"
 
@@ -57,6 +58,13 @@ func _run() -> void:
 		for profile in PieceAssets.PROFILE_PATHS:
 			var profile_paths: Dictionary = PieceAssets.PROFILE_PATHS[profile]
 			_expect(String(profile_paths.get(family, "")) == String(canonical_piece_paths[family]), "piece family identity must stay invariant across level profiles: %s / %s" % [profile, family])
+	var moth_visual: Dictionary = PieceVisuals.descriptor("moth")
+	var key_visual: Dictionary = PieceVisuals.descriptor("key")
+	var ivy_visual: Dictionary = PieceVisuals.descriptor("leaf")
+	_expect(String(moth_visual.get("display_name", "")) == "Luna Moth" and String(moth_visual.get("silhouette", "")) == "luna_moth", "piece semantics must describe Luna Moth")
+	_expect(String(key_visual.get("display_name", "")) == "Curio Key" and String(key_visual.get("silhouette", "")) == "antique_key", "piece semantics must describe Curio Key")
+	_expect(String(ivy_visual.get("display_name", "")) == "Night Ivy" and String(ivy_visual.get("silhouette", "")) == "ivy_leaf", "piece semantics must describe Night Ivy")
+	_expect(String(PieceAssets.RASTER_OVERRIDES.get(PieceAssets.PATHS["key"], "")).ends_with("curio_key.png"), "Curio Key must use the readable raster override while the material candidate is too dark")
 	var splash = SplashScene.instantiate()
 	root.add_child(splash)
 	await process_frame

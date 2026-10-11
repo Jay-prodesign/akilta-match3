@@ -15,6 +15,13 @@ const PATHS := {
 	"skull": "res://assets/pieces/skull.svg",
 }
 
+const RASTER_OVERRIDES := {
+	# Current material WebP key loses its silhouette against the dark board.
+	# Keep the canonical object identity but use the brighter authored raster
+	# until the final production-material Key replaces this review candidate.
+	"res://assets/pieces/curio_key.svg": "res://assets/pieces/curio_key.png",
+}
+
 static var _textures: Dictionary = {}
 static var _failures: Dictionary = {}
 static var _ornaments: Dictionary = {}
@@ -87,10 +94,13 @@ static func contract() -> Dictionary:
 static func ornament(path: String) -> Texture2D:
 	if _ornaments.has(path):
 		return _ornaments[path]
-	# Production artwork is raster-first. Prefer compact authored WebP, then PNG.
-	# The canonical owned SVG remains compatibility fallback only.
+	# Production artwork is raster-first. A narrowly declared readability override
+	# may outrank the material WebP; otherwise prefer WebP, then PNG. The canonical
+	# owned SVG remains compatibility fallback only.
 	var chosen := path
-	if path.get_extension().to_lower() == "svg":
+	if RASTER_OVERRIDES.has(path) and FileAccess.file_exists(String(RASTER_OVERRIDES[path])):
+		chosen = String(RASTER_OVERRIDES[path])
+	elif path.get_extension().to_lower() == "svg":
 		var webp_preferred := path.get_basename() + ".webp"
 		var png_preferred := path.get_basename() + ".png"
 		if FileAccess.file_exists(webp_preferred):
