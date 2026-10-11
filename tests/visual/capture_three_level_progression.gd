@@ -273,6 +273,17 @@ func _play_level(app: Node, level_number: int) -> bool:
 		return false
 	gameplay.result_action.emit_signal("pressed")
 	await _frames(4)
+	if String(app.current_route_name()) == "restoration":
+		var restoration = app.current_screen()
+		var restoration_continue: Button = restoration.get_node_or_null("RestorationOverlay/CeremonyCard/CeremonyContent/CeremonyRow/Copy/Continue") as Button if restoration != null else null
+		if restoration_continue == null:
+			_fail(app, "Level %d restoration ceremony must expose Continue before returning to House" % level_number)
+			return false
+		restoration_continue.emit_signal("pressed")
+		await _frames(4)
+	if String(app.current_route_name()) != "house":
+		_fail(app, "Level %d did not complete S07 Restoration -> S01 House" % level_number)
+		return false
 	return true
 
 func _frames(count: int) -> void:
