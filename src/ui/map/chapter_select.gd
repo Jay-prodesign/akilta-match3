@@ -13,10 +13,10 @@ func _layout_chapter_hotspots(grid: Control, buttons: Array[Button]) -> void:
 		var button := buttons[i]
 		if compact:
 			var spacing := 6.0
-			var card_height := maxf(50.0, (grid.size.y - spacing * float(count - 1)) / float(count))
+			var card_height := maxf(48.0, (grid.size.y - spacing * float(count - 1)) / float(count))
 			button.position = Vector2(0, float(i) * (card_height + spacing))
 			button.size = Vector2(grid.size.x, card_height)
-			button.add_theme_font_size_override("font_size", 15)
+			button.add_theme_font_size_override("font_size", 14)
 			button.add_theme_constant_override("icon_max_width", 58)
 		else:
 			button.position = Vector2(grid.size.x * float(button.get_meta("map_x")), grid.size.y * float(button.get_meta("map_y")))
