@@ -80,6 +80,11 @@ func _run() -> void:
 	_expect(map.get_level_button(2) != null and not map.get_level_button(2).disabled, "Level 2 must unlock after Level 1 completion")
 	_expect(map.get_level_button(3) != null and map.get_level_button(3).disabled, "Level 3 must stay progression-locked until Level 2 completion")
 	_expect(app.show_prestart(2), "Level 2 prestart must be accessible in the internal review after Level 1 win")
+	_expect(app.current_screen().get_node("Layout/Back").text == "BACK TO MAP", "map-origin prestart must identify the correct back destination")
+	app.current_screen().get_node("Layout/Back").emit_signal("pressed")
+	await process_frame
+	_expect(str(app.current_route_name()) == "map", "map-origin prestart Back must return to chapter map")
+	_expect(app.current_screen().get_level_button(2) != null, "returning from prestart must restore chapter level controls")
 	app.queue_free()
 	await process_frame
 	var relaunched = packed.instantiate()
