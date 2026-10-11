@@ -1572,6 +1572,49 @@
       "source_silhouette_path": "assets/pieces/skull.svg",
       "technical_policy": "webp_raster_first_runtime__canonical_family_identity__svg_owned_fallback",
       "provenance": "AKILTA first-party S05 eight-piece production family candidate: transparent WebP, shared moonlit directional light, antique-gold edge language and dark-romantic gothic reliquary material treatment. Candidate remains subject to rendered board/play validation before approval."
+    },
+    {
+      "asset_id": "blocker_wax_seal",
+      "screens": [
+        "S05"
+      ],
+      "type": "gameplay_asset",
+      "dimensions": "256x256_webp_transparent_state_pair",
+      "aspect_ratio": "1:1",
+      "transparent": true,
+      "variants": [
+        "intact",
+        "cracked"
+      ],
+      "reuse": "chapter",
+      "priority": "P0",
+      "production_status": "production_state_pair_candidate_runtime_validation",
+      "current_path": "assets/blockers/ch01_blocker_wax_seal_intact_v01.webp",
+      "architecture_owned": true,
+      "contract_owners": [
+        {
+          "screen_id": "S05",
+          "region_id": "board",
+          "block_id": "match_board",
+          "slot_id": "blockers",
+          "states": [
+            "normal",
+            "damaged",
+            "cleared"
+          ]
+        }
+      ],
+      "state_paths": {
+        "normal": "assets/blockers/ch01_blocker_wax_seal_intact_v01.webp",
+        "damaged": "assets/blockers/ch01_blocker_wax_seal_cracked_v01.webp",
+        "cleared": "runtime_transition"
+      },
+      "source_silhouette_paths": [
+        "assets/blockers/ch01_blocker_wax_seal_intact_v01.svg",
+        "assets/blockers/ch01_blocker_wax_seal_cracked_v01.svg"
+      ],
+      "technical_policy": "webp_raster_first_runtime__wax_seal_semantics__owned_svg_fallback",
+      "provenance": "AKILTA first-party Wax Seal production state pair derived from the Curio House seal language; raster runtime art replaces the temporary skull marker. Render/play validation required before approval."
     }
   ],
   "vertical_slice_art_policy": {
