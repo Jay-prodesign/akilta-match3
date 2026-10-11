@@ -46,7 +46,7 @@ func _draw() -> void:
 
 	var texture := _relic_texture(dormant)
 	if texture != null:
-		var extent := short * (0.62 if mode == "house" else 0.70)
+		var extent := short * 0.62 if mode == "house" else minf(size.x * 0.32, size.y * 0.92)
 		var rect := Rect2(center - Vector2.ONE * extent * 0.5, Vector2.ONE * extent)
 		draw_texture_rect(texture, rect, false)
 
@@ -54,8 +54,6 @@ func _draw() -> void:
 		_draw_wax_seal(center, short * 0.10)
 		draw_line(center - Vector2(short * 0.18, short * 0.18), center + Vector2(short * 0.18, short * 0.18), Color(ROSE, 0.52), 3.0)
 		draw_line(center + Vector2(short * 0.18, -short * 0.18), center + Vector2(-short * 0.18, short * 0.18), Color(ROSE, 0.52), 3.0)
-	elif mode == "result":
-		_draw_wax_seal(Vector2(center.x, size.y * 0.82), short * 0.055)
 
 func _relic_texture(dormant: bool) -> Texture2D:
 	if relic_id == "moon_cameo":
