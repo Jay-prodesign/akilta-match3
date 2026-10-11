@@ -75,7 +75,7 @@ func _build_ritual_aids() -> void:
 	panel.add_child(column)
 	var heading := Label.new()
 	heading.name = "RitualAidsHeading"
-	heading.text = "AVAILABLE AIDS"
+	heading.text = "IN-LEVEL AIDS"
 	heading.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	heading.add_theme_color_override("font_color", Color("#D5AD70"))
 	heading.add_theme_font_size_override("font_size", 14)
@@ -86,8 +86,7 @@ func _build_ritual_aids() -> void:
 	column.add_child(row)
 	for entry in [
 		{"label":"HINT", "art":"res://assets/pieces/moon_sigil.svg"},
-		{"label":"+3 MOVES", "art":"res://assets/pieces/potion.svg"},
-		{"label":"RETRY", "art":"res://assets/pieces/skull.svg"}
+		{"label":"+3 MOVES", "art":"res://assets/pieces/potion.svg"}
 	]:
 		var chip := PanelContainer.new()
 		chip.custom_minimum_size = Vector2(0, 44)
