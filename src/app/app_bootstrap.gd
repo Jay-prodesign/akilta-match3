@@ -198,13 +198,13 @@ func show_feature_preview(feature: String) -> bool:
 	layout.add_child(eyebrow)
 	var title := Label.new()
 	title.name = "FeatureTitle"
-	title.text = "WEEKLY RITUALS" if feature.to_lower() == "events" else "THE CURIO EMPORIUM"
+	title.text = "THE KEEPER" if feature.to_lower() == "profile" else ("WEEKLY RITUALS" if feature.to_lower() == "events" else "THE CURIO EMPORIUM")
 	title.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	title.add_theme_color_override("font_color", Color("#F4E5D3"))
 	title.add_theme_font_size_override("font_size", 30)
 	layout.add_child(title)
 	var detail := Label.new()
-	detail.text = "A new moonlit challenge arrives each week." if feature.to_lower() == "events" else "Spend no real money in this preview build."
+	detail.text = "Your journey through the House of Curios." if feature.to_lower() == "profile" else ("A new moonlit challenge arrives each week." if feature.to_lower() == "events" else "Spend no real money in this preview build.")
 	detail.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	detail.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	detail.add_theme_color_override("font_color", Color("#D8C6C3"))
@@ -222,6 +222,7 @@ func show_feature_preview(feature: String) -> bool:
 	card_scroll.add_child(cards)
 	var entries: Array[Dictionary]
 	var is_events := feature.to_lower() == "events"
+	var is_profile := feature.to_lower() == "profile"
 	if is_events:
 		var completed_count := mini(int(progress.completed_levels.size()) if progress != null else 0, INTERNAL_REVIEW_LEVEL_COUNT)
 		var progress_label := Label.new()
@@ -248,7 +249,7 @@ func show_feature_preview(feature: String) -> bool:
 		ritual_progress.add_theme_stylebox_override("background", track)
 		ritual_progress.add_theme_stylebox_override("fill", fill)
 		layout.add_child(ritual_progress)
-	else:
+	elif not is_profile:
 		var shop_note := Label.new()
 		shop_note.name = "NoPurchasesNotice"
 		shop_note.text = "THE EMPORIUM IS SEALED  ·  NO PURCHASES OR PAYMENTS"
@@ -262,6 +263,15 @@ func show_feature_preview(feature: String) -> bool:
 			{"icon":"☾", "art":"res://assets/pieces/moon_sigil.svg", "title":"MOONLIGHT MARKET", "body":"Awaken the three opening displays to restore the Curio House.", "status":"CHAPTER PROGRESS TRACKED · MARKET EVENT NOT YET ACTIVE"},
 			{"icon":"♜", "art":"res://assets/pieces/crow.svg", "title":"THE LOST RELICS", "body":"A raven has spotted a sealed cabinet.", "status":"LOCKED · COMPLETE THE OPENING CHAPTER"},
 			{"icon":"✧", "art":"res://assets/pieces/pentagram.svg", "title":"WEEKLY RITUALS", "body":"Your weekly ritual streak will live here.", "status":"PREVIEW · NO CLAIMABLE REWARDS"}
+		]
+	elif is_profile:
+		var cleared := mini(int(progress.completed_levels.size()) if progress != null else 0, INTERNAL_REVIEW_LEVEL_COUNT)
+		var collected := mini(int(progress.curios.size()) if progress != null else 0, INTERNAL_REVIEW_LEVEL_COUNT)
+		var restored := int(progress.house_stage) if progress != null else 0
+		entries = [
+			{"icon":"☾", "art":"res://assets/pieces/moon_sigil.svg", "title":"CHAPTER PROGRESS", "body":"%d of %d opening rituals completed." % [cleared, INTERNAL_REVIEW_LEVEL_COUNT], "status":"YOUR SAVED JOURNEY"},
+			{"icon":"✦", "art":"res://assets/curios/ch01_curio_moon_cameo_awakened_v01.svg", "title":"RELIQUARY", "body":"%d of %d opening curios awakened." % [collected, INTERNAL_REVIEW_LEVEL_COUNT], "status":"RELICS RECOVERED"},
+			{"icon":"⌂", "art":"res://assets/world/ch01_curio_boutique/curio_boutique_moonlit_backdrop.svg", "title":"HOUSE RESTORATION", "body":"Restoration stage %d." % restored, "status":"PROGRESS SAVED ON THIS DEVICE"}
 		]
 	else:
 		entries = [
@@ -328,6 +338,19 @@ func show_feature_preview(feature: String) -> bool:
 		status.add_theme_color_override("font_color", Color("#BFA5D8"))
 		status.add_theme_font_size_override("font_size", 14)
 		copy.add_child(status)
+	if is_profile:
+		var preferences := Button.new()
+		preferences.name = "ProfileSettings"
+		preferences.text = "AUDIO & ACCESSIBILITY SETTINGS"
+		preferences.custom_minimum_size.y = 52
+		preferences.add_theme_color_override("font_color", Color("#F4E5D3"))
+		preferences.add_theme_font_size_override("font_size", 18)
+		layout.add_child(preferences)
+		preferences.pressed.connect(func():
+			if is_instance_valid(overlay):
+				overlay.queue_free()
+		show_settings()
+		)
 	var back := Button.new()
 	back.name = "BackToHouse"
 	back.text = "RETURN TO THE HOUSE"
@@ -377,7 +400,7 @@ func _render_house() -> void:
 	screen.collection_requested.connect(show_collection)
 	screen.map_requested.connect(show_chapters)
 	screen.play_requested.connect(_on_house_play_requested)
-	screen.settings_requested.connect(show_settings)
+	screen.settings_requested.connect(func(): show_feature_preview("Profile"))
 	if screen.has_signal("events_requested"):
 		screen.events_requested.connect(func(): show_feature_preview("Events"))
 	if screen.has_signal("shop_requested"):
