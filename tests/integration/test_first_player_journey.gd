@@ -44,9 +44,15 @@ func _run() -> void:
 	play_button.emit_signal("pressed")
 	await process_frame
 	await process_frame
-	_expect(str(app.current_route_name()) == "prestart", "House primary CTA must enter the focused Level 1 pre-start")
+	_expect(str(app.current_route_name()) == "map", "House primary CTA must enter the current Curio Boutique route")
+	var route = app.current_screen()
+	_expect(route != null and route.get_level_button(1) != null and not route.get_level_button(1).disabled, "Golden Loop route must expose playable Level 1")
+	route.get_level_button(1).emit_signal("pressed")
+	await process_frame
+	await process_frame
+	_expect(str(app.current_route_name()) == "prestart", "Level 1 node must enter the focused pre-start")
 	var prestart = app.current_screen()
-	_expect(str(prestart.name) == "LevelPrestart", "House primary CTA must open the Level 1 screen contract")
+	_expect(str(prestart.name) == "LevelPrestart", "route Level 1 node must open the Level 1 screen contract")
 	_expect(prestart.get_node_or_null("ProductNavigation") == null, "pre-start must not carry the meta bottom navigation")
 	var prestart_back: Button = prestart.get_node_or_null("Layout/Back") as Button
 	_expect(prestart_back != null, "pre-start must own a focused back affordance")
