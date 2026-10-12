@@ -12,6 +12,7 @@ const MapScene = preload("res://src/ui/map/chapter_map.tscn")
 const ChapterSelectScene = preload("res://src/ui/map/chapter_select.tscn")
 const PrestartScene = preload("res://src/ui/prestart/level_prestart.tscn")
 const SettingsScene = preload("res://src/ui/settings/settings_panel.tscn")
+const MetaDestinationScene = preload("res://src/ui/meta/meta_destination_screen.tscn")
 const SplashScene = preload("res://src/ui/splash/splash_screen.tscn")
 const AudioDirectorScript = preload("res://src/feedback/audio_director.gd")
 const HapticsControllerScript = preload("res://src/feedback/haptics_controller.gd")
@@ -454,24 +455,17 @@ func _open_daily_practice(level_number: int) -> void:
 	show_prestart(level_number)
 
 func show_feature_preview(feature: String) -> bool:
-	# Truthful internal-review destinations are real product routes/screens.
-	# Events and Shop remain unavailable for live actions, but they are not
-	# overlays pretending the player is still on the House route.
 	if navigation == null:
 		return false
 	var feature_key := feature.to_lower()
 	var target_route := -1
-	var screen_name := ""
 	match feature_key:
 		"events":
 			target_route = NavigationScript.Route.EVENTS
-			screen_name = "EventsScreen"
 		"shop":
 			target_route = NavigationScript.Route.SHOP
-			screen_name = "ShopScreen"
 		"profile":
 			target_route = NavigationScript.Route.PROFILE_SETTINGS
-			screen_name = "ProfileSettingsScreen"
 		_:
 			return false
 	if navigation.current() != NavigationScript.Route.HOUSE and navigation.current() != target_route:
@@ -482,453 +476,39 @@ func show_feature_preview(feature: String) -> bool:
 			return false
 	elif navigation.current() != target_route:
 		return false
-	var overlay := Control.new()
-	overlay.name = screen_name
-	overlay.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
-	_show_screen(overlay)
-	var backdrop := ColorRect.new()
-	backdrop.color = Color("#0A0C16")
-	backdrop.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
-	overlay.add_child(backdrop)
-	var world_art := TextureRect.new()
-	world_art.name = "FeatureWorldArt"
-	world_art.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
-	world_art.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	var world_art_id := "events_bg_curio_house" if feature_key == "events" else ("profile_bg_curio_house" if feature_key == "profile" else "shop_bg_curio_house")
-	world_art.texture = ScreenArt.texture(world_art_id)
-	world_art.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
-	world_art.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_COVERED
-	world_art.modulate = Color(0.58, 0.52, 0.70, 0.42) if feature_key == "events" else (Color(0.68, 0.58, 0.50, 0.36) if feature_key == "shop" else Color(0.52, 0.60, 0.74, 0.38))
-	overlay.add_child(world_art)
-	var layout := VBoxContainer.new()
-	layout.name = "FeatureLayout"
-	layout.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
-	layout.offset_left = 18
-	layout.offset_top = 24
-	layout.offset_right = -18
-	layout.offset_bottom = -20
-	layout.add_theme_constant_override("separation", 12)
-	layout.alignment = BoxContainer.ALIGNMENT_BEGIN
-	overlay.add_child(layout)
-	var is_events := feature_key == "events"
-	var is_profile := feature_key == "profile"
+
 	var completed_count := mini(int(progress.completed_levels.size()) if progress != null else 0, INTERNAL_REVIEW_LEVEL_COUNT)
 	var collected_count := mini(int(progress.curios.size()) if progress != null else 0, INTERNAL_REVIEW_LEVEL_COUNT)
 	var restored_stage := int(progress.house_stage) if progress != null else 0
 	var opening_complete := completed_count >= INTERNAL_REVIEW_LEVEL_COUNT and collected_count >= INTERNAL_REVIEW_LEVEL_COUNT and restored_stage >= INTERNAL_REVIEW_LEVEL_COUNT
-
-	var eyebrow := Label.new()
-	eyebrow.text = "THE HOUSE OF CURIOS  ·  AKILTA"
-	eyebrow.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	eyebrow.add_theme_color_override("font_color", Color("#D5AD70"))
-	eyebrow.add_theme_color_override("font_outline_color", Color("#080710", 0.92))
-	eyebrow.add_theme_constant_override("outline_size", 3)
-	eyebrow.add_theme_font_size_override("font_size", 15)
-	layout.add_child(eyebrow)
-	var title := Label.new()
-	title.name = "FeatureTitle"
-	title.text = "THE KEEPER" if is_profile else ("EVENT CENTER" if is_events else "THE CURIO EMPORIUM")
-	title.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	title.add_theme_color_override("font_color", Color("#FFF0D8"))
-	title.add_theme_color_override("font_outline_color", Color("#080710", 0.94))
-	title.add_theme_constant_override("outline_size", 5)
-	title.add_theme_font_size_override("font_size", 38)
-	layout.add_child(title)
-	var detail := Label.new()
-	detail.text = "Your restored curios, House progress and preferences." if is_profile else ("Seasonal events gather here; Weekly Rituals has its own truthful mission state." if is_events else "A sealed preview of the House economy. Nothing here can charge you.")
-	detail.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	detail.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-	detail.add_theme_color_override("font_color", Color("#D8C6C3"))
-	detail.add_theme_color_override("font_outline_color", Color("#080710", 0.82))
-	detail.add_theme_constant_override("outline_size", 2)
-	detail.add_theme_font_size_override("font_size", 18)
-	layout.add_child(detail)
-	if not is_profile and not is_events:
-		var currency_summary := Label.new()
-		currency_summary.name = "ShopCurrencySummary"
-		currency_summary.text = "HOUSE COINS  %d  ·  MOONSTONES  %d" % [int(progress.coins) if progress != null else 0, int(progress.gems) if progress != null else 0]
-		currency_summary.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-		currency_summary.add_theme_color_override("font_color", Color("#F2D08B"))
-		currency_summary.add_theme_color_override("font_outline_color", Color("#080710", 0.86))
-		currency_summary.add_theme_constant_override("outline_size", 2)
-		currency_summary.add_theme_font_size_override("font_size", 17)
-		layout.add_child(currency_summary)
-		var currency_truth := Label.new()
-		currency_truth.name = "ShopCurrencyTruth"
-		currency_truth.text = "EARNED IN PLAY · NOT PURCHASABLE"
-		currency_truth.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-		currency_truth.add_theme_color_override("font_color", Color("#BFA5D8"))
-		currency_truth.add_theme_font_size_override("font_size", 13)
-		layout.add_child(currency_truth)
-
-	var hero := PanelContainer.new()
-	hero.name = "FeatureHero"
-	hero.custom_minimum_size = Vector2(0, 190) if is_events else Vector2(0, 150)
-	var hero_style := StyleBoxFlat.new()
-	hero_style.bg_color = Color("#171321", 0.96)
-	hero_style.border_color = Color("#9B6FA6", 0.82) if is_events else (Color("#D5AD70", 0.86) if not is_profile else Color("#8796C7", 0.82))
-	hero_style.set_border_width_all(2)
-	hero_style.set_corner_radius_all(16)
-	hero_style.content_margin_left = 18
-	hero_style.content_margin_right = 18
-	hero_style.content_margin_top = 14
-	hero_style.content_margin_bottom = 14
-	hero_style.shadow_color = Color(0, 0, 0, 0.48)
-	hero_style.shadow_size = 12
-	hero.add_theme_stylebox_override("panel", hero_style)
-	layout.add_child(hero)
-	var hero_row := HBoxContainer.new()
-	hero_row.name = "HeroRow"
-	hero_row.add_theme_constant_override("separation", 14)
-	hero.add_child(hero_row)
-	if is_events:
-		var event_hero_art := TextureRect.new()
-		event_hero_art.name = "EventHeroArt"
-		event_hero_art.custom_minimum_size = Vector2(190, 160)
-		event_hero_art.texture = PieceAssetLoader.ornament("res://assets/curios/ch01_curio_moon_cameo_awakened_v01.svg")
-		event_hero_art.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
-		event_hero_art.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
-		event_hero_art.mouse_filter = Control.MOUSE_FILTER_IGNORE
-		hero_row.add_child(event_hero_art)
-	elif not is_profile:
-		var shop_hero_art := TextureRect.new()
-		shop_hero_art.name = "ShopFeaturedOfferArt"
-		shop_hero_art.custom_minimum_size = Vector2(190, 160)
-		shop_hero_art.texture = PieceAssetLoader.ornament("res://assets/curios/ch01_curio_moth_reliquary.svg")
-		shop_hero_art.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
-		shop_hero_art.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
-		shop_hero_art.mouse_filter = Control.MOUSE_FILTER_IGNORE
-		hero_row.add_child(shop_hero_art)
-	var hero_copy := VBoxContainer.new()
-	hero_copy.name = "HeroCopy"
-	hero_copy.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	hero_copy.alignment = BoxContainer.ALIGNMENT_CENTER
-	hero_copy.add_theme_constant_override("separation", 4)
-	hero_row.add_child(hero_copy)
-	var hero_kicker := Label.new()
-	hero_kicker.name = "FeatureHeroKicker"
-	hero_kicker.text = ("OPENING RITUAL COMPLETE" if opening_complete else "OPENING RITUAL IN PROGRESS") if is_events else ("EMPORIUM PREVIEW · SEALED" if not is_profile else ("FIRST CABINET SET RESTORED" if opening_complete else "KEEPER RECORD"))
-	hero_kicker.add_theme_color_override("font_color", Color("#D5AD70"))
-	hero_kicker.add_theme_font_size_override("font_size", 15)
-	hero_copy.add_child(hero_kicker)
-	var hero_title := Label.new()
-	hero_title.name = "FeatureHeroTitle"
-	hero_title.text = ("%d / %d DISPLAYS AWAKENED" % [completed_count, INTERNAL_REVIEW_LEVEL_COUNT]) if is_events else ("NO PURCHASES ENABLED" if not is_profile else ("%d CURIOS · RESTORATION STAGE %d" % [collected_count, restored_stage]))
-	hero_title.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-	hero_title.add_theme_color_override("font_color", Color("#FFF0D8"))
-	hero_title.add_theme_color_override("font_outline_color", Color("#080710", 0.90))
-	hero_title.add_theme_constant_override("outline_size", 3)
-	hero_title.add_theme_font_size_override("font_size", 25)
-	hero_copy.add_child(hero_title)
-	var hero_body := Label.new()
-	hero_body.name = "FeatureHeroBody"
-	hero_body.text = ("The House remembers every completed display; future weekly events remain sealed." if is_events else ("These balances come only from first clears. Purchases and spending are not connected." if not is_profile else "Your opening journey is stored locally and reflected across the House, map and Reliquary."))
-	hero_body.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-	hero_body.add_theme_color_override("font_color", Color("#CFC0CF"))
-	hero_body.add_theme_font_size_override("font_size", 16)
-	hero_copy.add_child(hero_body)
-	if not is_profile and not is_events:
-		var disabled_action := Button.new()
-		disabled_action.name = "ShopDisabledAction"
-		disabled_action.text = "COMMERCE NOT CONNECTED"
-		disabled_action.custom_minimum_size.y = 52
-		_style_meta_action(disabled_action, false)
-		disabled_action.disabled = true
-		hero_copy.add_child(disabled_action)
-
-	var card_scroll := ScrollContainer.new()
-	card_scroll.name = "FeatureCardScroll"
-	card_scroll.size_flags_vertical = Control.SIZE_EXPAND_FILL
-	card_scroll.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	card_scroll.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
-	layout.add_child(card_scroll)
-	var cards := VBoxContainer.new()
-	cards.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	cards.add_theme_constant_override("separation", 10)
-	card_scroll.add_child(cards)
-	var entries: Array[Dictionary]
-	if is_events:
-		var progress_label := Label.new()
-		progress_label.name = "ChapterRitualProgress"
-		progress_label.text = ("OPENING RITUAL COMPLETE  ·  %d / %d DISPLAYS AWAKENED" if opening_complete else "OPENING RITUAL  ·  %d / %d DISPLAYS AWAKENED") % [completed_count, INTERNAL_REVIEW_LEVEL_COUNT]
-		progress_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-		progress_label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-		progress_label.add_theme_color_override("font_color", Color("#D5AD70"))
-		progress_label.add_theme_font_size_override("font_size", 16)
-		layout.add_child(progress_label)
-		var ritual_progress := ProgressBar.new()
-		ritual_progress.name = "OpeningRitualProgressBar"
-		ritual_progress.min_value = 0
-		ritual_progress.max_value = INTERNAL_REVIEW_LEVEL_COUNT
-		ritual_progress.value = completed_count
-		ritual_progress.show_percentage = false
-		ritual_progress.custom_minimum_size.y = 12
-		var track := StyleBoxFlat.new()
-		track.bg_color = Color("#211827")
-		track.set_corner_radius_all(6)
-		var fill := StyleBoxFlat.new()
-		fill.bg_color = Color("#D5AD70")
-		fill.set_corner_radius_all(6)
-		ritual_progress.add_theme_stylebox_override("background", track)
-		ritual_progress.add_theme_stylebox_override("fill", fill)
-		layout.add_child(ritual_progress)
-		var daily_level := _daily_practice_level()
-		var daily_card := PanelContainer.new()
-		daily_card.name = "DailyPracticeCard"
-		daily_card.custom_minimum_size = Vector2(0, 126)
-		var daily_style := StyleBoxFlat.new()
-		daily_style.bg_color = Color("#15101D", 0.96)
-		daily_style.border_color = Color("#D5AD70", 0.74)
-		daily_style.set_border_width_all(1)
-		daily_style.set_corner_radius_all(14)
-		daily_style.content_margin_left = 14
-		daily_style.content_margin_right = 14
-		daily_style.content_margin_top = 10
-		daily_style.content_margin_bottom = 10
-		daily_card.add_theme_stylebox_override("panel", daily_style)
-		layout.add_child(daily_card)
-		var daily_content := VBoxContainer.new()
-		daily_content.name = "DailyContent"
-		daily_content.add_theme_constant_override("separation", 4)
-		daily_card.add_child(daily_content)
-		var daily_kicker := Label.new()
-		daily_kicker.name = "DailyPracticeKicker"
-		daily_kicker.text = "DEVICE-LOCAL DAILY PRACTICE"
-		daily_kicker.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-		daily_kicker.add_theme_color_override("font_color", Color("#BFA5D8"))
-		daily_kicker.add_theme_font_size_override("font_size", 14)
-		daily_content.add_child(daily_kicker)
-		var daily_title := Label.new()
-		daily_title.name = "DailyPracticeTitle"
-		daily_title.text = "DAILY HOUSE RITUAL · LEVEL %d" % daily_level if daily_level > 0 else "DAILY HOUSE RITUAL · SEALED"
-		daily_title.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-		daily_title.add_theme_color_override("font_color", Color("#FFF0D8"))
-		daily_title.add_theme_font_size_override("font_size", 20)
-		daily_content.add_child(daily_title)
-		var daily_truth := Label.new()
-		daily_truth.name = "DailyPracticeTruth"
-		daily_truth.text = "REPLAY ONLY · NO BONUS REWARD · NO CURRENCY SPEND" if daily_level > 0 else "COMPLETE AN OPENING RITUAL TO UNLOCK LOCAL PRACTICE"
-		daily_truth.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-		daily_truth.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-		daily_truth.add_theme_color_override("font_color", Color("#D5AD70"))
-		daily_truth.add_theme_font_size_override("font_size", 13)
-		daily_content.add_child(daily_truth)
-		var daily_action := Button.new()
-		daily_action.name = "DailyPracticeAction"
-		daily_action.text = "PRACTICE LEVEL %d" % daily_level if daily_level > 0 else "RESTORE A DISPLAY TO UNLOCK"
-		daily_action.custom_minimum_size.y = 50
-		daily_action.disabled = daily_level <= 0
-		daily_action.set_meta("daily_level", daily_level)
-		daily_action.set_meta("retention_contract", "device_local_replay_no_bonus")
-		_style_meta_action(daily_action, daily_level > 0)
-		daily_content.add_child(daily_action)
-		if daily_level > 0:
-			daily_action.pressed.connect(_open_daily_practice.bind(daily_level))
-
-		var weekly_button := Button.new()
-		weekly_button.name = "WeeklyMissionsAction"
-		weekly_button.text = "OPEN WEEKLY RITUALS"
-		weekly_button.custom_minimum_size.y = 60
-		_style_meta_action(weekly_button, true)
-		layout.add_child(weekly_button)
-		weekly_button.pressed.connect(show_weekly_missions)
-	elif not is_profile:
-		var shop_note := Label.new()
-		shop_note.name = "NoPurchasesNotice"
-		shop_note.text = "THE EMPORIUM IS SEALED  ·  NO PURCHASES OR PAYMENTS"
-		shop_note.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-		shop_note.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-		shop_note.add_theme_color_override("font_color", Color("#D5AD70"))
-		shop_note.add_theme_font_size_override("font_size", 15)
-		layout.add_child(shop_note)
-	if is_events:
-		entries = [
-			{"icon":"☾", "art":"res://assets/curios/ch01_curio_moon_cameo_awakened_v01.svg", "title":"MOONLIGHT MARKET", "body":"The opening cabinet set is restored. The House is ready for a future moonlit event." if opening_complete else "Awaken the three opening displays to restore the Curio House.", "status":"OPENING CHAPTER COMPLETE · FUTURE MARKET EVENT REMAINS SEALED" if opening_complete else "CHAPTER PROGRESS TRACKED · MARKET EVENT NOT YET ACTIVE"},
-			{"icon":"♜", "art":"res://assets/curios/ch01_curio_moth_reliquary.svg", "title":"THE LOST RELICS", "body":"A sealed reliquary marks a future cabinet journey.", "status":"UPPER CABINETS SEALED · FUTURE JOURNEY" if opening_complete else "LOCKED · COMPLETE THE OPENING CHAPTER"},
-			{"icon":"✧", "art":"res://assets/curios/ch01_curio_thorned_locket.svg", "title":"WEEKLY RITUALS", "body":"Weekly ritual challenges will live here when a live mission feed exists.", "status":"FUTURE FEATURE · NO CLAIMABLE REWARDS"}
-		]
-	elif is_profile:
-		entries = [
-			{"icon":"☾", "art":"res://assets/pieces/moon_sigil.svg", "title":"CHAPTER PROGRESS", "body":"Opening chapter complete · %d of %d rituals." % [completed_count, INTERNAL_REVIEW_LEVEL_COUNT] if opening_complete else "%d of %d opening rituals completed." % [completed_count, INTERNAL_REVIEW_LEVEL_COUNT], "status":"FIRST CABINET SET RESTORED" if opening_complete else "YOUR SAVED JOURNEY"},
-			{"icon":"✦", "art":"res://assets/curios/ch01_curio_moon_cameo_awakened_v01.svg", "title":"RELIQUARY", "body":"%d of %d opening curios awakened." % [collected_count, INTERNAL_REVIEW_LEVEL_COUNT], "status":"OPENING SET COMPLETE" if opening_complete else "RELICS RECOVERED"},
-			{"icon":"⌂", "art":"res://assets/world/ch01_curio_boutique/curio_boutique_moonlit_backdrop.svg", "title":"HOUSE RESTORATION", "body":"Restoration stage %d." % restored_stage, "status":"OPENING RESTORATION COMPLETE" if opening_complete else "PROGRESS SAVED ON THIS DEVICE"}
-		]
-	else:
-		entries = [
-			{"icon":"◉", "title":"CANDLELIGHT KIT", "body":"A future soft-currency cabinet for restoration supplies.", "status":"SEALED · ECONOMY PREVIEW ONLY"},
-			{"icon":"◇", "title":"MOONSTONE CACHE", "body":"A future premium-currency cabinet. No price or payment flow is active.", "status":"SEALED · NO REAL-MONEY PURCHASES"},
-			{"icon":"✦", "title":"RESTORER'S RELIQUARY", "body":"A future curated bundle surface for boosters and curios.", "status":"SEALED · STORE NOT CONNECTED"}
-		]
-	var card_index := 0
-	for entry in entries:
-		var card := PanelContainer.new()
-		card_index += 1
-		card.name = "FeatureCard%d" % card_index
-		card.custom_minimum_size = Vector2(0, 210) if is_events else (Vector2(0, 170) if not is_profile else Vector2(0, 190))
-		var panel_style := StyleBoxFlat.new()
-		panel_style.bg_color = Color("#171321")
-		panel_style.border_color = Color("#9B6FA6", 0.58) if is_events else (Color("#D5AD70", 0.62) if not is_profile else Color("#8796C7", 0.58))
-		panel_style.set_border_width_all(2)
-		panel_style.set_corner_radius_all(14)
-		panel_style.content_margin_left = 16
-		panel_style.content_margin_right = 16
-		panel_style.content_margin_top = 14
-		panel_style.content_margin_bottom = 14
-		panel_style.shadow_color = Color(0, 0, 0, 0.34)
-		panel_style.shadow_size = 8
-		card.add_theme_stylebox_override("panel", panel_style)
-		cards.add_child(card)
-		var row := HBoxContainer.new()
-		row.size_flags_vertical = Control.SIZE_EXPAND_FILL
-		row.add_theme_constant_override("separation", 18)
-		card.add_child(row)
-		var art_path := String(entry.get("art", ""))
-		if art_path != "":
-			var card_art := TextureRect.new()
-			card_art.name = "CardArt%d" % card_index
-			card_art.custom_minimum_size = Vector2(116, 116) if is_events else Vector2(96, 96)
-			card_art.texture = PieceAssetLoader.ornament(art_path)
-			card_art.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
-			card_art.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
-			card_art.mouse_filter = Control.MOUSE_FILTER_IGNORE
-			row.add_child(card_art)
-		var copy := VBoxContainer.new()
-		copy.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-		copy.size_flags_vertical = Control.SIZE_EXPAND_FILL
-		copy.alignment = BoxContainer.ALIGNMENT_CENTER
-		copy.add_theme_constant_override("separation", 6)
-		row.add_child(copy)
-		var card_kicker := Label.new()
-		card_kicker.name = "CardKicker%d" % card_index
-		card_kicker.text = ("%s %02d" % ["RITUAL" if is_events else ("RECORD" if is_profile else "SEALED CABINET"), card_index])
-		card_kicker.add_theme_color_override("font_color", Color("#D5AD70"))
-		card_kicker.add_theme_font_size_override("font_size", 13)
-		copy.add_child(card_kicker)
-		var card_title := Label.new()
-		card_title.text = String(entry["title"])
-		card_title.add_theme_color_override("font_color", Color("#F4E5D3"))
-		card_title.add_theme_color_override("font_outline_color", Color("#080710", 0.88))
-		card_title.add_theme_constant_override("outline_size", 2)
-		card_title.add_theme_font_size_override("font_size", 23)
-		copy.add_child(card_title)
-		var card_body := Label.new()
-		card_body.text = String(entry["body"])
-		card_body.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-		card_body.add_theme_color_override("font_color", Color("#D8C6C3"))
-		card_body.add_theme_font_size_override("font_size", 17)
-		copy.add_child(card_body)
-		var status := Label.new()
-		status.text = String(entry["status"])
-		status.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-		status.add_theme_color_override("font_color", Color("#BFA5D8"))
-		status.add_theme_font_size_override("font_size", 14)
-		copy.add_child(status)
-	if is_profile:
-		_build_profile_save_health_card(layout)
-		var preferences := Button.new()
-		preferences.name = "ProfileSettings"
-		preferences.text = "⚙  AUDIO & ACCESSIBILITY"
-		preferences.custom_minimum_size.y = 60
-		preferences.add_theme_color_override("font_color", Color("#F4E5D3"))
-		preferences.add_theme_font_size_override("font_size", 18)
-		var preferences_style := StyleBoxFlat.new()
-		preferences_style.bg_color = Color("#211728", 0.98)
-		preferences_style.border_color = Color("#8796C7", 0.82)
-		preferences_style.set_border_width_all(1)
-		preferences_style.set_corner_radius_all(8)
-		var preferences_hover := preferences_style.duplicate() as StyleBoxFlat
-		preferences_hover.bg_color = Color("#352A45")
-		preferences_hover.border_color = Color("#D5AD70")
-		preferences.add_theme_stylebox_override("normal", preferences_style)
-		preferences.add_theme_stylebox_override("hover", preferences_hover)
-		preferences.add_theme_stylebox_override("pressed", preferences_hover)
-		layout.add_child(preferences)
-		preferences.pressed.connect(func(): show_settings())
-	var back := Button.new()
-	back.name = "BackToHouse"
-	back.text = "RETURN TO THE HOUSE"
-	back.custom_minimum_size = Vector2(0, 58)
-	back.add_theme_color_override("font_color", Color("#F4E5D3"))
-	back.add_theme_font_size_override("font_size", 22)
-	var back_style := StyleBoxFlat.new()
-	back_style.bg_color = Color("#38233A")
-	back_style.border_color = Color("#D5AD70")
-	back_style.set_border_width_all(1)
-	back_style.set_corner_radius_all(8)
-	back.add_theme_stylebox_override("normal", back_style)
-	back.add_theme_stylebox_override("hover", back_style)
-	layout.add_child(back)
-	back.pressed.connect(_dismiss_feature_preview)
-	_install_product_navigation(overlay, feature.to_lower(), NodePath("FeatureLayout"))
-	# Retention/meta destinations may use only contract-owned first-party content
-	# art. Live event/economy truth remains unavailable, so visual richness must
-	# never imply a claimable reward, price, countdown or active event.
+	var state := {
+		"completed_count": completed_count,
+		"collected_count": collected_count,
+		"restored_stage": restored_stage,
+		"opening_cap": INTERNAL_REVIEW_LEVEL_COUNT,
+		"opening_complete": opening_complete,
+		"coins": int(progress.coins) if progress != null else 0,
+		"gems": int(progress.gems) if progress != null else 0,
+		"daily_level": _daily_practice_level() if feature_key == "events" else 0,
+		"save_status": _local_save_status_copy(),
+		"save_detail": _local_save_detail_copy(),
+	}
+	var screen: Node = MetaDestinationScene.instantiate()
+	_show_screen(screen)
+	if not bool(screen.configure(feature_key, state)):
+		_ensure_house_route()
+		return false
+	_install_product_navigation(screen, feature_key)
+	if screen.has_signal("back_requested"):
+		screen.back_requested.connect(_dismiss_feature_preview)
+	if screen.has_signal("settings_requested"):
+		screen.settings_requested.connect(show_settings)
+	if screen.has_signal("weekly_requested"):
+		screen.weekly_requested.connect(show_weekly_missions)
+	if screen.has_signal("daily_practice_requested"):
+		screen.daily_practice_requested.connect(_open_daily_practice)
 	return true
 
-func _build_profile_save_health_card(layout: VBoxContainer) -> void:
-	if layout == null or layout.get_node_or_null("SaveHealthCard") != null:
-		return
-	var card := PanelContainer.new()
-	card.name = "SaveHealthCard"
-	card.custom_minimum_size = Vector2(0, 176)
-	var shell := StyleBoxFlat.new()
-	shell.bg_color = Color("#11131D", 0.98)
-	shell.border_color = Color("#8796C7", 0.74)
-	shell.set_border_width_all(2)
-	shell.set_corner_radius_all(14)
-	shell.content_margin_left = 16
-	shell.content_margin_right = 16
-	shell.content_margin_top = 12
-	shell.content_margin_bottom = 12
-	card.add_theme_stylebox_override("panel", shell)
-	layout.add_child(card)
-
-	var content := VBoxContainer.new()
-	content.name = "SaveHealthContent"
-	content.add_theme_constant_override("separation", 5)
-	card.add_child(content)
-
-	var kicker := Label.new()
-	kicker.name = "SaveHealthKicker"
-	kicker.text = "SAVE & ACCOUNT"
-	kicker.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	kicker.add_theme_color_override("font_color", Color("#D5AD70"))
-	kicker.add_theme_font_size_override("font_size", 14)
-	content.add_child(kicker)
-
-	var local_status := Label.new()
-	local_status.name = "LocalSaveStatus"
-	local_status.text = _local_save_status_copy()
-	local_status.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	local_status.add_theme_color_override("font_color", Color("#FFF0D8"))
-	local_status.add_theme_font_size_override("font_size", 20)
-	content.add_child(local_status)
-
-	var local_detail := Label.new()
-	local_detail.name = "LocalSaveDetail"
-	local_detail.text = _local_save_detail_copy()
-	local_detail.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	local_detail.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-	local_detail.add_theme_color_override("font_color", Color("#D8C6C3"))
-	local_detail.add_theme_font_size_override("font_size", 15)
-	content.add_child(local_detail)
-
-	var cloud_status := Label.new()
-	cloud_status.name = "CloudSyncStatus"
-	cloud_status.text = "CLOUD SYNC · NOT CONNECTED"
-	cloud_status.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	cloud_status.add_theme_color_override("font_color", Color("#BFA5D8"))
-	cloud_status.add_theme_font_size_override("font_size", 16)
-	content.add_child(cloud_status)
-
-	var cloud_detail := Label.new()
-	cloud_detail.name = "CloudSyncDetail"
-	cloud_detail.text = "No account sign-in, remote backup, or cross-device restore is active in this build."
-	cloud_detail.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	cloud_detail.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-	cloud_detail.add_theme_color_override("font_color", Color("#B8AAB8"))
-	cloud_detail.add_theme_font_size_override("font_size", 14)
-	content.add_child(cloud_detail)
 
 func _local_save_status_copy() -> String:
 	match _save_load_status:
