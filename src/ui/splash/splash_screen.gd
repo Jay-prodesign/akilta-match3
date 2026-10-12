@@ -68,7 +68,7 @@ func set_boot_state(state: String, message: String = "", can_continue: bool = tr
 			progress_label.text = "THE HOUSE IS READY"
 			recovery_message.visible = false
 			enter_button.text = "ENTER THE HOUSE"
-			enter_button.visible = true
+			enter_button.visible = false
 			enter_button.disabled = false
 		"recoverable_error":
 			progress_label.visible = true
