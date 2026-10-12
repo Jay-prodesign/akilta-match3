@@ -1,14 +1,15 @@
 class_name Match3ProductNavigation
 extends RefCounted
 
-const PieceAssetLoader = preload("res://src/match3/presentation/piece_asset_loader.gd")
 const MobileSafeArea = preload("res://src/ui/shared/mobile_safe_area.gd")
+const NavigationScene = preload("res://src/ui/shared/product_navigation.tscn")
+
 const ITEMS := [
-	{"label": "HOUSE", "id": "house", "icon": "res://assets/ui/nav_house.svg"},
-	{"label": "CURIOS", "id": "curios", "icon": "res://assets/ui/nav_curios.svg"},
-	{"label": "MAP", "id": "map", "icon": "res://assets/ui/nav_map.svg"},
-	{"label": "EVENTS", "id": "events", "icon": "res://assets/ui/nav_events.svg"},
-	{"label": "SHOP", "id": "shop", "icon": "res://assets/ui/nav_shop.svg"},
+	{"label": "HOUSE", "id": "house", "node": "NavHouse"},
+	{"label": "CURIOS", "id": "curios", "node": "NavCurios"},
+	{"label": "MAP", "id": "map", "node": "NavMap"},
+	{"label": "EVENTS", "id": "events", "node": "NavEvents"},
+	{"label": "SHOP", "id": "shop", "node": "NavShop"},
 ]
 
 static func attach(screen: Control, active_section: String, handler: Callable, content_path: NodePath = NodePath("Layout")) -> PanelContainer:
@@ -25,94 +26,63 @@ static func attach(screen: Control, active_section: String, handler: Callable, c
 			content.set_meta("product_nav_inset_applied", true)
 		MobileSafeArea.apply_content(screen, content_path)
 
-	var panel := PanelContainer.new()
-	panel.name = "ProductNavigation"
-	panel.anchor_left = 0.0
-	panel.anchor_right = 1.0
-	panel.anchor_top = 1.0
-	panel.anchor_bottom = 1.0
+	var panel := NavigationScene.instantiate() as PanelContainer
+	if panel == null:
+		push_error("Global ProductNavigation authored scene could not instantiate.")
+		return null
 	panel.offset_left = 12.0 + safe_insets.x
 	panel.offset_right = -12.0 - safe_insets.z
 	panel.offset_top = -114.0 - safe_insets.w
 	panel.offset_bottom = -10.0 - safe_insets.w
-	panel.z_index = 40
-	var shell := StyleBoxFlat.new()
-	shell.bg_color = Color("#090810", 0.985)
-	shell.border_color = Color("#D5AD70", 0.82)
-	shell.set_border_width_all(1)
-	shell.set_corner_radius_all(12)
-	shell.shadow_color = Color(0, 0, 0, 0.44)
-	shell.shadow_size = 8
-	panel.add_theme_stylebox_override("panel", shell)
 	screen.add_child(panel)
-
-	var scroll := ScrollContainer.new()
-	scroll.name = "Scroll"
-	scroll.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
-	scroll.vertical_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
-	scroll.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
-	panel.add_child(scroll)
-
-	var row := HBoxContainer.new()
-	row.name = "Items"
-	row.add_theme_constant_override("separation", 2)
-	row.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	scroll.add_child(row)
 
 	for item in ITEMS:
 		var action := String(item["id"])
-		var button := Button.new()
-		button.name = "Nav" + action.capitalize()
-		button.text = ""
-		button.tooltip_text = action.capitalize()
+		var button := panel.get_node_or_null("Scroll/Items/%s" % String(item["node"])) as Button
+		if button == null:
+			push_error("Global ProductNavigation authored slot missing: %s" % action)
+			continue
 		var is_active := action == active_section
 		button.set_meta("interaction_state", "selected" if is_active else "normal")
 		button.disabled = is_active
-		button.focus_mode = Control.FOCUS_ALL
-		button.custom_minimum_size = Vector2(0, 94)
-		button.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-		var normal := StyleBoxFlat.new()
-		normal.bg_color = Color("#211728")
-		normal.border_color = Color("#9B7B91", 0.54)
-		normal.set_border_width_all(1)
-		normal.set_corner_radius_all(7)
-		var active := normal.duplicate() as StyleBoxFlat
-		active.bg_color = Color("#49304C")
-		active.border_color = Color("#D5AD70")
-		active.set_border_width_all(2)
-		var disabled := normal.duplicate() as StyleBoxFlat
-		disabled.bg_color = Color("#17121C")
-		disabled.border_color = Color("#6B5A69", 0.46)
-		button.add_theme_stylebox_override("normal", active if is_active else normal)
-		button.add_theme_stylebox_override("hover", active)
-		button.add_theme_stylebox_override("pressed", active)
-		button.add_theme_stylebox_override("focus", active)
-		button.add_theme_stylebox_override("disabled", active if is_active else disabled)
-		var stack := VBoxContainer.new()
-		stack.name = "Content"
-		stack.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
-		stack.alignment = BoxContainer.ALIGNMENT_CENTER
-		stack.add_theme_constant_override("separation", 3)
-		stack.mouse_filter = Control.MOUSE_FILTER_IGNORE
-		button.add_child(stack)
-		var icon := TextureRect.new()
-		icon.name = "Icon"
-		icon.custom_minimum_size = Vector2(42, 42)
-		icon.texture = PieceAssetLoader.ornament(String(item["icon"]))
-		icon.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
-		icon.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
-		icon.mouse_filter = Control.MOUSE_FILTER_IGNORE
-		icon.modulate = Color("#F0CE8A") if is_active else Color("#C9B5C8")
-		stack.add_child(icon)
-		var caption := Label.new()
-		caption.name = "Label"
-		caption.text = String(item["label"])
-		caption.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-		caption.add_theme_font_size_override("font_size", 20)
-		caption.add_theme_color_override("font_color", Color("#F4E5D3") if is_active else Color("#CDBFC9"))
-		caption.mouse_filter = Control.MOUSE_FILTER_IGNORE
-		stack.add_child(caption)
+		button.tooltip_text = action.capitalize()
+		var icon := button.get_node_or_null("Content/Icon") as TextureRect
+		var caption := button.get_node_or_null("Content/Label") as Label
+		if icon != null:
+			icon.modulate = Color("#F0CE8A") if is_active else Color("#C9B5C8")
+		if caption != null:
+			caption.text = String(item["label"])
+			caption.add_theme_color_override("font_color", Color("#F4E5D3") if is_active else Color("#CDBFC9"))
 		if handler.is_valid() and not is_active:
 			button.pressed.connect(handler.bind(action))
-		row.add_child(button)
 	return panel
+
+static func authored_contract(panel: PanelContainer) -> Dictionary:
+	if panel == null:
+		return {
+			"authored_scene": false,
+			"all_slots_present": false,
+			"icons_loaded": false,
+			"touch_targets_ok": false,
+			"runtime_ui_factory": false,
+		}
+	var all_slots_present := true
+	var icons_loaded := true
+	var touch_targets_ok := true
+	for item in ITEMS:
+		var button := panel.get_node_or_null("Scroll/Items/%s" % String(item["node"])) as Button
+		all_slots_present = all_slots_present and button != null
+		if button == null:
+			icons_loaded = false
+			touch_targets_ok = false
+			continue
+		var icon := button.get_node_or_null("Content/Icon") as TextureRect
+		icons_loaded = icons_loaded and icon != null and icon.texture != null
+		touch_targets_ok = touch_targets_ok and button.custom_minimum_size.y >= 56.0
+	return {
+		"authored_scene": true,
+		"all_slots_present": all_slots_present,
+		"icons_loaded": icons_loaded,
+		"touch_targets_ok": touch_targets_ok,
+		"runtime_ui_factory": false,
+	}
