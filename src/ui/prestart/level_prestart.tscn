@@ -1,4 +1,4 @@
-[gd_scene load_steps=6 format=3]
+[gd_scene load_steps=7 format=3]
 
 [ext_resource type="Script" path="res://src/ui/prestart/level_prestart.gd" id="1_pre"]
 [ext_resource type="Script" path="res://src/ui/shared/moon_cameo_ritual_view.gd" id="2_cameo"]
@@ -45,6 +45,22 @@ corner_radius_top_right = 10
 corner_radius_bottom_right = 10
 corner_radius_bottom_left = 10
 
+[sub_resource type="StyleBoxFlat" id="EyebrowBand"]
+bg_color = Color(0.035, 0.025, 0.045, 0.82)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.851, 0.71, 0.416, 0.42)
+corner_radius_top_left = 10
+corner_radius_top_right = 10
+corner_radius_bottom_right = 10
+corner_radius_bottom_left = 10
+content_margin_left = 14.0
+content_margin_right = 14.0
+content_margin_top = 6.0
+content_margin_bottom = 6.0
+
 [node name="LevelPrestart" type="Control"]
 layout_mode = 3
 anchors_preset = 15
@@ -76,12 +92,13 @@ theme_override_constants/separation = 12
 alignment = 1
 
 [node name="Eyebrow" type="Label" parent="Layout"]
-custom_minimum_size = Vector2(0, 30)
+custom_minimum_size = Vector2(0, 44)
 layout_mode = 2
 theme_override_colors/font_color = Color(0.851, 0.71, 0.416, 1)
 theme_override_colors/font_outline_color = Color(0.02, 0.015, 0.025, 0.92)
 theme_override_constants/outline_size = 4
 theme_override_font_sizes/font_size = 20
+theme_override_styles/normal = SubResource("EyebrowBand")
 text = "CURIO BOUTIQUE · RITUAL PREVIEW"
 horizontal_alignment = 1
 vertical_alignment = 1
