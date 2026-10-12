@@ -43,7 +43,9 @@ var level_catalog
 @onready var screen_host: Node = $ScreenHost
 
 func _ready() -> void:
-	level_catalog = LevelCatalogScript.load_default()
+	level_catalog = LevelCatalogScript.new()
+	if not level_catalog.load_default():
+		level_catalog = null
 	# S00 must be a real boot state, not a decorative gate shown after loading.
 	# Navigation exists immediately so the player is truthfully on BOOT while the
 	# first rendered frame exposes the canonical loading state.
