@@ -10,8 +10,8 @@ func _init() -> void:
 func _run() -> void:
 	var failures: Array[String] = []
 	var summaries: Array[Dictionary] = []
-	var catalog = LevelCatalog.load_default()
-	if catalog == null:
+	var catalog = LevelCatalog.new()
+	if not catalog.load_default():
 		printerr("CATALOG_FAIL: canonical level catalog could not load")
 		quit(1)
 		return
