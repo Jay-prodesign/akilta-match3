@@ -13,12 +13,12 @@ const OPENING_LEVEL_COUNT := 3
 const CURRENT_WING_ART_PATH := "res://assets/world/ch01_curio_boutique/prestart_curio_boutique_shared.webp"
 
 const WINGS := [
-	{"id":"curio_boutique","name":"CURIO BOUTIQUE","x":0.08,"y":0.04,"w":0.84,"h":0.20},
-	{"id":"witch_atelier","name":"WITCH ATELIER","x":0.03,"y":0.32,"w":0.45,"h":0.14},
-	{"id":"dark_vanity","name":"DARK VANITY","x":0.52,"y":0.32,"w":0.45,"h":0.14},
-	{"id":"archive","name":"THE ARCHIVE","x":0.03,"y":0.51,"w":0.45,"h":0.14},
-	{"id":"moon_conservatory","name":"MOON CONSERVATORY","x":0.52,"y":0.51,"w":0.45,"h":0.14},
-	{"id":"cemetery_garden","name":"CEMETERY GARDEN","x":0.28,"y":0.70,"w":0.44,"h":0.14},
+	{"id":"curio_boutique","name":"CURIO BOUTIQUE","x":0.07,"y":0.03,"w":0.86,"h":0.23},
+	{"id":"witch_atelier","name":"WITCH ATELIER","x":0.03,"y":0.31,"w":0.46,"h":0.16},
+	{"id":"dark_vanity","name":"DARK VANITY","x":0.51,"y":0.31,"w":0.46,"h":0.16},
+	{"id":"archive","name":"THE ARCHIVE","x":0.03,"y":0.51,"w":0.46,"h":0.16},
+	{"id":"moon_conservatory","name":"MOON CONSERVATORY","x":0.51,"y":0.51,"w":0.46,"h":0.16},
+	{"id":"cemetery_garden","name":"CEMETERY GARDEN","x":0.27,"y":0.72,"w":0.46,"h":0.16},
 ]
 
 var progress
@@ -126,20 +126,20 @@ func _refresh_progress_state() -> void:
 	var state := "first_wing_open"
 	if opening_complete:
 		state = "current_complete"
-		_current.text = "CURIO BOUTIQUE\nRESTORED WING · 3 / 3 DISPLAYS\nREVISIT RITUALS"
+		_current.text = "CURIO BOUTIQUE\nRARE FINDS · RESTORED 3 / 3\nREVISIT RITUALS"
 		_current.tooltip_text = "Curio Boutique · first cabinet set restored · Levels 1–3 replayable"
-		_chapter_summary.text = "The opening wing is restored. Revisit its rituals while the deeper House remains sealed."
-		_lock_reason.text = "FIVE WINGS REMAIN SEALED · FUTURE CHAPTERS"
+		_chapter_summary.text = "CURIO BOUTIQUE RESTORED · REVISIT RITUALS"
+		_lock_reason.text = "FIVE WINGS SEALED · FUTURE CHAPTERS"
 	elif completed > 0:
 		state = "current_partial"
-		_current.text = "CURIO BOUTIQUE\nCURRENT WING · %d / %d DISPLAYS\nCONTINUE RESTORATION" % [completed, OPENING_LEVEL_COUNT]
+		_current.text = "CURIO BOUTIQUE\nRARE FINDS · %d / %d AWAKENED\nCONTINUE RESTORATION" % [completed, OPENING_LEVEL_COUNT]
 		_current.tooltip_text = "Curio Boutique · %d / %d opening displays awakened" % [completed, OPENING_LEVEL_COUNT]
-		_chapter_summary.text = "%d of %d displays are awake. Continue the Curio Boutique restoration." % [completed, OPENING_LEVEL_COUNT]
+		_chapter_summary.text = "CURIO BOUTIQUE · %d / %d DISPLAYS AWAKENED" % [completed, OPENING_LEVEL_COUNT]
 		_lock_reason.text = "RESTORE THE CURRENT WING · FUTURE WINGS STAY SEALED"
 	else:
-		_current.text = "CURIO BOUTIQUE\nCURRENT WING · 0 / 3 DISPLAYS\nBEGIN RESTORATION"
+		_current.text = "CURIO BOUTIQUE\nRARE FINDS · 0 / 3 AWAKENED\nBEGIN RESTORATION"
 		_current.tooltip_text = "Curio Boutique · opening rituals · Levels 1–3"
-		_chapter_summary.text = "The Curio Boutique is the House's first open wing. Begin its three opening rituals."
+		_chapter_summary.text = "CURIO BOUTIQUE · FIRST OPEN WING"
 		_lock_reason.text = "FUTURE WINGS ARE SEALED UNTIL LATER CHAPTERS"
 
 	_current.set_meta("chapter_state", state)
@@ -181,6 +181,10 @@ func chapter_visual_contract() -> Dictionary:
 		"future_wings_artless_until_authored": true,
 		"future_wings_use_house_world_glass": true,
 		"future_wings_specific_art_claimed": false,
+		"north_star_title_hierarchy": ($Layout/ChapterHeader/HeaderCopy/Title as Label).get_theme_font_size("font_size") >= 50,
+		"compact_header_back": _back != null and _back.custom_minimum_size.x <= 72.0,
+		"summary_plate": _chapter_summary != null and _chapter_summary.get_theme_stylebox("normal") != null,
+		"chapter_descriptors_present": _witch_atelier.text.contains("POTIONS & EXPERIMENTS") and _dark_vanity.text.contains("MIRRORS & SECRETS") and _archive.text.contains("LOST KNOWLEDGE") and _moon_conservatory.text.contains("CELESTIAL BOTANICALS") and _cemetery_garden.text.contains("RESTING BEAUTIES"),
 	}
 
 func _apply_current_style(button: Button, state: String) -> void:
