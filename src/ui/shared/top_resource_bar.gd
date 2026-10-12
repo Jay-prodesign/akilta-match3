@@ -22,7 +22,7 @@ static func attach(screen: Control, progress, profile_handler: Callable = Callab
 	panel.offset_left = safe_insets.x
 	panel.offset_right = -safe_insets.z
 	panel.offset_top = 6.0 + safe_insets.y
-	panel.offset_bottom = 68.0 + safe_insets.y
+	panel.offset_bottom = 64.0 + safe_insets.y
 	screen.add_child(panel)
 
 	var coin_icon := panel.get_node_or_null("Resources/CoinResourceChip/Content/Icon") as TextureRect

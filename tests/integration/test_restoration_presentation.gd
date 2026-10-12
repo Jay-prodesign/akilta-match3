@@ -12,7 +12,7 @@ func _run() -> void:
 	var dormant = HouseScene.instantiate()
 	root.add_child(dormant)
 	await _frames(2)
-	var dormant_room = dormant.get_node_or_null("Layout/RoomView")
+	var dormant_room = dormant.get_node_or_null("RoomView")
 	_expect(dormant_room != null and dormant_room.has_method("living_house_contract"), "Dormant House living-state contract missing")
 	var dormant_living: Dictionary = dormant_room.living_house_contract() if dormant_room != null and dormant_room.has_method("living_house_contract") else {}
 	_expect(String(dormant_living.get("ambient_tier", "")) == "dormant", "stage 0 House must own a dormant ambient tier")
@@ -33,7 +33,7 @@ func _run() -> void:
 	reduced.set_progress(p2)
 	reduced.show_restoration_ceremony("moth_reliquary", 2)
 	await _frames(3)
-	var reduced_room = reduced.get_node_or_null("Layout/RoomView")
+	var reduced_room = reduced.get_node_or_null("RoomView")
 	var reduced_card: PanelContainer = reduced.get_node_or_null("RestorationOverlay/CeremonyCard") as PanelContainer
 	var reduced_hero: TextureRect = reduced.get_node_or_null("RestorationOverlay/AwakeningMotif") as TextureRect
 	_expect(reduced_room != null, "Reduced Motion restoration room missing")
@@ -62,7 +62,7 @@ func _run() -> void:
 	animated.set_progress(p3)
 	animated.show_restoration_ceremony("thorned_locket", 3)
 	await _frames(3)
-	var animated_room = animated.get_node_or_null("Layout/RoomView")
+	var animated_room = animated.get_node_or_null("RoomView")
 	var animated_card: PanelContainer = animated.get_node_or_null("RestorationOverlay/CeremonyCard") as PanelContainer
 	var animated_hero: TextureRect = animated.get_node_or_null("RestorationOverlay/AwakeningMotif") as TextureRect
 	_expect(animated_room != null, "Animated restoration room missing")

@@ -32,7 +32,7 @@ func _run() -> void:
 	await process_frame
 	_expect(str(app.current_route_name()) == "house", "splash entry must route into House")
 	var house = app.current_screen()
-	var dormant_cameo: Control = house.get_node("Layout/RoomView/MoonCameoOverlay")
+	var dormant_cameo: Control = house.get_node("RoomView/MoonCameoOverlay")
 	_expect(not dormant_cameo.visible, "Moon Cameo physical relic must stay hidden before Level 1 is won")
 	_expect(house.has_method("keeper_house_contract"), "House must expose the Keeper familiar contract")
 	if house.has_method("keeper_house_contract"):
@@ -41,7 +41,7 @@ func _run() -> void:
 		_expect(bool(house_keeper.get("raster_runtime", false)), "House Keeper must use raster runtime art")
 		_expect(bool(house_keeper.get("touch_target_ok", false)), "House Keeper hotspot must meet the mobile touch target contract")
 		_expect(not bool(house_keeper.get("spends_resources", true)) and not bool(house_keeper.get("changes_board", true)) and not bool(house_keeper.get("adds_moves", true)), "House Keeper role must remain non-economic and non-mutating")
-	var keeper_hotspot: Button = house.get_node_or_null("Layout/RoomView/CurioHotspots/KeeperHotspot") as Button
+	var keeper_hotspot: Button = house.get_node_or_null("RoomView/CurioHotspots/KeeperHotspot") as Button
 	_expect(keeper_hotspot != null and not keeper_hotspot.disabled, "House must expose an interactive Keeper hotspot")
 	if keeper_hotspot != null:
 		keeper_hotspot.emit_signal("pressed")
@@ -111,7 +111,7 @@ func _run() -> void:
 		for booster_key in ["hint", "plus_moves", "retry"]:
 			_expect(bool(loaded_boosters.get(booster_key, false)), "%s booster artwork must load" % booster_key)
 	var booster_row: HBoxContainer = gameplay.get_node("BoosterTray/BoosterActions")
-	var hint_booster: Button = booster_row.get_node("HintBoost")
+	var hint_booster: Button = booster_row.get_node("HintSlot/HintBoost")
 	_expect(hint_booster.text == "ASK KEEPER", "gameplay familiar utility must be presented as ASK KEEPER")
 	_expect(booster_row.get_node_or_null("PlusMovesBoost") == null, "active gameplay must not expose the fail-only +3 Moves recovery as a free booster")
 	_expect(booster_row.get_node_or_null("RetryBoost") == null, "active gameplay must not duplicate retry as a booster")
@@ -144,7 +144,7 @@ func _run() -> void:
 	_expect(int(progress.house_stage) == 1, "House must awaken to stage 1")
 	_expect(progress.curios.count("moon_cameo") == 1, "Moon Cameo must persist exactly once")
 	var awakened_house = app.current_screen()
-	var awakened_cameo: Control = awakened_house.get_node("Layout/RoomView/MoonCameoOverlay")
+	var awakened_cameo: Control = awakened_house.get_node("RoomView/MoonCameoOverlay")
 	_expect(awakened_cameo.visible, "awakened House must display the same shared Moon Cameo component")
 	_expect(String(awakened_cameo.get("mode")) == "house", "House relic must use the shared Moon Cameo house mode")
 

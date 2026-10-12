@@ -74,7 +74,7 @@ func _run() -> void:
 	await process_frame
 	_expect(str(app.current_route_name()) == "house", "restoration Continue must return to House")
 	var replay_button: Button = app.current_screen().get_node("Layout/PlayButton")
-	_expect(not replay_button.disabled and replay_button.text == "CONTINUE CURIO BOUTIQUE", "House must offer the next provisional review level after restoration completes")
+	_expect(not replay_button.disabled and replay_button.text == "PLAY LEVEL 2", "House must offer the next provisional review level after restoration completes")
 	_expect(app.show_chapters(), "House must reopen chapter selection after Level 1 restoration")
 	await process_frame
 	var replay_chapters = app.current_screen()
@@ -120,7 +120,7 @@ func _run() -> void:
 	_expect(str(relaunched.current_route_name()) == "house", "relaunch splash must enter House")
 	_expect(restored != null and int(restored.house_stage) == 1, "relaunch must preserve Level 1 House restoration")
 	_expect(restored != null and restored.curios.count("moon_cameo") == 1, "relaunch must preserve Moon Cameo exactly once")
-	_expect(relaunched.current_screen().get_node("Layout/PlayButton").text == "CONTINUE CURIO BOUTIQUE", "saved House must offer unlocked Level 2")
+	_expect(relaunched.current_screen().get_node("Layout/PlayButton").text == "PLAY LEVEL 2", "saved House must offer unlocked Level 2")
 	var replay_coins := int(restored.coins)
 	var replay_gems := int(restored.gems)
 	var replay_transactions := int(restored.processed_transactions.size())

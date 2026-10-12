@@ -2,16 +2,16 @@
 
 
 [sub_resource type="StyleBoxFlat" id="Shell"]
-bg_color = Color(0.031, 0.027, 0.051, 0.94)
+bg_color = Color(0.024, 0.019, 0.038, 0.965)
 border_width_left = 1
 border_width_top = 1
 border_width_right = 1
 border_width_bottom = 1
-border_color = Color(0.835, 0.678, 0.439, 0.72)
-corner_radius_top_left = 12
-corner_radius_top_right = 12
-corner_radius_bottom_right = 12
-corner_radius_bottom_left = 12
+border_color = Color(0.878, 0.714, 0.455, 0.82)
+corner_radius_top_left = 15
+corner_radius_top_right = 15
+corner_radius_bottom_right = 15
+corner_radius_bottom_left = 15
 content_margin_left = 6.0
 content_margin_top = 4.0
 content_margin_right = 6.0
@@ -64,15 +64,16 @@ layout_mode = 3
 anchor_left = 0.02
 anchor_right = 0.98
 offset_top = 6.0
-offset_bottom = 68.0
+offset_bottom = 64.0
 grow_horizontal = 2
 z_index = 60
 theme_override_styles/panel = SubResource("Shell")
 
 [node name="Resources" type="HBoxContainer" parent="."]
 layout_mode = 2
-theme_override_constants/separation = 4
+theme_override_constants/separation = 3
 alignment = 1
+
 
 [node name="CoinResourceChip" type="PanelContainer" parent="Resources"]
 layout_mode = 2
@@ -85,7 +86,7 @@ theme_override_constants/separation = 3
 alignment = 1
 
 [node name="Icon" type="TextureRect" parent="Resources/CoinResourceChip/Content"]
-custom_minimum_size = Vector2(32, 32)
+custom_minimum_size = Vector2(30, 30)
 layout_mode = 2
 mouse_filter = 2
 expand_mode = 1
@@ -94,7 +95,7 @@ stretch_mode = 5
 [node name="CoinResource" type="Label" parent="Resources/CoinResourceChip/Content"]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.969, 0.914, 0.839, 1)
-theme_override_font_sizes/font_size = 18
+theme_override_font_sizes/font_size = 17
 text = "0"
 
 [node name="GemResourceChip" type="PanelContainer" parent="Resources"]
@@ -108,7 +109,7 @@ theme_override_constants/separation = 3
 alignment = 1
 
 [node name="Icon" type="TextureRect" parent="Resources/GemResourceChip/Content"]
-custom_minimum_size = Vector2(32, 32)
+custom_minimum_size = Vector2(30, 30)
 layout_mode = 2
 mouse_filter = 2
 expand_mode = 1
@@ -117,11 +118,11 @@ stretch_mode = 5
 [node name="GemResource" type="Label" parent="Resources/GemResourceChip/Content"]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.969, 0.914, 0.839, 1)
-theme_override_font_sizes/font_size = 18
+theme_override_font_sizes/font_size = 17
 text = "0"
 
 [node name="KeeperProfile" type="Button" parent="Resources"]
-custom_minimum_size = Vector2(58, 48)
+custom_minimum_size = Vector2(56, 48)
 layout_mode = 2
 focus_mode = 1
 theme_override_constants/icon_max_width = 34

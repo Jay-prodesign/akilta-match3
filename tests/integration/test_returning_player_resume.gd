@@ -58,7 +58,7 @@ func _run() -> void:
 		return _fail(app, "House did not expose canonical returning_player state")
 	if curio_label == null or not curio_label.text.contains("2 / 3 CURIOS"):
 		return _fail(app, "House did not restore 2/3 Curio truth")
-	if play == null or play.text != "CONTINUE CURIO BOUTIQUE":
+	if play == null or play.text != "PLAY LEVEL 3":
 		return _fail(app, "returning House did not expose the next useful action")
 	if not house.has_method("house_hotspot_contract"):
 		return _fail(app, "House hotspot contract missing")
@@ -70,7 +70,7 @@ func _run() -> void:
 		return _fail(app, "returning House must keep the owned Moth Reliquary hotspot active")
 	if String(thorn_state.get("state", "")) != "locked" or not bool(thorn_state.get("disabled", false)):
 		return _fail(app, "returning House must keep the unowned Thorned Locket hotspot sealed")
-	var moth_hotspot: Button = house.get_node_or_null("Layout/RoomView/CurioHotspots/MothHotspot") as Button
+	var moth_hotspot: Button = house.get_node_or_null("RoomView/CurioHotspots/MothHotspot") as Button
 	if moth_hotspot == null:
 		return _fail(app, "returning House Moth hotspot missing")
 	moth_hotspot.emit_signal("pressed")

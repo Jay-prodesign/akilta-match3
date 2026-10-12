@@ -107,7 +107,7 @@ func _run() -> void:
 			_expect(motifs.size() == 8, "piece motifs must be unique; hue-only differentiation is forbidden")
 
 	_expect(screen.get_node_or_null("ResourceBar/Resources/LifeResource") == null, "gameplay must not expose fake lives before refill/consumption is implemented")
-	_expect(screen.get_node_or_null("BoosterTray/BoosterActions/HintBoost") != null, "gameplay must expose the truthful Hint utility")
+	_expect(screen.get_node_or_null("BoosterTray/BoosterActions/HintSlot/HintBoost") != null, "gameplay must expose the truthful Hint utility")
 	_expect(screen.get_node_or_null("BoosterTray/BoosterActions/PlusMovesBoost") == null, "active gameplay must hide free +3 Moves")
 	_expect(screen.get_node_or_null("BoosterTray/BoosterActions/RetryBoost") == null, "active gameplay must hide duplicate Retry booster")
 	_expect(screen.find_child("Objective", true, false) != null, "HUD must expose Objective")

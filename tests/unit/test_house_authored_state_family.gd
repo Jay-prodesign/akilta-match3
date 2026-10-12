@@ -19,26 +19,32 @@ func _run() -> void:
 	await process_frame
 
 	var presentation: Dictionary = house.house_presentation_contract()
+	var north_star: Dictionary = house.north_star_home_contract()
 	_expect(bool(presentation.get("persistent_slots_authored", false)), "House FTUE/returning/completion slots must be authored")
 	_expect(bool(presentation.get("hotspots_authored", false)), "House Curio and Keeper hotspots must be authored")
 	_expect(bool(presentation.get("curio_inspect_authored", false)), "House Curio inspect must use an authored scene")
 	_expect(bool(presentation.get("keeper_role_authored", false)), "Keeper role must use an authored scene")
 	_expect(bool(presentation.get("restoration_authored", false)), "House restoration must use an authored scene")
 	_expect(not bool(presentation.get("runtime_overlay_factory", true)), "House must not rebuild player-facing overlays at runtime")
+	_expect(float(north_star.get("primary_cta_height", 0.0)) >= 72.0 and float(north_star.get("primary_cta_width", 0.0)) >= 620.0, "House primary CTA must retain the North Star hero proportion")
+	_expect(bool(north_star.get("primary_cta_centered", false)), "House primary CTA must remain centered above navigation")
+	_expect(bool(north_star.get("bottom_nav_reserved", false)), "House content must reserve vertical space for the compact bottom navigation")
+	_expect(bool(north_star.get("world_underlays_home_ui", false)), "House world must continue behind the lower Home UI instead of ending in a dead slab")
+	_expect(bool(north_star.get("direct_level_cta", false)), "House CTA must expose the direct current-level action")
 
 	var guide := house.get_node_or_null("Layout/FirstRitualGuide") as PanelContainer
 	var guide_art := house.get_node_or_null("Layout/FirstRitualGuide/GuideRow/KeeperArt") as TextureRect
 	_expect(guide != null and guide.visible, "Fresh House must expose the authored first-ritual guide")
 	_expect(guide_art != null and guide_art.texture != null, "First-ritual guide must use Keeper production art")
 	for hotspot_path in [
-		"Layout/RoomView/CurioHotspots/MoonHotspot",
-		"Layout/RoomView/CurioHotspots/MothHotspot",
-		"Layout/RoomView/CurioHotspots/ThornHotspot",
-		"Layout/RoomView/CurioHotspots/KeeperHotspot",
+		"RoomView/CurioHotspots/MoonHotspot",
+		"RoomView/CurioHotspots/MothHotspot",
+		"RoomView/CurioHotspots/ThornHotspot",
+		"RoomView/CurioHotspots/KeeperHotspot",
 	]:
 		_expect(house.get_node_or_null(hotspot_path) is Button, "Authored House hotspot missing: %s" % hotspot_path)
 
-	var keeper_hotspot := house.get_node("Layout/RoomView/CurioHotspots/KeeperHotspot") as Button
+	var keeper_hotspot := house.get_node("RoomView/CurioHotspots/KeeperHotspot") as Button
 	keeper_hotspot.emit_signal("pressed")
 	await process_frame
 	var keeper_overlay = house.get_node_or_null("KeeperRoleOverlay")
