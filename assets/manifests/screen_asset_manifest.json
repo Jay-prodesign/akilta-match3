@@ -708,17 +708,18 @@
         "high_contrast"
       ],
       "type": "structural_ui",
-      "dimensions": "512x512_9slice",
+      "dimensions": "512x512_owned_raster_runtime",
       "aspect_ratio": "scalable",
-      "transparent": true,
+      "transparent": false,
       "variants": [
         "default"
       ],
       "reuse": "global",
       "priority": "P0",
-      "production_status": "candidate",
-      "current_path": "assets/board/gbl_board_ritual_frame_9s_base_v01.svg",
+      "production_status": "runtime_connected_owned_raster_verified",
+      "current_path": "assets/board/gbl_board_ritual_frame_9s_base_v01.png",
       "architecture_owned": true,
+      "provenance": "AKILTA first-party raster board field derived from the contract-owned Curio House ritual frame; verified in Godot 4.7.2 Golden Loop and three-level rendered gameplay.",
       "contract_owners": [
         {
           "screen": "S05",
@@ -730,7 +731,9 @@
             "high_contrast"
           ]
         }
-      ]
+      ],
+      "source_master": "assets/board/gbl_board_ritual_frame_9s_base_v01.svg",
+      "runtime_dependency": "owned_only"
     },
     {
       "asset_id": "booster_hint",

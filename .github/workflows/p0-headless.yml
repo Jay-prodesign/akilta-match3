@@ -22,6 +22,7 @@ on:
       - "src/match3/presentation/**"
       - "assets/pieces/**"
       - "assets/blockers/**"
+      - "assets/board/**"
       - "assets/curios/**"
       - "src/ui/shared/**"
       - "src/settings/**"

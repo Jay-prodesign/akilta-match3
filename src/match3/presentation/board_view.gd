@@ -6,7 +6,7 @@ signal trace_motion_finished
 
 const PieceVisuals = preload("res://src/match3/presentation/piece_visuals.gd")
 const PieceAssetLoader = preload("res://src/match3/presentation/piece_asset_loader.gd")
-const KENNEY_FRAME_PATH := "res://assets/candidate/third_party/kenney/fantasy-ui-borders/frame-024.png"
+const BOARD_FRAME_PATH := "res://assets/board/gbl_board_ritual_frame_9s_base_v01.png"
 const SPECIAL_ASSET_PATHS := {
 	"line_h": "res://assets/specials/gbl_special_line_h_idle_v01.webp",
 	"line_v": "res://assets/specials/gbl_special_line_v_idle_v01.webp",
@@ -87,7 +87,7 @@ func _cascade_window(cascade: int) -> Vector2:
 func _cascade_phase(cascade: int, from_fraction: float, to_fraction: float) -> float:
 	var window := _cascade_window(cascade)
 	return _phase_progress(lerpf(window.x, window.y, from_fraction), lerpf(window.x, window.y, to_fraction))
-var _candidate_frame_texture: ImageTexture
+var _board_frame_texture: ImageTexture
 var _reduced_motion: bool = false
 var _high_contrast: bool = false
 var _teaching_from := Vector2i(-1, -1)
@@ -100,16 +100,16 @@ func _ready() -> void:
 	resized.connect(queue_redraw)
 	mouse_filter = Control.MOUSE_FILTER_STOP
 	focus_mode = Control.FOCUS_ALL
-	_load_candidate_frame()
+	_load_board_frame()
 	queue_redraw()
 
-func _load_candidate_frame() -> void:
-	if not FileAccess.file_exists(KENNEY_FRAME_PATH):
+func _load_board_frame() -> void:
+	if not FileAccess.file_exists(BOARD_FRAME_PATH):
 		return
-	var image := Image.load_from_file(KENNEY_FRAME_PATH)
+	var image := Image.load_from_file(BOARD_FRAME_PATH)
 	if image == null or image.is_empty():
 		return
-	_candidate_frame_texture = ImageTexture.create_from_image(image)
+	_board_frame_texture = ImageTexture.create_from_image(image)
 
 func set_visual_profile(profile: String) -> void:
 	_visual_profile = profile if PieceAssetLoader.PROFILE_PATHS.has(profile) else "curio_boutique_opening"
@@ -628,51 +628,17 @@ func _board_geometry() -> Dictionary:
 	return {"origin": Vector2(origin_x, origin_y), "cell_size": cell_size}
 
 func _draw_board_frame(rect: Rect2) -> void:
-	var shadow := rect.grow(10.0)
-	draw_rect(shadow, Color(0.015, 0.01, 0.02, 0.82), true)
-	draw_rect(rect, Color("#100B15"), true)
-	var outer := Color(GOLD)
-	outer.a = 0.94 if _high_contrast else 0.72
-	draw_rect(rect, outer, false, 3.0)
-	var inner := Color(GOLD)
-	inner.a = 0.42 if _high_contrast else 0.24
-	draw_rect(rect.grow(-7.0), inner, false, 1.5)
-	var mark_color := Color(GOLD)
-	mark_color.a = 0.5
-	var mark := minf(rect.size.x, rect.size.y) * 0.035
-	for corner in [
-		rect.position,
-		Vector2(rect.end.x, rect.position.y),
-		Vector2(rect.position.x, rect.end.y),
-		rect.end
-	]:
-		var sx: float = 1.0 if corner.x == rect.position.x else -1.0
-		var sy: float = 1.0 if corner.y == rect.position.y else -1.0
-		draw_line(corner, corner + Vector2(mark * sx, 0), mark_color, 2.0)
-		draw_line(corner, corner + Vector2(0, mark * sy), mark_color, 2.0)
-	# Carved corner diamonds and double inner rule echo the North Star's antique frame.
-	draw_rect(rect.grow(-5.0), Color(GOLD, 0.26), false, 1.0)
-	for corner in [
-		rect.position + Vector2(mark * 0.62, mark * 0.62),
-		Vector2(rect.end.x - mark * 0.62, rect.position.y + mark * 0.62),
-		Vector2(rect.position.x + mark * 0.62, rect.end.y - mark * 0.62),
-		rect.end - Vector2(mark * 0.62, mark * 0.62)
-	]:
-		var diamond := PackedVector2Array([
-			corner + Vector2(0, -mark * 0.30),
-			corner + Vector2(mark * 0.30, 0),
-			corner + Vector2(0, mark * 0.30),
-			corner + Vector2(-mark * 0.30, 0)
-		])
-		draw_colored_polygon(diamond, Color(GOLD, 0.85))
-		draw_circle(corner, maxf(1.5, mark * 0.07), Color("#FFF0C7"))
-
-	# CC0 frame geometry is used only as a candidate ornamental primitive;
-	# Curio House color/material identity remains owned by this renderer.
-	if _candidate_frame_texture != null:
-		var ornament_tint := Color(GOLD)
-		ornament_tint.a = 0.68
-		draw_texture_rect(_candidate_frame_texture, rect.grow(10.0), false, ornament_tint)
+	var framed_rect := rect.grow(12.0)
+	var shadow := framed_rect.grow(8.0)
+	draw_rect(shadow, Color(0.015, 0.01, 0.02, 0.74), true)
+	if _board_frame_texture != null:
+		draw_texture_rect(_board_frame_texture, framed_rect, false)
+	else:
+		# Semantic fallback only; production runtime should use the owned raster.
+		draw_rect(rect, Color("#100B15"), true)
+		draw_rect(rect, Color(GOLD, 0.74), false, 3.0)
+	if _high_contrast:
+		draw_rect(rect.grow(-7.0), Color("#FFF0C7", 0.78), false, 2.0)
 
 func _motion_piece_in_flight(pos: Vector2i) -> bool:
 	for item in _motion_items:
