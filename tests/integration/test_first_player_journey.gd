@@ -270,14 +270,16 @@ func _run() -> void:
 	_expect(String(review_route.get_level_state(3)) == "locked", "inspectable Level 3 must remain progression-locked")
 	_expect(String(review_route.get_level_state(4)) == "locked", "inspectable Level 4 must remain future-content locked")
 	review_map.get_level_button(4).emit_signal("pressed")
-	await _frames(2)
+	await process_frame
+	await process_frame
 	var sealed_review: Dictionary = review_map.sealed_explanation_contract()
 	_expect(String(sealed_review.get("sealed_kind", "")) == "future_content", "sealed Level 4 must expose future-content truth")
 	_expect(str(app.current_route_name()) == "map", "inspecting sealed Level 4 must not leave the map route")
 	var sealed_review_close: Button = review_map.get_node_or_null("LockedExplanation/LockedPanel/Content/Close") as Button
 	if sealed_review_close != null:
 		sealed_review_close.emit_signal("pressed")
-		await _frames(2)
+		await process_frame
+	await process_frame
 	_expect(app.show_prestart(2), "authorized Level 2 must open its own prestart")
 	_expect(not app.start_level(3), "prestart for Level 2 must not launch a different level")
 	_expect(app.start_level(2), "authorized Level 2 must enter gameplay")
