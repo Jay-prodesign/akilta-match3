@@ -491,7 +491,7 @@ func show_feature_preview(feature: String) -> bool:
 
 	var hero := PanelContainer.new()
 	hero.name = "FeatureHero"
-	hero.custom_minimum_size = Vector2(0, 190) if is_events else Vector2(0, 150)
+	hero.custom_minimum_size = Vector2(0, 190) if is_events else (Vector2(0, 230) if not is_profile else Vector2(0, 150))
 	var hero_style := StyleBoxFlat.new()
 	hero_style.bg_color = Color("#171321", 0.96)
 	hero_style.border_color = Color("#9B6FA6", 0.82) if is_events else (Color("#D5AD70", 0.86) if not is_profile else Color("#8796C7", 0.82))
@@ -521,11 +521,14 @@ func show_feature_preview(feature: String) -> bool:
 	elif not is_profile:
 		var shop_hero_art := TextureRect.new()
 		shop_hero_art.name = "ShopFeaturedOfferArt"
-		shop_hero_art.custom_minimum_size = Vector2(190, 160)
-		shop_hero_art.texture = PieceAssetLoader.ornament("res://assets/curios/ch01_curio_moth_reliquary.svg")
+		shop_hero_art.custom_minimum_size = Vector2(230, 198)
+		var shop_cabinet_path := "res://assets/world/ch01_curio_boutique/prestart_level01_cabinet.webp"
+		shop_hero_art.texture = PieceAssetLoader.ornament(shop_cabinet_path)
 		shop_hero_art.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
-		shop_hero_art.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+		shop_hero_art.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_COVERED
 		shop_hero_art.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		shop_hero_art.set_meta("asset_path", shop_cabinet_path)
+		shop_hero_art.set_meta("sealed_preview", true)
 		hero_row.add_child(shop_hero_art)
 	var hero_copy := VBoxContainer.new()
 	hero_copy.name = "HeroCopy"
@@ -535,7 +538,7 @@ func show_feature_preview(feature: String) -> bool:
 	hero_row.add_child(hero_copy)
 	var hero_kicker := Label.new()
 	hero_kicker.name = "FeatureHeroKicker"
-	hero_kicker.text = ("OPENING RITUAL COMPLETE" if opening_complete else "OPENING RITUAL IN PROGRESS") if is_events else ("EMPORIUM PREVIEW · SEALED" if not is_profile else ("FIRST CABINET SET RESTORED" if opening_complete else "KEEPER RECORD"))
+	hero_kicker.text = ("OPENING RITUAL COMPLETE" if opening_complete else "OPENING RITUAL IN PROGRESS") if is_events else ("SEALED EMPORIUM CABINET" if not is_profile else ("FIRST CABINET SET RESTORED" if opening_complete else "KEEPER RECORD"))
 	hero_kicker.add_theme_color_override("font_color", Color("#D5AD70"))
 	hero_kicker.add_theme_font_size_override("font_size", 15)
 	hero_copy.add_child(hero_kicker)
@@ -550,7 +553,7 @@ func show_feature_preview(feature: String) -> bool:
 	hero_copy.add_child(hero_title)
 	var hero_body := Label.new()
 	hero_body.name = "FeatureHeroBody"
-	hero_body.text = ("The House remembers every completed display; future weekly events remain sealed." if is_events else ("Future offers will live in this cabinet only after economy and purchase systems are production-ready." if not is_profile else "Your opening journey is stored locally and reflected across the House, map and Reliquary."))
+	hero_body.text = ("The House remembers every completed display; future weekly events remain sealed." if is_events else ("This cabinet is only a visual preview. Offers, prices and purchase actions will appear only after the economy and commerce systems are production-ready." if not is_profile else "Your opening journey is stored locally and reflected across the House, map and Reliquary."))
 	hero_body.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	hero_body.add_theme_color_override("font_color", Color("#CFC0CF"))
 	hero_body.add_theme_font_size_override("font_size", 16)
@@ -610,7 +613,7 @@ func show_feature_preview(feature: String) -> bool:
 	elif not is_profile:
 		var shop_note := Label.new()
 		shop_note.name = "NoPurchasesNotice"
-		shop_note.text = "THE EMPORIUM IS SEALED  ·  NO PURCHASES OR PAYMENTS"
+		shop_note.text = "SEALED PREVIEW  ·  NO PRICES  ·  NO PURCHASES  ·  NO PAYMENTS"
 		shop_note.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 		shop_note.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 		shop_note.add_theme_color_override("font_color", Color("#D5AD70"))
@@ -630,16 +633,16 @@ func show_feature_preview(feature: String) -> bool:
 		]
 	else:
 		entries = [
-			{"icon":"◉", "title":"CANDLELIGHT KIT", "body":"A future soft-currency cabinet for restoration supplies.", "status":"SEALED · ECONOMY PREVIEW ONLY"},
-			{"icon":"◇", "title":"MOONSTONE CACHE", "body":"A future premium-currency cabinet. No price or payment flow is active.", "status":"SEALED · NO REAL-MONEY PURCHASES"},
-			{"icon":"✦", "title":"RESTORER'S RELIQUARY", "body":"A future curated bundle surface for boosters and curios.", "status":"SEALED · STORE NOT CONNECTED"}
+			{"icon":"◉", "title":"RESTORATION SUPPLIES", "body":"A future cabinet category for House restoration supplies. No offer exists yet.", "status":"SEALED · NO OFFER OR PRICE"},
+			{"icon":"◇", "title":"MOONSTONE CABINET", "body":"A future premium-currency surface. No price, payment flow or purchasable balance exists.", "status":"SEALED · NO REAL-MONEY PURCHASES"},
+			{"icon":"✦", "title":"CURATED RELIQUARY", "body":"A future curated cabinet for boosters and curios. Inventory is not connected.", "status":"SEALED · STORE INVENTORY OFFLINE"}
 		]
 	var card_index := 0
 	for entry in entries:
 		var card := PanelContainer.new()
 		card_index += 1
 		card.name = "FeatureCard%d" % card_index
-		card.custom_minimum_size = Vector2(0, 210) if is_events else (Vector2(0, 170) if not is_profile else Vector2(0, 190))
+		card.custom_minimum_size = Vector2(0, 210) if is_events else (Vector2(0, 154) if not is_profile else Vector2(0, 190))
 		var panel_style := StyleBoxFlat.new()
 		panel_style.bg_color = Color("#171321")
 		panel_style.border_color = Color("#9B6FA6", 0.58) if is_events else (Color("#D5AD70", 0.62) if not is_profile else Color("#8796C7", 0.58))
