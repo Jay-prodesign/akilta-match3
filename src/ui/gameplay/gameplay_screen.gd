@@ -126,21 +126,6 @@ func _ready() -> void:
 	if FileAccess.file_exists(default_level_path):
 		load_level_path(default_level_path, default_seed)
 
-func _process(delta: float) -> void:
-	if board_state == null or result_overlay.visible or pause_overlay.visible:
-		_idle_hint_seconds = 0.0
-		return
-	if board_view.has_method("is_motion_active") and bool(board_view.is_motion_active()):
-		return
-	_idle_hint_seconds += delta
-	if _idle_hint_seconds < AUTO_HINT_DELAY:
-		return
-	_idle_hint_seconds = 0.0
-	var move: Dictionary = MoveFinder.first_legal_move(board_state)
-	if not move.is_empty() and board_view.has_method("set_teaching_move"):
-		board_view.set_teaching_move(move["from"], move["to"])
-		hint_label.text = "A moonlit sigil reveals a possible match."
-
 func set_player_resources(lives: int, coins: int, gems: int) -> void:
 	_player_lives = clampi(lives, 0, 5)
 	_player_coins = maxi(0, coins)
