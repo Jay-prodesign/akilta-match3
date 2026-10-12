@@ -165,7 +165,7 @@ func _run() -> void:
 	await process_frame
 	_expect(str(app.current_route_name()) == "collection", "House Curios control must open collection")
 	var collection = app.current_screen()
-	var moon_state: Label = collection.get_node("Layout/Cards/MoonCard/Content/State")
+	var moon_state: Label = collection.get_node("Layout/Cards/MoonCard/Content/Copy/State")
 	_expect(moon_state.text.begins_with("AWAKENED"), "Moon Cameo must be inspectable as awakened in collection")
 	_expect(collection.has_method("curio_asset_contract"), "Curio Collection must expose the production Curio asset contract")
 	if collection.has_method("curio_asset_contract"):
