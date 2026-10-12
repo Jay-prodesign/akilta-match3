@@ -59,7 +59,7 @@ func _run() -> void:
 	_expect(_strict_sequence(events), "analytics event sequence must stay monotonic inside a session")
 	var serialized := JSON.stringify(events).to_lower()
 	for forbidden in ["email", "phone", "address", "device_id", "advertising_id", "user_id"]:
-		_expect(not serialized.contains(""%s"" % forbidden), "analytics queue must not contain %s" % forbidden)
+		_expect(not serialized.contains("\"%s\"" % forbidden), "analytics queue must not contain %s" % forbidden)
 
 	app.queue_free()
 	await process_frame
