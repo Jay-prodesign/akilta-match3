@@ -1,10 +1,5 @@
-[gd_scene load_steps=9 format=3]
+[gd_scene load_steps=4 format=3]
 
-[ext_resource type="Texture2D" path="res://assets/ui/nav_house.svg" id="1_house"]
-[ext_resource type="Texture2D" path="res://assets/ui/nav_curios.svg" id="2_curios"]
-[ext_resource type="Texture2D" path="res://assets/ui/nav_map.svg" id="3_map"]
-[ext_resource type="Texture2D" path="res://assets/ui/nav_events.svg" id="4_events"]
-[ext_resource type="Texture2D" path="res://assets/ui/nav_shop.svg" id="5_shop"]
 
 [sub_resource type="StyleBoxFlat" id="Shell"]
 bg_color = Color(0.035, 0.031, 0.063, 0.985)
@@ -96,7 +91,6 @@ alignment = 1
 custom_minimum_size = Vector2(42, 42)
 layout_mode = 2
 mouse_filter = 2
-texture = ExtResource("1_house")
 expand_mode = 1
 stretch_mode = 5
 
@@ -135,7 +129,6 @@ alignment = 1
 custom_minimum_size = Vector2(42, 42)
 layout_mode = 2
 mouse_filter = 2
-texture = ExtResource("2_curios")
 expand_mode = 1
 stretch_mode = 5
 
@@ -174,7 +167,6 @@ alignment = 1
 custom_minimum_size = Vector2(42, 42)
 layout_mode = 2
 mouse_filter = 2
-texture = ExtResource("3_map")
 expand_mode = 1
 stretch_mode = 5
 
@@ -213,7 +205,6 @@ alignment = 1
 custom_minimum_size = Vector2(42, 42)
 layout_mode = 2
 mouse_filter = 2
-texture = ExtResource("4_events")
 expand_mode = 1
 stretch_mode = 5
 
@@ -252,7 +243,6 @@ alignment = 1
 custom_minimum_size = Vector2(42, 42)
 layout_mode = 2
 mouse_filter = 2
-texture = ExtResource("5_shop")
 expand_mode = 1
 stretch_mode = 5
 
