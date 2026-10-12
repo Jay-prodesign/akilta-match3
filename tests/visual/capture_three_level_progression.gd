@@ -127,14 +127,24 @@ func _capture() -> void:
 		return _fail(app, "Thorned Locket detail must render the awakened reward art")
 	if not await _save(app, "progression-final-reliquary-thorned-detail.png"):
 		return
-	var locket_close: Button = collection.get_node_or_null("CurioDetailOverlay/CurioDetailCard/Content/Close") as Button
-	if locket_close == null:
-		return _fail(app, "Thorned Locket detail close action missing")
-	locket_close.emit_signal("pressed")
-	await _frames(2)
-
-	collection.get_node("Layout/Back").emit_signal("pressed")
+	var locket_view_house: Button = collection.get_node_or_null("CurioDetailOverlay/CurioDetailCard/Content/ViewInHouse") as Button
+	if locket_view_house == null:
+		return _fail(app, "owned Thorned Locket detail must expose View In House")
+	locket_view_house.emit_signal("pressed")
 	await _frames(3)
+	if String(app.current_route_name()) != "house":
+		return _fail(app, "Thorned Locket View In House must reach House")
+	var handoff_house = app.current_screen()
+	var handoff_name: Label = handoff_house.get_node_or_null("HouseCurioInspect/Card/Content/Name") as Label
+	if handoff_name == null or handoff_name.text != "THORNED LOCKET":
+		return _fail(app, "Reliquary -> House handoff must preserve Thorned Locket identity")
+	if not await _save(app, "progression-curio-to-house-thorned.png"):
+		return
+	var handoff_close: Button = handoff_house.get_node_or_null("HouseCurioInspect/Card/Content/Close") as Button
+	if handoff_close == null:
+		return _fail(app, "Reliquary -> House handoff close missing")
+	handoff_close.emit_signal("pressed")
+	await _frames(2)
 
 	if not app.show_feature_preview("Events"):
 		return _fail(app, "completed House -> Events failed")

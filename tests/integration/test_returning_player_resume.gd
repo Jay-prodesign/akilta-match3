@@ -80,6 +80,35 @@ func _run() -> void:
 	house_close.emit_signal("pressed")
 	await _frames(2)
 
+	if not app.show_collection():
+		return _fail(app, "returning House -> Reliquary failed")
+	await _frames(3)
+	var returning_collection = app.current_screen()
+	var returning_moth_detail: Button = returning_collection.get_node_or_null("Layout/Cards/Slot2/DetailActionLayer/InspectAction") as Button
+	if returning_moth_detail == null:
+		return _fail(app, "returning Reliquary Moth detail action missing")
+	returning_moth_detail.emit_signal("pressed")
+	await _frames(2)
+	var view_moth_in_house: Button = returning_collection.get_node_or_null("CurioDetailOverlay/CurioDetailCard/Content/ViewInHouse") as Button
+	if view_moth_in_house == null:
+		return _fail(app, "owned Moth detail must expose View In House")
+	view_moth_in_house.emit_signal("pressed")
+	await _frames(3)
+	if String(app.current_route_name()) != "house":
+		return _fail(app, "View In House must return to House route")
+	house = app.current_screen()
+	var returned_moth_name: Label = house.get_node_or_null("HouseCurioInspect/Card/Content/Name") as Label
+	if returned_moth_name == null or returned_moth_name.text != "MOTH RELIQUARY":
+		return _fail(app, "Curio -> House handoff must preserve Moth identity")
+	var returned_moth_close: Button = house.get_node_or_null("HouseCurioInspect/Card/Content/Close") as Button
+	if returned_moth_close == null:
+		return _fail(app, "Curio -> House detail close missing")
+	returned_moth_close.emit_signal("pressed")
+	await _frames(2)
+	play = house.get_node_or_null("Layout/PlayButton") as Button
+	if play == null:
+		return _fail(app, "House play action missing after Curio round trip")
+
 	play.emit_signal("pressed")
 	await _frames(4)
 	if String(app.current_route_name()) != "map":

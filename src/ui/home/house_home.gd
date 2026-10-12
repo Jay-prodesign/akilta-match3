@@ -279,6 +279,12 @@ func house_hotspot_contract() -> Dictionary:
 		"overlay_open": _house_curio_overlay != null and is_instance_valid(_house_curio_overlay),
 	}
 
+func open_curio_inspect(curio_id: String) -> bool:
+	if progress == null or not progress.curios.has(curio_id):
+		return false
+	_open_house_curio_inspect(curio_id)
+	return _house_curio_overlay != null and is_instance_valid(_house_curio_overlay)
+
 func _open_house_curio_inspect(curio_id: String) -> void:
 	if progress == null or not progress.curios.has(curio_id):
 		return
