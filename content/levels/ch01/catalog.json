@@ -1,0 +1,46 @@
+{
+  "schema_version": 1,
+  "chapter_id": "curio_boutique",
+  "display_name": "Curio Boutique",
+  "entries": [
+    {
+      "number": 1,
+      "id": "ch01_level_001",
+      "path": "res://content/levels/ch01/level_001.json",
+      "title": "Moonlit Cabinet",
+      "reward_curio": "moon_cameo",
+      "house_stage_reward": 1,
+      "route_caption": "MOONLIT CABINET",
+      "route_open": "MOON CAMEO WAITS",
+      "route_completed": "MOON CAMEO AWAKENED",
+      "tooltip": "Moonlit Cabinet · Moon Cameo",
+      "route_art": "res://assets/curios/ch01_curio_moon_cameo_awakened_v01.webp"
+    },
+    {
+      "number": 2,
+      "id": "ch01_level_002",
+      "path": "res://content/levels/ch01/level_002.json",
+      "title": "Sealed Display",
+      "reward_curio": "moth_reliquary",
+      "house_stage_reward": 2,
+      "route_caption": "SEALED DISPLAY",
+      "route_open": "BREAK THE WAX SEALS",
+      "route_completed": "MOTH RELIQUARY RECOVERED",
+      "tooltip": "Sealed Display · Wax Seals · Moth Reliquary",
+      "route_art": "res://assets/curios/ch01_curio_moth_reliquary.png"
+    },
+    {
+      "number": 3,
+      "id": "ch01_level_003",
+      "path": "res://content/levels/ch01/level_003.json",
+      "title": "Thornlight Arrangement",
+      "reward_curio": "thorned_locket",
+      "house_stage_reward": 3,
+      "route_caption": "THORNLIGHT",
+      "route_open": "FORM A MOON BEAM",
+      "route_completed": "THORNED LOCKET RECOVERED",
+      "tooltip": "Thornlight Arrangement · Line Sigil · Thorned Locket",
+      "route_art": "res://assets/curios/ch01_curio_thorned_locket.png"
+    }
+  ]
+}

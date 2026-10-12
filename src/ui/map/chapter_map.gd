@@ -14,14 +14,25 @@ signal level_requested(level_number: int)
 @onready var back_button: Button = $Layout/Back
 
 var progress
+var level_catalog_entries: Array[Dictionary] = []
 
 func _ready() -> void:
 	back_button.pressed.connect(func(): back_requested.emit())
 	route_view.level_requested.connect(func(level_number: int): level_requested.emit(level_number))
-	route_view.visible_route_levels = visible_route_levels
+	route_view.visible_route_levels = max(visible_route_levels, canonical_level_cap)
+	if route_view.has_method("set_level_catalog"):
+		route_view.set_level_catalog(level_catalog_entries)
 	route_view.set_canonical_level_cap(canonical_level_cap)
 	_refresh()
 	call_deferred("_focus_frontier")
+
+func set_level_catalog(entries: Array) -> void:
+	level_catalog_entries.clear()
+	for raw_entry in entries:
+		if raw_entry is Dictionary:
+			level_catalog_entries.append((raw_entry as Dictionary).duplicate(true))
+	if is_node_ready() and route_view != null and route_view.has_method("set_level_catalog"):
+		route_view.set_level_catalog(level_catalog_entries)
 
 func set_progress(value) -> void:
 	progress = value
@@ -45,7 +56,7 @@ func _refresh() -> void:
 		elif awakened > 0:
 			intro.text = "%d of %d displays are awake. The next cabinet has opened; continue the Curio Boutique ritual." % [awakened, canonical_level_cap]
 		else:
-			intro.text = "Complete the opening three rituals to restore the first cabinet set. Upper cabinets remain visible but sealed for later journeys."
+			intro.text = "Complete the %d opening rituals to restore the first cabinet set. Upper cabinets remain visible but sealed for later journeys." % canonical_level_cap
 	route_view.set_progress(progress)
 
 func _focus_frontier() -> void:

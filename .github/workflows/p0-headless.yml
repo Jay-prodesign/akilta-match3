@@ -171,6 +171,18 @@ jobs:
           if grep -Eq "SCRIPT ERROR:|(^| )ERROR:" <<<"$output"; then exit 1; fi
           grep -Fq "TEST_PASS: full special combo matrix" <<<"$output"
 
+      - name: Run canonical level catalog authority
+        shell: bash
+        run: |
+          set +e
+          output=$(timeout 30s ./godot --headless --path . -s res://tests/unit/test_level_catalog.gd 2>&1)
+          status=$?
+          set -e
+          printf '%s\n' "$output"
+          if [ "$status" -ne 0 ]; then exit "$status"; fi
+          if grep -Eq "SCRIPT ERROR:|(^| )ERROR:|TEST_FAIL:" <<<"$output"; then exit 1; fi
+          grep -Fq "TEST_PASS: canonical data-driven level catalog authority" <<<"$output"
+
       - name: Run opening level catalog validation and simulation
         shell: bash
         run: |

@@ -21,6 +21,7 @@ const PieceAssetLoader = preload("res://src/match3/presentation/piece_asset_load
 const ProductNavigation = preload("res://src/ui/shared/product_navigation.gd")
 const ScreenArt = preload("res://src/ui/shared/screen_art_registry.gd")
 const MobileSafeArea = preload("res://src/ui/shared/mobile_safe_area.gd")
+const LevelCatalogScript = preload("res://src/content/level_catalog.gd")
 
 @export var environment: String = "development"
 @export var save_path_override: String = ""
@@ -37,13 +38,12 @@ var _settings_screen: Node
 var _pending_level_number: int = 0
 var _returning_player_entry: bool = false
 var _shell_navigation_locked: bool = false
-## Founder-authorized internal review exposes three provisional levels.
-## This does not confer D-024B/D-027 shipping or final-art approval.
-const INTERNAL_REVIEW_LEVEL_COUNT := 3
+var level_catalog
 
 @onready var screen_host: Node = $ScreenHost
 
 func _ready() -> void:
+	level_catalog = LevelCatalogScript.load_default()
 	# S00 must be a real boot state, not a decorative gate shown after loading.
 	# Navigation exists immediately so the player is truthfully on BOOT while the
 	# first rendered frame exposes the canonical loading state.
@@ -110,7 +110,9 @@ func show_map() -> bool:
 	if not navigation.go(NavigationScript.Route.MAP):
 		return false
 	var screen: Node = MapScene.instantiate()
-	screen.set("canonical_level_cap", INTERNAL_REVIEW_LEVEL_COUNT)
+	screen.set("canonical_level_cap", _level_cap())
+	if screen.has_method("set_level_catalog"):
+		screen.set_level_catalog(_level_entries())
 	_show_screen(screen)
 	screen.set_progress(progress)
 	_install_product_navigation(screen, "map")
@@ -119,7 +121,7 @@ func show_map() -> bool:
 	return true
 
 func show_prestart(level_number: int) -> bool:
-	if level_number < 1 or level_number > INTERNAL_REVIEW_LEVEL_COUNT or level_number > int(progress.highest_level_unlocked) or navigation.current() != NavigationScript.Route.MAP:
+	if level_number < 1 or level_number > _level_cap() or level_number > int(progress.highest_level_unlocked) or navigation.current() != NavigationScript.Route.MAP:
 		return false
 	# Reject missing or malformed content while preserving the current map.
 	var level_file := FileAccess.open(_level_path(level_number), FileAccess.READ)
@@ -146,7 +148,7 @@ func show_prestart(level_number: int) -> bool:
 	return true
 
 func start_level(level_number: int = 1) -> bool:
-	if level_number < 1 or level_number > INTERNAL_REVIEW_LEVEL_COUNT or level_number > int(progress.highest_level_unlocked) or level_number != _pending_level_number or navigation.current() != NavigationScript.Route.PRESTART:
+	if level_number < 1 or level_number > _level_cap() or level_number > int(progress.highest_level_unlocked) or level_number != _pending_level_number or navigation.current() != NavigationScript.Route.PRESTART:
 		return false
 	var level_path: String = _level_path(level_number)
 	if not FileAccess.file_exists(level_path):
@@ -340,9 +342,9 @@ func show_weekly_missions() -> bool:
 	empty_state.add_theme_font_size_override("font_size", 15)
 	empty_content.add_child(empty_state)
 	var record := Label.new()
-	var completed_count := mini(int(progress.completed_levels.size()) if progress != null else 0, INTERNAL_REVIEW_LEVEL_COUNT)
+	var completed_count := mini(int(progress.completed_levels.size()) if progress != null else 0, _level_cap())
 	record.name = "MissionOpeningRecord"
-	record.text = "OPENING CABINET RECORD · %d / %d DISPLAYS AWAKENED" % [completed_count, INTERNAL_REVIEW_LEVEL_COUNT]
+	record.text = "OPENING CABINET RECORD · %d / %d DISPLAYS AWAKENED" % [completed_count, _level_cap()]
 	record.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	record.add_theme_color_override("font_color", Color("#BFA5D8"))
 	record.add_theme_font_size_override("font_size", 16)
@@ -446,10 +448,10 @@ func show_feature_preview(feature: String) -> bool:
 	overlay.add_child(layout)
 	var is_events := feature_key == "events"
 	var is_profile := feature_key == "profile"
-	var completed_count := mini(int(progress.completed_levels.size()) if progress != null else 0, INTERNAL_REVIEW_LEVEL_COUNT)
-	var collected_count := mini(int(progress.curios.size()) if progress != null else 0, INTERNAL_REVIEW_LEVEL_COUNT)
+	var completed_count := mini(int(progress.completed_levels.size()) if progress != null else 0, _level_cap())
+	var collected_count := mini(int(progress.curios.size()) if progress != null else 0, _level_cap())
 	var restored_stage := int(progress.house_stage) if progress != null else 0
-	var opening_complete := completed_count >= INTERNAL_REVIEW_LEVEL_COUNT and collected_count >= INTERNAL_REVIEW_LEVEL_COUNT and restored_stage >= INTERNAL_REVIEW_LEVEL_COUNT
+	var opening_complete := completed_count >= _level_cap() and collected_count >= _level_cap() and restored_stage >= _level_cap()
 
 	var eyebrow := Label.new()
 	eyebrow.text = "THE HOUSE OF CURIOS  ·  AKILTA"
@@ -547,7 +549,7 @@ func show_feature_preview(feature: String) -> bool:
 	hero_copy.add_child(hero_kicker)
 	var hero_title := Label.new()
 	hero_title.name = "FeatureHeroTitle"
-	hero_title.text = ("%d / %d DISPLAYS AWAKENED" % [completed_count, INTERNAL_REVIEW_LEVEL_COUNT]) if is_events else ("NO PURCHASES ENABLED" if not is_profile else ("%d CURIOS · RESTORATION STAGE %d" % [collected_count, restored_stage]))
+	hero_title.text = ("%d / %d DISPLAYS AWAKENED" % [completed_count, _level_cap()]) if is_events else ("NO PURCHASES ENABLED" if not is_profile else ("%d CURIOS · RESTORATION STAGE %d" % [collected_count, restored_stage]))
 	hero_title.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	hero_title.add_theme_color_override("font_color", Color("#FFF0D8"))
 	hero_title.add_theme_color_override("font_outline_color", Color("#080710", 0.90))
@@ -584,7 +586,7 @@ func show_feature_preview(feature: String) -> bool:
 	if is_events:
 		var progress_label := Label.new()
 		progress_label.name = "ChapterRitualProgress"
-		progress_label.text = ("OPENING RITUAL COMPLETE  ·  %d / %d DISPLAYS AWAKENED" if opening_complete else "OPENING RITUAL  ·  %d / %d DISPLAYS AWAKENED") % [completed_count, INTERNAL_REVIEW_LEVEL_COUNT]
+		progress_label.text = ("OPENING RITUAL COMPLETE  ·  %d / %d DISPLAYS AWAKENED" if opening_complete else "OPENING RITUAL  ·  %d / %d DISPLAYS AWAKENED") % [completed_count, _level_cap()]
 		progress_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 		progress_label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 		progress_label.add_theme_color_override("font_color", Color("#D5AD70"))
@@ -593,7 +595,7 @@ func show_feature_preview(feature: String) -> bool:
 		var ritual_progress := ProgressBar.new()
 		ritual_progress.name = "OpeningRitualProgressBar"
 		ritual_progress.min_value = 0
-		ritual_progress.max_value = INTERNAL_REVIEW_LEVEL_COUNT
+		ritual_progress.max_value = _level_cap()
 		ritual_progress.value = completed_count
 		ritual_progress.show_percentage = false
 		ritual_progress.custom_minimum_size.y = 12
@@ -630,8 +632,8 @@ func show_feature_preview(feature: String) -> bool:
 		]
 	elif is_profile:
 		entries = [
-			{"icon":"☾", "art":"res://assets/pieces/moon_sigil.svg", "title":"CHAPTER PROGRESS", "body":"Opening chapter complete · %d of %d rituals." % [completed_count, INTERNAL_REVIEW_LEVEL_COUNT] if opening_complete else "%d of %d opening rituals completed." % [completed_count, INTERNAL_REVIEW_LEVEL_COUNT], "status":"FIRST CABINET SET RESTORED" if opening_complete else "YOUR SAVED JOURNEY"},
-			{"icon":"✦", "art":"res://assets/curios/ch01_curio_moon_cameo_awakened_v01.svg", "title":"RELIQUARY", "body":"%d of %d opening curios awakened." % [collected_count, INTERNAL_REVIEW_LEVEL_COUNT], "status":"OPENING SET COMPLETE" if opening_complete else "RELICS RECOVERED"},
+			{"icon":"☾", "art":"res://assets/pieces/moon_sigil.svg", "title":"CHAPTER PROGRESS", "body":"Opening chapter complete · %d of %d rituals." % [completed_count, _level_cap()] if opening_complete else "%d of %d opening rituals completed." % [completed_count, _level_cap()], "status":"FIRST CABINET SET RESTORED" if opening_complete else "YOUR SAVED JOURNEY"},
+			{"icon":"✦", "art":"res://assets/curios/ch01_curio_moon_cameo_awakened_v01.svg", "title":"RELIQUARY", "body":"%d of %d opening curios awakened." % [collected_count, _level_cap()], "status":"OPENING SET COMPLETE" if opening_complete else "RELICS RECOVERED"},
 			{"icon":"⌂", "art":"res://assets/world/ch01_curio_boutique/curio_boutique_moonlit_backdrop.svg", "title":"HOUSE RESTORATION", "body":"Restoration stage %d." % restored_stage, "status":"OPENING RESTORATION COMPLETE" if opening_complete else "PROGRESS SAVED ON THIS DEVICE"}
 		]
 	else:
@@ -774,7 +776,7 @@ func close_settings() -> bool:
 func _render_house(restoration_mode: bool = false, curio_id: String = "", restoration_stage: int = 0, returning_player: bool = false) -> void:
 	var screen: Node = HouseScene.instantiate()
 	_show_screen(screen)
-	screen.set_available_level_count(INTERNAL_REVIEW_LEVEL_COUNT)
+	screen.set_available_level_count(_level_cap())
 	if screen.has_method("apply_presentation_settings"):
 		screen.apply_presentation_settings(user_settings.get_presentation_state())
 	screen.set_progress(progress)
@@ -815,7 +817,7 @@ func _on_prestart_back() -> void:
 
 func _render_map_from_prestart() -> void:
 	var screen: Node = MapScene.instantiate()
-	screen.set("canonical_level_cap", INTERNAL_REVIEW_LEVEL_COUNT)
+	screen.set("canonical_level_cap", _level_cap())
 	_show_screen(screen)
 	screen.set_progress(progress)
 	_install_product_navigation(screen, "map")
@@ -860,8 +862,14 @@ func _on_presentation_settings_changed(state: Dictionary) -> void:
 	if _settings_screen != null and is_instance_valid(_settings_screen) and _settings_screen.has_method("apply_presentation_settings"):
 		_settings_screen.apply_presentation_settings(state)
 
+func _level_cap() -> int:
+	return int(level_catalog.count()) if level_catalog != null else 0
+
+func _level_entries() -> Array[Dictionary]:
+	return level_catalog.entries() if level_catalog != null else []
+
 func _level_path(level_number: int) -> String:
-	return "res://content/levels/ch01/level_%03d.json" % level_number
+	return String(level_catalog.level_path(level_number)) if level_catalog != null else ""
 
 func _show_screen(screen: Node) -> void:
 	if _current_screen != null and is_instance_valid(_current_screen):

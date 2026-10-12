@@ -26,10 +26,25 @@ var _level_states: Dictionary = {}
 var _frontier_level: int = -1
 var _frontier_focus: TextureRect
 var _frontier_label: Label
+var _catalog_entries: Dictionary = {}
 
 func _ready() -> void:
 	_build_route()
 	_refresh()
+
+func set_level_catalog(entries: Array) -> void:
+	_catalog_entries.clear()
+	for raw_entry in entries:
+		if raw_entry is Dictionary:
+			var entry: Dictionary = (raw_entry as Dictionary).duplicate(true)
+			_catalog_entries[int(entry.get("number", 0))] = entry
+	if is_node_ready():
+		_build_route()
+		_refresh()
+
+func _entry_for(level_number: int) -> Dictionary:
+	var value: Variant = _catalog_entries.get(level_number, {})
+	return (value as Dictionary) if value is Dictionary else {}
 
 func set_progress(value) -> void:
 	progress = value
@@ -37,7 +52,10 @@ func set_progress(value) -> void:
 
 func set_canonical_level_cap(value: int) -> void:
 	canonical_level_cap = max(1, value)
-	_refresh()
+	visible_route_levels = max(visible_route_levels, canonical_level_cap)
+	if is_node_ready():
+		_build_route()
+		_refresh()
 
 func get_level_button(level_number: int) -> Button:
 	return _level_buttons.get(level_number) as Button
@@ -59,7 +77,7 @@ func _build_route() -> void:
 	_centers.clear()
 	_level_states.clear()
 
-	var content_height := 1500.0
+	var content_height := 1500.0 + float(maxi(0, canonical_level_cap - 3)) * 320.0
 	custom_minimum_size = Vector2(route_width, content_height)
 	size = custom_minimum_size
 
@@ -106,7 +124,7 @@ func _build_route() -> void:
 
 		var button := Button.new()
 		button.name = "Level%d" % level_number
-		var diameter := 160.0 if level_number == 1 else (148.0 if level_number <= 3 else 52.0)
+		var diameter := 160.0 if level_number == 1 else (148.0 if level_number <= canonical_level_cap else 52.0)
 		button.position = center - Vector2.ONE * diameter * 0.5
 		button.size = Vector2.ONE * diameter
 		button.focus_mode = Control.FOCUS_ALL
@@ -132,7 +150,7 @@ func _build_route() -> void:
 		label_plate.content_margin_left = 12
 		label_plate.content_margin_right = 12
 		label.add_theme_stylebox_override("normal", label_plate)
-		label.visible = level_number <= 3
+		label.visible = level_number <= canonical_level_cap
 		var on_right := center.x < route_width * 0.50
 		if on_right:
 			label.position = Vector2(center.x + diameter * 0.60, center.y - 44.0)
@@ -142,36 +160,37 @@ func _build_route() -> void:
 			label.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
 		add_child(label)
 		_level_labels[level_number] = label
-		if level_number <= 3:
+		if level_number <= canonical_level_cap:
 			_add_relic_art(level_number, center, diameter, on_right)
 
 	queue_redraw()
 
 func _center_for(level_number: int, content_height: float) -> Vector2:
 	var base_y := content_height - bottom_margin
-	match level_number:
-		1:
-			return Vector2(route_width * 0.50, base_y)
-		2:
-			return Vector2(route_width * 0.34, base_y - 370.0)
-		3:
-			return Vector2(route_width * 0.66, base_y - 720.0)
-		_:
-			# Future Levels 4–10 stay visible as one compact sealed cabinet cluster.
-			var future_index := level_number - 4
-			if future_index < 4:
-				return Vector2(route_width * (0.20 + float(future_index) * 0.20), 158.0)
-			return Vector2(route_width * (0.30 + float(future_index - 4) * 0.20), 250.0)
+	if level_number == 1:
+		return Vector2(route_width * 0.50, base_y)
+	if level_number == 2:
+		return Vector2(route_width * 0.34, base_y - 370.0)
+	if level_number == 3:
+		return Vector2(route_width * 0.66, base_y - 720.0)
+	if level_number <= canonical_level_cap:
+		var live_index := level_number - 3
+		var x := 0.34 if live_index % 2 == 1 else 0.66
+		return Vector2(route_width * x, base_y - 720.0 - float(live_index) * 320.0)
+	# Future sealed cabinets stay visible as a compact cluster above the live route.
+	var future_index := level_number - canonical_level_cap - 1
+	if future_index < 4:
+		return Vector2(route_width * (0.20 + float(future_index) * 0.20), 158.0)
+	return Vector2(route_width * (0.30 + float(future_index - 4) * 0.20), 250.0)
 
 func _add_relic_art(level_number: int, center: Vector2, diameter: float, label_on_right: bool) -> void:
-	var paths := {
-		1: "res://assets/curios/ch01_curio_moon_cameo_awakened_v01.svg",
-		2: "res://assets/curios/ch01_curio_moth_reliquary.svg",
-		3: "res://assets/curios/ch01_curio_thorned_locket.svg",
-	}
+	var entry := _entry_for(level_number)
+	var art_path := String(entry.get("route_art", ""))
+	if art_path == "":
+		return
 	var art := TextureRect.new()
 	art.name = "RelicArt%d" % level_number
-	art.texture = PieceAssetLoader.ornament(String(paths.get(level_number, "")))
+	art.texture = PieceAssetLoader.ornament(art_path)
 	art.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
 	art.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
 	art.mouse_filter = Control.MOUSE_FILTER_IGNORE
@@ -236,7 +255,7 @@ func _update_frontier_focus() -> void:
 	if not visible:
 		return
 	var center: Vector2 = _centers[_frontier_level]
-	var diameter := 160.0 if _frontier_level == 1 else 148.0
+	var diameter := 160.0 if _frontier_level == 1 else (148.0 if _frontier_level <= canonical_level_cap else 52.0)
 	var icon_center := center + Vector2(diameter * 0.48, -diameter * 0.48)
 	_frontier_focus.position = icon_center - _frontier_focus.size * 0.5
 	_frontier_label.position = Vector2(center.x - _frontier_label.size.x * 0.5, center.y - diameter * 0.5 - 52.0)
@@ -244,28 +263,27 @@ func _update_frontier_focus() -> void:
 	move_child(_frontier_label, get_child_count() - 1)
 
 func _tooltip_for(level_number: int) -> String:
-	match level_number:
-		1: return "Moonlit Cabinet · Moon Cameo"
-		2: return "Sealed Display · Wax Seals · Moth Reliquary"
-		3: return "Thornlight Arrangement · Line Sigil · Thorned Locket"
-		_: return "Upper cabinet %d · sealed for later" % level_number
+	var entry := _entry_for(level_number)
+	if not entry.is_empty():
+		return String(entry.get("tooltip", "Ritual %d" % level_number))
+	return "Upper cabinet %d · sealed for later" % level_number
 
 func _caption(level_number: int, completed: bool) -> String:
-	if level_number == 1:
-		return "MOONLIT CABINET\n%s" % ("MOON CAMEO AWAKENED" if completed else "MOON CAMEO WAITS")
-	if level_number == 2:
-		return "SEALED DISPLAY\n%s" % ("MOTH RELIQUARY RECOVERED" if completed else "BREAK THE WAX SEALS")
-	if level_number == 3:
-		return "THORNLIGHT\n%s" % ("THORNED LOCKET RECOVERED" if completed else "FORM A MOON BEAM")
-	return ""
+	var entry := _entry_for(level_number)
+	if entry.is_empty():
+		return ""
+	return "%s\n%s" % [
+		String(entry.get("route_caption", "RITUAL %d" % level_number)),
+		String(entry.get("route_completed" if completed else "route_open", ""))
+	]
 
 func _apply_node_style(button: Button, state: String) -> void:
 	var box := StyleBoxFlat.new()
 	var level_number := int(button.name.trim_prefix("Level"))
-	var radius := 80 if level_number == 1 else (74 if level_number <= 3 else 26)
+	var radius := 80 if level_number == 1 else (74 if level_number <= canonical_level_cap else 26)
 	var open := state in ["current", "available", "completed"]
 	box.set_corner_radius_all(radius)
-	box.set_border_width_all(5 if state == "current" else (4 if level_number <= 3 else 1))
+	box.set_border_width_all(5 if state == "current" else (4 if level_number <= canonical_level_cap else 1))
 	box.shadow_color = Color(0, 0, 0, 0.52)
 	box.shadow_size = 24 if state == "current" else (18 if open else 5)
 	match state:
@@ -279,7 +297,7 @@ func _apply_node_style(button: Button, state: String) -> void:
 			box.bg_color = Color("#2E2036")
 			box.border_color = LILAC
 		_:
-			if level_number <= 3:
+			if level_number <= canonical_level_cap:
 				box.bg_color = Color("#1D1722")
 				box.border_color = Color("#65596D")
 			else:
@@ -295,7 +313,7 @@ func _apply_node_style(button: Button, state: String) -> void:
 	button.add_theme_stylebox_override("disabled", box)
 	button.add_theme_color_override("font_color", Color("#FFF4D8") if state == "current" else (BONE if open else Color("#9A8D9E")))
 	button.add_theme_color_override("font_disabled_color", Color("#776D7B"))
-	button.add_theme_font_size_override("font_size", 48 if state == "current" else (46 if level_number == 1 else (40 if level_number <= 3 else 15)))
+	button.add_theme_font_size_override("font_size", 48 if state == "current" else (46 if level_number == 1 else (40 if level_number <= canonical_level_cap else 15)))
 
 func _draw() -> void:
 	# S03 owns route STRUCTURE only. Environment imagery belongs to the
@@ -312,7 +330,7 @@ func _draw() -> void:
 	draw_rect(content, Color("#090711", 0.20), true)
 
 	# Opening route: live component geometry over authored environment art.
-	for level_number in range(1, 3):
+	for level_number in range(1, canonical_level_cap):
 		var a := get_level_center(level_number)
 		var b := get_level_center(level_number + 1)
 		draw_line(a, b, Color("#160F1B", 0.88), 12.0, true)
@@ -334,9 +352,9 @@ func _draw() -> void:
 
 	# Future levels remain visibly connected but subordinate to the opening
 	# three-level journey. Their lock/state styling is owned by live buttons.
-	var future_hub := Vector2(route_width * 0.50, 385.0)
-	draw_line(get_level_center(3), future_hub, Color(GOLD, 0.24), 2.0, true)
+	var future_hub := Vector2(route_width * 0.50, 110.0)
+	draw_line(get_level_center(canonical_level_cap), future_hub, Color(GOLD, 0.24), 2.0, true)
 	draw_circle(future_hub, 8.0, Color("#130D18", 0.90))
 	draw_arc(future_hub, 8.0, 0.0, TAU, 18, Color(GOLD, 0.38), 1.5)
-	for level_number in range(4, visible_route_levels + 1):
+	for level_number in range(canonical_level_cap + 1, visible_route_levels + 1):
 		draw_line(future_hub, get_level_center(level_number), Color(LILAC, 0.11), 1.2, true)
