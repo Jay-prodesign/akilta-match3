@@ -58,7 +58,7 @@ func _run() -> void:
 		return _fail(app, "House did not expose canonical returning_player state")
 	if curio_label == null or not curio_label.text.contains("2 / 3 CURIOS"):
 		return _fail(app, "House did not restore 2/3 Curio truth")
-	if play == null or play.text != "CONTINUE CURIO BOUTIQUE":
+	if play == null or play.text != "PLAY LEVEL 3":
 		return _fail(app, "returning House did not expose the next useful action")
 	if not house.has_method("house_hotspot_contract"):
 		return _fail(app, "House hotspot contract missing")
