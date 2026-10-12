@@ -351,7 +351,7 @@
       ],
       "reuse": "House",
       "priority": "P0",
-      "production_status": "required",
+      "production_status": "runtime_connected_owned_raster_verified",
       "architecture_owned": true,
       "contract_owners": [
         {
@@ -375,7 +375,9 @@
             "celebrate"
           ]
         }
-      ]
+      ],
+      "current_path": "assets/pieces/black_cat.webp",
+      "runtime_role": "persistent_house_character_layer"
     },
     {
       "asset_id": "gbl_primary_panel_frame",
@@ -917,7 +919,9 @@
         "assets/curios/ch01_curio_moon_cameo_awakened_v01.svg"
       ],
       "technical_policy": "webp_raster_first_runtime__shared_semantic_object_across_S04_S06_S07_S08__owned_svg_fallback",
-      "provenance": "AKILTA first-party Moon Cameo production state pair, composed from the approved S05 gothic reliquary material family. The same semantic object is used from sealed prestart/result state through awakened reward, House restoration and Curio collection; rendered Golden Loop validation required before approval. Verified across S04/S06/S07/S08 in the three-level Godot 4.7.2 rendered journey."
+      "provenance": "AKILTA first-party Moon Cameo production state pair, composed from the approved S05 gothic reliquary material family. The same semantic object is used from sealed prestart/result state through awakened reward, House restoration and Curio collection; rendered Golden Loop validation required before approval. Verified across S04/S06/S07/S08 in the three-level Godot 4.7.2 rendered journey.",
+      "restoration_payoff_motif_path": "assets/curios/ch01_curio_moon_cameo_awakened_v01.webp",
+      "restoration_payoff_status": "runtime_verified_exact_curio_hero"
     },
     {
       "asset_id": "vfx_match_clear",
@@ -2066,7 +2070,9 @@
       },
       "source_silhouette_path": "assets/curios/ch01_curio_moth_reliquary.svg",
       "technical_policy": "png_raster_first_runtime__same_semantic_object__owned_svg_exact_fallback",
-      "provenance": "AKILTA first-party opening Curio identity rasterized from the existing owned canonical silhouette for deterministic runtime parity. Verified across reward, restoration, Reliquary card and Curio Detail in the three-level Godot 4.7.2 rendered journey."
+      "provenance": "AKILTA first-party opening Curio identity rasterized from the existing owned canonical silhouette for deterministic runtime parity. Verified across reward, restoration, Reliquary card and Curio Detail in the three-level Godot 4.7.2 rendered journey.",
+      "restoration_payoff_motif_path": "assets/pieces/luna_moth.webp",
+      "restoration_payoff_status": "runtime_verified_production_motif__exact_item_identity_preserved_in_summary_and_house_niche"
     },
     {
       "asset_id": "reward_thorned_locket",
@@ -2163,7 +2169,9 @@
       },
       "source_silhouette_path": "assets/curios/ch01_curio_thorned_locket.svg",
       "technical_policy": "png_raster_first_runtime__same_semantic_object__owned_svg_exact_fallback",
-      "provenance": "AKILTA first-party opening Curio identity rasterized from the existing owned canonical silhouette for deterministic runtime parity. Verified across reward, restoration, Reliquary card and Curio Detail in the three-level Godot 4.7.2 rendered journey."
+      "provenance": "AKILTA first-party opening Curio identity rasterized from the existing owned canonical silhouette for deterministic runtime parity. Verified across reward, restoration, Reliquary card and Curio Detail in the three-level Godot 4.7.2 rendered journey.",
+      "restoration_payoff_motif_path": "assets/pieces/thorn_rose.webp",
+      "restoration_payoff_status": "runtime_verified_production_motif__exact_item_identity_preserved_in_summary_and_house_niche"
     },
     {
       "asset_id": "chapter_route_frontier_focus",
