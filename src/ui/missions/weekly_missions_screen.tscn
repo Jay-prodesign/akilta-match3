@@ -1,0 +1,200 @@
+[gd_scene load_steps=5 format=3]
+
+[ext_resource type="Script" path="res://src/ui/missions/weekly_missions_screen.gd" id="1_screen"]
+
+[sub_resource type="StyleBoxFlat" id="Altar"]
+bg_color = Color(0.043, 0.032, 0.055, 0.88)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.72, 0.54, 0.72, 0.82)
+corner_radius_top_left = 22
+corner_radius_top_right = 22
+corner_radius_bottom_right = 22
+corner_radius_bottom_left = 22
+content_margin_left = 24.0
+content_margin_top = 24.0
+content_margin_right = 24.0
+content_margin_bottom = 24.0
+shadow_color = Color(0, 0, 0, 0.48)
+shadow_size = 18
+
+[sub_resource type="StyleBoxFlat" id="Primary"]
+bg_color = Color(0.286, 0.157, 0.282, 0.96)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.831, 0.678, 0.439, 0.9)
+corner_radius_top_left = 14
+corner_radius_top_right = 14
+corner_radius_bottom_right = 14
+corner_radius_bottom_left = 14
+
+[sub_resource type="StyleBoxFlat" id="Secondary"]
+bg_color = Color(0.082, 0.061, 0.103, 0.94)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.721, 0.541, 0.721, 0.62)
+corner_radius_top_left = 14
+corner_radius_top_right = 14
+corner_radius_bottom_right = 14
+corner_radius_bottom_left = 14
+
+[node name="WeeklyMissionsScreen" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_screen")
+
+[node name="MissionWorldArt" type="TextureRect" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+expand_mode = 1
+stretch_mode = 6
+
+[node name="WorldShade" type="ColorRect" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+color = Color(0.018, 0.012, 0.026, 0.42)
+
+[node name="MissionLayout" type="VBoxContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 28.0
+offset_top = 44.0
+offset_right = -28.0
+offset_bottom = -34.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/separation = 12
+
+[node name="MetaEyebrow" type="Label" parent="MissionLayout"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.831, 0.678, 0.439, 1)
+theme_override_colors/font_outline_color = Color(0.02, 0.014, 0.028, 0.95)
+theme_override_constants/outline_size = 3
+theme_override_font_sizes/font_size = 18
+text = "THE HOUSE OF CURIOS · WEEKLY ALTAR"
+horizontal_alignment = 1
+
+[node name="MissionTitle" type="Label" parent="MissionLayout"]
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 0.941, 0.847, 1)
+theme_override_colors/font_outline_color = Color(0.02, 0.014, 0.028, 0.97)
+theme_override_constants/outline_size = 6
+theme_override_font_sizes/font_size = 44
+text = "WEEKLY RITUALS"
+horizontal_alignment = 1
+
+[node name="MissionTimer" type="Label" parent="MissionLayout"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.82, 0.72, 0.90, 1)
+theme_override_colors/font_outline_color = Color(0.02, 0.014, 0.028, 0.92)
+theme_override_constants/outline_size = 3
+theme_override_font_sizes/font_size = 20
+text = "OFFLINE · LIVE RESET TIME UNAVAILABLE"
+horizontal_alignment = 1
+
+[node name="MissionEmptyState" type="PanelContainer" parent="MissionLayout"]
+custom_minimum_size = Vector2(0, 640)
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_styles/panel = SubResource("Altar")
+
+[node name="EmptyContent" type="VBoxContainer" parent="MissionLayout/MissionEmptyState"]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_constants/separation = 10
+alignment = 1
+
+[node name="MissionRewardArt" type="TextureRect" parent="MissionLayout/MissionEmptyState/EmptyContent"]
+custom_minimum_size = Vector2(0, 340)
+layout_mode = 2
+expand_mode = 1
+stretch_mode = 5
+
+[node name="Headline" type="Label" parent="MissionLayout/MissionEmptyState/EmptyContent"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.96, 0.9, 0.84, 1)
+theme_override_colors/font_outline_color = Color(0.02, 0.014, 0.028, 0.96)
+theme_override_constants/outline_size = 3
+theme_override_font_sizes/font_size = 34
+text = "THE WEEKLY ALTAR IS QUIET"
+horizontal_alignment = 1
+
+[node name="EmptyBody" type="Label" parent="MissionLayout/MissionEmptyState/EmptyContent"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.90, 0.84, 0.88, 1)
+theme_override_colors/font_outline_color = Color(0.02, 0.014, 0.028, 0.92)
+theme_override_constants/outline_size = 2
+theme_override_font_sizes/font_size = 24
+text = "No live weekly mission feed is connected. Mission timers, progress and rewards are intentionally not fabricated."
+horizontal_alignment = 1
+autowrap_mode = 2
+
+[node name="MissionAvailability" type="Label" parent="MissionLayout/MissionEmptyState/EmptyContent"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.82, 0.72, 0.90, 1)
+theme_override_colors/font_outline_color = Color(0.02, 0.014, 0.028, 0.92)
+theme_override_constants/outline_size = 2
+theme_override_font_sizes/font_size = 20
+text = "LIVE RITUALS WILL APPEAR HERE ONLY WHEN A MISSION FEED IS CONNECTED"
+horizontal_alignment = 1
+autowrap_mode = 2
+
+[node name="MissionEmptyStateTruth" type="Label" parent="MissionLayout/MissionEmptyState/EmptyContent"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.831, 0.678, 0.439, 1)
+theme_override_colors/font_outline_color = Color(0.02, 0.014, 0.028, 0.92)
+theme_override_constants/outline_size = 2
+theme_override_font_sizes/font_size = 20
+text = "RESET / OFFLINE STATE · NOTHING TO CLAIM"
+horizontal_alignment = 1
+
+[node name="MissionOpeningRecord" type="Label" parent="MissionLayout"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.82, 0.72, 0.90, 1)
+theme_override_colors/font_outline_color = Color(0.02, 0.014, 0.028, 0.92)
+theme_override_constants/outline_size = 2
+theme_override_font_sizes/font_size = 20
+text = "OPENING CABINET RECORD · 0 / 3 DISPLAYS AWAKENED"
+horizontal_alignment = 1
+autowrap_mode = 2
+
+[node name="ReturnToEvents" type="Button" parent="MissionLayout"]
+custom_minimum_size = Vector2(0, 62)
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 0.941, 0.847, 1)
+theme_override_font_sizes/font_size = 22
+theme_override_styles/normal = SubResource("Primary")
+theme_override_styles/hover = SubResource("Primary")
+theme_override_styles/pressed = SubResource("Primary")
+text = "RETURN TO EVENT CENTER"
+
+[node name="ReturnToHouse" type="Button" parent="MissionLayout"]
+custom_minimum_size = Vector2(0, 56)
+layout_mode = 2
+theme_override_colors/font_color = Color(0.96, 0.9, 0.84, 1)
+theme_override_font_sizes/font_size = 22
+theme_override_styles/normal = SubResource("Secondary")
+theme_override_styles/hover = SubResource("Primary")
+theme_override_styles/pressed = SubResource("Primary")
+text = "RETURN TO HOUSE"
