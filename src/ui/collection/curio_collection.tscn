@@ -168,7 +168,7 @@ theme_override_constants/separation = 12
 alignment = 1
 
 [node name="MoonCard" type="PanelContainer" parent="Layout/Cards"]
-custom_minimum_size = Vector2(0, 520)
+custom_minimum_size = Vector2(0, 420)
 layout_mode = 2
 size_flags_horizontal = 3
 theme_override_styles/panel = SubResource("Display")
@@ -179,7 +179,7 @@ theme_override_constants/separation = 20
 alignment = 1
 
 [node name="RitualArt" type="TextureRect" parent="Layout/Cards/MoonCard/Content"]
-custom_minimum_size = Vector2(230, 280)
+custom_minimum_size = Vector2(210, 220)
 layout_mode = 2
 expand_mode = 1
 stretch_mode = 5
@@ -235,10 +235,10 @@ mouse_filter = 2
 [node name="InspectAction" type="Button" parent="Layout/Cards/MoonCard/DetailActionLayer"]
 layout_mode = 1
 anchors_preset = 0
-anchor_left = 0.14
-anchor_top = 0.84
-anchor_right = 0.86
-anchor_bottom = 0.97
+anchor_left = 0.18
+anchor_top = 0.80
+anchor_right = 0.82
+anchor_bottom = 0.95
 grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 0
@@ -250,7 +250,7 @@ theme_override_styles/pressed = SubResource("Action")
 text = "DETAILS"
 
 [node name="Slot2" type="PanelContainer" parent="Layout/Cards"]
-custom_minimum_size = Vector2(0, 520)
+custom_minimum_size = Vector2(0, 420)
 layout_mode = 2
 size_flags_horizontal = 3
 theme_override_styles/panel = SubResource("DisplayCool")
@@ -261,7 +261,7 @@ theme_override_constants/separation = 20
 alignment = 1
 
 [node name="Number" type="Label" parent="Layout/Cards/Slot2/Content"]
-custom_minimum_size = Vector2(230, 280)
+custom_minimum_size = Vector2(210, 220)
 size_flags_horizontal = 4
 size_flags_vertical = 4
 layout_mode = 2
@@ -319,10 +319,10 @@ mouse_filter = 2
 
 [node name="InspectAction" type="Button" parent="Layout/Cards/Slot2/DetailActionLayer"]
 layout_mode = 1
-anchor_left = 0.14
-anchor_top = 0.84
-anchor_right = 0.86
-anchor_bottom = 0.97
+anchor_left = 0.18
+anchor_top = 0.80
+anchor_right = 0.82
+anchor_bottom = 0.95
 grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 0
@@ -334,7 +334,7 @@ theme_override_styles/pressed = SubResource("Action")
 text = "DETAILS"
 
 [node name="Slot3" type="PanelContainer" parent="Layout/Cards"]
-custom_minimum_size = Vector2(0, 520)
+custom_minimum_size = Vector2(0, 420)
 layout_mode = 2
 size_flags_horizontal = 3
 theme_override_styles/panel = SubResource("DisplayCool")
@@ -345,7 +345,7 @@ theme_override_constants/separation = 20
 alignment = 1
 
 [node name="Number" type="Label" parent="Layout/Cards/Slot3/Content"]
-custom_minimum_size = Vector2(230, 280)
+custom_minimum_size = Vector2(210, 220)
 size_flags_horizontal = 4
 size_flags_vertical = 4
 layout_mode = 2
@@ -403,10 +403,10 @@ mouse_filter = 2
 
 [node name="InspectAction" type="Button" parent="Layout/Cards/Slot3/DetailActionLayer"]
 layout_mode = 1
-anchor_left = 0.14
-anchor_top = 0.84
-anchor_right = 0.86
-anchor_bottom = 0.97
+anchor_left = 0.18
+anchor_top = 0.80
+anchor_right = 0.82
+anchor_bottom = 0.95
 grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 0
