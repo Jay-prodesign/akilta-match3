@@ -11,13 +11,24 @@ const ScreenArt = preload("res://src/ui/shared/screen_art_registry.gd")
 @onready var boot_state_panel: PanelContainer = $Layout/BootState
 
 var _boot_state: String = "loading"
+var _ambient_tween: Tween
 
 func _ready() -> void:
 	_install_splash_art()
+	_start_ambient_motion()
 	_style_enter_button()
 	_style_boot_state()
 	enter_button.pressed.connect(func(): continue_requested.emit())
 	set_boot_state("loading")
+
+func _start_ambient_motion() -> void:
+	var art := get_node_or_null("SplashWorldArt") as TextureRect
+	if art == null:
+		return
+	art.pivot_offset = size * 0.5
+	_ambient_tween = create_tween().set_loops()
+	_ambient_tween.tween_property(art, "modulate", Color(0.84, 0.86, 1.0, 1.0), 2.8).set_trans(Tween.TRANS_SINE)
+	_ambient_tween.tween_property(art, "modulate", Color.WHITE, 2.8).set_trans(Tween.TRANS_SINE)
 
 func boot_state() -> String:
 	return _boot_state
