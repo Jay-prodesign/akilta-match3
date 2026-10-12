@@ -32,6 +32,7 @@ on:
       - "src/match3/presentation/**"
       - "assets/pieces/**"
       - "assets/blockers/**"
+      - "assets/board/**"
       - "assets/curios/**"
       - "assets/manifests/screen_asset_manifest.json"
       - "assets/world/ch01_curio_boutique/**"

@@ -19,7 +19,6 @@ const ScreenArt = preload("res://src/ui/shared/screen_art_registry.gd")
 const RewardRevealFx = preload("res://src/ui/shared/reward_reveal_fx.gd")
 const MoveResolver = preload("res://src/match3/domain/move_resolver.gd")
 const HapticsController = preload("res://src/feedback/haptics_controller.gd")
-const KENNEY_DIVIDER_PATH := "res://assets/candidate/third_party/kenney/fantasy-ui-borders/divider-004.png"
 
 @export var default_level_path := "res://content/levels/ch01/level_001.json"
 @export var default_seed := 1001
@@ -102,7 +101,6 @@ func _process(delta: float) -> void:
 func _ready() -> void:
 	world_backdrop.texture = ScreenArt.texture("gameplay_bg_curio_boutique")
 	world_backdrop.modulate = Color.WHITE
-	_install_candidate_divider()
 	_install_hud_plate()
 	_build_top_resource_bar()
 	_build_booster_tray()
@@ -593,27 +591,6 @@ func _build_result_proclamation() -> void:
 	proclamation.add_theme_font_size_override("font_size", 18)
 	copy.add_child(proclamation)
 	_result_proclamation = proclamation
-
-func _install_candidate_divider() -> void:
-	var layout := get_node_or_null("Layout")
-	if layout == null or layout.get_node_or_null("TitleDivider") != null:
-		return
-	if not FileAccess.file_exists(KENNEY_DIVIDER_PATH):
-		return
-	var image := Image.load_from_file(KENNEY_DIVIDER_PATH)
-	if image == null or image.is_empty():
-		return
-	var divider := TextureRect.new()
-	divider.name = "TitleDivider"
-	divider.custom_minimum_size = Vector2(0, 16)
-	divider.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	divider.modulate = Color(0.851, 0.71, 0.416, 0.52)
-	divider.texture = ImageTexture.create_from_image(image)
-	divider.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
-	divider.stretch_mode = TextureRect.STRETCH_SCALE
-	layout.add_child(divider)
-	layout.move_child(divider, min(2, layout.get_child_count() - 1))
-
 
 func _install_hud_plate() -> void:
 	var layout := get_node_or_null("Layout") as VBoxContainer
