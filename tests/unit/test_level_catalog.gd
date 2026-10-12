@@ -4,9 +4,9 @@ const LevelCatalog = preload("res://src/content/level_catalog.gd")
 var failures: Array[String] = []
 
 func _init() -> void:
-	var catalog = LevelCatalog.load_default()
-	_expect(catalog != null, "canonical level catalog must load")
-	if catalog != null:
+	var catalog = LevelCatalog.new()
+	_expect(catalog.load_default(), "canonical level catalog must load")
+	if catalog.count() > 0:
 		var issues: Array[String] = catalog.validate()
 		_expect(issues.is_empty(), "canonical level catalog must validate: %s" % str(issues))
 		_expect(catalog.count() == 3, "current opening catalog must own exactly three verified levels")
