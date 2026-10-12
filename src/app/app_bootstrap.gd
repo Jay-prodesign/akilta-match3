@@ -32,9 +32,7 @@ var _store
 var _current_screen: Node
 var _settings_screen: Node
 var _pending_level_number: int = 0
-var _prestart_origin: int = NavigationScript.Route.MAP
 var _returning_player_entry: bool = false
-var _splash_auto_enter_pending := false
 ## Founder-authorized internal review exposes three provisional levels.
 ## This does not confer D-024B/D-027 shipping or final-art approval.
 const INTERNAL_REVIEW_LEVEL_COUNT := 3
@@ -78,16 +76,6 @@ func _complete_bootstrap() -> void:
 			splash.set_boot_state("recoverable_error", "This House record was created by a newer build. Update the game before entering so that record is not overwritten.", false)
 		_:
 			splash.set_boot_state("ready")
-			_splash_auto_enter_pending = true
-			get_tree().create_timer(1.25).timeout.connect(_auto_enter_ready_splash)
-
-func _auto_enter_ready_splash() -> void:
-	if not _splash_auto_enter_pending or navigation == null or navigation.current() != NavigationScript.Route.BOOT:
-		return
-	if _current_screen == null or not _current_screen.has_method("boot_state") or String(_current_screen.boot_state()) != "ready":
-		return
-	_splash_auto_enter_pending = false
-	_on_splash_continue()
 
 func current_route_name() -> String:
 	return navigation.route_name().to_lower() if navigation != null else ""
@@ -125,7 +113,7 @@ func show_map() -> bool:
 	return true
 
 func show_prestart(level_number: int) -> bool:
-	if level_number < 1 or level_number > INTERNAL_REVIEW_LEVEL_COUNT or level_number > int(progress.highest_level_unlocked) or navigation.current() not in [NavigationScript.Route.MAP, NavigationScript.Route.HOUSE]:
+	if level_number < 1 or level_number > INTERNAL_REVIEW_LEVEL_COUNT or level_number > int(progress.highest_level_unlocked) or navigation.current() != NavigationScript.Route.MAP:
 		return false
 	# Reject missing or malformed content while preserving the current map.
 	var level_file := FileAccess.open(_level_path(level_number), FileAccess.READ)
@@ -135,8 +123,7 @@ func show_prestart(level_number: int) -> bool:
 	level_file.close()
 	if not level_data is Dictionary:
 		return false
-	var entry_route: int = navigation.current()
-	if not navigation.go(NavigationScript.Route.PRESTART, {"level": level_number, "origin": entry_route}):
+	if not navigation.go(NavigationScript.Route.PRESTART, {"level": level_number}):
 		return false
 	var screen: Node = PrestartScene.instantiate()
 	_show_screen(screen)
@@ -147,8 +134,7 @@ func show_prestart(level_number: int) -> bool:
 		_ensure_house_route()
 		return false
 	_pending_level_number = level_number
-	_prestart_origin = entry_route
-	screen.back_button.text = "BACK TO MAP" if entry_route == NavigationScript.Route.MAP else "BACK TO HOUSE"
+	screen.back_button.text = "BACK TO MAP"
 	screen.back_requested.connect(_on_prestart_back)
 	screen.start_requested.connect(_on_prestart_start)
 	return true
@@ -800,10 +786,7 @@ func _on_map_back() -> void:
 
 func _on_prestart_back() -> void:
 	_pending_level_number = 0
-	if _prestart_origin == NavigationScript.Route.HOUSE:
-		if navigation.go(NavigationScript.Route.HOUSE, {"via": "prestart_back"}):
-			_render_house()
-	elif navigation.go(NavigationScript.Route.MAP, {"via": "prestart_back"}):
+	if navigation.go(NavigationScript.Route.MAP, {"via": "prestart_back"}):
 		_render_map_from_prestart()
 
 func _render_map_from_prestart() -> void:
@@ -952,14 +935,10 @@ func _on_splash_continue() -> void:
 	_returning_player_entry = false
 	_render_house(false, "", 0, returning_player)
 
-func _on_house_play_requested(level_number: int) -> void:
+func _on_house_play_requested(_level_number: int) -> void:
 	if navigation.current() != NavigationScript.Route.HOUSE:
 		return
-	# The primary Play CTA should lead to the next level, not require a map detour.
-	if level_number >= 1 and level_number <= INTERNAL_REVIEW_LEVEL_COUNT:
-		show_prestart(level_number)
-	else:
-		show_map()
+	show_map()
 
 func show_chapters() -> bool:
 	if navigation == null or navigation.current() != NavigationScript.Route.HOUSE:

@@ -28,11 +28,11 @@ enum Route {
 
 const _EDGES := {
 	Route.BOOT: [Route.HOUSE],
-	Route.HOUSE: [Route.COLLECTION, Route.CHAPTERS, Route.MAP, Route.PRESTART, Route.MISSIONS, Route.EVENTS, Route.SHOP, Route.PROFILE_SETTINGS],
+	Route.HOUSE: [Route.COLLECTION, Route.CHAPTERS, Route.MAP, Route.MISSIONS, Route.EVENTS, Route.SHOP, Route.PROFILE_SETTINGS],
 	Route.COLLECTION: [Route.HOUSE],
 	Route.CHAPTERS: [Route.HOUSE, Route.MAP],
 	Route.MAP: [Route.CHAPTERS, Route.HOUSE, Route.PRESTART],
-	Route.PRESTART: [Route.MAP, Route.HOUSE, Route.GAMEPLAY],
+	Route.PRESTART: [Route.MAP, Route.GAMEPLAY],
 	Route.GAMEPLAY: [Route.WIN_REWARDS, Route.HOUSE],
 	Route.WIN_REWARDS: [Route.RESTORATION, Route.HOUSE],
 	Route.RESTORATION: [Route.HOUSE],
