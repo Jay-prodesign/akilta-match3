@@ -72,8 +72,9 @@ static func validate(level: Dictionary) -> Array[String]:
 	elif objective == "clear_blockers" and level.get("blockers", []).is_empty():
 		issues.append("%s: clear_blockers requires blockers" % level_id)
 
-	_validate_positions(level, width, height, issues)
-	_validate_teaching_moves(level, width, height, issues)
+	var holes: Dictionary = _validate_holes(level, width, height, issues)
+	_validate_positions(level, width, height, holes, issues)
+	_validate_teaching_moves(level, width, height, holes, issues)
 
 	if issues.is_empty() and width > 0 and height > 0 and not families.is_empty():
 		var seed_value: int = int(level.get("validation_seed", 1))
@@ -84,7 +85,24 @@ static func validate(level: Dictionary) -> Array[String]:
 			issues.append("%s: authored board has no legal opening move" % level_id)
 	return issues
 
-static func _validate_positions(level: Dictionary, width: int, height: int, issues: Array[String]) -> void:
+static func _validate_holes(level: Dictionary, width: int, height: int, issues: Array[String]) -> Dictionary:
+	var level_id: String = String(level.get("id", "<missing-id>"))
+	var holes: Dictionary = {}
+	for raw_hole in level.get("holes", []):
+		if not raw_hole is Array or raw_hole.size() < 2:
+			issues.append("%s: hole entry must be [x,y]" % level_id)
+			continue
+		var pos := Vector2i(int(raw_hole[0]), int(raw_hole[1]))
+		if not _in_bounds(pos, width, height):
+			issues.append("%s: hole position out of bounds" % level_id)
+			continue
+		if holes.has(pos):
+			issues.append("%s: duplicate hole position" % level_id)
+			continue
+		holes[pos] = true
+	return holes
+
+static func _validate_positions(level: Dictionary, width: int, height: int, holes: Dictionary, issues: Array[String]) -> void:
 	var level_id: String = String(level.get("id", "<missing-id>"))
 	var occupied_specials: Dictionary = {}
 	for raw_special in level.get("specials", []):
@@ -94,6 +112,8 @@ static func _validate_positions(level: Dictionary, width: int, height: int, issu
 		var pos := Vector2i(int(raw_special.get("x", -1)), int(raw_special.get("y", -1)))
 		if not _in_bounds(pos, width, height):
 			issues.append("%s: special position out of bounds" % level_id)
+		elif holes.has(pos):
+			issues.append("%s: special position cannot be a hole" % level_id)
 		if not SUPPORTED_SPECIALS.has(String(raw_special.get("kind", ""))):
 			issues.append("%s: unsupported special kind" % level_id)
 		if occupied_specials.has(pos):
@@ -108,6 +128,8 @@ static func _validate_positions(level: Dictionary, width: int, height: int, issu
 		var pos := Vector2i(int(raw_blocker.get("x", -1)), int(raw_blocker.get("y", -1)))
 		if not _in_bounds(pos, width, height):
 			issues.append("%s: blocker position out of bounds" % level_id)
+		elif holes.has(pos):
+			issues.append("%s: blocker position cannot be a hole" % level_id)
 		if String(raw_blocker.get("type", "")) != "wax_seal":
 			issues.append("%s: unsupported blocker type" % level_id)
 		if int(raw_blocker.get("hp", 0)) <= 0:
@@ -116,7 +138,7 @@ static func _validate_positions(level: Dictionary, width: int, height: int, issu
 			issues.append("%s: duplicate blocker position" % level_id)
 		occupied_blockers[pos] = true
 
-static func _validate_teaching_moves(level: Dictionary, width: int, height: int, issues: Array[String]) -> void:
+static func _validate_teaching_moves(level: Dictionary, width: int, height: int, holes: Dictionary, issues: Array[String]) -> void:
 	var level_id: String = String(level.get("id", "<missing-id>"))
 	var moves = level.get("teaching_moves", [])
 	if not moves is Array or moves.is_empty():
@@ -130,6 +152,8 @@ static func _validate_teaching_moves(level: Dictionary, width: int, height: int,
 		var to := Vector2i(int(raw_move[2]), int(raw_move[3]))
 		if not _in_bounds(from, width, height) or not _in_bounds(to, width, height):
 			issues.append("%s: teaching move out of bounds" % level_id)
+		elif holes.has(from) or holes.has(to):
+			issues.append("%s: teaching move cannot use a hole" % level_id)
 		elif (from - to).abs().x + (from - to).abs().y != 1:
 			issues.append("%s: teaching move must be adjacent" % level_id)
 

@@ -38,6 +38,7 @@ on:
       - "src/ui/settings/**"
       - "src/match3/domain/**"
       - "src/match3/presentation/**"
+      - "content/levels/**"
       - "assets/pieces/**"
       - "assets/blockers/**"
       - "assets/board/**"

@@ -35,6 +35,7 @@ var current_objective_type: String = "collect_family"
 var current_objective_family: String = "moon"
 var current_objective_target: int = 6
 var current_initial_blocker_count: int = 0
+var current_initial_blocker_hp: int = 0
 var current_win_title: String = "THE CABINET STIRS"
 var current_win_detail: String = "Something in the Curio Boutique has awakened."
 var current_retry_hint: String = ""
@@ -190,6 +191,11 @@ func load_level_path(path: String, seed_value: int = 1001) -> bool:
 	current_objective_target = int(parsed.get("objective_target", 1))
 	var blockers_data: Variant = parsed.get("blockers", [])
 	current_initial_blocker_count = blockers_data.size() if blockers_data is Array else 0
+	current_initial_blocker_hp = 0
+	if blockers_data is Array:
+		for raw_blocker in blockers_data:
+			if raw_blocker is Dictionary:
+				current_initial_blocker_hp += maxi(1, int(raw_blocker.get("hp", 1)))
 	current_win_title = String(parsed.get("win_title", "THE CABINET STIRS"))
 	current_win_detail = String(parsed.get("win_detail", "Something in the Curio Boutique has awakened."))
 	current_retry_hint = String(parsed.get("retry_hint", ""))
@@ -510,10 +516,10 @@ func _refresh_hud() -> void:
 	var progress_family := String(board_state.objective_family)
 	var progress_unit := "SIGILS"
 	if String(board_state.objective_type) == "clear_blockers":
-		progress_value = maxi(0, current_initial_blocker_count - int(board_state.remaining_blockers()))
-		target_value = maxi(1, current_initial_blocker_count)
+		progress_value = maxi(0, current_initial_blocker_hp - _remaining_blocker_hp())
+		target_value = maxi(1, current_initial_blocker_hp)
 		progress_family = "wax_seal"
-		progress_unit = "SEALS"
+		progress_unit = "SEAL LAYERS"
 	if awakening_title != null:
 		var relic_name := current_reward_curio.replace("_", " ").to_upper()
 		awakening_title.text = "AWAKENING · MOON CAMEO" if current_reward_curio == "moon_cameo" else "RELIC · %s" % relic_name
@@ -538,22 +544,31 @@ func _refresh_hud() -> void:
 			int(board_state.objective_target)
 		]
 	elif String(board_state.objective_type) == "clear_blockers":
-		objective_label.text = "Break the wax seals  %d left" % int(board_state.remaining_blockers())
+		objective_label.text = "Break wax seal layers  %d/%d" % [_objective_progress_value(), _objective_target_value()]
 	else:
 		objective_label.text = "Awaken the collection"
+
+func _remaining_blocker_hp() -> int:
+	if board_state == null:
+		return 0
+	var total := 0
+	for raw_pos in board_state.blockers.keys():
+		var blocker: Dictionary = board_state.get_blocker(raw_pos)
+		total += maxi(0, int(blocker.get("hp", 0)))
+	return total
 
 func _objective_progress_value() -> int:
 	if board_state == null:
 		return 0
 	if String(board_state.objective_type) == "clear_blockers":
-		return maxi(0, current_initial_blocker_count - int(board_state.remaining_blockers()))
+		return maxi(0, current_initial_blocker_hp - _remaining_blocker_hp())
 	return maxi(0, int(board_state.objective_progress))
 
 func _objective_target_value() -> int:
 	if board_state == null:
 		return maxi(1, current_objective_target)
 	if String(board_state.objective_type) == "clear_blockers":
-		return maxi(1, current_initial_blocker_count)
+		return maxi(1, current_initial_blocker_hp)
 	return maxi(1, int(board_state.objective_target))
 
 func _present_objective_progress() -> void:
@@ -563,7 +578,7 @@ func _present_objective_progress() -> void:
 	var target := _objective_target_value()
 	var complete := progress >= target
 	if String(board_state.objective_type) == "clear_blockers":
-		objective_label.text = "WAX SEALS %d/%d · %s" % [progress, target, "DISPLAY OPEN" if complete else "+%d THIS MOVE" % _last_objective_delta]
+		objective_label.text = "WAX SEAL LAYERS %d/%d · %s" % [progress, target, "DISPLAY OPEN" if complete else "+%d THIS MOVE" % _last_objective_delta]
 	else:
 		var family := String(board_state.objective_family).to_upper()
 		objective_label.text = "%s SIGILS %d/%d · %s" % [family, progress, target, "OBJECTIVE COMPLETE" if complete else "+%d THIS MOVE" % _last_objective_delta]
@@ -686,7 +701,7 @@ func _terminal_objective_summary(won: bool) -> String:
 		var progress := mini(_objective_progress_value(), _objective_target_value())
 		return "%s · %d / %d %s SIGILS" % [prefix, progress, _objective_target_value(), String(board_state.objective_family).to_upper()]
 	if String(board_state.objective_type) == "clear_blockers":
-		return "%s · %d / %d WAX SEALS" % [prefix, _objective_progress_value(), _objective_target_value()]
+		return "%s · %d / %d WAX SEAL LAYERS" % [prefix, _objective_progress_value(), _objective_target_value()]
 	return prefix
 
 func _style_terminal_result(kind: String) -> void:
