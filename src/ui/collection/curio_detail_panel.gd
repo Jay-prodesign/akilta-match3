@@ -39,5 +39,6 @@ func detail_contract() -> Dictionary:
 		"curio_id": _curio_id,
 		"art_loaded": hero_art != null and hero_art.texture != null,
 		"view_in_house_visible": view_house != null and view_house.visible,
+		"north_star_actions": view_house != null and view_house.custom_minimum_size.y >= 64.0 and close != null and close.custom_minimum_size.y >= 60.0,
 		"authored_scene": true,
 	}
