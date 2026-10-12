@@ -2,6 +2,7 @@ class_name Match3ChapterRouteView
 extends Control
 
 signal level_requested(level_number: int)
+signal sealed_level_requested(level_number: int, kind: String)
 
 const GOLD := Color("#D8B56A")
 const LILAC := Color("#BFA5D8")
@@ -186,6 +187,9 @@ func _add_relic_art(level_number: int, center: Vector2, diameter: float, label_o
 func _request(level_number: int) -> void:
 	if level_number <= canonical_level_cap and (progress == null or level_number <= int(progress.highest_level_unlocked)):
 		level_requested.emit(level_number)
+		return
+	var kind := "future_content" if level_number > canonical_level_cap else "progression_locked"
+	sealed_level_requested.emit(level_number, kind)
 
 func _refresh() -> void:
 	if not is_node_ready() or _level_buttons.is_empty():
@@ -208,7 +212,8 @@ func _refresh() -> void:
 			state = "available"
 		_level_states[level_number] = state
 		button.set_meta("level_state", state)
-		button.disabled = not open
+		button.set_meta("sealed_kind", "" if open else ("future_content" if level_number > canonical_level_cap else "progression_locked"))
+		button.disabled = false
 		button.text = "✓" if completed else str(level_number)
 		button.tooltip_text = _tooltip_for(level_number)
 		label.text = _caption(level_number, completed)
