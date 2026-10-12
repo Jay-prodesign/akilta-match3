@@ -55,6 +55,7 @@ func _run() -> void:
 		_expect(bool(detail_contract.get("authored_scene", false)), "Curio detail contract must identify authored presentation")
 		_expect(bool(detail_contract.get("art_loaded", false)), "Curio detail hero art must load")
 		_expect(bool(detail_contract.get("view_in_house_visible", false)), "Owned Curio detail must expose View in House")
+			_expect(bool(detail_contract.get("north_star_actions", false)), "Curio detail actions must retain the rounded North Star mobile CTA scale")
 		var close := detail.get_node_or_null("CurioDetailCard/Content/Close") as Button
 		_expect(close != null, "Curio detail close action missing")
 		if close != null:
