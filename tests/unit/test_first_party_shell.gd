@@ -46,18 +46,27 @@ func _run() -> void:
 	_expect(bool(presentation.get("high_contrast", false)), "high contrast must reach gameplay presentation")
 	_expect(bool(board.motion_contract().get("reduced_motion_supported", false)), "board motion contract must declare reduced-motion support")
 	board.free()
-	var canonical_piece_paths := {
+	var canonical_source_paths := {
 		"moon": "res://assets/pieces/moon_sigil.svg",
 		"rose": "res://assets/pieces/thorn_rose.svg",
 		"moth": "res://assets/pieces/luna_moth.svg",
 		"key": "res://assets/pieces/curio_key.svg",
 		"leaf": "res://assets/pieces/night_ivy.svg",
+		"cat": "res://assets/pieces/black_cat.svg",
+		"candle": "res://assets/pieces/candle.svg",
+		"skull": "res://assets/pieces/skull.svg",
 	}
-	for family in canonical_piece_paths:
-		_expect(String(PieceAssets.PATHS.get(family, "")) == String(canonical_piece_paths[family]), "piece family identity must stay invariant: %s" % family)
+	for family in canonical_source_paths:
+		var source_path := String(canonical_source_paths[family])
+		var runtime_path := source_path.get_basename() + ".webp"
+		_expect(String(PieceAssets.SOURCE_PATHS.get(family, "")) == source_path, "piece source identity must stay invariant: %s" % family)
+		_expect(String(PieceAssets.RUNTIME_PATHS.get(family, "")) == runtime_path, "piece runtime identity must be the exact raster counterpart: %s" % family)
+		_expect(source_path.get_basename() == runtime_path.get_basename(), "source/runtime piece identity must share one canonical basename: %s" % family)
 		for profile in PieceAssets.PROFILE_PATHS:
 			var profile_paths: Dictionary = PieceAssets.PROFILE_PATHS[profile]
-			_expect(String(profile_paths.get(family, "")) == String(canonical_piece_paths[family]), "piece family identity must stay invariant across level profiles: %s / %s" % [profile, family])
+			var profile_path := String(profile_paths.get(family, ""))
+			_expect(profile_path == runtime_path, "piece family identity must stay invariant across level profiles: %s / %s" % [profile, family])
+			_expect(profile_path.get_basename() == source_path.get_basename(), "profile runtime art must preserve exact source identity: %s / %s" % [profile, family])
 	var moth_visual: Dictionary = PieceVisuals.descriptor("moth")
 	var key_visual: Dictionary = PieceVisuals.descriptor("key")
 	var ivy_visual: Dictionary = PieceVisuals.descriptor("leaf")

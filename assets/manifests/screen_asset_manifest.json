@@ -458,7 +458,7 @@
         "matched_runtime"
       ],
       "type": "gameplay_asset",
-      "dimensions": "128x128_webp_runtime_candidate",
+      "dimensions": "128x128_webp_runtime_verified",
       "aspect_ratio": "1:1",
       "transparent": true,
       "variants": [
@@ -466,7 +466,7 @@
       ],
       "reuse": "global",
       "priority": "P0",
-      "production_status": "production_family_candidate_runtime_validation",
+      "production_status": "runtime_connected_production_piece_family_verified",
       "current_path": "assets/pieces/moon_sigil.webp",
       "architecture_owned": true,
       "contract_owners": [
@@ -484,8 +484,8 @@
         }
       ],
       "source_silhouette_path": "assets/pieces/moon_sigil.svg",
-      "technical_policy": "webp_raster_first_runtime__canonical_family_identity__svg_owned_fallback",
-      "provenance": "AKILTA first-party S05 eight-piece production family candidate: transparent WebP, shared moonlit directional light, antique-gold edge language and dark-romantic gothic reliquary material treatment. Candidate remains subject to rendered board/play validation before approval."
+      "technical_policy": "webp_production_runtime__canonical_family_identity__owned_svg_exact_identity_fallback",
+      "provenance": "AKILTA first-party S05 eight-piece production raster family: transparent WEBP, shared moonlit directional light, antique-gold edge language and dark-romantic gothic reliquary material treatment. Verified in Godot 4.7.2 across real rendered Levels 1, 2 and 3 boards, with unique silhouette/motif contracts and explicit WEBP runtime resolution."
     },
     {
       "asset_id": "piece_rose",
@@ -500,7 +500,7 @@
         "matched_runtime"
       ],
       "type": "gameplay_asset",
-      "dimensions": "128x128_webp_runtime_candidate",
+      "dimensions": "128x128_webp_runtime_verified",
       "aspect_ratio": "1:1",
       "transparent": true,
       "variants": [
@@ -508,7 +508,7 @@
       ],
       "reuse": "global",
       "priority": "P0",
-      "production_status": "production_family_candidate_runtime_validation",
+      "production_status": "runtime_connected_production_piece_family_verified",
       "current_path": "assets/pieces/thorn_rose.webp",
       "architecture_owned": true,
       "contract_owners": [
@@ -526,8 +526,8 @@
         }
       ],
       "source_silhouette_path": "assets/pieces/thorn_rose.svg",
-      "technical_policy": "webp_raster_first_runtime__canonical_family_identity__svg_owned_fallback",
-      "provenance": "AKILTA first-party S05 eight-piece production family candidate: transparent WebP, shared moonlit directional light, antique-gold edge language and dark-romantic gothic reliquary material treatment. Candidate remains subject to rendered board/play validation before approval."
+      "technical_policy": "webp_production_runtime__canonical_family_identity__owned_svg_exact_identity_fallback",
+      "provenance": "AKILTA first-party S05 eight-piece production raster family: transparent WEBP, shared moonlit directional light, antique-gold edge language and dark-romantic gothic reliquary material treatment. Verified in Godot 4.7.2 across real rendered Levels 1, 2 and 3 boards, with unique silhouette/motif contracts and explicit WEBP runtime resolution."
     },
     {
       "asset_id": "piece_moth",
@@ -542,7 +542,7 @@
         "matched_runtime"
       ],
       "type": "gameplay_asset",
-      "dimensions": "128x128_webp_runtime_candidate",
+      "dimensions": "128x128_webp_runtime_verified",
       "aspect_ratio": "1:1",
       "transparent": true,
       "variants": [
@@ -550,7 +550,7 @@
       ],
       "reuse": "global",
       "priority": "P0",
-      "production_status": "production_family_candidate_runtime_validation",
+      "production_status": "runtime_connected_production_piece_family_verified",
       "current_path": "assets/pieces/luna_moth.webp",
       "architecture_owned": true,
       "contract_owners": [
@@ -568,8 +568,8 @@
         }
       ],
       "source_silhouette_path": "assets/pieces/luna_moth.svg",
-      "technical_policy": "webp_raster_first_runtime__canonical_family_identity__svg_owned_fallback",
-      "provenance": "AKILTA first-party S05 eight-piece production family candidate: transparent WebP, shared moonlit directional light, antique-gold edge language and dark-romantic gothic reliquary material treatment. Candidate remains subject to rendered board/play validation before approval."
+      "technical_policy": "webp_production_runtime__canonical_family_identity__owned_svg_exact_identity_fallback",
+      "provenance": "AKILTA first-party S05 eight-piece production raster family: transparent WEBP, shared moonlit directional light, antique-gold edge language and dark-romantic gothic reliquary material treatment. Verified in Godot 4.7.2 across real rendered Levels 1, 2 and 3 boards, with unique silhouette/motif contracts and explicit WEBP runtime resolution."
     },
     {
       "asset_id": "piece_key",
@@ -584,7 +584,7 @@
         "matched_runtime"
       ],
       "type": "gameplay_asset",
-      "dimensions": "128x128_webp_runtime_candidate",
+      "dimensions": "128x128_webp_runtime_verified",
       "aspect_ratio": "1:1",
       "transparent": true,
       "variants": [
@@ -592,7 +592,7 @@
       ],
       "reuse": "global",
       "priority": "P0",
-      "production_status": "production_family_candidate_runtime_validation",
+      "production_status": "runtime_connected_production_piece_family_verified",
       "current_path": "assets/pieces/curio_key.webp",
       "architecture_owned": true,
       "contract_owners": [
@@ -610,8 +610,8 @@
         }
       ],
       "source_silhouette_path": "assets/pieces/curio_key.svg",
-      "technical_policy": "webp_raster_first_runtime__canonical_family_identity__svg_owned_fallback",
-      "provenance": "AKILTA first-party S05 eight-piece production family candidate: transparent WebP, shared moonlit directional light, antique-gold edge language and dark-romantic gothic reliquary material treatment. Candidate remains subject to rendered board/play validation before approval."
+      "technical_policy": "webp_production_runtime__canonical_family_identity__owned_svg_exact_identity_fallback",
+      "provenance": "AKILTA first-party S05 eight-piece production raster family: transparent WEBP, shared moonlit directional light, antique-gold edge language and dark-romantic gothic reliquary material treatment. Verified in Godot 4.7.2 across real rendered Levels 1, 2 and 3 boards, with unique silhouette/motif contracts and explicit WEBP runtime resolution."
     },
     {
       "asset_id": "piece_ivy",
@@ -626,7 +626,7 @@
         "matched_runtime"
       ],
       "type": "gameplay_asset",
-      "dimensions": "128x128_webp_runtime_candidate",
+      "dimensions": "128x128_webp_runtime_verified",
       "aspect_ratio": "1:1",
       "transparent": true,
       "variants": [
@@ -634,7 +634,7 @@
       ],
       "reuse": "global",
       "priority": "P0",
-      "production_status": "production_family_candidate_runtime_validation",
+      "production_status": "runtime_connected_production_piece_family_verified",
       "current_path": "assets/pieces/night_ivy.webp",
       "architecture_owned": true,
       "contract_owners": [
@@ -652,8 +652,8 @@
         }
       ],
       "source_silhouette_path": "assets/pieces/night_ivy.svg",
-      "technical_policy": "webp_raster_first_runtime__canonical_family_identity__svg_owned_fallback",
-      "provenance": "AKILTA first-party S05 eight-piece production family candidate: transparent WebP, shared moonlit directional light, antique-gold edge language and dark-romantic gothic reliquary material treatment. Candidate remains subject to rendered board/play validation before approval."
+      "technical_policy": "webp_production_runtime__canonical_family_identity__owned_svg_exact_identity_fallback",
+      "provenance": "AKILTA first-party S05 eight-piece production raster family: transparent WEBP, shared moonlit directional light, antique-gold edge language and dark-romantic gothic reliquary material treatment. Verified in Godot 4.7.2 across real rendered Levels 1, 2 and 3 boards, with unique silhouette/motif contracts and explicit WEBP runtime resolution."
     },
     {
       "asset_id": "gameplay_bg_curio_boutique",
@@ -1545,7 +1545,7 @@
         "matched_runtime"
       ],
       "type": "gameplay_asset",
-      "dimensions": "128x128_webp_runtime_candidate",
+      "dimensions": "128x128_webp_runtime_verified",
       "aspect_ratio": "1:1",
       "transparent": true,
       "variants": [
@@ -1553,7 +1553,7 @@
       ],
       "reuse": "global",
       "priority": "P0",
-      "production_status": "production_family_candidate_runtime_validation",
+      "production_status": "runtime_connected_production_piece_family_verified",
       "current_path": "assets/pieces/black_cat.webp",
       "architecture_owned": true,
       "contract_owners": [
@@ -1571,8 +1571,8 @@
         }
       ],
       "source_silhouette_path": "assets/pieces/black_cat.svg",
-      "technical_policy": "webp_raster_first_runtime__canonical_family_identity__svg_owned_fallback",
-      "provenance": "AKILTA first-party S05 eight-piece production family candidate: transparent WebP, shared moonlit directional light, antique-gold edge language and dark-romantic gothic reliquary material treatment. Candidate remains subject to rendered board/play validation before approval."
+      "technical_policy": "webp_production_runtime__canonical_family_identity__owned_svg_exact_identity_fallback",
+      "provenance": "AKILTA first-party S05 eight-piece production raster family: transparent WEBP, shared moonlit directional light, antique-gold edge language and dark-romantic gothic reliquary material treatment. Verified in Godot 4.7.2 across real rendered Levels 1, 2 and 3 boards, with unique silhouette/motif contracts and explicit WEBP runtime resolution."
     },
     {
       "asset_id": "piece_candle",
@@ -1587,7 +1587,7 @@
         "matched_runtime"
       ],
       "type": "gameplay_asset",
-      "dimensions": "128x128_webp_runtime_candidate",
+      "dimensions": "128x128_webp_runtime_verified",
       "aspect_ratio": "1:1",
       "transparent": true,
       "variants": [
@@ -1595,7 +1595,7 @@
       ],
       "reuse": "global",
       "priority": "P0",
-      "production_status": "production_family_candidate_runtime_validation",
+      "production_status": "runtime_connected_production_piece_family_verified",
       "current_path": "assets/pieces/candle.webp",
       "architecture_owned": true,
       "contract_owners": [
@@ -1613,8 +1613,8 @@
         }
       ],
       "source_silhouette_path": "assets/pieces/candle.svg",
-      "technical_policy": "webp_raster_first_runtime__canonical_family_identity__svg_owned_fallback",
-      "provenance": "AKILTA first-party S05 eight-piece production family candidate: transparent WebP, shared moonlit directional light, antique-gold edge language and dark-romantic gothic reliquary material treatment. Candidate remains subject to rendered board/play validation before approval."
+      "technical_policy": "webp_production_runtime__canonical_family_identity__owned_svg_exact_identity_fallback",
+      "provenance": "AKILTA first-party S05 eight-piece production raster family: transparent WEBP, shared moonlit directional light, antique-gold edge language and dark-romantic gothic reliquary material treatment. Verified in Godot 4.7.2 across real rendered Levels 1, 2 and 3 boards, with unique silhouette/motif contracts and explicit WEBP runtime resolution."
     },
     {
       "asset_id": "piece_skull",
@@ -1629,7 +1629,7 @@
         "matched_runtime"
       ],
       "type": "gameplay_asset",
-      "dimensions": "128x128_webp_runtime_candidate",
+      "dimensions": "128x128_webp_runtime_verified",
       "aspect_ratio": "1:1",
       "transparent": true,
       "variants": [
@@ -1637,7 +1637,7 @@
       ],
       "reuse": "global",
       "priority": "P0",
-      "production_status": "production_family_candidate_runtime_validation",
+      "production_status": "runtime_connected_production_piece_family_verified",
       "current_path": "assets/pieces/skull.webp",
       "architecture_owned": true,
       "contract_owners": [
@@ -1655,8 +1655,8 @@
         }
       ],
       "source_silhouette_path": "assets/pieces/skull.svg",
-      "technical_policy": "webp_raster_first_runtime__canonical_family_identity__svg_owned_fallback",
-      "provenance": "AKILTA first-party S05 eight-piece production family candidate: transparent WebP, shared moonlit directional light, antique-gold edge language and dark-romantic gothic reliquary material treatment. Candidate remains subject to rendered board/play validation before approval."
+      "technical_policy": "webp_production_runtime__canonical_family_identity__owned_svg_exact_identity_fallback",
+      "provenance": "AKILTA first-party S05 eight-piece production raster family: transparent WEBP, shared moonlit directional light, antique-gold edge language and dark-romantic gothic reliquary material treatment. Verified in Godot 4.7.2 across real rendered Levels 1, 2 and 3 boards, with unique silhouette/motif contracts and explicit WEBP runtime resolution."
     },
     {
       "asset_id": "blocker_wax_seal",

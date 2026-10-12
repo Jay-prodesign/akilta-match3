@@ -10,7 +10,7 @@ const CONTRACT := {
 		"display_name": "Moon Sigil",
 		"material": "smoked_moonstone",
 		"world_role": "base_family",
-		"status": "raster_material_candidate_runtime_validation"
+		"status": "production_raster_verified"
 	},
 	"rose": {
 		"color": Color("#C7728F"),
@@ -20,7 +20,7 @@ const CONTRACT := {
 		"display_name": "Thorn Rose",
 		"material": "carved_wine_enamel",
 		"world_role": "base_family",
-		"status": "raster_material_candidate_runtime_validation"
+		"status": "production_raster_verified"
 	},
 	"moth": {
 		"color": Color("#83BDC0"),
@@ -30,7 +30,7 @@ const CONTRACT := {
 		"display_name": "Luna Moth",
 		"material": "moonlit_cyan_enamel_and_antique_gold",
 		"world_role": "base_family",
-		"status": "raster_material_candidate_runtime_validation"
+		"status": "production_raster_verified"
 	},
 	"key": {
 		"color": Color("#D3A34E"),
@@ -40,7 +40,7 @@ const CONTRACT := {
 		"display_name": "Curio Key",
 		"material": "antique_gilt",
 		"world_role": "base_family",
-		"status": "raster_readability_candidate_runtime_validation"
+		"status": "production_raster_verified"
 	},
 	"leaf": {
 		"color": Color("#78AA63"),
@@ -50,7 +50,7 @@ const CONTRACT := {
 		"display_name": "Night Ivy",
 		"material": "lacquered_green_enamel",
 		"world_role": "base_family",
-		"status": "raster_material_candidate_runtime_validation"
+		"status": "production_raster_verified"
 	},
 	"cat": {
 		"color": Color("#24202D"),
@@ -60,7 +60,7 @@ const CONTRACT := {
 		"display_name": "House Cat",
 		"material": "obsidian_enamel",
 		"world_role": "base_family",
-		"status": "first_party_svg_candidate_v2"
+		"status": "production_raster_verified"
 	},
 	"candle": {
 		"color": Color("#E8B86C"),
@@ -70,7 +70,7 @@ const CONTRACT := {
 		"display_name": "Witchlight Candle",
 		"material": "ivory_wax_and_warm_gold",
 		"world_role": "base_family",
-		"status": "first_party_svg_candidate_v2"
+		"status": "production_raster_verified"
 	},
 	"skull": {
 		"color": Color("#E7DCC8"),
@@ -80,7 +80,7 @@ const CONTRACT := {
 		"display_name": "Curio Skull",
 		"material": "aged_bone_enamel",
 		"world_role": "base_family",
-		"status": "first_party_svg_candidate_v2"
+		"status": "production_raster_verified"
 	}
 }
 
