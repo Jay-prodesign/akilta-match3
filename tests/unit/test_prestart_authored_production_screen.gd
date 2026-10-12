@@ -20,6 +20,8 @@ func _run() -> void:
 	_expect(bool(contract.get("authored_level_artwork", false)), "Prestart level artwork must be authored and loaded")
 	_expect(bool(contract.get("authored_ritual_aids", false)), "Ritual Help chips must be authored and loaded")
 	_expect(not bool(contract.get("runtime_ui_factory", true)), "Prestart must not rebuild persistent presentation UI at runtime")
+	_expect(bool(contract.get("north_star_readability", false)), "Prestart must retain a strong North Star title/objective/Play hierarchy")
+	_expect(bool(contract.get("note_subordinate", false)), "Long explanatory copy must not compete with the primary prestart decision")
 	_expect(bool(contract.get("raster_runtime", false)), "Prestart aid art must use raster runtime assets")
 
 	var keeper := screen.get_node_or_null("Layout/Card/Content/RitualAids/Column/AidRow/KeeperChip/Content/Art") as TextureRect
@@ -28,7 +30,7 @@ func _run() -> void:
 	var back := screen.get_node_or_null("Layout/Back") as Button
 	_expect(keeper != null and keeper.texture != null, "ASK KEEPER authored aid art missing")
 	_expect(recovery != null and recovery.texture != null, "Fail recovery authored aid art missing")
-	_expect(start != null and start.custom_minimum_size.y >= 64.0, "Prestart primary CTA must retain mobile touch target")
+	_expect(start != null and start.custom_minimum_size.y >= 84.0, "Prestart primary CTA must retain mobile touch target")
 	_expect(back != null and back.custom_minimum_size.y >= 56.0, "Prestart back CTA must retain mobile touch target")
 
 	var objective := screen.get_node_or_null("Layout/Card/Content/Objective") as Label
