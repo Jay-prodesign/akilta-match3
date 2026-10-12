@@ -17,9 +17,9 @@ const ScreenArt = preload("res://src/ui/shared/screen_art_registry.gd")
 @onready var start_button: Button = $Layout/Card/Content/Start
 @onready var back_button: Button = $Layout/Back
 
+const KEEPER_ART_PATH := "res://assets/pieces/black_cat.webp"
 const AID_ART_PATHS := {
-	"hint": "res://assets/pieces/moon_sigil.webp",
-	"plus_moves": "res://assets/pieces/potion.webp"
+	"keeper": KEEPER_ART_PATH
 }
 
 var level_number: int = 1
@@ -67,7 +67,7 @@ func _build_ritual_aids() -> void:
 		return
 	var panel := PanelContainer.new()
 	panel.name = "RitualAids"
-	panel.custom_minimum_size = Vector2(0, 102)
+	panel.custom_minimum_size = Vector2(0, 88)
 	var shell := StyleBoxFlat.new()
 	shell.bg_color = Color("#120D18", 0.94)
 	shell.border_color = Color("#D5AD70", 0.46)
@@ -86,7 +86,7 @@ func _build_ritual_aids() -> void:
 	panel.add_child(column)
 	var heading := Label.new()
 	heading.name = "RitualAidsHeading"
-	heading.text = "IN-LEVEL AIDS"
+	heading.text = "KEEPER GUIDE · FREE"
 	heading.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	heading.add_theme_color_override("font_color", Color("#D5AD70"))
 	heading.add_theme_font_size_override("font_size", 18)
@@ -95,36 +95,35 @@ func _build_ritual_aids() -> void:
 	row.name = "AidRow"
 	row.add_theme_constant_override("separation", 6)
 	column.add_child(row)
-	for entry in [
-		{"label":"HINT", "art":String(AID_ART_PATHS["hint"])},
-		{"label":"+3 MOVES", "art":String(AID_ART_PATHS["plus_moves"])}
-	]:
-		var chip := PanelContainer.new()
-		chip.custom_minimum_size = Vector2(0, 56)
-		chip.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-		var chip_style := StyleBoxFlat.new()
-		chip_style.bg_color = Color("#28142D", 0.96)
-		chip_style.border_color = Color("#D5AD70", 0.44)
-		chip_style.set_border_width_all(1)
-		chip_style.set_corner_radius_all(22)
-		chip.add_theme_stylebox_override("panel", chip_style)
-		row.add_child(chip)
-		var chip_row := HBoxContainer.new()
-		chip_row.alignment = BoxContainer.ALIGNMENT_CENTER
-		chip_row.add_theme_constant_override("separation", 4)
-		chip.add_child(chip_row)
-		var art := TextureRect.new()
-		art.custom_minimum_size = Vector2(36, 36)
-		art.texture = PieceAssetLoader.ornament(String(entry["art"]))
-		art.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
-		art.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
-		art.mouse_filter = Control.MOUSE_FILTER_IGNORE
-		chip_row.add_child(art)
-		var caption := Label.new()
-		caption.text = String(entry["label"])
-		caption.add_theme_color_override("font_color", Color("#F4E5D3"))
-		caption.add_theme_font_size_override("font_size", 20)
-		chip_row.add_child(caption)
+	var chip := PanelContainer.new()
+	chip.name = "KeeperGuide"
+	chip.custom_minimum_size = Vector2(0, 54)
+	chip.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	var chip_style := StyleBoxFlat.new()
+	chip_style.bg_color = Color("#28142D", 0.96)
+	chip_style.border_color = Color("#D5AD70", 0.44)
+	chip_style.set_border_width_all(1)
+	chip_style.set_corner_radius_all(22)
+	chip.add_theme_stylebox_override("panel", chip_style)
+	row.add_child(chip)
+	var chip_row := HBoxContainer.new()
+	chip_row.alignment = BoxContainer.ALIGNMENT_CENTER
+	chip_row.add_theme_constant_override("separation", 6)
+	chip.add_child(chip_row)
+	var art := TextureRect.new()
+	art.name = "KeeperArt"
+	art.custom_minimum_size = Vector2(40, 40)
+	art.texture = PieceAssetLoader.ornament(KEEPER_ART_PATH)
+	art.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+	art.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+	art.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	chip_row.add_child(art)
+	var caption := Label.new()
+	caption.name = "KeeperGuideCopy"
+	caption.text = "ASK KEEPER · MARKS 1 LEGAL SWAP"
+	caption.add_theme_color_override("font_color", Color("#F4E5D3"))
+	caption.add_theme_font_size_override("font_size", 18)
+	chip_row.add_child(caption)
 
 func aid_asset_contract() -> Dictionary:
 	var loaded := {}
@@ -136,7 +135,10 @@ func aid_asset_contract() -> Dictionary:
 	return {
 		"paths": AID_ART_PATHS.duplicate(true),
 		"loaded": loaded,
-		"raster_runtime": raster_runtime
+		"raster_runtime": raster_runtime,
+		"keeper_only_before_play": true,
+		"failure_recovery_deferred": true,
+		"plus_moves_exposed_before_failure": false
 	}
 
 func _style_ritual_actions() -> void:
@@ -208,3 +210,16 @@ func configure_level(value: int, replay: bool = false) -> bool:
 			level_art.texture = ScreenArt.texture("prestart_ch01_level01_art" if level_number == 1 else "prestart_ch01_shared_art")
 		ritual_art.queue_redraw()
 	return true
+
+func ftue_contract() -> Dictionary:
+	var guide_copy := get_node_or_null("Layout/Card/Content/RitualAids/VBoxContainer/AidRow/KeeperGuide/HBoxContainer/KeeperGuideCopy") as Label
+	return {
+		"objective_visible": objective_label != null and objective_label.visible and not objective_label.text.is_empty(),
+		"moves_visible": moves_label != null and moves_label.visible and not moves_label.text.is_empty(),
+		"reward_visible": reward_label != null and reward_label.visible and not reward_label.text.is_empty(),
+		"keeper_guide_visible": get_node_or_null("Layout/Card/Content/RitualAids") != null,
+		"keeper_copy": guide_copy.text if guide_copy != null else "",
+		"plus_moves_exposed_before_failure": false,
+		"failure_recovery_deferred": true,
+		"start_action": start_button.text if start_button != null else ""
+	}
