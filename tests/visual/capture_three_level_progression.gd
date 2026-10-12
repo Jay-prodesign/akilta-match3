@@ -42,6 +42,26 @@ func _capture() -> void:
 	var completed_house = app.current_screen()
 	if completed_house == null or not completed_house.has_method("house_hotspot_contract"):
 		return _fail(app, "completed House hotspot contract missing")
+	if not completed_house.has_method("keeper_house_contract"):
+		return _fail(app, "completed House Keeper contract missing")
+	var keeper_hotspot: Button = completed_house.get_node_or_null("Layout/RoomView/CurioHotspots/KeeperHotspot") as Button
+	if keeper_hotspot == null or keeper_hotspot.disabled:
+		return _fail(app, "completed House Keeper hotspot missing")
+	keeper_hotspot.emit_signal("pressed")
+	await _frames(2)
+	var keeper_name: Label = completed_house.get_node_or_null("KeeperRoleOverlay/Card/Content/Name") as Label
+	var keeper_role: Label = completed_house.get_node_or_null("KeeperRoleOverlay/Card/Content/Role") as Label
+	var keeper_body: Label = completed_house.get_node_or_null("KeeperRoleOverlay/Card/Content/Body") as Label
+	if keeper_name == null or keeper_name.text != "THE KEEPER" or keeper_role == null or not keeper_role.text.contains("NO COST") or keeper_body == null or not keeper_body.text.contains("ASK KEEPER"):
+		return _fail(app, "House Keeper card must expose truthful familiar role")
+	if not await _save(app, "progression-house-keeper-role.png"):
+		return
+	var keeper_close: Button = completed_house.get_node_or_null("KeeperRoleOverlay/Card/Content/Close") as Button
+	if keeper_close == null:
+		return _fail(app, "House Keeper card close missing")
+	keeper_close.emit_signal("pressed")
+	await _frames(2)
+
 	var thorn_hotspot: Button = completed_house.get_node_or_null("Layout/RoomView/CurioHotspots/ThornHotspot") as Button
 	if thorn_hotspot == null or thorn_hotspot.disabled:
 		return _fail(app, "completed House must expose the restored Thorned Locket hotspot")
