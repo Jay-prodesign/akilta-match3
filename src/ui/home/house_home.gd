@@ -18,7 +18,7 @@ const HouseCurioInspectScene = preload("res://src/ui/home/house_curio_inspect.ts
 const KeeperRoleScene = preload("res://src/ui/home/keeper_role_panel.tscn")
 const RestorationOverlayScene = preload("res://src/ui/home/restoration_overlay.tscn")
 
-@onready var room_view = $Layout/RoomView
+@onready var room_view = $RoomView
 @onready var headline: Label = $Layout/Headline
 @onready var detail: Label = $Layout/Detail
 @onready var curio_label: Label = $Layout/CurioChip/Label
@@ -33,8 +33,8 @@ const RestorationOverlayScene = preload("res://src/ui/home/restoration_overlay.t
 @onready var _first_ritual_copy: Label = $Layout/FirstRitualGuide/GuideRow/CopyColumn/Copy
 @onready var _first_ritual_dismiss: Button = $Layout/FirstRitualGuide/GuideRow/Dismiss
 @onready var _first_ritual_keeper_art: TextureRect = $Layout/FirstRitualGuide/GuideRow/KeeperArt
-@onready var _hotspot_layer: Control = $Layout/RoomView/CurioHotspots
-@onready var _keeper_hotspot: Button = $Layout/RoomView/CurioHotspots/KeeperHotspot
+@onready var _hotspot_layer: Control = $RoomView/CurioHotspots
+@onready var _keeper_hotspot: Button = $RoomView/CurioHotspots/KeeperHotspot
 
 var progress
 var available_level_count: int = 1
@@ -57,9 +57,9 @@ func _ready() -> void:
 	_keeper_hotspot.icon = PieceAssetLoader.ornament(KEEPER_ART_PATH)
 	_first_ritual_dismiss.pressed.connect(_dismiss_first_ritual_guide)
 	_hotspot_buttons = {
-		"moon_cameo": $Layout/RoomView/CurioHotspots/MoonHotspot,
-		"moth_reliquary": $Layout/RoomView/CurioHotspots/MothHotspot,
-		"thorned_locket": $Layout/RoomView/CurioHotspots/ThornHotspot,
+		"moon_cameo": $RoomView/CurioHotspots/MoonHotspot,
+		"moth_reliquary": $RoomView/CurioHotspots/MothHotspot,
+		"thorned_locket": $RoomView/CurioHotspots/ThornHotspot,
 	}
 	for curio_id in _hotspot_buttons:
 		var hotspot := _hotspot_buttons[curio_id] as Button
@@ -150,6 +150,7 @@ func north_star_home_contract() -> Dictionary:
 		"primary_cta_width": play_button.custom_minimum_size.x if play_button != null else 0.0,
 		"primary_cta_centered": play_button != null and (play_button.size_flags_horizontal & Control.SIZE_SHRINK_CENTER) != 0,
 		"bottom_nav_reserved": ($Layout.offset_bottom <= -90.0),
+		"world_underlays_home_ui": room_view != null and room_view.get_parent() == self and $Layout/WorldSpacer != null,
 		"direct_level_cta": play_button != null and (play_button.text.begins_with("PLAY LEVEL") or play_button.text.begins_with("EXPLORE")),
 	}
 
