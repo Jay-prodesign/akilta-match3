@@ -106,6 +106,7 @@ const LAST_MOVE_THRESHOLD := 1
 @onready var result_reward_name: Label = $ResultOverlay/Card/Content/RewardName
 @onready var result_house_change: Label = $ResultOverlay/Card/Content/HouseChange
 @onready var result_ritual: Control = $ResultOverlay/Card/Content/RewardRitual
+@onready var result_recovery_action: Button = $ResultOverlay/Card/Content/RecoveryAction
 @onready var result_action: Button = $ResultOverlay/Card/Content/Action
 
 func _process(delta: float) -> void:
@@ -143,6 +144,7 @@ func _ready() -> void:
 		board_view.trace_motion_finished.connect(_on_board_trace_motion_finished)
 	if board_view.has_signal("motion_feedback_requested"):
 		board_view.motion_feedback_requested.connect(_on_board_motion_feedback_requested)
+	result_recovery_action.pressed.connect(_on_result_recovery_pressed)
 	result_action.pressed.connect(_on_result_action_pressed)
 	pause_button.pressed.connect(show_pause)
 	pause_resume.pressed.connect(resume_level)
@@ -227,6 +229,8 @@ func load_level_path(path: String, seed_value: int = 1001) -> bool:
 	_pending_hud_refresh = false
 	pause_overlay.visible = false
 	result_overlay.visible = false
+	if result_recovery_action != null:
+		result_recovery_action.visible = false
 	if _booster_tray != null:
 		_booster_tray.visible = true
 	if result_ritual != null:
@@ -671,6 +675,7 @@ func _show_result_if_terminal(result: String) -> void:
 			result_ritual.set("glow_strength", 0.75)
 			result_ritual.queue_redraw()
 		result_action.text = "RETURN TO HOUSE" if replay_mode else "CONTINUE"
+		result_recovery_action.visible = false
 		if _result_reward_values != null:
 			_result_reward_values.visible = not replay_mode
 		if _result_proclamation != null:
@@ -697,6 +702,8 @@ func _show_result_if_terminal(result: String) -> void:
 			result_ritual.set("glow_strength", 0.12)
 			result_ritual.queue_redraw()
 		result_action.text = "TRY AGAIN"
+		result_recovery_action.visible = not _potion_used_for_attempt
+		result_recovery_action.disabled = _potion_used_for_attempt
 		if _result_reward_values != null:
 			_result_reward_values.visible = false
 		if _result_proclamation != null:
@@ -709,13 +716,25 @@ func _show_result_if_terminal(result: String) -> void:
 		_present_result_overlay("failed")
 		result_state_changed.emit("failed")
 
+func _failure_gap_copy() -> String:
+	if board_state == null:
+		return "The ritual remains unfinished."
+	var remaining := maxi(0, _objective_target_value() - _objective_progress_value())
+	if String(board_state.objective_type) == "collect_family":
+		var family := String(board_state.objective_family).capitalize()
+		return "%d %s sigil%s remained." % [remaining, family, "" if remaining == 1 else "s"]
+	if String(board_state.objective_type) == "clear_blockers":
+		return "%d wax seal layer%s remained." % [remaining, "" if remaining == 1 else "s"]
+	return "The ritual remains unfinished."
+
 func _failure_recovery_copy() -> String:
 	var authored := current_retry_hint if current_retry_hint != "" else "Try another arrangement."
+	var base := "%s %s" % [_failure_gap_copy(), authored]
 	if _consecutive_failures <= 1:
-		return "The House keeps its secrets. %s" % authored
+		return base
 	if _consecutive_failures == 2:
-		return "The House keeps its secrets. %s On retry, the House will mark a legal opening." % authored
-	return "The House keeps its secrets. Guided retry is active: the first legal opening is marked and hints return sooner."
+		return "%s On retry, the House will mark a legal opening." % base
+	return "%s Guided retry is active: the first legal opening is marked and hints return sooner." % base
 
 func difficulty_recovery_contract() -> Dictionary:
 	var tier := "standard"
@@ -729,11 +748,43 @@ func difficulty_recovery_contract() -> Dictionary:
 		"guided_retry_pending": _guided_retry_pending,
 		"auto_hint_delay_seconds": _current_auto_hint_delay(),
 		"life_economy_visible": _resource_life_label != null,
-		"hint_booster_visible": _hint_boost_button != null,
-		"plus_moves_visible": _potion_boost_button != null,
-		"retry_booster_visible": _retry_boost_button != null,
-		"authored_move_budget_preserved": true,
+		"hint_utility_visible": _hint_boost_button != null,
+		"active_plus_moves_booster_visible": _potion_boost_button != null,
+		"active_retry_booster_visible": _retry_boost_button != null,
+		"fail_screen_plus_three_rescue_available": result_recovery_action != null and result_recovery_action.visible and not result_recovery_action.disabled,
+		"guided_retry_changes_move_budget": false,
+		"plus_three_rescue_is_explicit": true,
 	}
+
+func recover_failed_attempt_with_plus_moves() -> bool:
+	if board_state == null or not result_overlay.visible or _potion_used_for_attempt:
+		return false
+	if String(terminal_transition_contract().get("kind", "")) != "failed":
+		return false
+	_potion_used_for_attempt = true
+	board_state.moves_remaining += 3
+	_pending_win = false
+	_pending_terminal_result = ""
+	_last_objective_delta = 0
+	if _potion_boost_button != null:
+		_potion_boost_button.disabled = true
+	if result_recovery_action != null:
+		result_recovery_action.visible = false
+	result_overlay.visible = false
+	_reset_terminal_transition()
+	haptics.reset_for_new_attempt()
+	haptics.request_special()
+	feedback_requested.emit("special")
+	if _booster_tray != null:
+		_booster_tray.visible = true
+	_refresh_hud()
+	hint_label.text = "RECOVERY · +3 MOVES · CONTINUE FROM THIS BOARD"
+	_style_impact_hint("special")
+	result_state_changed.emit("recovered")
+	return true
+
+func _on_result_recovery_pressed() -> void:
+	recover_failed_attempt_with_plus_moves()
 
 func _terminal_objective_summary(won: bool) -> String:
 	if board_state == null:
@@ -774,6 +825,8 @@ func terminal_result_polish_contract() -> Dictionary:
 		"transition": terminal_transition_contract(),
 		"retry_copy": hint_label.text if hint_label != null else "",
 		"distinct_result_material": true,
+		"failure_gap": _failure_gap_copy() if result_overlay != null and result_overlay.visible and String(terminal_transition_contract().get("kind", "")) == "failed" else "",
+		"plus_three_recovery_available": result_recovery_action != null and result_recovery_action.visible and not result_recovery_action.disabled,
 	}
 
 func _present_result_overlay(kind: String) -> void:
@@ -1090,8 +1143,8 @@ func _build_top_resource_bar() -> void:
 	row.alignment = BoxContainer.ALIGNMENT_CENTER
 	row.add_theme_constant_override("separation", 5)
 	panel.add_child(row)
-	# Lives are intentionally not exposed until the economy/refill contract is real.
-	# Coins and gems are already durable first-completion rewards, so they remain truthful.
+	# Lives are not exposed until consumption/refill is a complete economy contract.
+	# Coins and gems already have durable first-completion semantics and remain visible.
 	_resource_life_label = null
 	_resource_coin_label = _add_resource_chip(row, "CoinResource", "res://assets/ui/ui_coin.svg", _format_number(_player_coins))
 	_resource_gem_label = _add_resource_chip(row, "GemResource", "res://assets/ui/ui_gem.svg", _format_number(_player_gems))
@@ -1175,8 +1228,8 @@ func _build_booster_tray() -> void:
 	row.add_theme_constant_override("separation", 6)
 	panel.add_child(row)
 	_hint_boost_button = _add_booster_button(row, "HintBoost", "HINT", String(BOOSTER_ART_PATHS["hint"]), _use_hint_boost)
-	# Economy/entitlement is not connected yet. Do not expose free move-budget
-	# mutation or a duplicate retry booster that would invalidate authored difficulty.
+	# The explicit fail-screen +3 rescue is truthful and remains available there.
+	# Do not also expose difficulty-changing free boosters during active play.
 	_potion_boost_button = null
 	_retry_boost_button = null
 
@@ -1235,8 +1288,9 @@ func booster_asset_contract() -> Dictionary:
 		"plus_moves_used": _potion_used_for_attempt,
 		"plus_moves_disabled": true,
 		"hint_exposed": _hint_boost_button != null,
-		"plus_moves_exposed": _potion_boost_button != null,
-		"retry_exposed": _retry_boost_button != null,
+		"plus_moves_exposed_in_active_play": _potion_boost_button != null,
+		"retry_exposed_in_active_play": _retry_boost_button != null,
+		"fail_screen_plus_three_rescue": result_recovery_action != null,
 		"economy_entitlement_connected": false
 	}
 
