@@ -8,6 +8,7 @@ on:
       - "feat/**"
     paths:
       - ".github/workflows/p0-headless.yml"
+      - ".github/workflows/mobile-release.yml"
       - "project.godot"
       - "export_presets.cfg"
       - "assets/mobile/**"
