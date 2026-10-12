@@ -57,19 +57,12 @@ const BOOSTER_ART_PATHS := {
 	"plus_moves": "res://assets/pieces/potion.webp",
 	"retry": "res://assets/pieces/skull.webp"
 }
-var _level_badge_label: Label
-var _booster_tray: PanelContainer
-var _hint_boost_button: Button
 var _potion_boost_button: Button
 var _retry_boost_button: Button
 var _resource_life_label: Label
-var _resource_coin_label: Label
-var _resource_gem_label: Label
 var _player_lives: int = 5
 var _player_coins: int = 0
 var _player_gems: int = 0
-var _result_proclamation: Label
-var _result_reward_values: Control
 var _result_reveal_fx: Control
 var _reduced_motion: bool = false
 var _high_contrast: bool = false
@@ -89,9 +82,9 @@ const LAST_MOVE_THRESHOLD := 1
 @onready var eyebrow_label: Label = $Layout/Eyebrow
 @onready var title_label: Label = $Layout/Title
 @onready var board_view = $Layout/BoardView
-@onready var objective_label: Label = $Layout/HUD/Objective
-@onready var moves_label: Label = $Layout/HUD/Moves
-@onready var pause_button: Button = $Layout/HUD/Pause
+@onready var objective_label: Label = $Layout/HUDPlate/HUD/Objective
+@onready var moves_label: Label = $Layout/HUDPlate/HUD/Moves
+@onready var pause_button: Button = $Layout/HUDPlate/HUD/Pause
 @onready var pause_overlay: Control = $PauseOverlay
 @onready var pause_resume: Button = $PauseOverlay/Card/Content/Resume
 @onready var pause_retry: Button = $PauseOverlay/Card/Content/Retry
@@ -111,6 +104,18 @@ const LAST_MOVE_THRESHOLD := 1
 @onready var result_ritual: Control = $ResultOverlay/Card/Content/RewardRitual
 @onready var result_recovery_action: Button = $ResultOverlay/Card/Content/RecoveryAction
 @onready var result_action: Button = $ResultOverlay/Card/Content/Action
+@onready var _level_badge_label: Label = $ResourceBar/Resources/LevelBadge
+@onready var _booster_tray: PanelContainer = $BoosterTray
+@onready var _hint_boost_button: Button = $BoosterTray/BoosterActions/HintBoost
+@onready var _resource_coin_label: Label = $ResourceBar/Resources/CoinChip/Content/CoinResource
+@onready var _resource_gem_label: Label = $ResourceBar/Resources/GemChip/Content/GemResource
+@onready var _resource_coin_icon: TextureRect = $ResourceBar/Resources/CoinChip/Content/Icon
+@onready var _resource_gem_icon: TextureRect = $ResourceBar/Resources/GemChip/Content/Icon
+@onready var _result_reward_values: Control = $ResultOverlay/Card/Content/ResultRewardValues
+@onready var _result_coin_icon: TextureRect = $ResultOverlay/Card/Content/ResultRewardValues/CoinReward/Content/Icon
+@onready var _result_gem_icon: TextureRect = $ResultOverlay/Card/Content/ResultRewardValues/GemReward/Content/Icon
+@onready var _result_proclamation: Label = $ResultOverlay/Card/Content/ResultProclamation/Copy/ResultProclamationCopy
+@onready var _result_keeper_cat: TextureRect = $ResultOverlay/Card/Content/ResultProclamation/KeeperCat
 
 func _process(delta: float) -> void:
 	if board_state == null or result_overlay.visible or pause_overlay.visible or _pending_terminal_result != "":
@@ -132,13 +137,18 @@ func _current_auto_hint_delay() -> float:
 func _ready() -> void:
 	world_backdrop.texture = ScreenArt.texture("gameplay_bg_curio_boutique")
 	world_backdrop.modulate = Color.WHITE
-	_install_hud_plate()
-	_build_top_resource_bar()
-	_build_booster_tray()
+	_resource_coin_icon.texture = PieceAssetLoader.ornament("res://assets/ui/ui_coin.svg")
+	_resource_gem_icon.texture = PieceAssetLoader.ornament("res://assets/ui/ui_gem.svg")
+	_result_coin_icon.texture = PieceAssetLoader.ornament("res://assets/ui/ui_coin.svg")
+	_result_gem_icon.texture = PieceAssetLoader.ornament("res://assets/ui/ui_gem.svg")
+	_result_keeper_cat.texture = PieceAssetLoader.ornament(KEEPER_ART_PATH)
+	_hint_boost_button.icon = PieceAssetLoader.ornament(String(BOOSTER_ART_PATHS["hint"]))
+	_hint_boost_button.pressed.connect(_use_hint_boost)
+	_resource_life_label = null
+	_potion_boost_button = null
+	_retry_boost_button = null
 	call_deferred("_position_booster_tray")
 	resized.connect(func(): call_deferred("_position_booster_tray"))
-	_build_result_reward_values()
-	_build_result_proclamation()
 	_install_reward_reveal_fx()
 	if board_view.has_signal("swap_requested"):
 		board_view.swap_requested.connect(_on_swap_requested)
@@ -955,245 +965,6 @@ func _on_board_trace_motion_finished() -> void:
 	_show_result_if_terminal(result)
 
 
-func _build_result_reward_values() -> void:
-	var content := get_node_or_null("ResultOverlay/Card/Content") as VBoxContainer
-	if content == null or content.get_node_or_null("ResultRewardValues") != null:
-		return
-	var row := HBoxContainer.new()
-	row.name = "ResultRewardValues"
-	row.custom_minimum_size = Vector2(0, 56)
-	row.alignment = BoxContainer.ALIGNMENT_CENTER
-	row.add_theme_constant_override("separation", 10)
-	var reward_index := result_reward_name.get_index()
-	content.add_child(row)
-	content.move_child(row, reward_index + 1)
-	_add_reward_value(row, "res://assets/ui/ui_coin.svg", "+120")
-	_add_reward_value(row, "res://assets/ui/ui_gem.svg", "+1")
-	_result_reward_values = row
-
-func _add_reward_value(parent: HBoxContainer, icon_path: String, value: String) -> void:
-	var panel := PanelContainer.new()
-	panel.custom_minimum_size = Vector2(136, 50)
-	var box := StyleBoxFlat.new()
-	box.bg_color = Color("#17101D", 0.94)
-	box.border_color = Color("#D5AD70", 0.44)
-	box.set_border_width_all(1)
-	box.set_corner_radius_all(12)
-	box.content_margin_left = 10
-	box.content_margin_right = 12
-	box.content_margin_top = 6
-	box.content_margin_bottom = 6
-	panel.add_theme_stylebox_override("panel", box)
-	parent.add_child(panel)
-	var row := HBoxContainer.new()
-	row.alignment = BoxContainer.ALIGNMENT_CENTER
-	row.add_theme_constant_override("separation", 6)
-	panel.add_child(row)
-	var icon := TextureRect.new()
-	icon.custom_minimum_size = Vector2(32, 32)
-	icon.texture = PieceAssetLoader.ornament(icon_path)
-	icon.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
-	icon.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
-	row.add_child(icon)
-	var label := Label.new()
-	label.text = value
-	label.add_theme_color_override("font_color", Color("#F4D995"))
-	label.add_theme_font_size_override("font_size", 20)
-	row.add_child(label)
-
-func _build_result_proclamation() -> void:
-	var content := get_node_or_null("ResultOverlay/Card/Content") as VBoxContainer
-	if content == null or content.get_node_or_null("ResultProclamation") != null:
-		return
-	var row := HBoxContainer.new()
-	row.name = "ResultProclamation"
-	row.custom_minimum_size = Vector2(0, 72)
-	row.alignment = BoxContainer.ALIGNMENT_CENTER
-	row.add_theme_constant_override("separation", 10)
-	var house_index := result_house_change.get_index()
-	content.add_child(row)
-	content.move_child(row, house_index + 1)
-	var cat := TextureRect.new()
-	cat.name = "KeeperCat"
-	cat.custom_minimum_size = Vector2(64, 64)
-	cat.texture = PieceAssetLoader.ornament("res://assets/pieces/black_cat.webp")
-	cat.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
-	cat.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
-	cat.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	row.add_child(cat)
-	var copy := VBoxContainer.new()
-	copy.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	copy.alignment = BoxContainer.ALIGNMENT_CENTER
-	row.add_child(copy)
-	var kicker := Label.new()
-	kicker.text = "THE HOUSE REMEMBERS"
-	kicker.add_theme_color_override("font_color", Color("#D5AD70"))
-	kicker.add_theme_font_size_override("font_size", 14)
-	copy.add_child(kicker)
-	var proclamation := Label.new()
-	proclamation.name = "ResultProclamationCopy"
-	proclamation.text = "A Curio has returned to its place."
-	proclamation.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-	proclamation.add_theme_color_override("font_color", Color("#F4E5D3"))
-	proclamation.add_theme_font_size_override("font_size", 18)
-	copy.add_child(proclamation)
-	_result_proclamation = proclamation
-
-func _install_hud_plate() -> void:
-	var layout := get_node_or_null("Layout") as VBoxContainer
-	var hud := get_node_or_null("Layout/HUD") as HBoxContainer
-	if layout == null or hud == null or layout.get_node_or_null("HUDPlate") != null:
-		return
-	var index := hud.get_index()
-	layout.remove_child(hud)
-	var plate := PanelContainer.new()
-	plate.name = "HUDPlate"
-	plate.custom_minimum_size = Vector2(0, 78)
-	var shell := StyleBoxFlat.new()
-	shell.bg_color = Color("#120D18", 0.97)
-	shell.border_color = Color("#D5AD70", 0.72)
-	shell.set_border_width_all(2)
-	shell.set_corner_radius_all(14)
-	shell.content_margin_left = 16
-	shell.content_margin_right = 12
-	shell.content_margin_top = 9
-	shell.content_margin_bottom = 9
-	shell.shadow_color = Color(0, 0, 0, 0.52)
-	shell.shadow_size = 10
-	plate.add_theme_stylebox_override("panel", shell)
-	layout.add_child(plate)
-	layout.move_child(plate, index)
-	plate.add_child(hud)
-	hud.add_theme_constant_override("separation", 16)
-	objective_label.add_theme_color_override("font_color", Color("#E4CDEB"))
-	moves_label.add_theme_color_override("font_color", Color("#F2C66D"))
-
-func _build_bottom_navigation() -> void:
-	var panel := PanelContainer.new()
-	panel.name = "BottomNavigation"
-	panel.anchor_left = 0.0
-	panel.anchor_right = 1.0
-	panel.anchor_top = 1.0
-	panel.anchor_bottom = 1.0
-	panel.offset_left = 12.0
-	panel.offset_right = -12.0
-	panel.offset_top = -76.0
-	panel.offset_bottom = -8.0
-	panel.z_index = 20
-	var style := StyleBoxFlat.new()
-	style.bg_color = Color("#0B0D17")
-	style.border_color = Color("#D5AD70", 0.88)
-	style.set_border_width_all(1)
-	style.set_corner_radius_all(8)
-	panel.add_theme_stylebox_override("panel", style)
-	add_child(panel)
-	var nav_scroll := ScrollContainer.new()
-	nav_scroll.name = "NavigationScroll"
-	nav_scroll.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
-	nav_scroll.vertical_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
-	panel.add_child(nav_scroll)
-	var row := HBoxContainer.new()
-	row.add_theme_constant_override("separation", 2)
-	row.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	nav_scroll.add_child(row)
-	for item in [
-		{"label":"HOUSE","id":"house","icon":"res://assets/ui/nav_house.svg"},
-		{"label":"CURIOS","id":"curios","icon":"res://assets/ui/nav_curios.svg"},
-		{"label":"MAP","id":"map","icon":"res://assets/ui/nav_map.svg"},
-		{"label":"EVENTS","id":"events","icon":"res://assets/ui/nav_events.svg"},
-		{"label":"SHOP","id":"shop","icon":"res://assets/ui/nav_shop.svg"}
-	]:
-		var button := Button.new()
-		button.text = String(item["label"])
-		button.icon = PieceAssetLoader.ornament(String(item["icon"]))
-		button.expand_icon = true
-		button.add_theme_constant_override("icon_max_width", 24)
-		button.custom_minimum_size = Vector2(0, 52)
-		button.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-		button.add_theme_font_size_override("font_size", 15)
-		button.add_theme_color_override("font_color", Color("#F4E5D3"))
-		var button_style := StyleBoxFlat.new()
-		button_style.bg_color = Color("#251529")
-		button_style.border_color = Color("#D5AD70", 0.32)
-		button_style.set_border_width_all(1)
-		button_style.set_corner_radius_all(6)
-		button.add_theme_stylebox_override("normal", button_style)
-		button.add_theme_stylebox_override("hover", button_style)
-		button.pressed.connect(func(): navigation_requested.emit(String(item["id"])))
-		row.add_child(button)
-
-func _build_top_resource_bar() -> void:
-	var panel := PanelContainer.new()
-	panel.name = "ResourceBar"
-	panel.anchor_left = 0.025
-	panel.anchor_right = 0.975
-	panel.anchor_top = 0.0
-	panel.anchor_bottom = 0.0
-	panel.offset_top = 6.0
-	panel.offset_bottom = 54.0
-	var style := StyleBoxFlat.new()
-	style.bg_color = Color("#08070D", 0.96)
-	style.border_color = Color("#D5AD70", 0.78)
-	style.set_border_width_all(1)
-	style.set_corner_radius_all(12)
-	style.shadow_color = Color(0, 0, 0, 0.44)
-	style.shadow_size = 8
-	panel.add_theme_stylebox_override("panel", style)
-	add_child(panel)
-	var row := HBoxContainer.new()
-	row.name = "Resources"
-	row.alignment = BoxContainer.ALIGNMENT_CENTER
-	row.add_theme_constant_override("separation", 5)
-	panel.add_child(row)
-	# Lives are not exposed until consumption/refill is a complete economy contract.
-	# Coins and gems already have durable first-completion semantics and remain visible.
-	_resource_life_label = null
-	_resource_coin_label = _add_resource_chip(row, "CoinResource", "res://assets/ui/ui_coin.svg", _format_number(_player_coins))
-	_resource_gem_label = _add_resource_chip(row, "GemResource", "res://assets/ui/ui_gem.svg", _format_number(_player_gems))
-	var level := Label.new()
-	level.name = "LevelBadge"
-	level.text = "LEVEL 1"
-	level.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	level.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
-	level.add_theme_color_override("font_color", Color("#D5AD70"))
-	level.add_theme_font_size_override("font_size", 17)
-	level.custom_minimum_size = Vector2(94, 0)
-	row.add_child(level)
-	_level_badge_label = level
-
-func _add_resource_chip(parent: HBoxContainer, node_name: String, icon_path: String, value: String) -> Label:
-	var chip := PanelContainer.new()
-	chip.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	var box := StyleBoxFlat.new()
-	box.bg_color = Color("#15111B", 0.92)
-	box.border_color = Color("#6F596E", 0.42)
-	box.set_border_width_all(1)
-	box.set_corner_radius_all(10)
-	box.content_margin_left = 5
-	box.content_margin_right = 7
-	box.content_margin_top = 3
-	box.content_margin_bottom = 3
-	chip.add_theme_stylebox_override("panel", box)
-	parent.add_child(chip)
-	var content := HBoxContainer.new()
-	content.alignment = BoxContainer.ALIGNMENT_CENTER
-	content.add_theme_constant_override("separation", 2)
-	chip.add_child(content)
-	var icon := TextureRect.new()
-	icon.custom_minimum_size = Vector2(31, 31)
-	icon.texture = PieceAssetLoader.ornament(icon_path)
-	icon.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
-	icon.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
-	icon.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	content.add_child(icon)
-	var label := Label.new()
-	label.name = node_name
-	label.text = value
-	label.add_theme_color_override("font_color", Color("#F4E5D3"))
-	label.add_theme_font_size_override("font_size", 17)
-	content.add_child(label)
-	return label
-
 func _format_number(value: int) -> String:
 	var digits := str(maxi(0, value))
 	var out := ""
@@ -1204,36 +975,6 @@ func _format_number(value: int) -> String:
 		out = digits.substr(i, 1) + out
 		count += 1
 	return out
-
-func _build_booster_tray() -> void:
-	var panel := PanelContainer.new()
-	panel.name = "BoosterTray"
-	panel.anchor_left = 0.055
-	panel.anchor_right = 0.945
-	panel.anchor_top = 0.0
-	panel.anchor_bottom = 0.0
-	panel.offset_top = 760.0
-	panel.offset_bottom = 830.0
-	panel.z_index = 18
-	var shell := StyleBoxFlat.new()
-	shell.bg_color = Color("#100B16", 0.985)
-	shell.border_color = Color("#D5AD70", 0.82)
-	shell.set_border_width_all(2)
-	shell.set_corner_radius_all(18)
-	shell.shadow_color = Color(0, 0, 0, 0.48)
-	shell.shadow_size = 10
-	panel.add_theme_stylebox_override("panel", shell)
-	add_child(panel)
-	_booster_tray = panel
-	var row := HBoxContainer.new()
-	row.name = "BoosterActions"
-	row.add_theme_constant_override("separation", 6)
-	panel.add_child(row)
-	_hint_boost_button = _add_booster_button(row, "HintBoost", "ASK KEEPER", String(BOOSTER_ART_PATHS["hint"]), _use_hint_boost)
-	# The explicit fail-screen +3 rescue is truthful and remains available there.
-	# Do not also expose difficulty-changing free boosters during active play.
-	_potion_boost_button = null
-	_retry_boost_button = null
 
 func _position_booster_tray() -> void:
 	if _booster_tray == null or hint_label == null or not is_node_ready():
@@ -1249,32 +990,16 @@ func _position_booster_tray() -> void:
 	_booster_tray.offset_bottom = top + 70.0
 
 
-func _add_booster_button(parent: HBoxContainer, node_name: String, caption: String, art_path: String, action: Callable) -> Button:
-	var button := Button.new()
-	button.name = node_name
-	button.text = caption
-	button.custom_minimum_size = Vector2(0, 62)
-	button.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	button.add_theme_font_size_override("font_size", 19)
-	button.add_theme_color_override("font_color", Color("#F4E5D3"))
-	button.add_theme_color_override("font_disabled_color", Color("#9B879A"))
-	button.icon = PieceAssetLoader.ornament(art_path)
-	button.expand_icon = true
-	var box := StyleBoxFlat.new()
-	box.bg_color = Color("#35153E", 0.98)
-	box.border_color = Color("#D5AD70", 0.72)
-	box.set_border_width_all(2)
-	box.set_corner_radius_all(26)
-	var disabled_box := box.duplicate() as StyleBoxFlat
-	disabled_box.bg_color = Color("#19111D", 0.92)
-	disabled_box.border_color = Color("#765E6B", 0.54)
-	button.add_theme_stylebox_override("normal", box)
-	button.add_theme_stylebox_override("hover", box)
-	button.add_theme_stylebox_override("pressed", box)
-	button.add_theme_stylebox_override("disabled", disabled_box)
-	button.pressed.connect(action)
-	parent.add_child(button)
-	return button
+func gameplay_presentation_contract() -> Dictionary:
+	return {
+		"authored_hud_plate": get_node_or_null("Layout/HUDPlate/HUD") != null,
+		"authored_resource_bar": _level_badge_label != null and _resource_coin_label != null and _resource_gem_label != null,
+		"authored_keeper_tray": _booster_tray != null and _hint_boost_button != null,
+		"authored_result_values": _result_reward_values != null,
+		"authored_result_proclamation": _result_proclamation != null and _result_keeper_cat != null,
+		"runtime_shell_factory": false,
+		"transient_vfx_runtime_allowed": true,
+	}
 
 func booster_asset_contract() -> Dictionary:
 	var loaded := {}
