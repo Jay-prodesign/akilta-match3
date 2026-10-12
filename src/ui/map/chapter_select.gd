@@ -153,7 +153,9 @@ func _ready() -> void:
 		else:
 			button.disabled = false
 			button.text = "%s\nSEALED WING · DETAILS" % String(wing["name"])
-			button.tooltip_text = "%s · inspect why this future chapter remains sealed" % String(wing["name"]).capitalize()\n\t\t\tbutton.mouse_default_cursor_shape = Control.CURSOR_POINTING_HAND\n\t\t\tbutton.pressed.connect(_open_locked_explanation.bind(id, String(wing["name"])))
+			button.tooltip_text = "%s · inspect why this future chapter remains sealed" % String(wing["name"]).capitalize()
+			button.mouse_default_cursor_shape = Control.CURSOR_POINTING_HAND
+			button.pressed.connect(_open_locked_explanation.bind(id, String(wing["name"])))
 		_apply_locked_style(button)
 		grid.add_child(button)
 		_buttons[id] = button
