@@ -15,6 +15,8 @@ func _run() -> void:
 
 	var contract: Dictionary = screen.settings_authored_contract()
 	_expect(bool(contract.get("authored_house_sigil", false)), "Settings must render an authored House sigil")
+	_expect(bool(contract.get("authored_world_backdrop", false)), "Settings must render authored House world art")
+	_expect(bool(contract.get("standalone_destination_surface", false)), "Settings must identify as a standalone destination surface")
 	_expect(bool(contract.get("sigil_raster_runtime", false)), "Settings House sigil must use raster runtime art")
 	_expect(bool(contract.get("authored_style_resources", false)), "Settings normal/high-contrast style resources must be authored")
 	_expect(not bool(contract.get("runtime_ui_factory", true)), "Settings must not create player-facing nodes at runtime")
@@ -22,9 +24,11 @@ func _run() -> void:
 
 	var card := screen.get_node_or_null("Card") as PanelContainer
 	var sigil := screen.get_node_or_null("Card/Content/HouseSigil") as TextureRect
+	var world_art := screen.get_node_or_null("WorldArt") as TextureRect
 	var close := screen.get_node_or_null("Card/Content/Close") as Button
 	_expect(card != null, "Settings authored Card missing")
 	_expect(sigil != null and sigil.texture != null and sigil.custom_minimum_size.y >= 72.0, "Settings authored raster sigil slot missing")
+	_expect(world_art != null and world_art.texture != null, "Settings authored world backdrop slot missing")
 	_expect(close != null and close.custom_minimum_size.y >= 56.0, "Settings close CTA must retain mobile touch target")
 	_expect(card.get_theme_stylebox("panel") == screen.card_normal_style, "Default Settings card must use authored normal style resource")
 
