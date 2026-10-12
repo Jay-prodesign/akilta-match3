@@ -12,6 +12,7 @@ func _capture() -> void:
 	screen.apply_presentation_settings({"reduced_motion": false, "high_contrast": false, "haptics_enabled": false})
 	screen.board_state.moves_remaining = 3
 	screen._refresh_hud()
+	await _frames(2)
 	if String(screen.gameplay_feel_contract().get("moves_urgency_state", "")) != "warning":
 		return _fail(screen, "three-move warning state missing")
 	if not await _save(screen, "gameplay-low-moves-warning.png"):
@@ -20,6 +21,7 @@ func _capture() -> void:
 	screen.board_state.moves_remaining = 1
 	screen.apply_presentation_settings({"reduced_motion": true, "high_contrast": true, "haptics_enabled": false})
 	screen._refresh_hud()
+	await _frames(2)
 	if String(screen.gameplay_feel_contract().get("moves_copy", "")) != "LAST MOVE":
 		return _fail(screen, "last-move critical state missing")
 	if not await _save(screen, "gameplay-last-move-high-contrast.png"):
