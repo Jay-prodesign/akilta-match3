@@ -84,6 +84,12 @@ func _run_level(entry: Dictionary) -> void:
 		var reward_art = screen.get_node_or_null("ResultOverlay/Card/Content/RewardRitual")
 		if reward_art == null or str(reward_art.get("relic_id")) != String(entry["reward"]):
 			failures.append("Level %d win ritual must render its authored relic" % number)
+		elif not reward_art.has_method("relic_asset_contract"):
+			failures.append("Level %d reward ritual must expose its production Curio asset contract" % number)
+		else:
+			var reward_contract: Dictionary = reward_art.relic_asset_contract()
+			if not bool(reward_contract.get("raster_runtime", false)) or not bool(reward_contract.get("loaded", false)):
+				failures.append("Level %d reward Curio must load from production raster art" % number)
 		var relic_label: Label = screen.get_node_or_null("Layout/Awakening/Content/Label")
 		if relic_label == null or relic_label.text != String(entry["relic_label"]):
 			failures.append("Level %d relic progress label must match its reward" % number)
