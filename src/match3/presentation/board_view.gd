@@ -8,11 +8,11 @@ const PieceVisuals = preload("res://src/match3/presentation/piece_visuals.gd")
 const PieceAssetLoader = preload("res://src/match3/presentation/piece_asset_loader.gd")
 const KENNEY_FRAME_PATH := "res://assets/candidate/third_party/kenney/fantasy-ui-borders/frame-024.png"
 const SPECIAL_ASSET_PATHS := {
-	"line_h": "res://assets/specials/gbl_special_line_h_idle_v01.svg",
-	"line_v": "res://assets/specials/gbl_special_line_v_idle_v01.svg",
-	"area": "res://assets/specials/gbl_special_area_idle_v01.svg",
-	"smart": "res://assets/specials/gbl_special_smart_idle_v01.svg",
-	"global": "res://assets/specials/gbl_special_global_idle_v01.svg",
+	"line_h": "res://assets/specials/gbl_special_line_h_idle_v01.webp",
+	"line_v": "res://assets/specials/gbl_special_line_v_idle_v01.webp",
+	"area": "res://assets/specials/gbl_special_area_idle_v01.webp",
+	"smart": "res://assets/specials/gbl_special_smart_idle_v01.webp",
+	"global": "res://assets/specials/gbl_special_global_idle_v01.webp",
 }
 
 const INK := Color("#080C15")
@@ -866,22 +866,15 @@ func _draw_lacquered_leaf_piece(c: Vector2, r: float, color: Color) -> void:
 	draw_circle(dew - Vector2(r * 0.015, r * 0.015), r * 0.025, Color(BONE, 0.88))
 
 func _draw_special_mark(rect: Rect2, kind: String) -> void:
-	var paths := {
-		"line_h": "res://assets/specials/gbl_special_line_h_idle_v01.svg",
-		"line_v": "res://assets/specials/gbl_special_line_v_idle_v01.svg",
-		"area": "res://assets/specials/gbl_special_area_idle_v01.svg",
-		"smart": "res://assets/specials/gbl_special_smart_idle_v01.svg",
-		"global": "res://assets/specials/gbl_special_global_idle_v01.svg",
-	}
-	var path := String(paths.get(kind, ""))
+	var path := String(SPECIAL_ASSET_PATHS.get(kind, ""))
 	if path != "":
 		var token := PieceAssetLoader.ornament(path)
 		if token != null:
-			# Special state is a deliberate gameplay token, not a tiny sticker. It
-			# overlays the base family while preserving enough silhouette context to
-			# keep the originating piece readable during creation/trigger teaching.
-			var extent := minf(rect.size.x, rect.size.y) * 0.72
-			var center := rect.get_center()
+			# A special is a state of the underlying illustrated piece, not a
+			# replacement token. Keep the production piece silhouette dominant and
+			# render the authored raster special as a compact readable badge.
+			var extent := minf(rect.size.x, rect.size.y) * 0.42
+			var center := rect.position + Vector2(rect.size.x * 0.77, rect.size.y * 0.25)
 			draw_texture_rect(token, Rect2(center - Vector2.ONE * extent * 0.5, Vector2.ONE * extent), false)
 			return
 	# Exact-state procedural fallback only. Never substitute a different special.
