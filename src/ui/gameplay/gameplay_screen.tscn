@@ -1,4 +1,4 @@
-[gd_scene load_steps=10 format=3]
+[gd_scene load_steps=16 format=3]
 
 [ext_resource type="Script" path="res://src/ui/gameplay/gameplay_screen.gd" id="1_game"]
 [ext_resource type="Script" path="res://src/match3/presentation/board_view.gd" id="2_board"]
@@ -71,6 +71,96 @@ content_margin_bottom = 8.0
 shadow_color = Color(0, 0, 0, 0.42)
 shadow_size = 8
 
+[sub_resource type="StyleBoxFlat" id="GameplayHUDPlate"]
+bg_color = Color(0.071, 0.051, 0.094, 0.94)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.831, 0.678, 0.439, 0.72)
+corner_radius_top_left = 14
+corner_radius_top_right = 14
+corner_radius_bottom_right = 14
+corner_radius_bottom_left = 14
+content_margin_left = 16.0
+content_margin_top = 9.0
+content_margin_right = 12.0
+content_margin_bottom = 9.0
+shadow_color = Color(0, 0, 0, 0.52)
+shadow_size = 10
+
+[sub_resource type="StyleBoxFlat" id="ResourceBarStyle"]
+bg_color = Color(0.031, 0.027, 0.051, 0.96)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.831, 0.678, 0.439, 0.78)
+corner_radius_top_left = 12
+corner_radius_top_right = 12
+corner_radius_bottom_right = 12
+corner_radius_bottom_left = 12
+shadow_color = Color(0, 0, 0, 0.44)
+shadow_size = 8
+
+[sub_resource type="StyleBoxFlat" id="ResourceChipStyle"]
+bg_color = Color(0.082, 0.067, 0.106, 0.92)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.435, 0.349, 0.431, 0.42)
+corner_radius_top_left = 10
+corner_radius_top_right = 10
+corner_radius_bottom_right = 10
+corner_radius_bottom_left = 10
+content_margin_left = 5.0
+content_margin_top = 3.0
+content_margin_right = 7.0
+content_margin_bottom = 3.0
+
+[sub_resource type="StyleBoxFlat" id="BoosterTrayStyle"]
+bg_color = Color(0.063, 0.043, 0.086, 0.985)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.831, 0.678, 0.439, 0.82)
+corner_radius_top_left = 18
+corner_radius_top_right = 18
+corner_radius_bottom_right = 18
+corner_radius_bottom_left = 18
+shadow_color = Color(0, 0, 0, 0.48)
+shadow_size = 10
+
+[sub_resource type="StyleBoxFlat" id="BoosterButtonStyle"]
+bg_color = Color(0.208, 0.082, 0.243, 0.98)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.831, 0.678, 0.439, 0.72)
+corner_radius_top_left = 26
+corner_radius_top_right = 26
+corner_radius_bottom_right = 26
+corner_radius_bottom_left = 26
+
+[sub_resource type="StyleBoxFlat" id="RewardChipStyle"]
+bg_color = Color(0.09, 0.063, 0.114, 0.94)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.831, 0.678, 0.439, 0.44)
+corner_radius_top_left = 12
+corner_radius_top_right = 12
+corner_radius_bottom_right = 12
+corner_radius_bottom_left = 12
+content_margin_left = 10.0
+content_margin_top = 6.0
+content_margin_right = 12.0
+content_margin_bottom = 6.0
+
 [node name="GameplayScreen" type="Control"]
 layout_mode = 3
 anchors_preset = 15
@@ -100,6 +190,77 @@ mouse_filter = 2
 expand_mode = 1
 stretch_mode = 6
 modulate = Color(0.92, 0.84, 0.87, 0.48)
+
+[node name="ResourceBar" type="PanelContainer" parent="."]
+layout_mode = 1
+anchor_left = 0.025
+anchor_top = 0.0
+anchor_right = 0.975
+anchor_bottom = 0.0
+offset_top = 6.0
+offset_bottom = 54.0
+grow_horizontal = 2
+theme_override_styles/panel = SubResource("ResourceBarStyle")
+
+[node name="Resources" type="HBoxContainer" parent="ResourceBar"]
+layout_mode = 2
+theme_override_constants/separation = 5
+alignment = 1
+
+[node name="CoinChip" type="PanelContainer" parent="ResourceBar/Resources"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_styles/panel = SubResource("ResourceChipStyle")
+
+[node name="Content" type="HBoxContainer" parent="ResourceBar/Resources/CoinChip"]
+layout_mode = 2
+theme_override_constants/separation = 2
+alignment = 1
+
+[node name="Icon" type="TextureRect" parent="ResourceBar/Resources/CoinChip/Content"]
+custom_minimum_size = Vector2(31, 31)
+layout_mode = 2
+mouse_filter = 2
+expand_mode = 1
+stretch_mode = 5
+
+[node name="CoinResource" type="Label" parent="ResourceBar/Resources/CoinChip/Content"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.96, 0.9, 0.83, 1)
+theme_override_font_sizes/font_size = 17
+text = "0"
+
+[node name="GemChip" type="PanelContainer" parent="ResourceBar/Resources"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_styles/panel = SubResource("ResourceChipStyle")
+
+[node name="Content" type="HBoxContainer" parent="ResourceBar/Resources/GemChip"]
+layout_mode = 2
+theme_override_constants/separation = 2
+alignment = 1
+
+[node name="Icon" type="TextureRect" parent="ResourceBar/Resources/GemChip/Content"]
+custom_minimum_size = Vector2(31, 31)
+layout_mode = 2
+mouse_filter = 2
+expand_mode = 1
+stretch_mode = 5
+
+[node name="GemResource" type="Label" parent="ResourceBar/Resources/GemChip/Content"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.96, 0.9, 0.83, 1)
+theme_override_font_sizes/font_size = 17
+text = "0"
+
+[node name="LevelBadge" type="Label" parent="ResourceBar/Resources"]
+custom_minimum_size = Vector2(94, 0)
+layout_mode = 2
+theme_override_colors/font_color = Color(0.831, 0.678, 0.439, 1)
+theme_override_font_sizes/font_size = 17
+text = "LEVEL 1"
+horizontal_alignment = 1
+vertical_alignment = 1
 
 [node name="Layout" type="VBoxContainer" parent="."]
 layout_mode = 1
@@ -132,11 +293,16 @@ theme_override_font_sizes/font_size = 28
 text = "Moonlit Cabinet"
 horizontal_alignment = 1
 
-[node name="HUD" type="HBoxContainer" parent="Layout"]
+[node name="HUDPlate" type="PanelContainer" parent="Layout"]
+custom_minimum_size = Vector2(0, 78)
 layout_mode = 2
-theme_override_constants/separation = 8
+theme_override_styles/panel = SubResource("GameplayHUDPlate")
 
-[node name="Objective" type="Label" parent="Layout/HUD"]
+[node name="HUD" type="HBoxContainer" parent="Layout/HUDPlate"]
+layout_mode = 2
+theme_override_constants/separation = 16
+
+[node name="Objective" type="Label" parent="Layout/HUDPlate/HUD"]
 layout_mode = 2
 size_flags_horizontal = 3
 theme_override_colors/font_color = Color(0.749, 0.647, 0.847, 1)
@@ -145,7 +311,7 @@ theme_override_constants/outline_size = 3
 theme_override_font_sizes/font_size = 21
 text = "Gather Moon sigils  0/6"
 
-[node name="Moves" type="Label" parent="Layout/HUD"]
+[node name="Moves" type="Label" parent="Layout/HUDPlate/HUD"]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.851, 0.71, 0.416, 1)
 theme_override_colors/font_outline_color = Color(0.03, 0.02, 0.04, 0.9)
@@ -154,7 +320,7 @@ theme_override_font_sizes/font_size = 24
 text = "12 moves"
 horizontal_alignment = 2
 
-[node name="Pause" type="Button" parent="Layout/HUD"]
+[node name="Pause" type="Button" parent="Layout/HUDPlate/HUD"]
 custom_minimum_size = Vector2(68, 54)
 layout_mode = 2
 theme_override_colors/font_color = Color(0.945, 0.91, 0.866, 1)
@@ -215,6 +381,35 @@ theme_override_colors/font_color = Color(0.663, 0.6, 0.659, 1)
 theme_override_font_sizes/font_size = 20
 text = "0 / 6 SIGILS · THE RELIC IS STILL DORMANT"
 horizontal_alignment = 1
+
+[node name="BoosterTray" type="PanelContainer" parent="."]
+layout_mode = 1
+anchor_left = 0.055
+anchor_top = 0.0
+anchor_right = 0.945
+anchor_bottom = 0.0
+offset_top = 760.0
+offset_bottom = 830.0
+grow_horizontal = 2
+z_index = 18
+theme_override_styles/panel = SubResource("BoosterTrayStyle")
+
+[node name="BoosterActions" type="HBoxContainer" parent="BoosterTray"]
+layout_mode = 2
+theme_override_constants/separation = 6
+
+[node name="HintBoost" type="Button" parent="BoosterTray/BoosterActions"]
+custom_minimum_size = Vector2(0, 62)
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_colors/font_color = Color(0.96, 0.9, 0.83, 1)
+theme_override_colors/font_disabled_color = Color(0.61, 0.53, 0.6, 1)
+theme_override_font_sizes/font_size = 19
+theme_override_styles/normal = SubResource("BoosterButtonStyle")
+theme_override_styles/hover = SubResource("BoosterButtonStyle")
+theme_override_styles/pressed = SubResource("BoosterButtonStyle")
+text = "ASK KEEPER"
+expand_icon = true
 
 [node name="PauseOverlay" type="Control" parent="."]
 visible = false
@@ -410,12 +605,93 @@ theme_override_font_sizes/font_size = 24
 text = "MOON CAMEO · AWAKENED"
 horizontal_alignment = 1
 
+[node name="ResultRewardValues" type="HBoxContainer" parent="ResultOverlay/Card/Content"]
+custom_minimum_size = Vector2(0, 56)
+layout_mode = 2
+theme_override_constants/separation = 10
+alignment = 1
+
+[node name="CoinReward" type="PanelContainer" parent="ResultOverlay/Card/Content/ResultRewardValues"]
+custom_minimum_size = Vector2(136, 50)
+layout_mode = 2
+theme_override_styles/panel = SubResource("RewardChipStyle")
+
+[node name="Content" type="HBoxContainer" parent="ResultOverlay/Card/Content/ResultRewardValues/CoinReward"]
+layout_mode = 2
+theme_override_constants/separation = 6
+alignment = 1
+
+[node name="Icon" type="TextureRect" parent="ResultOverlay/Card/Content/ResultRewardValues/CoinReward/Content"]
+custom_minimum_size = Vector2(32, 32)
+layout_mode = 2
+expand_mode = 1
+stretch_mode = 5
+
+[node name="Value" type="Label" parent="ResultOverlay/Card/Content/ResultRewardValues/CoinReward/Content"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.957, 0.851, 0.584, 1)
+theme_override_font_sizes/font_size = 20
+text = "+120"
+
+[node name="GemReward" type="PanelContainer" parent="ResultOverlay/Card/Content/ResultRewardValues"]
+custom_minimum_size = Vector2(136, 50)
+layout_mode = 2
+theme_override_styles/panel = SubResource("RewardChipStyle")
+
+[node name="Content" type="HBoxContainer" parent="ResultOverlay/Card/Content/ResultRewardValues/GemReward"]
+layout_mode = 2
+theme_override_constants/separation = 6
+alignment = 1
+
+[node name="Icon" type="TextureRect" parent="ResultOverlay/Card/Content/ResultRewardValues/GemReward/Content"]
+custom_minimum_size = Vector2(32, 32)
+layout_mode = 2
+expand_mode = 1
+stretch_mode = 5
+
+[node name="Value" type="Label" parent="ResultOverlay/Card/Content/ResultRewardValues/GemReward/Content"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.957, 0.851, 0.584, 1)
+theme_override_font_sizes/font_size = 20
+text = "+1"
+
 [node name="HouseChange" type="Label" parent="ResultOverlay/Card/Content"]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.851, 0.804, 0.835, 1)
 theme_override_font_sizes/font_size = 19
 text = "The first cabinet now keeps this Curio in the House."
 horizontal_alignment = 1
+autowrap_mode = 2
+
+[node name="ResultProclamation" type="HBoxContainer" parent="ResultOverlay/Card/Content"]
+custom_minimum_size = Vector2(0, 72)
+layout_mode = 2
+theme_override_constants/separation = 10
+alignment = 1
+
+[node name="KeeperCat" type="TextureRect" parent="ResultOverlay/Card/Content/ResultProclamation"]
+custom_minimum_size = Vector2(64, 64)
+layout_mode = 2
+mouse_filter = 2
+expand_mode = 1
+stretch_mode = 5
+
+[node name="Copy" type="VBoxContainer" parent="ResultOverlay/Card/Content/ResultProclamation"]
+layout_mode = 2
+size_flags_horizontal = 3
+alignment = 1
+
+[node name="Kicker" type="Label" parent="ResultOverlay/Card/Content/ResultProclamation/Copy"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.831, 0.678, 0.439, 1)
+theme_override_font_sizes/font_size = 14
+text = "THE HOUSE REMEMBERS"
+
+[node name="ResultProclamationCopy" type="Label" parent="ResultOverlay/Card/Content/ResultProclamation/Copy"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.96, 0.9, 0.83, 1)
+theme_override_font_sizes/font_size = 18
+text = "A Curio has returned to its place."
 autowrap_mode = 2
 
 [node name="RecoveryAction" type="Button" parent="ResultOverlay/Card/Content"]
