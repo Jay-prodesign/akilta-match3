@@ -74,6 +74,8 @@ var _last_clear_fx_count: int = 0
 var _last_blocker_fx_count: int = 0
 var _last_blocker_clear_fx_count: int = 0
 var _last_cascade_depth: int = 1
+var _last_landing_fx_count: int = 0
+var _last_longest_drop_rows: int = 0
 
 func _motion_stage_cells() -> Dictionary:
 	var visible: Dictionary = _motion_initial_cells.duplicate()
@@ -135,6 +137,8 @@ func motion_contract() -> Dictionary:
 	var contract := MOTION_PROFILE.duplicate(true)
 	contract["cascade_sequencing"] = "separate_clear_fall_refill_windows"
 	contract["cascade_escalation"] = "depth_scaled_clear_burst"
+	contract["landing_settle"] = "depth_weighted_squash_ring"
+	contract["gravity_ease"] = "cubic_out_with_settle"
 	contract["reduced_motion_supported"] = true
 	return contract
 
@@ -170,6 +174,8 @@ func feedback_vfx_contract() -> Dictionary:
 		"last_blocker_fx_count": _last_blocker_fx_count,
 		"last_blocker_clear_fx_count": _last_blocker_clear_fx_count,
 		"last_cascade_depth": _last_cascade_depth,
+		"last_landing_fx_count": _last_landing_fx_count,
+		"last_longest_drop_rows": _last_longest_drop_rows,
 		"reduced_motion_supported": true,
 		"reduced_motion": _reduced_motion
 	}
@@ -286,6 +292,8 @@ func _build_motion(trace) -> void:
 	_last_blocker_fx_count = 0
 	_last_blocker_clear_fx_count = 0
 	_last_cascade_depth = 1
+	_last_landing_fx_count = 0
+	_last_longest_drop_rows = 0
 	_reveal_at.clear()
 	_motion_cascade_count = 1
 	for event in trace.events:
@@ -350,14 +358,19 @@ func _build_motion(trace) -> void:
 					"at": _parse_pos(event.get("to", ""))
 				})
 			"gravity":
+				var gravity_from := _parse_pos(event.get("from", ""))
 				var gravity_to := _parse_pos(event.get("to", ""))
 				var gravity_family := String(event.get("family", ""))
 				if gravity_family != "":
+					var drop_rows := absi(gravity_to.y - gravity_from.y)
+					_last_landing_fx_count += 1
+					_last_longest_drop_rows = maxi(_last_longest_drop_rows, drop_rows)
 					_motion_items.append({
 						"type": "gravity",
 						"family": gravity_family,
 						"cascade": cascade,
-						"from": _parse_pos(event.get("from", "")),
+						"drop_rows": drop_rows,
+						"from": gravity_from,
 						"to": gravity_to
 					})
 				_remember_reveal(gravity_to, lerpf(window.x, window.y, 0.96))
@@ -365,7 +378,9 @@ func _build_motion(trace) -> void:
 				var spawn_pos := _parse_pos(event.get("at", ""))
 				var spawn_family := String(event.get("family", ""))
 				if spawn_family != "":
-					_motion_items.append({"type": "spawn", "family": spawn_family, "at": spawn_pos, "cascade": cascade})
+					_last_landing_fx_count += 1
+					_last_longest_drop_rows = maxi(_last_longest_drop_rows, spawn_pos.y + 1)
+					_motion_items.append({"type": "spawn", "family": spawn_family, "at": spawn_pos, "cascade": cascade, "drop_rows": spawn_pos.y + 1})
 				_remember_reveal(spawn_pos, lerpf(window.x, window.y, 0.98))
 			"blocker_damaged", "blocker_cleared":
 				var blocker_cleared := event_type == "blocker_cleared"
@@ -1039,23 +1054,37 @@ func _draw_motion() -> void:
 					var mote := ccenter + Vector2(cos(angle), sin(angle)) * orbit
 					draw_circle(mote, maxf(1.3, cell_size * 0.026 * (1.0 - cp)), Color("#FFF0C7", 0.66 * pulse))
 			"gravity":
-				var gp := _cascade_phase(int(item.get("cascade", 1)), 0.42, 0.84)
+				var cascade := int(item.get("cascade", 1))
+				var gp := _cascade_phase(cascade, 0.42, 0.84)
 				if gp <= 0.0 or gp >= 1.0:
 					continue
 				var gstart := _cell_center(item["from"])
 				var gfinish := _cell_center(item["to"])
 				var geased := 1.0 - pow(1.0 - gp, 3.0)
-				_draw_motion_piece(gstart.lerp(gfinish, geased), String(item["family"]), 1.0)
+				var settle := clampf((gp - 0.72) / 0.28, 0.0, 1.0)
+				var bounce := sin(settle * PI)
+				var cell_size := float(_board_geometry()["cell_size"])
+				var weight := 1.0 + 0.08 * float(maxi(0, cascade - 1)) + 0.03 * float(mini(3, int(item.get("drop_rows", 1))))
+				var center := gstart.lerp(gfinish, geased) + Vector2(0, -cell_size * 0.035 * bounce * weight)
+				_draw_motion_piece(center, String(item["family"]), 1.0 + 0.035 * bounce * weight)
+				_draw_landing_settle(gfinish, settle, cascade, weight)
 			"spawn":
-				var sp := _cascade_phase(int(item.get("cascade", 1)), 0.48, 0.98)
+				var cascade := int(item.get("cascade", 1))
+				var sp := _cascade_phase(cascade, 0.48, 0.98)
 				if sp <= 0.0 or sp >= 1.0:
 					continue
 				var target := _cell_center(item["at"])
 				var geometry := _board_geometry()
-				var start_y := float(geometry["origin"].y) - float(geometry["cell_size"]) * 1.25
+				var cell_size := float(geometry["cell_size"])
+				var start_y := float(geometry["origin"].y) - cell_size * 1.25
 				var spawn_start := Vector2(target.x, start_y)
 				var seased := 1.0 - pow(1.0 - sp, 3.0)
-				_draw_motion_piece(spawn_start.lerp(target, seased), String(item["family"]), 0.82 + 0.18 * seased)
+				var settle := clampf((sp - 0.74) / 0.26, 0.0, 1.0)
+				var bounce := sin(settle * PI)
+				var weight := 1.0 + 0.08 * float(maxi(0, cascade - 1))
+				var center := spawn_start.lerp(target, seased) + Vector2(0, -cell_size * 0.03 * bounce * weight)
+				_draw_motion_piece(center, String(item["family"]), (0.82 + 0.18 * seased) * (1.0 + 0.03 * bounce * weight))
+				_draw_landing_settle(target, settle, cascade, weight)
 			"special":
 				_draw_special_motion(item)
 			"special_created":
@@ -1101,6 +1130,17 @@ func _draw_motion() -> void:
 					draw_rect(frame, shuffle_color, false, 4.0)
 			_:
 				pass
+
+func _draw_landing_settle(center: Vector2, settle: float, cascade: int, weight: float) -> void:
+	if settle <= 0.0 or settle >= 1.0 or _reduced_motion:
+		return
+	var pulse := sin(settle * PI)
+	var cell_size := float(_board_geometry()["cell_size"])
+	var color := Color("#FFF1B6") if _high_contrast else Color(GOLD)
+	color.a = minf(0.42, (0.18 + 0.05 * float(maxi(0, cascade - 1))) * pulse)
+	var radius := cell_size * (0.20 + settle * 0.22) * minf(1.25, weight)
+	draw_arc(center, radius, 0.0, TAU, 28, color, 2.4 if _high_contrast else 1.8)
+	draw_line(center + Vector2(-cell_size * 0.18, cell_size * 0.28), center + Vector2(cell_size * 0.18, cell_size * 0.28), color, 2.0)
 
 func _draw_motion_piece(center: Vector2, family: String, scale_factor: float) -> void:
 	var descriptor := PieceVisuals.descriptor(family)
