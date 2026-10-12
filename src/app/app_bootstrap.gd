@@ -20,9 +20,7 @@ const HapticsControllerScript = preload("res://src/feedback/haptics_controller.g
 const AnalyticsScript = preload("res://src/analytics/product_analytics.gd")
 const Typography = preload("res://src/ui/theme/typography.gd")
 const CurioMaterials = preload("res://src/ui/theme/curio_materials.gd")
-const PieceAssetLoader = preload("res://src/match3/presentation/piece_asset_loader.gd")
 const ProductNavigation = preload("res://src/ui/shared/product_navigation.gd")
-const ScreenArt = preload("res://src/ui/shared/screen_art_registry.gd")
 const MobileSafeArea = preload("res://src/ui/shared/mobile_safe_area.gd")
 
 @export var environment: String = "development"
