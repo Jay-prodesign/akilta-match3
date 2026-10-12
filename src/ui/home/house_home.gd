@@ -221,8 +221,8 @@ func show_restoration_ceremony(curio_id: String, stage: int) -> void:
 	panel.name = "CeremonyCard"
 	panel.anchor_left = 0.08
 	panel.anchor_right = 0.92
-	panel.anchor_top = 0.48
-	panel.anchor_bottom = 0.75
+	panel.anchor_top = 0.52
+	panel.anchor_bottom = 0.70
 	var shell := StyleBoxFlat.new()
 	shell.bg_color = Color("#09070D", 0.985)
 	shell.border_color = Color("#D5AD70", 0.88)
@@ -257,7 +257,7 @@ func show_restoration_ceremony(curio_id: String, stage: int) -> void:
 
 	var art := TextureRect.new()
 	art.name = "RestoredCurioArt"
-	art.custom_minimum_size = Vector2(240, 240)
+	art.custom_minimum_size = Vector2(200, 200)
 	art.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
 	art.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
 	art.texture = _curio_texture(curio_id)
