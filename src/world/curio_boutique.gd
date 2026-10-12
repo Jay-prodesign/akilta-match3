@@ -37,9 +37,23 @@ func _ready() -> void:
 
 var house_stage: int = 0
 var curios: Array[String] = []
+var _reduced_motion: bool = false
+var _ambient_phase: float = 0.0
+
+func _process(delta: float) -> void:
+	if _reduced_motion or house_stage <= 0:
+		return
+	_ambient_phase = fmod(_ambient_phase + delta * 1.15, TAU)
+	queue_redraw()
+
+func apply_presentation_settings(state: Dictionary) -> void:
+	_reduced_motion = bool(state.get("reduced_motion", false))
+	if _reduced_motion:
+		_ambient_phase = 0.0
+	queue_redraw()
 
 func set_house_state(stage: int, owned_curios: Array[String]) -> void:
-	house_stage = stage
+	house_stage = clampi(stage, 0, 3)
 	curios = owned_curios.duplicate()
 	var cameo_overlay := get_node_or_null("MoonCameoOverlay")
 	if cameo_overlay != null:
@@ -72,20 +86,86 @@ func _draw() -> void:
 		_draw_awakened_sparkles(room)
 
 
+func _stage_veil_alpha() -> float:
+	match house_stage:
+		0:
+			return 0.40
+		1:
+			return 0.27
+		2:
+			return 0.15
+		_:
+			return 0.06
+
+func _ambient_tier() -> String:
+	match house_stage:
+		0:
+			return "dormant"
+		1:
+			return "first_cabinet_awake"
+		2:
+			return "side_display_awake"
+		_:
+			return "opening_set_alive"
+
+func _ambient_breath() -> float:
+	if _reduced_motion or house_stage <= 0:
+		return 1.0
+	return 0.96 + sin(_ambient_phase) * 0.04
+
 func _draw_authored_atmosphere(room: Rect2) -> void:
+	# The environment itself is always the authored raster. These runtime layers
+	# are lighting/color-response VFX only, so House progression changes the same
+	# camera without redrawing furniture, architecture or painted props.
+	var veil := Color("#090A17")
+	veil.a = _stage_veil_alpha()
+	draw_rect(room, veil, true)
+
+	var breath := _ambient_breath()
 	var moon_center := Vector2(room.get_center().x, room.position.y + room.size.y * 0.19)
-	for i in range(5, 0, -1):
+	for i in range(4, 0, -1):
 		var glow := Color(LILAC)
-		glow.a = 0.008 + float(i) * 0.008
-		draw_circle(moon_center, room.size.x * (0.10 + float(i) * 0.035), glow)
-	for side in [-1.0, 1.0]:
-		var warm_center := Vector2(room.get_center().x + side * room.size.x * 0.34, room.position.y + room.size.y * 0.64)
-		for i in range(3, 0, -1):
+		glow.a = (0.006 + float(i) * 0.006) * breath
+		draw_circle(moon_center, room.size.x * (0.10 + float(i) * 0.032), glow)
+
+	if house_stage >= 1:
+		var cabinet_center := Vector2(room.position.x + room.size.x * 0.84, room.position.y + room.size.y * 0.37)
+		var stage_strength := 0.72 + float(house_stage) * 0.18
+		for i in range(5, 0, -1):
 			var warm := Color(GOLD)
-			warm.a = 0.008 + float(i) * 0.010
-			draw_circle(warm_center, room.size.x * (0.06 + float(i) * 0.035), warm)
-	if house_stage > 0:
-		_draw_awakened_sparkles(room)
+			warm.a = (0.008 + float(i) * 0.008) * stage_strength * breath
+			draw_circle(cabinet_center, room.size.x * (0.07 + float(i) * 0.028), warm)
+
+	if house_stage >= 2:
+		var hearth_center := Vector2(room.get_center().x, room.position.y + room.size.y * 0.57)
+		for i in range(4, 0, -1):
+			var hearth := Color("#E5A766")
+			hearth.a = (0.005 + float(i) * 0.006) * breath
+			draw_circle(hearth_center, room.size.x * (0.08 + float(i) * 0.035), hearth)
+
+	if house_stage >= 3:
+		var room_wake := Color(GOLD)
+		room_wake.a = 0.022 * breath
+		draw_rect(room, room_wake, true)
+
+func living_house_contract() -> Dictionary:
+	var restored := 0
+	for curio_id in ["moon_cameo", "moth_reliquary", "thorned_locket"]:
+		if curios.has(curio_id):
+			restored += 1
+	return {
+		"stage": house_stage,
+		"ambient_tier": _ambient_tier(),
+		"stage_veil_alpha": _stage_veil_alpha(),
+		"breathing_active": house_stage > 0 and not _reduced_motion,
+		"reduced_motion": _reduced_motion,
+		"authored_backdrop_id": BACKDROP_ASSET_ID,
+		"authored_backdrop_loaded": _backdrop != null,
+		"same_camera": true,
+		"runtime_world_art": "authored_raster_plus_state_vfx",
+		"restored_curio_count": restored,
+		"procedural_environment_fallback": false,
+	}
 
 func restoration_contract() -> Dictionary:
 	return {

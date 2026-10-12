@@ -61,6 +61,8 @@ func set_returning_player(value: bool) -> void:
 
 func apply_presentation_settings(state: Dictionary) -> void:
 	_reduced_motion = bool(state.get("reduced_motion", false))
+	if room_view != null and room_view.has_method("apply_presentation_settings"):
+		room_view.apply_presentation_settings(state)
 
 func _refresh() -> void:
 	var stage: int = 0
