@@ -22,11 +22,15 @@ static func attach(screen: Control, progress, profile_handler: Callable = Callab
 	panel.offset_left = safe_insets.x
 	panel.offset_right = -safe_insets.z
 	panel.offset_top = 6.0 + safe_insets.y
-	panel.offset_bottom = 68.0 + safe_insets.y
+	panel.offset_bottom = 64.0 + safe_insets.y
 	screen.add_child(panel)
 
+	var life_icon := panel.get_node_or_null("Resources/LifeResourceChip/Content/Icon") as TextureRect
+	var life_icon := panel.get_node_or_null("Resources/LifeResourceChip/Content/Icon") as TextureRect
 	var coin_icon := panel.get_node_or_null("Resources/CoinResourceChip/Content/Icon") as TextureRect
 	var gem_icon := panel.get_node_or_null("Resources/GemResourceChip/Content/Icon") as TextureRect
+	if life_icon != null:
+		life_icon.texture = PieceAssetLoader.ornament("res://assets/ui/ui_heart.svg")
 	if coin_icon != null:
 		coin_icon.texture = PieceAssetLoader.ornament("res://assets/ui/ui_coin.svg")
 	if gem_icon != null:
@@ -47,13 +51,19 @@ static func attach(screen: Control, progress, profile_handler: Callable = Callab
 static func refresh(panel: PanelContainer, progress) -> void:
 	if panel == null:
 		return
+	var lives := 5
 	var coins := 0
 	var gems := 0
 	if progress != null:
+		lives = clampi(int(progress.lives), 0, 5)
 		coins = maxi(0, int(progress.coins))
 		gems = maxi(0, int(progress.gems))
+	var life := panel.find_child("LifeResource", true, false) as Label
+	var life := panel.find_child("LifeResource", true, false) as Label
 	var coin := panel.find_child("CoinResource", true, false) as Label
 	var gem := panel.find_child("GemResource", true, false) as Label
+	if life != null:
+		life.text = "FULL" if lives >= 5 else "%d / 5" % lives
 	if coin != null:
 		coin.text = _format_number(coins)
 	if gem != null:
@@ -75,8 +85,8 @@ static func authored_contract(panel: PanelContainer) -> Dictionary:
 	var profile := panel.get_node_or_null("Resources/KeeperProfile") as Button
 	return {
 		"authored_scene": true,
-		"resource_slots_present": coin != null and gem != null,
-		"icons_loaded": coin_icon != null and coin_icon.texture != null and gem_icon != null and gem_icon.texture != null and profile != null and profile.icon != null,
+		"resource_slots_present": life != null and coin != null and gem != null,
+		"icons_loaded": life_icon != null and life_icon.texture != null and coin_icon != null and coin_icon.texture != null and gem_icon != null and gem_icon.texture != null and profile != null and profile.icon != null,
 		"profile_touch_target_ok": profile != null and profile.custom_minimum_size.x >= 56.0 and profile.custom_minimum_size.y >= 48.0,
 		"runtime_ui_factory": false,
 	}
