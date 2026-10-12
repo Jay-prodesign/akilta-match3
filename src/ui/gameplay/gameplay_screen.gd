@@ -855,7 +855,10 @@ func _add_booster_button(parent: HBoxContainer, caption: String, art_path: Strin
 	parent.add_child(button)
 
 func _use_potion_boost() -> void:
+	_idle_hint_seconds = 0.0
 	if board_state == null or _potion_used_for_attempt or result_overlay.visible or pause_overlay.visible:
+		return
+	if board_view.has_method("is_motion_active") and bool(board_view.is_motion_active()):
 		return
 	_potion_used_for_attempt = true
 	board_state.moves_remaining += 3
@@ -867,6 +870,8 @@ func _use_hint_boost() -> void:
 	_idle_hint_seconds = 0.0
 	if board_state == null or result_overlay.visible or pause_overlay.visible:
 		return
+	if board_view.has_method("is_motion_active") and bool(board_view.is_motion_active()):
+		return
 	var move: Dictionary = MoveFinder.first_legal_move(board_state)
 	if move.is_empty():
 		hint_label.text = "The House is reshaping the sigils. Try a different line."
@@ -876,6 +881,9 @@ func _use_hint_boost() -> void:
 	feedback_requested.emit("match")
 
 func _use_retry_boost() -> void:
+	_idle_hint_seconds = 0.0
 	if board_state == null or result_overlay.visible or pause_overlay.visible:
+		return
+	if board_view.has_method("is_motion_active") and bool(board_view.is_motion_active()):
 		return
 	retry_current_level()
