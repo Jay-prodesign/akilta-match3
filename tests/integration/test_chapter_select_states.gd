@@ -22,7 +22,13 @@ func _run() -> void:
 	await process_frame
 	_expect(screen.chapter_state("curio_boutique") == "first_wing_open", "fresh S02 must expose first_wing_open")
 	var current: Button = screen.get_chapter_button("curio_boutique")
-	_expect(current != null and current.text.contains("OPENING RITUALS") and current.text.contains("0 / 3"), "fresh current wing copy")
+	_expect(current != null and current.text.contains("CURRENT WING") and current.text.contains("0 / 3 DISPLAYS") and current.text.contains("BEGIN RESTORATION"), "fresh current wing copy")
+	_expect(screen.has_method("chapter_visual_contract"), "S02 must expose its current-wing visual contract")
+	if screen.has_method("chapter_visual_contract"):
+		var visual_contract: Dictionary = screen.chapter_visual_contract()
+		_expect(bool(visual_contract.get("current_wing_art_loaded", false)), "S02 current wing authored place art must load")
+		_expect(bool(visual_contract.get("current_wing_art_is_raster", false)), "S02 current wing place art must use raster runtime artwork")
+		_expect(bool(visual_contract.get("future_wings_artless_until_authored", false)), "S02 future wings must remain artless rather than fabricate chapter artwork")
 	_expect(screen.get_node_or_null("ResourceBar") != null, "S02 global resources header missing")
 	_expect(screen.get_node_or_null("Layout/ChapterHeader/HeaderBack") != null, "S02 header back missing")
 	var backdrop: TextureRect = screen.get_node_or_null("ChapterWorldBackdrop")
@@ -42,7 +48,7 @@ func _run() -> void:
 	screen.set_progress(partial)
 	await process_frame
 	_expect(screen.chapter_state("curio_boutique") == "current_partial", "2/3 S02 must expose current_partial")
-	_expect(current.text.contains("2 / 3 DISPLAYS AWAKENED") and current.text.contains("CONTINUE"), "partial current-wing CTA truth")
+	_expect(current.text.contains("CURRENT WING") and current.text.contains("2 / 3 DISPLAYS") and current.text.contains("CONTINUE RESTORATION"), "partial current-wing CTA truth")
 	var resource_coin: Label = screen.get_node_or_null("ResourceBar/Resources/CoinResourceChip/HBoxContainer/CoinResource") as Label
 	if resource_coin == null:
 		resource_coin = screen.find_child("CoinResource", true, false) as Label
@@ -55,7 +61,7 @@ func _run() -> void:
 	screen.set_progress(complete)
 	await process_frame
 	_expect(screen.chapter_state("curio_boutique") == "current_complete", "3/3 S02 must expose current_complete")
-	_expect(current.text.contains("RESTORED") and current.text.contains("3 / 3") and current.text.contains("FIRST CABINET SET"), "complete current-wing replay truth")
+	_expect(current.text.contains("RESTORED WING") and current.text.contains("3 / 3 DISPLAYS") and current.text.contains("REVISIT RITUALS"), "complete current-wing replay truth")
 	var lock_reason: Label = screen.get_node_or_null("Layout/LockReason")
 	_expect(lock_reason != null and lock_reason.text.contains("FIVE WINGS REMAIN SEALED"), "completed S02 must keep future-wing lock reason truthful")
 
