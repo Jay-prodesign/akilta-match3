@@ -103,6 +103,7 @@ const LAST_MOVE_THRESHOLD := 1
 @onready var result_reward_name: Label = $ResultOverlay/Card/Content/RewardName
 @onready var result_house_change: Label = $ResultOverlay/Card/Content/HouseChange
 @onready var result_ritual: Control = $ResultOverlay/Card/Content/RewardRitual
+@onready var result_recovery_action: Button = $ResultOverlay/Card/Content/RecoveryAction
 @onready var result_action: Button = $ResultOverlay/Card/Content/Action
 
 func _process(delta: float) -> void:
@@ -137,6 +138,7 @@ func _ready() -> void:
 		board_view.trace_motion_finished.connect(_on_board_trace_motion_finished)
 	if board_view.has_signal("motion_feedback_requested"):
 		board_view.motion_feedback_requested.connect(_on_board_motion_feedback_requested)
+	result_recovery_action.pressed.connect(_on_result_recovery_pressed)
 	result_action.pressed.connect(_on_result_action_pressed)
 	pause_button.pressed.connect(show_pause)
 	pause_resume.pressed.connect(resume_level)
@@ -221,6 +223,8 @@ func load_level_path(path: String, seed_value: int = 1001) -> bool:
 	_pending_hud_refresh = false
 	pause_overlay.visible = false
 	result_overlay.visible = false
+	if result_recovery_action != null:
+		result_recovery_action.visible = false
 	if _booster_tray != null:
 		_booster_tray.visible = true
 	if result_ritual != null:
@@ -657,6 +661,7 @@ func _show_result_if_terminal(result: String) -> void:
 			result_ritual.set("glow_strength", 0.75)
 			result_ritual.queue_redraw()
 		result_action.text = "RETURN TO HOUSE" if replay_mode else "CONTINUE"
+		result_recovery_action.visible = false
 		if _result_reward_values != null:
 			_result_reward_values.visible = not replay_mode
 		if _result_proclamation != null:
@@ -673,7 +678,7 @@ func _show_result_if_terminal(result: String) -> void:
 		feedback_requested.emit("fail")
 		_pending_win = false
 		result_title.text = "THE ROOM WAITS"
-		result_detail.text = "The House keeps its secrets. %s" % current_retry_hint if current_retry_hint != "" else "The House keeps its secrets. Try another arrangement."
+		result_detail.text = "%s %s" % [_failure_gap_copy(), current_retry_hint if current_retry_hint != "" else "Try another arrangement."]
 		_configure_result_reward_copy(false)
 		if result_ritual != null:
 			result_ritual.set("mode", "fail")
@@ -681,6 +686,8 @@ func _show_result_if_terminal(result: String) -> void:
 			result_ritual.set("glow_strength", 0.12)
 			result_ritual.queue_redraw()
 		result_action.text = "TRY AGAIN"
+		result_recovery_action.visible = not _potion_used_for_attempt
+		result_recovery_action.disabled = _potion_used_for_attempt
 		if _result_reward_values != null:
 			_result_reward_values.visible = false
 		if _result_proclamation != null:
@@ -692,6 +699,47 @@ func _show_result_if_terminal(result: String) -> void:
 		result_objective_summary.text = _terminal_objective_summary(false)
 		_present_result_overlay("failed")
 		result_state_changed.emit("failed")
+
+func _failure_gap_copy() -> String:
+	if board_state == null:
+		return "The ritual remains unfinished."
+	var remaining := maxi(0, _objective_target_value() - _objective_progress_value())
+	if String(board_state.objective_type) == "collect_family":
+		var family := String(board_state.objective_family).capitalize()
+		return "%d %s sigil%s remained." % [remaining, family, "" if remaining == 1 else "s"]
+	if String(board_state.objective_type) == "clear_blockers":
+		return "%d wax seal layer%s remained." % [remaining, "" if remaining == 1 else "s"]
+	return "The ritual remains unfinished."
+
+func recover_failed_attempt_with_plus_moves() -> bool:
+	if board_state == null or not result_overlay.visible or _potion_used_for_attempt:
+		return false
+	if String(terminal_transition_contract().get("kind", "")) != "failed":
+		return false
+	_potion_used_for_attempt = true
+	board_state.moves_remaining += 3
+	_pending_win = false
+	_pending_terminal_result = ""
+	_last_objective_delta = 0
+	if _potion_boost_button != null:
+		_potion_boost_button.disabled = true
+	if result_recovery_action != null:
+		result_recovery_action.visible = false
+	result_overlay.visible = false
+	_reset_terminal_transition()
+	haptics.reset_for_new_attempt()
+	haptics.request_special()
+	feedback_requested.emit("special")
+	if _booster_tray != null:
+		_booster_tray.visible = true
+	_refresh_hud()
+	hint_label.text = "RECOVERY · +3 MOVES · CONTINUE FROM THIS BOARD"
+	_style_impact_hint("special")
+	result_state_changed.emit("recovered")
+	return true
+
+func _on_result_recovery_pressed() -> void:
+	recover_failed_attempt_with_plus_moves()
 
 func _terminal_objective_summary(won: bool) -> String:
 	if board_state == null:
@@ -732,6 +780,8 @@ func terminal_result_polish_contract() -> Dictionary:
 		"transition": terminal_transition_contract(),
 		"retry_copy": hint_label.text if hint_label != null else "",
 		"distinct_result_material": true,
+		"failure_gap": _failure_gap_copy() if result_overlay != null and result_overlay.visible and String(terminal_transition_contract().get("kind", "")) == "failed" else "",
+		"plus_three_recovery_available": result_recovery_action != null and result_recovery_action.visible and not result_recovery_action.disabled,
 	}
 
 func _present_result_overlay(kind: String) -> void:

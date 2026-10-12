@@ -54,6 +54,11 @@ func _capture() -> void:
 	var failure_eyebrow: Label = gameplay.get_node("ResultOverlay/Card/Content/Eyebrow")
 	var failure_reward: Label = gameplay.get_node("ResultOverlay/Card/Content/RewardName")
 	var failure_house_change: Label = gameplay.get_node("ResultOverlay/Card/Content/HouseChange")
+	var recovery_action: Button = gameplay.get_node_or_null("ResultOverlay/Card/Content/RecoveryAction") as Button
+	if recovery_action == null or not recovery_action.visible or recovery_action.disabled:
+		return _fail(app, "failure must expose the free +3 Moves recovery action")
+	if not recovery_action.text.contains("FREE"):
+		return _fail(app, "failure recovery must truthfully label its free state")
 	if failure_eyebrow.text != "RITUAL UNFINISHED":
 		return _fail(app, "failed Level 1 must not claim a recovered Curio")
 	if failure_reward.text != "MOON CAMEO · STILL SEALED":
@@ -61,6 +66,16 @@ func _capture() -> void:
 	if not failure_house_change.text.begins_with("No Curio is added"):
 		return _fail(app, "failed Level 1 must explain that House progression was not granted")
 	if not await _save(app, "level1-fail-result.png"):
+		return
+
+	if not gameplay.recover_failed_attempt_with_plus_moves():
+		return _fail(app, "free +3 Moves recovery failed")
+	await _frames(3)
+	if gameplay.result_overlay.visible or int(gameplay.board_state.moves_remaining) != 3:
+		return _fail(app, "recovery must resume same board with exactly three moves")
+	if not gameplay.hint_label.text.contains("RECOVERY"):
+		return _fail(app, "recovery confirmation missing")
+	if not await _save(app, "level1-fail-plus3-recovery.png"):
 		return
 
 	if not gameplay.retry_current_level():

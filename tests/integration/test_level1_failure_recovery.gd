@@ -50,6 +50,9 @@ func _run() -> void:
 		await board_view.trace_motion_finished
 	_expect(gameplay.result_overlay.visible, "failure must show a result overlay after resolution")
 	_expect(gameplay.result_action.text == "TRY AGAIN", "failure result must offer Try Again")
+	var recovery_action: Button = gameplay.get_node_or_null("ResultOverlay/Card/Content/RecoveryAction") as Button
+	_expect(recovery_action != null and recovery_action.visible and not recovery_action.disabled, "unused +3 Moves recovery must be offered after failure")
+	_expect(recovery_action != null and recovery_action.text.contains("+3 MOVES") and recovery_action.text.contains("FREE"), "failure recovery must truthfully label the free +3 Moves option")
 	_expect(gameplay.result_detail.text.contains("Moon sigils"), "Level 1 failure must give authored Moon-sigil retry assistance")
 	_expect(gameplay.has_method("terminal_result_polish_contract"), "failure result must expose terminal polish contract")
 	if gameplay.has_method("terminal_result_polish_contract"):
@@ -60,9 +63,25 @@ func _run() -> void:
 	_expect(String(fail_ritual.get("mode")) == "fail", "failure must keep Moon Cameo visually sealed rather than showing an awakened reward")
 	_expect(int(app.progress.house_stage) == 0, "failure must not advance House")
 	_expect(not app.progress.curios.has("moon_cameo"), "failure must not grant Moon Cameo")
+	var failed_signature: String = String(gameplay.board_state.signature())
+	var failed_objective_progress := int(gameplay.board_state.objective_progress)
+	_expect(gameplay.has_method("terminal_result_polish_contract"), "failure must expose recovery polish contract")
+	if gameplay.has_method("terminal_result_polish_contract"):
+		var fail_polish: Dictionary = gameplay.terminal_result_polish_contract()
+		_expect(String(fail_polish.get("failure_gap", "")).contains("remained"), "failure result must explain exact remaining objective gap")
+		_expect(bool(fail_polish.get("plus_three_recovery_available", false)), "failure contract must expose +3 recovery availability")
+	_expect(gameplay.recover_failed_attempt_with_plus_moves(), "unused +3 Moves must recover the failed board")
+	_expect(not gameplay.result_overlay.visible, "successful +3 recovery must return to gameplay")
+	_expect(int(gameplay.board_state.moves_remaining) == 3, "+3 recovery must restore exactly three moves")
+	_expect(int(gameplay.board_state.objective_progress) == failed_objective_progress, "+3 recovery must preserve objective progress")
+	var recovered_signature: String = String(gameplay.board_state.signature())
+	_expect(failed_signature.get_slice("|moves=", 0) == recovered_signature.get_slice("|moves=", 0), "+3 recovery must preserve the settled board state")
+	_expect(gameplay.hint_label.text.contains("RECOVERY") and gameplay.hint_label.text.contains("+3 MOVES"), "recovered gameplay must visibly confirm the continuation")
+	_expect(not gameplay.recover_failed_attempt_with_plus_moves(), "+3 recovery must remain one-shot for the attempt")
+	_expect(int(app.progress.house_stage) == 0 and not app.progress.curios.has("moon_cameo"), "recovery itself must not grant persistent progress")
 	var retry_haptics: Array[Dictionary] = []
 	gameplay.haptics.set_platform_sink(func(ms: int, category: int): retry_haptics.append({"ms": ms, "category": category}))
-	_expect(gameplay.retry_current_level(), "Try Again contract must reload Level 1")
+	_expect(gameplay.retry_current_level(), "clean retry must remain available after recovery and reload Level 1")
 	_expect(not gameplay.result_overlay.visible, "retry must clear failure overlay")
 	_expect(int(gameplay.board_state.moves_remaining) == int(level_data["moves"]), "retry must restore full authored move budget")
 	_expect(String(gameplay.current_level_id) == "ch01_level_001", "retry must remain on canonical Level 1")

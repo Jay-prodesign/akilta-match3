@@ -50,6 +50,7 @@ on:
       - "tests/integration/test_chapter_route_frontier.gd"
       - "tests/integration/test_restoration_presentation.gd"
       - "tests/integration/test_level1_gameplay.gd"
+      - "tests/integration/test_level1_failure_recovery.gd"
       - "tests/integration/test_golden_feedback_vfx.gd"
       - "tests/integration/test_gameplay_feel.gd"
       - "tests/integration/test_gameplay_impact_hierarchy.gd"

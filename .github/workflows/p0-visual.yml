@@ -184,6 +184,7 @@ jobs:
           if grep -Eq "SCRIPT ERROR:|(^| )ERROR:|CAPTURE_FAIL:" <<<"$output"; then exit 1; fi
           grep -Fq "CAPTURE_PASS: Level 1 fail retry" <<<"$output"
           test -s artifacts/level1-fail-result.png
+          test -s artifacts/level1-fail-plus3-recovery.png
           test -s artifacts/level1-retry-restored.png
 
       - name: Render whole-product three-level review shell
@@ -309,6 +310,7 @@ jobs:
             artifacts/golden-08-curio-verification.png
             artifacts/golden-09-curio-detail.png
             artifacts/level1-fail-result.png
+            artifacts/level1-fail-plus3-recovery.png
             artifacts/level1-retry-restored.png
             artifacts/progression-house-stage1.png
             artifacts/progression-house-stage2.png
