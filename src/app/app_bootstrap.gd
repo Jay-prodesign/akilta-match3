@@ -787,6 +787,8 @@ func _render_house(restoration_mode: bool = false, curio_id: String = "", restor
 func _on_restoration_finished() -> void:
 	if navigation.current() == NavigationScript.Route.RESTORATION:
 		navigation.go(NavigationScript.Route.HOUSE, {"reason": "restoration_complete"})
+		# House is already rendered beneath the restoration ceremony.
+		# Keep the next-level CTA available without forcing another route.
 
 func _on_collection_back() -> void:
 	if navigation.go(NavigationScript.Route.HOUSE, {"via": "collection_back"}):
