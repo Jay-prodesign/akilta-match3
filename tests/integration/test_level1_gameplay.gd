@@ -111,6 +111,13 @@ func _run() -> void:
 		_expect(not bool(board_view.is_motion_active()), "Level 1 motion must settle within eight seconds")
 	if awakening != null and awakening.has_method("contract"):
 		_expect(int(awakening.contract().get("progress", 0)) >= 6, "reward meter must fully awaken after the visible move resolves")
+	var level1_reward = screen.get_node_or_null("ResultOverlay/Card/Content/RewardRitual")
+	_expect(level1_reward != null and level1_reward.has_method("relic_asset_contract"), "Level 1 reward ritual must expose its production Curio asset contract")
+	if level1_reward != null and level1_reward.has_method("relic_asset_contract"):
+		var reward_contract: Dictionary = level1_reward.relic_asset_contract()
+		_expect(bool(reward_contract.get("raster_runtime", false)), "Level 1 Moon Cameo reward must use raster runtime art")
+		_expect(bool(reward_contract.get("loaded", false)), "Level 1 Moon Cameo raster reward must load")
+		_expect(String(reward_contract.get("runtime_path", "")).ends_with(".webp"), "Level 1 Moon Cameo reward must use the authored WEBP state pair")
 	if board_view != null and board_view.has_method("teaching_contract"):
 		_expect(not bool(board_view.teaching_contract().get("active", true)), "teaching cue must disappear after the first accepted swipe")
 
