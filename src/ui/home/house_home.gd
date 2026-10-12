@@ -268,16 +268,16 @@ func show_restoration_ceremony(curio_id: String, stage: int) -> void:
 	header.add_child(hero_copy)
 
 	var hero_art := TextureRect.new()
-	hero_art.name = "AwakeningCurio"
-	hero_art.anchor_left = 0.34
-	hero_art.anchor_right = 0.66
+	hero_art.name = "AwakeningMotif"
+	hero_art.anchor_left = 0.32
+	hero_art.anchor_right = 0.68
 	hero_art.anchor_top = 0.27
-	hero_art.anchor_bottom = 0.55
+	hero_art.anchor_bottom = 0.56
 	hero_art.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
 	hero_art.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
 	hero_art.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	hero_art.texture = _curio_texture(curio_id)
-	hero_art.modulate = Color(1.0, 0.95, 0.82, 1.0)
+	hero_art.texture = _restoration_motif_texture(curio_id)
+	hero_art.modulate = Color(1.0, 0.96, 0.88, 1.0)
 	overlay.add_child(hero_art)
 
 	var ceremony := VBoxContainer.new()
@@ -393,6 +393,18 @@ func _animate_restoration_state(curio_id: String, stage: int, current_curios: Ar
 		tween.parallel().tween_property(awakening_echo, "scale", Vector2.ONE, 0.48).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
 		tween.tween_property(awakening_echo, "modulate", Color(1.0, 0.94, 0.78, 0.0), 0.26)
 		tween.tween_callback(awakening_echo.queue_free)
+
+func _restoration_motif_texture(curio_id: String) -> Texture2D:
+	# The large transient awakening layer communicates each relic's motif using
+	# the accepted production piece family. Exact Curio identity remains on the
+	# item card and the persistent House niche; the motif is never a substitute
+	# for ownership/progression truth.
+	var path := "res://assets/curios/ch01_curio_moon_cameo_awakened_v01.webp"
+	if curio_id == "moth_reliquary":
+		path = "res://assets/pieces/luna_moth.webp"
+	elif curio_id == "thorned_locket":
+		path = "res://assets/pieces/thorn_rose.webp"
+	return PieceAssetLoader.ornament(path)
 
 func _curio_texture(curio_id: String) -> Texture2D:
 	var path := "res://assets/curios/ch01_curio_moon_cameo_awakened_v01.webp"
