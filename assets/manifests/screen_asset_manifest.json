@@ -749,13 +749,13 @@
         "disabled"
       ],
       "type": "gameplay_asset",
-      "dimensions": "128x128_svg",
+      "dimensions": "128x128_webp_runtime_verified",
       "aspect_ratio": "1:1",
       "transparent": true,
       "variants": [],
       "reuse": "global",
       "priority": "P0",
-      "production_status": "required",
+      "production_status": "runtime_connected_raster_aid_verified",
       "architecture_owned": true,
       "contract_owners": [
         {
@@ -779,7 +779,11 @@
             "pressed"
           ]
         }
-      ]
+      ],
+      "current_path": "assets/pieces/moon_sigil.webp",
+      "source_silhouette_path": "assets/pieces/moon_sigil.svg",
+      "technical_policy": "webp_raster_runtime__shared_moon_sigil_identity__svg_owned_source",
+      "provenance": "AKILTA first-party Hint aid reuses the verified Moon Sigil identity. Verified on S04 Pre-start and S05 gameplay in Godot 4.7.2 rendered Golden Loop evidence."
     },
     {
       "asset_id": "booster_plus_moves",
@@ -795,14 +799,14 @@
         "disabled"
       ],
       "type": "gameplay_asset",
-      "dimensions": "128x128_svg",
+      "dimensions": "256x256_webp_runtime_verified",
       "aspect_ratio": "1:1",
       "transparent": true,
       "variants": [],
       "reuse": "global",
       "priority": "P0",
-      "production_status": "candidate",
-      "current_path": "assets/pieces/potion.svg",
+      "production_status": "runtime_connected_raster_aid_verified",
+      "current_path": "assets/pieces/potion.webp",
       "architecture_owned": true,
       "contract_owners": [
         {
@@ -826,7 +830,10 @@
             "pressed"
           ]
         }
-      ]
+      ],
+      "source_silhouette_path": "assets/pieces/potion.svg",
+      "technical_policy": "webp_raster_runtime__owned_authored_vector_source",
+      "provenance": "AKILTA first-party emerald potion artwork, rasterized from the owned authored SVG source for runtime presentation. Verified on S04 Pre-start and S05 gameplay with one-use disabled state in Godot 4.7.2."
     },
     {
       "asset_id": "reward_moon_cameo",
