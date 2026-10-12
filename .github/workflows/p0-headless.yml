@@ -46,6 +46,7 @@ on:
       - "src/ui/missions/**"
       - "tests/unit/test_weekly_missions_screen.gd"
       - "tests/unit/test_reliquary_production_screen.gd"
+      - "tests/unit/test_house_authored_state_family.gd"
       - "tests/unit/test_meta_destination_screen.gd"
       - "assets/manifests/screen_contracts.json"
       - "assets/manifests/screen_asset_manifest.json"
@@ -364,6 +365,18 @@ jobs:
           if [ "$status" -ne 0 ]; then exit "$status"; fi
           if grep -Eq "SCRIPT ERROR:|(^| )ERROR:|TEST_FAIL:" <<<"$output"; then exit 1; fi
           grep -Fq "TEST_PASS: authored Reliquary production display" <<<"$output"
+
+      - name: Run authored House state family contract
+        shell: bash
+        run: |
+          set +e
+          output=$(timeout 35s ./godot --headless --path . -s res://tests/unit/test_house_authored_state_family.gd 2>&1)
+          status=$?
+          set -e
+          printf '%s\n' "$output"
+          if [ "$status" -ne 0 ]; then exit "$status"; fi
+          if grep -Eq "SCRIPT ERROR:|(^| )ERROR:|TEST_FAIL:" <<<"$output"; then exit 1; fi
+          grep -Fq "TEST_PASS: authored House state family" <<<"$output"
 
       - name: Run S02 Chapters production state contract
         shell: bash
