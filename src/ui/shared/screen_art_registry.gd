@@ -33,21 +33,33 @@ static func texture(asset_id: String) -> Texture2D:
 	if extension != "png" and extension != "webp":
 		push_error("Screen art must be raster: %s -> %s" % [asset_id, asset_path])
 		return null
-	# Exported Godot builds remap imported raster sources to engine resources.
-	# ResourceLoader follows that remap; raw FileAccess to source bytes does not.
-	if not ResourceLoader.exists(asset_path):
+
+	# Exported builds prefer Godot's imported-resource remap. Fresh headless CI
+	# may not have an import cache yet, so native exports also retain the authored
+	# raster bytes and this loader can decode them as a deterministic fallback.
+	if ResourceLoader.exists(asset_path):
+		var imported := ResourceLoader.load(asset_path, "Texture2D", ResourceLoader.CACHE_MODE_REUSE) as Texture2D
+		if imported != null:
+			_cache[asset_id] = imported
+			return imported
+
+	if not FileAccess.file_exists(asset_path):
 		push_error("Missing required production screen art: %s -> %s" % [asset_id, asset_path])
 		return null
-	var resource := ResourceLoader.load(asset_path, "Texture2D", ResourceLoader.CACHE_MODE_REUSE) as Texture2D
-	if resource == null:
+	var image := Image.new()
+	var bytes := FileAccess.get_file_as_bytes(asset_path)
+	var err := image.load_png_from_buffer(bytes) if extension == "png" else image.load_webp_from_buffer(bytes)
+	if err != OK or image.is_empty():
 		push_error("Failed to decode production screen art: %s -> %s" % [asset_id, asset_path])
 		return null
-	_cache[asset_id] = resource
-	return resource
+	var decoded := ImageTexture.create_from_image(image)
+	_cache[asset_id] = decoded
+	return decoded
 
 static func missing_required() -> PackedStringArray:
 	var missing := PackedStringArray()
 	for asset_id in ART:
-		if not ResourceLoader.exists(String(ART[asset_id])):
+		var asset_path := String(ART[asset_id])
+		if not ResourceLoader.exists(asset_path) and not FileAccess.file_exists(asset_path):
 			missing.append(String(asset_id))
 	return missing
