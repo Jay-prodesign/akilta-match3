@@ -29,6 +29,18 @@ func _run() -> void:
 	_expect(route.get_frontier_level() == 1, "0/3 frontier must be Level 1")
 	_expect(route.get_level_state(1) == "current", "Level 1 must be current at 0/3")
 	_expect(route.get_level_state(2) == "locked" and route.get_level_state(3) == "locked", "Levels 2–3 must be locked at 0/3")
+	_expect(route.get_level_button(2) != null and not route.get_level_button(2).disabled, "progression-locked Level 2 must remain inspectable")
+	route.get_level_button(2).emit_signal("pressed")
+	await process_frame
+	var progression_sealed: Dictionary = screen.sealed_explanation_contract()
+	_expect(bool(progression_sealed.get("open", false)), "progression-locked cabinet must open sealed explanation")
+	_expect(String(progression_sealed.get("sealed_kind", "")) == "progression_locked", "progression-locked sealed kind mismatch")
+	_expect(String(progression_sealed.get("reason", "")).contains("Complete the current available ritual"), "progression lock must explain the next useful action")
+	_expect(String(progression_sealed.get("requirement", "")).contains("no currency purchase"), "progression lock must deny paid bypass")
+	var progression_close: Button = screen.get_node_or_null("LockedExplanation/LockedPanel/Content/Close") as Button
+	if progression_close != null:
+		progression_close.emit_signal("pressed")
+		await process_frame
 	_expect(focus.visible and focus_label.visible, "current frontier marker must be visible at 0/3")
 
 	var p1 = ProgressScript.new()
@@ -58,6 +70,15 @@ func _run() -> void:
 	_expect(route.get_frontier_level() == -1, "3/3 route must have no unfinished current frontier")
 	_expect(route.get_level_state(1) == "completed" and route.get_level_state(2) == "completed" and route.get_level_state(3) == "completed", "opening trio must all be completed at 3/3")
 	_expect(route.get_level_state(4) == "locked", "future route must remain locked after opening completion")
+	_expect(route.get_level_button(4) != null and not route.get_level_button(4).disabled, "future Level 4 must remain inspectable while sealed")
+	route.get_level_button(4).emit_signal("pressed")
+	await process_frame
+	var future_sealed: Dictionary = screen.sealed_explanation_contract()
+	_expect(bool(future_sealed.get("open", false)), "future cabinet must open sealed explanation")
+	_expect(String(future_sealed.get("sealed_kind", "")) == "future_content", "future cabinet sealed kind mismatch")
+	_expect(int(future_sealed.get("sealed_level", 0)) == 4, "future cabinet explanation must preserve level identity")
+	_expect(String(future_sealed.get("reason", "")).contains("not playable in this build"), "future cabinet must state build availability")
+	_expect(String(future_sealed.get("requirement", "")).contains("No unlock date") and String(future_sealed.get("requirement", "")).contains("purchase path"), "future cabinet must not invent release or commerce")
 	_expect(not focus.visible and not focus_label.visible, "frontier focus must disappear when opening trio is complete")
 
 	screen.queue_free()
