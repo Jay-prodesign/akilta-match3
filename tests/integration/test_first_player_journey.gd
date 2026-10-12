@@ -58,6 +58,17 @@ func _run() -> void:
 	_expect(prestart_back != null, "pre-start must own a focused back affordance")
 	var objective: Label = prestart.get_node("Layout/Card/Content/Objective")
 	_expect(objective.text == "GOAL · GATHER 6 MOON SIGILS", "prestart must reflect the canonical Level 1 collect-family objective")
+	_expect(prestart.has_method("aid_contract"), "pre-start must expose the in-level aid contract")
+	if prestart.has_method("aid_contract"):
+		var aids: Dictionary = prestart.aid_contract()
+		_expect(bool(aids.get("hint", {}).get("loaded", false)), "pre-start Hint art must load")
+		_expect(bool(aids.get("plus_moves", {}).get("loaded", false)), "pre-start +3 Moves art must load")
+		_expect(bool(aids.get("plus_moves", {}).get("once_per_attempt", false)), "pre-start must truthfully preview +3 Moves as once per attempt")
+	var aid_truth: Label = prestart.get_node_or_null("Layout/Card/Content/RitualAids/VBoxContainer/AidTruth") as Label
+	if aid_truth == null:
+		var aid_panel = prestart.get_node_or_null("Layout/Card/Content/RitualAids")
+		aid_truth = aid_panel.find_child("AidTruth", true, false) as Label if aid_panel != null else null
+	_expect(aid_truth != null and aid_truth.text.contains("once per attempt"), "pre-start must disclose the +3 Moves usage limit before play")
 	var start_button: Button = prestart.get_node("Layout/Card/Content/Start")
 	start_button.emit_signal("pressed")
 	await process_frame
