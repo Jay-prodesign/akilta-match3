@@ -1,5 +1,4 @@
 ; Engine configuration file.
-; CI current-head proof trigger (temporary, reverted in next checkpoint).
 ; Cat & Coven — production baseline
 ; Godot 4.7.2-stable is the pinned engine for the release foundation.
 
