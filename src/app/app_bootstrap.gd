@@ -32,6 +32,7 @@ var _store
 var _current_screen: Node
 var _settings_screen: Node
 var _pending_level_number: int = 0
+var _prestart_origin: int = NavigationScript.Route.MAP
 var _returning_player_entry: bool = false
 ## Founder-authorized internal review exposes three provisional levels.
 ## This does not confer D-024B/D-027 shipping or final-art approval.
@@ -135,6 +136,7 @@ func show_prestart(level_number: int) -> bool:
 		_ensure_house_route()
 		return false
 	_pending_level_number = level_number
+	_prestart_origin = entry_route
 	screen.back_button.text = "BACK TO MAP" if entry_route == NavigationScript.Route.MAP else "BACK TO HOUSE"
 	screen.back_requested.connect(_on_prestart_back)
 	screen.start_requested.connect(_on_prestart_start)
@@ -785,7 +787,7 @@ func _on_map_back() -> void:
 
 func _on_prestart_back() -> void:
 	_pending_level_number = 0
-	if _current_screen != null and is_instance_valid(_current_screen) and _current_screen.has_node("Back") and (_current_screen.get_node("Back") as Button).text == "BACK TO HOUSE":
+	if _prestart_origin == NavigationScript.Route.HOUSE:
 		if navigation.go(NavigationScript.Route.HOUSE, {"via": "prestart_back"}):
 			_render_house()
 	elif navigation.go(NavigationScript.Route.MAP, {"via": "prestart_back"}):
