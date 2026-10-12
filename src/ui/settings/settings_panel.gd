@@ -133,7 +133,7 @@ func _style_settings_overlay() -> void:
 	close_button.add_theme_stylebox_override("focus", close_hover_style)
 	close_button.add_theme_color_override("font_color", Color("#FFF7E8"))
 	close_button.add_theme_color_override("font_hover_color", Color("#FFFFFF"))
-	close_button.add_theme_font_size_override("font_size", 20)
+	close_button.add_theme_font_size_override("font_size", 22)
 
 func _style_toggle(toggle: CheckButton) -> void:
 	if toggle == null:
@@ -144,7 +144,7 @@ func _style_toggle(toggle: CheckButton) -> void:
 	toggle.add_theme_stylebox_override("focus", toggle_high_hover_style if _high_contrast else toggle_hover_style)
 	toggle.add_theme_color_override("font_color", Color("#FFFFFF") if _high_contrast else Color("#E8DCE4"))
 	toggle.add_theme_color_override("font_hover_color", Color("#FFFFFF"))
-	toggle.add_theme_font_size_override("font_size", 19)
+	toggle.add_theme_font_size_override("font_size", 21)
 
 func settings_authored_contract() -> Dictionary:
 	return {
@@ -154,6 +154,9 @@ func settings_authored_contract() -> Dictionary:
 		"sigil_raster_runtime": true,
 		"authored_style_resources": card_normal_style != null and card_high_style != null and toggle_normal_style != null and toggle_high_style != null and close_normal_style != null and close_high_style != null,
 		"runtime_ui_factory": false,
+		"north_star_title_hierarchy": ($Card/Content/Title as Label).get_theme_font_size("font_size") >= 46,
+		"north_star_toggle_height": [master_toggle, music_toggle, sfx_toggle, haptics_toggle, reduced_toggle, contrast_toggle].all(func(control): return control.custom_minimum_size.y >= 68.0),
+		"intro_subordinate": ($Card/Content/Intro as Label) != null and not ($Card/Content/Intro as Label).visible,
 		"runtime_style_factory": false,
 	}
 
