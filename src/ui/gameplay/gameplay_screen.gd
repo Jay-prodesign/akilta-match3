@@ -134,6 +134,8 @@ func _ready() -> void:
 		board_view.swap_requested.connect(_on_swap_requested)
 	if board_view.has_signal("trace_motion_finished"):
 		board_view.trace_motion_finished.connect(_on_board_trace_motion_finished)
+	if board_view.has_signal("motion_feedback_requested"):
+		board_view.motion_feedback_requested.connect(_on_board_motion_feedback_requested)
 	result_action.pressed.connect(_on_result_action_pressed)
 	pause_button.pressed.connect(show_pause)
 	pause_resume.pressed.connect(resume_level)
@@ -333,32 +335,10 @@ func attempt_swap(from: Vector2i, to: Vector2i):
 	if last_trace.accepted:
 		if board_view.has_method("clear_teaching_move"):
 			board_view.clear_teaching_move()
-		var feedback_types: Array[String] = last_trace.event_types()
 		_last_cascade_depth = _trace_cascade_depth(last_trace)
-		if feedback_types.has("combo_triggered"):
-			_last_impact_feedback = "combo"
-			haptics.request_combo()
-			feedback_requested.emit("combo")
-		elif feedback_types.has("special_triggered"):
-			_last_impact_feedback = "special_triggered"
-			haptics.request_special()
-			feedback_requested.emit("special")
-		elif feedback_types.has("special_created"):
-			_last_impact_feedback = "special_created"
-			haptics.request_special()
-			feedback_requested.emit("special_create")
-		elif feedback_types.has("blocker_cleared") or feedback_types.has("blocker_damaged"):
-			_last_impact_feedback = "blocker_cleared" if feedback_types.has("blocker_cleared") else "blocker_damaged"
-			haptics.request_blocker()
-			feedback_requested.emit("blocker")
-		elif _last_cascade_depth > 1:
-			_last_impact_feedback = "cascade_%d" % _last_cascade_depth
-			haptics.request_special()
-			feedback_requested.emit("cascade")
-		else:
-			_last_impact_feedback = "match"
-			haptics.request_match()
-			feedback_requested.emit("match")
+		_set_trace_impact_state(last_trace)
+		if not motion_started:
+			_emit_trace_feedback_immediate(last_trace)
 		var terminal_result := String(last_trace.result)
 		if terminal_result == "won" or terminal_result == "failed":
 			if motion_started:
@@ -366,6 +346,60 @@ func attempt_swap(from: Vector2i, to: Vector2i):
 			else:
 				_show_result_if_terminal(terminal_result)
 	return last_trace
+
+func _set_trace_impact_state(trace) -> void:
+	if trace == null:
+		_last_impact_feedback = ""
+		return
+	var feedback_types: Array[String] = trace.event_types()
+	if feedback_types.has("combo_triggered"):
+		_last_impact_feedback = "combo"
+	elif feedback_types.has("special_triggered"):
+		_last_impact_feedback = "special_triggered"
+	elif feedback_types.has("special_created"):
+		_last_impact_feedback = "special_created"
+	elif feedback_types.has("blocker_cleared") or feedback_types.has("blocker_damaged"):
+		_last_impact_feedback = "blocker_cleared" if feedback_types.has("blocker_cleared") else "blocker_damaged"
+	elif _last_cascade_depth > 1:
+		_last_impact_feedback = "cascade_%d" % _last_cascade_depth
+	else:
+		_last_impact_feedback = "match"
+
+func _trace_primary_feedback_kind(trace) -> String:
+	if trace == null:
+		return "match"
+	var feedback_types: Array[String] = trace.event_types()
+	if feedback_types.has("combo_triggered"):
+		return "combo"
+	if feedback_types.has("special_triggered"):
+		return "special"
+	if feedback_types.has("special_created"):
+		return "special_create"
+	if feedback_types.has("blocker_cleared") or feedback_types.has("blocker_damaged"):
+		return "blocker"
+	if _trace_cascade_depth(trace) > 1:
+		return "cascade"
+	return "match"
+
+func _emit_trace_feedback_immediate(trace) -> void:
+	_emit_semantic_impact_feedback(_trace_primary_feedback_kind(trace))
+
+func _on_board_motion_feedback_requested(kind: String, cascade: int, _clock: float) -> void:
+	if kind == "cascade":
+		_last_impact_feedback = "cascade_%d" % cascade
+	_emit_semantic_impact_feedback(kind)
+
+func _emit_semantic_impact_feedback(kind: String) -> void:
+	match kind:
+		"combo":
+			haptics.request_combo()
+		"blocker":
+			haptics.request_blocker()
+		"special", "special_create", "cascade":
+			haptics.request_special()
+		_:
+			haptics.request_match()
+	feedback_requested.emit(kind)
 
 func continue_after_win() -> bool:
 	if not _pending_win:
