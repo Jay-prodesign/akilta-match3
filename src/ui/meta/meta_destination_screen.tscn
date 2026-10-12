@@ -113,7 +113,7 @@ theme_override_font_sizes/font_size = 16
 text = "THE HOUSE OF CURIOS"
 horizontal_alignment = 1
 
-[node name="Title" type="Label" parent="FeatureLayout"]
+[node name="FeatureTitle" type="Label" parent="FeatureLayout"]
 layout_mode = 2
 theme_override_colors/font_color = Color(1, 0.941, 0.847, 1)
 theme_override_colors/font_outline_color = Color(0.02, 0.014, 0.028, 0.97)
@@ -132,34 +132,77 @@ text = "Destination detail"
 horizontal_alignment = 1
 autowrap_mode = 2
 
-[node name="Hero" type="PanelContainer" parent="FeatureLayout"]
+[node name="ChapterRitualProgress" type="Label" parent="FeatureLayout"]
+visible = false
+layout_mode = 2
+theme_override_colors/font_color = Color(0.831, 0.678, 0.439, 1)
+theme_override_colors/font_outline_color = Color(0.02, 0.014, 0.028, 0.9)
+theme_override_constants/outline_size = 3
+theme_override_font_sizes/font_size = 16
+text = "OPENING RITUAL · 0 / 3 DISPLAYS AWAKENED"
+horizontal_alignment = 1
+autowrap_mode = 2
+
+[node name="NoPurchasesNotice" type="Label" parent="FeatureLayout"]
+visible = false
+layout_mode = 2
+theme_override_colors/font_color = Color(0.831, 0.678, 0.439, 1)
+theme_override_font_sizes/font_size = 15
+text = "THE EMPORIUM IS SEALED · NO PURCHASES OR PAYMENTS"
+horizontal_alignment = 1
+autowrap_mode = 2
+
+[node name="ShopCurrencySummary" type="Label" parent="FeatureLayout"]
+visible = false
+layout_mode = 2
+theme_override_colors/font_color = Color(0.95, 0.816, 0.545, 1)
+theme_override_font_sizes/font_size = 17
+text = "HOUSE COINS  0 · MOONSTONES  0"
+horizontal_alignment = 1
+
+[node name="ShopCurrencyTruth" type="Label" parent="FeatureLayout"]
+visible = false
+layout_mode = 2
+theme_override_colors/font_color = Color(0.75, 0.65, 0.84, 1)
+theme_override_font_sizes/font_size = 13
+text = "EARNED IN PLAY · NOT PURCHASABLE"
+horizontal_alignment = 1
+
+[node name="FeatureHero" type="PanelContainer" parent="FeatureLayout"]
 custom_minimum_size = Vector2(0, 286)
 layout_mode = 2
 theme_override_styles/panel = SubResource("Hero")
 
-[node name="HeroRow" type="HBoxContainer" parent="FeatureLayout/Hero"]
+[node name="HeroRow" type="HBoxContainer" parent="FeatureLayout/FeatureHero"]
 layout_mode = 2
 theme_override_constants/separation = 20
 
-[node name="HeroArt" type="TextureRect" parent="FeatureLayout/Hero/HeroRow"]
+[node name="HeroArt" type="TextureRect" parent="FeatureLayout/FeatureHero/HeroRow"]
 custom_minimum_size = Vector2(270, 246)
 layout_mode = 2
 expand_mode = 1
 stretch_mode = 5
 
-[node name="HeroCopy" type="VBoxContainer" parent="FeatureLayout/Hero/HeroRow"]
+[node name="ShopFeaturedOfferArt" type="TextureRect" parent="FeatureLayout/FeatureHero/HeroRow"]
+visible = false
+custom_minimum_size = Vector2(270, 246)
+layout_mode = 2
+expand_mode = 1
+stretch_mode = 5
+
+[node name="HeroCopy" type="VBoxContainer" parent="FeatureLayout/FeatureHero/HeroRow"]
 layout_mode = 2
 size_flags_horizontal = 3
 theme_override_constants/separation = 7
 alignment = 1
 
-[node name="HeroKicker" type="Label" parent="FeatureLayout/Hero/HeroRow/HeroCopy"]
+[node name="FeatureHeroKicker" type="Label" parent="FeatureLayout/FeatureHero/HeroRow/HeroCopy"]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.831, 0.678, 0.439, 1)
 theme_override_font_sizes/font_size = 16
 text = "STATE"
 
-[node name="HeroTitle" type="Label" parent="FeatureLayout/Hero/HeroRow/HeroCopy"]
+[node name="FeatureHeroTitle" type="Label" parent="FeatureLayout/FeatureHero/HeroRow/HeroCopy"]
 layout_mode = 2
 theme_override_colors/font_color = Color(1, 0.941, 0.847, 1)
 theme_override_colors/font_outline_color = Color(0.02, 0.014, 0.028, 0.9)
@@ -168,14 +211,27 @@ theme_override_font_sizes/font_size = 28
 text = "HERO TITLE"
 autowrap_mode = 2
 
-[node name="HeroBody" type="Label" parent="FeatureLayout/Hero/HeroRow/HeroCopy"]
+[node name="HeroBody" type="Label" parent="FeatureLayout/FeatureHero/HeroRow/HeroCopy"]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.84, 0.76, 0.82, 1)
 theme_override_font_sizes/font_size = 17
 text = "Hero body"
 autowrap_mode = 2
 
+[node name="ShopDisabledAction" type="Button" parent="FeatureLayout/FeatureHero/HeroRow/HeroCopy"]
+visible = false
+custom_minimum_size = Vector2(0, 52)
+layout_mode = 2
+disabled = true
+theme_override_colors/font_color = Color(0.93, 0.86, 0.91, 1)
+theme_override_colors/font_disabled_color = Color(0.67, 0.61, 0.67, 1)
+theme_override_font_sizes/font_size = 16
+theme_override_styles/normal = SubResource("Secondary")
+theme_override_styles/disabled = SubResource("Secondary")
+text = "COMMERCE NOT CONNECTED"
+
 [node name="Actions" type="HBoxContainer" parent="FeatureLayout"]
+visible = false
 layout_mode = 2
 theme_override_constants/separation = 10
 
@@ -202,6 +258,73 @@ theme_override_styles/hover = SubResource("Secondary")
 theme_override_styles/pressed = SubResource("Secondary")
 theme_override_styles/disabled = SubResource("Secondary")
 text = "SECONDARY"
+
+[node name="DailyPracticeCard" type="PanelContainer" parent="FeatureLayout"]
+visible = false
+custom_minimum_size = Vector2(0, 138)
+layout_mode = 2
+theme_override_styles/panel = SubResource("Card")
+
+[node name="DailyContent" type="VBoxContainer" parent="FeatureLayout/DailyPracticeCard"]
+layout_mode = 2
+theme_override_constants/separation = 5
+
+[node name="DailyPracticeKicker" type="Label" parent="FeatureLayout/DailyPracticeCard/DailyContent"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.75, 0.65, 0.84, 1)
+theme_override_font_sizes/font_size = 14
+text = "DEVICE-LOCAL DAILY PRACTICE"
+horizontal_alignment = 1
+
+[node name="DailyPracticeTitle" type="Label" parent="FeatureLayout/DailyPracticeCard/DailyContent"]
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 0.941, 0.847, 1)
+theme_override_font_sizes/font_size = 20
+text = "DAILY HOUSE RITUAL · SEALED"
+horizontal_alignment = 1
+
+[node name="DailyPracticeTruth" type="Label" parent="FeatureLayout/DailyPracticeCard/DailyContent"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.831, 0.678, 0.439, 1)
+theme_override_font_sizes/font_size = 13
+text = "COMPLETE AN OPENING RITUAL TO UNLOCK LOCAL PRACTICE"
+horizontal_alignment = 1
+autowrap_mode = 2
+
+[node name="DailyPracticeAction" type="Button" parent="FeatureLayout/DailyPracticeCard/DailyContent"]
+custom_minimum_size = Vector2(0, 50)
+layout_mode = 2
+disabled = true
+theme_override_colors/font_color = Color(1, 0.941, 0.847, 1)
+theme_override_colors/font_disabled_color = Color(0.56, 0.49, 0.56, 1)
+theme_override_font_sizes/font_size = 17
+theme_override_styles/normal = SubResource("Secondary")
+theme_override_styles/hover = SubResource("Primary")
+theme_override_styles/pressed = SubResource("Primary")
+theme_override_styles/disabled = SubResource("Secondary")
+text = "RESTORE A DISPLAY TO UNLOCK"
+
+[node name="WeeklyMissionsAction" type="Button" parent="FeatureLayout"]
+visible = false
+custom_minimum_size = Vector2(0, 60)
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 0.941, 0.847, 1)
+theme_override_font_sizes/font_size = 18
+theme_override_styles/normal = SubResource("Primary")
+theme_override_styles/hover = SubResource("Primary")
+theme_override_styles/pressed = SubResource("Primary")
+text = "OPEN WEEKLY RITUALS"
+
+[node name="ProfileSettings" type="Button" parent="FeatureLayout"]
+visible = false
+custom_minimum_size = Vector2(0, 60)
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 0.941, 0.847, 1)
+theme_override_font_sizes/font_size = 18
+theme_override_styles/normal = SubResource("Primary")
+theme_override_styles/hover = SubResource("Primary")
+theme_override_styles/pressed = SubResource("Primary")
+text = "AUDIO & ACCESSIBILITY"
 
 [node name="CardScroll" type="ScrollContainer" parent="FeatureLayout"]
 layout_mode = 2
@@ -410,7 +533,7 @@ horizontal_alignment = 1
 vertical_alignment = 1
 autowrap_mode = 2
 
-[node name="Back" type="Button" parent="FeatureLayout"]
+[node name="BackToHouse" type="Button" parent="FeatureLayout"]
 custom_minimum_size = Vector2(0, 58)
 layout_mode = 2
 theme_override_colors/font_color = Color(0.96, 0.9, 0.84, 1)
