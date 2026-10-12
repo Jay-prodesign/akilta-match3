@@ -62,7 +62,7 @@ func _build_ritual_aids() -> void:
 		return
 	var panel := PanelContainer.new()
 	panel.name = "RitualAids"
-	panel.custom_minimum_size = Vector2(0, 86)
+	panel.custom_minimum_size = Vector2(0, 102)
 	var shell := StyleBoxFlat.new()
 	shell.bg_color = Color("#120D18", 0.94)
 	shell.border_color = Color("#D5AD70", 0.46)
@@ -70,8 +70,8 @@ func _build_ritual_aids() -> void:
 	shell.set_corner_radius_all(12)
 	shell.content_margin_left = 10
 	shell.content_margin_right = 10
-	shell.content_margin_top = 8
-	shell.content_margin_bottom = 8
+	shell.content_margin_top = 10
+	shell.content_margin_bottom = 10
 	panel.add_theme_stylebox_override("panel", shell)
 	var start_index := start_button.get_index()
 	content.add_child(panel)
@@ -84,18 +84,18 @@ func _build_ritual_aids() -> void:
 	heading.text = "IN-LEVEL AIDS"
 	heading.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	heading.add_theme_color_override("font_color", Color("#D5AD70"))
-	heading.add_theme_font_size_override("font_size", 14)
+	heading.add_theme_font_size_override("font_size", 16)
 	column.add_child(heading)
 	var row := HBoxContainer.new()
 	row.name = "AidRow"
 	row.add_theme_constant_override("separation", 6)
 	column.add_child(row)
 	for entry in [
-		{"label":"HINT", "art":"res://assets/pieces/moon_sigil.svg"},
+		{"label":"HINT", "art":"res://assets/pieces/moon_sigil.webp"},
 		{"label":"+3 MOVES", "art":"res://assets/pieces/potion.svg"}
 	]:
 		var chip := PanelContainer.new()
-		chip.custom_minimum_size = Vector2(0, 44)
+		chip.custom_minimum_size = Vector2(0, 52)
 		chip.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 		var chip_style := StyleBoxFlat.new()
 		chip_style.bg_color = Color("#28142D", 0.96)
@@ -109,7 +109,7 @@ func _build_ritual_aids() -> void:
 		chip_row.add_theme_constant_override("separation", 4)
 		chip.add_child(chip_row)
 		var art := TextureRect.new()
-		art.custom_minimum_size = Vector2(30, 30)
+		art.custom_minimum_size = Vector2(36, 36)
 		art.texture = PieceAssetLoader.ornament(String(entry["art"]))
 		art.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
 		art.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
@@ -118,7 +118,7 @@ func _build_ritual_aids() -> void:
 		var caption := Label.new()
 		caption.text = String(entry["label"])
 		caption.add_theme_color_override("font_color", Color("#F4E5D3"))
-		caption.add_theme_font_size_override("font_size", 14)
+		caption.add_theme_font_size_override("font_size", 17)
 		chip_row.add_child(caption)
 
 func _style_ritual_actions() -> void:
@@ -142,8 +142,8 @@ func _style_ritual_actions() -> void:
 		button.add_theme_stylebox_override("pressed", hover)
 		button.add_theme_color_override("font_color", ivory)
 		button.add_theme_color_override("font_hover_color", ivory)
-		button.add_theme_font_size_override("font_size", 24 if button == start_button else 19)
-		button.custom_minimum_size.y = maxf(button.custom_minimum_size.y, 58.0)
+		button.add_theme_font_size_override("font_size", 26 if button == start_button else 21)
+		button.custom_minimum_size.y = maxf(button.custom_minimum_size.y, 64.0)
 
 func configure_level(value: int, replay: bool = false) -> bool:
 	level_number = value
