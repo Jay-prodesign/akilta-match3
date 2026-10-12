@@ -213,6 +213,9 @@ func complete_level_win(transaction_id: String, level_id: String, curio_id: Stri
 		return false
 	if not _store.save(candidate.to_dict()):
 		return false
+	if _save_load_status != "backup_recovered":
+		_save_load_status = "primary"
+	_save_write_blocked_reason = ""
 	progress = candidate
 	if restoration_needed:
 		if not navigation.go(NavigationScript.Route.RESTORATION, {"reason": "level_reward_restoration"}):
