@@ -30,7 +30,7 @@ func _capture() -> void:
 	await process_frame
 	await process_frame
 
-	var room_view = screen.get_node_or_null("Layout/RoomView")
+	var room_view = screen.get_node_or_null("RoomView")
 	if room_view == null or not room_view.has_method("restoration_contract"):
 		printerr("CAPTURE_FAIL: House stage 3 restoration contract missing")
 		quit(1)
