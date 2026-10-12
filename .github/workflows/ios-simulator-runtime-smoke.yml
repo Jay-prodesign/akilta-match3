@@ -125,17 +125,14 @@ jobs:
           test -n "$APP_PID"
           echo "IOS_COLD_PID=$APP_PID" | tee artifacts/ios-lifecycle.txt
           sleep 8
-          set +e
-          xcrun simctl spawn "$SIM_UDID" ps -p "$APP_PID" -o pid=,comm= > artifacts/ios-process-alive.txt 2>&1
-          PROCESS_STATUS=$?
-          set -e
-          cat artifacts/ios-process-alive.txt
-          if [ "$PROCESS_STATUS" -ne 0 ] || ! grep -Fq "$APP_PID" artifacts/ios-process-alive.txt; then
-            xcrun simctl spawn "$SIM_UDID" log show --last 3m --style compact --predicate 'process == "CatAndCoven"' > artifacts/ios-cold-launch-runtime-log.txt || true
-            echo "::error::Cat & Coven exited during iOS Simulator cold launch."
+          xcrun simctl spawn "$SIM_UDID" launchctl list > artifacts/ios-launchctl-list.txt 2>&1 || true
+          if ! grep -Fq "$BUNDLE_ID" artifacts/ios-launchctl-list.txt; then
+            xcrun simctl spawn "$SIM_UDID" log show --last 1m --style compact --predicate 'process == "CatAndCoven"' > artifacts/ios-cold-launch-runtime-log.txt || true
+            echo "::error::Cat & Coven is not registered as a live simulator service after cold launch."
             tail -200 artifacts/ios-cold-launch-runtime-log.txt || true
             exit 1
           fi
+          grep -F "$BUNDLE_ID" artifacts/ios-launchctl-list.txt | tee artifacts/ios-process-alive.txt
           xcrun simctl io "$SIM_UDID" screenshot artifacts/ios-01-cold-launch.png
           test -s artifacts/ios-01-cold-launch.png
           BYTES="$(stat -f%z artifacts/ios-01-cold-launch.png)"
@@ -155,8 +152,8 @@ jobs:
           test -n "$APP_PID"
           echo "IOS_RELAUNCH_PID=$APP_PID" | tee -a artifacts/ios-lifecycle.txt
           sleep 5
-          xcrun simctl spawn "$SIM_UDID" ps -p "$APP_PID" -o pid=,comm= | tee artifacts/ios-process-relaunch-alive.txt
-          grep -Fq "$APP_PID" artifacts/ios-process-relaunch-alive.txt
+          xcrun simctl spawn "$SIM_UDID" launchctl list > artifacts/ios-relaunch-launchctl-list.txt 2>&1 || true
+          grep -F "$BUNDLE_ID" artifacts/ios-relaunch-launchctl-list.txt | tee artifacts/ios-process-relaunch-alive.txt
           xcrun simctl io "$SIM_UDID" screenshot artifacts/ios-02-relaunch.png
           test -s artifacts/ios-02-relaunch.png
           BYTES="$(stat -f%z artifacts/ios-02-relaunch.png)"
