@@ -5,6 +5,8 @@ extends RefCounted
 ## Sekiph82/Scrubbots scripts/haptics/haptics_controller.gd.
 ## Product-neutral infrastructure only: Match Game owns the event vocabulary and timings.
 
+const BLOCKER_MS := 28
+const COMBO_MS := 72
 const INVALID_MS := 9
 const UI_MS := 12
 const MATCH_MS := 18
@@ -15,7 +17,7 @@ const INVALID_THROTTLE_MS := 120
 const UI_THROTTLE_MS := 90
 const MATCH_THROTTLE_MS := 55
 
-enum Category { INVALID, UI, MATCH, SPECIAL, WIN, FAIL }
+enum Category { BLOCKER, COMBO, INVALID, UI, MATCH, SPECIAL, WIN, FAIL }
 
 var _enabled := true
 var _last_invalid_ms := -100000
@@ -38,6 +40,20 @@ func apply_settings(state: Dictionary) -> void:
 
 func is_enabled() -> bool:
 	return _enabled
+
+func request_blocker() -> bool:
+	_requests[Category.BLOCKER] += 1
+	if not _enabled:
+		_suppressed[Category.BLOCKER] += 1
+		return false
+	return _emit(BLOCKER_MS, Category.BLOCKER)
+
+func request_combo() -> bool:
+	_requests[Category.COMBO] += 1
+	if not _enabled:
+		_suppressed[Category.COMBO] += 1
+		return false
+	return _emit(COMBO_MS, Category.COMBO)
 
 func request_invalid() -> bool:
 	_requests[Category.INVALID] += 1

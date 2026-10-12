@@ -16,6 +16,7 @@ on:
       - "tests/visual/capture_level1_journey.gd"
       - "tests/visual/capture_golden_feedback_vfx.gd"
       - "tests/visual/capture_gameplay_urgency.gd"
+      - "tests/visual/capture_gameplay_impact_hierarchy.gd"
       - "tests/visual/capture_splash_states.gd"
       - "tests/visual/capture_level1_failure.gd"
       - "tests/visual/capture_three_level_progression.gd"
@@ -137,6 +138,21 @@ jobs:
           grep -Fq "CAPTURE_PASS: gameplay low-move urgency states" <<<"$output"
           test -s artifacts/gameplay-low-moves-warning.png
           test -s artifacts/gameplay-last-move-high-contrast.png
+
+      - name: Render gameplay impact hierarchy
+        shell: bash
+        run: |
+          set -uo pipefail
+          set +e
+          output=$(LIBGL_ALWAYS_SOFTWARE=1 xvfb-run -a ./godot --audio-driver Dummy --path . -s res://tests/visual/capture_gameplay_impact_hierarchy.gd 2>&1)
+          status=$?
+          set -e
+          printf '%s\n' "$output"
+          if [ "$status" -ne 0 ]; then exit "$status"; fi
+          if grep -Eq "SCRIPT ERROR:|(^| )ERROR:|CAPTURE_FAIL:" <<<"$output"; then exit 1; fi
+          grep -Fq "CAPTURE_PASS: gameplay blocker and special impact hierarchy" <<<"$output"
+          test -s artifacts/gameplay-blocker-clear-impact.png
+          test -s artifacts/gameplay-special-trigger-impact.png
 
       - name: Render Golden Loop failure and retry branch
         shell: bash
@@ -260,6 +276,8 @@ jobs:
             artifacts/feedback-02-reward-reveal.png
             artifacts/gameplay-low-moves-warning.png
             artifacts/gameplay-last-move-high-contrast.png
+            artifacts/gameplay-blocker-clear-impact.png
+            artifacts/gameplay-special-trigger-impact.png
             artifacts/golden-00-splash.png
             artifacts/golden-01-house-dormant.png
             artifacts/golden-02-chapter-route.png

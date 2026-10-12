@@ -69,6 +69,9 @@ var _motion_stages: Array[Dictionary] = []
 var _motion_visible_cells: Dictionary = {}
 var _reveal_at: Dictionary = {}
 var _last_clear_fx_count: int = 0
+var _last_blocker_fx_count: int = 0
+var _last_blocker_clear_fx_count: int = 0
+var _last_cascade_depth: int = 1
 
 func _motion_stage_cells() -> Dictionary:
 	var visible: Dictionary = _motion_initial_cells.duplicate()
@@ -129,6 +132,7 @@ func piece_asset_contract() -> Dictionary:
 func motion_contract() -> Dictionary:
 	var contract := MOTION_PROFILE.duplicate(true)
 	contract["cascade_sequencing"] = "separate_clear_fall_refill_windows"
+	contract["cascade_escalation"] = "depth_scaled_clear_burst"
 	contract["reduced_motion_supported"] = true
 	return contract
 
@@ -161,6 +165,9 @@ func feedback_vfx_contract() -> Dictionary:
 		"slot": "S05/match_board/board_fx",
 		"mode": "runtime_match_clear_fragment_burst",
 		"last_clear_fx_count": _last_clear_fx_count,
+		"last_blocker_fx_count": _last_blocker_fx_count,
+		"last_blocker_clear_fx_count": _last_blocker_clear_fx_count,
+		"last_cascade_depth": _last_cascade_depth,
 		"reduced_motion_supported": true,
 		"reduced_motion": _reduced_motion
 	}
@@ -274,10 +281,14 @@ func play_trace(trace) -> bool:
 func _build_motion(trace) -> void:
 	_motion_items.clear()
 	_last_clear_fx_count = 0
+	_last_blocker_fx_count = 0
+	_last_blocker_clear_fx_count = 0
+	_last_cascade_depth = 1
 	_reveal_at.clear()
 	_motion_cascade_count = 1
 	for event in trace.events:
 		_motion_cascade_count = maxi(_motion_cascade_count, int(event.get("cascade", 1)))
+	_last_cascade_depth = _motion_cascade_count
 	for event in trace.events:
 		var cascade := maxi(1, int(event.get("cascade", 1)))
 		var window := _cascade_window(cascade)
@@ -355,9 +366,13 @@ func _build_motion(trace) -> void:
 					_motion_items.append({"type": "spawn", "family": spawn_family, "at": spawn_pos, "cascade": cascade})
 				_remember_reveal(spawn_pos, lerpf(window.x, window.y, 0.98))
 			"blocker_damaged", "blocker_cleared":
+				var blocker_cleared := event_type == "blocker_cleared"
+				_last_blocker_fx_count += 1
+				if blocker_cleared:
+					_last_blocker_clear_fx_count += 1
 				_motion_items.append({
 					"type": "blocker",
-					"cleared": event_type == "blocker_cleared",
+					"cleared": blocker_cleared,
 					"at": _parse_pos(event.get("at", ""))
 				})
 			"shuffle":
@@ -923,18 +938,22 @@ func _draw_motion() -> void:
 				var center := rstart + direction * (0.26 * sin(rp * PI))
 				_draw_motion_piece(center, String(item["family"]), 1.0)
 			"clear":
-				var cp := _cascade_phase(int(item.get("cascade", 1)), 0.06, 0.46)
+				var cascade := int(item.get("cascade", 1))
+				var cp := _cascade_phase(cascade, 0.06, 0.46)
 				if cp <= 0.0 or cp >= 1.0:
 					continue
 				var ccenter := _cell_center(item["at"])
 				var cell_size := float(_board_geometry()["cell_size"])
-				_draw_motion_piece(ccenter, String(item["family"]), maxf(0.16, 1.0 - cp * 0.88))
+				var cascade_scale := 1.0 + 0.12 * float(maxi(0, cascade - 1))
+				_draw_motion_piece(ccenter, String(item["family"]), maxf(0.16, 1.0 - cp * 0.88) * cascade_scale)
 				var pulse := sin(cp * PI)
 				var clear_color := Color(GOLD)
-				clear_color.a = 0.72 * pulse
+				clear_color.a = minf(0.92, (0.72 + 0.06 * float(maxi(0, cascade - 1))) * pulse)
 				var lilac := Color(LILAC)
-				lilac.a = 0.34 * pulse
-				draw_arc(ccenter, cell_size * (0.16 + cp * 0.38), 0.0, TAU, 32, clear_color, 2.0 + 1.5 * pulse)
+				lilac.a = minf(0.58, (0.34 + 0.08 * float(maxi(0, cascade - 1))) * pulse)
+				draw_arc(ccenter, cell_size * (0.16 + cp * 0.38) * cascade_scale, 0.0, TAU, 32, clear_color, 2.0 + 1.5 * pulse)
+				for ring in range(mini(2, maxi(0, cascade - 1))):
+					draw_arc(ccenter, cell_size * (0.22 + cp * (0.42 + 0.10 * ring)), 0.0, TAU, 36, lilac, 1.8)
 				for ray_index in range(6):
 					var angle := TAU * float(ray_index) / 6.0 + float(item.get("cascade", 1)) * 0.19
 					var direction := Vector2(cos(angle), sin(angle))
@@ -982,12 +1001,24 @@ func _draw_motion() -> void:
 					for ring in range(3):
 						draw_arc(combo_center, float(_board_geometry()["cell_size"]) * (0.22 + combo_p * (0.30 + ring * 0.12)), 0.0, TAU, 40, combo_color, 2.0)
 			"blocker":
-				var bp := _phase_progress(0.18, 0.48)
+				var bp := _phase_progress(0.16, 0.52)
 				if bp > 0.0 and bp < 1.0:
 					var bcenter := _cell_center(item["at"])
-					var wax := Color("#C7728F")
-					wax.a = 0.78 * (1.0 - bp)
-					draw_arc(bcenter, float(_board_geometry()["cell_size"]) * (0.20 + bp * 0.30), 0.0, TAU, 28, wax, 3.0)
+					var cell_size := float(_board_geometry()["cell_size"])
+					var cleared := bool(item.get("cleared", false))
+					var impact := Color("#F0CE8A") if cleared else Color("#C7728F")
+					impact.a = (0.92 if cleared else 0.76) * (1.0 - bp)
+					draw_arc(bcenter, cell_size * (0.18 + bp * (0.48 if cleared else 0.30)), 0.0, TAU, 32, impact, 4.0 if cleared else 3.0)
+					if cleared:
+						for shard in range(6):
+							var angle := TAU * float(shard) / 6.0 + 0.18
+							var direction := Vector2(cos(angle), sin(angle))
+							var inner := bcenter + direction * cell_size * (0.10 + bp * 0.08)
+							var outer := bcenter + direction * cell_size * (0.20 + bp * 0.40)
+							draw_line(inner, outer, impact, 2.2)
+					else:
+						draw_line(bcenter + Vector2(-1, -1) * cell_size * 0.16, bcenter + Vector2(1, 1) * cell_size * 0.16, impact, 2.4)
+						draw_line(bcenter + Vector2(1, -1) * cell_size * 0.16, bcenter + Vector2(-1, 1) * cell_size * 0.16, impact, 2.4)
 			"shuffle":
 				var shuffle_p := _phase_progress(0.0, 0.62)
 				if shuffle_p > 0.0 and shuffle_p < 1.0:

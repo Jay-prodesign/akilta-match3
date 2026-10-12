@@ -67,6 +67,8 @@ var _result_reveal_fx: Control
 var _reduced_motion: bool = false
 var _high_contrast: bool = false
 var _moves_urgency_state: String = "normal"
+var _last_impact_feedback: String = ""
+var _last_cascade_depth: int = 1
 const LOW_MOVE_WARNING_THRESHOLD := 3
 const LAST_MOVE_THRESHOLD := 1
 
@@ -182,6 +184,9 @@ func load_level_path(path: String, seed_value: int = 1001) -> bool:
 	current_win_title = String(parsed.get("win_title", "THE CABINET STIRS"))
 	current_win_detail = String(parsed.get("win_detail", "Something in the Curio Boutique has awakened."))
 	current_retry_hint = String(parsed.get("retry_hint", ""))
+	_last_impact_feedback = ""
+	_last_cascade_depth = 1
+	_style_impact_hint("normal")
 	eyebrow_label.text = String(parsed.get("eyebrow", "CURIO BOUTIQUE"))
 	title_label.text = String(parsed.get("title", "Hidden Display"))
 	hint_label.text = String(parsed.get("hint", "Swipe a sigil."))
@@ -312,10 +317,29 @@ func attempt_swap(from: Vector2i, to: Vector2i):
 		if board_view.has_method("clear_teaching_move"):
 			board_view.clear_teaching_move()
 		var feedback_types: Array[String] = last_trace.event_types()
-		if feedback_types.has("combo_triggered") or feedback_types.has("special_triggered") or feedback_types.has("special_created"):
+		_last_cascade_depth = _trace_cascade_depth(last_trace)
+		if feedback_types.has("combo_triggered"):
+			_last_impact_feedback = "combo"
+			haptics.request_combo()
+			feedback_requested.emit("combo")
+		elif feedback_types.has("special_triggered"):
+			_last_impact_feedback = "special_triggered"
 			haptics.request_special()
 			feedback_requested.emit("special")
+		elif feedback_types.has("special_created"):
+			_last_impact_feedback = "special_created"
+			haptics.request_special()
+			feedback_requested.emit("special_create")
+		elif feedback_types.has("blocker_cleared") or feedback_types.has("blocker_damaged"):
+			_last_impact_feedback = "blocker_cleared" if feedback_types.has("blocker_cleared") else "blocker_damaged"
+			haptics.request_blocker()
+			feedback_requested.emit("blocker")
+		elif _last_cascade_depth > 1:
+			_last_impact_feedback = "cascade_%d" % _last_cascade_depth
+			haptics.request_special()
+			feedback_requested.emit("cascade")
 		else:
+			_last_impact_feedback = "match"
 			haptics.request_match()
 			feedback_requested.emit("match")
 		var terminal_result := String(last_trace.result)
@@ -359,16 +383,65 @@ func _refresh_move_feedback(trace) -> void:
 	if trace == null:
 		return
 	var types: Array[String] = trace.event_types()
+	var cascade_depth := _trace_cascade_depth(trace)
 	if types.has("combo_triggered"):
-		hint_label.text = "The relics answer together. The whole cabinet shudders."
+		hint_label.text = "COVEN COMBO · THE WHOLE CABINET ANSWERS"
+		_style_impact_hint("combo")
+	elif types.has("blocker_cleared"):
+		var remaining := int(board_state.remaining_blockers()) if board_state != null else 0
+		hint_label.text = "WAX SEAL SHATTERED · %s" % ("DISPLAY OPEN" if remaining == 0 else "%d REMAIN" % remaining)
+		_style_impact_hint("blocker")
+	elif types.has("blocker_damaged"):
+		hint_label.text = "WAX SEAL CRACKED · STRIKE BESIDE IT AGAIN"
+		_style_impact_hint("blocker")
 	elif types.has("special_created"):
-		hint_label.text = "A Moon Beam formed. Match it to unleash the whole row."
+		hint_label.text = "MOON BEAM FORMED · MATCH IT TO RELEASE THE LINE"
+		_style_impact_hint("special")
 	elif types.has("special_triggered"):
-		hint_label.text = "The sigil opens. Follow the chain reaction."
+		hint_label.text = "MOON BEAM RELEASED · THE CABINET ANSWERS"
+		_style_impact_hint("special")
+	elif cascade_depth > 1:
+		hint_label.text = "RITUAL CHAIN ×%d · KEEP WATCHING THE FALL" % cascade_depth
+		_style_impact_hint("cascade")
 	elif types.has("shuffle"):
-		hint_label.text = "No path remained. The House rearranged the sigils."
+		hint_label.text = "NO PATH REMAINED · THE HOUSE REARRANGES THE SIGILS"
+		_style_impact_hint("normal")
 	elif not bool(trace.accepted):
-		hint_label.text = "Those sigils refuse the arrangement. Try another adjacent swap."
+		hint_label.text = "THOSE SIGILS REFUSE THE ARRANGEMENT · TRY ANOTHER ADJACENT SWAP"
+		_style_impact_hint("invalid")
+
+func _trace_cascade_depth(trace) -> int:
+	if trace == null:
+		return 1
+	var depth := 1
+	for event in trace.events:
+		depth = maxi(depth, int(event.get("cascade", 1)))
+	return depth
+
+func _style_impact_hint(mode: String) -> void:
+	if hint_label == null:
+		return
+	var color := Color("#F4E5D3")
+	var size_px := 20
+	match mode:
+		"blocker":
+			color = Color("#F0CE8A")
+			size_px = 21
+		"special":
+			color = Color("#E8C987")
+			size_px = 21
+		"combo":
+			color = Color("#E7C8FF")
+			size_px = 22
+		"cascade":
+			color = Color("#DDB7F5")
+			size_px = 21
+		"invalid":
+			color = Color("#D8C5D2")
+		_:
+			pass
+	hint_label.add_theme_color_override("font_color", Color("#FFFFFF") if _high_contrast else color)
+	hint_label.add_theme_font_size_override("font_size", size_px)
 
 func _refresh_hud() -> void:
 	if board_state == null:
@@ -452,6 +525,9 @@ func gameplay_feel_contract() -> Dictionary:
 		"reduced_motion": _reduced_motion,
 		"high_contrast": _high_contrast,
 		"urgency_non_color_cue": _moves_urgency_state == "normal" or moves_label.text.contains("⚠") or moves_label.text.contains("LAST MOVE") or moves_label.text.contains("NO MOVES"),
+		"last_impact_feedback": _last_impact_feedback,
+		"last_cascade_depth": _last_cascade_depth,
+		"impact_copy": hint_label.text if hint_label != null else "",
 	}
 
 func _show_result_if_terminal(result: String) -> void:

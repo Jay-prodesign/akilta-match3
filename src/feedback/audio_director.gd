@@ -9,6 +9,10 @@ const AMBIENT_PATH := "res://assets/audio/music/curio_house_ambient.ogg"
 const CHIME_PATH := "res://assets/audio/sfx/ritual_chime.wav"
 
 const FEEDBACK := {
+	"blocker": {"pitch": 0.78, "gain_db": -33.0},
+	"special_create": {"pitch": 0.90, "gain_db": -32.0},
+	"combo": {"pitch": 1.04, "gain_db": -29.0},
+	"cascade": {"pitch": 0.99, "gain_db": -31.0},
 	"invalid": {"pitch": 0.72, "gain_db": -40.0},
 	"ui": {"pitch": 0.82, "gain_db": -38.0},
 	"match": {"pitch": 0.88, "gain_db": -34.0},
