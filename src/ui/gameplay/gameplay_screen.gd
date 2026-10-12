@@ -66,8 +66,8 @@ var _resource_life_label: Label
 var _resource_coin_label: Label
 var _resource_gem_label: Label
 var _player_lives: int = 5
-var _player_coins: int = 12340
-var _player_gems: int = 520
+var _player_coins: int = 0
+var _player_gems: int = 0
 var _result_proclamation: Label
 var _result_reward_values: Control
 var _result_reveal_fx: Control
