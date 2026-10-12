@@ -50,6 +50,9 @@ func _run() -> void:
 	await process_frame
 	var sealed_contract: Dictionary = screen.sealed_explanation_contract()
 	_expect(bool(sealed_contract.get("open", false)), "sealed future wing must open an explanation")
+	_expect(bool(sealed_contract.get("authored_scene", false)), "sealed future wing explanation must use the authored modal scene")
+	_expect(bool(sealed_contract.get("touch_target_ok", false)), "sealed future wing explanation close action must retain a mobile touch target")
+	_expect(not bool(sealed_contract.get("runtime_ui_factory", true)), "sealed explanation must not rebuild player-facing modal nodes at runtime")
 	_expect(bool(sealed_contract.get("sealed_truth", false)) and bool(sealed_contract.get("no_fake_unlock", false)), "sealed explanation must forbid fabricated unlock truth")
 	_expect(String(sealed_contract.get("sealed_kind", "")) == "future_chapter", "future wing sealed kind mismatch")
 	_expect(String(sealed_contract.get("reason", "")).contains("not playable in this build"), "future wing reason must state build availability")
