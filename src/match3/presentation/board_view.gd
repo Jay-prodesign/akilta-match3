@@ -6,7 +6,7 @@ signal trace_motion_finished
 
 const PieceVisuals = preload("res://src/match3/presentation/piece_visuals.gd")
 const PieceAssetLoader = preload("res://src/match3/presentation/piece_asset_loader.gd")
-const BOARD_FRAME_PATH := "res://assets/board/gbl_board_ritual_frame_9s_base_v01.webp"
+const BOARD_FRAME_PATH := "res://assets/board/gbl_board_ritual_frame_9s_base_v01.png"
 const SPECIAL_ASSET_PATHS := {
 	"line_h": "res://assets/specials/gbl_special_line_h_idle_v01.webp",
 	"line_v": "res://assets/specials/gbl_special_line_v_idle_v01.webp",
