@@ -14,6 +14,12 @@ func _run() -> void:
 	await process_frame
 	await process_frame
 
+	var title := screen.get_node_or_null("Layout/Title") as Label
+	var progress_label := screen.get_node_or_null("Layout/Progress") as Label
+	var intro := screen.get_node_or_null("Layout/Intro") as Label
+	_expect(title != null and title.get_theme_font_size("font_size") >= 46, "S03 Chapter title must retain mobile-readable hierarchy")
+	_expect(progress_label != null and progress_label.get_theme_font_size("font_size") >= 22, "S03 chapter progress must remain legible")
+	_expect(intro != null and intro.get_theme_font_size("font_size") >= 19, "S03 chapter intro copy must remain legible")
 	var route = screen.get_node_or_null("Layout/RoutePanel/Scroll/RouteView")
 	_expect(route != null, "S03 authored RouteView missing")
 	if route == null:
@@ -29,6 +35,8 @@ func _run() -> void:
 	_expect(bool(contract.get("authored_frontier_slots", false)), "S03 frontier focus and label slots must be authored")
 	_expect(bool(contract.get("frontier_raster_loaded", false)), "S03 frontier marker must use production raster art")
 	_expect(bool(contract.get("raster_relics_loaded", false)), "S03 opening relic identity art must use production raster assets")
+	_expect(bool(contract.get("opening_label_readability", false)), "S03 opening ritual captions must retain readable authored plates")
+	_expect(bool(contract.get("frontier_label_readability", false)), "S03 CURRENT RITUAL label must retain readable authored plate")
 	_expect(not bool(contract.get("runtime_node_factory", true)), "S03 must not rebuild route nodes at runtime")
 
 	for level_number in range(1, 11):
