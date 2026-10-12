@@ -129,7 +129,8 @@ jobs:
           PY
           cat artifacts/simulator-choice.env
           cat artifacts/simulator-choice.env >> "$GITHUB_ENV"
-          source artifacts/simulator-choice.env
+          SIM_UDID="$(grep '^SIM_UDID=' artifacts/simulator-choice.env | cut -d= -f2-)"
+          test -n "$SIM_UDID"
           xcrun simctl boot "$SIM_UDID" 2>/dev/null || true
           xcrun simctl bootstatus "$SIM_UDID" -b
 
