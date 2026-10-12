@@ -33,6 +33,15 @@ func _run() -> void:
 		var loaded: bool = bool(screen.load_level_path(LEVEL_PATH, 1001))
 		_expect(loaded, "GameplayScreen must load authored Level 1 content")
 
+	_expect(screen.has_method("booster_asset_contract"), "GameplayScreen must expose its contract-owned booster art family")
+	if screen.has_method("booster_asset_contract"):
+		var booster_contract: Dictionary = screen.booster_asset_contract()
+		_expect(bool(booster_contract.get("raster_runtime", false)), "all gameplay booster art must be raster-first at runtime")
+		var loaded_boosters: Dictionary = booster_contract.get("loaded", {})
+		_expect(loaded_boosters.size() == 3, "gameplay must register Hint, +3 Moves and Retry booster art")
+		for booster_key in ["hint", "plus_moves", "retry"]:
+			_expect(bool(loaded_boosters.get(booster_key, false)), "%s gameplay booster art must load" % booster_key)
+
 	var board = screen.get("board_state")
 	_expect(board != null, "GameplayScreen must own logical board_state")
 	if board != null:
