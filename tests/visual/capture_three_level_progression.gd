@@ -477,7 +477,7 @@ func _play_level(app: Node, level_number: int) -> bool:
 		var restoration = app.current_screen()
 		var restoration_card: PanelContainer = restoration.get_node_or_null("RestorationOverlay/CeremonyCard") as PanelContainer if restoration != null else null
 		var restoration_continue: Button = restoration.get_node_or_null("RestorationOverlay/CeremonyCard/CeremonyContent/CeremonyRow/Copy/Continue") as Button if restoration != null else null
-		var restoration_room = restoration.get_node_or_null("Layout/RoomView") if restoration != null else null
+		var restoration_room = restoration.get_node_or_null("RoomView") if restoration != null else null
 		if restoration_continue == null or restoration_card == null or restoration_room == null:
 			_fail(app, "Level %d restoration ceremony surface is incomplete" % level_number)
 			return false
