@@ -1660,7 +1660,7 @@
       ],
       "reuse": "chapter",
       "priority": "P0",
-      "production_status": "production_state_pair_candidate_runtime_validation",
+      "production_status": "runtime_connected_raster_state_pair_verified",
       "current_path": "assets/blockers/ch01_blocker_wax_seal_intact_v01.webp",
       "architecture_owned": true,
       "contract_owners": [
@@ -1686,7 +1686,7 @@
         "assets/blockers/ch01_blocker_wax_seal_cracked_v01.svg"
       ],
       "technical_policy": "webp_raster_first_runtime__wax_seal_semantics__owned_svg_fallback",
-      "provenance": "AKILTA first-party Wax Seal production state pair derived from the Curio House seal language; raster runtime art replaces the temporary skull marker. Render/play validation required before approval.",
+      "provenance": "AKILTA first-party Wax Seal production state pair derived from the Curio House seal language; raster runtime art replaces the temporary skull marker. Verified in Godot 4.7.2 gameplay and rendered Level 2 evidence.",
       "screen": [
         "S05"
       ],
