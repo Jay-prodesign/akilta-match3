@@ -3,6 +3,8 @@ name: P0 Golden Loop Render Verification
 on:
   push:
     branches:
+      - main
+      - "feat/p0-render-main-gate"
       - p0/bootstrap
       - "p1/**"
       - "feat/**"
