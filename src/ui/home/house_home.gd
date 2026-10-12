@@ -212,17 +212,17 @@ func show_restoration_ceremony(curio_id: String, stage: int) -> void:
 	add_child(overlay)
 
 	var veil := ColorRect.new()
-	veil.color = Color(0.02, 0.015, 0.03, 0.30)
+	veil.color = Color(0.02, 0.015, 0.03, 0.22)
 	veil.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	veil.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	overlay.add_child(veil)
 
 	var panel := PanelContainer.new()
 	panel.name = "CeremonyCard"
-	panel.anchor_left = 0.08
-	panel.anchor_right = 0.92
-	panel.anchor_top = 0.53
-	panel.anchor_bottom = 0.70
+	panel.anchor_left = 0.06
+	panel.anchor_right = 0.94
+	panel.anchor_top = 0.70
+	panel.anchor_bottom = 0.82
 	var shell := StyleBoxFlat.new()
 	shell.bg_color = Color("#09070D", 0.985)
 	shell.border_color = Color("#D5AD70", 0.88)
@@ -237,19 +237,53 @@ func show_restoration_ceremony(curio_id: String, stage: int) -> void:
 	panel.add_theme_stylebox_override("panel", shell)
 	overlay.add_child(panel)
 
-	var ceremony := VBoxContainer.new()
-	ceremony.name = "CeremonyContent"
-	ceremony.add_theme_constant_override("separation", 6)
-	panel.add_child(ceremony)
+	var header := VBoxContainer.new()
+	header.name = "RestorationHeader"
+	header.anchor_left = 0.08
+	header.anchor_right = 0.92
+	header.anchor_top = 0.09
+	header.anchor_bottom = 0.24
+	header.add_theme_constant_override("separation", 4)
+	overlay.add_child(header)
 	var section := Label.new()
 	section.text = "HOUSE RESTORATION"
 	section.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	section.add_theme_color_override("font_color", Color("#D5AD70"))
 	section.add_theme_font_size_override("font_size", 18)
-	ceremony.add_child(section)
-	var divider := HSeparator.new()
-	divider.modulate = Color("#D5AD70", 0.45)
-	ceremony.add_child(divider)
+	header.add_child(section)
+	var hero_title := Label.new()
+	hero_title.name = "RestorationHeroTitle"
+	hero_title.text = _curio_name(curio_id)
+	hero_title.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	hero_title.add_theme_color_override("font_color", Color("#FFF0D8"))
+	hero_title.add_theme_color_override("font_outline_color", Color(0.02, 0.01, 0.03, 0.96))
+	hero_title.add_theme_constant_override("outline_size", 5)
+	hero_title.add_theme_font_size_override("font_size", 34)
+	header.add_child(hero_title)
+	var hero_copy := Label.new()
+	hero_copy.text = "THE HOUSE REMEMBERS"
+	hero_copy.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	hero_copy.add_theme_color_override("font_color", Color("#D9C5D0"))
+	hero_copy.add_theme_font_size_override("font_size", 16)
+	header.add_child(hero_copy)
+
+	var hero_art := TextureRect.new()
+	hero_art.name = "AwakeningCurio"
+	hero_art.anchor_left = 0.34
+	hero_art.anchor_right = 0.66
+	hero_art.anchor_top = 0.27
+	hero_art.anchor_bottom = 0.55
+	hero_art.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+	hero_art.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+	hero_art.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	hero_art.texture = _curio_texture(curio_id)
+	hero_art.modulate = Color(1.0, 0.95, 0.82, 1.0)
+	overlay.add_child(hero_art)
+
+	var ceremony := VBoxContainer.new()
+	ceremony.name = "CeremonyContent"
+	ceremony.add_theme_constant_override("separation", 5)
+	panel.add_child(ceremony)
 	var row := HBoxContainer.new()
 	row.name = "CeremonyRow"
 	row.add_theme_constant_override("separation", 12)
@@ -257,7 +291,7 @@ func show_restoration_ceremony(curio_id: String, stage: int) -> void:
 
 	var art := TextureRect.new()
 	art.name = "RestoredCurioArt"
-	art.custom_minimum_size = Vector2(160, 160)
+	art.custom_minimum_size = Vector2(82, 82)
 	art.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
 	art.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
 	art.texture = _curio_texture(curio_id)
@@ -269,30 +303,18 @@ func show_restoration_ceremony(curio_id: String, stage: int) -> void:
 	copy.add_theme_constant_override("separation", 5)
 	row.add_child(copy)
 
-	var kicker := Label.new()
-	kicker.text = "THE HOUSE REMEMBERS"
-	kicker.add_theme_color_override("font_color", Color("#D5AD70"))
-	kicker.add_theme_font_size_override("font_size", 18)
-	copy.add_child(kicker)
-
-	var title := Label.new()
-	title.text = _curio_name(curio_id)
-	title.add_theme_color_override("font_color", Color("#FFF0D8"))
-	title.add_theme_font_size_override("font_size", 30)
-	copy.add_child(title)
-
 	var body := Label.new()
 	body.text = _restoration_copy(stage)
 	body.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	body.add_theme_color_override("font_color", Color("#DDCED6"))
-	body.add_theme_font_size_override("font_size", 18)
+	body.add_theme_font_size_override("font_size", 19)
 	copy.add_child(body)
 
 	var button := Button.new()
 	button.name = "Continue"
 	button.text = "CONTINUE"
-	button.custom_minimum_size = Vector2(0, 56)
-	button.add_theme_font_size_override("font_size", 20)
+	button.custom_minimum_size = Vector2(0, 58)
+	button.add_theme_font_size_override("font_size", 21)
 	var normal := StyleBoxFlat.new()
 	normal.bg_color = Color("#4A1A51")
 	normal.border_color = Color("#D5AD70")
@@ -373,11 +395,11 @@ func _animate_restoration_state(curio_id: String, stage: int, current_curios: Ar
 		tween.tween_callback(awakening_echo.queue_free)
 
 func _curio_texture(curio_id: String) -> Texture2D:
-	var path := "res://assets/curios/ch01_curio_moon_cameo_awakened_v01.svg"
+	var path := "res://assets/curios/ch01_curio_moon_cameo_awakened_v01.webp"
 	if curio_id == "moth_reliquary":
-		path = "res://assets/curios/ch01_curio_moth_reliquary.svg"
+		path = "res://assets/curios/ch01_curio_moth_reliquary.png"
 	elif curio_id == "thorned_locket":
-		path = "res://assets/curios/ch01_curio_thorned_locket.svg"
+		path = "res://assets/curios/ch01_curio_thorned_locket.png"
 	return PieceAssetLoader.ornament(path)
 
 func _curio_name(curio_id: String) -> String:

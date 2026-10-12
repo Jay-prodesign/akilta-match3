@@ -18,9 +18,9 @@ const PieceAssetLoader = preload("res://src/match3/presentation/piece_asset_load
 const ScreenArt = preload("res://src/ui/shared/screen_art_registry.gd")
 const BACKDROP_ASSET_ID := "hub_bg_grandhall"
 var _backdrop: Texture2D
-const CAT_PORTRAIT_PATH := "res://assets/pieces/black_cat.svg"
-const MOTH_RELIQUARY_PATH := "res://assets/curios/ch01_curio_moth_reliquary.svg"
-const THORNED_LOCKET_PATH := "res://assets/curios/ch01_curio_thorned_locket.svg"
+const CAT_PORTRAIT_PATH := "res://assets/pieces/black_cat.webp"
+const MOTH_RELIQUARY_PATH := "res://assets/curios/ch01_curio_moth_reliquary.png"
+const THORNED_LOCKET_PATH := "res://assets/curios/ch01_curio_thorned_locket.png"
 var _cat_portrait: Texture2D
 var _moth_reliquary: Texture2D
 var _thorned_locket: Texture2D
@@ -30,12 +30,7 @@ func _ready() -> void:
 	# back to a procedurally drawn room or an SVG environment when production art
 	# is missing; missing art must remain visible as a production failure.
 	_backdrop = ScreenArt.texture(BACKDROP_ASSET_ID)
-	var file := FileAccess.open(CAT_PORTRAIT_PATH, FileAccess.READ)
-	if file != null:
-		var image := Image.new()
-		if image.load_svg_from_string(file.get_as_text(), 1.0) == OK and not image.is_empty():
-			_cat_portrait = ImageTexture.create_from_image(image)
-		file.close()
+	_cat_portrait = PieceAssetLoader.ornament(CAT_PORTRAIT_PATH)
 	_moth_reliquary = PieceAssetLoader.ornament(MOTH_RELIQUARY_PATH)
 	_thorned_locket = PieceAssetLoader.ornament(THORNED_LOCKET_PATH)
 	queue_redraw()
