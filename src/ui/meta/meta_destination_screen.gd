@@ -10,6 +10,7 @@ const PieceAssetLoader = preload("res://src/match3/presentation/piece_asset_load
 
 var _feature_key: String = ""
 var _daily_level: int = 0
+var _hero_asset_path: String = ""
 
 @onready var world_art: TextureRect = $WorldArt
 @onready var title: Label = $FeatureLayout/FeatureTitle
@@ -142,6 +143,7 @@ func configure(feature_key: String, state: Dictionary) -> bool:
 		hero_art.texture = PieceAssetLoader.ornament(hero_path)
 		if hero_art.texture == null:
 			return false
+	_hero_asset_path = hero_path
 	_apply_cards(cards)
 	return true
 
@@ -162,7 +164,9 @@ func _apply_cards(cards: Array[Dictionary]) -> void:
 		var card_title := card.get_node("Row/Copy/Title") as Label
 		var body := card.get_node("Row/Copy/Body") as Label
 		var status := card.get_node("Row/Copy/Status") as Label
-		art.texture = PieceAssetLoader.ornament(String(entry.get("art", "")))
+		var art_path := String(entry.get("art", ""))
+		art.texture = PieceAssetLoader.ornament(art_path)
+		art.set_meta("asset_path", art_path)
 		kicker.text = String(entry.get("kicker", ""))
 		card_title.text = String(entry.get("title", ""))
 		body.text = String(entry.get("body", ""))
@@ -182,7 +186,8 @@ func screen_contract() -> Dictionary:
 		"code_built_panels": false,
 		"north_star_title_hierarchy": title != null and title.get_theme_font_size("font_size") >= 52,
 		"north_star_hero_scale": ($FeatureLayout/FeatureHero as PanelContainer).custom_minimum_size.y >= 320.0 and ((shop_offer_art.custom_minimum_size.x if _feature_key == "shop" else hero_art.custom_minimum_size.x) >= 290.0),
-		"raster_feature_art": (String(shop_offer_art.texture.resource_path if _feature_key == "shop" and shop_offer_art.texture != null else hero_art.texture.resource_path if hero_art.texture != null else "")).to_lower().ends_with(".webp") or (String(shop_offer_art.texture.resource_path if _feature_key == "shop" and shop_offer_art.texture != null else hero_art.texture.resource_path if hero_art.texture != null else "")).to_lower().ends_with(".png"),
+		"hero_asset_path": _hero_asset_path,
+		"raster_feature_art": _hero_asset_path.to_lower().ends_with(".webp") or _hero_asset_path.to_lower().ends_with(".png"),
 		"rounded_primary_actions": weekly_action.get_theme_stylebox("normal") != null and profile_settings.get_theme_stylebox("normal") != null,
 
 	}
