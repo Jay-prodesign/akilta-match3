@@ -202,6 +202,7 @@ jobs:
           test -s artifacts/progression-house-stage1.png
           test -s artifacts/progression-house-stage2.png
           test -s artifacts/progression-house-stage3.png
+          test -s artifacts/progression-house-thorn-detail.png
           test -s artifacts/progression-level1-gameplay.png
           test -s artifacts/progression-level2-gameplay.png
           test -s artifacts/progression-level3-gameplay.png
@@ -315,6 +316,7 @@ jobs:
             artifacts/progression-house-stage1.png
             artifacts/progression-house-stage2.png
             artifacts/progression-house-stage3.png
+            artifacts/progression-house-thorn-detail.png
             artifacts/progression-level1-gameplay.png
             artifacts/progression-level2-gameplay.png
             artifacts/progression-level3-gameplay.png
