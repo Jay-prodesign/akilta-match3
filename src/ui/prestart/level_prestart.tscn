@@ -4,22 +4,22 @@
 [ext_resource type="Script" path="res://src/ui/shared/moon_cameo_ritual_view.gd" id="2_cameo"]
 
 [sub_resource type="StyleBoxFlat" id="Card"]
-bg_color = Color(0.027, 0.020, 0.035, 0.945)
+bg_color = Color(0.020, 0.014, 0.030, 0.975)
 border_width_left = 2
 border_width_top = 2
 border_width_right = 2
 border_width_bottom = 2
 border_color = Color(0.851, 0.71, 0.416, 0.72)
-corner_radius_top_left = 16
-corner_radius_top_right = 16
-corner_radius_bottom_right = 16
-corner_radius_bottom_left = 16
+corner_radius_top_left = 22
+corner_radius_top_right = 22
+corner_radius_bottom_right = 22
+corner_radius_bottom_left = 22
 shadow_color = Color(0, 0, 0, 0.68)
 shadow_size = 18
-content_margin_left = 22.0
-content_margin_right = 22.0
-content_margin_top = 20.0
-content_margin_bottom = 20.0
+content_margin_left = 28.0
+content_margin_right = 28.0
+content_margin_top = 24.0
+content_margin_bottom = 24.0
 
 [sub_resource type="StyleBoxFlat" id="Start"]
 bg_color = Color(0.294, 0.102, 0.318, 0.98)
@@ -28,10 +28,10 @@ border_width_top = 2
 border_width_right = 2
 border_width_bottom = 2
 border_color = Color(0.851, 0.71, 0.416, 0.9)
-corner_radius_top_left = 12
-corner_radius_top_right = 12
-corner_radius_bottom_right = 12
-corner_radius_bottom_left = 12
+corner_radius_top_left = 26
+corner_radius_top_right = 26
+corner_radius_bottom_right = 26
+corner_radius_bottom_left = 26
 
 [sub_resource type="StyleBoxFlat" id="Back"]
 bg_color = Color(0.075, 0.055, 0.09, 0.94)
@@ -68,10 +68,10 @@ border_width_top = 2
 border_width_right = 2
 border_width_bottom = 2
 border_color = Color(0.976, 0.835, 0.552, 1)
-corner_radius_top_left = 12
-corner_radius_top_right = 12
-corner_radius_bottom_right = 12
-corner_radius_bottom_left = 12
+corner_radius_top_left = 26
+corner_radius_top_right = 26
+corner_radius_bottom_right = 26
+corner_radius_bottom_left = 26
 
 [sub_resource type="StyleBoxFlat" id="AidPanel"]
 bg_color = Color(0.071, 0.051, 0.094, 0.94)
@@ -135,28 +135,29 @@ layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
-offset_left = 18.0
-offset_top = 18.0
-offset_right = -18.0
-offset_bottom = -18.0
-theme_override_constants/separation = 12
+offset_left = 26.0
+offset_top = 20.0
+offset_right = -26.0
+offset_bottom = -20.0
+theme_override_constants/separation = 10
 alignment = 1
 
 [node name="Eyebrow" type="Label" parent="Layout"]
-custom_minimum_size = Vector2(0, 44)
+custom_minimum_size = Vector2(0, 54)
 layout_mode = 2
 theme_override_colors/font_color = Color(0.851, 0.71, 0.416, 1)
 theme_override_colors/font_outline_color = Color(0.02, 0.015, 0.025, 0.92)
 theme_override_constants/outline_size = 4
-theme_override_font_sizes/font_size = 20
+theme_override_font_sizes/font_size = 22
 theme_override_styles/normal = SubResource("EyebrowBand")
 text = "CURIO BOUTIQUE · RITUAL PREVIEW"
 horizontal_alignment = 1
 vertical_alignment = 1
 
 [node name="Card" type="PanelContainer" parent="Layout"]
-custom_minimum_size = Vector2(0, 0)
+custom_minimum_size = Vector2(900, 0)
 layout_mode = 2
+size_flags_horizontal = 4
 size_flags_vertical = 0
 theme_override_styles/panel = SubResource("Card")
 
@@ -166,7 +167,7 @@ theme_override_constants/separation = 8
 alignment = 0
 
 [node name="RitualArt" type="Control" parent="Layout/Card/Content"]
-custom_minimum_size = Vector2(0, 272)
+custom_minimum_size = Vector2(0, 310)
 layout_mode = 2
 mouse_filter = 2
 clip_contents = true
@@ -190,7 +191,7 @@ modulate = Color(0.88, 0.82, 0.9, 0.72)
 [node name="Level" type="Label" parent="Layout/Card/Content"]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.851, 0.71, 0.416, 1)
-theme_override_font_sizes/font_size = 22
+theme_override_font_sizes/font_size = 32
 text = "LEVEL 1"
 horizontal_alignment = 1
 
@@ -199,32 +200,38 @@ layout_mode = 2
 theme_override_colors/font_color = Color(0.988, 0.933, 0.831, 1)
 theme_override_colors/font_outline_color = Color(0.02, 0.015, 0.025, 0.96)
 theme_override_constants/outline_size = 5
-theme_override_font_sizes/font_size = 40
+theme_override_font_sizes/font_size = 50
 text = "Moonlit Cabinet"
 horizontal_alignment = 1
 
 [node name="Objective" type="Label" parent="Layout/Card/Content"]
+custom_minimum_size = Vector2(0, 60)
 layout_mode = 2
 theme_override_colors/font_color = Color(0.89, 0.82, 0.84, 1)
-theme_override_font_sizes/font_size = 26
+theme_override_font_sizes/font_size = 34
+theme_override_styles/normal = SubResource("EyebrowBand")
 text = "GOAL · GATHER 6 MOON SIGILS"
+vertical_alignment = 1
 horizontal_alignment = 1
 
 [node name="Moves" type="Label" parent="Layout/Card/Content"]
+custom_minimum_size = Vector2(0, 48)
 layout_mode = 2
 theme_override_colors/font_color = Color(0.749, 0.647, 0.847, 1)
-theme_override_font_sizes/font_size = 22
+theme_override_font_sizes/font_size = 29
 text = "20 MOVES"
 horizontal_alignment = 1
 
 [node name="Reward" type="Label" parent="Layout/Card/Content"]
+custom_minimum_size = Vector2(0, 50)
 layout_mode = 2
 theme_override_colors/font_color = Color(0.902, 0.772, 0.502, 1)
-theme_override_font_sizes/font_size = 24
+theme_override_font_sizes/font_size = 29
 text = "REWARD · MOON CAMEO"
 horizontal_alignment = 1
 
 [node name="Note" type="Label" parent="Layout/Card/Content"]
+visible = false
 layout_mode = 2
 theme_override_colors/font_color = Color(0.72, 0.66, 0.73, 1)
 theme_override_font_sizes/font_size = 22
@@ -233,7 +240,7 @@ horizontal_alignment = 1
 autowrap_mode = 2
 
 [node name="RitualAids" type="PanelContainer" parent="Layout/Card/Content"]
-custom_minimum_size = Vector2(0, 102)
+custom_minimum_size = Vector2(0, 128)
 layout_mode = 2
 theme_override_styles/panel = SubResource("AidPanel")
 
@@ -244,8 +251,8 @@ theme_override_constants/separation = 5
 [node name="RitualAidsHeading" type="Label" parent="Layout/Card/Content/RitualAids/Column"]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.831, 0.678, 0.439, 1)
-theme_override_font_sizes/font_size = 18
-text = "RITUAL HELP"
+theme_override_font_sizes/font_size = 22
+text = "SELECT RITUAL HELP"
 horizontal_alignment = 1
 
 [node name="AidRow" type="HBoxContainer" parent="Layout/Card/Content/RitualAids/Column"]
@@ -253,7 +260,7 @@ layout_mode = 2
 theme_override_constants/separation = 6
 
 [node name="KeeperChip" type="PanelContainer" parent="Layout/Card/Content/RitualAids/Column/AidRow"]
-custom_minimum_size = Vector2(0, 56)
+custom_minimum_size = Vector2(0, 70)
 layout_mode = 2
 size_flags_horizontal = 3
 theme_override_styles/panel = SubResource("AidChip")
@@ -264,7 +271,7 @@ theme_override_constants/separation = 4
 alignment = 1
 
 [node name="Art" type="TextureRect" parent="Layout/Card/Content/RitualAids/Column/AidRow/KeeperChip/Content"]
-custom_minimum_size = Vector2(36, 36)
+custom_minimum_size = Vector2(48, 48)
 layout_mode = 2
 mouse_filter = 2
 expand_mode = 1
@@ -273,11 +280,11 @@ stretch_mode = 5
 [node name="Caption" type="Label" parent="Layout/Card/Content/RitualAids/Column/AidRow/KeeperChip/Content"]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.96, 0.9, 0.83, 1)
-theme_override_font_sizes/font_size = 20
+theme_override_font_sizes/font_size = 21
 text = "ASK KEEPER"
 
 [node name="RecoveryChip" type="PanelContainer" parent="Layout/Card/Content/RitualAids/Column/AidRow"]
-custom_minimum_size = Vector2(0, 56)
+custom_minimum_size = Vector2(0, 70)
 layout_mode = 2
 size_flags_horizontal = 3
 theme_override_styles/panel = SubResource("AidChip")
@@ -288,7 +295,7 @@ theme_override_constants/separation = 4
 alignment = 1
 
 [node name="Art" type="TextureRect" parent="Layout/Card/Content/RitualAids/Column/AidRow/RecoveryChip/Content"]
-custom_minimum_size = Vector2(36, 36)
+custom_minimum_size = Vector2(48, 48)
 layout_mode = 2
 mouse_filter = 2
 expand_mode = 1
@@ -297,11 +304,11 @@ stretch_mode = 5
 [node name="Caption" type="Label" parent="Layout/Card/Content/RitualAids/Column/AidRow/RecoveryChip/Content"]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.96, 0.9, 0.83, 1)
-theme_override_font_sizes/font_size = 20
+theme_override_font_sizes/font_size = 21
 text = "FAIL RECOVERY · +3"
 
 [node name="Start" type="Button" parent="Layout/Card/Content"]
-custom_minimum_size = Vector2(0, 72)
+custom_minimum_size = Vector2(0, 88)
 layout_mode = 2
 theme_override_colors/font_color = Color(0.988, 0.933, 0.831, 1)
 theme_override_colors/font_hover_color = Color(0.988, 0.933, 0.831, 1)
@@ -312,7 +319,7 @@ theme_override_styles/pressed = SubResource("StartHover")
 text = "PLAY"
 
 [node name="Back" type="Button" parent="Layout"]
-custom_minimum_size = Vector2(0, 64)
+custom_minimum_size = Vector2(0, 60)
 layout_mode = 2
 theme_override_colors/font_color = Color(0.945, 0.91, 0.866, 1)
 theme_override_colors/font_hover_color = Color(0.988, 0.933, 0.831, 1)
