@@ -84,7 +84,18 @@ func _run() -> void:
 	_expect(str(app.current_route_name()) == "map", "Curio Boutique selection must open chapter map")
 	var map = app.current_screen()
 	_expect(map.get_level_button(2) != null and not map.get_level_button(2).disabled, "Level 2 must unlock after Level 1 completion")
-	_expect(map.get_level_button(3) != null and map.get_level_button(3).disabled, "Level 3 must stay progression-locked until Level 2 completion")
+	_expect(map.get_level_button(3) != null and not map.get_level_button(3).disabled, "Level 3 must stay progression-locked but inspectable until Level 2 completion")
+	var route = map.get_node_or_null("Layout/RoutePanel/Scroll/RouteView")
+	_expect(route != null and String(route.get_level_state(3)) == "locked", "Level 3 must preserve progression-locked state truth")
+	map.get_level_button(3).emit_signal("pressed")
+	await process_frame
+	await process_frame
+	var sealed: Dictionary = map.sealed_explanation_contract()
+	_expect(String(sealed.get("sealed_kind", "")) == "progression_locked", "Level 3 inspection must identify progression lock")
+	var sealed_close: Button = map.get_node_or_null("LockedExplanation/LockedPanel/Content/Close") as Button
+	if sealed_close != null:
+		sealed_close.emit_signal("pressed")
+		await process_frame
 	_expect(app.show_prestart(2), "Level 2 prestart must be accessible in the internal review after Level 1 win")
 	_expect(app.current_screen().get_node("Layout/Back").text == "BACK TO MAP", "map-origin prestart must identify the correct back destination")
 	app.current_screen().get_node("Layout/Back").emit_signal("pressed")
