@@ -38,6 +38,7 @@ on:
       - "src/ui/shared/**"
       - "src/settings/**"
       - "src/ui/settings/**"
+      - "src/ui/meta/**"
       - "src/match3/domain/**"
       - "src/match3/presentation/**"
       - "content/levels/**"
