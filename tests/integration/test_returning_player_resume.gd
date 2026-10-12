@@ -56,6 +56,29 @@ func _run() -> void:
 		return _fail(app, "House did not restore 2/3 Curio truth")
 	if play == null or play.text != "CONTINUE CURIO BOUTIQUE":
 		return _fail(app, "returning House did not expose the next useful action")
+	if not house.has_method("house_hotspot_contract"):
+		return _fail(app, "House hotspot contract missing")
+	var hotspot_contract: Dictionary = house.house_hotspot_contract()
+	var hotspot_states: Dictionary = hotspot_contract.get("states", {})
+	var moth_state: Dictionary = hotspot_states.get("moth_reliquary", {})
+	var thorn_state: Dictionary = hotspot_states.get("thorned_locket", {})
+	if String(moth_state.get("state", "")) != "owned" or bool(moth_state.get("disabled", true)):
+		return _fail(app, "returning House must keep the owned Moth Reliquary hotspot active")
+	if String(thorn_state.get("state", "")) != "locked" or not bool(thorn_state.get("disabled", false)):
+		return _fail(app, "returning House must keep the unowned Thorned Locket hotspot sealed")
+	var moth_hotspot: Button = house.get_node_or_null("Layout/RoomView/CurioHotspots/MothHotspot") as Button
+	if moth_hotspot == null:
+		return _fail(app, "returning House Moth hotspot missing")
+	moth_hotspot.emit_signal("pressed")
+	await _frames(2)
+	var house_detail_name: Label = house.get_node_or_null("HouseCurioInspect/Card/Content/Name") as Label
+	if house_detail_name == null or house_detail_name.text != "MOTH RELIQUARY":
+		return _fail(app, "House hotspot must open the persisted Moth Reliquary detail")
+	var house_close: Button = house.get_node_or_null("HouseCurioInspect/Card/Content/Close") as Button
+	if house_close == null:
+		return _fail(app, "House Curio detail close action missing")
+	house_close.emit_signal("pressed")
+	await _frames(2)
 
 	play.emit_signal("pressed")
 	await _frames(4)
