@@ -30,23 +30,25 @@ func _run() -> void:
 		_expect(bool(contract.get("hero_art_loaded", false)), "%s must load hero object art" % feature)
 		_expect(int(contract.get("static_card_slots", 0)) == 3, "%s must own three authored card slots" % feature)
 		_expect(not bool(contract.get("code_built_panels", true)), "%s must not return to bootstrap-built panel UI" % feature)
-		_expect(screen.get_node_or_null("FeatureLayout/Hero/HeroRow/HeroArt") != null, "%s must keep a scene-owned hero art slot" % feature)
+		_expect(screen.get_node_or_null("FeatureLayout/FeatureHero/HeroRow/HeroArt") != null, "%s must keep a scene-owned hero art slot" % feature)
+		var expected_title := "EVENT CENTER" if feature == "events" else ("THE CURIO EMPORIUM" if feature == "shop" else "THE KEEPER")
+		_expect((screen.get_node("FeatureLayout/FeatureTitle") as Label).text == expected_title, "%s must preserve its authored route title" % feature)
 		for card_name in ["Card1", "Card2", "Card3"]:
 			var art := screen.get_node_or_null("FeatureLayout/CardScroll/Cards/%s/Row/Art" % card_name) as TextureRect
 			_expect(art != null and art.texture != null, "%s %s must render object art" % [feature, card_name])
 		if feature == "events":
 			var weekly := {"hit": false}
 			screen.weekly_requested.connect(func(): weekly["hit"] = true)
-			(screen.get_node("FeatureLayout/Actions/Primary") as Button).emit_signal("pressed")
+			(screen.get_node("FeatureLayout/WeeklyMissionsAction") as Button).emit_signal("pressed")
 			_expect(bool(weekly["hit"]), "events primary action must open weekly rituals")
 			var daily := {"level": 0}
 			screen.daily_practice_requested.connect(func(level_number: int): daily["level"] = level_number)
-			(screen.get_node("FeatureLayout/Actions/Secondary") as Button).emit_signal("pressed")
+			(screen.get_node("FeatureLayout/DailyPracticeCard/DailyContent/DailyPracticeAction") as Button).emit_signal("pressed")
 			_expect(int(daily["level"]) == 2, "events secondary action must preserve daily practice level")
 		if feature == "profile":
 			var settings := {"hit": false}
 			screen.settings_requested.connect(func(): settings["hit"] = true)
-			(screen.get_node("FeatureLayout/Actions/Primary") as Button).emit_signal("pressed")
+			(screen.get_node("FeatureLayout/ProfileSettings") as Button).emit_signal("pressed")
 			_expect(bool(settings["hit"]), "profile primary action must open settings")
 		screen.queue_free()
 		await process_frame
