@@ -12,6 +12,7 @@ const ScreenArt = preload("res://src/ui/shared/screen_art_registry.gd")
 
 var _boot_state: String = "loading"
 var _ambient_tween: Tween
+var _loading_tween: Tween
 
 func _ready() -> void:
 	_install_splash_art()
@@ -20,6 +21,20 @@ func _ready() -> void:
 	_style_boot_state()
 	enter_button.pressed.connect(func(): continue_requested.emit())
 	set_boot_state("loading")
+
+func _start_loading_pulse() -> void:
+	if _loading_tween != null:
+		_loading_tween.kill()
+	progress_label.modulate.a = 1.0
+	_loading_tween = create_tween().set_loops()
+	_loading_tween.tween_property(progress_label, "modulate:a", 0.48, 0.85)
+	_loading_tween.tween_property(progress_label, "modulate:a", 1.0, 0.85)
+
+func _stop_loading_pulse() -> void:
+	if _loading_tween != null:
+		_loading_tween.kill()
+		_loading_tween = null
+	progress_label.modulate.a = 1.0
 
 func _start_ambient_motion() -> void:
 	var art := get_node_or_null("SplashWorldArt") as TextureRect
@@ -37,6 +52,10 @@ func set_boot_state(state: String, message: String = "", can_continue: bool = tr
 	if state not in ["loading", "ready", "recoverable_error"]:
 		return
 	_boot_state = state
+	if state == "loading":
+		_start_loading_pulse()
+	else:
+		_stop_loading_pulse()
 	match state:
 		"loading":
 			progress_label.visible = true
