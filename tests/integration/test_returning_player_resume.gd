@@ -70,7 +70,7 @@ func _run() -> void:
 		return _fail(app, "returning House must keep the owned Moth Reliquary hotspot active")
 	if String(thorn_state.get("state", "")) != "locked" or not bool(thorn_state.get("disabled", false)):
 		return _fail(app, "returning House must keep the unowned Thorned Locket hotspot sealed")
-	var moth_hotspot: Button = house.get_node_or_null("Layout/RoomView/CurioHotspots/MothHotspot") as Button
+	var moth_hotspot: Button = house.get_node_or_null("RoomView/CurioHotspots/MothHotspot") as Button
 	if moth_hotspot == null:
 		return _fail(app, "returning House Moth hotspot missing")
 	moth_hotspot.emit_signal("pressed")
