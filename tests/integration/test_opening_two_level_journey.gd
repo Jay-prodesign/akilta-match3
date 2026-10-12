@@ -120,7 +120,7 @@ func _run() -> void:
 	_expect(str(relaunched.current_route_name()) == "house", "relaunch splash must enter House")
 	_expect(restored != null and int(restored.house_stage) == 1, "relaunch must preserve Level 1 House restoration")
 	_expect(restored != null and restored.curios.count("moon_cameo") == 1, "relaunch must preserve Moon Cameo exactly once")
-	_expect(relaunched.current_screen().get_node("Layout/PlayButton").text == "CONTINUE CURIO BOUTIQUE", "saved House must offer unlocked Level 2")
+	_expect(relaunched.current_screen().get_node("Layout/PlayButton").text == "PLAY LEVEL 2", "saved House must offer unlocked Level 2")
 	var replay_coins := int(restored.coins)
 	var replay_gems := int(restored.gems)
 	var replay_transactions := int(restored.processed_transactions.size())
