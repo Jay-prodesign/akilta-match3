@@ -1,6 +1,102 @@
-[gd_scene load_steps=2 format=3]
+[gd_scene load_steps=8 format=3]
 
 [ext_resource type="Script" path="res://src/ui/map/chapter_select.gd" id="1_chapters"]
+
+[sub_resource type="StyleBoxFlat" id="HeaderNormal"]
+bg_color = Color(0.082, 0.067, 0.106, 0.92)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.831, 0.678, 0.439, 0.72)
+corner_radius_top_left = 10
+corner_radius_top_right = 10
+corner_radius_bottom_right = 10
+corner_radius_bottom_left = 10
+
+[sub_resource type="StyleBoxFlat" id="HeaderHover"]
+bg_color = Color(0.208, 0.137, 0.231, 0.98)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.949, 0.816, 0.545, 1)
+corner_radius_top_left = 10
+corner_radius_top_right = 10
+corner_radius_bottom_right = 10
+corner_radius_bottom_left = 10
+
+[sub_resource type="StyleBoxFlat" id="CurrentNormal"]
+bg_color = Color(0.145, 0.09, 0.173, 0.84)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.949, 0.831, 0.604, 0.98)
+corner_radius_top_left = 16
+corner_radius_top_right = 16
+corner_radius_bottom_right = 16
+corner_radius_bottom_left = 16
+content_margin_left = 228.0
+content_margin_top = 14.0
+content_margin_right = 18.0
+content_margin_bottom = 14.0
+shadow_color = Color(0, 0, 0, 0.62)
+shadow_size = 14
+
+[sub_resource type="StyleBoxFlat" id="CurrentHover"]
+bg_color = Color(0.215, 0.139, 0.251, 0.92)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(1, 0.941, 0.722, 1)
+corner_radius_top_left = 16
+corner_radius_top_right = 16
+corner_radius_bottom_right = 16
+corner_radius_bottom_left = 16
+content_margin_left = 228.0
+content_margin_top = 14.0
+content_margin_right = 18.0
+content_margin_bottom = 14.0
+shadow_color = Color(0, 0, 0, 0.68)
+shadow_size = 16
+
+[sub_resource type="StyleBoxFlat" id="LockedNormal"]
+bg_color = Color(0.055, 0.045, 0.075, 0.38)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.72, 0.62, 0.75, 0.56)
+corner_radius_top_left = 14
+corner_radius_top_right = 14
+corner_radius_bottom_right = 14
+corner_radius_bottom_left = 14
+content_margin_left = 18.0
+content_margin_top = 14.0
+content_margin_right = 18.0
+content_margin_bottom = 14.0
+shadow_color = Color(0, 0, 0, 0.34)
+shadow_size = 8
+
+[sub_resource type="StyleBoxFlat" id="LockedHover"]
+bg_color = Color(0.12, 0.09, 0.15, 0.64)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.831, 0.678, 0.439, 0.78)
+corner_radius_top_left = 14
+corner_radius_top_right = 14
+corner_radius_bottom_right = 14
+corner_radius_bottom_left = 14
+content_margin_left = 18.0
+content_margin_top = 14.0
+content_margin_right = 18.0
+content_margin_bottom = 14.0
+shadow_color = Color(0, 0, 0, 0.42)
+shadow_size = 10
 
 [node name="ChapterSelect" type="Control"]
 layout_mode = 3
@@ -11,11 +107,188 @@ grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_chapters")
 
-[node name="Backdrop" type="ColorRect" parent="."]
+[node name="ChapterWorldBackdrop" type="TextureRect" parent="."]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-color = Color(0.035, 0.025, 0.045, 0.48)
+mouse_filter = 2
+expand_mode = 1
+stretch_mode = 6
+
+[node name="ChapterWorldVeil" type="ColorRect" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+color = Color(0.025, 0.02, 0.05, 0.12)
+
+[node name="Layout" type="VBoxContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 20.0
+offset_top = 66.0
+offset_right = -20.0
+offset_bottom = -126.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/separation = 10
+
+[node name="ChapterHeader" type="HBoxContainer" parent="Layout"]
+layout_mode = 2
+theme_override_constants/separation = 10
+
+[node name="HeaderBack" type="Button" parent="Layout/ChapterHeader"]
+custom_minimum_size = Vector2(126, 52)
+layout_mode = 2
+theme_override_colors/font_color = Color(0.96, 0.9, 0.83, 1)
+theme_override_font_sizes/font_size = 17
+theme_override_styles/normal = SubResource("HeaderNormal")
+theme_override_styles/hover = SubResource("HeaderHover")
+theme_override_styles/pressed = SubResource("HeaderHover")
+theme_override_styles/focus = SubResource("HeaderHover")
+text = "‹  HOUSE"
+
+[node name="HeaderCopy" type="VBoxContainer" parent="Layout/ChapterHeader"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 0
+
+[node name="Eyebrow" type="Label" parent="Layout/ChapterHeader/HeaderCopy"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.831, 0.678, 0.439, 1)
+theme_override_colors/font_outline_color = Color(0.02, 0.014, 0.028, 0.94)
+theme_override_constants/outline_size = 3
+theme_override_font_sizes/font_size = 18
+text = "THE HOUSE AND ITS CHAPTERS"
+horizontal_alignment = 1
+
+[node name="Title" type="Label" parent="Layout/ChapterHeader/HeaderCopy"]
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 0.941, 0.847, 1)
+theme_override_colors/font_outline_color = Color(0.02, 0.014, 0.028, 0.96)
+theme_override_constants/outline_size = 5
+theme_override_font_sizes/font_size = 44
+text = "CHOOSE A WING"
+horizontal_alignment = 1
+
+[node name="HeaderSpacer" type="Control" parent="Layout/ChapterHeader"]
+custom_minimum_size = Vector2(126, 1)
+layout_mode = 2
+
+[node name="ChapterSummary" type="Label" parent="Layout"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.95, 0.86, 0.80, 1)
+theme_override_colors/font_outline_color = Color(0.02, 0.014, 0.028, 0.9)
+theme_override_constants/outline_size = 2
+theme_override_font_sizes/font_size = 22
+horizontal_alignment = 1
+autowrap_mode = 2
+
+[node name="ChapterGrid" type="Control" parent="Layout"]
+layout_mode = 2
+size_flags_vertical = 3
+clip_contents = false
+
+[node name="CurioBoutiqueButton" type="Button" parent="Layout/ChapterGrid"]
+layout_mode = 0
+clip_contents = true
+theme_override_colors/font_color = Color(1, 0.969, 0.914, 1)
+theme_override_font_sizes/font_size = 27
+theme_override_styles/normal = SubResource("CurrentNormal")
+theme_override_styles/hover = SubResource("CurrentHover")
+theme_override_styles/pressed = SubResource("CurrentHover")
+theme_override_styles/focus = SubResource("CurrentHover")
+text = "CURIO BOUTIQUE"
+alignment = 1
+
+[node name="CurrentWingArtwork" type="TextureRect" parent="Layout/ChapterGrid/CurioBoutiqueButton"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 0.39
+anchor_bottom = 1.0
+offset_left = 12.0
+offset_top = 12.0
+offset_right = -12.0
+offset_bottom = -12.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+expand_mode = 1
+stretch_mode = 6
+
+[node name="Chapter_witch_atelier" type="Button" parent="Layout/ChapterGrid"]
+layout_mode = 0
+theme_override_colors/font_color = Color(0.93, 0.87, 0.93, 1)
+theme_override_font_sizes/font_size = 23
+theme_override_styles/normal = SubResource("LockedNormal")
+theme_override_styles/hover = SubResource("LockedHover")
+theme_override_styles/pressed = SubResource("LockedHover")
+theme_override_styles/focus = SubResource("LockedHover")
+text = "WITCH ATELIER
+SEALED · FUTURE CHAPTER"
+alignment = 1
+
+[node name="Chapter_dark_vanity" type="Button" parent="Layout/ChapterGrid"]
+layout_mode = 0
+theme_override_colors/font_color = Color(0.93, 0.87, 0.93, 1)
+theme_override_font_sizes/font_size = 23
+theme_override_styles/normal = SubResource("LockedNormal")
+theme_override_styles/hover = SubResource("LockedHover")
+theme_override_styles/pressed = SubResource("LockedHover")
+theme_override_styles/focus = SubResource("LockedHover")
+text = "DARK VANITY
+SEALED · FUTURE CHAPTER"
+alignment = 1
+
+[node name="Chapter_archive" type="Button" parent="Layout/ChapterGrid"]
+layout_mode = 0
+theme_override_colors/font_color = Color(0.93, 0.87, 0.93, 1)
+theme_override_font_sizes/font_size = 23
+theme_override_styles/normal = SubResource("LockedNormal")
+theme_override_styles/hover = SubResource("LockedHover")
+theme_override_styles/pressed = SubResource("LockedHover")
+theme_override_styles/focus = SubResource("LockedHover")
+text = "THE ARCHIVE
+SEALED · FUTURE CHAPTER"
+alignment = 1
+
+[node name="Chapter_moon_conservatory" type="Button" parent="Layout/ChapterGrid"]
+layout_mode = 0
+theme_override_colors/font_color = Color(0.93, 0.87, 0.93, 1)
+theme_override_font_sizes/font_size = 23
+theme_override_styles/normal = SubResource("LockedNormal")
+theme_override_styles/hover = SubResource("LockedHover")
+theme_override_styles/pressed = SubResource("LockedHover")
+theme_override_styles/focus = SubResource("LockedHover")
+text = "MOON CONSERVATORY
+SEALED · FUTURE CHAPTER"
+alignment = 1
+
+[node name="Chapter_cemetery_garden" type="Button" parent="Layout/ChapterGrid"]
+layout_mode = 0
+theme_override_colors/font_color = Color(0.93, 0.87, 0.93, 1)
+theme_override_font_sizes/font_size = 23
+theme_override_styles/normal = SubResource("LockedNormal")
+theme_override_styles/hover = SubResource("LockedHover")
+theme_override_styles/pressed = SubResource("LockedHover")
+theme_override_styles/focus = SubResource("LockedHover")
+text = "CEMETERY GARDEN
+SEALED · FUTURE CHAPTER"
+alignment = 1
+
+[node name="LockReason" type="Label" parent="Layout"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.82, 0.72, 0.9, 1)
+theme_override_colors/font_outline_color = Color(0.02, 0.014, 0.028, 0.88)
+theme_override_constants/outline_size = 2
+theme_override_font_sizes/font_size = 19
+horizontal_alignment = 1
+autowrap_mode = 2
