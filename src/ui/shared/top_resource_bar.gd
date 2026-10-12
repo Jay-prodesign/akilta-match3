@@ -3,6 +3,7 @@ extends RefCounted
 
 const PieceAssetLoader = preload("res://src/match3/presentation/piece_asset_loader.gd")
 const MobileSafeArea = preload("res://src/ui/shared/mobile_safe_area.gd")
+const ResourceBarScene = preload("res://src/ui/shared/top_resource_bar.tscn")
 
 static func attach(screen: Control, progress, profile_handler: Callable = Callable()) -> PanelContainer:
 	if screen == null:
@@ -12,68 +13,33 @@ static func attach(screen: Control, progress, profile_handler: Callable = Callab
 		refresh(existing, progress)
 		return existing
 
-	var panel := PanelContainer.new()
-	panel.name = "ResourceBar"
-	panel.anchor_left = 0.02
-	panel.anchor_right = 0.98
-	panel.anchor_top = 0.0
-	panel.anchor_bottom = 0.0
+	var panel := ResourceBarScene.instantiate() as PanelContainer
+	if panel == null:
+		push_error("Global ResourceBar authored scene could not instantiate.")
+		return null
+
 	var safe_insets := MobileSafeArea.current_insets(screen)
 	panel.offset_left = safe_insets.x
 	panel.offset_right = -safe_insets.z
 	panel.offset_top = 6.0 + safe_insets.y
 	panel.offset_bottom = 68.0 + safe_insets.y
-	panel.z_index = 60
-	var shell := StyleBoxFlat.new()
-	shell.bg_color = Color("#08070D", 0.94)
-	shell.border_color = Color("#D5AD70", 0.72)
-	shell.set_border_width_all(1)
-	shell.set_corner_radius_all(12)
-	shell.shadow_color = Color(0, 0, 0, 0.46)
-	shell.shadow_size = 8
-	shell.content_margin_left = 6
-	shell.content_margin_right = 6
-	shell.content_margin_top = 4
-	shell.content_margin_bottom = 4
-	panel.add_theme_stylebox_override("panel", shell)
 	screen.add_child(panel)
 
-	var row := HBoxContainer.new()
-	row.name = "Resources"
-	row.alignment = BoxContainer.ALIGNMENT_CENTER
-	row.add_theme_constant_override("separation", 4)
-	panel.add_child(row)
-
-	# Life consumption/refill is not connected yet; do not expose a fake life economy.
-	_add_chip(row, "CoinResource", "res://assets/ui/ui_coin.svg", "0")
-	_add_chip(row, "GemResource", "res://assets/ui/ui_gem.svg", "0")
-
-	var profile := Button.new()
-	profile.name = "KeeperProfile"
-	profile.text = ""
-	profile.icon = PieceAssetLoader.ornament("res://assets/ui/ui_profile.svg")
-	profile.expand_icon = true
-	profile.add_theme_constant_override("icon_max_width", 34)
-	profile.custom_minimum_size = Vector2(58, 48)
-	profile.tooltip_text = "Keeper profile and settings"
-	var profile_box := StyleBoxFlat.new()
-	profile_box.bg_color = Color("#201526", 0.94)
-	profile_box.border_color = Color("#D5AD70", 0.46)
-	profile_box.set_border_width_all(1)
-	profile_box.set_corner_radius_all(10)
-	var profile_focus := profile_box.duplicate() as StyleBoxFlat
-	profile_focus.bg_color = Color("#4A2C50", 0.98)
-	profile_focus.border_color = Color("#F0CE8A")
-	profile_focus.set_border_width_all(2)
-	profile.add_theme_stylebox_override("normal", profile_box)
-	profile.add_theme_stylebox_override("hover", profile_focus)
-	profile.add_theme_stylebox_override("pressed", profile_focus)
-	profile.add_theme_stylebox_override("focus", profile_focus)
-	if profile_handler.is_valid():
-		profile.pressed.connect(profile_handler)
-	else:
-		profile.visible = false
-	row.add_child(profile)
+	var coin_icon := panel.get_node_or_null("Resources/CoinResourceChip/Content/Icon") as TextureRect
+	var gem_icon := panel.get_node_or_null("Resources/GemResourceChip/Content/Icon") as TextureRect
+	if coin_icon != null:
+		coin_icon.texture = PieceAssetLoader.ornament("res://assets/ui/ui_coin.svg")
+	if gem_icon != null:
+		gem_icon.texture = PieceAssetLoader.ornament("res://assets/ui/ui_gem.svg")
+	var profile := panel.get_node_or_null("Resources/KeeperProfile") as Button
+	if profile != null:
+		profile.icon = PieceAssetLoader.ornament("res://assets/ui/ui_profile.svg")
+	if profile != null:
+		if profile_handler.is_valid():
+			profile.visible = true
+			profile.pressed.connect(profile_handler)
+		else:
+			profile.visible = false
 
 	refresh(panel, progress)
 	return panel
@@ -93,41 +59,27 @@ static func refresh(panel: PanelContainer, progress) -> void:
 	if gem != null:
 		gem.text = _format_number(gems)
 
-static func _add_chip(parent: HBoxContainer, node_name: String, icon_path: String, value: String) -> void:
-	var chip := PanelContainer.new()
-	chip.name = node_name + "Chip"
-	chip.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	var box := StyleBoxFlat.new()
-	box.bg_color = Color("#15111B", 0.88)
-	box.border_color = Color("#745C73", 0.38)
-	box.set_border_width_all(1)
-	box.set_corner_radius_all(10)
-	box.content_margin_left = 5
-	box.content_margin_right = 7
-	box.content_margin_top = 3
-	box.content_margin_bottom = 3
-	chip.add_theme_stylebox_override("panel", box)
-	parent.add_child(chip)
-
-	var row := HBoxContainer.new()
-	row.alignment = BoxContainer.ALIGNMENT_CENTER
-	row.add_theme_constant_override("separation", 3)
-	chip.add_child(row)
-
-	var icon := TextureRect.new()
-	icon.custom_minimum_size = Vector2(32, 32)
-	icon.texture = PieceAssetLoader.ornament(icon_path)
-	icon.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
-	icon.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
-	icon.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	row.add_child(icon)
-
-	var label := Label.new()
-	label.name = node_name
-	label.text = value
-	label.add_theme_color_override("font_color", Color("#F7E9D6"))
-	label.add_theme_font_size_override("font_size", 18)
-	row.add_child(label)
+static func authored_contract(panel: PanelContainer) -> Dictionary:
+	if panel == null:
+		return {
+			"authored_scene": false,
+			"resource_slots_present": false,
+			"icons_loaded": false,
+			"profile_touch_target_ok": false,
+			"runtime_ui_factory": false,
+		}
+	var coin := panel.find_child("CoinResource", true, false) as Label
+	var gem := panel.find_child("GemResource", true, false) as Label
+	var coin_icon := panel.get_node_or_null("Resources/CoinResourceChip/Content/Icon") as TextureRect
+	var gem_icon := panel.get_node_or_null("Resources/GemResourceChip/Content/Icon") as TextureRect
+	var profile := panel.get_node_or_null("Resources/KeeperProfile") as Button
+	return {
+		"authored_scene": true,
+		"resource_slots_present": coin != null and gem != null,
+		"icons_loaded": coin_icon != null and coin_icon.texture != null and gem_icon != null and gem_icon.texture != null and profile != null and profile.icon != null,
+		"profile_touch_target_ok": profile != null and profile.custom_minimum_size.x >= 56.0 and profile.custom_minimum_size.y >= 48.0,
+		"runtime_ui_factory": false,
+	}
 
 static func _format_number(value: int) -> String:
 	var digits := str(maxi(0, value))

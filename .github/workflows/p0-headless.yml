@@ -51,6 +51,7 @@ on:
       - "tests/unit/test_prestart_authored_production_screen.gd"
       - "tests/unit/test_chapter_route_authored_screen.gd"
       - "tests/unit/test_settings_authored_utility_screen.gd"
+      - "tests/unit/test_authored_global_product_shell.gd"
       - "tests/unit/test_meta_destination_screen.gd"
       - "assets/manifests/screen_contracts.json"
       - "assets/manifests/screen_asset_manifest.json"
@@ -333,6 +334,18 @@ jobs:
           if [ "$status" -ne 0 ]; then exit "$status"; fi
           if grep -Eq "SCRIPT ERROR:|(^| )ERROR:|TEST_FAIL:" <<<"$output"; then exit 1; fi
           grep -Fq "TEST_PASS: authored Settings utility screen" <<<"$output"
+
+      - name: Run authored global product shell contract
+        shell: bash
+        run: |
+          set +e
+          output=$(timeout 35s ./godot --headless --path . -s res://tests/unit/test_authored_global_product_shell.gd 2>&1)
+          status=$?
+          set -e
+          printf '%s\n' "$output"
+          if [ "$status" -ne 0 ]; then exit "$status"; fi
+          if grep -Eq "SCRIPT ERROR:|(^| )ERROR:|TEST_FAIL:" <<<"$output"; then exit 1; fi
+          grep -Fq "TEST_PASS: authored global product shell" <<<"$output"
 
       - name: Run AKILTA first-party shell contracts
         shell: bash
