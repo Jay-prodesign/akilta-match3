@@ -265,6 +265,7 @@ jobs:
           test -s artifacts/chapters-00-first-wing.png
           test -s artifacts/chapters-01-current-partial.png
           test -s artifacts/chapters-02-current-complete.png
+          test -s artifacts/chapters-03-sealed-wing-inspection.png
 
       - name: Render S03 frontier progression states
         shell: bash
@@ -282,6 +283,7 @@ jobs:
           test -s artifacts/chapter-route-01-frontier2.png
           test -s artifacts/chapter-route-02-frontier3.png
           test -s artifacts/chapter-route-03-complete.png
+          test -s artifacts/chapter-route-04-sealed-cabinet.png
 
       - name: Upload Golden Loop render evidence
         uses: actions/upload-artifact@v4
@@ -346,10 +348,12 @@ jobs:
             artifacts/chapters-00-first-wing.png
             artifacts/chapters-01-current-partial.png
             artifacts/chapters-02-current-complete.png
+            artifacts/chapters-03-sealed-wing-inspection.png
             artifacts/chapter-route-00-frontier1.png
             artifacts/chapter-route-01-frontier2.png
             artifacts/chapter-route-02-frontier3.png
             artifacts/chapter-route-03-complete.png
+            artifacts/chapter-route-04-sealed-cabinet.png
             artifacts/progression-final-map.png
           if-no-files-found: error
           retention-days: 14
