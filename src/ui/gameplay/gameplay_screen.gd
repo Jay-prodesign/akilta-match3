@@ -269,6 +269,7 @@ func resume_level() -> bool:
 	if not pause_overlay.visible:
 		return false
 	pause_overlay.visible = false
+	_idle_hint_seconds = 0.0
 	if _booster_tray != null:
 		_booster_tray.visible = true
 	return true
