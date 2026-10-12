@@ -113,7 +113,7 @@ func show_map() -> bool:
 	return true
 
 func show_prestart(level_number: int) -> bool:
-	if level_number < 1 or level_number > INTERNAL_REVIEW_LEVEL_COUNT or level_number > int(progress.highest_level_unlocked) or navigation.current() != NavigationScript.Route.MAP:
+	if level_number < 1 or level_number > INTERNAL_REVIEW_LEVEL_COUNT or level_number > int(progress.highest_level_unlocked) or navigation.current() not in [NavigationScript.Route.MAP, NavigationScript.Route.HOUSE]:
 		return false
 	# Reject missing or malformed content while preserving the current map.
 	var level_file := FileAccess.open(_level_path(level_number), FileAccess.READ)
@@ -785,7 +785,10 @@ func _on_map_back() -> void:
 
 func _on_prestart_back() -> void:
 	_pending_level_number = 0
-	if navigation.go(NavigationScript.Route.MAP, {"via": "prestart_back"}):
+	if _current_screen != null and is_instance_valid(_current_screen) and _current_screen.has_node("Back") and (_current_screen.get_node("Back") as Button).text == "BACK TO HOUSE":
+		if navigation.go(NavigationScript.Route.HOUSE, {"via": "prestart_back"}):
+			_render_house()
+	elif navigation.go(NavigationScript.Route.MAP, {"via": "prestart_back"}):
 		_render_map_from_prestart()
 
 func _render_map_from_prestart() -> void:
