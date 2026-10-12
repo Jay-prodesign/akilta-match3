@@ -200,9 +200,9 @@ func _build_room_hotspots() -> void:
 	room_view.add_child(layer)
 	_hotspot_layer = layer
 	for spec in [
-		{"id":"moon_cameo", "name":"MoonHotspot", "x":0.83, "y":0.27},
-		{"id":"moth_reliquary", "name":"MothHotspot", "x":0.84, "y":0.38},
-		{"id":"thorned_locket", "name":"ThornHotspot", "x":0.84, "y":0.49}
+		{"id":"moon_cameo", "name":"MoonHotspot", "x":0.93, "y":0.27},
+		{"id":"moth_reliquary", "name":"MothHotspot", "x":0.93, "y":0.38},
+		{"id":"thorned_locket", "name":"ThornHotspot", "x":0.93, "y":0.49}
 	]:
 		var button := Button.new()
 		button.name = String(spec["name"])
@@ -222,23 +222,23 @@ func _build_room_hotspots() -> void:
 		button.tooltip_text = "Inspect %s" % _curio_name(String(spec["id"])).capitalize()
 		button.add_theme_font_size_override("font_size", 25)
 		var normal := StyleBoxFlat.new()
-		normal.bg_color = Color("#18111F", 0.74)
-		normal.border_color = Color("#F0CE8A", 0.82)
+		normal.bg_color = Color("#18111F", 0.22)
+		normal.border_color = Color("#F0CE8A", 0.58)
 		normal.set_border_width_all(2)
 		normal.set_corner_radius_all(30)
 		var hover := normal.duplicate() as StyleBoxFlat
-		hover.bg_color = Color("#3A2340", 0.92)
-		hover.border_color = Color("#FFF1B6")
+		hover.bg_color = Color("#3A2340", 0.72)
+		hover.border_color = Color("#FFF1B6", 0.92)
 		var disabled := normal.duplicate() as StyleBoxFlat
-		disabled.bg_color = Color("#0D0A11", 0.38)
-		disabled.border_color = Color("#7F7180", 0.34)
+		disabled.bg_color = Color("#0D0A11", 0.12)
+		disabled.border_color = Color("#7F7180", 0.24)
 		button.add_theme_stylebox_override("normal", normal)
 		button.add_theme_stylebox_override("hover", hover)
 		button.add_theme_stylebox_override("pressed", hover)
 		button.add_theme_stylebox_override("focus", hover)
 		button.add_theme_stylebox_override("disabled", disabled)
-		button.add_theme_color_override("font_color", Color("#FFF1B6"))
-		button.add_theme_color_override("font_disabled_color", Color("#817783"))
+		button.add_theme_color_override("font_color", Color("#FFF1B6", 0.86))
+		button.add_theme_color_override("font_disabled_color", Color("#817783", 0.58))
 		button.pressed.connect(_open_house_curio_inspect.bind(String(spec["id"])))
 		layer.add_child(button)
 		_hotspot_buttons[String(spec["id"])] = button
@@ -298,8 +298,8 @@ func _open_house_curio_inspect(curio_id: String) -> void:
 	card.name = "Card"
 	card.anchor_left = 0.09
 	card.anchor_right = 0.91
-	card.anchor_top = 0.18
-	card.anchor_bottom = 0.63
+	card.anchor_top = 0.16
+	card.anchor_bottom = 0.54
 	var shell := StyleBoxFlat.new()
 	shell.bg_color = Color("#0D0912", 0.985)
 	shell.border_color = Color("#D5AD70", 0.88)
@@ -316,7 +316,7 @@ func _open_house_curio_inspect(curio_id: String) -> void:
 
 	var content := VBoxContainer.new()
 	content.name = "Content"
-	content.add_theme_constant_override("separation", 10)
+	content.add_theme_constant_override("separation", 7)
 	card.add_child(content)
 
 	var kicker := Label.new()
@@ -328,7 +328,7 @@ func _open_house_curio_inspect(curio_id: String) -> void:
 
 	var art := TextureRect.new()
 	art.name = "HeroArt"
-	art.custom_minimum_size = Vector2(0, 280)
+	art.custom_minimum_size = Vector2(0, 200)
 	art.texture = _curio_texture(curio_id)
 	art.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
 	art.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
