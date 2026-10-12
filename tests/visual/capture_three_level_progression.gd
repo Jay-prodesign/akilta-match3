@@ -44,7 +44,7 @@ func _capture() -> void:
 		return _fail(app, "completed House hotspot contract missing")
 	if not completed_house.has_method("keeper_house_contract"):
 		return _fail(app, "completed House Keeper contract missing")
-	var keeper_hotspot: Button = completed_house.get_node_or_null("Layout/RoomView/CurioHotspots/KeeperHotspot") as Button
+	var keeper_hotspot: Button = completed_house.get_node_or_null("RoomView/CurioHotspots/KeeperHotspot") as Button
 	if keeper_hotspot == null or keeper_hotspot.disabled:
 		return _fail(app, "completed House Keeper hotspot missing")
 	keeper_hotspot.emit_signal("pressed")
@@ -62,7 +62,7 @@ func _capture() -> void:
 	keeper_close.emit_signal("pressed")
 	await _frames(2)
 
-	var thorn_hotspot: Button = completed_house.get_node_or_null("Layout/RoomView/CurioHotspots/ThornHotspot") as Button
+	var thorn_hotspot: Button = completed_house.get_node_or_null("RoomView/CurioHotspots/ThornHotspot") as Button
 	if thorn_hotspot == null or thorn_hotspot.disabled:
 		return _fail(app, "completed House must expose the restored Thorned Locket hotspot")
 	thorn_hotspot.emit_signal("pressed")
