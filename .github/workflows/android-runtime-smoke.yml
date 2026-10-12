@@ -238,8 +238,8 @@ jobs:
             for frame in artifacts/android-01-cold-launch.png artifacts/android-02-resumed.png artifacts/android-03-force-stop-relaunch.png; do
               bytes="$(stat -c%s "$frame")"
               echo "$(basename "$frame")=$bytes"
-              if [ "$bytes" -lt 50000 ]; then
-                echo "Native frame is too small to constitute rendered Cat & Coven UI: $frame ($bytes bytes)"
+              if [ "$bytes" -lt 500000 ]; then
+                echo "Native frame is too small to constitute product-ready Cat & Coven UI: $frame ($bytes bytes)"
                 exit 1
               fi
             done
