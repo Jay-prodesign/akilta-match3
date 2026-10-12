@@ -19,7 +19,7 @@ static func attach(screen: Control, active_section: String, handler: Callable, c
 
 	var content := screen.get_node_or_null(content_path) as Control
 	if content != null and not bool(content.get_meta("product_nav_inset_applied", false)):
-		content.offset_bottom -= 104.0
+		content.offset_bottom -= 120.0
 		content.set_meta("product_nav_inset_applied", true)
 
 	var panel := PanelContainer.new()
@@ -30,7 +30,7 @@ static func attach(screen: Control, active_section: String, handler: Callable, c
 	panel.anchor_bottom = 1.0
 	panel.offset_left = 12.0
 	panel.offset_right = -12.0
-	panel.offset_top = -100.0
+	panel.offset_top = -114.0
 	panel.offset_bottom = -10.0
 	panel.z_index = 40
 	var shell := StyleBoxFlat.new()
@@ -62,7 +62,7 @@ static func attach(screen: Control, active_section: String, handler: Callable, c
 		button.name = "Nav" + action.capitalize()
 		button.text = ""
 		button.tooltip_text = action.capitalize()
-		button.custom_minimum_size = Vector2(0, 80)
+		button.custom_minimum_size = Vector2(0, 94)
 		button.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 		var normal := StyleBoxFlat.new()
 		normal.bg_color = Color("#211728")
@@ -86,7 +86,7 @@ static func attach(screen: Control, active_section: String, handler: Callable, c
 		button.add_child(stack)
 		var icon := TextureRect.new()
 		icon.name = "Icon"
-		icon.custom_minimum_size = Vector2(36, 36)
+		icon.custom_minimum_size = Vector2(42, 42)
 		icon.texture = PieceAssetLoader.ornament(String(item["icon"]))
 		icon.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
 		icon.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
@@ -97,7 +97,7 @@ static func attach(screen: Control, active_section: String, handler: Callable, c
 		caption.name = "Label"
 		caption.text = String(item["label"])
 		caption.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-		caption.add_theme_font_size_override("font_size", 15)
+		caption.add_theme_font_size_override("font_size", 20)
 		caption.add_theme_color_override("font_color", Color("#F4E5D3") if action == active_section else Color("#CDBFC9"))
 		caption.mouse_filter = Control.MOUSE_FILTER_IGNORE
 		stack.add_child(caption)

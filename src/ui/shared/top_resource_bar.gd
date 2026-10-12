@@ -18,7 +18,7 @@ static func attach(screen: Control, progress, profile_handler: Callable = Callab
 	panel.anchor_top = 0.0
 	panel.anchor_bottom = 0.0
 	panel.offset_top = 6.0
-	panel.offset_bottom = 58.0
+	panel.offset_bottom = 68.0
 	panel.z_index = 60
 	var shell := StyleBoxFlat.new()
 	shell.bg_color = Color("#08070D", 0.94)
@@ -49,8 +49,8 @@ static func attach(screen: Control, progress, profile_handler: Callable = Callab
 	profile.text = ""
 	profile.icon = PieceAssetLoader.ornament("res://assets/ui/ui_profile.svg")
 	profile.expand_icon = true
-	profile.add_theme_constant_override("icon_max_width", 30)
-	profile.custom_minimum_size = Vector2(50, 40)
+	profile.add_theme_constant_override("icon_max_width", 34)
+	profile.custom_minimum_size = Vector2(58, 48)
 	profile.tooltip_text = "Keeper profile and settings"
 	var profile_box := StyleBoxFlat.new()
 	profile_box.bg_color = Color("#201526", 0.94)
@@ -116,7 +116,7 @@ static func _add_chip(parent: HBoxContainer, node_name: String, icon_path: Strin
 	chip.add_child(row)
 
 	var icon := TextureRect.new()
-	icon.custom_minimum_size = Vector2(27, 27)
+	icon.custom_minimum_size = Vector2(32, 32)
 	icon.texture = PieceAssetLoader.ornament(icon_path)
 	icon.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
 	icon.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
@@ -127,7 +127,7 @@ static func _add_chip(parent: HBoxContainer, node_name: String, icon_path: Strin
 	label.name = node_name
 	label.text = value
 	label.add_theme_color_override("font_color", Color("#F7E9D6"))
-	label.add_theme_font_size_override("font_size", 14)
+	label.add_theme_font_size_override("font_size", 18)
 	row.add_child(label)
 
 static func _format_number(value: int) -> String:

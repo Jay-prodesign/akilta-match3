@@ -196,15 +196,15 @@ func _install_card_action(card: PanelContainer, curio_id: String) -> void:
 	var button := Button.new()
 	button.name = "InspectAction"
 	button.text = "DETAILS"
-	button.anchor_left = 0.73
+	button.anchor_left = 0.70
 	button.anchor_right = 0.97
-	button.anchor_top = 0.78
+	button.anchor_top = 0.70
 	button.anchor_bottom = 0.96
 	button.grow_horizontal = Control.GROW_DIRECTION_BEGIN
 	button.grow_vertical = Control.GROW_DIRECTION_BEGIN
 	button.mouse_filter = Control.MOUSE_FILTER_STOP
 	button.mouse_default_cursor_shape = Control.CURSOR_POINTING_HAND
-	button.add_theme_font_size_override("font_size", 12)
+	button.add_theme_font_size_override("font_size", 20)
 	var normal := StyleBoxFlat.new()
 	normal.bg_color = Color("#24172A", 0.96)
 	normal.border_color = Color("#D5AD70", 0.62)
@@ -268,7 +268,7 @@ func _open_curio_detail(curio_id: String) -> void:
 	kicker.text = "RELIQUARY · CURIO DETAIL"
 	kicker.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	kicker.add_theme_color_override("font_color", Color("#D5AD70"))
-	kicker.add_theme_font_size_override("font_size", 13)
+	kicker.add_theme_font_size_override("font_size", 18)
 	content.add_child(kicker)
 
 	var art := TextureRect.new()
@@ -293,7 +293,7 @@ func _open_curio_detail(curio_id: String) -> void:
 	state.text = "AWAKENED · OWNED" if awakened else "LOCKED · NOT YET RECOVERED"
 	state.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	state.add_theme_color_override("font_color", Color("#F2D08B") if awakened else Color("#A995B0"))
-	state.add_theme_font_size_override("font_size", 17)
+	state.add_theme_font_size_override("font_size", 20)
 	content.add_child(state)
 
 	var origin := Label.new()
@@ -302,7 +302,7 @@ func _open_curio_detail(curio_id: String) -> void:
 	origin.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	origin.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	origin.add_theme_color_override("font_color", Color("#B4A2B7"))
-	origin.add_theme_font_size_override("font_size", 15)
+	origin.add_theme_font_size_override("font_size", 19)
 	content.add_child(origin)
 
 	var lore := Label.new()
@@ -311,14 +311,14 @@ func _open_curio_detail(curio_id: String) -> void:
 	lore.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	lore.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	lore.add_theme_color_override("font_color", Color("#DDD0D7"))
-	lore.add_theme_font_size_override("font_size", 17)
+	lore.add_theme_font_size_override("font_size", 20)
 	content.add_child(lore)
 
 	var close := Button.new()
 	close.name = "Close"
 	close.text = "RETURN TO RELIQUARY"
 	close.custom_minimum_size = Vector2(0, 54)
-	close.add_theme_font_size_override("font_size", 17)
+	close.add_theme_font_size_override("font_size", 20)
 	var close_box := StyleBoxFlat.new()
 	close_box.bg_color = Color("#35213B")
 	close_box.border_color = Color("#D5AD70")

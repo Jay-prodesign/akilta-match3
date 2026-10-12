@@ -730,8 +730,8 @@ func _build_top_resource_bar() -> void:
 	level.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	level.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
 	level.add_theme_color_override("font_color", Color("#D5AD70"))
-	level.add_theme_font_size_override("font_size", 13)
-	level.custom_minimum_size = Vector2(84, 0)
+	level.add_theme_font_size_override("font_size", 17)
+	level.custom_minimum_size = Vector2(94, 0)
 	row.add_child(level)
 	_level_badge_label = level
 
@@ -754,7 +754,7 @@ func _add_resource_chip(parent: HBoxContainer, node_name: String, icon_path: Str
 	content.add_theme_constant_override("separation", 2)
 	chip.add_child(content)
 	var icon := TextureRect.new()
-	icon.custom_minimum_size = Vector2(26, 26)
+	icon.custom_minimum_size = Vector2(31, 31)
 	icon.texture = PieceAssetLoader.ornament(icon_path)
 	icon.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
 	icon.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
@@ -764,7 +764,7 @@ func _add_resource_chip(parent: HBoxContainer, node_name: String, icon_path: Str
 	label.name = node_name
 	label.text = value
 	label.add_theme_color_override("font_color", Color("#F4E5D3"))
-	label.add_theme_font_size_override("font_size", 13)
+	label.add_theme_font_size_override("font_size", 17)
 	content.add_child(label)
 	return label
 
@@ -787,7 +787,7 @@ func _build_booster_tray() -> void:
 	panel.anchor_top = 0.0
 	panel.anchor_bottom = 0.0
 	panel.offset_top = 760.0
-	panel.offset_bottom = 822.0
+	panel.offset_bottom = 830.0
 	panel.z_index = 18
 	var shell := StyleBoxFlat.new()
 	shell.bg_color = Color("#100B16", 0.985)
@@ -813,19 +813,19 @@ func _position_booster_tray() -> void:
 	var screen_rect := get_global_rect()
 	var desired_top := hint_rect.end.y - screen_rect.position.y + 8.0
 	var safe_bottom := maxf(0.0, size.y - 12.0)
-	var top := minf(desired_top, maxf(0.0, safe_bottom - 62.0))
+	var top := minf(desired_top, maxf(0.0, safe_bottom - 70.0))
 	_booster_tray.anchor_top = 0.0
 	_booster_tray.anchor_bottom = 0.0
 	_booster_tray.offset_top = top
-	_booster_tray.offset_bottom = top + 62.0
+	_booster_tray.offset_bottom = top + 70.0
 
 
 func _add_booster_button(parent: HBoxContainer, caption: String, art_path: String, action: Callable) -> void:
 	var button := Button.new()
 	button.text = caption
-	button.custom_minimum_size = Vector2(0, 54)
+	button.custom_minimum_size = Vector2(0, 62)
 	button.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	button.add_theme_font_size_override("font_size", 14)
+	button.add_theme_font_size_override("font_size", 19)
 	button.add_theme_color_override("font_color", Color("#F4E5D3"))
 	button.icon = PieceAssetLoader.ornament(art_path)
 	button.expand_icon = true
