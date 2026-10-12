@@ -118,38 +118,21 @@ static func contract() -> Dictionary:
 static func ornament(path: String) -> Texture2D:
 	if _ornaments.has(path):
 		return _ornaments[path]
-	# Production art is raster-first, but a malformed candidate must never make
-	# the canonical semantic object disappear. Prefer authored WebP, then PNG,
-	# and only then the owned SVG source for that exact object.
+	# Production resources must load through ResourceLoader so exported builds can
+	# follow Godot's import remaps. Exact-family fallback order stays unchanged.
 	var candidates: Array[String] = []
 	if path.get_extension().to_lower() == "svg":
-		var webp_preferred := path.get_basename() + ".webp"
-		var png_preferred := path.get_basename() + ".png"
-		if FileAccess.file_exists(webp_preferred):
-			candidates.append(webp_preferred)
-		if FileAccess.file_exists(png_preferred):
-			candidates.append(png_preferred)
+		candidates.append(path.get_basename() + ".webp")
+		candidates.append(path.get_basename() + ".png")
 	candidates.append(path)
 	for chosen in candidates:
-		if not FileAccess.file_exists(chosen):
+		if chosen == "" or not ResourceLoader.exists(chosen):
 			continue
-		var image := Image.new()
-		var err := ERR_FILE_UNRECOGNIZED
-		match chosen.get_extension().to_lower():
-			"png":
-				err = image.load_png_from_buffer(FileAccess.get_file_as_bytes(chosen))
-			"webp":
-				err = image.load_webp_from_buffer(FileAccess.get_file_as_bytes(chosen))
-			"svg":
-				var file := FileAccess.open(chosen, FileAccess.READ)
-				if file != null:
-					err = image.load_svg_from_string(file.get_as_text(), 1.0)
-					file.close()
-		if err == OK and not image.is_empty():
-			var result := ImageTexture.create_from_image(image)
-			_ornaments[path] = result
+		var resource := ResourceLoader.load(chosen, "Texture2D", ResourceLoader.CACHE_MODE_REUSE) as Texture2D
+		if resource != null:
+			_ornaments[path] = resource
 			_resolved_paths[path] = chosen
-			return result
+			return resource
 	_failures[path] = candidates
 	return null
 
