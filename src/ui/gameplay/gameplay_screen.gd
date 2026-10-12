@@ -640,9 +640,9 @@ func _play_terminal_transition(kind: String) -> void:
 		result_dim.modulate = Color.WHITE
 		_last_result_transition = "reduced_motion_immediate"
 		return
-	result_card.modulate = Color(1, 1, 1, 0)
-	result_card.scale = Vector2(0.94, 0.94) if kind == "won" else Vector2(0.97, 0.97)
-	result_dim.modulate = Color(1, 1, 1, 0)
+	result_card.modulate = Color(1, 1, 1, 0.72)
+	result_card.scale = Vector2(0.96, 0.96) if kind == "won" else Vector2(0.98, 0.98)
+	result_dim.modulate = Color(1, 1, 1, 0.48)
 	var tween := create_tween()
 	tween.set_parallel(true)
 	tween.set_trans(Tween.TRANS_QUAD)
