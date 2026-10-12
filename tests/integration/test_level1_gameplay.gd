@@ -132,6 +132,11 @@ func _run() -> void:
 		_expect(String(reward_contract.get("runtime_path", "")).ends_with(".webp"), "Level 1 Moon Cameo reward must use the authored WEBP state pair")
 	if board_view != null and board_view.has_method("teaching_contract"):
 		_expect(not bool(board_view.teaching_contract().get("active", true)), "teaching cue must disappear after the first accepted swipe")
+	_expect(screen.has_method("terminal_result_polish_contract"), "win result must expose terminal polish contract")
+	if screen.has_method("terminal_result_polish_contract"):
+		var terminal_polish: Dictionary = screen.terminal_result_polish_contract()
+		_expect(String(terminal_polish.get("objective_summary", "")).contains("6 / 6 MOON SIGILS"), "win terminal polish must state completed objective")
+		_expect(bool(terminal_polish.get("distinct_result_material", false)), "win result must use distinct terminal material")
 
 	screen.queue_free()
 	await process_frame

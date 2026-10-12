@@ -97,6 +97,7 @@ const LAST_MOVE_THRESHOLD := 1
 @onready var result_overlay: Control = $ResultOverlay
 @onready var result_title: Label = $ResultOverlay/Card/Content/Title
 @onready var result_detail: Label = $ResultOverlay/Card/Content/Detail
+@onready var result_objective_summary: Label = $ResultOverlay/Card/Content/ObjectiveSummary
 @onready var result_eyebrow: Label = $ResultOverlay/Card/Content/Eyebrow
 @onready var result_reward_name: Label = $ResultOverlay/Card/Content/RewardName
 @onready var result_house_change: Label = $ResultOverlay/Card/Content/HouseChange
@@ -389,8 +390,13 @@ func retry_current_level() -> bool:
 	if current_level_path == "":
 		return false
 	haptics.reset_for_new_attempt()
+	haptics.request_retry()
 	feedback_requested.emit("retry")
-	return load_level_path(current_level_path, current_seed)
+	var reloaded := load_level_path(current_level_path, current_seed)
+	if reloaded:
+		hint_label.text = "RITUAL RESET · %d MOVES RESTORED" % int(board_state.moves_remaining)
+		_style_impact_hint("normal")
+	return reloaded
 
 func _on_swap_requested(from: Vector2i, to: Vector2i) -> void:
 	attempt_swap(from, to)
@@ -608,6 +614,7 @@ func _show_result_if_terminal(result: String) -> void:
 			_result_proclamation.text = "Replay complete · House state and owned Curios stay unchanged." if replay_mode else "The recovered Curio now changes the House."
 		if _booster_tray != null:
 			_booster_tray.visible = false
+		result_objective_summary.text = _terminal_objective_summary(true)
 		_present_result_overlay("won")
 		if _result_reveal_fx != null and _result_reveal_fx.has_method("play"):
 			_result_reveal_fx.play(_reduced_motion or replay_mode)
@@ -633,11 +640,54 @@ func _show_result_if_terminal(result: String) -> void:
 			_booster_tray.visible = false
 		if _result_reveal_fx != null and _result_reveal_fx.has_method("stop"):
 			_result_reveal_fx.stop()
+		result_objective_summary.text = _terminal_objective_summary(false)
 		_present_result_overlay("failed")
 		result_state_changed.emit("failed")
 
+func _terminal_objective_summary(won: bool) -> String:
+	if board_state == null:
+		return "OBJECTIVE COMPLETE" if won else "OBJECTIVE UNFINISHED"
+	var prefix := "OBJECTIVE COMPLETE" if won else "OBJECTIVE UNFINISHED"
+	if String(board_state.objective_type) == "collect_family":
+		var progress := mini(_objective_progress_value(), _objective_target_value())
+		return "%s · %d / %d %s SIGILS" % [prefix, progress, _objective_target_value(), String(board_state.objective_family).to_upper()]
+	if String(board_state.objective_type) == "clear_blockers":
+		return "%s · %d / %d WAX SEALS" % [prefix, _objective_progress_value(), _objective_target_value()]
+	return prefix
+
+func _style_terminal_result(kind: String) -> void:
+	if result_overlay == null:
+		return
+	var card := result_overlay.get_node_or_null("Card") as PanelContainer
+	if card == null:
+		return
+	var won := kind == "won"
+	var panel := StyleBoxFlat.new()
+	panel.bg_color = Color("#100D17", 0.99) if won else Color("#120D14", 0.99)
+	panel.border_color = (Color("#FFF1B6") if _high_contrast else Color("#D5AD70")) if won else (Color("#FFD3DF") if _high_contrast else Color("#9A6073"))
+	panel.set_border_width_all(3 if _high_contrast else 2)
+	panel.set_corner_radius_all(18)
+	panel.shadow_color = Color(0, 0, 0, 0.72)
+	panel.shadow_size = 26
+	panel.content_margin_left = 24
+	panel.content_margin_right = 24
+	panel.content_margin_top = 20
+	panel.content_margin_bottom = 20
+	card.add_theme_stylebox_override("panel", panel)
+	result_title.add_theme_color_override("font_color", Color("#FFF1B6") if won else Color("#F2D6DE"))
+	result_objective_summary.add_theme_color_override("font_color", Color("#F0CE8A") if won else Color("#E5B2C1"))
+
+func terminal_result_polish_contract() -> Dictionary:
+	return {
+		"objective_summary": result_objective_summary.text if result_objective_summary != null else "",
+		"transition": terminal_transition_contract(),
+		"retry_copy": hint_label.text if hint_label != null else "",
+		"distinct_result_material": true,
+	}
+
 func _present_result_overlay(kind: String) -> void:
 	_result_transition_kind = kind
+	_style_terminal_result(kind)
 	if _result_transition_tween != null and _result_transition_tween.is_valid():
 		_result_transition_tween.kill()
 	result_overlay.visible = true
