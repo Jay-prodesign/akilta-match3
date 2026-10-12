@@ -76,6 +76,7 @@ var _last_blocker_clear_fx_count: int = 0
 var _last_cascade_depth: int = 1
 var _last_landing_fx_count: int = 0
 var _last_longest_drop_rows: int = 0
+var _last_shuffle_fx_count: int = 0
 
 func _motion_stage_cells() -> Dictionary:
 	var visible: Dictionary = _motion_initial_cells.duplicate()
@@ -139,6 +140,7 @@ func motion_contract() -> Dictionary:
 	contract["cascade_escalation"] = "depth_scaled_clear_burst"
 	contract["landing_settle"] = "depth_weighted_squash_ring"
 	contract["gravity_ease"] = "cubic_out_with_settle"
+	contract["shuffle_recovery"] = "protected_input_rearrange_restore"
 	contract["reduced_motion_supported"] = true
 	return contract
 
@@ -176,6 +178,8 @@ func feedback_vfx_contract() -> Dictionary:
 		"last_cascade_depth": _last_cascade_depth,
 		"last_landing_fx_count": _last_landing_fx_count,
 		"last_longest_drop_rows": _last_longest_drop_rows,
+		"last_shuffle_fx_count": _last_shuffle_fx_count,
+		"shuffle_recovery_visible": _last_shuffle_fx_count > 0,
 		"reduced_motion_supported": true,
 		"reduced_motion": _reduced_motion
 	}
@@ -294,6 +298,7 @@ func _build_motion(trace) -> void:
 	_last_cascade_depth = 1
 	_last_landing_fx_count = 0
 	_last_longest_drop_rows = 0
+	_last_shuffle_fx_count = 0
 	_reveal_at.clear()
 	_motion_cascade_count = 1
 	for event in trace.events:
@@ -393,7 +398,8 @@ func _build_motion(trace) -> void:
 					"at": _parse_pos(event.get("at", ""))
 				})
 			"shuffle":
-				_motion_items.append({"type": "shuffle"})
+				_last_shuffle_fx_count += 1
+				_motion_items.append({"type": "shuffle", "attempt": int(event.get("attempt", 1))})
 			_:
 				pass
 
@@ -1122,12 +1128,35 @@ func _draw_motion() -> void:
 						draw_line(bcenter + Vector2(-1, -1) * cell_size * 0.16, bcenter + Vector2(1, 1) * cell_size * 0.16, impact, 2.4)
 						draw_line(bcenter + Vector2(1, -1) * cell_size * 0.16, bcenter + Vector2(-1, 1) * cell_size * 0.16, impact, 2.4)
 			"shuffle":
-				var shuffle_p := _phase_progress(0.0, 0.62)
+				var shuffle_p := _phase_progress(0.0, 0.72)
 				if shuffle_p > 0.0 and shuffle_p < 1.0:
-					var frame := Rect2(Vector2.ZERO, size).grow(-14.0)
-					var shuffle_color := Color(LILAC)
-					shuffle_color.a = 0.34 * sin(shuffle_p * PI)
-					draw_rect(frame, shuffle_color, false, 4.0)
+					var pulse := sin(shuffle_p * PI)
+					var geometry := _board_geometry()
+					var origin: Vector2 = geometry["origin"]
+					var cell_size := float(geometry["cell_size"])
+					var board_extent := Vector2(
+						cell_size * board_state.width + cell_gap * (board_state.width - 1),
+						cell_size * board_state.height + cell_gap * (board_state.height - 1)
+					)
+					var frame := Rect2(origin, board_extent).grow(10.0)
+					var center := frame.get_center()
+					var shuffle_color := Color("#FFFFFF") if _high_contrast else Color(LILAC)
+					shuffle_color.a = (0.70 if _high_contrast else 0.48) * pulse
+					draw_rect(frame, shuffle_color, false, 4.0 if _high_contrast else 3.0)
+					for corner in [frame.position, Vector2(frame.end.x, frame.position.y), frame.end, Vector2(frame.position.x, frame.end.y)]:
+						var direction := (center - corner).normalized()
+						var start := corner + direction * cell_size * 0.35
+						var finish := center - direction * cell_size * (0.55 + 0.15 * shuffle_p)
+						draw_line(start, finish, shuffle_color, 3.0 if _high_contrast else 2.0)
+					var diamond_r := cell_size * (0.30 + 0.20 * pulse)
+					var diamond := PackedVector2Array([
+						center + Vector2(0, -diamond_r),
+						center + Vector2(diamond_r, 0),
+						center + Vector2(0, diamond_r),
+						center + Vector2(-diamond_r, 0),
+						center + Vector2(0, -diamond_r)
+					])
+					draw_polyline(diamond, shuffle_color, 3.0 if _high_contrast else 2.0)
 			_:
 				pass
 
