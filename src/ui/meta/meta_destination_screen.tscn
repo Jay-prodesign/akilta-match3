@@ -91,7 +91,7 @@ grow_vertical = 2
 mouse_filter = 2
 color = Color(0.018, 0.012, 0.026, 0.32)
 
-[node name="Layout" type="VBoxContainer" parent="."]
+[node name="FeatureLayout" type="VBoxContainer" parent="."]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -104,7 +104,7 @@ grow_horizontal = 2
 grow_vertical = 2
 theme_override_constants/separation = 12
 
-[node name="Eyebrow" type="Label" parent="Layout"]
+[node name="Eyebrow" type="Label" parent="FeatureLayout"]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.831, 0.678, 0.439, 1)
 theme_override_colors/font_outline_color = Color(0.02, 0.014, 0.028, 0.95)
@@ -113,7 +113,7 @@ theme_override_font_sizes/font_size = 16
 text = "THE HOUSE OF CURIOS"
 horizontal_alignment = 1
 
-[node name="Title" type="Label" parent="Layout"]
+[node name="Title" type="Label" parent="FeatureLayout"]
 layout_mode = 2
 theme_override_colors/font_color = Color(1, 0.941, 0.847, 1)
 theme_override_colors/font_outline_color = Color(0.02, 0.014, 0.028, 0.97)
@@ -122,7 +122,7 @@ theme_override_font_sizes/font_size = 42
 text = "DESTINATION"
 horizontal_alignment = 1
 
-[node name="Detail" type="Label" parent="Layout"]
+[node name="Detail" type="Label" parent="FeatureLayout"]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.89, 0.824, 0.83, 1)
 theme_override_colors/font_outline_color = Color(0.02, 0.014, 0.028, 0.9)
@@ -132,34 +132,34 @@ text = "Destination detail"
 horizontal_alignment = 1
 autowrap_mode = 2
 
-[node name="Hero" type="PanelContainer" parent="Layout"]
+[node name="Hero" type="PanelContainer" parent="FeatureLayout"]
 custom_minimum_size = Vector2(0, 286)
 layout_mode = 2
 theme_override_styles/panel = SubResource("Hero")
 
-[node name="HeroRow" type="HBoxContainer" parent="Layout/Hero"]
+[node name="HeroRow" type="HBoxContainer" parent="FeatureLayout/Hero"]
 layout_mode = 2
 theme_override_constants/separation = 20
 
-[node name="HeroArt" type="TextureRect" parent="Layout/Hero/HeroRow"]
+[node name="HeroArt" type="TextureRect" parent="FeatureLayout/Hero/HeroRow"]
 custom_minimum_size = Vector2(270, 246)
 layout_mode = 2
 expand_mode = 1
 stretch_mode = 5
 
-[node name="HeroCopy" type="VBoxContainer" parent="Layout/Hero/HeroRow"]
+[node name="HeroCopy" type="VBoxContainer" parent="FeatureLayout/Hero/HeroRow"]
 layout_mode = 2
 size_flags_horizontal = 3
 theme_override_constants/separation = 7
 alignment = 1
 
-[node name="HeroKicker" type="Label" parent="Layout/Hero/HeroRow/HeroCopy"]
+[node name="HeroKicker" type="Label" parent="FeatureLayout/Hero/HeroRow/HeroCopy"]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.831, 0.678, 0.439, 1)
 theme_override_font_sizes/font_size = 16
 text = "STATE"
 
-[node name="HeroTitle" type="Label" parent="Layout/Hero/HeroRow/HeroCopy"]
+[node name="HeroTitle" type="Label" parent="FeatureLayout/Hero/HeroRow/HeroCopy"]
 layout_mode = 2
 theme_override_colors/font_color = Color(1, 0.941, 0.847, 1)
 theme_override_colors/font_outline_color = Color(0.02, 0.014, 0.028, 0.9)
@@ -168,18 +168,18 @@ theme_override_font_sizes/font_size = 28
 text = "HERO TITLE"
 autowrap_mode = 2
 
-[node name="HeroBody" type="Label" parent="Layout/Hero/HeroRow/HeroCopy"]
+[node name="HeroBody" type="Label" parent="FeatureLayout/Hero/HeroRow/HeroCopy"]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.84, 0.76, 0.82, 1)
 theme_override_font_sizes/font_size = 17
 text = "Hero body"
 autowrap_mode = 2
 
-[node name="Actions" type="HBoxContainer" parent="Layout"]
+[node name="Actions" type="HBoxContainer" parent="FeatureLayout"]
 layout_mode = 2
 theme_override_constants/separation = 10
 
-[node name="Primary" type="Button" parent="Layout/Actions"]
+[node name="Primary" type="Button" parent="FeatureLayout/Actions"]
 custom_minimum_size = Vector2(0, 62)
 layout_mode = 2
 size_flags_horizontal = 3
@@ -190,7 +190,7 @@ theme_override_styles/hover = SubResource("Primary")
 theme_override_styles/pressed = SubResource("Primary")
 text = "PRIMARY"
 
-[node name="Secondary" type="Button" parent="Layout/Actions"]
+[node name="Secondary" type="Button" parent="FeatureLayout/Actions"]
 custom_minimum_size = Vector2(0, 62)
 layout_mode = 2
 size_flags_horizontal = 3
@@ -203,155 +203,202 @@ theme_override_styles/pressed = SubResource("Secondary")
 theme_override_styles/disabled = SubResource("Secondary")
 text = "SECONDARY"
 
-[node name="CardScroll" type="ScrollContainer" parent="Layout"]
+[node name="CardScroll" type="ScrollContainer" parent="FeatureLayout"]
 layout_mode = 2
 size_flags_vertical = 3
 horizontal_scroll_mode = 0
 
-[node name="Cards" type="VBoxContainer" parent="Layout/CardScroll"]
+[node name="Cards" type="VBoxContainer" parent="FeatureLayout/CardScroll"]
 layout_mode = 2
 size_flags_horizontal = 3
 theme_override_constants/separation = 12
 
-[node name="Card1" type="PanelContainer" parent="Layout/CardScroll/Cards"]
+[node name="Card1" type="PanelContainer" parent="FeatureLayout/CardScroll/Cards"]
 custom_minimum_size = Vector2(0, 202)
 layout_mode = 2
 theme_override_styles/panel = SubResource("Card")
 
-[node name="Row" type="HBoxContainer" parent="Layout/CardScroll/Cards/Card1"]
+[node name="Row" type="HBoxContainer" parent="FeatureLayout/CardScroll/Cards/Card1"]
 layout_mode = 2
 theme_override_constants/separation = 18
 
-[node name="Art" type="TextureRect" parent="Layout/CardScroll/Cards/Card1/Row"]
+[node name="Art" type="TextureRect" parent="FeatureLayout/CardScroll/Cards/Card1/Row"]
 custom_minimum_size = Vector2(156, 156)
 layout_mode = 2
 expand_mode = 1
 stretch_mode = 5
 
-[node name="Copy" type="VBoxContainer" parent="Layout/CardScroll/Cards/Card1/Row"]
+[node name="Copy" type="VBoxContainer" parent="FeatureLayout/CardScroll/Cards/Card1/Row"]
 layout_mode = 2
 size_flags_horizontal = 3
 alignment = 1
 
-[node name="Kicker" type="Label" parent="Layout/CardScroll/Cards/Card1/Row/Copy"]
+[node name="Kicker" type="Label" parent="FeatureLayout/CardScroll/Cards/Card1/Row/Copy"]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.831, 0.678, 0.439, 1)
 theme_override_font_sizes/font_size = 13
 text = "KICKER"
 
-[node name="Title" type="Label" parent="Layout/CardScroll/Cards/Card1/Row/Copy"]
+[node name="Title" type="Label" parent="FeatureLayout/CardScroll/Cards/Card1/Row/Copy"]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.96, 0.9, 0.84, 1)
 theme_override_font_sizes/font_size = 24
 text = "TITLE"
 
-[node name="Body" type="Label" parent="Layout/CardScroll/Cards/Card1/Row/Copy"]
+[node name="Body" type="Label" parent="FeatureLayout/CardScroll/Cards/Card1/Row/Copy"]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.84, 0.76, 0.82, 1)
 theme_override_font_sizes/font_size = 16
 text = "BODY"
 autowrap_mode = 2
 
-[node name="Status" type="Label" parent="Layout/CardScroll/Cards/Card1/Row/Copy"]
+[node name="Status" type="Label" parent="FeatureLayout/CardScroll/Cards/Card1/Row/Copy"]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.75, 0.65, 0.84, 1)
 theme_override_font_sizes/font_size = 14
 text = "STATUS"
 autowrap_mode = 2
 
-[node name="Card2" type="PanelContainer" parent="Layout/CardScroll/Cards"]
+[node name="Card2" type="PanelContainer" parent="FeatureLayout/CardScroll/Cards"]
 custom_minimum_size = Vector2(0, 202)
 layout_mode = 2
 theme_override_styles/panel = SubResource("Card")
 
-[node name="Row" type="HBoxContainer" parent="Layout/CardScroll/Cards/Card2"]
+[node name="Row" type="HBoxContainer" parent="FeatureLayout/CardScroll/Cards/Card2"]
 layout_mode = 2
 theme_override_constants/separation = 18
 
-[node name="Art" type="TextureRect" parent="Layout/CardScroll/Cards/Card2/Row"]
+[node name="Art" type="TextureRect" parent="FeatureLayout/CardScroll/Cards/Card2/Row"]
 custom_minimum_size = Vector2(156, 156)
 layout_mode = 2
 expand_mode = 1
 stretch_mode = 5
 
-[node name="Copy" type="VBoxContainer" parent="Layout/CardScroll/Cards/Card2/Row"]
+[node name="Copy" type="VBoxContainer" parent="FeatureLayout/CardScroll/Cards/Card2/Row"]
 layout_mode = 2
 size_flags_horizontal = 3
 alignment = 1
 
-[node name="Kicker" type="Label" parent="Layout/CardScroll/Cards/Card2/Row/Copy"]
+[node name="Kicker" type="Label" parent="FeatureLayout/CardScroll/Cards/Card2/Row/Copy"]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.831, 0.678, 0.439, 1)
 theme_override_font_sizes/font_size = 13
 text = "KICKER"
 
-[node name="Title" type="Label" parent="Layout/CardScroll/Cards/Card2/Row/Copy"]
+[node name="Title" type="Label" parent="FeatureLayout/CardScroll/Cards/Card2/Row/Copy"]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.96, 0.9, 0.84, 1)
 theme_override_font_sizes/font_size = 24
 text = "TITLE"
 
-[node name="Body" type="Label" parent="Layout/CardScroll/Cards/Card2/Row/Copy"]
+[node name="Body" type="Label" parent="FeatureLayout/CardScroll/Cards/Card2/Row/Copy"]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.84, 0.76, 0.82, 1)
 theme_override_font_sizes/font_size = 16
 text = "BODY"
 autowrap_mode = 2
 
-[node name="Status" type="Label" parent="Layout/CardScroll/Cards/Card2/Row/Copy"]
+[node name="Status" type="Label" parent="FeatureLayout/CardScroll/Cards/Card2/Row/Copy"]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.75, 0.65, 0.84, 1)
 theme_override_font_sizes/font_size = 14
 text = "STATUS"
 autowrap_mode = 2
 
-[node name="Card3" type="PanelContainer" parent="Layout/CardScroll/Cards"]
+[node name="Card3" type="PanelContainer" parent="FeatureLayout/CardScroll/Cards"]
 custom_minimum_size = Vector2(0, 202)
 layout_mode = 2
 theme_override_styles/panel = SubResource("Card")
 
-[node name="Row" type="HBoxContainer" parent="Layout/CardScroll/Cards/Card3"]
+[node name="Row" type="HBoxContainer" parent="FeatureLayout/CardScroll/Cards/Card3"]
 layout_mode = 2
 theme_override_constants/separation = 18
 
-[node name="Art" type="TextureRect" parent="Layout/CardScroll/Cards/Card3/Row"]
+[node name="Art" type="TextureRect" parent="FeatureLayout/CardScroll/Cards/Card3/Row"]
 custom_minimum_size = Vector2(156, 156)
 layout_mode = 2
 expand_mode = 1
 stretch_mode = 5
 
-[node name="Copy" type="VBoxContainer" parent="Layout/CardScroll/Cards/Card3/Row"]
+[node name="Copy" type="VBoxContainer" parent="FeatureLayout/CardScroll/Cards/Card3/Row"]
 layout_mode = 2
 size_flags_horizontal = 3
 alignment = 1
 
-[node name="Kicker" type="Label" parent="Layout/CardScroll/Cards/Card3/Row/Copy"]
+[node name="Kicker" type="Label" parent="FeatureLayout/CardScroll/Cards/Card3/Row/Copy"]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.831, 0.678, 0.439, 1)
 theme_override_font_sizes/font_size = 13
 text = "KICKER"
 
-[node name="Title" type="Label" parent="Layout/CardScroll/Cards/Card3/Row/Copy"]
+[node name="Title" type="Label" parent="FeatureLayout/CardScroll/Cards/Card3/Row/Copy"]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.96, 0.9, 0.84, 1)
 theme_override_font_sizes/font_size = 24
 text = "TITLE"
 
-[node name="Body" type="Label" parent="Layout/CardScroll/Cards/Card3/Row/Copy"]
+[node name="Body" type="Label" parent="FeatureLayout/CardScroll/Cards/Card3/Row/Copy"]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.84, 0.76, 0.82, 1)
 theme_override_font_sizes/font_size = 16
 text = "BODY"
 autowrap_mode = 2
 
-[node name="Status" type="Label" parent="Layout/CardScroll/Cards/Card3/Row/Copy"]
+[node name="Status" type="Label" parent="FeatureLayout/CardScroll/Cards/Card3/Row/Copy"]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.75, 0.65, 0.84, 1)
 theme_override_font_sizes/font_size = 14
 text = "STATUS"
 autowrap_mode = 2
 
-[node name="TruthStrip" type="Label" parent="Layout"]
+[node name="SaveHealthCard" type="PanelContainer" parent="FeatureLayout"]
+visible = false
+custom_minimum_size = Vector2(0, 250)
+layout_mode = 2
+theme_override_styles/panel = SubResource("Card")
+
+[node name="SaveHealthContent" type="VBoxContainer" parent="FeatureLayout/SaveHealthCard"]
+layout_mode = 2
+theme_override_constants/separation = 5
+
+[node name="Kicker" type="Label" parent="FeatureLayout/SaveHealthCard/SaveHealthContent"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.831, 0.678, 0.439, 1)
+theme_override_font_sizes/font_size = 14
+text = "SAVE & ACCOUNT"
+horizontal_alignment = 1
+
+[node name="LocalSaveStatus" type="Label" parent="FeatureLayout/SaveHealthCard/SaveHealthContent"]
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 0.941, 0.847, 1)
+theme_override_font_sizes/font_size = 20
+text = "LOCAL SAVE · DEVICE-LOCAL"
+horizontal_alignment = 1
+
+[node name="LocalSaveDetail" type="Label" parent="FeatureLayout/SaveHealthCard/SaveHealthContent"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.84, 0.76, 0.82, 1)
+theme_override_font_sizes/font_size = 15
+text = "Progress is stored on this device."
+horizontal_alignment = 1
+autowrap_mode = 2
+
+[node name="CloudSyncStatus" type="Label" parent="FeatureLayout/SaveHealthCard/SaveHealthContent"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.75, 0.65, 0.84, 1)
+theme_override_font_sizes/font_size = 16
+text = "CLOUD SYNC · NOT CONNECTED"
+horizontal_alignment = 1
+
+[node name="CloudSyncDetail" type="Label" parent="FeatureLayout/SaveHealthCard/SaveHealthContent"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.72, 0.66, 0.72, 1)
+theme_override_font_sizes/font_size = 14
+text = "No account sign-in, remote backup, or cross-device restore is active in this build."
+horizontal_alignment = 1
+autowrap_mode = 2
+
+[node name="TruthStrip" type="Label" parent="FeatureLayout"]
 custom_minimum_size = Vector2(0, 44)
 layout_mode = 2
 theme_override_colors/font_color = Color(0.831, 0.678, 0.439, 1)
@@ -363,7 +410,7 @@ horizontal_alignment = 1
 vertical_alignment = 1
 autowrap_mode = 2
 
-[node name="Back" type="Button" parent="Layout"]
+[node name="Back" type="Button" parent="FeatureLayout"]
 custom_minimum_size = Vector2(0, 58)
 layout_mode = 2
 theme_override_colors/font_color = Color(0.96, 0.9, 0.84, 1)
