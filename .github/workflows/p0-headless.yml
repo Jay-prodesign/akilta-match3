@@ -49,6 +49,7 @@ on:
       - "tests/integration/test_golden_feedback_vfx.gd"
       - "tests/integration/test_gameplay_feel.gd"
       - "tests/integration/test_gameplay_impact_hierarchy.gd"
+      - "tests/integration/test_gameplay_objective_terminal_feedback.gd"
       - "tests/integration/test_opening_two_level_journey.gd"
       - "tests/integration/test_returning_player_resume.gd"
   # Milestone trigger: canonical Golden Loop architecture + playable journey verification (2026-10-11).
@@ -238,6 +239,18 @@ jobs:
           if [ "$status" -ne 0 ]; then exit "$status"; fi
           if grep -Eq "SCRIPT ERROR:|(^| )ERROR:|TEST_FAIL:" <<<"$output"; then exit 1; fi
           grep -Fq "TEST_PASS: gameplay blocker special and cascade impact hierarchy" <<<"$output"
+
+      - name: Run gameplay objective and terminal feel contract
+        shell: bash
+        run: |
+          set +e
+          output=$(timeout 45s ./godot --headless --path . -s res://tests/integration/test_gameplay_objective_terminal_feedback.gd 2>&1)
+          status=$?
+          set -e
+          printf '%s\n' "$output"
+          if [ "$status" -ne 0 ]; then exit "$status"; fi
+          if grep -Eq "SCRIPT ERROR:|(^| )ERROR:|TEST_FAIL:" <<<"$output"; then exit 1; fi
+          grep -Fq "TEST_PASS: gameplay objective progress and terminal transition feel" <<<"$output"
 
       - name: Run durable progression contract
         shell: bash

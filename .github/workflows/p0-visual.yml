@@ -17,6 +17,7 @@ on:
       - "tests/visual/capture_golden_feedback_vfx.gd"
       - "tests/visual/capture_gameplay_urgency.gd"
       - "tests/visual/capture_gameplay_impact_hierarchy.gd"
+      - "tests/visual/capture_gameplay_objective_terminal.gd"
       - "tests/visual/capture_splash_states.gd"
       - "tests/visual/capture_level1_failure.gd"
       - "tests/visual/capture_three_level_progression.gd"
@@ -154,6 +155,21 @@ jobs:
           test -s artifacts/gameplay-blocker-clear-impact.png
           test -s artifacts/gameplay-special-trigger-impact.png
 
+      - name: Render gameplay objective and terminal feel
+        shell: bash
+        run: |
+          set -uo pipefail
+          set +e
+          output=$(LIBGL_ALWAYS_SOFTWARE=1 xvfb-run -a ./godot --audio-driver Dummy --path . -s res://tests/visual/capture_gameplay_objective_terminal.gd 2>&1)
+          status=$?
+          set -e
+          printf '%s\n' "$output"
+          if [ "$status" -ne 0 ]; then exit "$status"; fi
+          if grep -Eq "SCRIPT ERROR:|(^| )ERROR:|CAPTURE_FAIL:" <<<"$output"; then exit 1; fi
+          grep -Fq "CAPTURE_PASS: gameplay objective and terminal transition feel" <<<"$output"
+          test -s artifacts/gameplay-objective-progress.png
+          test -s artifacts/gameplay-win-terminal-settled.png
+
       - name: Render Golden Loop failure and retry branch
         shell: bash
         run: |
@@ -278,6 +294,8 @@ jobs:
             artifacts/gameplay-last-move-high-contrast.png
             artifacts/gameplay-blocker-clear-impact.png
             artifacts/gameplay-special-trigger-impact.png
+            artifacts/gameplay-objective-progress.png
+            artifacts/gameplay-win-terminal-settled.png
             artifacts/golden-00-splash.png
             artifacts/golden-01-house-dormant.png
             artifacts/golden-02-chapter-route.png
