@@ -34,6 +34,10 @@ func _run() -> void:
 	_expect(String(presets.get_value("preset.4.options", "package/unique_name", "")) == "com.akilta.catandcoven", "Android emulator package identity mismatch")
 	_expect(bool(presets.get_value("preset.4.options", "architectures/x86_64", false)), "CI emulator APK must include x86_64")
 	_expect(not bool(presets.get_value("preset.4.options", "architectures/arm64-v8a", true)), "CI emulator APK must remain separate from the production arm64 artifact contract")
+	for native_index in [1, 2, 3, 4]:
+		var include_filter := String(presets.get_value("preset.%d" % native_index, "include_filter", ""))
+		_expect(include_filter.contains("*.webp") and include_filter.contains("*.png"), "native export must retain raw authored raster files")
+		_expect(include_filter.contains("*.json"), "native export must retain raw authored level/content JSON")
 
 	var raw := FileAccess.get_file_as_string("res://export_presets.cfg")
 	_expect(raw.contains('exclude_filter="build/*,tests/*,tools/*,docs/*"'), "production mobile exports must exclude tests/tools/docs")
