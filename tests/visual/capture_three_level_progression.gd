@@ -146,16 +146,18 @@ func _capture() -> void:
 	var shop_hero_title: Label = app.current_screen().get_node_or_null("FeatureLayout/FeatureHero/HeroRow/HeroCopy/FeatureHeroTitle") as Label
 	var shop_art: TextureRect = app.current_screen().get_node_or_null("FeatureLayout/FeatureHero/HeroRow/ShopFeaturedOfferArt") as TextureRect
 	var shop_disabled_action: Button = app.current_screen().get_node_or_null("FeatureLayout/FeatureHero/HeroRow/HeroCopy/ShopDisabledAction") as Button
-	if shop_notice == null or not shop_notice.text.contains("NO PURCHASES OR PAYMENTS"):
-		return _fail(app, "Shop must truthfully expose that purchases are disabled")
+	if shop_notice == null or not shop_notice.text.contains("NO PRICES") or not shop_notice.text.contains("NO PURCHASES") or not shop_notice.text.contains("NO PAYMENTS"):
+		return _fail(app, "Shop must truthfully expose that prices, purchases and payments are disabled")
 	if shop_currency == null or not shop_currency.text.contains("HOUSE COINS  12700") or not shop_currency.text.contains("MOONSTONES  523"):
 		return _fail(app, "Shop currency summary must reflect persisted review balances")
 	if shop_truth == null or not shop_truth.text.contains("NOT PURCHASABLE"):
 		return _fail(app, "Shop currency summary must not imply commerce availability")
 	if shop_hero_title == null or shop_hero_title.text != "NO PURCHASES ENABLED":
 		return _fail(app, "Shop hero must remain an admitted unavailable state")
-	if shop_art == null or shop_art.texture == null or shop_disabled_action == null or not shop_disabled_action.disabled:
-		return _fail(app, "Shop featured offer must provide art with a disabled commerce CTA")
+	if shop_art == null or shop_art.texture == null or not String(shop_art.get_meta("asset_path", "")).ends_with(".webp") or not bool(shop_art.get_meta("sealed_preview", false)):
+		return _fail(app, "Shop sealed preview must use authored raster cabinet art")
+	if shop_disabled_action == null or not shop_disabled_action.disabled:
+		return _fail(app, "Shop sealed preview must keep commerce disabled")
 	if not await _save(app, "progression-final-shop.png"):
 		return
 	app.current_screen().get_node("FeatureLayout/BackToHouse").emit_signal("pressed")
