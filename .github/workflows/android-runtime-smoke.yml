@@ -215,6 +215,18 @@ jobs:
           PACKAGE="com.akilta.catandcoven"
           adb logcat -b crash -d > artifacts/crash-buffer.txt || true
           adb logcat -d > artifacts/logcat.txt || true
+
+          {
+            echo "NATIVE_FRAME_BYTES"
+            for frame in artifacts/android-01-cold-launch.png artifacts/android-02-resumed.png artifacts/android-03-force-stop-relaunch.png; do
+              bytes="$(stat -c%s "$frame")"
+              echo "$(basename "$frame")=$bytes"
+              if [ "$bytes" -lt 50000 ]; then
+                echo "Native frame is too small to constitute rendered Cat & Coven UI: $frame ($bytes bytes)"
+                exit 1
+              fi
+            done
+          } | tee artifacts/native-frame-sizes.txt
           if grep -Fq "$PACKAGE" artifacts/crash-buffer.txt; then
             cat artifacts/crash-buffer.txt
             exit 1
