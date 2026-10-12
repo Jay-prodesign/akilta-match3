@@ -32,6 +32,18 @@ func _run() -> void:
 	await process_frame
 	_expect(str(app.current_route_name()) == "house", "splash entry must route into House")
 	var house = app.current_screen()
+	_expect(house.has_method("ftue_house_contract"), "first House must expose FTUE guidance contract")
+	if house.has_method("ftue_house_contract"):
+		var ftue: Dictionary = house.ftue_house_contract()
+		_expect(bool(ftue.get("active", false)), "brand-new player must see First Ritual guidance")
+		_expect(String(ftue.get("copy", "")).contains("ENTER CURIO BOUTIQUE") and String(ftue.get("copy", "")).contains("ASK KEEPER"), "First Ritual guidance must connect the primary CTA to Keeper help")
+		_expect(bool(ftue.get("keeper_available", false)), "First Ritual guidance must point to an available Keeper action")
+	var ftue_dismiss: Button = house.get_node_or_null("Layout/FirstRitualGuide/Dismiss") as Button
+	_expect(ftue_dismiss != null and ftue_dismiss.custom_minimum_size.y >= 56.0, "First Ritual guidance must have a mobile-safe dismiss target")
+	if ftue_dismiss != null:
+		ftue_dismiss.emit_signal("pressed")
+		await process_frame
+		_expect(not bool(house.ftue_house_contract().get("active", true)), "dismissed First Ritual guidance must leave the House unobstructed for this visit")
 	var dormant_cameo: Control = house.get_node("Layout/RoomView/MoonCameoOverlay")
 	_expect(not dormant_cameo.visible, "Moon Cameo physical relic must stay hidden before Level 1 is won")
 	_expect(house.has_method("keeper_house_contract"), "House must expose the Keeper familiar contract")
