@@ -1,8 +1,5 @@
-[gd_scene load_steps=8 format=3]
+[gd_scene load_steps=5 format=3]
 
-[ext_resource type="Texture2D" path="res://assets/ui/ui_coin.svg" id="1_coin"]
-[ext_resource type="Texture2D" path="res://assets/ui/ui_gem.svg" id="2_gem"]
-[ext_resource type="Texture2D" path="res://assets/ui/ui_profile.svg" id="3_profile"]
 
 [sub_resource type="StyleBoxFlat" id="Shell"]
 bg_color = Color(0.031, 0.027, 0.051, 0.94)
@@ -91,7 +88,6 @@ alignment = 1
 custom_minimum_size = Vector2(32, 32)
 layout_mode = 2
 mouse_filter = 2
-texture = ExtResource("1_coin")
 expand_mode = 1
 stretch_mode = 5
 
@@ -115,7 +111,6 @@ alignment = 1
 custom_minimum_size = Vector2(32, 32)
 layout_mode = 2
 mouse_filter = 2
-texture = ExtResource("2_gem")
 expand_mode = 1
 stretch_mode = 5
 
@@ -134,6 +129,5 @@ theme_override_styles/normal = SubResource("Profile")
 theme_override_styles/hover = SubResource("ProfileFocus")
 theme_override_styles/pressed = SubResource("ProfileFocus")
 theme_override_styles/focus = SubResource("ProfileFocus")
-icon = ExtResource("3_profile")
 expand_icon = true
 tooltip_text = "Keeper profile and settings"
