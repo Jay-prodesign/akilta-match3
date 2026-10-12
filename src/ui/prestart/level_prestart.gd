@@ -17,6 +17,11 @@ const ScreenArt = preload("res://src/ui/shared/screen_art_registry.gd")
 @onready var start_button: Button = $Layout/Card/Content/Start
 @onready var back_button: Button = $Layout/Back
 
+const AID_ART_PATHS := {
+	"hint": "res://assets/pieces/moon_sigil.webp",
+	"plus_moves": "res://assets/pieces/potion.webp"
+}
+
 var level_number: int = 1
 
 func _ready() -> void:
@@ -91,8 +96,8 @@ func _build_ritual_aids() -> void:
 	row.add_theme_constant_override("separation", 6)
 	column.add_child(row)
 	for entry in [
-		{"label":"HINT", "art":"res://assets/pieces/moon_sigil.webp"},
-		{"label":"+3 MOVES", "art":"res://assets/pieces/potion.svg"}
+		{"label":"HINT", "art":String(AID_ART_PATHS["hint"])},
+		{"label":"+3 MOVES", "art":String(AID_ART_PATHS["plus_moves"])}
 	]:
 		var chip := PanelContainer.new()
 		chip.custom_minimum_size = Vector2(0, 56)
@@ -120,6 +125,19 @@ func _build_ritual_aids() -> void:
 		caption.add_theme_color_override("font_color", Color("#F4E5D3"))
 		caption.add_theme_font_size_override("font_size", 20)
 		chip_row.add_child(caption)
+
+func aid_asset_contract() -> Dictionary:
+	var loaded := {}
+	var raster_runtime := true
+	for key in AID_ART_PATHS:
+		var path := String(AID_ART_PATHS[key])
+		loaded[key] = PieceAssetLoader.ornament(path) != null
+		raster_runtime = raster_runtime and (path.ends_with(".webp") or path.ends_with(".png"))
+	return {
+		"paths": AID_ART_PATHS.duplicate(true),
+		"loaded": loaded,
+		"raster_runtime": raster_runtime
+	}
 
 func _style_ritual_actions() -> void:
 	var gold := Color("#D8B56A")
