@@ -123,8 +123,7 @@ func show_prestart(level_number: int) -> bool:
 	level_file.close()
 	if not level_data is Dictionary:
 		return false
-	var entry_route: int = navigation.current()
-	if not navigation.go(NavigationScript.Route.PRESTART, {"level": level_number, "origin": entry_route}):
+	if not navigation.go(NavigationScript.Route.PRESTART, {"level": level_number}):
 		return false
 	var screen: Node = PrestartScene.instantiate()
 	_show_screen(screen)
@@ -135,7 +134,7 @@ func show_prestart(level_number: int) -> bool:
 		_ensure_house_route()
 		return false
 	_pending_level_number = level_number
-	screen.back_button.text = "BACK TO MAP" if entry_route == NavigationScript.Route.MAP else "BACK TO HOUSE"
+	screen.back_button.text = "BACK TO MAP"
 	screen.back_requested.connect(_on_prestart_back)
 	screen.start_requested.connect(_on_prestart_start)
 	return true
@@ -181,6 +180,13 @@ func start_level(level_number: int = 1) -> bool:
 	return true
 
 func complete_level_win(transaction_id: String, level_id: String, curio_id: String = "moon_cameo", house_stage_reward: int = -1) -> bool:
+	# Reward acknowledgement is only valid from the visible win/rewards route.
+	# Never persist a transaction first and reject its navigation afterwards:
+	# that strands an already-claimed Curio without the restoration ceremony.
+	if navigation == null or navigation.current() != NavigationScript.Route.WIN_REWARDS:
+		return false
+	if _store == null:
+		return false
 	if progress == null:
 		progress = ProgressScript.new()
 	var curio_was_owned: bool = progress.curios.has(curio_id)
@@ -189,21 +195,19 @@ func complete_level_win(transaction_id: String, level_id: String, curio_id: Stri
 	var applied: bool = bool(candidate.apply_level_win(transaction_id, level_id, curio_id, house_stage_reward))
 	if not applied:
 		return false
+	var restoration_needed := not curio_was_owned or int(candidate.house_stage) > previous_house_stage
+	var destination := NavigationScript.Route.RESTORATION if restoration_needed else NavigationScript.Route.HOUSE
+	if not navigation.can_go(destination):
+		return false
 	if not _store.save(candidate.to_dict()):
 		return false
 	progress = candidate
-	var restoration_needed := not curio_was_owned or int(candidate.house_stage) > previous_house_stage
 	if restoration_needed:
-		if navigation.current() != NavigationScript.Route.WIN_REWARDS:
-			return false
 		if not navigation.go(NavigationScript.Route.RESTORATION, {"reason": "level_reward_restoration"}):
 			return false
 		_render_house(true, curio_id, int(candidate.house_stage))
 	else:
-		if navigation.current() == NavigationScript.Route.WIN_REWARDS:
-			if not navigation.go(NavigationScript.Route.HOUSE, {"reason": "level_replay_complete"}):
-				return false
-		elif navigation.current() != NavigationScript.Route.HOUSE:
+		if not navigation.go(NavigationScript.Route.HOUSE, {"reason": "level_replay_complete"}):
 			return false
 		_render_house(false, "", int(candidate.house_stage))
 	return true
@@ -769,6 +773,8 @@ func _render_house(restoration_mode: bool = false, curio_id: String = "", restor
 func _on_restoration_finished() -> void:
 	if navigation.current() == NavigationScript.Route.RESTORATION:
 		navigation.go(NavigationScript.Route.HOUSE, {"reason": "restoration_complete"})
+		# House is already rendered beneath the restoration ceremony.
+		# Keep the next-level CTA available without forcing another route.
 
 func _on_collection_back() -> void:
 	if navigation.go(NavigationScript.Route.HOUSE, {"via": "collection_back"}):
@@ -806,7 +812,10 @@ func _on_gameplay_result_state_changed(kind: String) -> void:
 func _on_level_won(level_id: String, curio_id: String, house_stage_reward: int) -> void:
 	_pending_level_number = 0
 	var transaction_id := "win:first:%s" % level_id
-	complete_level_win(transaction_id, level_id, curio_id, house_stage_reward)
+	if not complete_level_win(transaction_id, level_id, curio_id, house_stage_reward):
+		# Keep the visible reward claim retryable when persistence fails.
+		if _current_screen != null and is_instance_valid(_current_screen) and _current_screen.has_method("restore_reward_claim"):
+			_current_screen.restore_reward_claim()
 
 func _on_level_replay_finished(level_id: String) -> void:
 	_pending_level_number = 0

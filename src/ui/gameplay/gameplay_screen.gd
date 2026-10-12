@@ -44,6 +44,8 @@ var _pending_terminal_result: String = ""
 var _pending_hud_refresh: bool = false
 var haptics = HapticsController.new()
 var _potion_used_for_attempt := false
+var _idle_hint_seconds: float = 0.0
+const AUTO_HINT_DELAY_SECONDS := 9.0
 var _level_badge_label: Label
 var _booster_tray: PanelContainer
 var _resource_life_label: Label
@@ -81,6 +83,21 @@ var _reduced_motion: bool = false
 @onready var result_house_change: Label = $ResultOverlay/Card/Content/HouseChange
 @onready var result_ritual: Control = $ResultOverlay/Card/Content/RewardRitual
 @onready var result_action: Button = $ResultOverlay/Card/Content/Action
+
+func _process(delta: float) -> void:
+	if board_state == null or result_overlay.visible or pause_overlay.visible or _pending_terminal_result != "":
+		_idle_hint_seconds = 0.0
+		return
+	if board_view.has_method("is_motion_active") and bool(board_view.is_motion_active()):
+		_idle_hint_seconds = 0.0
+		return
+	_idle_hint_seconds += delta
+	if _idle_hint_seconds >= AUTO_HINT_DELAY_SECONDS:
+		_idle_hint_seconds = 0.0
+		var legal_move: Dictionary = MoveFinder.first_legal_move(board_state)
+		if not legal_move.is_empty() and board_view.has_method("set_teaching_move"):
+			board_view.set_teaching_move(legal_move["from"], legal_move["to"])
+			hint_label.text = "Follow the moonlit pair for your next match."
 
 func _ready() -> void:
 	world_backdrop.texture = ScreenArt.texture("gameplay_bg_curio_boutique")
@@ -138,6 +155,7 @@ func load_level_path(path: String, seed_value: int = 1001) -> bool:
 	current_level_path = path
 	current_seed = seed_value
 	_potion_used_for_attempt = false
+	_idle_hint_seconds = 0.0
 	current_level_id = String(parsed.get("id", ""))
 	_update_level_badge()
 	current_reward_curio = String(parsed.get("reward_curio", ""))
@@ -222,6 +240,7 @@ func _configure_teaching_move(level_data: Dictionary) -> void:
 		board_view.clear_teaching_move()
 
 func show_pause() -> bool:
+	_idle_hint_seconds = 0.0
 	if board_state == null or result_overlay.visible or pause_overlay.visible:
 		return false
 	if board_view.has_method("is_motion_active") and bool(board_view.is_motion_active()):
@@ -235,6 +254,7 @@ func resume_level() -> bool:
 	if not pause_overlay.visible:
 		return false
 	pause_overlay.visible = false
+	_idle_hint_seconds = 0.0
 	if _booster_tray != null:
 		_booster_tray.visible = true
 	return true
@@ -252,6 +272,7 @@ func _on_pause_exit() -> void:
 	level_exit_requested.emit()
 
 func attempt_swap(from: Vector2i, to: Vector2i):
+	_idle_hint_seconds = 0.0
 	if board_state == null or result_overlay.visible or pause_overlay.visible:
 		return null
 	if board_view.has_method("is_motion_active") and bool(board_view.is_motion_active()):
@@ -298,6 +319,15 @@ func continue_after_win() -> bool:
 		level_won.emit(current_level_id, current_reward_curio, current_house_stage_reward)
 	return true
 
+func restore_reward_claim() -> void:
+	# A failed durable write must not consume the one-shot Continue action.
+	# The player remains on the win result and may retry the same claim.
+	_pending_win = true
+	result_overlay.visible = true
+	result_action.disabled = false
+	result_action.text = "RETRY REWARD"
+	result_detail.text = "The House could not save your reward. Your win is still here; try again."
+
 func retry_current_level() -> bool:
 	if current_level_path == "":
 		return false
@@ -328,7 +358,7 @@ func _refresh_hud() -> void:
 		objective_label.text = "Awaken the collection"
 		moves_label.text = "—"
 		return
-	moves_label.text = "%d moves" % int(board_state.moves_remaining)
+	moves_label.text = "%d MOVES LEFT" % int(board_state.moves_remaining)
 	var progress_value := int(board_state.objective_progress)
 	var target_value := int(board_state.objective_target)
 	var progress_family := String(board_state.objective_family)
@@ -700,8 +730,8 @@ func _build_top_resource_bar() -> void:
 	level.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	level.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
 	level.add_theme_color_override("font_color", Color("#D5AD70"))
-	level.add_theme_font_size_override("font_size", 13)
-	level.custom_minimum_size = Vector2(84, 0)
+	level.add_theme_font_size_override("font_size", 17)
+	level.custom_minimum_size = Vector2(94, 0)
 	row.add_child(level)
 	_level_badge_label = level
 
@@ -724,7 +754,7 @@ func _add_resource_chip(parent: HBoxContainer, node_name: String, icon_path: Str
 	content.add_theme_constant_override("separation", 2)
 	chip.add_child(content)
 	var icon := TextureRect.new()
-	icon.custom_minimum_size = Vector2(26, 26)
+	icon.custom_minimum_size = Vector2(31, 31)
 	icon.texture = PieceAssetLoader.ornament(icon_path)
 	icon.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
 	icon.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
@@ -734,7 +764,7 @@ func _add_resource_chip(parent: HBoxContainer, node_name: String, icon_path: Str
 	label.name = node_name
 	label.text = value
 	label.add_theme_color_override("font_color", Color("#F4E5D3"))
-	label.add_theme_font_size_override("font_size", 13)
+	label.add_theme_font_size_override("font_size", 17)
 	content.add_child(label)
 	return label
 
@@ -757,7 +787,7 @@ func _build_booster_tray() -> void:
 	panel.anchor_top = 0.0
 	panel.anchor_bottom = 0.0
 	panel.offset_top = 760.0
-	panel.offset_bottom = 822.0
+	panel.offset_bottom = 830.0
 	panel.z_index = 18
 	var shell := StyleBoxFlat.new()
 	shell.bg_color = Color("#100B16", 0.985)
@@ -783,19 +813,19 @@ func _position_booster_tray() -> void:
 	var screen_rect := get_global_rect()
 	var desired_top := hint_rect.end.y - screen_rect.position.y + 8.0
 	var safe_bottom := maxf(0.0, size.y - 12.0)
-	var top := minf(desired_top, maxf(0.0, safe_bottom - 62.0))
+	var top := minf(desired_top, maxf(0.0, safe_bottom - 70.0))
 	_booster_tray.anchor_top = 0.0
 	_booster_tray.anchor_bottom = 0.0
 	_booster_tray.offset_top = top
-	_booster_tray.offset_bottom = top + 62.0
+	_booster_tray.offset_bottom = top + 70.0
 
 
 func _add_booster_button(parent: HBoxContainer, caption: String, art_path: String, action: Callable) -> void:
 	var button := Button.new()
 	button.text = caption
-	button.custom_minimum_size = Vector2(0, 54)
+	button.custom_minimum_size = Vector2(0, 62)
 	button.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	button.add_theme_font_size_override("font_size", 14)
+	button.add_theme_font_size_override("font_size", 19)
 	button.add_theme_color_override("font_color", Color("#F4E5D3"))
 	button.icon = PieceAssetLoader.ornament(art_path)
 	button.expand_icon = true
@@ -810,7 +840,10 @@ func _add_booster_button(parent: HBoxContainer, caption: String, art_path: Strin
 	parent.add_child(button)
 
 func _use_potion_boost() -> void:
+	_idle_hint_seconds = 0.0
 	if board_state == null or _potion_used_for_attempt or result_overlay.visible or pause_overlay.visible:
+		return
+	if board_view.has_method("is_motion_active") and bool(board_view.is_motion_active()):
 		return
 	_potion_used_for_attempt = true
 	board_state.moves_remaining += 3
@@ -819,7 +852,10 @@ func _use_potion_boost() -> void:
 	feedback_requested.emit("special")
 
 func _use_hint_boost() -> void:
+	_idle_hint_seconds = 0.0
 	if board_state == null or result_overlay.visible or pause_overlay.visible:
+		return
+	if board_view.has_method("is_motion_active") and bool(board_view.is_motion_active()):
 		return
 	var move: Dictionary = MoveFinder.first_legal_move(board_state)
 	if move.is_empty():
@@ -830,6 +866,9 @@ func _use_hint_boost() -> void:
 	feedback_requested.emit("match")
 
 func _use_retry_boost() -> void:
+	_idle_hint_seconds = 0.0
 	if board_state == null or result_overlay.visible or pause_overlay.visible:
+		return
+	if board_view.has_method("is_motion_active") and bool(board_view.is_motion_active()):
 		return
 	retry_current_level()
