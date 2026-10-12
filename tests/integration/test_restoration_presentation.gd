@@ -20,7 +20,7 @@ func _run() -> void:
 	await _frames(3)
 	var reduced_room = reduced.get_node_or_null("Layout/RoomView")
 	var reduced_card: PanelContainer = reduced.get_node_or_null("RestorationOverlay/CeremonyCard") as PanelContainer
-	var reduced_hero: TextureRect = reduced.get_node_or_null("RestorationOverlay/AwakeningCurio") as TextureRect
+	var reduced_hero: TextureRect = reduced.get_node_or_null("RestorationOverlay/AwakeningMotif") as TextureRect
 	_expect(reduced_room != null, "Reduced Motion restoration room missing")
 	if reduced_room != null:
 		var contract: Dictionary = reduced_room.restoration_contract()
@@ -29,7 +29,7 @@ func _run() -> void:
 		_expect(reduced_room.modulate == Color.WHITE, "Reduced Motion must not leave the House in a transitional tint")
 		_expect(reduced_room.get_node_or_null("RestorationAwakeningEcho") == null, "Reduced Motion must skip scale/tween awakening echo")
 	_expect(reduced_card != null and reduced_card.size.y <= reduced.size.y * 0.13, "Restoration ceremony summary must stay compact over the House world")
-	_expect(reduced_hero != null and reduced_hero.texture != null, "Restoration must render the recovered Curio as a hero artwork in the House world")
+	_expect(reduced_hero != null and reduced_hero.texture != null, "Restoration must render the recovered Curio motif as production hero artwork while exact item identity remains in the summary")
 	reduced.queue_free()
 	await _frames(2)
 
@@ -44,7 +44,7 @@ func _run() -> void:
 	await _frames(3)
 	var animated_room = animated.get_node_or_null("Layout/RoomView")
 	var animated_card: PanelContainer = animated.get_node_or_null("RestorationOverlay/CeremonyCard") as PanelContainer
-	var animated_hero: TextureRect = animated.get_node_or_null("RestorationOverlay/AwakeningCurio") as TextureRect
+	var animated_hero: TextureRect = animated.get_node_or_null("RestorationOverlay/AwakeningMotif") as TextureRect
 	_expect(animated_room != null, "Animated restoration room missing")
 	if animated_room != null:
 		var contract: Dictionary = animated_room.restoration_contract()
@@ -53,7 +53,7 @@ func _run() -> void:
 		var echo: TextureRect = animated_room.get_node_or_null("RestorationAwakeningEcho") as TextureRect
 		_expect(echo != null and echo.texture != null, "Stage 3 must render the contract-owned Curio awakening echo")
 	_expect(animated_card != null and animated_card.size.y <= animated.size.y * 0.13, "Animated ceremony summary must stay compact over the House world")
-	_expect(animated_hero != null and animated_hero.texture != null, "Animated restoration must retain the recovered Curio hero artwork")
+	_expect(animated_hero != null and animated_hero.texture != null, "Animated restoration must retain the recovered Curio production motif")
 	animated.queue_free()
 	await _frames(2)
 
