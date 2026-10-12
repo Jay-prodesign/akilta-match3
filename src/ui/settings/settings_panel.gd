@@ -5,6 +5,7 @@ signal close_requested
 signal interaction_feedback_requested(kind: String)
 
 const PieceAssetLoader = preload("res://src/match3/presentation/piece_asset_loader.gd")
+const ScreenArt = preload("res://src/ui/shared/screen_art_registry.gd")
 
 @export var card_normal_style: StyleBoxFlat
 @export var card_high_style: StyleBoxFlat
@@ -29,12 +30,14 @@ const PieceAssetLoader = preload("res://src/match3/presentation/piece_asset_load
 @onready var close_button: Button = $Card/Content/Close
 @onready var saved_note: Label = $Card/Content/SavedNote
 @onready var house_sigil: TextureRect = $Card/Content/HouseSigil
+@onready var world_art: TextureRect = $WorldArt
 
 var settings
 var _binding_controls := false
 var _high_contrast := false
 
 func _ready() -> void:
+	world_art.texture = ScreenArt.texture("settings_bg_curio_house")
 	house_sigil.texture = PieceAssetLoader.ornament("res://assets/pieces/moon_sigil.webp")
 	_style_settings_overlay()
 	close_button.pressed.connect(_on_close_pressed)
@@ -146,6 +149,8 @@ func _style_toggle(toggle: CheckButton) -> void:
 func settings_authored_contract() -> Dictionary:
 	return {
 		"authored_house_sigil": house_sigil != null and house_sigil.texture != null,
+		"authored_world_backdrop": world_art != null and world_art.texture != null,
+		"standalone_destination_surface": true,
 		"sigil_raster_runtime": true,
 		"authored_style_resources": card_normal_style != null and card_high_style != null and toggle_normal_style != null and toggle_high_style != null and close_normal_style != null and close_high_style != null,
 		"runtime_ui_factory": false,

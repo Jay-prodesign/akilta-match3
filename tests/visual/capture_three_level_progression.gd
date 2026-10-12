@@ -283,7 +283,19 @@ func _capture() -> void:
 		return _fail(app, "Settings modal must preserve the Profile route")
 	var settings_panel = app.get_node_or_null("ScreenHost/SettingsPanel")
 	if settings_panel == null:
-		return _fail(app, "Settings modal surface missing")
+		return _fail(app, "Settings destination surface missing")
+	var settings_surface: Dictionary = app.settings_surface_contract() if app.has_method("settings_surface_contract") else {}
+	if not bool(settings_surface.get("standalone_surface", false)):
+		return _fail(app, "Settings must render as a standalone destination surface")
+	if not bool(settings_surface.get("origin_suspended", false)):
+		return _fail(app, "Settings must suspend the Profile origin while open")
+	if profile.visible:
+		return _fail(app, "Profile must not remain visible behind Settings")
+	if profile.process_mode != Node.PROCESS_MODE_DISABLED:
+		return _fail(app, "Profile must not keep processing behind Settings")
+	var settings_world := settings_panel.get_node_or_null("WorldArt") as TextureRect
+	if settings_world == null or settings_world.texture == null:
+		return _fail(app, "Settings destination must load authored House world art")
 	var settings_close: Button = settings_panel.get_node_or_null("Card/Content/Close") as Button
 	if settings_close == null or settings_close.text != "RETURN TO PROFILE":
 		return _fail(app, "Profile Settings must return to its origin screen")
@@ -311,6 +323,8 @@ func _capture() -> void:
 	await _frames(2)
 	if String(app.current_route_name()) != "profile_settings" or app.current_screen() != profile:
 		return _fail(app, "closing Settings must preserve and reveal the Profile origin")
+	if not profile.visible or profile.process_mode == Node.PROCESS_MODE_DISABLED:
+		return _fail(app, "closing Settings must restore Profile visibility and processing")
 	app.current_screen().get_node("FeatureLayout/BackToHouse").emit_signal("pressed")
 	await _frames(3)
 
