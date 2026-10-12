@@ -3,6 +3,9 @@ extends SceneTree
 const BoardState = preload("res://src/match3/domain/board_state.gd")
 const MatchDetector = preload("res://src/match3/domain/match_detector.gd")
 const MoveResolver = preload("res://src/match3/domain/move_resolver.gd")
+const BoardShuffler = preload("res://src/match3/domain/board_shuffler.gd")
+const MoveFinder = preload("res://src/match3/domain/move_finder.gd")
+const ResolutionTrace = preload("res://src/match3/domain/resolution_trace.gd")
 
 var failures: Array[String] = []
 
@@ -13,6 +16,7 @@ func _init() -> void:
 	_test_horizontal_match_detection()
 	_test_invalid_swap_restores_state()
 	_test_valid_swap_resolves_deterministically()
+	_test_no_move_recovery_preserves_budget()
 
 	if failures.is_empty():
 		print("TEST_PASS: deterministic Match-3 core")
@@ -114,6 +118,28 @@ func _test_valid_swap_resolves_deterministically() -> void:
 
 	_expect(not first.has_empty(), "resolved board must contain no empty playable cells")
 	_expect(MatchDetector.find_match_cells(first).is_empty(), "resolver must settle until no automatic matches remain")
+
+func _test_no_move_recovery_preserves_budget() -> void:
+	var board = BoardState.from_level({
+		"width": 3,
+		"height": 3,
+		"moves": 7,
+		"families": ["moon", "rose", "moth"],
+		"initial_rows": [
+			["moon", "moon", "rose"],
+			["moon", "moon", "rose"],
+			["rose", "moth", "moth"]
+		]
+	}, 4242)
+	_expect(MatchDetector.find_match_cells(board).is_empty(), "no-move fixture must not start with an automatic match")
+	_expect(not MoveFinder.has_legal_move(board), "fixture must genuinely have no legal move")
+	var moves_before := int(board.moves_remaining)
+	var trace = ResolutionTrace.new()
+	_expect(BoardShuffler.ensure_playable(board, trace), "shuffler must recover a board with no legal move")
+	_expect(board.moves_remaining == moves_before, "automatic shuffle recovery must not consume a move")
+	_expect(MatchDetector.find_match_cells(board).is_empty(), "recovered board must not fabricate an automatic match")
+	_expect(MoveFinder.has_legal_move(board), "recovered board must expose at least one legal move")
+	_expect(trace.event_types().has("shuffle"), "recovery must emit an explicit shuffle event")
 
 func _expect(condition: bool, message: String) -> void:
 	if not condition:
