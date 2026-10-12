@@ -65,6 +65,10 @@ var _result_proclamation: Label
 var _result_reward_values: Control
 var _result_reveal_fx: Control
 var _reduced_motion: bool = false
+var _high_contrast: bool = false
+var _moves_urgency_state: String = "normal"
+const LOW_MOVE_WARNING_THRESHOLD := 3
+const LAST_MOVE_THRESHOLD := 1
 
 @onready var world_backdrop: TextureRect = $WorldBackdrop
 @onready var eyebrow_label: Label = $Layout/Eyebrow
@@ -145,9 +149,11 @@ func set_player_resources(lives: int, coins: int, gems: int) -> void:
 
 func apply_presentation_settings(state: Dictionary) -> void:
 	_reduced_motion = bool(state.get("reduced_motion", false))
+	_high_contrast = bool(state.get("high_contrast", false))
 	if board_view != null and board_view.has_method("apply_presentation_settings"):
 		board_view.apply_presentation_settings(state)
 	haptics.apply_settings(state)
+	_apply_moves_urgency()
 
 func load_level_path(path: String, seed_value: int = 1001) -> bool:
 	if not FileAccess.file_exists(path):
@@ -299,6 +305,9 @@ func attempt_swap(from: Vector2i, to: Vector2i):
 	else:
 		_refresh_hud()
 	_refresh_move_feedback(last_trace)
+	if not bool(last_trace.accepted):
+		haptics.request_invalid()
+		feedback_requested.emit("invalid")
 	if last_trace.accepted:
 		if board_view.has_method("clear_teaching_move"):
 			board_view.clear_teaching_move()
@@ -366,7 +375,7 @@ func _refresh_hud() -> void:
 		objective_label.text = "Awaken the collection"
 		moves_label.text = "—"
 		return
-	moves_label.text = "%d MOVES LEFT" % int(board_state.moves_remaining)
+	_apply_moves_urgency()
 	var progress_value := int(board_state.objective_progress)
 	var target_value := int(board_state.objective_target)
 	var progress_family := String(board_state.objective_family)
@@ -403,6 +412,47 @@ func _refresh_hud() -> void:
 		objective_label.text = "Break the wax seals  %d left" % int(board_state.remaining_blockers())
 	else:
 		objective_label.text = "Awaken the collection"
+
+func _apply_moves_urgency() -> void:
+	if moves_label == null:
+		return
+	if board_state == null:
+		_moves_urgency_state = "normal"
+		moves_label.text = "—"
+		moves_label.set_meta("urgency_state", _moves_urgency_state)
+		return
+	var moves := maxi(0, int(board_state.moves_remaining))
+	if moves <= LAST_MOVE_THRESHOLD:
+		_moves_urgency_state = "critical"
+		moves_label.text = "LAST MOVE" if moves == 1 else "NO MOVES"
+		moves_label.add_theme_color_override("font_color", Color("#FFFFFF") if _high_contrast else Color("#FF9B8E"))
+		moves_label.add_theme_font_size_override("font_size", 27)
+		moves_label.add_theme_constant_override("outline_size", 5 if _high_contrast else 4)
+	elif moves <= LOW_MOVE_WARNING_THRESHOLD:
+		_moves_urgency_state = "warning"
+		moves_label.text = "⚠ %d MOVES LEFT" % moves
+		moves_label.add_theme_color_override("font_color", Color("#FFF1B6") if _high_contrast else Color("#F2B36D"))
+		moves_label.add_theme_font_size_override("font_size", 26)
+		moves_label.add_theme_constant_override("outline_size", 4)
+	else:
+		_moves_urgency_state = "normal"
+		moves_label.text = "%d MOVES LEFT" % moves
+		moves_label.add_theme_color_override("font_color", Color("#FFF1B6") if _high_contrast else Color("#F2C66D"))
+		moves_label.add_theme_font_size_override("font_size", 24)
+		moves_label.add_theme_constant_override("outline_size", 3)
+	moves_label.set_meta("urgency_state", _moves_urgency_state)
+
+func gameplay_feel_contract() -> Dictionary:
+	return {
+		"invalid_swap_feedback": "visual_return_audio_haptic",
+		"low_move_warning_threshold": LOW_MOVE_WARNING_THRESHOLD,
+		"last_move_threshold": LAST_MOVE_THRESHOLD,
+		"moves_urgency_state": _moves_urgency_state,
+		"moves_copy": moves_label.text if moves_label != null else "",
+		"reduced_motion": _reduced_motion,
+		"high_contrast": _high_contrast,
+		"urgency_non_color_cue": _moves_urgency_state == "normal" or moves_label.text.contains("⚠") or moves_label.text.contains("LAST MOVE") or moves_label.text.contains("NO MOVES"),
+	}
 
 func _show_result_if_terminal(result: String) -> void:
 	if result == "won":
