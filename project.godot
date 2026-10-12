@@ -10,7 +10,8 @@ config/name="Cat & Coven"
 run/main_scene="res://src/app/app_bootstrap.tscn"
 config/features=PackedStringArray("4.7")
 config/icon="res://assets/pieces/black_cat.webp"
-boot_splash/show_image=false
+boot_splash/show_image=true
+boot_splash/image="res://assets/mobile/black_cat_launch.png"
 boot_splash/bg_color=Color(0.027, 0.018, 0.035, 1)
 
 [display]
