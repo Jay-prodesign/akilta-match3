@@ -59,6 +59,21 @@ func _run() -> void:
 	_expect(route.get_level_state(1) == "completed" and route.get_level_state(2) == "completed" and route.get_level_state(3) == "completed", "opening trio must all be completed at 3/3")
 	_expect(route.get_level_state(4) == "locked", "future route must remain locked after opening completion")
 	_expect(not focus.visible and not focus_label.visible, "frontier focus must disappear when opening trio is complete")
+	var future_info: Button = route.get_level_lock_inspector(4)
+	_expect(future_info != null and future_info.visible and not future_info.disabled, "sealed future cabinet must remain inspectable")
+	if future_info != null:
+		future_info.pressed.emit()
+		await process_frame
+		var locked_reason: Label = screen.get_node_or_null("LockedExplanation/LockedPanel/Content/Reason") as Label
+		var locked_requirement: Label = screen.get_node_or_null("LockedExplanation/LockedPanel/Content/Requirement") as Label
+		var locked_close: Button = screen.get_node_or_null("LockedExplanation/LockedPanel/Content/Close") as Button
+		_expect(locked_reason != null and locked_reason.text.contains("future chapter"), "S03 O05 must expose a truthful future-cabinet reason")
+		_expect(locked_requirement != null and locked_requirement.text.contains("does not unlock"), "S03 O05 must expose a truthful requirement")
+		_expect(locked_close != null, "S03 O05 must expose a close action")
+		if locked_close != null:
+			locked_close.pressed.emit()
+			await process_frame
+			_expect(screen.get_node_or_null("LockedExplanation") == null, "S03 O05 close must return to route")
 
 	screen.queue_free()
 	await process_frame

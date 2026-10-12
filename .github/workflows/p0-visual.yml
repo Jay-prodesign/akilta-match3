@@ -156,6 +156,7 @@ jobs:
           test -s artifacts/progression-final-reliquary-moth-detail.png
           test -s artifacts/progression-final-reliquary-thorned-detail.png
           test -s artifacts/progression-final-events.png
+          test -s artifacts/progression-final-event-locked.png
           test -s artifacts/progression-final-weekly-missions.png
           test -s artifacts/progression-final-shop.png
           test -s artifacts/progression-final-profile.png
@@ -207,6 +208,7 @@ jobs:
           test -s artifacts/chapters-00-first-wing.png
           test -s artifacts/chapters-01-current-partial.png
           test -s artifacts/chapters-02-current-complete.png
+          test -s artifacts/chapters-03-locked-explanation.png
 
       - name: Render S03 frontier progression states
         shell: bash
@@ -224,6 +226,7 @@ jobs:
           test -s artifacts/chapter-route-01-frontier2.png
           test -s artifacts/chapter-route-02-frontier3.png
           test -s artifacts/chapter-route-03-complete.png
+          test -s artifacts/chapter-route-04-locked-explanation.png
 
       - name: Upload Golden Loop render evidence
         uses: actions/upload-artifact@v4
@@ -271,6 +274,7 @@ jobs:
             artifacts/progression-final-reliquary-moth-detail.png
             artifacts/progression-final-reliquary-thorned-detail.png
             artifacts/progression-final-events.png
+            artifacts/progression-final-event-locked.png
             artifacts/progression-final-weekly-missions.png
             artifacts/progression-final-shop.png
             artifacts/progression-final-profile.png
@@ -279,10 +283,12 @@ jobs:
             artifacts/chapters-00-first-wing.png
             artifacts/chapters-01-current-partial.png
             artifacts/chapters-02-current-complete.png
+            artifacts/chapters-03-locked-explanation.png
             artifacts/chapter-route-00-frontier1.png
             artifacts/chapter-route-01-frontier2.png
             artifacts/chapter-route-02-frontier3.png
             artifacts/chapter-route-03-complete.png
+            artifacts/chapter-route-04-locked-explanation.png
             artifacts/progression-final-map.png
           if-no-files-found: error
           retention-days: 14

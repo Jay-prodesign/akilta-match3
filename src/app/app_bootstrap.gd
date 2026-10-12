@@ -19,6 +19,7 @@ const CurioMaterials = preload("res://src/ui/theme/curio_materials.gd")
 const PieceAssetLoader = preload("res://src/match3/presentation/piece_asset_loader.gd")
 const ProductNavigation = preload("res://src/ui/shared/product_navigation.gd")
 const ScreenArt = preload("res://src/ui/shared/screen_art_registry.gd")
+const LockedExplanation = preload("res://src/ui/shared/locked_explanation.gd")
 
 @export var environment: String = "development"
 @export var save_path_override: String = ""
@@ -558,6 +559,7 @@ func show_feature_preview(feature: String) -> bool:
 	card_scroll.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
 	layout.add_child(card_scroll)
 	var cards := VBoxContainer.new()
+	cards.name = "FeatureCards"
 	cards.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	cards.add_theme_constant_override("separation", 10)
 	card_scroll.add_child(cards)
@@ -626,7 +628,7 @@ func show_feature_preview(feature: String) -> bool:
 		var card := PanelContainer.new()
 		card_index += 1
 		card.name = "FeatureCard%d" % card_index
-		card.custom_minimum_size = Vector2(0, 210) if is_events else (Vector2(0, 170) if not is_profile else Vector2(0, 190))
+		card.custom_minimum_size = Vector2(0, 248) if is_events else (Vector2(0, 170) if not is_profile else Vector2(0, 190))
 		var panel_style := StyleBoxFlat.new()
 		panel_style.bg_color = Color("#171321")
 		panel_style.border_color = Color("#9B6FA6", 0.58) if is_events else (Color("#D5AD70", 0.62) if not is_profile else Color("#8796C7", 0.58))
@@ -641,6 +643,7 @@ func show_feature_preview(feature: String) -> bool:
 		card.add_theme_stylebox_override("panel", panel_style)
 		cards.add_child(card)
 		var row := HBoxContainer.new()
+		row.name = "CardRow"
 		row.size_flags_vertical = Control.SIZE_EXPAND_FILL
 		row.add_theme_constant_override("separation", 18)
 		card.add_child(row)
@@ -655,6 +658,7 @@ func show_feature_preview(feature: String) -> bool:
 			card_art.mouse_filter = Control.MOUSE_FILTER_IGNORE
 			row.add_child(card_art)
 		var copy := VBoxContainer.new()
+		copy.name = "CardCopy"
 		copy.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 		copy.size_flags_vertical = Control.SIZE_EXPAND_FILL
 		copy.alignment = BoxContainer.ALIGNMENT_CENTER
@@ -680,11 +684,31 @@ func show_feature_preview(feature: String) -> bool:
 		card_body.add_theme_font_size_override("font_size", 17)
 		copy.add_child(card_body)
 		var status := Label.new()
+		status.name = "CardStatus"
 		status.text = String(entry["status"])
 		status.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 		status.add_theme_color_override("font_color", Color("#BFA5D8"))
 		status.add_theme_font_size_override("font_size", 14)
 		copy.add_child(status)
+		if is_events:
+			var event_action := Button.new()
+			event_action.name = "CardAction%d" % card_index
+			event_action.custom_minimum_size.y = 52
+			_style_meta_action(event_action, false)
+			copy.add_child(event_action)
+			var event_title := String(entry["title"])
+			if event_title == "WEEKLY RITUALS":
+				event_action.text = "VIEW WEEKLY RITUAL STATUS"
+				event_action.pressed.connect(show_weekly_missions)
+			else:
+				event_action.text = "WHY SEALED"
+				var lock_copy := _event_lock_copy(event_title)
+				event_action.pressed.connect(_open_event_locked_explanation.bind(
+					overlay,
+					event_title,
+					String(lock_copy["reason"]),
+					String(lock_copy["requirement"])
+				))
 	if is_profile:
 		var preferences := Button.new()
 		preferences.name = "ProfileSettings"
@@ -725,6 +749,27 @@ func show_feature_preview(feature: String) -> bool:
 	# art. Live event/economy truth remains unavailable, so visual richness must
 	# never imply a claimable reward, price, countdown or active event.
 	return true
+
+func _event_lock_copy(event_title: String) -> Dictionary:
+	match event_title:
+		"MOONLIGHT MARKET":
+			return {
+				"reason": "The Moonlight Market is a future seasonal event and no live event feed is connected.",
+				"requirement": "A released event schedule and live event content are required. Completing the opening chapter does not activate it."
+			}
+		"THE LOST RELICS":
+			return {
+				"reason": "The Lost Relics journey belongs to a future cabinet chapter that is not playable in this build.",
+				"requirement": "The future cabinet journey must be released first. Current Curio Boutique progress does not unlock it."
+			}
+		_:
+			return {
+				"reason": "This event is not active in the current playable House.",
+				"requirement": "Live event content must be available before this destination can open."
+			}
+
+func _open_event_locked_explanation(owner: Control, event_title: String, reason: String, requirement: String) -> void:
+	LockedExplanation.present(owner, event_title, reason, requirement, "RETURN TO EVENT CENTER")
 
 func show_settings() -> bool:
 	if navigation == null or not navigation.open_settings():

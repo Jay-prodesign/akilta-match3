@@ -2,6 +2,7 @@ class_name Match3ChapterRouteView
 extends Control
 
 signal level_requested(level_number: int)
+signal locked_level_requested(level_number: int)
 
 const GOLD := Color("#D8B56A")
 const LILAC := Color("#BFA5D8")
@@ -23,6 +24,7 @@ var _level_buttons: Dictionary = {}
 var _level_labels: Dictionary = {}
 var _centers: Dictionary = {}
 var _level_states: Dictionary = {}
+var _lock_inspectors: Dictionary = {}
 var _frontier_level: int = -1
 var _frontier_focus: TextureRect
 var _frontier_label: Label
@@ -45,6 +47,9 @@ func get_level_button(level_number: int) -> Button:
 func get_level_center(level_number: int) -> Vector2:
 	return _centers.get(level_number, Vector2.ZERO) as Vector2
 
+func get_level_lock_inspector(level_number: int) -> Button:
+	return _lock_inspectors.get(level_number) as Button
+
 func get_level_state(level_number: int) -> String:
 	return String(_level_states.get(level_number, "locked"))
 
@@ -58,6 +63,7 @@ func _build_route() -> void:
 	_level_labels.clear()
 	_centers.clear()
 	_level_states.clear()
+	_lock_inspectors.clear()
 
 	var content_height := 1500.0
 	custom_minimum_size = Vector2(route_width, content_height)
@@ -114,6 +120,31 @@ func _build_route() -> void:
 		button.pressed.connect(func(n := level_number): _request(n))
 		add_child(button)
 		_level_buttons[level_number] = button
+
+		var inspector := Button.new()
+		inspector.name = "LockedInfo%d" % level_number
+		var hit_diameter := maxf(diameter, 72.0)
+		inspector.position = center - Vector2.ONE * hit_diameter * 0.5
+		inspector.size = Vector2.ONE * hit_diameter
+		inspector.text = ""
+		inspector.tooltip_text = "Why is cabinet %d sealed?" % level_number
+		inspector.focus_mode = Control.FOCUS_ALL
+		inspector.mouse_default_cursor_shape = Control.CURSOR_POINTING_HAND
+		var inspect_normal := StyleBoxFlat.new()
+		inspect_normal.bg_color = Color(0, 0, 0, 0)
+		inspect_normal.border_color = Color(0, 0, 0, 0)
+		inspect_normal.set_corner_radius_all(int(hit_diameter * 0.5))
+		var inspect_hover := inspect_normal.duplicate() as StyleBoxFlat
+		inspect_hover.bg_color = Color("#A68CAB", 0.08)
+		inspect_hover.border_color = Color("#D5AD70", 0.42)
+		inspect_hover.set_border_width_all(2)
+		inspector.add_theme_stylebox_override("normal", inspect_normal)
+		inspector.add_theme_stylebox_override("hover", inspect_hover)
+		inspector.add_theme_stylebox_override("pressed", inspect_hover)
+		inspector.add_theme_stylebox_override("focus", inspect_hover)
+		inspector.pressed.connect(func(n := level_number): locked_level_requested.emit(n))
+		add_child(inspector)
+		_lock_inspectors[level_number] = inspector
 
 		var label := Label.new()
 		label.name = "Label%d" % level_number
@@ -209,6 +240,10 @@ func _refresh() -> void:
 		_level_states[level_number] = state
 		button.set_meta("level_state", state)
 		button.disabled = not open
+		var inspector := _lock_inspectors.get(level_number) as Button
+		if inspector != null:
+			inspector.visible = not open
+			inspector.disabled = open
 		button.text = "✓" if completed else str(level_number)
 		button.tooltip_text = _tooltip_for(level_number)
 		label.text = _caption(level_number, completed)

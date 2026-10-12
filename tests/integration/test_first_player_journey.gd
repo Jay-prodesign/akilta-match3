@@ -149,6 +149,21 @@ func _run() -> void:
 	_expect(events_preview != null and events_preview.name == "EventsScreen" and events_preview.get_node("FeatureLayout/FeatureTitle").text == "EVENT CENTER", "Events tab must open as the S10 Event Center screen")
 	_expect(events_preview != null and events_preview.get_node_or_null("ProductNavigation") != null, "Events screen must retain shared product navigation")
 	if events_preview != null:
+		var sealed_event_action: Button = events_preview.get_node_or_null("FeatureLayout/FeatureCardScroll/FeatureCards/FeatureCard1/CardRow/CardCopy/CardAction1") as Button
+		_expect(sealed_event_action != null and not sealed_event_action.disabled, "S10 sealed event must expose an inspectable CTA")
+		if sealed_event_action != null:
+			sealed_event_action.pressed.emit()
+			await process_frame
+			var event_lock_reason: Label = events_preview.get_node_or_null("LockedExplanation/LockedPanel/Content/Reason") as Label
+			var event_lock_requirement: Label = events_preview.get_node_or_null("LockedExplanation/LockedPanel/Content/Requirement") as Label
+			var event_lock_close: Button = events_preview.get_node_or_null("LockedExplanation/LockedPanel/Content/Close") as Button
+			_expect(event_lock_reason != null and event_lock_reason.text.contains("no live event feed"), "S10 O05 must disclose missing live event content")
+			_expect(event_lock_requirement != null and event_lock_requirement.text.contains("does not activate"), "S10 O05 must state the real activation requirement")
+			_expect(str(app.current_route_name()) == "events", "S10 locked explanation must not leave Event Center")
+			if event_lock_close != null:
+				event_lock_close.pressed.emit()
+				await process_frame
+				_expect(events_preview.get_node_or_null("LockedExplanation") == null, "S10 O05 close must return to Event Center")
 		var weekly_action: Button = events_preview.get_node_or_null("FeatureLayout/WeeklyMissionsAction") as Button
 		_expect(weekly_action != null, "Event Center must expose the S09 Weekly Rituals destination")
 		if weekly_action != null:

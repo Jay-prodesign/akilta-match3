@@ -7,6 +7,7 @@ signal chapter_requested(chapter_id: String)
 const PieceAssetLoader = preload("res://src/match3/presentation/piece_asset_loader.gd")
 const ScreenArt = preload("res://src/ui/shared/screen_art_registry.gd")
 const TopResourceBar = preload("res://src/ui/shared/top_resource_bar.gd")
+const LockedExplanation = preload("res://src/ui/shared/locked_explanation.gd")
 const OPENING_LEVEL_COUNT := 3
 
 const WINGS := [
@@ -150,9 +151,11 @@ func _ready() -> void:
 			button.add_theme_constant_override("icon_max_width", 156)
 			button.pressed.connect(func(): chapter_requested.emit("curio_boutique"))
 		else:
-			button.disabled = true
-			button.text = "%s\nSEALED WING" % String(wing["name"])
-			button.tooltip_text = "%s · future chapter remains sealed" % String(wing["name"]).capitalize()
+			button.disabled = false
+			button.text = "%s\nSEALED WING · DETAILS" % String(wing["name"])
+			button.tooltip_text = "%s · inspect why this future chapter remains sealed" % String(wing["name"]).capitalize()
+			button.mouse_default_cursor_shape = Control.CURSOR_POINTING_HAND
+			button.pressed.connect(_open_locked_explanation.bind(id, String(wing["name"])))
 		_apply_locked_style(button)
 		grid.add_child(button)
 		_buttons[id] = button
@@ -257,7 +260,7 @@ func _apply_current_style(button: Button, state: String) -> void:
 	button.add_theme_stylebox_override("focus", hover)
 
 func _apply_locked_style(button: Button) -> void:
-	button.add_theme_color_override("font_disabled_color", Color("#E1D4E2"))
+	button.add_theme_color_override("font_color", Color("#E1D4E2"))
 	var box := StyleBoxFlat.new()
 	box.bg_color = Color("#0F1017", 0.72)
 	box.border_color = Color("#A68CAB", 0.48)
@@ -265,7 +268,25 @@ func _apply_locked_style(button: Button) -> void:
 	box.set_corner_radius_all(12)
 	box.shadow_color = Color(0, 0, 0, 0.42)
 	box.shadow_size = 7
-	button.add_theme_stylebox_override("disabled", box)
+	button.add_theme_stylebox_override("normal", box)
+	var hover := box.duplicate() as StyleBoxFlat
+	hover.bg_color = Color("#1B1721", 0.90)
+	hover.border_color = Color("#D5AD70", 0.72)
+	hover.set_border_width_all(2)
+	button.add_theme_stylebox_override("hover", hover)
+	button.add_theme_stylebox_override("pressed", hover)
+	button.add_theme_stylebox_override("focus", hover)
+
+func _open_locked_explanation(chapter_id: String, chapter_name: String) -> void:
+	if chapter_id == "curio_boutique":
+		return
+	LockedExplanation.present(
+		self,
+		chapter_name,
+		"This wing belongs to a future chapter and is not available in the current playable House.",
+		"Future chapter content must be released first. Curio Boutique progress does not unlock this wing.",
+		"RETURN TO CHAPTERS"
+	)
 
 func _style_header_back(button: Button) -> void:
 	var box := StyleBoxFlat.new()

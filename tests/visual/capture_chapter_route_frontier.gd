@@ -42,6 +42,17 @@ func _capture() -> void:
 			return _fail(screen, "S03 frontier focus visibility mismatch")
 		if not await _save(screen, String(state["name"])):
 			return
+		if int(state["wins"]) == 3:
+			var future_info: Button = route.get_level_lock_inspector(4)
+			if future_info == null or future_info.disabled:
+				return _fail(screen, "S03 future cabinet lock inspector unavailable")
+			future_info.pressed.emit()
+			await process_frame
+			await process_frame
+			if screen.get_node_or_null("LockedExplanation/LockedPanel/Content/Reason") == null:
+				return _fail(screen, "S03 O05 locked explanation missing")
+			if not await _save(screen, "chapter-route-04-locked-explanation.png"):
+				return
 		screen.queue_free()
 		await process_frame
 	print("CAPTURE_PASS: S03 frontier state progression")
