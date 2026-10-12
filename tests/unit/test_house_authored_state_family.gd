@@ -1,0 +1,99 @@
+extends SceneTree
+
+const HouseScene = preload("res://src/ui/home/house_home.tscn")
+const ProgressScript = preload("res://src/progression/player_progress.gd")
+
+var failures: Array[String] = []
+
+func _init() -> void:
+	call_deferred("_run")
+
+func _run() -> void:
+	var house = HouseScene.instantiate()
+	root.add_child(house)
+	await process_frame
+	house.set_available_level_count(3)
+
+	var fresh = ProgressScript.new()
+	house.set_progress(fresh)
+	await process_frame
+
+	var presentation: Dictionary = house.house_presentation_contract()
+	_expect(bool(presentation.get("persistent_slots_authored", false)), "House FTUE/returning/completion slots must be authored")
+	_expect(bool(presentation.get("hotspots_authored", false)), "House Curio and Keeper hotspots must be authored")
+	_expect(bool(presentation.get("curio_inspect_authored", false)), "House Curio inspect must use an authored scene")
+	_expect(bool(presentation.get("keeper_role_authored", false)), "Keeper role must use an authored scene")
+	_expect(bool(presentation.get("restoration_authored", false)), "House restoration must use an authored scene")
+	_expect(not bool(presentation.get("runtime_overlay_factory", true)), "House must not rebuild player-facing overlays at runtime")
+
+	var guide := house.get_node_or_null("Layout/FirstRitualGuide") as PanelContainer
+	var guide_art := house.get_node_or_null("Layout/FirstRitualGuide/GuideRow/KeeperArt") as TextureRect
+	_expect(guide != null and guide.visible, "Fresh House must expose the authored first-ritual guide")
+	_expect(guide_art != null and guide_art.texture != null, "First-ritual guide must use Keeper production art")
+	for hotspot_path in [
+		"Layout/RoomView/CurioHotspots/MoonHotspot",
+		"Layout/RoomView/CurioHotspots/MothHotspot",
+		"Layout/RoomView/CurioHotspots/ThornHotspot",
+		"Layout/RoomView/CurioHotspots/KeeperHotspot",
+	]:
+		_expect(house.get_node_or_null(hotspot_path) is Button, "Authored House hotspot missing: %s" % hotspot_path)
+
+	var keeper_hotspot := house.get_node("Layout/RoomView/CurioHotspots/KeeperHotspot") as Button
+	keeper_hotspot.emit_signal("pressed")
+	await process_frame
+	var keeper_overlay = house.get_node_or_null("KeeperRoleOverlay")
+	_expect(keeper_overlay != null and keeper_overlay.has_method("keeper_contract"), "Keeper hotspot must open authored Keeper role scene")
+	if keeper_overlay != null and keeper_overlay.has_method("keeper_contract"):
+		var keeper_contract: Dictionary = keeper_overlay.keeper_contract()
+		_expect(bool(keeper_contract.get("authored_scene", false)) and bool(keeper_contract.get("art_loaded", false)), "Keeper role scene must render Keeper art")
+		var keeper_close := keeper_overlay.get_node_or_null("Card/Content/Close") as Button
+		if keeper_close != null:
+			keeper_close.emit_signal("pressed")
+			await process_frame
+
+	var owned = ProgressScript.new()
+	owned.apply_level_win("house-r1", "ch01_level_001", "moon_cameo", 1)
+	house.set_progress(owned)
+	await process_frame
+	_expect(house.open_curio_inspect("moon_cameo"), "Owned Moon Cameo must open House inspect")
+	await process_frame
+	var inspect = house.get_node_or_null("HouseCurioInspect")
+	_expect(inspect != null and inspect.has_method("inspect_contract"), "Owned Curio must open authored House inspect scene")
+	if inspect != null and inspect.has_method("inspect_contract"):
+		var inspect_contract: Dictionary = inspect.inspect_contract()
+		_expect(bool(inspect_contract.get("authored_scene", false)) and bool(inspect_contract.get("art_loaded", false)), "House inspect scene must render owned Curio art")
+		var inspect_close := inspect.get_node_or_null("Card/Content/Close") as Button
+		if inspect_close != null:
+			inspect_close.emit_signal("pressed")
+			await process_frame
+
+	house.show_restoration_ceremony("moon_cameo", 1)
+	await process_frame
+	var restoration = house.get_node_or_null("RestorationOverlay")
+	_expect(restoration != null and restoration.has_method("restoration_contract"), "Reward handoff must open authored House restoration scene")
+	if restoration != null and restoration.has_method("restoration_contract"):
+		var restoration_contract: Dictionary = restoration.restoration_contract()
+		_expect(bool(restoration_contract.get("authored_scene", false)), "Restoration contract must identify authored scene")
+		_expect(bool(restoration_contract.get("motif_loaded", false)) and bool(restoration_contract.get("curio_art_loaded", false)), "Restoration must render motif and exact Curio art")
+		var continue_button := restoration.get_node_or_null("CeremonyCard/CeremonyContent/CeremonyRow/Copy/Continue") as Button
+		_expect(continue_button != null, "Authored restoration must preserve focused Continue CTA")
+		if continue_button != null:
+			continue_button.emit_signal("pressed")
+			await process_frame
+
+	house.queue_free()
+	await process_frame
+	_finish()
+
+func _expect(condition: bool, message: String) -> void:
+	if not condition:
+		failures.append(message)
+
+func _finish() -> void:
+	if failures.is_empty():
+		print("TEST_PASS: authored House state family")
+		quit(0)
+		return
+	for failure in failures:
+		printerr("TEST_FAIL: %s" % failure)
+	quit(1)
