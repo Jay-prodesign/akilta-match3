@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - "main"
+      - "feat/release-proof-*"
       - "feat/native-mobile-release-foundation"
       - "feat/native-android-runtime-smoke"
     paths:
@@ -11,6 +12,7 @@ on:
       - "export_presets.cfg"
       - "tests/unit/test_mobile_release_contract.gd"
       - ".github/workflows/mobile-release.yml"
+      - ".github/release-proof.trigger"
       - "src/**"
       - "assets/**"
       - "content/**"
