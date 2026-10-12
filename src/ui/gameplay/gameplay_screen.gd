@@ -69,6 +69,8 @@ var _high_contrast: bool = false
 var _moves_urgency_state: String = "normal"
 var _last_impact_feedback: String = ""
 var _last_cascade_depth: int = 1
+var _terminal_state: String = ""
+var _last_result_transition: String = ""
 const LOW_MOVE_WARNING_THRESHOLD := 3
 const LAST_MOVE_THRESHOLD := 1
 
@@ -89,6 +91,9 @@ const LAST_MOVE_THRESHOLD := 1
 @onready var awakening_view: Control = $Layout/Awakening/Content/ProgressView
 @onready var awakening_copy: Label = $Layout/Awakening/Content/ProgressCopy
 @onready var result_overlay: Control = $ResultOverlay
+@onready var result_dim: ColorRect = $ResultOverlay/Dim
+@onready var result_card: PanelContainer = $ResultOverlay/Card
+@onready var result_objective_summary: Label = $ResultOverlay/Card/Content/ObjectiveSummary
 @onready var result_title: Label = $ResultOverlay/Card/Content/Title
 @onready var result_detail: Label = $ResultOverlay/Card/Content/Detail
 @onready var result_eyebrow: Label = $ResultOverlay/Card/Content/Eyebrow
@@ -200,6 +205,8 @@ func load_level_path(path: String, seed_value: int = 1001) -> bool:
 	_pending_win = false
 	_pending_terminal_result = ""
 	_pending_hud_refresh = false
+	_terminal_state = ""
+	_last_result_transition = ""
 	pause_overlay.visible = false
 	result_overlay.visible = false
 	if _booster_tray != null:
@@ -373,8 +380,13 @@ func retry_current_level() -> bool:
 	if current_level_path == "":
 		return false
 	haptics.reset_for_new_attempt()
+	haptics.request_retry()
 	feedback_requested.emit("retry")
-	return load_level_path(current_level_path, current_seed)
+	var reloaded := load_level_path(current_level_path, current_seed)
+	if reloaded:
+		hint_label.text = "RITUAL RESET · %d MOVES RESTORED" % int(board_state.moves_remaining)
+		_style_impact_hint("normal")
+	return reloaded
 
 func _on_swap_requested(from: Vector2i, to: Vector2i) -> void:
 	attempt_swap(from, to)
@@ -550,7 +562,11 @@ func _show_result_if_terminal(result: String) -> void:
 			_result_proclamation.text = "Replay complete · House state and owned Curios stay unchanged." if replay_mode else "The recovered Curio now changes the House."
 		if _booster_tray != null:
 			_booster_tray.visible = false
+		result_objective_summary.text = _terminal_objective_summary(true)
+		_terminal_state = "won"
 		result_overlay.visible = true
+		_style_terminal_result("won")
+		_play_terminal_transition("won")
 		if _result_reveal_fx != null and _result_reveal_fx.has_method("play"):
 			_result_reveal_fx.play(_reduced_motion or replay_mode)
 		result_state_changed.emit("won")
@@ -575,8 +591,76 @@ func _show_result_if_terminal(result: String) -> void:
 			_booster_tray.visible = false
 		if _result_reveal_fx != null and _result_reveal_fx.has_method("stop"):
 			_result_reveal_fx.stop()
+		result_objective_summary.text = _terminal_objective_summary(false)
+		_terminal_state = "failed"
 		result_overlay.visible = true
+		_style_terminal_result("failed")
+		_play_terminal_transition("failed")
 		result_state_changed.emit("failed")
+
+func _terminal_objective_summary(won: bool) -> String:
+	if board_state == null:
+		return "OBJECTIVE COMPLETE" if won else "OBJECTIVE UNFINISHED"
+	var prefix := "OBJECTIVE COMPLETE" if won else "OBJECTIVE UNFINISHED"
+	if String(board_state.objective_type) == "collect_family":
+		var progress := mini(int(board_state.objective_progress), int(board_state.objective_target))
+		return "%s · %d / %d %s SIGILS" % [prefix, progress, int(board_state.objective_target), String(board_state.objective_family).to_upper()]
+	if String(board_state.objective_type) == "clear_blockers":
+		var total := maxi(1, current_initial_blocker_count)
+		var cleared := maxi(0, total - int(board_state.remaining_blockers()))
+		return "%s · %d / %d WAX SEALS" % [prefix, cleared, total]
+	return prefix
+
+func _style_terminal_result(kind: String) -> void:
+	if result_card == null:
+		return
+	var won := kind == "won"
+	var card_style := StyleBoxFlat.new()
+	card_style.bg_color = Color("#100D17", 0.99) if won else Color("#120D14", 0.99)
+	card_style.border_color = (Color("#E2BE75") if _high_contrast else Color("#D5AD70")) if won else (Color("#F0B2C3") if _high_contrast else Color("#9A6073"))
+	card_style.set_border_width_all(3 if _high_contrast else 2)
+	card_style.set_corner_radius_all(18)
+	card_style.shadow_color = Color(0, 0, 0, 0.72)
+	card_style.shadow_size = 26
+	card_style.content_margin_left = 24
+	card_style.content_margin_right = 24
+	card_style.content_margin_top = 20
+	card_style.content_margin_bottom = 20
+	result_card.add_theme_stylebox_override("panel", card_style)
+	result_title.add_theme_color_override("font_color", Color("#FFF1B6") if won else Color("#F2D6DE"))
+	result_objective_summary.add_theme_color_override("font_color", Color("#F0CE8A") if won else Color("#E5B2C1"))
+
+func _play_terminal_transition(kind: String) -> void:
+	if result_card == null or result_dim == null:
+		return
+	result_card.pivot_offset = result_card.size * 0.5
+	if _reduced_motion:
+		result_card.modulate = Color.WHITE
+		result_card.scale = Vector2.ONE
+		result_dim.modulate = Color.WHITE
+		_last_result_transition = "reduced_motion_immediate"
+		return
+	result_card.modulate = Color(1, 1, 1, 0)
+	result_card.scale = Vector2(0.94, 0.94) if kind == "won" else Vector2(0.97, 0.97)
+	result_dim.modulate = Color(1, 1, 1, 0)
+	var tween := create_tween()
+	tween.set_parallel(true)
+	tween.set_trans(Tween.TRANS_QUAD)
+	tween.set_ease(Tween.EASE_OUT)
+	tween.tween_property(result_dim, "modulate:a", 1.0, 0.16)
+	tween.tween_property(result_card, "modulate:a", 1.0, 0.22 if kind == "won" else 0.18)
+	tween.tween_property(result_card, "scale", Vector2.ONE, 0.28 if kind == "won" else 0.20)
+	_last_result_transition = "win_reveal" if kind == "won" else "fail_settle"
+
+func terminal_result_contract() -> Dictionary:
+	return {
+		"state": _terminal_state,
+		"objective_summary": result_objective_summary.text if result_objective_summary != null else "",
+		"transition": _last_result_transition,
+		"reduced_motion": _reduced_motion,
+		"action": result_action.text if result_action != null else "",
+		"card_visible": result_overlay.visible,
+	}
 
 func _install_reward_reveal_fx() -> void:
 	if _result_reveal_fx != null:
