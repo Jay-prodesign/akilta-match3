@@ -22,7 +22,7 @@ permissions:
 
 jobs:
   ios-simulator:
-    runs-on: macos-latest
+    runs-on: macos-15-intel
     timeout-minutes: 35
     steps:
       - uses: actions/checkout@v4
@@ -59,32 +59,6 @@ jobs:
           test -f build/ios/CatAndCoven.xcodeproj/project.pbxproj
           test -d build/ios/CatAndCoven.xcframework/ios-arm64_x86_64-simulator
 
-      - name: Repair missing arm64 simulator slice in pinned Godot template
-        shell: bash
-        run: |
-          set -euo pipefail
-          SIM_LIB="build/ios/CatAndCoven.xcframework/ios-arm64_x86_64-simulator/libgodot.a"
-          test -f "$SIM_LIB"
-          echo "Before repair: $(lipo -info "$SIM_LIB")" | tee artifacts/ios-simulator-template-arch.txt
-          if ! lipo -archs "$SIM_LIB" | tr ' ' '\n' | grep -Fxq arm64; then
-            git clone --depth 1 --branch 4.7.2-stable https://github.com/godotengine/godot.git /tmp/godot-4.7.2
-            python3 -m venv /tmp/godot-scons-env
-            /tmp/godot-scons-env/bin/python -m pip install --disable-pip-version-check scons
-            (
-              cd /tmp/godot-4.7.2
-              /tmp/godot-scons-env/bin/scons platform=ios target=template_release ios_simulator=yes arch=arm64 -j"$(sysctl -n hw.logicalcpu)"
-            )
-            ARM64_LIB="$(find /tmp/godot-4.7.2/bin -maxdepth 1 -type f -name '*arm64*simulator*.a' | head -1)"
-            test -n "$ARM64_LIB"
-            echo "Built repair slice: $ARM64_LIB"
-            lipo -info "$ARM64_LIB"
-            lipo -create "$SIM_LIB" "$ARM64_LIB" -output "$SIM_LIB.universal"
-            mv "$SIM_LIB.universal" "$SIM_LIB"
-          fi
-          echo "After repair: $(lipo -info "$SIM_LIB")" | tee -a artifacts/ios-simulator-template-arch.txt
-          lipo -archs "$SIM_LIB" | tr ' ' '\n' | grep -Fxq arm64
-          lipo -archs "$SIM_LIB" | tr ' ' '\n' | grep -Fxq x86_64
-
       - name: Compile unsigned iOS Simulator app
         shell: bash
         run: |
@@ -96,6 +70,9 @@ jobs:
             -sdk iphonesimulator \
             -destination 'generic/platform=iOS Simulator' \
             -derivedDataPath build/ios-derived \
+            ARCHS=x86_64 \
+            EXCLUDED_ARCHS=arm64 \
+            ONLY_ACTIVE_ARCH=YES \
             CODE_SIGNING_ALLOWED=NO \
             CODE_SIGNING_REQUIRED=NO \
             CODE_SIGN_IDENTITY="" \
