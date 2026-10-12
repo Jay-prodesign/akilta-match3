@@ -5,6 +5,7 @@ signal close_requested
 signal interaction_feedback_requested(kind: String)
 
 const PieceAssetLoader = preload("res://src/match3/presentation/piece_asset_loader.gd")
+const ScreenArt = preload("res://src/ui/shared/screen_art_registry.gd")
 
 @onready var master_toggle: CheckButton = $Card/Content/Master
 @onready var music_toggle: CheckButton = $Card/Content/Music
