@@ -23,6 +23,7 @@ var _resource_bar: PanelContainer
 var _chapter_summary: Label
 var _lock_reason: Label
 var _buttons: Dictionary = {}
+var _locked_explanation: Control
 
 func set_progress(value) -> void:
 	progress = value
@@ -150,9 +151,9 @@ func _ready() -> void:
 			button.add_theme_constant_override("icon_max_width", 156)
 			button.pressed.connect(func(): chapter_requested.emit("curio_boutique"))
 		else:
-			button.disabled = true
-			button.text = "%s\nSEALED WING" % String(wing["name"])
-			button.tooltip_text = "%s · future chapter remains sealed" % String(wing["name"]).capitalize()
+			button.disabled = false
+			button.text = "%s\nSEALED WING · DETAILS" % String(wing["name"])
+			button.tooltip_text = "%s · inspect why this future chapter remains sealed" % String(wing["name"]).capitalize()\n\t\t\tbutton.mouse_default_cursor_shape = Control.CURSOR_POINTING_HAND\n\t\t\tbutton.pressed.connect(_open_locked_explanation.bind(id, String(wing["name"])))
 		_apply_locked_style(button)
 		grid.add_child(button)
 		_buttons[id] = button
@@ -257,7 +258,7 @@ func _apply_current_style(button: Button, state: String) -> void:
 	button.add_theme_stylebox_override("focus", hover)
 
 func _apply_locked_style(button: Button) -> void:
-	button.add_theme_color_override("font_disabled_color", Color("#E1D4E2"))
+	button.add_theme_color_override("font_color", Color("#E1D4E2"))
 	var box := StyleBoxFlat.new()
 	box.bg_color = Color("#0F1017", 0.72)
 	box.border_color = Color("#A68CAB", 0.48)
@@ -265,7 +266,117 @@ func _apply_locked_style(button: Button) -> void:
 	box.set_corner_radius_all(12)
 	box.shadow_color = Color(0, 0, 0, 0.42)
 	box.shadow_size = 7
-	button.add_theme_stylebox_override("disabled", box)
+	button.add_theme_stylebox_override("normal", box)
+	var hover := box.duplicate() as StyleBoxFlat
+	hover.bg_color = Color("#1B1721", 0.90)
+	hover.border_color = Color("#D5AD70", 0.72)
+	hover.set_border_width_all(2)
+	button.add_theme_stylebox_override("hover", hover)
+	button.add_theme_stylebox_override("pressed", hover)
+	button.add_theme_stylebox_override("focus", hover)
+
+func _open_locked_explanation(chapter_id: String, chapter_name: String) -> void:
+	if chapter_id == "curio_boutique":
+		return
+	_close_locked_explanation()
+	var overlay := Control.new()
+	overlay.name = "LockedExplanation"
+	overlay.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	overlay.z_index = 120
+	overlay.mouse_filter = Control.MOUSE_FILTER_STOP
+	add_child(overlay)
+	_locked_explanation = overlay
+
+	var veil := ColorRect.new()
+	veil.name = "Dim"
+	veil.color = Color(0.015, 0.01, 0.025, 0.74)
+	veil.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	veil.mouse_filter = Control.MOUSE_FILTER_STOP
+	overlay.add_child(veil)
+
+	var panel := PanelContainer.new()
+	panel.name = "LockedPanel"
+	panel.anchor_left = 0.08
+	panel.anchor_right = 0.92
+	panel.anchor_top = 0.30
+	panel.anchor_bottom = 0.66
+	var shell := StyleBoxFlat.new()
+	shell.bg_color = Color("#0D0912", 0.985)
+	shell.border_color = Color("#A68CAB", 0.82)
+	shell.set_border_width_all(2)
+	shell.set_corner_radius_all(18)
+	shell.content_margin_left = 24
+	shell.content_margin_right = 24
+	shell.content_margin_top = 20
+	shell.content_margin_bottom = 20
+	shell.shadow_color = Color(0, 0, 0, 0.68)
+	shell.shadow_size = 18
+	panel.add_theme_stylebox_override("panel", shell)
+	overlay.add_child(panel)
+
+	var content := VBoxContainer.new()
+	content.name = "Content"
+	content.alignment = BoxContainer.ALIGNMENT_CENTER
+	content.add_theme_constant_override("separation", 14)
+	panel.add_child(content)
+
+	var kicker := Label.new()
+	kicker.name = "State"
+	kicker.text = "SEALED HOUSE WING"
+	kicker.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	kicker.add_theme_color_override("font_color", Color("#D5AD70"))
+	kicker.add_theme_font_size_override("font_size", 20)
+	content.add_child(kicker)
+
+	var title := Label.new()
+	title.name = "Title"
+	title.text = chapter_name
+	title.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	title.add_theme_color_override("font_color", Color("#FFF0D8"))
+	title.add_theme_font_size_override("font_size", 34)
+	content.add_child(title)
+
+	var reason := Label.new()
+	reason.name = "Reason"
+	reason.text = "This wing belongs to a future chapter and is not available in the current playable House."
+	reason.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	reason.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	reason.add_theme_color_override("font_color", Color("#E0D1D8"))
+	reason.add_theme_font_size_override("font_size", 21)
+	content.add_child(reason)
+
+	var requirement := Label.new()
+	requirement.name = "Requirement"
+	requirement.text = "Future chapter content must be released first. Curio Boutique progress does not unlock this wing."
+	requirement.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	requirement.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	requirement.add_theme_color_override("font_color", Color("#BFA5D8"))
+	requirement.add_theme_font_size_override("font_size", 19)
+	content.add_child(requirement)
+
+	var close := Button.new()
+	close.name = "Close"
+	close.text = "RETURN TO CHAPTERS"
+	close.custom_minimum_size = Vector2(0, 62)
+	close.add_theme_font_size_override("font_size", 21)
+	var close_box := StyleBoxFlat.new()
+	close_box.bg_color = Color("#35213B")
+	close_box.border_color = Color("#D5AD70")
+	close_box.set_border_width_all(2)
+	close_box.set_corner_radius_all(10)
+	var close_hover := close_box.duplicate() as StyleBoxFlat
+	close_hover.bg_color = Color("#56305A")
+	close.add_theme_stylebox_override("normal", close_box)
+	close.add_theme_stylebox_override("hover", close_hover)
+	close.add_theme_stylebox_override("pressed", close_hover)
+	close.add_theme_color_override("font_color", Color("#FFF0D8"))
+	content.add_child(close)
+	close.pressed.connect(_close_locked_explanation)
+
+func _close_locked_explanation() -> void:
+	if _locked_explanation != null and is_instance_valid(_locked_explanation):
+		_locked_explanation.queue_free()
+	_locked_explanation = null
 
 func _style_header_back(button: Button) -> void:
 	var box := StyleBoxFlat.new()

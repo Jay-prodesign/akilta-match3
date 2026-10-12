@@ -29,9 +29,29 @@ func _run() -> void:
 	_expect(backdrop != null and backdrop.texture != null, "S02 authored chapter-world raster missing")
 	for id in ["witch_atelier", "dark_vanity", "archive", "moon_conservatory", "cemetery_garden"]:
 		var locked: Button = screen.get_chapter_button(id)
-		_expect(locked != null and locked.disabled, "%s must remain locked" % id)
+		_expect(locked != null and not locked.disabled, "%s must remain inspectable while locked" % id)
 		_expect(screen.chapter_state(id) == "future_wings_locked", "%s must expose future_wings_locked" % id)
 		_expect(locked.icon == null, "%s must not use placeholder wing artwork" % id)
+
+	var requested_chapters: Array[String] = []
+	screen.chapter_requested.connect(func(chapter_id: String): requested_chapters.append(chapter_id))
+	var sealed_wing: Button = screen.get_chapter_button("witch_atelier")
+	if sealed_wing != null:
+		sealed_wing.pressed.emit()
+		await process_frame
+		var locked_overlay: Control = screen.get_node_or_null("LockedExplanation") as Control
+		var reason: Label = screen.get_node_or_null("LockedExplanation/LockedPanel/Content/Reason") as Label
+		var requirement: Label = screen.get_node_or_null("LockedExplanation/LockedPanel/Content/Requirement") as Label
+		var close: Button = screen.get_node_or_null("LockedExplanation/LockedPanel/Content/Close") as Button
+		_expect(locked_overlay != null, "S02 locked hotspot must open O05 Locked Explanation")
+		_expect(reason != null and reason.text.contains("future chapter"), "O05 must expose a truthful lock reason")
+		_expect(requirement != null and requirement.text.contains("does not unlock"), "O05 must expose a truthful requirement")
+		_expect(close != null and not close.disabled, "O05 must expose an enabled close action")
+		_expect(requested_chapters.is_empty(), "locked S02 hotspot must never emit chapter entry")
+		if close != null:
+			close.pressed.emit()
+			await process_frame
+			_expect(screen.get_node_or_null("LockedExplanation") == null, "O05 close must return to S02")
 
 	var partial = ProgressScript.new()
 	partial.apply_level_win("chapters-l1", "ch01_level_001", "moon_cameo", 1)
