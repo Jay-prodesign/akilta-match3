@@ -143,7 +143,7 @@ func _run() -> void:
 	_expect(replay_trace != null and replay_trace.accepted and str(replay_trace.result) == "won", "Level 1 replay must remain fully playable")
 	await _await_board_motion(replay)
 	_expect(replay.result_overlay.visible, "replay win must still present an explicit result state")
-	_expect(replay.result_eyebrow.text.begins_with("REPLAY COMPLETE"), "replay result must not masquerade as a first-time reward")
+	_expect(replay.result_eyebrow.text.begins_with("REPLAY"), "replay result must not masquerade as a first-time reward")
 	var replay_values = replay.get_node_or_null("ResultOverlay/Card/Content/ResultRewardValues")
 	_expect(replay_values != null and not replay_values.visible, "replay result must not display duplicate persistent currency rewards")
 	_expect(replay.continue_after_win(), "replay result must return through its explicit completion action")

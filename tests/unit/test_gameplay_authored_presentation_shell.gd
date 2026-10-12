@@ -24,6 +24,8 @@ func _run() -> void:
 	_expect(bool(contract.get("authored_board_frame", false)), "Gameplay board must sit inside an authored ornamental frame")
 	_expect(bool(contract.get("authored_result_values", false)), "Terminal reward values must be authored")
 	_expect(bool(contract.get("authored_result_proclamation", false)), "Terminal House proclamation must be authored")
+	_expect(bool(contract.get("north_star_result_hierarchy", false)), "Terminal reward must retain a strong North Star completion hierarchy")
+	_expect(bool(contract.get("north_star_result_cta", false)), "Terminal reward CTA must match the large rounded North Star action family")
 	_expect(not bool(contract.get("runtime_shell_factory", true)), "Gameplay must not rebuild persistent presentation shell at runtime")
 
 	var objective := screen.get_node_or_null("Layout/HUDPlate/HUD/Objective") as Label
@@ -63,6 +65,10 @@ func _run() -> void:
 	var reward_values := screen.get_node_or_null("ResultOverlay/Card/Content/ResultRewardValues") as HBoxContainer
 	var keeper_cat := screen.get_node_or_null("ResultOverlay/Card/Content/ResultProclamation/KeeperCat") as TextureRect
 	_expect(reward_values != null and reward_values.get_child_count() == 2, "Authored result values must preserve coin and gem reward slots")
+	var result_action := screen.get_node_or_null("ResultOverlay/Card/Content/Action") as Button
+	var result_objective := screen.get_node_or_null("ResultOverlay/Card/Content/ObjectiveSummary") as Label
+	_expect(result_action != null and result_action.custom_minimum_size.y >= 82.0, "Result primary action must retain the North Star mobile CTA scale")
+	_expect(result_objective != null and result_objective.get_theme_stylebox("normal") != null, "Result objective completion must sit on an authored plate")
 	_expect(keeper_cat != null and keeper_cat.texture != null, "Authored terminal proclamation must use Keeper production art")
 
 	screen.queue_free()

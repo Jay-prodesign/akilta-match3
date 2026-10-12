@@ -334,9 +334,9 @@ func _capture() -> void:
 	var completed_chapters = app.current_screen()
 	var completed_boutique: Button = completed_chapters.get_node_or_null("Layout/ChapterGrid/CurioBoutiqueButton") as Button
 	var completed_summary: Label = completed_chapters.get_node_or_null("Layout/ChapterSummary") as Label
-	if completed_boutique == null or not completed_boutique.text.contains("RESTORED WING · 3 / 3 DISPLAYS") or not completed_boutique.text.contains("REVISIT RITUALS"):
+	if completed_boutique == null or not completed_boutique.text.contains("RARE FINDS · RESTORED 3 / 3") or not completed_boutique.text.contains("REVISIT RITUALS"):
 		return _fail(app, "completed Chapter Select must identify the restored 3/3 Curio Boutique")
-	if completed_summary == null or not completed_summary.text.begins_with("The opening wing is restored"):
+	if completed_summary == null or not completed_summary.text.begins_with("CURIO BOUTIQUE RESTORED"):
 		return _fail(app, "completed Chapter Select must describe the restored opening wing")
 	if not await _save(app, "progression-final-chapters.png"):
 		return
@@ -385,10 +385,10 @@ func _play_level(app: Node, level_number: int) -> bool:
 		_fail(app, "Curio Boutique entry missing before Level %d" % level_number)
 		return false
 	if completed_before == 0:
-		if not boutique.text.contains("CURRENT WING · 0 / 3 DISPLAYS") or not boutique.text.contains("BEGIN RESTORATION"):
+		if not boutique.text.contains("RARE FINDS · 0 / 3 AWAKENED") or not boutique.text.contains("BEGIN RESTORATION"):
 			_fail(app, "Chapter Select must begin at 0 / 3 before Level 1")
 			return false
-	elif not boutique.text.contains("CURRENT WING · %d / 3 DISPLAYS" % completed_before) or not boutique.text.contains("CONTINUE RESTORATION"):
+	elif not boutique.text.contains("RARE FINDS · %d / 3 AWAKENED" % completed_before) or not boutique.text.contains("CONTINUE RESTORATION"):
 		_fail(app, "Chapter Select must reflect %d / 3 progress before Level %d" % [completed_before, level_number])
 		return false
 	if chapter_summary == null:

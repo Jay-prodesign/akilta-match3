@@ -710,8 +710,9 @@ func _show_result_if_terminal(result: String) -> void:
 		haptics.request_terminal("won")
 		feedback_requested.emit("win")
 		_pending_win = true
-		result_title.text = "RITUAL COMPLETE AGAIN" if replay_mode else current_win_title
+		result_title.text = "RITUAL COMPLETE AGAIN" if replay_mode else "LEVEL COMPLETE!"
 		result_detail.text = "This Curio already belongs to the House. Replaying does not grant the persistent reward again." if replay_mode else current_win_detail
+		result_detail.visible = replay_mode
 		_configure_result_reward_copy(true)
 		if result_ritual != null:
 			result_ritual.set("mode", "result")
@@ -739,6 +740,7 @@ func _show_result_if_terminal(result: String) -> void:
 		_guided_retry_pending = _consecutive_failures >= 2
 		result_title.text = "THE ROOM WAITS"
 		result_detail.text = _failure_recovery_copy()
+		result_detail.visible = true
 		_configure_result_reward_copy(false)
 		if result_ritual != null:
 			result_ritual.set("mode", "fail")
@@ -852,7 +854,7 @@ func _style_terminal_result(kind: String) -> void:
 	panel.bg_color = Color("#100D17", 0.99) if won else Color("#120D14", 0.99)
 	panel.border_color = (Color("#FFF1B6") if _high_contrast else Color("#D5AD70")) if won else (Color("#FFD3DF") if _high_contrast else Color("#9A6073"))
 	panel.set_border_width_all(3 if _high_contrast else 2)
-	panel.set_corner_radius_all(18)
+	panel.set_corner_radius_all(26)
 	panel.shadow_color = Color(0, 0, 0, 0.72)
 	panel.shadow_size = 26
 	panel.content_margin_left = 24
@@ -955,11 +957,11 @@ func _configure_result_reward_copy(won: bool) -> void:
 	if won:
 		var relic_number := maxi(1, current_house_stage_reward)
 		if replay_mode:
-			result_eyebrow.text = "REPLAY COMPLETE · RELIC %02d" % relic_number
+			result_eyebrow.text = "REPLAY · RELIC %02d" % relic_number
 			result_reward_name.text = "%s · ALREADY AWAKENED" % reward_name
 			result_house_change.text = "No new Curio, House restoration or persistent currency is granted on replay."
 			return
-		result_eyebrow.text = "LEVEL COMPLETE · RELIC %02d" % relic_number
+		result_eyebrow.text = "CURIO RECOVERED · RELIC %02d" % relic_number
 		result_reward_name.text = "%s · %s" % [
 			reward_name,
 			"AWAKENED" if current_reward_curio == "moon_cameo" else "RECOVERED"
@@ -1034,6 +1036,9 @@ func gameplay_presentation_contract() -> Dictionary:
 		"authored_board_frame": get_node_or_null("Layout/BoardView/OrnateFrame") != null,
 		"authored_result_values": _result_reward_values != null,
 		"authored_result_proclamation": _result_proclamation != null and _result_keeper_cat != null,
+		"north_star_result_hierarchy": result_title != null and result_title.get_theme_font_size("font_size") >= 46 and result_objective_summary != null and result_objective_summary.get_theme_stylebox("normal") != null,
+		"north_star_result_cta": result_action != null and result_action.custom_minimum_size.y >= 82.0 and result_action.get_theme_stylebox("normal") != null,
+		"win_copy_compact": result_detail != null and result_house_change != null,
 		"runtime_shell_factory": false,
 		"transient_vfx_runtime_allowed": true,
 	}

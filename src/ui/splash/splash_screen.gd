@@ -81,7 +81,10 @@ func splash_authored_contract() -> Dictionary:
 	return {
 		"authored_world_art": splash_world_art != null and splash_world_art.texture != null,
 		"authored_boot_panel": boot_state_panel != null,
-		"authored_enter_cta": enter_button != null and enter_button.custom_minimum_size.y >= 64.0,
+		"authored_enter_cta": enter_button != null and enter_button.custom_minimum_size.y >= 80.0,
+		"north_star_brand_hierarchy": ($Layout/Brand as Label).get_theme_font_size("font_size") >= 66 and ($Layout/MoonMark as Label).get_theme_font_size("font_size") >= 84,
+		"compact_boot_state": boot_state_panel != null and boot_state_panel.custom_minimum_size.y <= 88.0,
+		"story_subordinate": ($Layout/Story as Label) != null and not ($Layout/Story as Label).visible,
 		"runtime_ui_factory": false,
 	}
 
