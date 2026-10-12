@@ -459,13 +459,17 @@ func show_feature_preview(feature: String) -> bool:
 		return false
 	var feature_key := feature.to_lower()
 	var target_route := -1
+	var screen_name := ""
 	match feature_key:
 		"events":
 			target_route = NavigationScript.Route.EVENTS
+			screen_name = "EventsScreen"
 		"shop":
 			target_route = NavigationScript.Route.SHOP
+			screen_name = "ShopScreen"
 		"profile":
 			target_route = NavigationScript.Route.PROFILE_SETTINGS
+			screen_name = "ProfileSettingsScreen"
 		_:
 			return false
 	if navigation.current() != NavigationScript.Route.HOUSE and navigation.current() != target_route:
@@ -494,6 +498,7 @@ func show_feature_preview(feature: String) -> bool:
 		"save_detail": _local_save_detail_copy(),
 	}
 	var screen: Node = MetaDestinationScene.instantiate()
+	screen.name = screen_name
 	_show_screen(screen)
 	if not bool(screen.configure(feature_key, state)):
 		_ensure_house_route()
