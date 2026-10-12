@@ -220,19 +220,27 @@ func _layout_chapter_hotspots(grid: Control, buttons: Array[Button]) -> void:
 	var count := buttons.size()
 	for i in range(count):
 		var button := buttons[i]
+		var current := String(button.get_meta("chapter_id", "")) == "curio_boutique"
 		if compact:
 			var spacing := 6.0
 			var card_height := maxf(52.0, (grid.size.y - spacing * float(count - 1)) / float(count))
 			button.position = Vector2(0, float(i) * (card_height + spacing))
 			button.size = Vector2(grid.size.x, card_height)
 			button.add_theme_font_size_override("font_size", 14)
-			button.add_theme_constant_override("icon_max_width", 56)
+			button.add_theme_constant_override("icon_max_width", 86 if current else 0)
 		else:
 			button.position = Vector2(grid.size.x * float(button.get_meta("map_x")), grid.size.y * float(button.get_meta("map_y")))
 			button.size = Vector2(grid.size.x * float(button.get_meta("map_w")), grid.size.y * float(button.get_meta("map_h")))
-			var current := String(button.get_meta("chapter_id", "")) == "curio_boutique"
 			button.add_theme_font_size_override("font_size", 27 if current else 21)
 			button.add_theme_constant_override("icon_max_width", 210 if current else 0)
+
+func chapter_visual_contract() -> Dictionary:
+	return {
+		"current_wing_art_path": CURRENT_WING_ART_PATH,
+		"current_wing_art_loaded": PieceAssetLoader.ornament(CURRENT_WING_ART_PATH) != null,
+		"current_wing_art_is_raster": CURRENT_WING_ART_PATH.ends_with(".webp") or CURRENT_WING_ART_PATH.ends_with(".png"),
+		"future_wings_artless_until_authored": true
+	}
 
 func _apply_current_style(button: Button, state: String) -> void:
 	button.disabled = false
