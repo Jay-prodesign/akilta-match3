@@ -8,6 +8,11 @@ on:
       - "feat/**"
     paths:
       - ".github/workflows/p0-headless.yml"
+      - "project.godot"
+      - "export_presets.cfg"
+      - "assets/mobile/**"
+      - "tests/unit/test_mobile_release_contract.gd"
+      - "tests/unit/test_mobile_safe_area.gd"
       - "src/app/**"
       - "src/ui/home/**"
       - "src/ui/splash/**"
@@ -84,6 +89,12 @@ jobs:
           if [ "$status" -ne 0 ]; then exit "$status"; fi
           if grep -Eq "SCRIPT ERROR:|(^| )ERROR:|TEST_FAIL:" <<<"$output"; then exit 1; fi
           grep -Fq "TEST_PASS: S00 boot loading ready and recovery contract" <<<"$output"
+
+      - name: Run native mobile configuration contracts
+        shell: bash
+        run: |
+          timeout 30s ./godot --headless --path . -s res://tests/unit/test_mobile_release_contract.gd
+          timeout 30s ./godot --headless --path . -s res://tests/unit/test_mobile_safe_area.gd
 
       - name: Run canonical screen-state architecture contract
         shell: bash
