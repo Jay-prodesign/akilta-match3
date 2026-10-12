@@ -26,9 +26,13 @@ func _run() -> void:
 	_expect(screen.has_method("chapter_visual_contract"), "S02 must expose its current-wing visual contract")
 	if screen.has_method("chapter_visual_contract"):
 		var visual_contract: Dictionary = screen.chapter_visual_contract()
+		_expect(bool(visual_contract.get("authored_scene_structure", false)), "S02 must own six authored chapter slots in its scene tree")
+		_expect(bool(visual_contract.get("world_backdrop_loaded", false)), "S02 authored House-world backdrop must load")
 		_expect(bool(visual_contract.get("current_wing_art_loaded", false)), "S02 current wing authored place art must load")
 		_expect(bool(visual_contract.get("current_wing_art_is_raster", false)), "S02 current wing place art must use raster runtime artwork")
 		_expect(bool(visual_contract.get("future_wings_artless_until_authored", false)), "S02 future wings must remain artless rather than fabricate chapter artwork")
+		_expect(bool(visual_contract.get("future_wings_use_house_world_glass", false)), "S02 sealed wings must reveal the authored House world instead of opaque empty slabs")
+		_expect(not bool(visual_contract.get("future_wings_specific_art_claimed", true)), "S02 must not imply unauthored future-wing-specific artwork")
 	_expect(screen.get_node_or_null("ResourceBar") != null, "S02 global resources header missing")
 	_expect(screen.get_node_or_null("Layout/ChapterHeader/HeaderBack") != null, "S02 header back missing")
 	var current_wing_art: TextureRect = current.get_node_or_null("CurrentWingArtwork") as TextureRect if current != null else null
