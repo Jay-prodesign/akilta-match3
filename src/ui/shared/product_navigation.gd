@@ -1,15 +1,16 @@
 class_name Match3ProductNavigation
 extends RefCounted
 
+const PieceAssetLoader = preload("res://src/match3/presentation/piece_asset_loader.gd")
 const MobileSafeArea = preload("res://src/ui/shared/mobile_safe_area.gd")
 const NavigationScene = preload("res://src/ui/shared/product_navigation.tscn")
 
 const ITEMS := [
-	{"label": "HOUSE", "id": "house", "node": "NavHouse"},
-	{"label": "CURIOS", "id": "curios", "node": "NavCurios"},
-	{"label": "MAP", "id": "map", "node": "NavMap"},
-	{"label": "EVENTS", "id": "events", "node": "NavEvents"},
-	{"label": "SHOP", "id": "shop", "node": "NavShop"},
+	{"label": "HOUSE", "id": "house", "node": "NavHouse", "icon": "res://assets/ui/nav_house.svg"},
+	{"label": "CURIOS", "id": "curios", "node": "NavCurios", "icon": "res://assets/ui/nav_curios.svg"},
+	{"label": "MAP", "id": "map", "node": "NavMap", "icon": "res://assets/ui/nav_map.svg"},
+	{"label": "EVENTS", "id": "events", "node": "NavEvents", "icon": "res://assets/ui/nav_events.svg"},
+	{"label": "SHOP", "id": "shop", "node": "NavShop", "icon": "res://assets/ui/nav_shop.svg"},
 ]
 
 static func attach(screen: Control, active_section: String, handler: Callable, content_path: NodePath = NodePath("Layout")) -> PanelContainer:
@@ -49,6 +50,7 @@ static func attach(screen: Control, active_section: String, handler: Callable, c
 		var icon := button.get_node_or_null("Content/Icon") as TextureRect
 		var caption := button.get_node_or_null("Content/Label") as Label
 		if icon != null:
+			icon.texture = PieceAssetLoader.ornament(String(item["icon"]))
 			icon.modulate = Color("#F0CE8A") if is_active else Color("#C9B5C8")
 		if caption != null:
 			caption.text = String(item["label"])
