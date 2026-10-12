@@ -14,6 +14,10 @@ const SPECIAL_ASSET_PATHS := {
 	"smart": "res://assets/specials/gbl_special_smart_idle_v01.webp",
 	"global": "res://assets/specials/gbl_special_global_idle_v01.webp",
 }
+const WAX_SEAL_ASSET_PATHS := {
+	"intact": "res://assets/blockers/ch01_blocker_wax_seal_intact_v01.webp",
+	"cracked": "res://assets/blockers/ch01_blocker_wax_seal_cracked_v01.webp",
+}
 
 const INK := Color("#080C15")
 const VELVET := Color("#101320")
@@ -707,7 +711,7 @@ func _draw_cell(rect: Rect2, pos: Vector2i) -> void:
 		_draw_special_mark(rect, special)
 	var blocker: Dictionary = board_state.get_blocker(pos)
 	if not blocker.is_empty():
-		_draw_wax_seal(rect, int(blocker.get("hp", 1)))
+		_draw_wax_seal(rect, blocker)
 
 func _cell_box(radius: float) -> StyleBoxFlat:
 	var box := StyleBoxFlat.new()
@@ -893,16 +897,16 @@ func _draw_special_mark(rect: Rect2, kind: String) -> void:
 		"global":
 			draw_arc(center, full_r * 0.82, 0.0, TAU, 28, fallback, 2.5)
 
-func _draw_wax_seal(rect: Rect2, hp: int) -> void:
-	var center := rect.position + Vector2(rect.size.x * 0.23, rect.size.y * 0.76)
-	var asset_size := minf(rect.size.x, rect.size.y) * 0.42
-	var seal := PieceAssetLoader.ornament("res://assets/blockers/ch01_blocker_wax_seal_intact_v01.svg")
+func _draw_wax_seal(rect: Rect2, blocker: Dictionary) -> void:
+	var hp := maxi(1, int(blocker.get("hp", 1)))
+	var max_hp := maxi(hp, int(blocker.get("max_hp", hp)))
+	var state := "cracked" if hp < max_hp else "intact"
+	var path := String(WAX_SEAL_ASSET_PATHS.get(state, WAX_SEAL_ASSET_PATHS["intact"]))
+	var center := rect.position + Vector2(rect.size.x * 0.24, rect.size.y * 0.74)
+	var asset_size := minf(rect.size.x, rect.size.y) * 0.54
+	var seal := PieceAssetLoader.ornament(path)
 	if seal != null:
 		draw_texture_rect(seal, Rect2(center - Vector2.ONE * asset_size * 0.5, Vector2.ONE * asset_size), false)
-		if hp > 1:
-			for i in range(hp - 1):
-				var mark_y := center.y + asset_size * 0.22 + float(i) * 3.0
-				draw_line(Vector2(center.x - asset_size * 0.12, mark_y), Vector2(center.x + asset_size * 0.12, mark_y), Color("#F1D296", 0.72), 1.5)
 		return
 	# Exact semantic fallback only; never substitute another gameplay family.
 	var r := asset_size * 0.40

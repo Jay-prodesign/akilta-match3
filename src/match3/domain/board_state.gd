@@ -45,9 +45,11 @@ static func from_level(level_data: Dictionary, seed_value: int):
 		if raw_blocker is Dictionary:
 			var blocker_pos := Vector2i(int(raw_blocker.get("x", -1)), int(raw_blocker.get("y", -1)))
 			if board.in_bounds(blocker_pos) and not board.is_hole(blocker_pos):
+				var blocker_hp: int = maxi(1, int(raw_blocker.get("hp", 1)))
 				board.blockers[blocker_pos] = {
 					"type": String(raw_blocker.get("type", "wax_seal")),
-					"hp": max(1, int(raw_blocker.get("hp", 1)))
+					"hp": blocker_hp,
+					"max_hp": blocker_hp
 				}
 
 	var initial_rows = level_data.get("initial_rows", [])

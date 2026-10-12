@@ -62,7 +62,9 @@ func _test_wax_seal_damage() -> void:
 	var hit: Array[Vector2i] = [Vector2i(2, 1)]
 	var first: Array[Dictionary] = WaxSeal.apply_damage(board, hit)
 	_expect(first.size() == 1, "adjacent clear must damage Wax Seal once")
-	_expect(int(board.get_blocker(Vector2i(2, 2)).get("hp", 0)) == 1, "Wax Seal hp must decrement")
+	var damaged_seal: Dictionary = board.get_blocker(Vector2i(2, 2))
+	_expect(int(damaged_seal.get("hp", 0)) == 1, "Wax Seal hp must decrement")
+	_expect(int(damaged_seal.get("max_hp", 0)) == 2, "Wax Seal must preserve authored max hp for cracked-state presentation")
 	var second: Array[Dictionary] = WaxSeal.apply_damage(board, hit)
 	_expect(second.size() == 1, "second adjacent clear must resolve Wax Seal")
 	_expect(board.remaining_blockers() == 0, "Wax Seal must clear at zero hp")
