@@ -228,10 +228,10 @@ func show_restoration_ceremony(curio_id: String, stage: int) -> void:
 	shell.border_color = Color("#D5AD70", 0.88)
 	shell.set_border_width_all(2)
 	shell.set_corner_radius_all(14)
-	shell.content_margin_left = 16
-	shell.content_margin_right = 16
-	shell.content_margin_top = 12
-	shell.content_margin_bottom = 12
+	shell.content_margin_left = 12
+	shell.content_margin_right = 12
+	shell.content_margin_top = 8
+	shell.content_margin_bottom = 8
 	shell.shadow_color = Color(0, 0, 0, 0.58)
 	shell.shadow_size = 14
 	panel.add_theme_stylebox_override("panel", shell)
@@ -239,25 +239,25 @@ func show_restoration_ceremony(curio_id: String, stage: int) -> void:
 
 	var ceremony := VBoxContainer.new()
 	ceremony.name = "CeremonyContent"
-	ceremony.add_theme_constant_override("separation", 10)
+	ceremony.add_theme_constant_override("separation", 6)
 	panel.add_child(ceremony)
 	var section := Label.new()
 	section.text = "HOUSE RESTORATION"
 	section.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	section.add_theme_color_override("font_color", Color("#D5AD70"))
-	section.add_theme_font_size_override("font_size", 20)
+	section.add_theme_font_size_override("font_size", 18)
 	ceremony.add_child(section)
 	var divider := HSeparator.new()
 	divider.modulate = Color("#D5AD70", 0.45)
 	ceremony.add_child(divider)
 	var row := HBoxContainer.new()
 	row.name = "CeremonyRow"
-	row.add_theme_constant_override("separation", 18)
+	row.add_theme_constant_override("separation", 12)
 	ceremony.add_child(row)
 
 	var art := TextureRect.new()
 	art.name = "RestoredCurioArt"
-	art.custom_minimum_size = Vector2(200, 200)
+	art.custom_minimum_size = Vector2(160, 160)
 	art.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
 	art.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
 	art.texture = _curio_texture(curio_id)
@@ -266,33 +266,33 @@ func show_restoration_ceremony(curio_id: String, stage: int) -> void:
 	var copy := VBoxContainer.new()
 	copy.name = "Copy"
 	copy.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	copy.add_theme_constant_override("separation", 8)
+	copy.add_theme_constant_override("separation", 5)
 	row.add_child(copy)
 
 	var kicker := Label.new()
 	kicker.text = "THE HOUSE REMEMBERS"
 	kicker.add_theme_color_override("font_color", Color("#D5AD70"))
-	kicker.add_theme_font_size_override("font_size", 20)
+	kicker.add_theme_font_size_override("font_size", 18)
 	copy.add_child(kicker)
 
 	var title := Label.new()
 	title.text = _curio_name(curio_id)
 	title.add_theme_color_override("font_color", Color("#FFF0D8"))
-	title.add_theme_font_size_override("font_size", 34)
+	title.add_theme_font_size_override("font_size", 30)
 	copy.add_child(title)
 
 	var body := Label.new()
 	body.text = _restoration_copy(stage)
 	body.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	body.add_theme_color_override("font_color", Color("#DDCED6"))
-	body.add_theme_font_size_override("font_size", 20)
+	body.add_theme_font_size_override("font_size", 18)
 	copy.add_child(body)
 
 	var button := Button.new()
 	button.name = "Continue"
 	button.text = "CONTINUE"
-	button.custom_minimum_size = Vector2(0, 64)
-	button.add_theme_font_size_override("font_size", 22)
+	button.custom_minimum_size = Vector2(0, 56)
+	button.add_theme_font_size_override("font_size", 20)
 	var normal := StyleBoxFlat.new()
 	normal.bg_color = Color("#4A1A51")
 	normal.border_color = Color("#D5AD70")
