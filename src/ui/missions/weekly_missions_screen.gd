@@ -34,8 +34,8 @@ func configure(state: Dictionary) -> bool:
 	reward_art.set_meta("asset_path", WEEKLY_ART_PATH)
 	empty_state.set_meta("offline_contract", "truthful_empty_state")
 	mission_timer.text = "OFFLINE · LIVE RESET TIME UNAVAILABLE"
-	availability.text = "LIVE RITUALS WILL APPEAR HERE ONLY WHEN A MISSION FEED IS CONNECTED"
-	truth.text = "RESET / OFFLINE STATE · NOTHING TO CLAIM"
+	availability.text = "LIVE RITUALS REQUIRE A CONNECTED MISSION FEED"
+	truth.text = "OFFLINE · NOTHING TO CLAIM"
 	opening_record.text = "OPENING CABINET RECORD · %d / %d DISPLAYS AWAKENED" % [completed_count, opening_cap]
 	return true
 
@@ -48,7 +48,8 @@ func screen_contract() -> Dictionary:
 		"reward_asset_path": String(reward_art.get_meta("asset_path", "")),
 		"code_built_panels": false,
 		"north_star_title_hierarchy": ($MissionLayout/MissionTitle as Label).get_theme_font_size("font_size") >= 52,
-		"north_star_altar_stack": ($MissionLayout/MissionEmptyState/EmptyContent as VBoxContainer) != null and reward_art.custom_minimum_size.y <= 260.0,
+		"north_star_altar_stack": ($MissionLayout/MissionEmptyState/EmptyContent as VBoxContainer) != null and reward_art.custom_minimum_size.y <= 200.0,
+		"compact_offline_altar": empty_state != null and empty_state.custom_minimum_size.y <= 460.0 and not ($MissionLayout/MissionEmptyState/EmptyContent/AltarCopy/EmptyBody as Label).visible,
 		"primary_cta_rounding": return_events.get_theme_stylebox("normal") != null,
 
 	}
