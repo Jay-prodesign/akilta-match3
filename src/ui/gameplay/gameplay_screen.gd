@@ -44,8 +44,6 @@ var _pending_terminal_result: String = ""
 var _pending_hud_refresh: bool = false
 var haptics = HapticsController.new()
 var _potion_used_for_attempt := false
-var _idle_hint_seconds := 0.0
-const AUTO_HINT_DELAY := 9.0
 var _idle_hint_seconds: float = 0.0
 const AUTO_HINT_DELAY_SECONDS := 9.0
 var _level_badge_label: Label
