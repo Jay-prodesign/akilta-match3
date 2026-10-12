@@ -83,6 +83,8 @@ func _run() -> void:
 	if prestart.has_method("aid_asset_contract"):
 		var prestart_aids: Dictionary = prestart.aid_asset_contract()
 		_expect(bool(prestart_aids.get("raster_runtime", false)), "prestart aids must use raster runtime artwork")
+		_expect(String(prestart_aids.get("manual_hint_label", "")) == "ASK KEEPER", "prestart must name the real manual familiar action")
+		_expect(String(prestart_aids.get("plus_moves_availability", "")) == "fail_recovery_only", "prestart +3 Moves must be labeled as fail-only recovery")
 		var prestart_loaded: Dictionary = prestart_aids.get("loaded", {})
 		_expect(bool(prestart_loaded.get("hint", false)), "prestart Hint artwork must load")
 		_expect(bool(prestart_loaded.get("plus_moves", false)), "prestart +3 Moves artwork must load")

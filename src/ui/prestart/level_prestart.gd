@@ -136,7 +136,10 @@ func aid_asset_contract() -> Dictionary:
 	return {
 		"paths": AID_ART_PATHS.duplicate(true),
 		"loaded": loaded,
-		"raster_runtime": raster_runtime
+		"raster_runtime": raster_runtime,
+		"manual_hint_label": "ASK KEEPER",
+		"plus_moves_label": "FAIL RECOVERY · +3",
+		"plus_moves_availability": "fail_recovery_only"
 	}
 
 func _style_ritual_actions() -> void:
