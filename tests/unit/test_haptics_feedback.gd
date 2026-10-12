@@ -31,8 +31,10 @@ func _init() -> void:
 	_expect(int(calls[4]["ms"]) == HapticsController.WIN_MS, "win duration contract")
 
 	h.reset_for_new_attempt()
+	_expect(h.request_retry(), "retry haptic must play after attempt reset")
+	_expect(int(calls[5]["ms"]) == HapticsController.RETRY_MS, "retry duration contract")
 	_expect(h.request_terminal("failed"), "retry must re-arm terminal feedback for a later fail")
-	_expect(int(calls[5]["ms"]) == HapticsController.FAIL_MS, "fail duration contract")
+	_expect(int(calls[6]["ms"]) == HapticsController.FAIL_MS, "fail duration contract")
 
 	var invalid_diag: Dictionary = h.get_diagnostics(HapticsController.Category.INVALID)
 	_expect(int(invalid_diag["requests"]) == 2 and int(invalid_diag["played"]) == 1 and int(invalid_diag["suppressed"]) == 1, "invalid-swap haptics must record one played and one throttled request")
