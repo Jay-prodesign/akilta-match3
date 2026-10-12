@@ -1,6 +1,7 @@
 class_name Match3TopResourceBar
 extends RefCounted
 
+const PieceAssetLoader = preload("res://src/match3/presentation/piece_asset_loader.gd")
 const MobileSafeArea = preload("res://src/ui/shared/mobile_safe_area.gd")
 const ResourceBarScene = preload("res://src/ui/shared/top_resource_bar.tscn")
 
@@ -24,7 +25,15 @@ static func attach(screen: Control, progress, profile_handler: Callable = Callab
 	panel.offset_bottom = 68.0 + safe_insets.y
 	screen.add_child(panel)
 
+	var coin_icon := panel.get_node_or_null("Resources/CoinResourceChip/Content/Icon") as TextureRect
+	var gem_icon := panel.get_node_or_null("Resources/GemResourceChip/Content/Icon") as TextureRect
+	if coin_icon != null:
+		coin_icon.texture = PieceAssetLoader.ornament("res://assets/ui/ui_coin.svg")
+	if gem_icon != null:
+		gem_icon.texture = PieceAssetLoader.ornament("res://assets/ui/ui_gem.svg")
 	var profile := panel.get_node_or_null("Resources/KeeperProfile") as Button
+	if profile != null:
+		profile.icon = PieceAssetLoader.ornament("res://assets/ui/ui_profile.svg")
 	if profile != null:
 		if profile_handler.is_valid():
 			profile.visible = true
