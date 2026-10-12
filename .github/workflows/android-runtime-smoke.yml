@@ -219,9 +219,27 @@ jobs:
             cat artifacts/crash-buffer.txt
             exit 1
           fi
-          if grep -Eq "Missing required production screen art|Failed to decode production screen art" artifacts/logcat.txt; then
-            grep -E "Missing required production screen art|Failed to decode production screen art" artifacts/logcat.txt
+          if grep -Eq "Missing required production screen art|Failed to decode production screen art|Missing required gameplay asset|SCRIPT ERROR:" artifacts/logcat.txt; then
+            grep -E "Missing required production screen art|Failed to decode production screen art|Missing required gameplay asset|SCRIPT ERROR:" artifacts/logcat.txt
             exit 1
+          fi
+
+          # Godot Compatibility on Google SwiftShader currently has an upstream
+          # fragment-uniform specialization bug. Record that emulator limitation
+          # explicitly, but do not confuse it with Cat & Coven resource/script
+          # failures. Any equivalent shader-link failure on a non-SwiftShader
+          # renderer remains fatal.
+          if grep -Eq "Program linking failed|shader failed to compile" artifacts/logcat.txt; then
+            if grep -Fq "Google SwiftShader" artifacts/logcat.txt && grep -Fq "GL_MAX_FRAGMENT_UNIFORM_VECTORS" artifacts/logcat.txt; then
+              {
+                echo "KNOWN_ENGINE_EMULATOR_WARNING"
+                echo "Godot Compatibility + Google SwiftShader uniform-vector specialization limit"
+                grep -E "Program linking failed|GL_MAX_FRAGMENT_UNIFORM_VECTORS|shader failed to compile|OpenGL API" artifacts/logcat.txt | tail -80
+              } > artifacts/known-swiftshader-render-warning.txt
+            else
+              grep -E "Program linking failed|shader failed to compile" artifacts/logcat.txt
+              exit 1
+            fi
           fi
           echo "VIRTUAL_DEVICE_RUNTIME_PASS: cold launch, resume, force-stop relaunch"
 
