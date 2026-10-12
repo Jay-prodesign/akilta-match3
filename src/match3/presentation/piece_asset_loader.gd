@@ -118,15 +118,20 @@ static func contract() -> Dictionary:
 static func ornament(path: String) -> Texture2D:
 	if _ornaments.has(path):
 		return _ornaments[path]
-	# Production resources must load through ResourceLoader so exported builds can
-	# follow Godot's import remaps. Exact-family fallback order stays unchanged.
+	# Exported Godot builds remap imported image sources into engine resources.
+	# ResourceLoader follows that remap on Android/iOS/Web; raw FileAccess to
+	# source image bytes is not a valid production loading contract.
 	var candidates: Array[String] = []
 	if path.get_extension().to_lower() == "svg":
-		candidates.append(path.get_basename() + ".webp")
-		candidates.append(path.get_basename() + ".png")
+		var webp_preferred := path.get_basename() + ".webp"
+		var png_preferred := path.get_basename() + ".png"
+		if ResourceLoader.exists(webp_preferred):
+			candidates.append(webp_preferred)
+		if ResourceLoader.exists(png_preferred):
+			candidates.append(png_preferred)
 	candidates.append(path)
 	for chosen in candidates:
-		if chosen == "" or not ResourceLoader.exists(chosen):
+		if not ResourceLoader.exists(chosen):
 			continue
 		var resource := ResourceLoader.load(chosen, "Texture2D", ResourceLoader.CACHE_MODE_REUSE) as Texture2D
 		if resource != null:
