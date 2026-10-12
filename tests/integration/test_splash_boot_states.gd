@@ -44,6 +44,13 @@ func _verify_clean_ready() -> void:
 	root.add_child(app)
 	var splash = app.current_screen()
 	_expect(splash != null and splash.has_method("boot_state") and splash.boot_state() == "loading", "Cold boot must first expose S00 loading")
+	_expect(splash != null and splash.has_method("splash_authored_contract"), "S00 must expose authored presentation contract")
+	if splash != null and splash.has_method("splash_authored_contract"):
+		var authored: Dictionary = splash.splash_authored_contract()
+		_expect(bool(authored.get("authored_world_art", false)), "S00 world art must be authored and loaded")
+		_expect(bool(authored.get("authored_boot_panel", false)), "S00 boot-state panel must be authored")
+		_expect(bool(authored.get("authored_enter_cta", false)), "S00 Enter CTA must be authored with mobile touch target")
+		_expect(not bool(authored.get("runtime_ui_factory", true)), "S00 must not rebuild presentation UI at runtime")
 	var enter: Button = splash.get_node_or_null("Layout/Enter") as Button
 	_expect(enter != null and (not enter.visible or enter.disabled), "S00 loading must not expose an active Enter action")
 	await _frames(3)
