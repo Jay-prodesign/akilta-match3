@@ -146,7 +146,15 @@ jobs:
           done
           test -n "$PID"
           echo "COLD_PID=$PID" | tee artifacts/lifecycle.txt
-          sleep 5
+          COLD_MAIN_LOOP_COUNT=0
+          for i in $(seq 1 60); do
+            COLD_MAIN_LOOP_COUNT="$(adb logcat -d | grep -Fc "OnGodotMainLoopStarted" || true)"
+            [ "$COLD_MAIN_LOOP_COUNT" -ge 1 ] && break
+            sleep 1
+          done
+          test "$COLD_MAIN_LOOP_COUNT" -ge 1
+          echo "COLD_MAIN_LOOP_COUNT=$COLD_MAIN_LOOP_COUNT" | tee -a artifacts/lifecycle.txt
+          sleep 2
           adb shell dumpsys activity activities | grep -E "mResumedActivity|topResumedActivity" | tee artifacts/cold-foreground.txt
           grep -Fq "$PACKAGE" artifacts/cold-foreground.txt
           adb exec-out screencap -p > artifacts/android-01-cold-launch.png
@@ -190,6 +198,7 @@ jobs:
           sleep 2
           STOPPED="$(adb shell pidof "$PACKAGE" 2>/dev/null | tr -d '\r' || true)"
           test -z "$STOPPED"
+          MAIN_LOOPS_BEFORE="$(adb logcat -d | grep -Fc "OnGodotMainLoopStarted" || true)"
           adb shell monkey -p "$PACKAGE" -c android.intent.category.LAUNCHER 1 >/dev/null
           AFTER=""
           for i in $(seq 1 60); do
@@ -198,11 +207,19 @@ jobs:
             sleep 1
           done
           test -n "$AFTER"
+          RELAUNCH_MAIN_LOOP_COUNT="$MAIN_LOOPS_BEFORE"
+          for i in $(seq 1 60); do
+            RELAUNCH_MAIN_LOOP_COUNT="$(adb logcat -d | grep -Fc "OnGodotMainLoopStarted" || true)"
+            [ "$RELAUNCH_MAIN_LOOP_COUNT" -gt "$MAIN_LOOPS_BEFORE" ] && break
+            sleep 1
+          done
+          test "$RELAUNCH_MAIN_LOOP_COUNT" -gt "$MAIN_LOOPS_BEFORE"
           {
             echo "FORCE_STOP_PREVIOUS_PID=$BEFORE"
             echo "RELAUNCH_PID=$AFTER"
+            echo "RELAUNCH_MAIN_LOOP_COUNT=$RELAUNCH_MAIN_LOOP_COUNT"
           } | tee -a artifacts/lifecycle.txt
-          sleep 5
+          sleep 2
           adb shell dumpsys activity activities | grep -E "mResumedActivity|topResumedActivity" | tee artifacts/relaunch-foreground.txt
           grep -Fq "$PACKAGE" artifacts/relaunch-foreground.txt
           adb exec-out screencap -p > artifacts/android-03-force-stop-relaunch.png
