@@ -146,27 +146,37 @@ grow_horizontal = 2
 grow_vertical = 2
 color = Color(0.0235, 0.0196, 0.0314, 1)
 
+[node name="RoomView" type="Control" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_top = 58.0
+offset_bottom = -92.0
+grow_horizontal = 2
+grow_vertical = 2
+clip_contents = true
+script = ExtResource("2_room")
+
 [node name="Layout" type="VBoxContainer" parent="."]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 offset_left = 14.0
-offset_top = 62.0
+offset_top = 66.0
 offset_right = -14.0
-offset_bottom = -96.0
+offset_bottom = -98.0
 grow_horizontal = 2
 grow_vertical = 2
 theme_override_constants/separation = 6
 
-[node name="RoomView" type="Control" parent="Layout"]
-custom_minimum_size = Vector2(0, 290)
+[node name="WorldSpacer" type="Control" parent="Layout"]
 layout_mode = 2
 size_flags_vertical = 3
-clip_contents = true
-script = ExtResource("2_room")
+mouse_filter = 2
 
-[node name="CurioHotspots" type="Control" parent="Layout/RoomView"]
+[node name="CurioHotspots" type="Control" parent="RoomView"]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -175,7 +185,7 @@ grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
 
-[node name="MoonHotspot" type="Button" parent="Layout/RoomView/CurioHotspots"]
+[node name="MoonHotspot" type="Button" parent="RoomView/CurioHotspots"]
 custom_minimum_size = Vector2(60, 60)
 layout_mode = 1
 anchor_left = 0.93
@@ -201,7 +211,7 @@ theme_override_styles/focus = SubResource("HotspotHover")
 theme_override_styles/disabled = SubResource("HotspotDisabled")
 text = "·"
 
-[node name="MothHotspot" type="Button" parent="Layout/RoomView/CurioHotspots"]
+[node name="MothHotspot" type="Button" parent="RoomView/CurioHotspots"]
 custom_minimum_size = Vector2(60, 60)
 layout_mode = 1
 anchor_left = 0.93
@@ -224,7 +234,7 @@ theme_override_styles/focus = SubResource("HotspotHover")
 theme_override_styles/disabled = SubResource("HotspotDisabled")
 text = "·"
 
-[node name="ThornHotspot" type="Button" parent="Layout/RoomView/CurioHotspots"]
+[node name="ThornHotspot" type="Button" parent="RoomView/CurioHotspots"]
 custom_minimum_size = Vector2(60, 60)
 layout_mode = 1
 anchor_left = 0.93
@@ -247,7 +257,7 @@ theme_override_styles/focus = SubResource("HotspotHover")
 theme_override_styles/disabled = SubResource("HotspotDisabled")
 text = "·"
 
-[node name="KeeperHotspot" type="Button" parent="Layout/RoomView/CurioHotspots"]
+[node name="KeeperHotspot" type="Button" parent="RoomView/CurioHotspots"]
 custom_minimum_size = Vector2(68, 68)
 layout_mode = 1
 anchor_left = 0.27
@@ -269,7 +279,7 @@ theme_override_styles/hover = SubResource("HotspotHover")
 theme_override_styles/pressed = SubResource("HotspotHover")
 theme_override_styles/focus = SubResource("HotspotHover")
 
-[node name="MoonCameoOverlay" type="Control" parent="Layout/RoomView"]
+[node name="MoonCameoOverlay" type="Control" parent="RoomView"]
 visible = false
 layout_mode = 1
 anchors_preset = -1
