@@ -21,9 +21,42 @@ func _run() -> void:
 	var store = StoreScript.new(TEST_PATH)
 	_cleanup()
 
+	_expect(int(progress.schema_version) == 2, "fresh progress must use economy-truth schema 2")
+	_expect(int(progress.coins) == 0 and int(progress.gems) == 0, "fresh progress must not seed fake currency balances")
+	var economy: Dictionary = progress.economy_contract()
+	_expect(not bool(economy.get("purchases_connected", true)) and not bool(economy.get("spending_connected", true)), "purchase and spending authority must remain disconnected")
+	_expect(not bool(economy.get("life_economy_connected", true)), "life economy must remain hidden until consumption/refill exists")
+
+	var legacy_data := {
+		"schema_version": 1,
+		"highest_level_unlocked": 3,
+		"house_stage": 2,
+		"lives": 5,
+		"coins": 12340,
+		"gems": 520,
+		"completed_levels": ["ch01_level_001", "ch01_level_002"],
+		"curios": ["moon_cameo", "moth_reliquary"],
+		"processed_transactions": ["legacy-1", "legacy-2"],
+	}
+	var legacy_file := FileAccess.open(TEST_PATH, FileAccess.WRITE)
+	_expect(legacy_file != null, "test must create a schema-1 legacy save")
+	if legacy_file != null:
+		legacy_file.store_string(JSON.stringify(legacy_data))
+		legacy_file.close()
+	var loaded_legacy: Dictionary = store.load_or_default()
+	_expect(int(loaded_legacy.get("schema_version", 0)) == 1, "SaveStore must still read supported schema-1 saves")
+	var migrated = ProgressScript.from_dict(loaded_legacy)
+	_expect(int(migrated.schema_version) == 2, "legacy progress must migrate to schema 2")
+	_expect(int(migrated.coins) == 240 and int(migrated.gems) == 2, "legacy seeded balances must be rebuilt only from durable first clears")
+	_expect(store.save(migrated.to_dict()), "migrated schema-2 save must write transactionally")
+	var migrated_disk: Dictionary = store.load_or_default()
+	_expect(int(migrated_disk.get("schema_version", 0)) == 2, "migrated save must persist schema 2")
+	_cleanup()
+
 	_expect(progress.apply_level_win("tx-level-001", "ch01_level_001", "moon_cameo"), "first win transaction must apply")
 	var first_reward_coins := int(progress.coins)
 	var first_reward_gems := int(progress.gems)
+	_expect(first_reward_coins == 120 and first_reward_gems == 1, "first clear must grant exactly 120 House Coins and 1 Moonstone")
 	_expect(not progress.apply_level_win("tx-level-001", "ch01_level_001", "moon_cameo"), "same win transaction must be idempotent")
 	_expect(not progress.apply_level_win("tx-level-001-replay", "ch01_level_001", "moon_cameo"), "fresh transaction id must not duplicate a completed level reward")
 	_expect(int(progress.coins) == first_reward_coins and int(progress.gems) == first_reward_gems, "replay must not duplicate persistent currency rewards")
