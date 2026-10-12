@@ -69,6 +69,8 @@ var _high_contrast: bool = false
 var _moves_urgency_state: String = "normal"
 var _last_impact_feedback: String = ""
 var _last_cascade_depth: int = 1
+var _last_shuffle_recovery: bool = false
+var _last_shuffle_attempt: int = 0
 var _last_objective_progress: int = 0
 var _last_objective_delta: int = 0
 var _objective_pulse_tween: Tween
@@ -304,6 +306,8 @@ func _on_pause_exit() -> void:
 func attempt_swap(from: Vector2i, to: Vector2i):
 	_idle_hint_seconds = 0.0
 	_last_objective_delta = 0
+	_last_shuffle_recovery = false
+	_last_shuffle_attempt = 0
 	if board_state == null or result_overlay.visible or pause_overlay.visible:
 		return null
 	if board_view.has_method("is_motion_active") and bool(board_view.is_motion_active()):
@@ -359,6 +363,12 @@ func attempt_swap(from: Vector2i, to: Vector2i):
 			_last_impact_feedback = "match"
 			haptics.request_match()
 			feedback_requested.emit("match")
+		if feedback_types.has("shuffle"):
+			_last_shuffle_recovery = true
+			_last_shuffle_attempt = _trace_shuffle_attempt(last_trace)
+			_last_impact_feedback = "shuffle_recovery"
+			haptics.request_shuffle()
+			feedback_requested.emit("shuffle")
 		var terminal_result := String(last_trace.result)
 		if terminal_result == "won" or terminal_result == "failed":
 			if motion_started:
@@ -406,7 +416,10 @@ func _refresh_move_feedback(trace) -> void:
 		return
 	var types: Array[String] = trace.event_types()
 	var cascade_depth := _trace_cascade_depth(trace)
-	if types.has("combo_triggered"):
+	if types.has("shuffle"):
+		hint_label.text = "NO PATH REMAINED · THE HOUSE REARRANGES THE SIGILS"
+		_style_impact_hint("shuffle")
+	elif types.has("combo_triggered"):
 		hint_label.text = "COVEN COMBO · THE WHOLE CABINET ANSWERS"
 		_style_impact_hint("combo")
 	elif types.has("blocker_cleared"):
@@ -425,12 +438,17 @@ func _refresh_move_feedback(trace) -> void:
 	elif cascade_depth > 1:
 		hint_label.text = "RITUAL CHAIN ×%d · KEEP WATCHING THE FALL" % cascade_depth
 		_style_impact_hint("cascade")
-	elif types.has("shuffle"):
-		hint_label.text = "NO PATH REMAINED · THE HOUSE REARRANGES THE SIGILS"
-		_style_impact_hint("normal")
 	elif not bool(trace.accepted):
 		hint_label.text = "THOSE SIGILS REFUSE THE ARRANGEMENT · TRY ANOTHER ADJACENT SWAP"
 		_style_impact_hint("invalid")
+
+func _trace_shuffle_attempt(trace) -> int:
+	if trace == null:
+		return 0
+	for event in trace.events:
+		if String(event.get("type", "")) == "shuffle":
+			return maxi(1, int(event.get("attempt", 1)))
+	return 0
 
 func _trace_cascade_depth(trace) -> int:
 	if trace == null:
@@ -457,6 +475,9 @@ func _style_impact_hint(mode: String) -> void:
 			size_px = 22
 		"cascade":
 			color = Color("#DDB7F5")
+			size_px = 21
+		"shuffle":
+			color = Color("#C7D9F4")
 			size_px = 21
 		"invalid":
 			color = Color("#D8C5D2")
@@ -592,6 +613,9 @@ func gameplay_feel_contract() -> Dictionary:
 		"objective_delta": _last_objective_delta,
 		"objective_target": _objective_target_value(),
 		"objective_copy": objective_label.text if objective_label != null else "",
+		"shuffle_recovery": _last_shuffle_recovery,
+		"shuffle_attempt": _last_shuffle_attempt,
+		"shuffle_copy": hint_label.text if hint_label != null else "",
 	}
 
 func _show_result_if_terminal(result: String) -> void:
@@ -802,6 +826,9 @@ func _on_board_trace_motion_finished() -> void:
 		_pending_hud_refresh = false
 		_refresh_hud()
 		_present_objective_progress()
+	if _last_shuffle_recovery:
+		hint_label.text = "PATH RESTORED · THE SIGILS ARE PLAYABLE AGAIN"
+		_style_impact_hint("shuffle")
 	if _pending_terminal_result == "":
 		return
 	var result := _pending_terminal_result
