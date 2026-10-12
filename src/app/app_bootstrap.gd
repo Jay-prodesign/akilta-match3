@@ -19,6 +19,7 @@ const CurioMaterials = preload("res://src/ui/theme/curio_materials.gd")
 const PieceAssetLoader = preload("res://src/match3/presentation/piece_asset_loader.gd")
 const ProductNavigation = preload("res://src/ui/shared/product_navigation.gd")
 const ScreenArt = preload("res://src/ui/shared/screen_art_registry.gd")
+const MobileSafeArea = preload("res://src/ui/shared/mobile_safe_area.gd")
 
 @export var environment: String = "development"
 @export var save_path_override: String = ""
@@ -854,6 +855,8 @@ func _show_screen(screen: Node) -> void:
 		_current_screen.queue_free()
 	_current_screen = screen
 	screen_host.add_child(screen)
+	if screen is Control:
+		MobileSafeArea.apply_content(screen as Control)
 	_install_north_star_backdrop(screen)
 	Typography.apply(screen)
 	CurioMaterials.apply(screen)

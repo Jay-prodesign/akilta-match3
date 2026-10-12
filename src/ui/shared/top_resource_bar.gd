@@ -2,6 +2,7 @@ class_name Match3TopResourceBar
 extends RefCounted
 
 const PieceAssetLoader = preload("res://src/match3/presentation/piece_asset_loader.gd")
+const MobileSafeArea = preload("res://src/ui/shared/mobile_safe_area.gd")
 
 static func attach(screen: Control, progress, profile_handler: Callable = Callable()) -> PanelContainer:
 	if screen == null:
@@ -17,8 +18,11 @@ static func attach(screen: Control, progress, profile_handler: Callable = Callab
 	panel.anchor_right = 0.98
 	panel.anchor_top = 0.0
 	panel.anchor_bottom = 0.0
-	panel.offset_top = 6.0
-	panel.offset_bottom = 68.0
+	var safe_insets := MobileSafeArea.current_insets(screen)
+	panel.offset_left = safe_insets.x
+	panel.offset_right = -safe_insets.z
+	panel.offset_top = 6.0 + safe_insets.y
+	panel.offset_bottom = 68.0 + safe_insets.y
 	panel.z_index = 60
 	var shell := StyleBoxFlat.new()
 	shell.bg_color = Color("#08070D", 0.94)

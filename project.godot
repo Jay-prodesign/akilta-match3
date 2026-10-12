@@ -1,14 +1,18 @@
 ; Engine configuration file.
-; AKILTA Match-3 — production baseline
-; Godot 4.7.2-stable is the pinned engine for P0.
+; Cat & Coven — production baseline
+; Godot 4.7.2-stable is the pinned engine for the release foundation.
 
 config_version=5
 
 [application]
 
-config/name="AKILTA Match-3"
+config/name="Cat & Coven"
 run/main_scene="res://src/app/app_bootstrap.tscn"
 config/features=PackedStringArray("4.7")
+config/icon="res://assets/ui/cat_coven_launch.png"
+boot_splash/show_image=true
+boot_splash/image="res://assets/mobile/black_cat_launch.png"
+boot_splash/bg_color=Color(0.027, 0.018, 0.035, 1)
 
 [display]
 
@@ -23,4 +27,5 @@ window/handheld/orientation=1
 
 renderer/rendering_method="gl_compatibility"
 renderer/rendering_method.mobile="gl_compatibility"
+textures/vram_compression/import_etc2_astc=true
 textures/default_filters/use_nearest_mipmap_filter=false

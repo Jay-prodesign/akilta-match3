@@ -8,6 +8,11 @@ on:
       - "feat/**"
     paths:
       - ".github/workflows/p0-visual.yml"
+      - ".github/workflows/mobile-release.yml"
+      - "project.godot"
+      - "export_presets.cfg"
+      - "assets/mobile/**"
+      - "tests/unit/test_mobile_safe_area.gd"
       - "tests/visual/capture_level1_journey.gd"
       - "tests/visual/capture_golden_feedback_vfx.gd"
       - "tests/visual/capture_splash_states.gd"

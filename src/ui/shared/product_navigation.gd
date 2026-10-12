@@ -2,6 +2,7 @@ class_name Match3ProductNavigation
 extends RefCounted
 
 const PieceAssetLoader = preload("res://src/match3/presentation/piece_asset_loader.gd")
+const MobileSafeArea = preload("res://src/ui/shared/mobile_safe_area.gd")
 const ITEMS := [
 	{"label": "HOUSE", "id": "house", "icon": "res://assets/ui/nav_house.svg"},
 	{"label": "CURIOS", "id": "curios", "icon": "res://assets/ui/nav_curios.svg"},
@@ -17,10 +18,12 @@ static func attach(screen: Control, active_section: String, handler: Callable, c
 	if existing != null:
 		return existing
 
+	var safe_insets := MobileSafeArea.current_insets(screen)
 	var content := screen.get_node_or_null(content_path) as Control
-	if content != null and not bool(content.get_meta("product_nav_inset_applied", false)):
-		content.offset_bottom -= 120.0
-		content.set_meta("product_nav_inset_applied", true)
+	if content != null:
+		if not bool(content.get_meta("product_nav_inset_applied", false)):
+			content.set_meta("product_nav_inset_applied", true)
+		MobileSafeArea.apply_content(screen, content_path)
 
 	var panel := PanelContainer.new()
 	panel.name = "ProductNavigation"
@@ -28,10 +31,10 @@ static func attach(screen: Control, active_section: String, handler: Callable, c
 	panel.anchor_right = 1.0
 	panel.anchor_top = 1.0
 	panel.anchor_bottom = 1.0
-	panel.offset_left = 12.0
-	panel.offset_right = -12.0
-	panel.offset_top = -114.0
-	panel.offset_bottom = -10.0
+	panel.offset_left = 12.0 + safe_insets.x
+	panel.offset_right = -12.0 - safe_insets.z
+	panel.offset_top = -114.0 - safe_insets.w
+	panel.offset_bottom = -10.0 - safe_insets.w
 	panel.z_index = 40
 	var shell := StyleBoxFlat.new()
 	shell.bg_color = Color("#090810", 0.985)

@@ -1,0 +1,164 @@
+name: Native Mobile Release Foundation
+
+on:
+  push:
+    branches:
+      - "feat/native-mobile-release-foundation"
+    paths:
+      - "project.godot"
+      - "export_presets.cfg"
+      - "tests/unit/test_mobile_release_contract.gd"
+      - ".github/workflows/mobile-release.yml"
+      - "src/**"
+      - "assets/**"
+      - "content/**"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  android:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: "17"
+
+      - name: Install Android SDK packages
+        shell: bash
+        run: |
+          set -euo pipefail
+          export ANDROID_HOME="/usr/local/lib/android/sdk"
+          SDKMANAGER="$(find "$ANDROID_HOME/cmdline-tools" -type f -name sdkmanager | sort | tail -1)"
+          test -x "$SDKMANAGER"
+          yes | "$SDKMANAGER" --licenses >/dev/null || true
+          "$SDKMANAGER" --sdk_root="$ANDROID_HOME" "platform-tools" "build-tools;36.0.0" "platforms;android-36"
+          echo "ANDROID_HOME=$ANDROID_HOME" >> "$GITHUB_ENV"
+          echo "$ANDROID_HOME/platform-tools" >> "$GITHUB_PATH"
+          echo "$ANDROID_HOME/build-tools/36.0.0" >> "$GITHUB_PATH"
+
+      - name: Install pinned Godot 4.7.2 and export templates
+        shell: bash
+        run: |
+          set -euo pipefail
+          curl -L --fail --retry 3 -o godot.zip "https://github.com/godotengine/godot-builds/releases/download/4.7.2-stable/Godot_v4.7.2-stable_linux.x86_64.zip"
+          echo "cadd3204e728a35d3f13adb7fd0d7902636b79f6b95c40c265eb73b6c35329e4  godot.zip" | sha256sum -c -
+          unzip -q godot.zip
+          mv Godot_v4.7.2-stable_linux.x86_64 godot
+          chmod +x godot
+          curl -L --fail --retry 3 -o templates.tpz "https://github.com/godotengine/godot-builds/releases/download/4.7.2-stable/Godot_v4.7.2-stable_export_templates.tpz"
+          echo "f298490b8d44d934be425a5a65a51bf15f422428b229a06a6e11d9ffea248011  templates.tpz" | sha256sum -c -
+          mkdir -p "$HOME/.local/share/godot/export_templates/4.7.2.stable" /tmp/godot-templates
+          unzip -q templates.tpz -d /tmp/godot-templates
+          cp -R /tmp/godot-templates/templates/. "$HOME/.local/share/godot/export_templates/4.7.2.stable/"
+
+      - name: Configure Android exporter and ephemeral CI signing
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p "$HOME/.config/godot"
+          cat > "$HOME/.config/godot/editor_settings-4.7.tres" <<EOF
+          [gd_resource type="EditorSettings" format=3]
+          [resource]
+          export/android/android_sdk_path = "$ANDROID_HOME"
+          export/android/java_sdk_path = "$JAVA_HOME"
+          EOF
+          keytool -genkeypair -noprompt -keystore /tmp/cat-coven-ci.keystore -storepass changeit -keypass changeit -alias catcoven -keyalg RSA -keysize 2048 -validity 3650 -dname "CN=Cat Coven CI,O=AKILTA,C=US"
+
+      - name: Verify native release contract in Godot
+        run: |
+          ./godot --headless --path . -s res://tests/unit/test_mobile_release_contract.gd
+          ./godot --headless --path . -s res://tests/unit/test_mobile_safe_area.gd
+
+      - name: Export signed Android release APK
+        shell: bash
+        env:
+          GODOT_ANDROID_KEYSTORE_RELEASE_PATH: /tmp/cat-coven-ci.keystore
+          GODOT_ANDROID_KEYSTORE_RELEASE_USER: catcoven
+          GODOT_ANDROID_KEYSTORE_RELEASE_PASSWORD: changeit
+        run: |
+          set -euo pipefail
+          mkdir -p build/android
+          ./godot --headless --path . --export-release "Android Release APK" build/android/cat-and-coven-release.apk
+          test -s build/android/cat-and-coven-release.apk
+          "$ANDROID_HOME/build-tools/36.0.0/apksigner" verify --verbose --print-certs build/android/cat-and-coven-release.apk
+          unzip -t build/android/cat-and-coven-release.apk >/dev/null
+
+      - name: Export signed Android Play AAB
+        shell: bash
+        env:
+          GODOT_ANDROID_KEYSTORE_RELEASE_PATH: /tmp/cat-coven-ci.keystore
+          GODOT_ANDROID_KEYSTORE_RELEASE_USER: catcoven
+          GODOT_ANDROID_KEYSTORE_RELEASE_PASSWORD: changeit
+        run: |
+          set -euo pipefail
+          ./godot --headless --path . --install-android-build-template --export-release "Android Play AAB" build/android/cat-and-coven-release.aab
+          test -s build/android/cat-and-coven-release.aab
+          unzip -t build/android/cat-and-coven-release.aab >/dev/null
+          jarsigner -verify build/android/cat-and-coven-release.aab 2>&1 | tee /tmp/aab-signature.txt
+          grep -Fq "jar verified." /tmp/aab-signature.txt
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: cat-and-coven-android-ci
+          path: |
+            build/android/cat-and-coven-release.apk
+            build/android/cat-and-coven-release.aab
+          if-no-files-found: error
+
+  ios-project:
+    runs-on: macos-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install pinned Godot 4.7.2 and export templates
+        shell: bash
+        run: |
+          set -euo pipefail
+          curl -L --fail --retry 3 -o godot.zip "https://github.com/godotengine/godot-builds/releases/download/4.7.2-stable/Godot_v4.7.2-stable_macos.universal.zip"
+          echo "c58a24e31d720be9d62f60cb5627c4e695fb72f21b0cfe1bc9ccaa9a3b3ba63e  godot.zip" | shasum -a 256 -c -
+          unzip -q godot.zip
+          GODOT="./Godot.app/Contents/MacOS/Godot"
+          "$GODOT" --version
+          curl -L --fail --retry 3 -o templates.tpz "https://github.com/godotengine/godot-builds/releases/download/4.7.2-stable/Godot_v4.7.2-stable_export_templates.tpz"
+          echo "f298490b8d44d934be425a5a65a51bf15f422428b229a06a6e11d9ffea248011  templates.tpz" | shasum -a 256 -c -
+          mkdir -p "$HOME/Library/Application Support/Godot/export_templates/4.7.2.stable" /tmp/godot-templates
+          unzip -q templates.tpz -d /tmp/godot-templates
+          cp -R /tmp/godot-templates/templates/. "$HOME/Library/Application Support/Godot/export_templates/4.7.2.stable/"
+
+      - name: Verify committed mobile release contract
+        run: |
+          ./Godot.app/Contents/MacOS/Godot --headless --path . -s res://tests/unit/test_mobile_release_contract.gd
+          ./Godot.app/Contents/MacOS/Godot --headless --path . -s res://tests/unit/test_mobile_safe_area.gd
+
+      - name: Export unsigned iOS Xcode project
+        shell: bash
+        run: |
+          set -euo pipefail
+          # Project-only export still requires a syntactically valid 10-character Team ID.
+          # This CI-only value is never presented as a signing or device-install credential.
+          sed -i '' 's/__IOS_TEAM_ID__/CIABCDE12X/g' export_presets.cfg
+          mkdir -p build/ios
+          ./Godot.app/Contents/MacOS/Godot --headless --path . --export-release "iOS Xcode Project" build/ios/CatAndCoven.zip
+          # With export_project_only=true, Godot uses the requested basename but
+          # writes the Xcode tree directly beside it instead of creating a ZIP.
+          test -f build/ios/CatAndCoven.xcodeproj/project.pbxproj
+          test -f build/ios/CatAndCoven/CatAndCoven-Info.plist
+          xcodebuild -project build/ios/CatAndCoven.xcodeproj -list
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: cat-and-coven-ios-xcode-project-ci
+          path: |
+            build/ios/CatAndCoven
+            build/ios/CatAndCoven.xcodeproj
+            build/ios/CatAndCoven.xcframework
+            build/ios/MoltenVK.xcframework
+            build/ios/PrivacyInfo.xcprivacy
+          if-no-files-found: error
