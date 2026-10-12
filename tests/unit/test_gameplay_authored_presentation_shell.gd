@@ -29,11 +29,11 @@ func _run() -> void:
 	var objective := screen.get_node_or_null("Layout/HUDPlate/HUD/Objective") as Label
 	var moves := screen.get_node_or_null("Layout/HUDPlate/HUD/Moves") as Label
 	var objective_icon := screen.get_node_or_null("Layout/HUDPlate/HUD/ObjectiveIcon") as TextureRect
-	var keeper := screen.get_node_or_null("BoosterTray/BoosterActions/HintBoost") as Button
-	var sealed_a := screen.get_node_or_null("BoosterTray/BoosterActions/SealedBoostA") as Button
-	var sealed_b := screen.get_node_or_null("BoosterTray/BoosterActions/SealedBoostB") as Button
-	var sealed_c := screen.get_node_or_null("BoosterTray/BoosterActions/SealedBoostC") as Button
-	var settings := screen.get_node_or_null("BoosterTray/BoosterActions/SettingsShortcut") as Button
+	var keeper := screen.get_node_or_null("BoosterTray/BoosterActions/HintSlot/HintBoost") as Button
+	var sealed_a := screen.get_node_or_null("BoosterTray/BoosterActions/SealedSlotA/SealedBoostA") as Button
+	var sealed_b := screen.get_node_or_null("BoosterTray/BoosterActions/SealedSlotB/SealedBoostB") as Button
+	var sealed_c := screen.get_node_or_null("BoosterTray/BoosterActions/SealedSlotC/SealedBoostC") as Button
+	var settings := screen.get_node_or_null("BoosterTray/BoosterActions/SettingsSlot/SettingsShortcut") as Button
 	_expect(objective != null and moves != null, "Authored HUD objective/moves slots missing")
 	_expect(objective_icon != null and objective_icon.texture != null, "Authored objective plate must expose production objective art")
 	_expect(objective != null and objective.text.begins_with("TARGET ·"), "Objective copy must read as a clear top target block")
