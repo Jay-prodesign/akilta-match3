@@ -528,7 +528,7 @@ func show_feature_preview(feature: String) -> bool:
 		layout.add_child(currency_summary)
 		var currency_truth := Label.new()
 		currency_truth.name = "ShopCurrencyTruth"
-		currency_truth.text = "LOCAL REVIEW BALANCES · NOT PURCHASABLE"
+		currency_truth.text = "EARNED IN PLAY · NOT PURCHASABLE"
 		currency_truth.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 		currency_truth.add_theme_color_override("font_color", Color("#BFA5D8"))
 		currency_truth.add_theme_font_size_override("font_size", 13)
@@ -595,7 +595,7 @@ func show_feature_preview(feature: String) -> bool:
 	hero_copy.add_child(hero_title)
 	var hero_body := Label.new()
 	hero_body.name = "FeatureHeroBody"
-	hero_body.text = ("The House remembers every completed display; future weekly events remain sealed." if is_events else ("Future offers will live in this cabinet only after economy and purchase systems are production-ready." if not is_profile else "Your opening journey is stored locally and reflected across the House, map and Reliquary."))
+	hero_body.text = ("The House remembers every completed display; future weekly events remain sealed." if is_events else ("These balances come only from first clears. Purchases and spending are not connected." if not is_profile else "Your opening journey is stored locally and reflected across the House, map and Reliquary."))
 	hero_body.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	hero_body.add_theme_color_override("font_color", Color("#CFC0CF"))
 	hero_body.add_theme_font_size_override("font_size", 16)
