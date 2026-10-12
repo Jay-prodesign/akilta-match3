@@ -237,7 +237,7 @@ func show_weekly_missions() -> bool:
 	world_art.texture = ScreenArt.texture("events_bg_curio_house")
 	world_art.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
 	world_art.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_COVERED
-	world_art.modulate = Color(0.48, 0.44, 0.62, 0.40)
+	world_art.modulate = Color(0.58, 0.52, 0.70, 0.52)
 	world_art.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	screen.add_child(world_art)
 	var layout := VBoxContainer.new()
@@ -277,16 +277,16 @@ func show_weekly_missions() -> bool:
 	empty.size_flags_vertical = Control.SIZE_EXPAND_FILL
 	empty.set_meta("offline_contract", "truthful_empty_state")
 	var empty_style := StyleBoxFlat.new()
-	empty_style.bg_color = Color("#14101B", 0.82)
-	empty_style.border_color = Color("#9B6FA6", 0.72)
+	empty_style.bg_color = Color("#100C16", 0.68)
+	empty_style.border_color = Color("#B88AB8", 0.72)
 	empty_style.set_border_width_all(2)
 	empty_style.set_corner_radius_all(18)
 	empty_style.content_margin_left = 22
 	empty_style.content_margin_right = 22
-	empty_style.content_margin_top = 20
-	empty_style.content_margin_bottom = 20
+	empty_style.content_margin_top = 26
+	empty_style.content_margin_bottom = 26
 	empty_style.shadow_color = Color(0, 0, 0, 0.48)
-	empty_style.shadow_size = 12
+	empty_style.shadow_size = 18
 	empty.add_theme_stylebox_override("panel", empty_style)
 	layout.add_child(empty)
 	var empty_content := VBoxContainer.new()
