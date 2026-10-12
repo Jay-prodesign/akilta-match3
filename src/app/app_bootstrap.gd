@@ -32,6 +32,8 @@ var user_settings
 var audio_director
 var ui_haptics
 var _store
+var _save_load_status: String = "not_loaded"
+var _save_write_blocked_reason: String = ""
 var _current_screen: Node
 var _settings_screen: Node
 var _pending_level_number: int = 0
@@ -55,6 +57,8 @@ func _complete_bootstrap() -> void:
 	var path: String = save_path_override if save_path_override != "" else SaveStoreScript.DEFAULT_PATH
 	_store = SaveStoreScript.new(path)
 	var loaded: Dictionary = _store.load_or_default()
+	_save_load_status = String(_store.load_status())
+	_save_write_blocked_reason = String(_store.write_blocked_reason)
 	progress = ProgressScript.from_dict(loaded)
 	_returning_player_entry = _has_durable_progress(progress)
 
@@ -72,7 +76,7 @@ func _complete_bootstrap() -> void:
 	var splash := _current_screen
 	if splash == null or not splash.has_method("set_boot_state"):
 		return
-	var load_status := String(_store.load_status())
+	var load_status := _save_load_status
 	match load_status:
 		"backup_recovered":
 			splash.set_boot_state("recoverable_error", "The primary House record could not be used. The last known good backup was restored.", true)
@@ -209,6 +213,9 @@ func complete_level_win(transaction_id: String, level_id: String, curio_id: Stri
 		return false
 	if not _store.save(candidate.to_dict()):
 		return false
+	if _save_load_status != "backup_recovered":
+		_save_load_status = "primary"
+	_save_write_blocked_reason = ""
 	progress = candidate
 	if restoration_needed:
 		if not navigation.go(NavigationScript.Route.RESTORATION, {"reason": "level_reward_restoration"}):
@@ -790,6 +797,7 @@ func show_feature_preview(feature: String) -> bool:
 		status.add_theme_font_size_override("font_size", 14)
 		copy.add_child(status)
 	if is_profile:
+		_build_profile_save_health_card(layout)
 		var preferences := Button.new()
 		preferences.name = "ProfileSettings"
 		preferences.text = "⚙  AUDIO & ACCESSIBILITY"
@@ -829,6 +837,112 @@ func show_feature_preview(feature: String) -> bool:
 	# art. Live event/economy truth remains unavailable, so visual richness must
 	# never imply a claimable reward, price, countdown or active event.
 	return true
+
+func _build_profile_save_health_card(layout: VBoxContainer) -> void:
+	if layout == null or layout.get_node_or_null("SaveHealthCard") != null:
+		return
+	var card := PanelContainer.new()
+	card.name = "SaveHealthCard"
+	card.custom_minimum_size = Vector2(0, 176)
+	var shell := StyleBoxFlat.new()
+	shell.bg_color = Color("#11131D", 0.98)
+	shell.border_color = Color("#8796C7", 0.74)
+	shell.set_border_width_all(2)
+	shell.set_corner_radius_all(14)
+	shell.content_margin_left = 16
+	shell.content_margin_right = 16
+	shell.content_margin_top = 12
+	shell.content_margin_bottom = 12
+	card.add_theme_stylebox_override("panel", shell)
+	layout.add_child(card)
+
+	var content := VBoxContainer.new()
+	content.name = "SaveHealthContent"
+	content.add_theme_constant_override("separation", 5)
+	card.add_child(content)
+
+	var kicker := Label.new()
+	kicker.name = "SaveHealthKicker"
+	kicker.text = "SAVE & ACCOUNT"
+	kicker.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	kicker.add_theme_color_override("font_color", Color("#D5AD70"))
+	kicker.add_theme_font_size_override("font_size", 14)
+	content.add_child(kicker)
+
+	var local_status := Label.new()
+	local_status.name = "LocalSaveStatus"
+	local_status.text = _local_save_status_copy()
+	local_status.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	local_status.add_theme_color_override("font_color", Color("#FFF0D8"))
+	local_status.add_theme_font_size_override("font_size", 20)
+	content.add_child(local_status)
+
+	var local_detail := Label.new()
+	local_detail.name = "LocalSaveDetail"
+	local_detail.text = _local_save_detail_copy()
+	local_detail.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	local_detail.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	local_detail.add_theme_color_override("font_color", Color("#D8C6C3"))
+	local_detail.add_theme_font_size_override("font_size", 15)
+	content.add_child(local_detail)
+
+	var cloud_status := Label.new()
+	cloud_status.name = "CloudSyncStatus"
+	cloud_status.text = "CLOUD SYNC · NOT CONNECTED"
+	cloud_status.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	cloud_status.add_theme_color_override("font_color", Color("#BFA5D8"))
+	cloud_status.add_theme_font_size_override("font_size", 16)
+	content.add_child(cloud_status)
+
+	var cloud_detail := Label.new()
+	cloud_detail.name = "CloudSyncDetail"
+	cloud_detail.text = "No account sign-in, remote backup, or cross-device restore is active in this build."
+	cloud_detail.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	cloud_detail.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	cloud_detail.add_theme_color_override("font_color", Color("#B8AAB8"))
+	cloud_detail.add_theme_font_size_override("font_size", 14)
+	content.add_child(cloud_detail)
+
+func _local_save_status_copy() -> String:
+	match _save_load_status:
+		"primary":
+			return "LOCAL SAVE · HEALTHY"
+		"backup_recovered":
+			return "LOCAL SAVE · BACKUP RECOVERED"
+		"default_after_invalid_primary":
+			return "LOCAL SAVE · SAFE NEW RECORD"
+		"future_schema":
+			return "LOCAL SAVE · UPDATE REQUIRED"
+		"default_new":
+			return "LOCAL SAVE · NEW ON THIS DEVICE"
+		_:
+			return "LOCAL SAVE · DEVICE-LOCAL"
+
+func _local_save_detail_copy() -> String:
+	match _save_load_status:
+		"backup_recovered":
+			return "The primary record was unreadable; the last known good device backup restored your saved House state."
+		"default_after_invalid_primary":
+			return "The unreadable primary record could not be recovered; this build prepared a safe new local record."
+		"future_schema":
+			return "This record belongs to a newer build and is protected from overwrite. Update before continuing."
+		"primary":
+			return "Progress is stored transactionally on this device with a last-known-good local backup."
+		"default_new":
+			return "A new device-local House record is ready. No remote backup is active."
+		_:
+			return "Progress is device-local. Cloud backup is not active."
+
+func save_health_contract() -> Dictionary:
+	return {
+		"load_status": _save_load_status,
+		"write_blocked_reason": _save_write_blocked_reason,
+		"local_status": _local_save_status_copy(),
+		"cloud_sync_connected": false,
+		"remote_backup_active": false,
+		"cross_device_restore_active": false,
+		"cloud_status": "CLOUD SYNC · NOT CONNECTED",
+	}
 
 func show_settings() -> bool:
 	if navigation == null or not navigation.open_settings():

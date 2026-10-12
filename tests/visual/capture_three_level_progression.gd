@@ -261,6 +261,12 @@ func _capture() -> void:
 		return _fail(app, "completed Profile hero must identify the restored first cabinet set")
 	if profile_hero_title == null or not profile_hero_title.text.contains("3 CURIOS · RESTORATION STAGE 3"):
 		return _fail(app, "completed Profile hero must summarize 3 curios and stage 3")
+	var profile_local_save: Label = profile.get_node_or_null("FeatureLayout/SaveHealthCard/SaveHealthContent/LocalSaveStatus") as Label
+	var profile_cloud: Label = profile.get_node_or_null("FeatureLayout/SaveHealthCard/SaveHealthContent/CloudSyncStatus") as Label
+	if profile_local_save == null or profile_local_save.text != "LOCAL SAVE · HEALTHY":
+		return _fail(app, "completed Profile local save health missing")
+	if profile_cloud == null or profile_cloud.text != "CLOUD SYNC · NOT CONNECTED":
+		return _fail(app, "completed Profile cloud-sync truth missing")
 	if not await _save(app, "progression-final-profile.png"):
 		return
 	var profile_settings_button: Button = profile.get_node_or_null("FeatureLayout/ProfileSettings") as Button

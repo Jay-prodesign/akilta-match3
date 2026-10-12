@@ -45,6 +45,7 @@ on:
       - "tests/unit/test_save_progress.gd"
       - "tests/unit/test_first_party_shell.gd"
       - "tests/integration/test_first_player_journey.gd"
+      - "tests/integration/test_save_recovery_surface.gd"
       - "tests/integration/test_splash_boot_states.gd"
       - "tests/integration/test_chapter_select_states.gd"
       - "tests/integration/test_chapter_route_frontier.gd"
@@ -268,6 +269,18 @@ jobs:
           if [ "$status" -ne 0 ]; then exit "$status"; fi
           if grep -Eq "SCRIPT ERROR:|(^| )ERROR:" <<<"$output"; then exit 1; fi
           grep -Fq "TEST_PASS: durable progression and exactly-once save" <<<"$output"
+
+      - name: Run local save recovery and cloud truth
+        shell: bash
+        run: |
+          set +e
+          output=$(timeout 40s ./godot --headless --path . -s res://tests/integration/test_save_recovery_surface.gd 2>&1)
+          status=$?
+          set -e
+          printf '%s\n' "$output"
+          if [ "$status" -ne 0 ]; then exit "$status"; fi
+          if grep -Eq "SCRIPT ERROR:|(^| )ERROR:|TEST_FAIL:" <<<"$output"; then exit 1; fi
+          grep -Fq "TEST_PASS: local save recovery and cloud-sync truth" <<<"$output"
 
       - name: Run AKILTA first-party shell contracts
         shell: bash

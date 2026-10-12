@@ -415,6 +415,10 @@ func _run() -> void:
 					profile_copy += (label_node as Label).text + "\n"
 			_expect(profile_copy.contains("FIRST CABINET SET RESTORED"), "Profile must summarize the completed opening chapter")
 			_expect(profile_copy.contains("OPENING RESTORATION COMPLETE"), "Profile must summarize the completed House restoration")
+			var profile_local_save: Label = profile_preview.get_node_or_null("FeatureLayout/SaveHealthCard/SaveHealthContent/LocalSaveStatus") as Label if profile_preview != null else null
+			var profile_cloud: Label = profile_preview.get_node_or_null("FeatureLayout/SaveHealthCard/SaveHealthContent/CloudSyncStatus") as Label if profile_preview != null else null
+			_expect(profile_local_save != null and profile_local_save.text == "LOCAL SAVE · HEALTHY", "Profile must expose healthy local save truth after durable progression saves")
+			_expect(profile_cloud != null and profile_cloud.text == "CLOUD SYNC · NOT CONNECTED", "Profile must not imply account or cloud sync")
 			var profile_settings_button: Button = profile_preview.get_node_or_null("FeatureLayout/ProfileSettings") as Button
 			_expect(profile_settings_button != null, "Profile must expose its real Settings state")
 			if profile_settings_button != null:
