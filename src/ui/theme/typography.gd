@@ -3,7 +3,7 @@ extends RefCounted
 
 const DISPLAY_FONT_PATH := "res://assets/fonts/CormorantGaramond-Variable.ttf"
 const UI_FONT_PATH := "res://assets/fonts/Manrope-Variable.ttf"
-const DISPLAY_NODE_NAMES := ["Title", "Headline"]
+const DISPLAY_NODE_NAMES := ["Title", "Headline", "FeatureTitle", "FeatureHeroTitle"]
 const LICENSE := "SIL Open Font License 1.1"
 const PINNED_SOURCE := "google/fonts@bd8f81ddb5c74d5c8897b36ad88b440266245103"
 
