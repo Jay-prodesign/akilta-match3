@@ -12,25 +12,36 @@ var _feature_key: String = ""
 var _daily_level: int = 0
 
 @onready var world_art: TextureRect = $WorldArt
-@onready var title: Label = $FeatureLayout/Title
+@onready var title: Label = $FeatureLayout/FeatureTitle
 @onready var detail: Label = $FeatureLayout/Detail
-@onready var hero_art: TextureRect = $FeatureLayout/Hero/HeroRow/HeroArt
-@onready var hero_kicker: Label = $FeatureLayout/Hero/HeroRow/HeroCopy/HeroKicker
-@onready var hero_title: Label = $FeatureLayout/Hero/HeroRow/HeroCopy/HeroTitle
-@onready var hero_body: Label = $FeatureLayout/Hero/HeroRow/HeroCopy/HeroBody
-@onready var primary_action: Button = $FeatureLayout/Actions/Primary
-@onready var secondary_action: Button = $FeatureLayout/Actions/Secondary
+@onready var chapter_progress: Label = $FeatureLayout/ChapterRitualProgress
+@onready var shop_notice: Label = $FeatureLayout/NoPurchasesNotice
+@onready var shop_currency: Label = $FeatureLayout/ShopCurrencySummary
+@onready var shop_truth: Label = $FeatureLayout/ShopCurrencyTruth
+@onready var hero_art: TextureRect = $FeatureLayout/FeatureHero/HeroRow/HeroArt
+@onready var shop_offer_art: TextureRect = $FeatureLayout/FeatureHero/HeroRow/ShopFeaturedOfferArt
+@onready var hero_kicker: Label = $FeatureLayout/FeatureHero/HeroRow/HeroCopy/FeatureHeroKicker
+@onready var hero_title: Label = $FeatureLayout/FeatureHero/HeroRow/HeroCopy/FeatureHeroTitle
+@onready var hero_body: Label = $FeatureLayout/FeatureHero/HeroRow/HeroCopy/HeroBody
+@onready var shop_disabled_action: Button = $FeatureLayout/FeatureHero/HeroRow/HeroCopy/ShopDisabledAction
+@onready var daily_card: PanelContainer = $FeatureLayout/DailyPracticeCard
+@onready var daily_title: Label = $FeatureLayout/DailyPracticeCard/DailyContent/DailyPracticeTitle
+@onready var daily_truth: Label = $FeatureLayout/DailyPracticeCard/DailyContent/DailyPracticeTruth
+@onready var daily_action: Button = $FeatureLayout/DailyPracticeCard/DailyContent/DailyPracticeAction
+@onready var weekly_action: Button = $FeatureLayout/WeeklyMissionsAction
+@onready var profile_settings: Button = $FeatureLayout/ProfileSettings
 @onready var save_health_card: PanelContainer = $FeatureLayout/SaveHealthCard
 @onready var local_save_status: Label = $FeatureLayout/SaveHealthCard/SaveHealthContent/LocalSaveStatus
 @onready var local_save_detail: Label = $FeatureLayout/SaveHealthCard/SaveHealthContent/LocalSaveDetail
 @onready var cloud_sync_status: Label = $FeatureLayout/SaveHealthCard/SaveHealthContent/CloudSyncStatus
 @onready var cloud_sync_detail: Label = $FeatureLayout/SaveHealthCard/SaveHealthContent/CloudSyncDetail
 @onready var truth_strip: Label = $FeatureLayout/TruthStrip
-@onready var back_button: Button = $FeatureLayout/Back
+@onready var back_button: Button = $FeatureLayout/BackToHouse
 
 func _ready() -> void:
-	primary_action.pressed.connect(_on_primary_pressed)
-	secondary_action.pressed.connect(_on_secondary_pressed)
+	weekly_action.pressed.connect(func(): weekly_requested.emit())
+	daily_action.pressed.connect(_on_daily_pressed)
+	profile_settings.pressed.connect(func(): settings_requested.emit())
 	back_button.pressed.connect(func(): back_requested.emit())
 
 func configure(feature_key: String, state: Dictionary) -> bool:
@@ -46,7 +57,19 @@ func configure(feature_key: String, state: Dictionary) -> bool:
 	var background_id := ""
 	var hero_path := ""
 	var cards: Array[Dictionary] = []
+
+	chapter_progress.visible = _feature_key == "events"
+	daily_card.visible = _feature_key == "events"
+	weekly_action.visible = _feature_key == "events"
+	shop_notice.visible = _feature_key == "shop"
+	shop_currency.visible = _feature_key == "shop"
+	shop_truth.visible = _feature_key == "shop"
+	shop_offer_art.visible = _feature_key == "shop"
+	shop_disabled_action.visible = _feature_key == "shop"
+	hero_art.visible = _feature_key != "shop"
+	profile_settings.visible = _feature_key == "profile"
 	save_health_card.visible = _feature_key == "profile"
+
 	local_save_status.text = String(state.get("save_status", "LOCAL SAVE · DEVICE-LOCAL"))
 	local_save_detail.text = String(state.get("save_detail", "Progress is stored on this device."))
 	cloud_sync_status.text = "CLOUD SYNC · NOT CONNECTED"
@@ -57,55 +80,52 @@ func configure(feature_key: String, state: Dictionary) -> bool:
 			background_id = "events_bg_curio_house"
 			hero_path = "res://assets/curios/ch01_curio_moon_cameo_awakened_v01.svg"
 			title.text = "EVENT CENTER"
-			detail.text = "House rituals, returning-player practice and future seasonal rooms live here."
+			detail.text = "Seasonal events gather here; Weekly Rituals has its own truthful mission state."
 			hero_kicker.text = "OPENING RITUAL COMPLETE" if opening_complete else "OPENING RITUAL IN PROGRESS"
 			hero_title.text = "%d / %d DISPLAYS AWAKENED" % [completed_count, opening_cap]
-			hero_body.text = "The House remembers every completed display. Live events remain sealed until a real event feed exists."
-			primary_action.text = "OPEN WEEKLY RITUALS"
-			primary_action.visible = true
-			primary_action.disabled = false
-			secondary_action.visible = true
-			secondary_action.disabled = _daily_level <= 0
-			secondary_action.text = "PRACTICE LEVEL %d" % _daily_level if _daily_level > 0 else "DAILY HOUSE RITUAL · SEALED"
+			hero_body.text = "The House remembers every completed display; future weekly events remain sealed."
+			chapter_progress.text = ("OPENING RITUAL COMPLETE · %d / %d DISPLAYS AWAKENED" if opening_complete else "OPENING RITUAL · %d / %d DISPLAYS AWAKENED") % [completed_count, opening_cap]
+			daily_title.text = "DAILY HOUSE RITUAL · LEVEL %d" % _daily_level if _daily_level > 0 else "DAILY HOUSE RITUAL · SEALED"
+			daily_truth.text = "REPLAY ONLY · NO BONUS REWARD · NO CURRENCY SPEND" if _daily_level > 0 else "COMPLETE AN OPENING RITUAL TO UNLOCK LOCAL PRACTICE"
+			daily_action.text = "PRACTICE LEVEL %d" % _daily_level if _daily_level > 0 else "RESTORE A DISPLAY TO UNLOCK"
+			daily_action.disabled = _daily_level <= 0
 			truth_strip.text = "LIVE EVENT REWARDS ARE NOT FABRICATED · DAILY PRACTICE IS DEVICE-LOCAL"
 			cards = [
-				{"art":"res://assets/curios/ch01_curio_moon_cameo_awakened_v01.svg", "kicker":"RITUAL I", "title":"MOONLIGHT MARKET", "body":"The restored opening cabinet anchors a future moonlit event room.", "status":"FUTURE EVENT · NO CLAIMABLE REWARD"},
-				{"art":"res://assets/curios/ch01_curio_moth_reliquary.svg", "kicker":"RITUAL II", "title":"THE LOST RELICS", "body":"A sealed reliquary marks the next cabinet journey beyond the opening set.", "status":"SEALED · FUTURE JOURNEY"},
-				{"art":"res://assets/curios/ch01_curio_thorned_locket.svg", "kicker":"RITUAL III", "title":"WEEKLY RITUALS", "body":"Weekly challenges occupy a dedicated truthful state when a mission feed is connected.", "status":"OFFLINE STATE · NOTHING TO CLAIM"}
+				{"art":"res://assets/curios/ch01_curio_moon_cameo_awakened_v01.svg", "kicker":"RITUAL I", "title":"MOONLIGHT MARKET", "body":"The opening cabinet set is restored. The House is ready for a future moonlit event." if opening_complete else "Awaken the three opening displays to restore the Curio House.", "status":"OPENING CHAPTER COMPLETE · FUTURE MARKET EVENT REMAINS SEALED" if opening_complete else "CHAPTER PROGRESS TRACKED · MARKET EVENT NOT YET ACTIVE"},
+				{"art":"res://assets/curios/ch01_curio_moth_reliquary.svg", "kicker":"RITUAL II", "title":"THE LOST RELICS", "body":"A sealed reliquary marks a future cabinet journey.", "status":"UPPER CABINETS SEALED · FUTURE JOURNEY" if opening_complete else "LOCKED · COMPLETE THE OPENING CHAPTER"},
+				{"art":"res://assets/curios/ch01_curio_thorned_locket.svg", "kicker":"RITUAL III", "title":"WEEKLY RITUALS", "body":"Weekly ritual challenges will live here when a live mission feed exists.", "status":"FUTURE FEATURE · NO CLAIMABLE REWARDS"}
 			]
 		"shop":
 			background_id = "shop_bg_curio_house"
 			hero_path = "res://assets/curios/ch01_curio_moth_reliquary.svg"
 			title.text = "THE CURIO EMPORIUM"
-			detail.text = "A sealed economy room. Your earned balances are visible; purchases are not enabled."
-			hero_kicker.text = "HOUSE BALANCES"
-			hero_title.text = "%d COINS · %d MOONSTONES" % [coins, gems]
-			hero_body.text = "These balances come only from play in this build. No payment, purchase or spending flow is connected."
-			primary_action.visible = false
-			secondary_action.visible = false
+			detail.text = "A sealed preview of the House economy. Nothing here can charge you."
+			hero_kicker.text = "EMPORIUM PREVIEW · SEALED"
+			hero_title.text = "NO PURCHASES ENABLED"
+			hero_body.text = "These balances come only from first clears. Purchases and spending are not connected."
+			shop_notice.text = "THE EMPORIUM IS SEALED · NO PURCHASES OR PAYMENTS"
+			shop_currency.text = "HOUSE COINS  %d  ·  MOONSTONES  %d" % [coins, gems]
+			shop_truth.text = "EARNED IN PLAY · NOT PURCHASABLE"
+			shop_disabled_action.disabled = true
 			truth_strip.text = "EARNED IN PLAY · NOT PURCHASABLE · NO REAL-MONEY COMMERCE"
 			cards = [
 				{"art":"res://assets/curios/ch01_curio_moon_cameo_awakened_v01.svg", "kicker":"SEALED CABINET I", "title":"CANDLELIGHT KIT", "body":"A future soft-currency cabinet for restoration supplies.", "status":"SEALED · ECONOMY PREVIEW ONLY"},
-				{"art":"res://assets/curios/ch01_curio_moth_reliquary.svg", "kicker":"SEALED CABINET II", "title":"MOONSTONE CACHE", "body":"A future premium-currency surface. No price or payment flow is active.", "status":"SEALED · NO PURCHASES"},
-				{"art":"res://assets/curios/ch01_curio_thorned_locket.svg", "kicker":"SEALED CABINET III", "title":"RESTORER'S RELIQUARY", "body":"A future curated cabinet for boosters and curios.", "status":"SEALED · STORE NOT CONNECTED"}
+				{"art":"res://assets/curios/ch01_curio_moth_reliquary.svg", "kicker":"SEALED CABINET II", "title":"MOONSTONE CACHE", "body":"A future premium-currency cabinet. No price or payment flow is active.", "status":"SEALED · NO REAL-MONEY PURCHASES"},
+				{"art":"res://assets/curios/ch01_curio_thorned_locket.svg", "kicker":"SEALED CABINET III", "title":"RESTORER'S RELIQUARY", "body":"A future curated bundle surface for boosters and curios.", "status":"SEALED · STORE NOT CONNECTED"}
 			]
 		"profile":
 			background_id = "profile_bg_curio_house"
 			hero_path = "res://assets/curios/ch01_curio_moon_cameo_awakened_v01.svg"
 			title.text = "THE KEEPER"
-			detail.text = "Your restored curios, House progress, local save health and presentation preferences."
-			hero_kicker.text = String(state.get("save_status", "LOCAL SAVE · DEVICE-LOCAL"))
+			detail.text = "Your restored curios, House progress and preferences."
+			hero_kicker.text = "FIRST CABINET SET RESTORED" if opening_complete else "KEEPER RECORD"
 			hero_title.text = "%d CURIOS · RESTORATION STAGE %d" % [collected_count, restored_stage]
-			hero_body.text = String(state.get("save_detail", "Progress is stored on this device."))
-			primary_action.text = "AUDIO & ACCESSIBILITY"
-			primary_action.visible = true
-			primary_action.disabled = false
-			secondary_action.visible = false
+			hero_body.text = "Your opening journey is stored locally and reflected across the House, map and Reliquary."
 			truth_strip.text = "CLOUD SYNC · NOT CONNECTED · NO REMOTE BACKUP CLAIM"
 			cards = [
-				{"art":"res://assets/pieces/moon_sigil.svg", "kicker":"KEEPER RECORD I", "title":"CHAPTER PROGRESS", "body":"%d of %d opening rituals completed." % [completed_count, opening_cap], "status":"FIRST CABINET SET RESTORED" if opening_complete else "YOUR SAVED JOURNEY"},
+				{"art":"res://assets/pieces/moon_sigil.svg", "kicker":"KEEPER RECORD I", "title":"CHAPTER PROGRESS", "body":"Opening chapter complete · %d of %d rituals." % [completed_count, opening_cap] if opening_complete else "%d of %d opening rituals completed." % [completed_count, opening_cap], "status":"FIRST CABINET SET RESTORED" if opening_complete else "YOUR SAVED JOURNEY"},
 				{"art":"res://assets/curios/ch01_curio_moon_cameo_awakened_v01.svg", "kicker":"KEEPER RECORD II", "title":"RELIQUARY", "body":"%d of %d opening curios awakened." % [collected_count, opening_cap], "status":"OPENING SET COMPLETE" if opening_complete else "RELICS RECOVERED"},
-				{"art":"res://assets/world/ch01_curio_boutique/hub_bg_grandhall.webp", "kicker":"KEEPER RECORD III", "title":"HOUSE RESTORATION", "body":"The Grand Hall currently rests at restoration stage %d." % restored_stage, "status":"PROGRESS SAVED ON THIS DEVICE"}
+				{"art":"res://assets/world/ch01_curio_boutique/hub_bg_grandhall.webp", "kicker":"KEEPER RECORD III", "title":"HOUSE RESTORATION", "body":"Restoration stage %d." % restored_stage, "status":"OPENING RESTORATION COMPLETE" if opening_complete else "PROGRESS SAVED ON THIS DEVICE"}
 			]
 		_:
 			return false
@@ -113,9 +133,14 @@ func configure(feature_key: String, state: Dictionary) -> bool:
 	world_art.texture = ScreenArt.texture(background_id)
 	if world_art.texture == null:
 		return false
-	hero_art.texture = PieceAssetLoader.ornament(hero_path)
-	if hero_art.texture == null:
-		return false
+	if _feature_key == "shop":
+		shop_offer_art.texture = PieceAssetLoader.ornament(hero_path)
+		if shop_offer_art.texture == null:
+			return false
+	else:
+		hero_art.texture = PieceAssetLoader.ornament(hero_path)
+		if hero_art.texture == null:
+			return false
 	_apply_cards(cards)
 	return true
 
@@ -142,22 +167,16 @@ func _apply_cards(cards: Array[Dictionary]) -> void:
 		body.text = String(entry.get("body", ""))
 		status.text = String(entry.get("status", ""))
 
-func _on_primary_pressed() -> void:
-	match _feature_key:
-		"events":
-			weekly_requested.emit()
-		"profile":
-			settings_requested.emit()
-
-func _on_secondary_pressed() -> void:
+func _on_daily_pressed() -> void:
 	if _feature_key == "events" and _daily_level > 0:
 		daily_practice_requested.emit(_daily_level)
 
 func screen_contract() -> Dictionary:
+	var hero_loaded := shop_offer_art.texture != null if _feature_key == "shop" else hero_art.texture != null
 	return {
 		"feature": _feature_key,
 		"world_art_loaded": world_art != null and world_art.texture != null,
-		"hero_art_loaded": hero_art != null and hero_art.texture != null,
+		"hero_art_loaded": hero_loaded,
 		"static_card_slots": 3,
 		"code_built_panels": false,
 	}
