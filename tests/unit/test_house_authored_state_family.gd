@@ -31,10 +31,11 @@ func _run() -> void:
 	_expect(bool(north_star.get("bottom_nav_reserved", false)), "House content must reserve vertical space for the compact bottom navigation")
 	_expect(bool(north_star.get("world_underlays_home_ui", false)), "House world must continue behind the lower Home UI instead of ending in a dead slab")
 	_expect(bool(north_star.get("direct_level_cta", false)), "House CTA must expose the direct current-level action")
+	_expect(bool(north_star.get("compact_ftue_guide", false)), "House FTUE guide must stay compact so the House world and primary CTA remain dominant")
 
 	var guide := house.get_node_or_null("Layout/FirstRitualGuide") as PanelContainer
 	var guide_art := house.get_node_or_null("Layout/FirstRitualGuide/GuideRow/KeeperArt") as TextureRect
-	_expect(guide != null and guide.visible, "Fresh House must expose the authored first-ritual guide")
+	_expect(guide != null and guide.visible and guide.custom_minimum_size.y <= 78.0, "Fresh House must expose a compact authored first-ritual guide")
 	_expect(guide_art != null and guide_art.texture != null, "First-ritual guide must use Keeper production art")
 	for hotspot_path in [
 		"RoomView/CurioHotspots/MoonHotspot",
