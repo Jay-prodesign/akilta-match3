@@ -183,9 +183,16 @@ func _run() -> void:
 			var mission_screen = app.current_screen()
 			_expect(mission_screen != null and mission_screen.name == "WeeklyMissionsScreen", "S09 must render as its own route-backed screen")
 			var mission_timer: Label = mission_screen.get_node_or_null("MissionLayout/MissionTimer") as Label if mission_screen != null else null
+			var mission_empty: PanelContainer = mission_screen.get_node_or_null("MissionLayout/MissionEmptyState") as PanelContainer if mission_screen != null else null
+			var mission_art: TextureRect = mission_screen.get_node_or_null("MissionLayout/MissionEmptyState/EmptyContent/MissionRewardArt") as TextureRect if mission_screen != null else null
+			var mission_availability: Label = mission_screen.get_node_or_null("MissionLayout/MissionEmptyState/EmptyContent/MissionAvailability") as Label if mission_screen != null else null
 			var mission_truth: Label = mission_screen.get_node_or_null("MissionLayout/MissionEmptyState/EmptyContent/MissionEmptyStateTruth") as Label if mission_screen != null else null
 			_expect(mission_timer != null and mission_timer.text.contains("OFFLINE"), "S09 must disclose unavailable live reset timing")
 			_expect(mission_truth != null and mission_truth.text.contains("NOTHING TO CLAIM"), "S09 must not fabricate claimable weekly rewards")
+			_expect(mission_empty != null and String(mission_empty.get_meta("offline_contract", "")) == "truthful_empty_state", "S09 must identify the truthful offline empty-state contract")
+			_expect(mission_empty != null and mission_empty.size_flags_vertical == Control.SIZE_EXPAND_FILL, "S09 offline altar must own the available vertical stage rather than look like a small unfinished card")
+			_expect(mission_art != null and mission_art.texture != null and String(mission_art.get_meta("asset_path", "")).ends_with(".webp"), "S09 offline altar must use production raster Curio artwork")
+			_expect(mission_availability != null and mission_availability.text.contains("ONLY WHEN A MISSION FEED IS CONNECTED"), "S09 must explain when live rituals can appear without fabricating a schedule")
 			if mission_screen != null:
 				mission_screen.get_node("MissionLayout/ReturnToEvents").emit_signal("pressed")
 				await process_frame
