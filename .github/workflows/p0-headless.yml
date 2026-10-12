@@ -41,6 +41,8 @@ on:
       - "src/feedback/**"
       - "src/settings/**"
       - "src/ui/settings/**"
+      - "src/ui/meta/**"
+      - "tests/unit/test_meta_destination_screen.gd"
       - "assets/manifests/screen_contracts.json"
       - "assets/manifests/screen_asset_manifest.json"
       - "tests/unit/test_screen_state_architecture.gd"
@@ -316,6 +318,17 @@ jobs:
         run: |
           set +e
           output=$(timeout 30s ./godot --headless --path . -s res://tests/unit/test_first_party_shell.gd 2>&1)
+          echo "$output"
+          if ! echo "$output" | grep -Fq "TEST_PASS: AKILTA first-party shell contracts"; then
+            echo "::error::First-party shell contract failed."
+            exit 1
+          fi
+          output=$(timeout 30s ./godot --headless --path . -s res://tests/unit/test_meta_destination_screen.gd 2>&1)
+          echo "$output"
+          if ! echo "$output" | grep -Fq "TEST_PASS: authored meta destination screen family"; then
+            echo "::error::Meta destination screen contract failed."
+            exit 1
+          fi
           status=$?
           set -e
           printf '%s\n' "$output"
