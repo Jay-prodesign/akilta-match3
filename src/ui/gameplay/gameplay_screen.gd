@@ -20,6 +20,10 @@ const RewardRevealFx = preload("res://src/ui/shared/reward_reveal_fx.gd")
 const MoveResolver = preload("res://src/match3/domain/move_resolver.gd")
 const HapticsController = preload("res://src/feedback/haptics_controller.gd")
 
+const BOOSTER_HINT_ART_PATH := "res://assets/pieces/moon_sigil.webp"
+const BOOSTER_MOVES_ART_PATH := "res://assets/pieces/potion.svg"
+const BOOSTER_RETRY_ART_PATH := "res://assets/pieces/skull.webp"
+
 @export var default_level_path := "res://content/levels/ch01/level_001.json"
 @export var default_seed := 1001
 @export var replay_mode := false
@@ -47,6 +51,9 @@ var _idle_hint_seconds: float = 0.0
 const AUTO_HINT_DELAY_SECONDS := 9.0
 var _level_badge_label: Label
 var _booster_tray: PanelContainer
+var _hint_booster_button: Button
+var _moves_booster_button: Button
+var _retry_booster_button: Button
 var _resource_life_label: Label
 var _resource_coin_label: Label
 var _resource_gem_label: Label
@@ -189,6 +196,7 @@ func load_level_path(path: String, seed_value: int = 1001) -> bool:
 		result_ritual.set("glow_strength", 0.75)
 		result_ritual.queue_redraw()
 	_refresh_hud()
+	_refresh_booster_states()
 	return true
 
 func _update_level_badge() -> void:
@@ -246,6 +254,7 @@ func show_pause() -> bool:
 	pause_overlay.visible = true
 	if _booster_tray != null:
 		_booster_tray.visible = false
+	_refresh_booster_states()
 	return true
 
 func resume_level() -> bool:
@@ -255,6 +264,7 @@ func resume_level() -> bool:
 	_idle_hint_seconds = 0.0
 	if _booster_tray != null:
 		_booster_tray.visible = true
+	_refresh_booster_states()
 	return true
 
 func _on_pause_retry() -> void:
@@ -501,6 +511,7 @@ func _on_board_trace_motion_finished() -> void:
 	if _pending_hud_refresh:
 		_pending_hud_refresh = false
 		_refresh_hud()
+	_refresh_booster_states()
 	if _pending_terminal_result == "":
 		return
 	var result := _pending_terminal_result
@@ -779,9 +790,10 @@ func _build_booster_tray() -> void:
 	var row := HBoxContainer.new()
 	row.add_theme_constant_override("separation", 6)
 	panel.add_child(row)
-	_add_booster_button(row, "HINT", "res://assets/pieces/moon_sigil.svg", _use_hint_boost)
-	_add_booster_button(row, "+3 MOVES", "res://assets/pieces/potion.svg", _use_potion_boost)
-	_add_booster_button(row, "RETRY", "res://assets/pieces/skull.svg", _use_retry_boost)
+	_hint_booster_button = _add_booster_button(row, "HINT", BOOSTER_HINT_ART_PATH, _use_hint_boost)
+	_moves_booster_button = _add_booster_button(row, "+3 MOVES", BOOSTER_MOVES_ART_PATH, _use_potion_boost)
+	_retry_booster_button = _add_booster_button(row, "RETRY", BOOSTER_RETRY_ART_PATH, _use_retry_boost)
+	_refresh_booster_states()
 
 func _position_booster_tray() -> void:
 	if _booster_tray == null or hint_label == null or not is_node_ready():
@@ -797,13 +809,14 @@ func _position_booster_tray() -> void:
 	_booster_tray.offset_bottom = top + 70.0
 
 
-func _add_booster_button(parent: HBoxContainer, caption: String, art_path: String, action: Callable) -> void:
+func _add_booster_button(parent: HBoxContainer, caption: String, art_path: String, action: Callable) -> Button:
 	var button := Button.new()
 	button.text = caption
 	button.custom_minimum_size = Vector2(0, 62)
 	button.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	button.add_theme_font_size_override("font_size", 19)
 	button.add_theme_color_override("font_color", Color("#F4E5D3"))
+	button.add_theme_color_override("font_disabled_color", Color("#918195"))
 	button.icon = PieceAssetLoader.ornament(art_path)
 	button.expand_icon = true
 	var box := StyleBoxFlat.new()
@@ -811,10 +824,47 @@ func _add_booster_button(parent: HBoxContainer, caption: String, art_path: Strin
 	box.border_color = Color("#D5AD70", 0.72)
 	box.set_border_width_all(2)
 	box.set_corner_radius_all(26)
+	var disabled := box.duplicate() as StyleBoxFlat
+	disabled.bg_color = Color("#17121B", 0.94)
+	disabled.border_color = Color("#6D5A6F", 0.50)
 	button.add_theme_stylebox_override("normal", box)
 	button.add_theme_stylebox_override("hover", box)
+	button.add_theme_stylebox_override("pressed", box)
+	button.add_theme_stylebox_override("disabled", disabled)
 	button.pressed.connect(action)
 	parent.add_child(button)
+	return button
+
+func _refresh_booster_states() -> void:
+	var active := board_state != null and not result_overlay.visible and not pause_overlay.visible and _pending_terminal_result == ""
+	if _hint_booster_button != null:
+		_hint_booster_button.disabled = not active
+	if _moves_booster_button != null:
+		_moves_booster_button.disabled = not active or _potion_used_for_attempt
+		_moves_booster_button.text = "+3 USED" if _potion_used_for_attempt else "+3 MOVES"
+	if _retry_booster_button != null:
+		_retry_booster_button.disabled = not active
+
+func booster_contract() -> Dictionary:
+	return {
+		"hint": {
+			"art_path": BOOSTER_HINT_ART_PATH,
+			"loaded": PieceAssetLoader.ornament(BOOSTER_HINT_ART_PATH) != null,
+			"available": _hint_booster_button != null and not _hint_booster_button.disabled
+		},
+		"plus_moves": {
+			"art_path": BOOSTER_MOVES_ART_PATH,
+			"loaded": PieceAssetLoader.ornament(BOOSTER_MOVES_ART_PATH) != null,
+			"available": _moves_booster_button != null and not _moves_booster_button.disabled,
+			"used": _potion_used_for_attempt,
+			"once_per_attempt": true
+		},
+		"retry": {
+			"art_path": BOOSTER_RETRY_ART_PATH,
+			"loaded": PieceAssetLoader.ornament(BOOSTER_RETRY_ART_PATH) != null,
+			"available": _retry_booster_button != null and not _retry_booster_button.disabled
+		}
+	}
 
 func _use_potion_boost() -> void:
 	_idle_hint_seconds = 0.0
@@ -825,7 +875,8 @@ func _use_potion_boost() -> void:
 	_potion_used_for_attempt = true
 	board_state.moves_remaining += 3
 	_refresh_hud()
-	hint_label.text = "The emerald potion grants three extra moves."
+	_refresh_booster_states()
+	hint_label.text = "The emerald potion grants three extra moves. It can be used once per attempt."
 	feedback_requested.emit("special")
 
 func _use_hint_boost() -> void:
