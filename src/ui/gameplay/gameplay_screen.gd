@@ -69,6 +69,12 @@ var _high_contrast: bool = false
 var _moves_urgency_state: String = "normal"
 var _last_impact_feedback: String = ""
 var _last_cascade_depth: int = 1
+var _last_objective_progress: int = 0
+var _last_objective_delta: int = 0
+var _objective_pulse_tween: Tween
+var _result_transition_kind: String = ""
+var _result_transition_active: bool = false
+var _result_transition_tween: Tween
 const LOW_MOVE_WARNING_THRESHOLD := 3
 const LAST_MOVE_THRESHOLD := 1
 
@@ -186,6 +192,9 @@ func load_level_path(path: String, seed_value: int = 1001) -> bool:
 	current_retry_hint = String(parsed.get("retry_hint", ""))
 	_last_impact_feedback = ""
 	_last_cascade_depth = 1
+	_last_objective_progress = 0
+	_last_objective_delta = 0
+	_reset_terminal_transition()
 	_style_impact_hint("normal")
 	eyebrow_label.text = String(parsed.get("eyebrow", "CURIO BOUTIQUE"))
 	title_label.text = String(parsed.get("title", "Hidden Display"))
@@ -193,6 +202,7 @@ func load_level_path(path: String, seed_value: int = 1001) -> bool:
 	var art_profile := String(parsed.get("visual_profile", "curio_boutique_opening"))
 	_apply_level_art_profile(art_profile)
 	board_state = BoardState.from_level(parsed, seed_value)
+	_last_objective_progress = _objective_progress_value()
 	if board_view.has_method("set_visual_profile"):
 		board_view.set_visual_profile(art_profile)
 	board_view.set_board(board_state)
@@ -292,13 +302,18 @@ func _on_pause_exit() -> void:
 
 func attempt_swap(from: Vector2i, to: Vector2i):
 	_idle_hint_seconds = 0.0
+	_last_objective_delta = 0
 	if board_state == null or result_overlay.visible or pause_overlay.visible:
 		return null
 	if board_view.has_method("is_motion_active") and bool(board_view.is_motion_active()):
 		return null
+	var objective_before := _objective_progress_value()
 	if board_view.has_method("snapshot_before_move"):
 		board_view.snapshot_before_move()
 	last_trace = MoveResolver.try_swap(board_state, from, to)
+	var objective_after := _objective_progress_value()
+	_last_objective_delta = maxi(0, objective_after - objective_before)
+	_last_objective_progress = objective_after
 	board_view.set_board(board_state)
 	var motion_started := false
 	if board_view.has_method("play_trace"):
@@ -309,6 +324,7 @@ func attempt_swap(from: Vector2i, to: Vector2i):
 		_pending_hud_refresh = true
 	else:
 		_refresh_hud()
+		_present_objective_progress()
 	_refresh_move_feedback(last_trace)
 	if not bool(last_trace.accepted):
 		haptics.request_invalid()
@@ -486,6 +502,44 @@ func _refresh_hud() -> void:
 	else:
 		objective_label.text = "Awaken the collection"
 
+func _objective_progress_value() -> int:
+	if board_state == null:
+		return 0
+	if String(board_state.objective_type) == "clear_blockers":
+		return maxi(0, current_initial_blocker_count - int(board_state.remaining_blockers()))
+	return maxi(0, int(board_state.objective_progress))
+
+func _objective_target_value() -> int:
+	if board_state == null:
+		return maxi(1, current_objective_target)
+	if String(board_state.objective_type) == "clear_blockers":
+		return maxi(1, current_initial_blocker_count)
+	return maxi(1, int(board_state.objective_target))
+
+func _present_objective_progress() -> void:
+	if objective_label == null or board_state == null or _last_objective_delta <= 0:
+		return
+	var progress := _objective_progress_value()
+	var target := _objective_target_value()
+	var complete := progress >= target
+	if String(board_state.objective_type) == "clear_blockers":
+		objective_label.text = "WAX SEALS %d/%d · %s" % [progress, target, "DISPLAY OPEN" if complete else "+%d THIS MOVE" % _last_objective_delta]
+	else:
+		var family := String(board_state.objective_family).to_upper()
+		objective_label.text = "%s SIGILS %d/%d · %s" % [family, progress, target, "OBJECTIVE COMPLETE" if complete else "+%d THIS MOVE" % _last_objective_delta]
+	objective_label.set_meta("objective_feedback_state", "complete" if complete else "progress")
+	objective_label.add_theme_color_override("font_color", Color("#FFFFFF") if _high_contrast else (Color("#F0CE8A") if complete else Color("#E4CDEB")))
+	if _objective_pulse_tween != null and _objective_pulse_tween.is_valid():
+		_objective_pulse_tween.kill()
+	objective_label.scale = Vector2.ONE
+	if _reduced_motion:
+		return
+	objective_label.pivot_offset = objective_label.size * 0.5
+	objective_label.scale = Vector2(1.06, 1.06)
+	_objective_pulse_tween = create_tween()
+	_objective_pulse_tween.set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
+	_objective_pulse_tween.tween_property(objective_label, "scale", Vector2.ONE, 0.24)
+
 func _apply_moves_urgency() -> void:
 	if moves_label == null:
 		return
@@ -528,6 +582,10 @@ func gameplay_feel_contract() -> Dictionary:
 		"last_impact_feedback": _last_impact_feedback,
 		"last_cascade_depth": _last_cascade_depth,
 		"impact_copy": hint_label.text if hint_label != null else "",
+		"objective_progress": _last_objective_progress,
+		"objective_delta": _last_objective_delta,
+		"objective_target": _objective_target_value(),
+		"objective_copy": objective_label.text if objective_label != null else "",
 	}
 
 func _show_result_if_terminal(result: String) -> void:
@@ -550,7 +608,7 @@ func _show_result_if_terminal(result: String) -> void:
 			_result_proclamation.text = "Replay complete · House state and owned Curios stay unchanged." if replay_mode else "The recovered Curio now changes the House."
 		if _booster_tray != null:
 			_booster_tray.visible = false
-		result_overlay.visible = true
+		_present_result_overlay("won")
 		if _result_reveal_fx != null and _result_reveal_fx.has_method("play"):
 			_result_reveal_fx.play(_reduced_motion or replay_mode)
 		result_state_changed.emit("won")
@@ -575,8 +633,63 @@ func _show_result_if_terminal(result: String) -> void:
 			_booster_tray.visible = false
 		if _result_reveal_fx != null and _result_reveal_fx.has_method("stop"):
 			_result_reveal_fx.stop()
-		result_overlay.visible = true
+		_present_result_overlay("failed")
 		result_state_changed.emit("failed")
+
+func _present_result_overlay(kind: String) -> void:
+	_result_transition_kind = kind
+	if _result_transition_tween != null and _result_transition_tween.is_valid():
+		_result_transition_tween.kill()
+	result_overlay.visible = true
+	var card := result_overlay.get_node_or_null("Card") as Control
+	var dim := result_overlay.get_node_or_null("Dim") as CanvasItem
+	if card == null:
+		_result_transition_active = false
+		return
+	card.pivot_offset = card.size * 0.5
+	card.scale = Vector2.ONE
+	card.modulate = Color.WHITE
+	if dim != null:
+		dim.modulate = Color.WHITE
+	if _reduced_motion:
+		_result_transition_active = false
+		return
+	_result_transition_active = true
+	card.scale = Vector2(0.985, 0.985)
+	card.modulate = Color(1, 1, 1, 0.94)
+	if dim != null:
+		dim.modulate = Color(1, 1, 1, 0.92)
+	_result_transition_tween = create_tween()
+	_result_transition_tween.set_parallel(true)
+	_result_transition_tween.set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
+	_result_transition_tween.tween_property(card, "scale", Vector2.ONE, 0.18)
+	_result_transition_tween.tween_property(card, "modulate", Color.WHITE, 0.18)
+	if dim != null:
+		_result_transition_tween.tween_property(dim, "modulate", Color.WHITE, 0.18)
+	_result_transition_tween.finished.connect(func(): _result_transition_active = false)
+
+func _reset_terminal_transition() -> void:
+	if _result_transition_tween != null and _result_transition_tween.is_valid():
+		_result_transition_tween.kill()
+	_result_transition_kind = ""
+	_result_transition_active = false
+	if result_overlay != null:
+		var card := result_overlay.get_node_or_null("Card") as Control
+		var dim := result_overlay.get_node_or_null("Dim") as CanvasItem
+		if card != null:
+			card.scale = Vector2.ONE
+			card.modulate = Color.WHITE
+		if dim != null:
+			dim.modulate = Color.WHITE
+
+func terminal_transition_contract() -> Dictionary:
+	return {
+		"kind": _result_transition_kind,
+		"active": _result_transition_active,
+		"mode": "subtle_card_settle",
+		"reduced_motion": _reduced_motion,
+		"overlay_visible": result_overlay.visible if result_overlay != null else false,
+	}
 
 func _install_reward_reveal_fx() -> void:
 	if _result_reveal_fx != null:
@@ -593,6 +706,7 @@ func feedback_vfx_contract() -> Dictionary:
 	return {
 		"match_clear": board_view.feedback_vfx_contract() if board_view != null and board_view.has_method("feedback_vfx_contract") else {},
 		"reward_reveal": _result_reveal_fx.contract() if _result_reveal_fx != null and _result_reveal_fx.has_method("contract") else {},
+		"terminal_transition": terminal_transition_contract(),
 		"reduced_motion": _reduced_motion
 	}
 
@@ -637,6 +751,7 @@ func _on_board_trace_motion_finished() -> void:
 	if _pending_hud_refresh:
 		_pending_hud_refresh = false
 		_refresh_hud()
+		_present_objective_progress()
 	if _pending_terminal_result == "":
 		return
 	var result := _pending_terminal_result
