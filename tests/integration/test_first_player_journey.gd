@@ -378,8 +378,29 @@ func _run() -> void:
 			_expect(str(app.current_route_name()) == "events", "completed House must enter the Events route")
 			var completed_event_progress: Label = app.current_screen().get_node_or_null("FeatureLayout/ChapterRitualProgress")
 			_expect(completed_event_progress != null and completed_event_progress.text.begins_with("OPENING RITUAL COMPLETE"), "Events must reflect the completed 3/3 opening ritual")
-			app.current_screen().get_node("FeatureLayout/BackToHouse").emit_signal("pressed")
-			await process_frame
+			var daily_action: Button = app.current_screen().get_node_or_null("FeatureLayout/DailyPracticeCard/DailyContent/DailyPracticeAction") as Button
+			var daily_truth: Label = app.current_screen().get_node_or_null("FeatureLayout/DailyPracticeCard/DailyContent/DailyPracticeTruth") as Label
+			_expect(daily_action != null and not daily_action.disabled, "completed Events must expose a playable Daily House Ritual")
+			_expect(daily_truth != null and daily_truth.text.contains("REPLAY ONLY") and daily_truth.text.contains("NO BONUS REWARD"), "Daily House Ritual must state its non-economic replay truth")
+			var daily_level := int(daily_action.get_meta("daily_level", 0)) if daily_action != null else 0
+			_expect(daily_level >= 1 and daily_level <= 3, "Daily House Ritual must select one completed opening level")
+			if daily_action != null:
+				daily_action.emit_signal("pressed")
+				await process_frame
+				_expect(str(app.current_route_name()) == "prestart", "Daily House Ritual must enter replay prestart through the canonical route")
+				var daily_prestart = app.current_screen()
+				var daily_reward: Label = daily_prestart.get_node_or_null("Layout/Card/Content/Reward") as Label if daily_prestart != null else null
+				var daily_note: Label = daily_prestart.get_node_or_null("Layout/Card/Content/Note") as Label if daily_prestart != null else null
+				_expect(daily_reward != null and daily_reward.text.begins_with("OWNED CURIO"), "Daily House Ritual replay must not advertise a duplicate reward")
+				_expect(daily_note != null and daily_note.text.contains("persistent rewards are already secured"), "Daily House Ritual prestart must state that persistent rewards cannot be farmed")
+				var daily_back: Button = daily_prestart.get_node_or_null("Layout/Back") as Button if daily_prestart != null else null
+				_expect(daily_back != null, "Daily House Ritual replay prestart must keep a safe Map return")
+				if daily_back != null:
+					daily_back.emit_signal("pressed")
+					await process_frame
+				_expect(str(app.current_route_name()) == "map", "Daily House Ritual back action must return to Map")
+				_expect(app.show_house(), "Daily House Ritual Map must return to House")
+				await process_frame
 			_expect(app.show_feature_preview("Profile"), "completed House must open Profile")
 			await process_frame
 			_expect(str(app.current_route_name()) == "profile_settings", "Profile must own the S12 route")

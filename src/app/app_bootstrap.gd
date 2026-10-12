@@ -389,6 +389,36 @@ func _on_missions_house() -> void:
 	if navigation != null and navigation.current() == NavigationScript.Route.MISSIONS and navigation.go(NavigationScript.Route.HOUSE, {"via": "missions_house"}):
 		_render_house()
 
+func _completed_opening_levels() -> Array[int]:
+	var levels: Array[int] = []
+	if progress == null:
+		return levels
+	for level_number in range(1, INTERNAL_REVIEW_LEVEL_COUNT + 1):
+		var level_id := "ch01_level_%03d" % level_number
+		if progress.completed_levels.has(level_id):
+			levels.append(level_number)
+	return levels
+
+func _daily_practice_level() -> int:
+	var levels := _completed_opening_levels()
+	if levels.is_empty():
+		return 0
+	var local_date := Time.get_datetime_dict_from_system()
+	var ordinal := int(local_date.get("year", 2000)) * 372 + int(local_date.get("month", 1)) * 31 + int(local_date.get("day", 1))
+	return int(levels[posmod(ordinal, levels.size())])
+
+func _open_daily_practice(level_number: int) -> void:
+	var level_id := "ch01_level_%03d" % level_number
+	if navigation == null or navigation.current() != NavigationScript.Route.EVENTS or progress == null or not progress.completed_levels.has(level_id):
+		return
+	_emit_shell_feedback()
+	if not navigation.go(NavigationScript.Route.HOUSE, {"via":"daily_house_ritual", "level":level_number}):
+		return
+	_render_house()
+	if not show_map():
+		return
+	show_prestart(level_number)
+
 func show_feature_preview(feature: String) -> bool:
 	# Truthful internal-review destinations are real product routes/screens.
 	# Events and Shop remain unavailable for live actions, but they are not
@@ -608,6 +638,59 @@ func show_feature_preview(feature: String) -> bool:
 		ritual_progress.add_theme_stylebox_override("background", track)
 		ritual_progress.add_theme_stylebox_override("fill", fill)
 		layout.add_child(ritual_progress)
+		var daily_level := _daily_practice_level()
+		var daily_card := PanelContainer.new()
+		daily_card.name = "DailyPracticeCard"
+		daily_card.custom_minimum_size = Vector2(0, 126)
+		var daily_style := StyleBoxFlat.new()
+		daily_style.bg_color = Color("#15101D", 0.96)
+		daily_style.border_color = Color("#D5AD70", 0.74)
+		daily_style.set_border_width_all(1)
+		daily_style.set_corner_radius_all(14)
+		daily_style.content_margin_left = 14
+		daily_style.content_margin_right = 14
+		daily_style.content_margin_top = 10
+		daily_style.content_margin_bottom = 10
+		daily_card.add_theme_stylebox_override("panel", daily_style)
+		layout.add_child(daily_card)
+		var daily_content := VBoxContainer.new()
+		daily_content.name = "DailyContent"
+		daily_content.add_theme_constant_override("separation", 4)
+		daily_card.add_child(daily_content)
+		var daily_kicker := Label.new()
+		daily_kicker.name = "DailyPracticeKicker"
+		daily_kicker.text = "DEVICE-LOCAL DAILY PRACTICE"
+		daily_kicker.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+		daily_kicker.add_theme_color_override("font_color", Color("#BFA5D8"))
+		daily_kicker.add_theme_font_size_override("font_size", 14)
+		daily_content.add_child(daily_kicker)
+		var daily_title := Label.new()
+		daily_title.name = "DailyPracticeTitle"
+		daily_title.text = "DAILY HOUSE RITUAL · LEVEL %d" % daily_level if daily_level > 0 else "DAILY HOUSE RITUAL · SEALED"
+		daily_title.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+		daily_title.add_theme_color_override("font_color", Color("#FFF0D8"))
+		daily_title.add_theme_font_size_override("font_size", 20)
+		daily_content.add_child(daily_title)
+		var daily_truth := Label.new()
+		daily_truth.name = "DailyPracticeTruth"
+		daily_truth.text = "REPLAY ONLY · NO BONUS REWARD · NO CURRENCY SPEND" if daily_level > 0 else "COMPLETE AN OPENING RITUAL TO UNLOCK LOCAL PRACTICE"
+		daily_truth.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+		daily_truth.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+		daily_truth.add_theme_color_override("font_color", Color("#D5AD70"))
+		daily_truth.add_theme_font_size_override("font_size", 13)
+		daily_content.add_child(daily_truth)
+		var daily_action := Button.new()
+		daily_action.name = "DailyPracticeAction"
+		daily_action.text = "PRACTICE LEVEL %d" % daily_level if daily_level > 0 else "RESTORE A DISPLAY TO UNLOCK"
+		daily_action.custom_minimum_size.y = 50
+		daily_action.disabled = daily_level <= 0
+		daily_action.set_meta("daily_level", daily_level)
+		daily_action.set_meta("retention_contract", "device_local_replay_no_bonus")
+		_style_meta_action(daily_action, daily_level > 0)
+		daily_content.add_child(daily_action)
+		if daily_level > 0:
+			daily_action.pressed.connect(_open_daily_practice.bind(daily_level))
+
 		var weekly_button := Button.new()
 		weekly_button.name = "WeeklyMissionsAction"
 		weekly_button.text = "OPEN WEEKLY RITUALS"

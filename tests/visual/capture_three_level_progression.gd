@@ -158,8 +158,34 @@ func _capture() -> void:
 		return _fail(app, "Events does not expose the completed opening ritual state")
 	if event_hero_kicker == null or event_hero_kicker.text != "OPENING RITUAL COMPLETE" or event_hero_title == null or not event_hero_title.text.contains("3 / 3 DISPLAYS AWAKENED"):
 		return _fail(app, "completed Events hero does not resolve to the 3/3 ritual state")
+	var daily_action: Button = app.current_screen().get_node_or_null("FeatureLayout/DailyPracticeCard/DailyContent/DailyPracticeAction") as Button
+	var daily_truth: Label = app.current_screen().get_node_or_null("FeatureLayout/DailyPracticeCard/DailyContent/DailyPracticeTruth") as Label
+	if daily_action == null or daily_action.disabled or daily_truth == null or not daily_truth.text.contains("NO BONUS REWARD"):
+		return _fail(app, "completed Events must expose truthful Daily House Ritual practice")
 	if not await _save(app, "progression-final-events.png"):
 		return
+	daily_action.emit_signal("pressed")
+	await _frames(3)
+	if String(app.current_route_name()) != "prestart":
+		return _fail(app, "Daily House Ritual must open replay prestart")
+	var daily_prestart = app.current_screen()
+	var daily_reward: Label = daily_prestart.get_node_or_null("Layout/Card/Content/Reward") as Label if daily_prestart != null else null
+	var daily_note: Label = daily_prestart.get_node_or_null("Layout/Card/Content/Note") as Label if daily_prestart != null else null
+	if daily_reward == null or not daily_reward.text.begins_with("OWNED CURIO") or daily_note == null or not daily_note.text.contains("persistent rewards are already secured"):
+		return _fail(app, "Daily House Ritual replay prestart must preserve no-farming truth")
+	if not await _save(app, "progression-daily-ritual-prestart.png"):
+		return
+	var daily_back: Button = daily_prestart.get_node_or_null("Layout/Back") as Button if daily_prestart != null else null
+	if daily_back == null:
+		return _fail(app, "Daily House Ritual replay prestart back action missing")
+	daily_back.emit_signal("pressed")
+	await _frames(2)
+	if String(app.current_route_name()) != "map" or not app.show_house():
+		return _fail(app, "Daily House Ritual must return safely through Map to House")
+	await _frames(2)
+	if not app.show_feature_preview("Events"):
+		return _fail(app, "House must reopen Events after Daily House Ritual proof")
+	await _frames(2)
 	var weekly_button: Button = app.current_screen().get_node_or_null("FeatureLayout/WeeklyMissionsAction") as Button
 	if weekly_button == null:
 		return _fail(app, "Event Center must expose the S09 Weekly Rituals destination")
