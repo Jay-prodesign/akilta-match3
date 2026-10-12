@@ -115,5 +115,10 @@
       "kind": "global"
     }
   ],
-  "prestart_note": "Wake the Moon Cameo. The first cabinet will remember this victory every time you return to the House."
+  "prestart_note": "Wake the Moon Cameo. The first cabinet will remember this victory every time you return to the House.",
+  "validation_seeds": [
+    1001,
+    1018,
+    1102
+  ]
 }

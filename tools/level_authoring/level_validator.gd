@@ -9,6 +9,7 @@ const SUPPORTED_SCHEMA_VERSION := 1
 const SUPPORTED_OBJECTIVES := ["collect_family", "clear_blockers"]
 const SUPPORTED_SPECIALS := ["line_h", "line_v", "area", "smart", "global"]
 const SUPPORTED_STATUSES := ["draft", "validated", "playtest", "approved", "staging", "production", "retired"]
+const MIN_VALIDATION_SEEDS := 3
 
 static func load_level(path: String) -> Dictionary:
 	if not FileAccess.file_exists(path):
@@ -72,6 +73,7 @@ static func validate(level: Dictionary) -> Array[String]:
 	elif objective == "clear_blockers" and level.get("blockers", []).is_empty():
 		issues.append("%s: clear_blockers requires blockers" % level_id)
 
+	_validate_validation_seeds(level, issues)
 	var holes: Dictionary = _validate_holes(level, width, height, issues)
 	_validate_positions(level, width, height, holes, issues)
 	_validate_teaching_moves(level, width, height, holes, issues)
@@ -84,6 +86,26 @@ static func validate(level: Dictionary) -> Array[String]:
 		if not MoveFinder.has_legal_move(board):
 			issues.append("%s: authored board has no legal opening move" % level_id)
 	return issues
+
+static func _validate_validation_seeds(level: Dictionary, issues: Array[String]) -> void:
+	var level_id: String = String(level.get("id", "<missing-id>"))
+	var raw_seeds = level.get("validation_seeds", [])
+	if not raw_seeds is Array or raw_seeds.size() < MIN_VALIDATION_SEEDS:
+		issues.append("%s: validation_seeds must contain at least %d seeds" % [level_id, MIN_VALIDATION_SEEDS])
+		return
+	var seen: Dictionary = {}
+	var primary := int(level.get("validation_seed", 1))
+	var has_primary := false
+	for raw_seed in raw_seeds:
+		var seed_value := int(raw_seed)
+		if seen.has(seed_value):
+			issues.append("%s: validation_seeds must be unique" % level_id)
+			continue
+		seen[seed_value] = true
+		if seed_value == primary:
+			has_primary = true
+	if not has_primary:
+		issues.append("%s: validation_seeds must include validation_seed" % level_id)
 
 static func _validate_holes(level: Dictionary, width: int, height: int, issues: Array[String]) -> Dictionary:
 	var level_id: String = String(level.get("id", "<missing-id>"))
