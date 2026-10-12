@@ -13,11 +13,12 @@ const MATCH_MS := 18
 const SPECIAL_MS := 42
 const WIN_MS := 180
 const FAIL_MS := 55
+const RETRY_MS := 24
 const INVALID_THROTTLE_MS := 120
 const UI_THROTTLE_MS := 90
 const MATCH_THROTTLE_MS := 55
 
-enum Category { BLOCKER, COMBO, INVALID, UI, MATCH, SPECIAL, WIN, FAIL }
+enum Category { BLOCKER, COMBO, INVALID, UI, MATCH, SPECIAL, WIN, FAIL, RETRY }
 
 var _enabled := true
 var _last_invalid_ms := -100000
@@ -106,6 +107,13 @@ func request_terminal(result: String) -> bool:
 		return false
 	_terminal_emitted = true
 	return _emit(WIN_MS if result == "won" else FAIL_MS, category)
+
+func request_retry() -> bool:
+	_requests[Category.RETRY] += 1
+	if not _enabled:
+		_suppressed[Category.RETRY] += 1
+		return false
+	return _emit(RETRY_MS, Category.RETRY)
 
 func reset_for_new_attempt() -> void:
 	_terminal_emitted = false
