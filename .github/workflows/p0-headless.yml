@@ -3,11 +3,13 @@ name: P0 Golden Playable Loop Verification
 on:
   push:
     branches:
+      - main
       - p0/bootstrap
       - "p1/**"
       - "feat/**"
     paths:
       - ".github/workflows/p0-headless.yml"
+      - ".github/release-proof.trigger"
       - ".github/workflows/mobile-release.yml"
       - "project.godot"
       - "export_presets.cfg"
