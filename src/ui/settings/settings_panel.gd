@@ -6,6 +6,20 @@ signal interaction_feedback_requested(kind: String)
 
 const PieceAssetLoader = preload("res://src/match3/presentation/piece_asset_loader.gd")
 
+@export var card_normal_style: StyleBoxFlat
+@export var card_high_style: StyleBoxFlat
+@export var toggle_normal_style: StyleBoxFlat
+@export var toggle_hover_style: StyleBoxFlat
+@export var toggle_pressed_style: StyleBoxFlat
+@export var toggle_high_style: StyleBoxFlat
+@export var toggle_high_hover_style: StyleBoxFlat
+@export var toggle_high_pressed_style: StyleBoxFlat
+@export var close_normal_style: StyleBoxFlat
+@export var close_hover_style: StyleBoxFlat
+@export var close_pressed_style: StyleBoxFlat
+@export var close_high_style: StyleBoxFlat
+
+
 @onready var master_toggle: CheckButton = $Card/Content/Master
 @onready var music_toggle: CheckButton = $Card/Content/Music
 @onready var sfx_toggle: CheckButton = $Card/Content/SFX
@@ -14,14 +28,15 @@ const PieceAssetLoader = preload("res://src/match3/presentation/piece_asset_load
 @onready var contrast_toggle: CheckButton = $Card/Content/Contrast
 @onready var close_button: Button = $Card/Content/Close
 @onready var saved_note: Label = $Card/Content/SavedNote
+@onready var house_sigil: TextureRect = $Card/Content/HouseSigil
 
 var settings
 var _binding_controls := false
 var _high_contrast := false
 
 func _ready() -> void:
+	house_sigil.texture = PieceAssetLoader.ornament("res://assets/pieces/moon_sigil.webp")
 	_style_settings_overlay()
-	_install_house_sigil()
 	close_button.pressed.connect(_on_close_pressed)
 	master_toggle.toggled.connect(func(on): _on_toggle("master_muted", not on))
 	music_toggle.toggled.connect(func(on): _on_toggle("music_muted", not on))
@@ -106,33 +121,13 @@ func _refresh_toggle_copy() -> void:
 func _style_settings_overlay() -> void:
 	var card := get_node_or_null("Card") as PanelContainer
 	if card != null:
-		var panel := StyleBoxFlat.new()
-		panel.bg_color = Color("#080A12") if _high_contrast else Color("#121322")
-		panel.border_color = Color("#FFF1B6") if _high_contrast else Color("#D5AD70", 0.82)
-		panel.set_border_width_all(3 if _high_contrast else 2)
-		panel.set_corner_radius_all(18)
-		panel.shadow_color = Color(0, 0, 0, 0.72)
-		panel.shadow_size = 24
-		panel.content_margin_left = 24
-		panel.content_margin_right = 24
-		panel.content_margin_top = 20
-		panel.content_margin_bottom = 20
-		card.add_theme_stylebox_override("panel", panel)
+		card.add_theme_stylebox_override("panel", card_high_style if _high_contrast else card_normal_style)
 	for toggle in [master_toggle, music_toggle, sfx_toggle, haptics_toggle, reduced_toggle, contrast_toggle]:
 		_style_toggle(toggle)
-	var close_style := StyleBoxFlat.new()
-	close_style.bg_color = Color("#63356A") if _high_contrast else Color("#512957")
-	close_style.border_color = Color("#FFF1B6") if _high_contrast else Color("#D5AD70")
-	close_style.set_border_width_all(3 if _high_contrast else 2)
-	close_style.set_corner_radius_all(12)
-	var hover := close_style.duplicate() as StyleBoxFlat
-	hover.bg_color = Color("#7B4482")
-	var pressed := close_style.duplicate() as StyleBoxFlat
-	pressed.bg_color = Color("#3E1D43")
-	close_button.add_theme_stylebox_override("normal", close_style)
-	close_button.add_theme_stylebox_override("hover", hover)
-	close_button.add_theme_stylebox_override("pressed", pressed)
-	close_button.add_theme_stylebox_override("focus", hover)
+	close_button.add_theme_stylebox_override("normal", close_high_style if _high_contrast else close_normal_style)
+	close_button.add_theme_stylebox_override("hover", close_hover_style)
+	close_button.add_theme_stylebox_override("pressed", close_pressed_style)
+	close_button.add_theme_stylebox_override("focus", close_hover_style)
 	close_button.add_theme_color_override("font_color", Color("#FFF7E8"))
 	close_button.add_theme_color_override("font_hover_color", Color("#FFFFFF"))
 	close_button.add_theme_font_size_override("font_size", 20)
@@ -140,39 +135,20 @@ func _style_settings_overlay() -> void:
 func _style_toggle(toggle: CheckButton) -> void:
 	if toggle == null:
 		return
-	var normal := StyleBoxFlat.new()
-	normal.bg_color = Color("#090A10", 0.98) if _high_contrast else Color("#15111B", 0.96)
-	normal.border_color = Color("#FFF1B6", 0.84) if _high_contrast else Color("#745C73", 0.54)
-	normal.set_border_width_all(2 if _high_contrast else 1)
-	normal.set_corner_radius_all(12)
-	normal.content_margin_left = 14
-	normal.content_margin_right = 14
-	var hover := normal.duplicate() as StyleBoxFlat
-	hover.bg_color = Color("#2A2130")
-	hover.border_color = Color("#D5AD70")
-	var pressed := normal.duplicate() as StyleBoxFlat
-	pressed.bg_color = Color("#3A2640")
-	pressed.border_color = Color("#F0CE8A")
-	toggle.add_theme_stylebox_override("normal", normal)
-	toggle.add_theme_stylebox_override("hover", hover)
-	toggle.add_theme_stylebox_override("pressed", pressed)
-	toggle.add_theme_stylebox_override("focus", hover)
+	toggle.add_theme_stylebox_override("normal", toggle_high_style if _high_contrast else toggle_normal_style)
+	toggle.add_theme_stylebox_override("hover", toggle_high_hover_style if _high_contrast else toggle_hover_style)
+	toggle.add_theme_stylebox_override("pressed", toggle_high_pressed_style if _high_contrast else toggle_pressed_style)
+	toggle.add_theme_stylebox_override("focus", toggle_high_hover_style if _high_contrast else toggle_hover_style)
 	toggle.add_theme_color_override("font_color", Color("#FFFFFF") if _high_contrast else Color("#E8DCE4"))
 	toggle.add_theme_color_override("font_hover_color", Color("#FFFFFF"))
 	toggle.add_theme_font_size_override("font_size", 19)
 
+func settings_authored_contract() -> Dictionary:
+	return {
+		"authored_house_sigil": house_sigil != null and house_sigil.texture != null,
+		"sigil_raster_runtime": true,
+		"authored_style_resources": card_normal_style != null and card_high_style != null and toggle_normal_style != null and toggle_high_style != null and close_normal_style != null and close_high_style != null,
+		"runtime_ui_factory": false,
+		"runtime_style_factory": false,
+	}
 
-func _install_house_sigil() -> void:
-	var content := get_node_or_null("Card/Content") as VBoxContainer
-	if content == null or content.has_node("HouseSigil"):
-		return
-	var sigil := TextureRect.new()
-	sigil.name = "HouseSigil"
-	sigil.custom_minimum_size = Vector2(0, 72)
-	sigil.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
-	sigil.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
-	sigil.texture = PieceAssetLoader.ornament("res://assets/pieces/moon_sigil.svg")
-	sigil.modulate = Color("#E8C987")
-	sigil.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	content.add_child(sigil)
-	content.move_child(sigil, 3)
