@@ -47,4 +47,8 @@ func screen_contract() -> Dictionary:
 		"offline_contract": String(empty_state.get_meta("offline_contract", "")),
 		"reward_asset_path": String(reward_art.get_meta("asset_path", "")),
 		"code_built_panels": false,
+		"north_star_title_hierarchy": ($MissionLayout/MissionTitle as Label).get_theme_font_size("font_size") >= 52,
+		"north_star_altar_stack": ($MissionLayout/MissionEmptyState/EmptyContent as VBoxContainer) != null and reward_art.custom_minimum_size.y <= 260.0,
+		"primary_cta_rounding": return_events.get_theme_stylebox("normal") != null,
+
 	}
