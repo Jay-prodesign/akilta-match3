@@ -97,6 +97,7 @@ func _process(delta: float) -> void:
 		var legal_move: Dictionary = MoveFinder.first_legal_move(board_state)
 		if not legal_move.is_empty() and board_view.has_method("set_teaching_move"):
 			board_view.set_teaching_move(legal_move["from"], legal_move["to"])
+			hint_label.text = "Follow the moonlit pair for your next match."
 
 func _ready() -> void:
 	world_backdrop.texture = ScreenArt.texture("gameplay_bg_curio_boutique")
@@ -371,7 +372,7 @@ func _refresh_hud() -> void:
 		objective_label.text = "Awaken the collection"
 		moves_label.text = "—"
 		return
-	moves_label.text = "%d moves" % int(board_state.moves_remaining)
+	moves_label.text = "%d MOVES LEFT" % int(board_state.moves_remaining)
 	var progress_value := int(board_state.objective_progress)
 	var target_value := int(board_state.objective_target)
 	var progress_family := String(board_state.objective_family)
