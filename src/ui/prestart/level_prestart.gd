@@ -7,6 +7,9 @@ signal start_requested(level_number: int)
 const PieceAssetLoader = preload("res://src/match3/presentation/piece_asset_loader.gd")
 const ScreenArt = preload("res://src/ui/shared/screen_art_registry.gd")
 
+const AID_HINT_ART_PATH := "res://assets/pieces/moon_sigil.webp"
+const AID_MOVES_ART_PATH := "res://assets/pieces/potion.svg"
+
 @onready var level_label: Label = $Layout/Card/Content/Level
 @onready var title_label: Label = $Layout/Card/Content/Title
 @onready var objective_label: Label = $Layout/Card/Content/Objective
@@ -62,7 +65,7 @@ func _build_ritual_aids() -> void:
 		return
 	var panel := PanelContainer.new()
 	panel.name = "RitualAids"
-	panel.custom_minimum_size = Vector2(0, 102)
+	panel.custom_minimum_size = Vector2(0, 124)
 	var shell := StyleBoxFlat.new()
 	shell.bg_color = Color("#120D18", 0.94)
 	shell.border_color = Color("#D5AD70", 0.46)
@@ -91,8 +94,8 @@ func _build_ritual_aids() -> void:
 	row.add_theme_constant_override("separation", 6)
 	column.add_child(row)
 	for entry in [
-		{"label":"HINT", "art":"res://assets/pieces/moon_sigil.webp"},
-		{"label":"+3 MOVES", "art":"res://assets/pieces/potion.svg"}
+		{"label":"HINT", "art":AID_HINT_ART_PATH},
+		{"label":"+3 MOVES", "art":AID_MOVES_ART_PATH}
 	]:
 		var chip := PanelContainer.new()
 		chip.custom_minimum_size = Vector2(0, 56)
@@ -120,6 +123,20 @@ func _build_ritual_aids() -> void:
 		caption.add_theme_color_override("font_color", Color("#F4E5D3"))
 		caption.add_theme_font_size_override("font_size", 20)
 		chip_row.add_child(caption)
+	var truth := Label.new()
+	truth.name = "AidTruth"
+	truth.text = "Hint reveals a legal match · +3 Moves works once per attempt"
+	truth.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	truth.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	truth.add_theme_color_override("font_color", Color("#BDAFC3"))
+	truth.add_theme_font_size_override("font_size", 14)
+	column.add_child(truth)
+
+func aid_contract() -> Dictionary:
+	return {
+		"hint": {"art_path": AID_HINT_ART_PATH, "loaded": PieceAssetLoader.ornament(AID_HINT_ART_PATH) != null},
+		"plus_moves": {"art_path": AID_MOVES_ART_PATH, "loaded": PieceAssetLoader.ornament(AID_MOVES_ART_PATH) != null, "once_per_attempt": true}
+	}
 
 func _style_ritual_actions() -> void:
 	var gold := Color("#D8B56A")
