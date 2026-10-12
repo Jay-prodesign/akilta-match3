@@ -5,15 +5,18 @@ extends RefCounted
 ## Sekiph82/Scrubbots scripts/haptics/haptics_controller.gd.
 ## Product-neutral infrastructure only: Match Game owns the event vocabulary and timings.
 
+const UI_MS := 12
 const MATCH_MS := 18
 const SPECIAL_MS := 42
 const WIN_MS := 180
 const FAIL_MS := 55
+const UI_THROTTLE_MS := 90
 const MATCH_THROTTLE_MS := 55
 
-enum Category { MATCH, SPECIAL, WIN, FAIL }
+enum Category { UI, MATCH, SPECIAL, WIN, FAIL }
 
 var _enabled := true
+var _last_ui_ms := -100000
 var _last_match_ms := -100000
 var _terminal_emitted := false
 var _platform_sink: Callable = Callable()
@@ -32,6 +35,18 @@ func apply_settings(state: Dictionary) -> void:
 
 func is_enabled() -> bool:
 	return _enabled
+
+func request_ui() -> bool:
+	_requests[Category.UI] += 1
+	if not _enabled:
+		_suppressed[Category.UI] += 1
+		return false
+	var now := Time.get_ticks_msec()
+	if now - _last_ui_ms < UI_THROTTLE_MS:
+		_suppressed[Category.UI] += 1
+		return false
+	_last_ui_ms = now
+	return _emit(UI_MS, Category.UI)
 
 func request_match() -> bool:
 	_requests[Category.MATCH] += 1

@@ -65,6 +65,10 @@ static func attach(screen: Control, active_section: String, handler: Callable, c
 		button.name = "Nav" + action.capitalize()
 		button.text = ""
 		button.tooltip_text = action.capitalize()
+		var is_active := action == active_section
+		button.set_meta("interaction_state", "selected" if is_active else "normal")
+		button.disabled = is_active
+		button.focus_mode = Control.FOCUS_ALL
 		button.custom_minimum_size = Vector2(0, 94)
 		button.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 		var normal := StyleBoxFlat.new()
@@ -76,10 +80,14 @@ static func attach(screen: Control, active_section: String, handler: Callable, c
 		active.bg_color = Color("#49304C")
 		active.border_color = Color("#D5AD70")
 		active.set_border_width_all(2)
-		button.add_theme_stylebox_override("normal", active if action == active_section else normal)
+		var disabled := normal.duplicate() as StyleBoxFlat
+		disabled.bg_color = Color("#17121C")
+		disabled.border_color = Color("#6B5A69", 0.46)
+		button.add_theme_stylebox_override("normal", active if is_active else normal)
 		button.add_theme_stylebox_override("hover", active)
 		button.add_theme_stylebox_override("pressed", active)
 		button.add_theme_stylebox_override("focus", active)
+		button.add_theme_stylebox_override("disabled", active if is_active else disabled)
 		var stack := VBoxContainer.new()
 		stack.name = "Content"
 		stack.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
@@ -94,17 +102,17 @@ static func attach(screen: Control, active_section: String, handler: Callable, c
 		icon.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
 		icon.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
 		icon.mouse_filter = Control.MOUSE_FILTER_IGNORE
-		icon.modulate = Color("#F0CE8A") if action == active_section else Color("#C9B5C8")
+		icon.modulate = Color("#F0CE8A") if is_active else Color("#C9B5C8")
 		stack.add_child(icon)
 		var caption := Label.new()
 		caption.name = "Label"
 		caption.text = String(item["label"])
 		caption.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 		caption.add_theme_font_size_override("font_size", 20)
-		caption.add_theme_color_override("font_color", Color("#F4E5D3") if action == active_section else Color("#CDBFC9"))
+		caption.add_theme_color_override("font_color", Color("#F4E5D3") if is_active else Color("#CDBFC9"))
 		caption.mouse_filter = Control.MOUSE_FILTER_IGNORE
 		stack.add_child(caption)
-		if handler.is_valid():
+		if handler.is_valid() and not is_active:
 			button.pressed.connect(handler.bind(action))
 		row.add_child(button)
 	return panel
