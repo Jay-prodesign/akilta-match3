@@ -121,6 +121,7 @@ jobs:
           adb shell settings put global window_animation_scale 0
           adb shell settings put global transition_animation_scale 0
           adb shell settings put global animator_duration_scale 0
+          adb shell settings put secure immersive_mode_confirmations confirmed || true
           {
             echo "MODEL=$(adb shell getprop ro.product.model | tr -d '\r')"
             echo "SDK=$(adb shell getprop ro.build.version.sdk | tr -d '\r')"
@@ -150,6 +151,12 @@ jobs:
           grep -Fq "$PACKAGE" artifacts/cold-foreground.txt
           adb exec-out screencap -p > artifacts/android-01-cold-launch.png
           test -s artifacts/android-01-cold-launch.png
+          adb shell uiautomator dump /sdcard/window.xml >/dev/null || true
+          adb pull /sdcard/window.xml artifacts/android-window.xml >/dev/null 2>&1 || true
+          if [ -f artifacts/android-window.xml ] && grep -Fq "Viewing full screen" artifacts/android-window.xml; then
+            echo "Android immersive education overlay obscured the app evidence"
+            exit 1
+          fi
 
       - name: Verify background and resume
         shell: bash
@@ -210,6 +217,10 @@ jobs:
           adb logcat -d > artifacts/logcat.txt || true
           if grep -Fq "$PACKAGE" artifacts/crash-buffer.txt; then
             cat artifacts/crash-buffer.txt
+            exit 1
+          fi
+          if grep -Eq "Missing required production screen art|Failed to decode production screen art" artifacts/logcat.txt; then
+            grep -E "Missing required production screen art|Failed to decode production screen art" artifacts/logcat.txt
             exit 1
           fi
           echo "VIRTUAL_DEVICE_RUNTIME_PASS: cold launch, resume, force-stop relaunch"
