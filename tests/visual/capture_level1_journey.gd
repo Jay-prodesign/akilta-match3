@@ -112,7 +112,7 @@ func _capture() -> void:
 	if String(app.current_route_name()) != "house":
 		return _fail(app, "S07 Continue must return to S01 House")
 	var returned_house = app.current_screen()
-	var awakened_cameo: Control = returned_house.get_node_or_null("Layout/RoomView/MoonCameoOverlay") as Control if returned_house != null else null
+	var awakened_cameo: Control = returned_house.get_node_or_null("RoomView/MoonCameoOverlay") as Control if returned_house != null else null
 	if awakened_cameo == null or not awakened_cameo.visible:
 		return _fail(app, "returned S01 must render the persisted restored Curio")
 	if not await _save(app, "golden-07-house-return.png"):
