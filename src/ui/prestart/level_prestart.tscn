@@ -16,10 +16,10 @@ corner_radius_bottom_right = 16
 corner_radius_bottom_left = 16
 shadow_color = Color(0, 0, 0, 0.68)
 shadow_size = 18
-content_margin_left = 18.0
-content_margin_right = 18.0
-content_margin_top = 16.0
-content_margin_bottom = 16.0
+content_margin_left = 22.0
+content_margin_right = 22.0
+content_margin_top = 20.0
+content_margin_bottom = 20.0
 
 [sub_resource type="StyleBoxFlat" id="Start"]
 bg_color = Color(0.294, 0.102, 0.318, 0.98)
@@ -68,11 +68,11 @@ layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
-offset_left = 24.0
+offset_left = 18.0
 offset_top = 18.0
-offset_right = -24.0
+offset_right = -18.0
 offset_bottom = -18.0
-theme_override_constants/separation = 10
+theme_override_constants/separation = 12
 alignment = 1
 
 [node name="Eyebrow" type="Label" parent="Layout"]
@@ -98,7 +98,7 @@ theme_override_constants/separation = 8
 alignment = 0
 
 [node name="RitualArt" type="Control" parent="Layout/Card/Content"]
-custom_minimum_size = Vector2(0, 228)
+custom_minimum_size = Vector2(0, 272)
 layout_mode = 2
 mouse_filter = 2
 clip_contents = true
@@ -109,7 +109,7 @@ glow_strength = 0.5
 [node name="Level" type="Label" parent="Layout/Card/Content"]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.851, 0.71, 0.416, 1)
-theme_override_font_sizes/font_size = 20
+theme_override_font_sizes/font_size = 22
 text = "LEVEL 1"
 horizontal_alignment = 1
 
@@ -118,51 +118,51 @@ layout_mode = 2
 theme_override_colors/font_color = Color(0.988, 0.933, 0.831, 1)
 theme_override_colors/font_outline_color = Color(0.02, 0.015, 0.025, 0.96)
 theme_override_constants/outline_size = 5
-theme_override_font_sizes/font_size = 36
+theme_override_font_sizes/font_size = 40
 text = "Moonlit Cabinet"
 horizontal_alignment = 1
 
 [node name="Objective" type="Label" parent="Layout/Card/Content"]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.89, 0.82, 0.84, 1)
-theme_override_font_sizes/font_size = 22
+theme_override_font_sizes/font_size = 26
 text = "GOAL · GATHER 6 MOON SIGILS"
 horizontal_alignment = 1
 
 [node name="Moves" type="Label" parent="Layout/Card/Content"]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.749, 0.647, 0.847, 1)
-theme_override_font_sizes/font_size = 18
+theme_override_font_sizes/font_size = 22
 text = "20 MOVES"
 horizontal_alignment = 1
 
 [node name="Reward" type="Label" parent="Layout/Card/Content"]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.902, 0.772, 0.502, 1)
-theme_override_font_sizes/font_size = 21
+theme_override_font_sizes/font_size = 24
 text = "REWARD · MOON CAMEO"
 horizontal_alignment = 1
 
 [node name="Note" type="Label" parent="Layout/Card/Content"]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.72, 0.66, 0.73, 1)
-theme_override_font_sizes/font_size = 15
+theme_override_font_sizes/font_size = 18
 text = "Wake the Moon Cameo. The first cabinet will remember this victory."
 horizontal_alignment = 1
 autowrap_mode = 2
 
 [node name="Start" type="Button" parent="Layout/Card/Content"]
-custom_minimum_size = Vector2(0, 64)
+custom_minimum_size = Vector2(0, 72)
 layout_mode = 2
 theme_override_colors/font_color = Color(0.988, 0.933, 0.831, 1)
-theme_override_font_sizes/font_size = 24
+theme_override_font_sizes/font_size = 26
 theme_override_styles/normal = SubResource("Start")
 text = "PLAY"
 
 [node name="Back" type="Button" parent="Layout"]
-custom_minimum_size = Vector2(0, 50)
+custom_minimum_size = Vector2(0, 58)
 layout_mode = 2
 theme_override_colors/font_color = Color(0.945, 0.91, 0.866, 1)
-theme_override_font_sizes/font_size = 18
+theme_override_font_sizes/font_size = 20
 theme_override_styles/normal = SubResource("Back")
 text = "BACK TO HOUSE"
