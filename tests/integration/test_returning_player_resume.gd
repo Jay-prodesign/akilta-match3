@@ -46,6 +46,10 @@ func _run() -> void:
 	if String(app.current_route_name()) != "house":
 		return _fail(app, "S00 relaunch did not reach S01 House")
 	var house = app.current_screen()
+	if house == null or not house.has_method("ftue_house_contract"):
+		return _fail(app, "returning House FTUE contract missing")
+	if bool(house.ftue_house_contract().get("active", true)):
+		return _fail(app, "returning player must not see first-ritual guidance")
 	var return_banner := house.get_node_or_null("Layout/ReturningPlayerBanner") as PanelContainer if house != null else null
 	var return_label := house.get_node_or_null("Layout/ReturningPlayerBanner/Label") as Label if house != null else null
 	var curio_label := house.get_node_or_null("Layout/CurioChip/Label") as Label if house != null else null

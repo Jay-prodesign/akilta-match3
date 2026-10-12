@@ -31,6 +31,9 @@ var _resource_bar: PanelContainer
 var _returning_player: bool = false
 var _returning_banner: PanelContainer
 var _returning_label: Label
+var _first_ritual_panel: PanelContainer
+var _first_ritual_copy: Label
+var _first_ritual_dismissed: bool = false
 var _reduced_motion: bool = false
 var _hotspot_layer: Control
 var _hotspot_buttons: Dictionary = {}
@@ -47,6 +50,7 @@ func _ready() -> void:
 	ProductNavigation.attach(self, "house", Callable(self, "_navigate_dock"), NodePath("Layout"))
 	_build_returning_banner()
 	_build_completion_banner()
+	_build_first_ritual_guide()
 	_build_room_hotspots()
 	_build_keeper_hotspot()
 
@@ -108,6 +112,10 @@ func _refresh() -> void:
 	if _completion_label != null:
 		_completion_label.text = "OPENING CABINET SET COMPLETE · %d / %d" % [finished, available_level_count]
 
+	var first_ritual: bool = progress != null and progress.completed_levels.is_empty() and progress.curios.is_empty() and stage == 0 and not _returning_player
+	if _first_ritual_panel != null:
+		_first_ritual_panel.visible = first_ritual and not _first_ritual_dismissed
+
 	var next_level := int(progress.highest_level_unlocked) if progress != null else 1
 	var level1_completed: bool = progress != null and progress.completed_levels.has("ch01_level_001")
 	play_button.disabled = available_level_count < 1
@@ -149,6 +157,94 @@ func _navigate_dock(action: String) -> void:
 			events_requested.emit()
 		"shop":
 			shop_requested.emit()
+
+func _build_first_ritual_guide() -> void:
+	if _first_ritual_panel != null:
+		return
+	var panel := PanelContainer.new()
+	panel.name = "FirstRitualGuide"
+	panel.custom_minimum_size = Vector2(0, 92)
+	panel.visible = false
+	var shell := StyleBoxFlat.new()
+	shell.bg_color = Color("#130E19", 0.96)
+	shell.border_color = Color("#D5AD70", 0.72)
+	shell.set_border_width_all(1)
+	shell.set_corner_radius_all(12)
+	shell.content_margin_left = 12
+	shell.content_margin_right = 10
+	shell.content_margin_top = 10
+	shell.content_margin_bottom = 10
+	panel.add_theme_stylebox_override("panel", shell)
+	var row := HBoxContainer.new()
+	row.name = "GuideRow"
+	row.add_theme_constant_override("separation", 10)
+	panel.add_child(row)
+	var keeper := TextureRect.new()
+	keeper.name = "KeeperArt"
+	keeper.custom_minimum_size = Vector2(64, 64)
+	keeper.texture = PieceAssetLoader.ornament(KEEPER_ART_PATH)
+	keeper.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+	keeper.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+	keeper.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	row.add_child(keeper)
+	var copy_column := VBoxContainer.new()
+	copy_column.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	copy_column.alignment = BoxContainer.ALIGNMENT_CENTER
+	copy_column.add_theme_constant_override("separation", 2)
+	row.add_child(copy_column)
+	var heading := Label.new()
+	heading.name = "Heading"
+	heading.text = "FIRST RITUAL"
+	heading.add_theme_color_override("font_color", Color("#F2D08B"))
+	heading.add_theme_font_size_override("font_size", 18)
+	copy_column.add_child(heading)
+	var copy := Label.new()
+	copy.name = "Copy"
+	copy.text = "ENTER CURIO BOUTIQUE → LEVEL 1 → SWIPE THE MOONLIT PAIR. ASK KEEPER IF YOU WANT A LEGAL SWAP."
+	copy.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	copy.add_theme_color_override("font_color", Color("#E6D9E2"))
+	copy.add_theme_font_size_override("font_size", 17)
+	copy_column.add_child(copy)
+	var dismiss := Button.new()
+	dismiss.name = "Dismiss"
+	dismiss.text = "GOT IT"
+	dismiss.custom_minimum_size = Vector2(86, 56)
+	dismiss.focus_mode = Control.FOCUS_ALL
+	dismiss.add_theme_font_size_override("font_size", 16)
+	var dismiss_box := StyleBoxFlat.new()
+	dismiss_box.bg_color = Color("#321C38")
+	dismiss_box.border_color = Color("#D5AD70", 0.72)
+	dismiss_box.set_border_width_all(1)
+	dismiss_box.set_corner_radius_all(10)
+	dismiss.add_theme_stylebox_override("normal", dismiss_box)
+	var dismiss_hover := dismiss_box.duplicate() as StyleBoxFlat
+	dismiss_hover.bg_color = Color("#4A2851")
+	dismiss.add_theme_stylebox_override("hover", dismiss_hover)
+	dismiss.add_theme_stylebox_override("pressed", dismiss_hover)
+	dismiss.add_theme_stylebox_override("focus", dismiss_hover)
+	dismiss.add_theme_color_override("font_color", Color("#F4E5D3"))
+	row.add_child(dismiss)
+	dismiss.pressed.connect(_dismiss_first_ritual_guide)
+	$Layout.add_child(panel)
+	$Layout.move_child(panel, $Layout/CurioChip.get_index() + 1)
+	_first_ritual_panel = panel
+	_first_ritual_copy = copy
+
+func _dismiss_first_ritual_guide() -> void:
+	_first_ritual_dismissed = true
+	if _first_ritual_panel != null:
+		_first_ritual_panel.visible = false
+
+func ftue_house_contract() -> Dictionary:
+	var active := _first_ritual_panel != null and _first_ritual_panel.visible
+	return {
+		"active": active,
+		"dismissed": _first_ritual_dismissed,
+		"copy": _first_ritual_copy.text if _first_ritual_copy != null else "",
+		"play_cta": play_button.text if play_button != null else "",
+		"keeper_available": _keeper_hotspot != null and not _keeper_hotspot.disabled,
+		"first_time_truth": progress != null and progress.completed_levels.is_empty() and progress.curios.is_empty() and int(progress.house_stage) == 0,
+	}
 
 func _build_returning_banner() -> void:
 	var panel := PanelContainer.new()
