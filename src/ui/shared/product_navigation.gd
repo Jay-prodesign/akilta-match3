@@ -20,9 +20,10 @@ static func attach(screen: Control, active_section: String, handler: Callable, c
 
 	var safe_insets := MobileSafeArea.current_insets(screen)
 	var content := screen.get_node_or_null(content_path) as Control
-	if content != null and not bool(content.get_meta("product_nav_inset_applied", false)):
-		content.offset_bottom -= 120.0 + safe_insets.w
-		content.set_meta("product_nav_inset_applied", true)
+	if content != null:
+		if not bool(content.get_meta("product_nav_inset_applied", false)):
+			content.set_meta("product_nav_inset_applied", true)
+		MobileSafeArea.apply_content(screen, content_path)
 
 	var panel := PanelContainer.new()
 	panel.name = "ProductNavigation"

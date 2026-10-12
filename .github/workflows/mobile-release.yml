@@ -145,12 +145,19 @@ jobs:
           sed -i '' 's/__IOS_TEAM_ID__/CIABCDE12X/g' export_presets.cfg
           mkdir -p build/ios
           ./Godot.app/Contents/MacOS/Godot --headless --path . --export-release "iOS Xcode Project" build/ios/CatAndCoven.zip
-          test -s build/ios/CatAndCoven.zip
-          unzip -t build/ios/CatAndCoven.zip >/dev/null
-          unzip -l build/ios/CatAndCoven.zip | grep -Eq '\\.xcodeproj/|project.pbxproj'
+          # With export_project_only=true, Godot uses the requested basename but
+          # writes the Xcode tree directly beside it instead of creating a ZIP.
+          test -f build/ios/CatAndCoven.xcodeproj/project.pbxproj
+          test -f build/ios/CatAndCoven/CatAndCoven-Info.plist
+          xcodebuild -project build/ios/CatAndCoven.xcodeproj -list
 
       - uses: actions/upload-artifact@v4
         with:
           name: cat-and-coven-ios-xcode-project-ci
-          path: build/ios/CatAndCoven.zip
+          path: |
+            build/ios/CatAndCoven
+            build/ios/CatAndCoven.xcodeproj
+            build/ios/CatAndCoven.xcframework
+            build/ios/MoltenVK.xcframework
+            build/ios/PrivacyInfo.xcprivacy
           if-no-files-found: error

@@ -10,7 +10,7 @@ func _run() -> void:
 	_expect(project.load("res://project.godot") == OK, "project.godot must parse")
 	_expect(String(project.get_value("application", "config/name", "")) == "Cat & Coven", "native product identity must be Cat & Coven")
 	_expect(String(project.get_value("application", "config/icon", "")) == "res://assets/pieces/black_cat.webp", "native project icon must use first-party Cat art")
-	_expect(String(project.get_value("application", "boot_splash/image", "")) == "res://assets/pieces/black_cat.webp", "native launch presentation must not fall back to Godot branding")
+	_expect(not bool(project.get_value("application", "boot_splash/show_image", true)), "native launch must suppress the default Godot splash before S00")
 	_expect(int(project.get_value("display", "window/handheld/orientation", 0)) == 1, "mobile release must remain portrait")
 	_expect(String(project.get_value("rendering", "renderer/rendering_method.mobile", "")) == "gl_compatibility", "mobile renderer must be explicit")
 	_expect(bool(project.get_value("rendering", "textures/vram_compression/import_etc2_astc", false)), "mobile texture compression import must be enabled for native export")

@@ -19,3 +19,19 @@ static func current_insets(screen: Control) -> Vector4:
 	if screen == null or OS.get_name() not in ["Android", "iOS"]:
 		return Vector4.ZERO
 	return insets_for_geometry(screen.size, DisplayServer.window_get_size(), DisplayServer.get_display_safe_area())
+
+static func apply_content(screen: Control, content_path: NodePath = NodePath("Layout")) -> void:
+	if screen == null:
+		return
+	var content := screen.get_node_or_null(content_path) as Control
+	if content == null:
+		return
+	if not content.has_meta("mobile_safe_base_offsets"):
+		content.set_meta("mobile_safe_base_offsets", Vector4(content.offset_left, content.offset_top, content.offset_right, content.offset_bottom))
+	var base: Vector4 = content.get_meta("mobile_safe_base_offsets")
+	var safe := current_insets(screen)
+	var bottom_reserve := 120.0 if bool(content.get_meta("product_nav_inset_applied", false)) else 0.0
+	content.offset_left = base.x + safe.x
+	content.offset_top = base.y + safe.y
+	content.offset_right = base.z - safe.z
+	content.offset_bottom = base.w - safe.w - bottom_reserve
