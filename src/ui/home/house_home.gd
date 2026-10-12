@@ -176,6 +176,7 @@ func _build_first_ritual_guide() -> void:
 	shell.content_margin_bottom = 10
 	panel.add_theme_stylebox_override("panel", shell)
 	var row := HBoxContainer.new()
+	row.name = "GuideRow"
 	row.add_theme_constant_override("separation", 10)
 	panel.add_child(row)
 	var keeper := TextureRect.new()

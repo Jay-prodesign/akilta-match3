@@ -38,7 +38,7 @@ func _run() -> void:
 		_expect(bool(ftue.get("active", false)), "brand-new player must see First Ritual guidance")
 		_expect(String(ftue.get("copy", "")).contains("ENTER CURIO BOUTIQUE") and String(ftue.get("copy", "")).contains("ASK KEEPER"), "First Ritual guidance must connect the primary CTA to Keeper help")
 		_expect(bool(ftue.get("keeper_available", false)), "First Ritual guidance must point to an available Keeper action")
-	var ftue_dismiss: Button = house.get_node_or_null("Layout/FirstRitualGuide/Dismiss") as Button
+	var ftue_dismiss: Button = house.get_node_or_null("Layout/FirstRitualGuide/GuideRow/Dismiss") as Button
 	_expect(ftue_dismiss != null and ftue_dismiss.custom_minimum_size.y >= 56.0, "First Ritual guidance must have a mobile-safe dismiss target")
 	if ftue_dismiss != null:
 		ftue_dismiss.emit_signal("pressed")
