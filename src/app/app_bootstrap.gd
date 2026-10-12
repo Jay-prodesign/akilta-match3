@@ -34,6 +34,7 @@ var _settings_screen: Node
 var _pending_level_number: int = 0
 var _prestart_origin: int = NavigationScript.Route.MAP
 var _returning_player_entry: bool = false
+var _splash_auto_enter_pending := false
 ## Founder-authorized internal review exposes three provisional levels.
 ## This does not confer D-024B/D-027 shipping or final-art approval.
 const INTERNAL_REVIEW_LEVEL_COUNT := 3
@@ -77,6 +78,16 @@ func _complete_bootstrap() -> void:
 			splash.set_boot_state("recoverable_error", "This House record was created by a newer build. Update the game before entering so that record is not overwritten.", false)
 		_:
 			splash.set_boot_state("ready")
+			_splash_auto_enter_pending = true
+			get_tree().create_timer(1.25).timeout.connect(_auto_enter_ready_splash)
+
+func _auto_enter_ready_splash() -> void:
+	if not _splash_auto_enter_pending or navigation == null or navigation.current() != NavigationScript.Route.BOOT:
+		return
+	if _current_screen == null or not _current_screen.has_method("boot_state") or String(_current_screen.boot_state()) != "ready":
+		return
+	_splash_auto_enter_pending = false
+	_on_splash_continue()
 
 func current_route_name() -> String:
 	return navigation.route_name().to_lower() if navigation != null else ""
