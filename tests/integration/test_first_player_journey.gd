@@ -123,6 +123,13 @@ func _run() -> void:
 	var collection = app.current_screen()
 	var moon_state: Label = collection.get_node("Layout/Cards/MoonCard/Content/State")
 	_expect(moon_state.text.begins_with("AWAKENED"), "Moon Cameo must be inspectable as awakened in collection")
+	_expect(collection.has_method("curio_asset_contract"), "Curio Collection must expose the production Curio asset contract")
+	if collection.has_method("curio_asset_contract"):
+		var curio_assets: Dictionary = collection.curio_asset_contract()
+		_expect(bool(curio_assets.get("raster_runtime", false)), "Reliquary must use one raster runtime family for all opening Curios")
+		var loaded_curios: Dictionary = curio_assets.get("loaded", {})
+		for asset_key in ["moon_sealed", "moon_awakened", "moth_reliquary", "thorned_locket"]:
+			_expect(bool(loaded_curios.get(asset_key, false)), "%s production Curio art must load in Reliquary" % asset_key)
 	var moon_details: Button = collection.get_node_or_null("Layout/Cards/MoonCard/DetailActionLayer/InspectAction") as Button
 	_expect(moon_details != null, "awakened Moon Cameo card must expose Curio Detail")
 	if moon_details != null:
