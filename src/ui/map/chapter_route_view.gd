@@ -96,11 +96,19 @@ func route_authored_contract() -> Dictionary:
 		var path := String(RELIC_ART_PATHS[level_number])
 		var art := get_node_or_null("RelicArt%d" % int(level_number)) as TextureRect
 		raster_relics_loaded = raster_relics_loaded and (path.ends_with(".webp") or path.ends_with(".png")) and art != null and art.texture != null
+	var opening_labels_readable := true
+	for level_number in [1, 2, 3]:
+		var label := _level_labels.get(level_number) as Label
+		var plate := label.get_theme_stylebox("normal") if label != null else null
+		opening_labels_readable = opening_labels_readable and label != null and label.get_theme_font_size("font_size") >= 25 and plate is StyleBoxFlat and (plate as StyleBoxFlat).bg_color.a >= 0.9
+	var frontier_plate := _frontier_label.get_theme_stylebox("normal") if _frontier_label != null else null
 	return {
 		"authored_level_slots": _level_buttons.size() == visible_route_levels and _level_labels.size() == visible_route_levels,
 		"authored_frontier_slots": _frontier_focus != null and _frontier_label != null,
 		"frontier_raster_loaded": FRONTIER_ART_PATH.ends_with(".webp") and _frontier_focus != null and _frontier_focus.texture != null,
 		"raster_relics_loaded": raster_relics_loaded,
+		"opening_label_readability": opening_labels_readable,
+		"frontier_label_readability": _frontier_label != null and _frontier_label.get_theme_font_size("font_size") >= 20 and frontier_plate is StyleBoxFlat,
 		"runtime_node_factory": false,
 		"runtime_route_vfx_allowed": true,
 	}
