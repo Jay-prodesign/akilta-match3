@@ -2,42 +2,45 @@
 
 
 [sub_resource type="StyleBoxFlat" id="Shell"]
-bg_color = Color(0.035, 0.031, 0.063, 0.985)
+bg_color = Color(0.024, 0.019, 0.038, 0.985)
 border_width_left = 1
-border_width_top = 1
+border_width_top = 2
 border_width_right = 1
 border_width_bottom = 1
-border_color = Color(0.835, 0.678, 0.439, 0.82)
-corner_radius_top_left = 12
-corner_radius_top_right = 12
-corner_radius_bottom_right = 12
-corner_radius_bottom_left = 12
-shadow_color = Color(0, 0, 0, 0.44)
-shadow_size = 8
+border_color = Color(0.878, 0.714, 0.455, 0.88)
+corner_radius_top_left = 18
+corner_radius_top_right = 18
+corner_radius_bottom_right = 8
+corner_radius_bottom_left = 8
+content_margin_left = 5.0
+content_margin_top = 4.0
+content_margin_right = 5.0
+content_margin_bottom = 4.0
+shadow_color = Color(0, 0, 0, 0.62)
+shadow_size = 14
 
 [sub_resource type="StyleBoxFlat" id="NavNormal"]
-bg_color = Color(0.129, 0.09, 0.157, 1)
-border_width_left = 1
+bg_color = Color(0.055, 0.038, 0.071, 0.58)
 border_width_top = 1
-border_width_right = 1
-border_width_bottom = 1
-border_color = Color(0.608, 0.482, 0.569, 0.54)
-corner_radius_top_left = 7
-corner_radius_top_right = 7
-corner_radius_bottom_right = 7
-corner_radius_bottom_left = 7
+border_color = Color(0.831, 0.678, 0.439, 0.12)
+corner_radius_top_left = 13
+corner_radius_top_right = 13
+corner_radius_bottom_right = 13
+corner_radius_bottom_left = 13
 
 [sub_resource type="StyleBoxFlat" id="NavSelected"]
-bg_color = Color(0.286, 0.188, 0.298, 1)
-border_width_left = 2
+bg_color = Color(0.229, 0.128, 0.254, 0.9)
+border_width_left = 1
 border_width_top = 2
-border_width_right = 2
-border_width_bottom = 2
-border_color = Color(0.835, 0.678, 0.439, 1)
-corner_radius_top_left = 7
-corner_radius_top_right = 7
-corner_radius_bottom_right = 7
-corner_radius_bottom_left = 7
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.941, 0.808, 0.541, 0.96)
+corner_radius_top_left = 13
+corner_radius_top_right = 13
+corner_radius_bottom_right = 13
+corner_radius_bottom_left = 13
+shadow_color = Color(0.188, 0.055, 0.235, 0.36)
+shadow_size = 8
 
 [node name="ProductNavigation" type="PanelContainer"]
 layout_mode = 3
@@ -45,10 +48,10 @@ anchors_preset = 10
 anchor_right = 1.0
 anchor_top = 1.0
 anchor_bottom = 1.0
-offset_left = 12.0
-offset_top = -114.0
-offset_right = -12.0
-offset_bottom = -10.0
+offset_left = 6.0
+offset_top = -90.0
+offset_right = -6.0
+offset_bottom = -4.0
 grow_horizontal = 2
 grow_vertical = 0
 z_index = 40
@@ -62,10 +65,10 @@ vertical_scroll_mode = 0
 [node name="Items" type="HBoxContainer" parent="Scroll"]
 layout_mode = 2
 size_flags_horizontal = 3
-theme_override_constants/separation = 2
+theme_override_constants/separation = 3
 
 [node name="NavHouse" type="Button" parent="Scroll/Items"]
-custom_minimum_size = Vector2(0, 94)
+custom_minimum_size = Vector2(0, 76)
 layout_mode = 2
 size_flags_horizontal = 3
 focus_mode = 1
@@ -84,11 +87,11 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
-theme_override_constants/separation = 3
+theme_override_constants/separation = 2
 alignment = 1
 
 [node name="Icon" type="TextureRect" parent="Scroll/Items/NavHouse/Content"]
-custom_minimum_size = Vector2(42, 42)
+custom_minimum_size = Vector2(34, 34)
 layout_mode = 2
 mouse_filter = 2
 expand_mode = 1
@@ -98,12 +101,12 @@ stretch_mode = 5
 layout_mode = 2
 mouse_filter = 2
 theme_override_colors/font_color = Color(0.804, 0.749, 0.788, 1)
-theme_override_font_sizes/font_size = 20
+theme_override_font_sizes/font_size = 16
 text = "HOUSE"
 horizontal_alignment = 1
 
 [node name="NavCurios" type="Button" parent="Scroll/Items"]
-custom_minimum_size = Vector2(0, 94)
+custom_minimum_size = Vector2(0, 76)
 layout_mode = 2
 size_flags_horizontal = 3
 focus_mode = 1
@@ -122,11 +125,11 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
-theme_override_constants/separation = 3
+theme_override_constants/separation = 2
 alignment = 1
 
 [node name="Icon" type="TextureRect" parent="Scroll/Items/NavCurios/Content"]
-custom_minimum_size = Vector2(42, 42)
+custom_minimum_size = Vector2(34, 34)
 layout_mode = 2
 mouse_filter = 2
 expand_mode = 1
@@ -136,12 +139,12 @@ stretch_mode = 5
 layout_mode = 2
 mouse_filter = 2
 theme_override_colors/font_color = Color(0.804, 0.749, 0.788, 1)
-theme_override_font_sizes/font_size = 20
+theme_override_font_sizes/font_size = 16
 text = "CURIOS"
 horizontal_alignment = 1
 
 [node name="NavMap" type="Button" parent="Scroll/Items"]
-custom_minimum_size = Vector2(0, 94)
+custom_minimum_size = Vector2(0, 76)
 layout_mode = 2
 size_flags_horizontal = 3
 focus_mode = 1
@@ -160,11 +163,11 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
-theme_override_constants/separation = 3
+theme_override_constants/separation = 2
 alignment = 1
 
 [node name="Icon" type="TextureRect" parent="Scroll/Items/NavMap/Content"]
-custom_minimum_size = Vector2(42, 42)
+custom_minimum_size = Vector2(34, 34)
 layout_mode = 2
 mouse_filter = 2
 expand_mode = 1
@@ -174,12 +177,12 @@ stretch_mode = 5
 layout_mode = 2
 mouse_filter = 2
 theme_override_colors/font_color = Color(0.804, 0.749, 0.788, 1)
-theme_override_font_sizes/font_size = 20
+theme_override_font_sizes/font_size = 16
 text = "MAP"
 horizontal_alignment = 1
 
 [node name="NavEvents" type="Button" parent="Scroll/Items"]
-custom_minimum_size = Vector2(0, 94)
+custom_minimum_size = Vector2(0, 76)
 layout_mode = 2
 size_flags_horizontal = 3
 focus_mode = 1
@@ -198,11 +201,11 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
-theme_override_constants/separation = 3
+theme_override_constants/separation = 2
 alignment = 1
 
 [node name="Icon" type="TextureRect" parent="Scroll/Items/NavEvents/Content"]
-custom_minimum_size = Vector2(42, 42)
+custom_minimum_size = Vector2(34, 34)
 layout_mode = 2
 mouse_filter = 2
 expand_mode = 1
@@ -212,12 +215,12 @@ stretch_mode = 5
 layout_mode = 2
 mouse_filter = 2
 theme_override_colors/font_color = Color(0.804, 0.749, 0.788, 1)
-theme_override_font_sizes/font_size = 20
+theme_override_font_sizes/font_size = 16
 text = "EVENTS"
 horizontal_alignment = 1
 
 [node name="NavShop" type="Button" parent="Scroll/Items"]
-custom_minimum_size = Vector2(0, 94)
+custom_minimum_size = Vector2(0, 76)
 layout_mode = 2
 size_flags_horizontal = 3
 focus_mode = 1
@@ -236,11 +239,11 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
-theme_override_constants/separation = 3
+theme_override_constants/separation = 2
 alignment = 1
 
 [node name="Icon" type="TextureRect" parent="Scroll/Items/NavShop/Content"]
-custom_minimum_size = Vector2(42, 42)
+custom_minimum_size = Vector2(34, 34)
 layout_mode = 2
 mouse_filter = 2
 expand_mode = 1
@@ -250,6 +253,6 @@ stretch_mode = 5
 layout_mode = 2
 mouse_filter = 2
 theme_override_colors/font_color = Color(0.804, 0.749, 0.788, 1)
-theme_override_font_sizes/font_size = 20
+theme_override_font_sizes/font_size = 16
 text = "SHOP"
 horizontal_alignment = 1
