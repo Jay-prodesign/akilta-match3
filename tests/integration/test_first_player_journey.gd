@@ -214,8 +214,19 @@ func _run() -> void:
 	var shop_disabled_action: Button = shop_preview.get_node_or_null("FeatureLayout/FeatureHero/HeroRow/HeroCopy/ShopDisabledAction") as Button if shop_preview != null else null
 	_expect(shop_currency != null and shop_currency.text.contains("HOUSE COINS") and shop_currency.text.contains("MOONSTONES"), "Shop must expose real local currency balances")
 	_expect(shop_truth != null and shop_truth.text.contains("NOT PURCHASABLE"), "Shop balances must be explicitly non-purchasable")
-	_expect(shop_offer_art != null and shop_offer_art.texture != null, "Shop featured offer must own content artwork")
+	_expect(shop_offer_art != null and shop_offer_art.texture != null, "Shop sealed cabinet preview must own authored content artwork")
+	_expect(shop_offer_art != null and String(shop_offer_art.get_meta("asset_path", "")).ends_with(".webp"), "Shop sealed cabinet preview must use authored raster world art")
+	_expect(shop_offer_art != null and bool(shop_offer_art.get_meta("sealed_preview", false)), "Shop hero art must identify itself as a non-commerce sealed preview")
 	_expect(shop_disabled_action != null and shop_disabled_action.disabled, "Shop commerce CTA must remain disabled before commerce is connected")
+	var shop_notice: Label = shop_preview.get_node_or_null("FeatureLayout/NoPurchasesNotice") as Label if shop_preview != null else null
+	_expect(shop_notice != null and shop_notice.text.contains("NO PRICES") and shop_notice.text.contains("NO PURCHASES") and shop_notice.text.contains("NO PAYMENTS"), "Shop must explicitly disclose that the preview has no prices, purchases or payments")
+	var shop_enabled_commerce := false
+	if shop_preview != null:
+		for node in shop_preview.find_children("", "Button", true, false):
+			var candidate := node as Button
+			if candidate != null and candidate.name != "BackToHouse" and not candidate.disabled and candidate != shop_preview.get_node_or_null("ProductNavigation/Scroll/Items/NavHouse") and candidate.name.begins_with("Shop"):
+				shop_enabled_commerce = true
+	_expect(not shop_enabled_commerce, "Shop sealed preview must not expose any enabled commerce action")
 	if shop_preview != null:
 		shop_preview.get_node("ProductNavigation/Scroll/Items/NavHouse").emit_signal("pressed")
 	await process_frame
