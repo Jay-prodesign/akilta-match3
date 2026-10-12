@@ -114,17 +114,17 @@ text = "OFFLINE · LIVE RESET TIME UNAVAILABLE"
 horizontal_alignment = 1
 
 [node name="MissionEmptyState" type="PanelContainer" parent="MissionLayout"]
-custom_minimum_size = Vector2(0, 560)
+custom_minimum_size = Vector2(0, 440)
 layout_mode = 2
 theme_override_styles/panel = SubResource("Altar")
 
 [node name="EmptyContent" type="VBoxContainer" parent="MissionLayout/MissionEmptyState"]
 layout_mode = 2
-theme_override_constants/separation = 12
+theme_override_constants/separation = 9
 alignment = 1
 
 [node name="MissionRewardArt" type="TextureRect" parent="MissionLayout/MissionEmptyState/EmptyContent"]
-custom_minimum_size = Vector2(300, 245)
+custom_minimum_size = Vector2(250, 190)
 layout_mode = 2
 expand_mode = 1
 stretch_mode = 5
@@ -132,7 +132,7 @@ stretch_mode = 5
 [node name="AltarCopy" type="VBoxContainer" parent="MissionLayout/MissionEmptyState/EmptyContent"]
 layout_mode = 2
 size_flags_horizontal = 3
-theme_override_constants/separation = 14
+theme_override_constants/separation = 9
 alignment = 1
 
 [node name="Headline" type="Label" parent="MissionLayout/MissionEmptyState/EmptyContent/AltarCopy"]
@@ -140,12 +140,13 @@ layout_mode = 2
 theme_override_colors/font_color = Color(1, 0.941, 0.847, 1)
 theme_override_colors/font_outline_color = Color(0.02, 0.014, 0.028, 0.96)
 theme_override_constants/outline_size = 4
-theme_override_font_sizes/font_size = 42
+theme_override_font_sizes/font_size = 38
 text = "THE WEEKLY ALTAR IS QUIET"
 horizontal_alignment = 1
 autowrap_mode = 2
 
 [node name="EmptyBody" type="Label" parent="MissionLayout/MissionEmptyState/EmptyContent/AltarCopy"]
+visible = false
 layout_mode = 2
 theme_override_colors/font_color = Color(0.95, 0.89, 0.92, 1)
 theme_override_colors/font_outline_color = Color(0.02, 0.014, 0.028, 0.94)
@@ -161,7 +162,7 @@ theme_override_colors/font_color = Color(0.86, 0.77, 0.93, 1)
 theme_override_colors/font_outline_color = Color(0.02, 0.014, 0.028, 0.94)
 theme_override_constants/outline_size = 2
 theme_override_font_sizes/font_size = 20
-text = "LIVE RITUALS APPEAR ONLY WHEN A MISSION FEED IS CONNECTED"
+text = "LIVE RITUALS REQUIRE A CONNECTED MISSION FEED"
 horizontal_alignment = 1
 autowrap_mode = 2
 
@@ -170,7 +171,7 @@ layout_mode = 2
 theme_override_colors/font_color = Color(0.95, 0.80, 0.50, 1)
 theme_override_colors/font_outline_color = Color(0.02, 0.014, 0.028, 0.94)
 theme_override_constants/outline_size = 2
-theme_override_font_sizes/font_size = 22
+theme_override_font_sizes/font_size = 21
 text = "OFFLINE · NOTHING TO CLAIM"
 horizontal_alignment = 1
 autowrap_mode = 2
@@ -180,7 +181,7 @@ layout_mode = 2
 theme_override_colors/font_color = Color(0.82, 0.72, 0.90, 1)
 theme_override_colors/font_outline_color = Color(0.02, 0.014, 0.028, 0.92)
 theme_override_constants/outline_size = 2
-theme_override_font_sizes/font_size = 22
+theme_override_font_sizes/font_size = 20
 text = "OPENING CABINET RECORD · 0 / 3 DISPLAYS AWAKENED"
 horizontal_alignment = 1
 autowrap_mode = 2
