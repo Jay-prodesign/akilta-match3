@@ -35,6 +35,9 @@ var _reduced_motion: bool = false
 var _hotspot_layer: Control
 var _hotspot_buttons: Dictionary = {}
 var _house_curio_overlay: Control
+var _keeper_hotspot: Button
+var _keeper_overlay: Control
+const KEEPER_ART_PATH := "res://assets/pieces/black_cat.webp"
 
 func _ready() -> void:
 	play_button.pressed.connect(_on_play_pressed)
@@ -45,6 +48,7 @@ func _ready() -> void:
 	_build_returning_banner()
 	_build_completion_banner()
 	_build_room_hotspots()
+	_build_keeper_hotspot()
 
 func set_available_level_count(value: int) -> void:
 	available_level_count = max(0, value)
@@ -400,6 +404,158 @@ func _house_curio_data(curio_id: String) -> Dictionary:
 			}
 		_:
 			return {}
+
+func _build_keeper_hotspot() -> void:
+	if room_view == null or _keeper_hotspot != null:
+		return
+	if _hotspot_layer == null:
+		_build_room_hotspots()
+	var button := Button.new()
+	button.name = "KeeperHotspot"
+	button.anchor_left = 0.27
+	button.anchor_right = 0.27
+	button.anchor_top = 0.56
+	button.anchor_bottom = 0.56
+	button.offset_left = -34
+	button.offset_right = 34
+	button.offset_top = -34
+	button.offset_bottom = 34
+	button.custom_minimum_size = Vector2(68, 68)
+	button.icon = PieceAssetLoader.ornament(KEEPER_ART_PATH)
+	button.expand_icon = true
+	button.tooltip_text = "Meet the Keeper"
+	button.focus_mode = Control.FOCUS_ALL
+	button.mouse_default_cursor_shape = Control.CURSOR_POINTING_HAND
+	var normal := StyleBoxFlat.new()
+	normal.bg_color = Color("#0E0A14", 0.20)
+	normal.border_color = Color("#D5AD70", 0.46)
+	normal.set_border_width_all(2)
+	normal.set_corner_radius_all(34)
+	var hover := normal.duplicate() as StyleBoxFlat
+	hover.bg_color = Color("#2C1A31", 0.72)
+	hover.border_color = Color("#FFF1B6", 0.92)
+	button.add_theme_stylebox_override("normal", normal)
+	button.add_theme_stylebox_override("hover", hover)
+	button.add_theme_stylebox_override("pressed", hover)
+	button.add_theme_stylebox_override("focus", hover)
+	button.pressed.connect(_open_keeper_card)
+	_hotspot_layer.add_child(button)
+	_keeper_hotspot = button
+
+func _open_keeper_card() -> void:
+	_close_keeper_card()
+	var overlay := Control.new()
+	overlay.name = "KeeperRoleOverlay"
+	overlay.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	overlay.z_index = 150
+	overlay.mouse_filter = Control.MOUSE_FILTER_STOP
+	add_child(overlay)
+	_keeper_overlay = overlay
+
+	var veil := ColorRect.new()
+	veil.color = Color(0.012, 0.008, 0.018, 0.64)
+	veil.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	veil.mouse_filter = Control.MOUSE_FILTER_STOP
+	overlay.add_child(veil)
+
+	var card := PanelContainer.new()
+	card.name = "Card"
+	card.anchor_left = 0.10
+	card.anchor_right = 0.90
+	card.anchor_top = 0.17
+	card.anchor_bottom = 0.50
+	var shell := StyleBoxFlat.new()
+	shell.bg_color = Color("#0D0912", 0.985)
+	shell.border_color = Color("#D5AD70", 0.86)
+	shell.set_border_width_all(2)
+	shell.set_corner_radius_all(20)
+	shell.content_margin_left = 22
+	shell.content_margin_right = 22
+	shell.content_margin_top = 18
+	shell.content_margin_bottom = 18
+	shell.shadow_color = Color(0, 0, 0, 0.66)
+	shell.shadow_size = 18
+	card.add_theme_stylebox_override("panel", shell)
+	overlay.add_child(card)
+
+	var content := VBoxContainer.new()
+	content.name = "Content"
+	content.add_theme_constant_override("separation", 8)
+	card.add_child(content)
+
+	var kicker := Label.new()
+	kicker.text = "HOUSE FAMILIAR"
+	kicker.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	kicker.add_theme_color_override("font_color", Color("#D5AD70"))
+	kicker.add_theme_font_size_override("font_size", 18)
+	content.add_child(kicker)
+
+	var art := TextureRect.new()
+	art.name = "KeeperArt"
+	art.custom_minimum_size = Vector2(0, 170)
+	art.texture = PieceAssetLoader.ornament(KEEPER_ART_PATH)
+	art.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+	art.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+	content.add_child(art)
+
+	var title := Label.new()
+	title.name = "Name"
+	title.text = "THE KEEPER"
+	title.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	title.add_theme_color_override("font_color", Color("#FFF0D8"))
+	title.add_theme_font_size_override("font_size", 30)
+	content.add_child(title)
+
+	var role := Label.new()
+	role.name = "Role"
+	role.text = "PUZZLE GUIDE · NO COST · NO BOARD CHANGES"
+	role.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	role.add_theme_color_override("font_color", Color("#F0CE8A"))
+	role.add_theme_font_size_override("font_size", 18)
+	content.add_child(role)
+
+	var body := Label.new()
+	body.name = "Body"
+	body.text = "In a puzzle, ASK KEEPER marks one legal adjacent swap. The Keeper never spends currency, changes the board, or adds moves."
+	body.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	body.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	body.add_theme_color_override("font_color", Color("#E7D9DF"))
+	body.add_theme_font_size_override("font_size", 20)
+	content.add_child(body)
+
+	var close := Button.new()
+	close.name = "Close"
+	close.text = "RETURN TO HOUSE"
+	close.custom_minimum_size = Vector2(0, 56)
+	close.add_theme_font_size_override("font_size", 20)
+	var close_box := StyleBoxFlat.new()
+	close_box.bg_color = Color("#4A1A51")
+	close_box.border_color = Color("#D5AD70")
+	close_box.set_border_width_all(2)
+	close_box.set_corner_radius_all(12)
+	close.add_theme_stylebox_override("normal", close_box)
+	close.add_theme_stylebox_override("hover", close_box)
+	close.add_theme_stylebox_override("pressed", close_box)
+	close.add_theme_color_override("font_color", Color("#FFF0D8"))
+	content.add_child(close)
+	close.pressed.connect(_close_keeper_card)
+
+func _close_keeper_card() -> void:
+	if _keeper_overlay != null and is_instance_valid(_keeper_overlay):
+		_keeper_overlay.queue_free()
+	_keeper_overlay = null
+
+func keeper_house_contract() -> Dictionary:
+	return {
+		"role": "non_mutating_legal_move_guide",
+		"asset": KEEPER_ART_PATH,
+		"raster_runtime": KEEPER_ART_PATH.ends_with(".webp") or KEEPER_ART_PATH.ends_with(".png"),
+		"hotspot_visible": _keeper_hotspot != null and _keeper_hotspot.visible,
+		"touch_target_ok": _keeper_hotspot != null and _keeper_hotspot.custom_minimum_size.x >= 56.0 and _keeper_hotspot.custom_minimum_size.y >= 56.0,
+		"spends_resources": false,
+		"changes_board": false,
+		"adds_moves": false,
+	}
 
 func show_restoration_ceremony(curio_id: String, stage: int) -> void:
 	if get_node_or_null("RestorationOverlay") != null:
