@@ -44,9 +44,9 @@ static func attach(screen: Control, progress, profile_handler: Callable = Callab
 	row.add_theme_constant_override("separation", 4)
 	panel.add_child(row)
 
-	_add_chip(row, "LifeResource", "res://assets/ui/ui_heart.svg", "FULL")
-	_add_chip(row, "CoinResource", "res://assets/ui/ui_coin.svg", "12,340")
-	_add_chip(row, "GemResource", "res://assets/ui/ui_gem.svg", "520")
+	# Life consumption/refill is not connected yet; do not expose a fake life economy.
+	_add_chip(row, "CoinResource", "res://assets/ui/ui_coin.svg", "0")
+	_add_chip(row, "GemResource", "res://assets/ui/ui_gem.svg", "0")
 
 	var profile := Button.new()
 	profile.name = "KeeperProfile"
@@ -81,18 +81,13 @@ static func attach(screen: Control, progress, profile_handler: Callable = Callab
 static func refresh(panel: PanelContainer, progress) -> void:
 	if panel == null:
 		return
-	var lives := 5
-	var coins := 12340
-	var gems := 520
+	var coins := 0
+	var gems := 0
 	if progress != null:
-		lives = clampi(int(progress.lives), 0, 5)
 		coins = maxi(0, int(progress.coins))
 		gems = maxi(0, int(progress.gems))
-	var life := panel.find_child("LifeResource", true, false) as Label
 	var coin := panel.find_child("CoinResource", true, false) as Label
 	var gem := panel.find_child("GemResource", true, false) as Label
-	if life != null:
-		life.text = "FULL" if lives >= 5 else "%d / 5" % lives
 	if coin != null:
 		coin.text = _format_number(coins)
 	if gem != null:
