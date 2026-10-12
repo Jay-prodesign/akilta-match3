@@ -108,9 +108,9 @@ jobs:
           hw.keyboard=yes
           showDeviceFrame=no
           EOF
-          nohup emulator -avd cat_coven_runtime             -no-window -noaudio -no-boot-anim -no-snapshot             -gpu host -accel auto             > artifacts/emulator.log 2>&1 &
+          nohup xvfb-run -a emulator -avd cat_coven_runtime             -noaudio -no-boot-anim -no-snapshot             -gpu host -accel auto             > artifacts/emulator.log 2>&1 &
           echo $! > artifacts/emulator.pid
-          adb wait-for-device
+          timeout 180s adb wait-for-device
           for i in $(seq 1 180); do
             if [ "$(adb shell getprop sys.boot_completed 2>/dev/null | tr -d '\r')" = "1" ]; then
               break
