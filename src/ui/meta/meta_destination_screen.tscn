@@ -109,7 +109,7 @@ layout_mode = 2
 theme_override_colors/font_color = Color(0.831, 0.678, 0.439, 1)
 theme_override_colors/font_outline_color = Color(0.02, 0.014, 0.028, 0.95)
 theme_override_constants/outline_size = 4
-theme_override_font_sizes/font_size = 16
+theme_override_font_sizes/font_size = 18
 text = "THE HOUSE OF CURIOS"
 horizontal_alignment = 1
 
@@ -118,16 +118,16 @@ layout_mode = 2
 theme_override_colors/font_color = Color(1, 0.941, 0.847, 1)
 theme_override_colors/font_outline_color = Color(0.02, 0.014, 0.028, 0.97)
 theme_override_constants/outline_size = 6
-theme_override_font_sizes/font_size = 42
+theme_override_font_sizes/font_size = 44
 text = "DESTINATION"
 horizontal_alignment = 1
 
 [node name="Detail" type="Label" parent="FeatureLayout"]
 layout_mode = 2
-theme_override_colors/font_color = Color(0.89, 0.824, 0.83, 1)
+theme_override_colors/font_color = Color(0.95, 0.89, 0.90, 1)
 theme_override_colors/font_outline_color = Color(0.02, 0.014, 0.028, 0.9)
 theme_override_constants/outline_size = 3
-theme_override_font_sizes/font_size = 20
+theme_override_font_sizes/font_size = 24
 text = "Destination detail"
 horizontal_alignment = 1
 autowrap_mode = 2
@@ -138,7 +138,7 @@ layout_mode = 2
 theme_override_colors/font_color = Color(0.831, 0.678, 0.439, 1)
 theme_override_colors/font_outline_color = Color(0.02, 0.014, 0.028, 0.9)
 theme_override_constants/outline_size = 3
-theme_override_font_sizes/font_size = 16
+theme_override_font_sizes/font_size = 20
 text = "OPENING RITUAL · 0 / 3 DISPLAYS AWAKENED"
 horizontal_alignment = 1
 autowrap_mode = 2
@@ -147,7 +147,7 @@ autowrap_mode = 2
 visible = false
 layout_mode = 2
 theme_override_colors/font_color = Color(0.831, 0.678, 0.439, 1)
-theme_override_font_sizes/font_size = 15
+theme_override_font_sizes/font_size = 19
 text = "THE EMPORIUM IS SEALED · NO PURCHASES OR PAYMENTS"
 horizontal_alignment = 1
 autowrap_mode = 2
@@ -156,15 +156,15 @@ autowrap_mode = 2
 visible = false
 layout_mode = 2
 theme_override_colors/font_color = Color(0.95, 0.816, 0.545, 1)
-theme_override_font_sizes/font_size = 17
+theme_override_font_sizes/font_size = 21
 text = "HOUSE COINS  0 · MOONSTONES  0"
 horizontal_alignment = 1
 
 [node name="ShopCurrencyTruth" type="Label" parent="FeatureLayout"]
 visible = false
 layout_mode = 2
-theme_override_colors/font_color = Color(0.75, 0.65, 0.84, 1)
-theme_override_font_sizes/font_size = 13
+theme_override_colors/font_color = Color(0.82, 0.72, 0.90, 1)
+theme_override_font_sizes/font_size = 18
 text = "EARNED IN PLAY · NOT PURCHASABLE"
 horizontal_alignment = 1
 
@@ -199,7 +199,7 @@ alignment = 1
 [node name="FeatureHeroKicker" type="Label" parent="FeatureLayout/FeatureHero/HeroRow/HeroCopy"]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.831, 0.678, 0.439, 1)
-theme_override_font_sizes/font_size = 16
+theme_override_font_sizes/font_size = 18
 text = "STATE"
 
 [node name="FeatureHeroTitle" type="Label" parent="FeatureLayout/FeatureHero/HeroRow/HeroCopy"]
@@ -207,14 +207,14 @@ layout_mode = 2
 theme_override_colors/font_color = Color(1, 0.941, 0.847, 1)
 theme_override_colors/font_outline_color = Color(0.02, 0.014, 0.028, 0.9)
 theme_override_constants/outline_size = 3
-theme_override_font_sizes/font_size = 28
+theme_override_font_sizes/font_size = 32
 text = "HERO TITLE"
 autowrap_mode = 2
 
 [node name="HeroBody" type="Label" parent="FeatureLayout/FeatureHero/HeroRow/HeroCopy"]
 layout_mode = 2
-theme_override_colors/font_color = Color(0.84, 0.76, 0.82, 1)
-theme_override_font_sizes/font_size = 19
+theme_override_colors/font_color = Color(0.90, 0.84, 0.88, 1)
+theme_override_font_sizes/font_size = 24
 text = "Hero body"
 autowrap_mode = 2
 
@@ -225,7 +225,7 @@ layout_mode = 2
 disabled = true
 theme_override_colors/font_color = Color(0.93, 0.86, 0.91, 1)
 theme_override_colors/font_disabled_color = Color(0.67, 0.61, 0.67, 1)
-theme_override_font_sizes/font_size = 16
+theme_override_font_sizes/font_size = 20
 theme_override_styles/normal = SubResource("Secondary")
 theme_override_styles/disabled = SubResource("Secondary")
 text = "COMMERCE NOT CONNECTED"
@@ -240,7 +240,7 @@ custom_minimum_size = Vector2(0, 62)
 layout_mode = 2
 size_flags_horizontal = 3
 theme_override_colors/font_color = Color(1, 0.941, 0.847, 1)
-theme_override_font_sizes/font_size = 18
+theme_override_font_sizes/font_size = 22
 theme_override_styles/normal = SubResource("Primary")
 theme_override_styles/hover = SubResource("Primary")
 theme_override_styles/pressed = SubResource("Primary")
@@ -252,7 +252,7 @@ layout_mode = 2
 size_flags_horizontal = 3
 theme_override_colors/font_color = Color(0.93, 0.86, 0.91, 1)
 theme_override_colors/font_disabled_color = Color(0.56, 0.49, 0.56, 1)
-theme_override_font_sizes/font_size = 18
+theme_override_font_sizes/font_size = 22
 theme_override_styles/normal = SubResource("Secondary")
 theme_override_styles/hover = SubResource("Secondary")
 theme_override_styles/pressed = SubResource("Secondary")
@@ -271,22 +271,22 @@ theme_override_constants/separation = 5
 
 [node name="DailyPracticeKicker" type="Label" parent="FeatureLayout/DailyPracticeCard/DailyContent"]
 layout_mode = 2
-theme_override_colors/font_color = Color(0.75, 0.65, 0.84, 1)
-theme_override_font_sizes/font_size = 14
+theme_override_colors/font_color = Color(0.82, 0.72, 0.90, 1)
+theme_override_font_sizes/font_size = 18
 text = "DEVICE-LOCAL DAILY PRACTICE"
 horizontal_alignment = 1
 
 [node name="DailyPracticeTitle" type="Label" parent="FeatureLayout/DailyPracticeCard/DailyContent"]
 layout_mode = 2
 theme_override_colors/font_color = Color(1, 0.941, 0.847, 1)
-theme_override_font_sizes/font_size = 20
+theme_override_font_sizes/font_size = 24
 text = "DAILY HOUSE RITUAL · SEALED"
 horizontal_alignment = 1
 
 [node name="DailyPracticeTruth" type="Label" parent="FeatureLayout/DailyPracticeCard/DailyContent"]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.831, 0.678, 0.439, 1)
-theme_override_font_sizes/font_size = 13
+theme_override_font_sizes/font_size = 18
 text = "COMPLETE AN OPENING RITUAL TO UNLOCK LOCAL PRACTICE"
 horizontal_alignment = 1
 autowrap_mode = 2
@@ -297,7 +297,7 @@ layout_mode = 2
 disabled = true
 theme_override_colors/font_color = Color(1, 0.941, 0.847, 1)
 theme_override_colors/font_disabled_color = Color(0.56, 0.49, 0.56, 1)
-theme_override_font_sizes/font_size = 17
+theme_override_font_sizes/font_size = 22
 theme_override_styles/normal = SubResource("Secondary")
 theme_override_styles/hover = SubResource("Primary")
 theme_override_styles/pressed = SubResource("Primary")
@@ -309,7 +309,7 @@ visible = false
 custom_minimum_size = Vector2(0, 60)
 layout_mode = 2
 theme_override_colors/font_color = Color(1, 0.941, 0.847, 1)
-theme_override_font_sizes/font_size = 18
+theme_override_font_sizes/font_size = 22
 theme_override_styles/normal = SubResource("Primary")
 theme_override_styles/hover = SubResource("Primary")
 theme_override_styles/pressed = SubResource("Primary")
@@ -320,7 +320,7 @@ visible = false
 custom_minimum_size = Vector2(0, 60)
 layout_mode = 2
 theme_override_colors/font_color = Color(1, 0.941, 0.847, 1)
-theme_override_font_sizes/font_size = 18
+theme_override_font_sizes/font_size = 22
 theme_override_styles/normal = SubResource("Primary")
 theme_override_styles/hover = SubResource("Primary")
 theme_override_styles/pressed = SubResource("Primary")
@@ -359,7 +359,7 @@ alignment = 1
 [node name="Kicker" type="Label" parent="FeatureLayout/CardScroll/Cards/Card1/Row/Copy"]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.831, 0.678, 0.439, 1)
-theme_override_font_sizes/font_size = 13
+theme_override_font_sizes/font_size = 16
 text = "KICKER"
 
 [node name="Title" type="Label" parent="FeatureLayout/CardScroll/Cards/Card1/Row/Copy"]
@@ -367,24 +367,24 @@ layout_mode = 2
 theme_override_colors/font_color = Color(0.96, 0.9, 0.84, 1)
 theme_override_colors/font_outline_color = Color(0.02, 0.014, 0.028, 0.96)
 theme_override_constants/outline_size = 2
-theme_override_font_sizes/font_size = 25
+theme_override_font_sizes/font_size = 28
 text = "TITLE"
 
 [node name="Body" type="Label" parent="FeatureLayout/CardScroll/Cards/Card1/Row/Copy"]
 layout_mode = 2
-theme_override_colors/font_color = Color(0.84, 0.76, 0.82, 1)
+theme_override_colors/font_color = Color(0.90, 0.84, 0.88, 1)
 theme_override_colors/font_outline_color = Color(0.02, 0.014, 0.028, 0.96)
 theme_override_constants/outline_size = 2
-theme_override_font_sizes/font_size = 18
+theme_override_font_sizes/font_size = 23
 text = "BODY"
 autowrap_mode = 2
 
 [node name="Status" type="Label" parent="FeatureLayout/CardScroll/Cards/Card1/Row/Copy"]
 layout_mode = 2
-theme_override_colors/font_color = Color(0.75, 0.65, 0.84, 1)
+theme_override_colors/font_color = Color(0.82, 0.72, 0.90, 1)
 theme_override_colors/font_outline_color = Color(0.02, 0.014, 0.028, 0.96)
 theme_override_constants/outline_size = 2
-theme_override_font_sizes/font_size = 16
+theme_override_font_sizes/font_size = 19
 text = "STATUS"
 autowrap_mode = 2
 
@@ -411,7 +411,7 @@ alignment = 1
 [node name="Kicker" type="Label" parent="FeatureLayout/CardScroll/Cards/Card2/Row/Copy"]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.831, 0.678, 0.439, 1)
-theme_override_font_sizes/font_size = 13
+theme_override_font_sizes/font_size = 16
 text = "KICKER"
 
 [node name="Title" type="Label" parent="FeatureLayout/CardScroll/Cards/Card2/Row/Copy"]
@@ -419,24 +419,24 @@ layout_mode = 2
 theme_override_colors/font_color = Color(0.96, 0.9, 0.84, 1)
 theme_override_colors/font_outline_color = Color(0.02, 0.014, 0.028, 0.96)
 theme_override_constants/outline_size = 2
-theme_override_font_sizes/font_size = 25
+theme_override_font_sizes/font_size = 28
 text = "TITLE"
 
 [node name="Body" type="Label" parent="FeatureLayout/CardScroll/Cards/Card2/Row/Copy"]
 layout_mode = 2
-theme_override_colors/font_color = Color(0.84, 0.76, 0.82, 1)
+theme_override_colors/font_color = Color(0.90, 0.84, 0.88, 1)
 theme_override_colors/font_outline_color = Color(0.02, 0.014, 0.028, 0.96)
 theme_override_constants/outline_size = 2
-theme_override_font_sizes/font_size = 18
+theme_override_font_sizes/font_size = 23
 text = "BODY"
 autowrap_mode = 2
 
 [node name="Status" type="Label" parent="FeatureLayout/CardScroll/Cards/Card2/Row/Copy"]
 layout_mode = 2
-theme_override_colors/font_color = Color(0.75, 0.65, 0.84, 1)
+theme_override_colors/font_color = Color(0.82, 0.72, 0.90, 1)
 theme_override_colors/font_outline_color = Color(0.02, 0.014, 0.028, 0.96)
 theme_override_constants/outline_size = 2
-theme_override_font_sizes/font_size = 16
+theme_override_font_sizes/font_size = 19
 text = "STATUS"
 autowrap_mode = 2
 
@@ -463,7 +463,7 @@ alignment = 1
 [node name="Kicker" type="Label" parent="FeatureLayout/CardScroll/Cards/Card3/Row/Copy"]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.831, 0.678, 0.439, 1)
-theme_override_font_sizes/font_size = 13
+theme_override_font_sizes/font_size = 16
 text = "KICKER"
 
 [node name="Title" type="Label" parent="FeatureLayout/CardScroll/Cards/Card3/Row/Copy"]
@@ -471,24 +471,24 @@ layout_mode = 2
 theme_override_colors/font_color = Color(0.96, 0.9, 0.84, 1)
 theme_override_colors/font_outline_color = Color(0.02, 0.014, 0.028, 0.96)
 theme_override_constants/outline_size = 2
-theme_override_font_sizes/font_size = 25
+theme_override_font_sizes/font_size = 28
 text = "TITLE"
 
 [node name="Body" type="Label" parent="FeatureLayout/CardScroll/Cards/Card3/Row/Copy"]
 layout_mode = 2
-theme_override_colors/font_color = Color(0.84, 0.76, 0.82, 1)
+theme_override_colors/font_color = Color(0.90, 0.84, 0.88, 1)
 theme_override_colors/font_outline_color = Color(0.02, 0.014, 0.028, 0.96)
 theme_override_constants/outline_size = 2
-theme_override_font_sizes/font_size = 18
+theme_override_font_sizes/font_size = 23
 text = "BODY"
 autowrap_mode = 2
 
 [node name="Status" type="Label" parent="FeatureLayout/CardScroll/Cards/Card3/Row/Copy"]
 layout_mode = 2
-theme_override_colors/font_color = Color(0.75, 0.65, 0.84, 1)
+theme_override_colors/font_color = Color(0.82, 0.72, 0.90, 1)
 theme_override_colors/font_outline_color = Color(0.02, 0.014, 0.028, 0.96)
 theme_override_constants/outline_size = 2
-theme_override_font_sizes/font_size = 16
+theme_override_font_sizes/font_size = 19
 text = "STATUS"
 autowrap_mode = 2
 
@@ -505,36 +505,36 @@ theme_override_constants/separation = 5
 [node name="Kicker" type="Label" parent="FeatureLayout/SaveHealthCard/SaveHealthContent"]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.831, 0.678, 0.439, 1)
-theme_override_font_sizes/font_size = 14
+theme_override_font_sizes/font_size = 16
 text = "SAVE & ACCOUNT"
 horizontal_alignment = 1
 
 [node name="LocalSaveStatus" type="Label" parent="FeatureLayout/SaveHealthCard/SaveHealthContent"]
 layout_mode = 2
 theme_override_colors/font_color = Color(1, 0.941, 0.847, 1)
-theme_override_font_sizes/font_size = 20
+theme_override_font_sizes/font_size = 24
 text = "LOCAL SAVE · DEVICE-LOCAL"
 horizontal_alignment = 1
 
 [node name="LocalSaveDetail" type="Label" parent="FeatureLayout/SaveHealthCard/SaveHealthContent"]
 layout_mode = 2
-theme_override_colors/font_color = Color(0.84, 0.76, 0.82, 1)
-theme_override_font_sizes/font_size = 17
+theme_override_colors/font_color = Color(0.90, 0.84, 0.88, 1)
+theme_override_font_sizes/font_size = 21
 text = "Progress is stored on this device."
 horizontal_alignment = 1
 autowrap_mode = 2
 
 [node name="CloudSyncStatus" type="Label" parent="FeatureLayout/SaveHealthCard/SaveHealthContent"]
 layout_mode = 2
-theme_override_colors/font_color = Color(0.75, 0.65, 0.84, 1)
-theme_override_font_sizes/font_size = 16
+theme_override_colors/font_color = Color(0.82, 0.72, 0.90, 1)
+theme_override_font_sizes/font_size = 20
 text = "CLOUD SYNC · NOT CONNECTED"
 horizontal_alignment = 1
 
 [node name="CloudSyncDetail" type="Label" parent="FeatureLayout/SaveHealthCard/SaveHealthContent"]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.72, 0.66, 0.72, 1)
-theme_override_font_sizes/font_size = 16
+theme_override_font_sizes/font_size = 20
 text = "No account sign-in, remote backup, or cross-device restore is active in this build."
 horizontal_alignment = 1
 autowrap_mode = 2
@@ -545,7 +545,7 @@ layout_mode = 2
 theme_override_colors/font_color = Color(0.831, 0.678, 0.439, 1)
 theme_override_colors/font_outline_color = Color(0.02, 0.014, 0.028, 0.9)
 theme_override_constants/outline_size = 3
-theme_override_font_sizes/font_size = 14
+theme_override_font_sizes/font_size = 18
 text = "TRUTH"
 horizontal_alignment = 1
 vertical_alignment = 1
@@ -555,7 +555,7 @@ autowrap_mode = 2
 custom_minimum_size = Vector2(0, 58)
 layout_mode = 2
 theme_override_colors/font_color = Color(0.96, 0.9, 0.84, 1)
-theme_override_font_sizes/font_size = 19
+theme_override_font_sizes/font_size = 22
 theme_override_styles/normal = SubResource("Secondary")
 theme_override_styles/hover = SubResource("Primary")
 theme_override_styles/pressed = SubResource("Primary")
