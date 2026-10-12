@@ -57,6 +57,17 @@ const BOOSTER_ART_PATHS := {
 	"plus_moves": "res://assets/pieces/potion.webp",
 	"retry": "res://assets/pieces/skull.webp"
 }
+const OBJECTIVE_ART_PATHS := {
+	"moon": "res://assets/pieces/moon_sigil.webp",
+	"rose": "res://assets/pieces/thorn_rose.webp",
+	"moth": "res://assets/pieces/luna_moth.webp",
+	"key": "res://assets/pieces/curio_key.webp",
+	"leaf": "res://assets/pieces/night_ivy.webp",
+	"cat": "res://assets/pieces/black_cat.webp",
+	"candle": "res://assets/pieces/candle.webp",
+	"skull": "res://assets/pieces/skull.webp",
+	"wax_seal": "res://assets/blockers/ch01_blocker_wax_seal_intact_v01.webp"
+}
 var _potion_boost_button: Button
 var _retry_boost_button: Button
 var _resource_life_label: Label
@@ -82,6 +93,7 @@ const LAST_MOVE_THRESHOLD := 1
 @onready var eyebrow_label: Label = $Layout/Eyebrow
 @onready var title_label: Label = $Layout/Title
 @onready var board_view = $Layout/BoardView
+@onready var objective_icon: TextureRect = $Layout/HUDPlate/HUD/ObjectiveIcon
 @onready var objective_label: Label = $Layout/HUDPlate/HUD/Objective
 @onready var moves_label: Label = $Layout/HUDPlate/HUD/Moves
 @onready var pause_button: Button = $Layout/HUDPlate/HUD/Pause
@@ -107,6 +119,10 @@ const LAST_MOVE_THRESHOLD := 1
 @onready var _level_badge_label: Label = $ResourceBar/Resources/LevelBadge
 @onready var _booster_tray: PanelContainer = $BoosterTray
 @onready var _hint_boost_button: Button = $BoosterTray/BoosterActions/HintBoost
+@onready var _sealed_boost_a: Button = $BoosterTray/BoosterActions/SealedBoostA
+@onready var _sealed_boost_b: Button = $BoosterTray/BoosterActions/SealedBoostB
+@onready var _sealed_boost_c: Button = $BoosterTray/BoosterActions/SealedBoostC
+@onready var _settings_shortcut: Button = $BoosterTray/BoosterActions/SettingsShortcut
 @onready var _resource_coin_label: Label = $ResourceBar/Resources/CoinChip/Content/CoinResource
 @onready var _resource_gem_label: Label = $ResourceBar/Resources/GemChip/Content/GemResource
 @onready var _resource_coin_icon: TextureRect = $ResourceBar/Resources/CoinChip/Content/Icon
@@ -143,7 +159,12 @@ func _ready() -> void:
 	_result_gem_icon.texture = PieceAssetLoader.ornament("res://assets/ui/ui_gem.svg")
 	_result_keeper_cat.texture = PieceAssetLoader.ornament(KEEPER_ART_PATH)
 	_hint_boost_button.icon = PieceAssetLoader.ornament(String(BOOSTER_ART_PATHS["hint"]))
+	_sealed_boost_a.icon = PieceAssetLoader.ornament(String(BOOSTER_ART_PATHS["plus_moves"]))
+	_sealed_boost_b.icon = PieceAssetLoader.ornament(String(BOOSTER_ART_PATHS["retry"]))
+	_sealed_boost_c.icon = PieceAssetLoader.ornament("res://assets/pieces/moon_sigil.webp")
+	_settings_shortcut.icon = PieceAssetLoader.ornament("res://assets/ui/ui_settings.svg")
 	_hint_boost_button.pressed.connect(_use_hint_boost)
+	_settings_shortcut.pressed.connect(func(): settings_requested.emit())
 	_resource_life_label = null
 	_potion_boost_button = null
 	_retry_boost_button = null
@@ -536,8 +557,10 @@ func _style_impact_hint(mode: String) -> void:
 	hint_label.add_theme_font_size_override("font_size", size_px)
 
 func _refresh_hud() -> void:
+	if objective_icon != null:
+		objective_icon.texture = PieceAssetLoader.ornament(_objective_art_path())
 	if board_state == null:
-		objective_label.text = "Awaken the collection"
+		objective_label.text = "TARGET · AWAKEN THE COLLECTION"
 		moves_label.text = "—"
 		return
 	_apply_moves_urgency()
@@ -568,15 +591,24 @@ func _refresh_hud() -> void:
 		]
 	if String(board_state.objective_type) == "collect_family":
 		var family_label: String = String(board_state.objective_family).capitalize()
-		objective_label.text = "Gather %s sigils  %d/%d" % [
-			family_label,
+		objective_label.text = "TARGET · %s SIGILS   %d / %d" % [
+			family_label.to_upper(),
 			int(board_state.objective_progress),
 			int(board_state.objective_target)
 		]
 	elif String(board_state.objective_type) == "clear_blockers":
-		objective_label.text = "Break wax seal layers  %d/%d" % [_objective_progress_value(), _objective_target_value()]
+		objective_label.text = "TARGET · WAX SEAL LAYERS   %d / %d" % [_objective_progress_value(), _objective_target_value()]
 	else:
-		objective_label.text = "Awaken the collection"
+		objective_label.text = "TARGET · AWAKEN THE COLLECTION"
+
+func _objective_art_path() -> String:
+	if board_state != null and String(board_state.objective_type) == "clear_blockers":
+		return String(OBJECTIVE_ART_PATHS["wax_seal"])
+	var family := current_objective_family
+	if board_state != null:
+		family = String(board_state.objective_family)
+	return String(OBJECTIVE_ART_PATHS.get(family, OBJECTIVE_ART_PATHS["moon"]))
+
 
 func _remaining_blocker_hp() -> int:
 	if board_state == null:
@@ -608,10 +640,10 @@ func _present_objective_progress() -> void:
 	var target := _objective_target_value()
 	var complete := progress >= target
 	if String(board_state.objective_type) == "clear_blockers":
-		objective_label.text = "WAX SEAL LAYERS %d/%d · %s" % [progress, target, "DISPLAY OPEN" if complete else "+%d THIS MOVE" % _last_objective_delta]
+		objective_label.text = "TARGET · WAX SEAL LAYERS %d/%d · %s" % [progress, target, "DISPLAY OPEN" if complete else "+%d THIS MOVE" % _last_objective_delta]
 	else:
 		var family := String(board_state.objective_family).to_upper()
-		objective_label.text = "%s SIGILS %d/%d · %s" % [family, progress, target, "OBJECTIVE COMPLETE" if complete else "+%d THIS MOVE" % _last_objective_delta]
+		objective_label.text = "TARGET · %s SIGILS %d/%d · %s" % [family, progress, target, "OBJECTIVE COMPLETE" if complete else "+%d THIS MOVE" % _last_objective_delta]
 	objective_label.set_meta("objective_feedback_state", "complete" if complete else "progress")
 	objective_label.add_theme_color_override("font_color", Color("#FFFFFF") if _high_contrast else (Color("#F0CE8A") if complete else Color("#E4CDEB")))
 	if _objective_pulse_tween != null and _objective_pulse_tween.is_valid():
@@ -983,11 +1015,12 @@ func _position_booster_tray() -> void:
 	var screen_rect := get_global_rect()
 	var desired_top := hint_rect.end.y - screen_rect.position.y + 8.0
 	var safe_bottom := maxf(0.0, size.y - 12.0)
-	var top := minf(desired_top, maxf(0.0, safe_bottom - 70.0))
+	var tray_height := 96.0
+	var top := minf(desired_top, maxf(0.0, safe_bottom - tray_height))
 	_booster_tray.anchor_top = 0.0
 	_booster_tray.anchor_bottom = 0.0
 	_booster_tray.offset_top = top
-	_booster_tray.offset_bottom = top + 70.0
+	_booster_tray.offset_bottom = top + tray_height
 
 
 func gameplay_presentation_contract() -> Dictionary:
@@ -995,6 +1028,10 @@ func gameplay_presentation_contract() -> Dictionary:
 		"authored_hud_plate": get_node_or_null("Layout/HUDPlate/HUD") != null,
 		"authored_resource_bar": _level_badge_label != null and _resource_coin_label != null and _resource_gem_label != null,
 		"authored_keeper_tray": _booster_tray != null and _hint_boost_button != null,
+		"authored_booster_menu": _booster_tray != null and _booster_tray.get_node_or_null("BoosterActions") != null and (_booster_tray.get_node("BoosterActions") as HBoxContainer).get_child_count() == 5,
+		"truthful_sealed_slots": _sealed_boost_a != null and _sealed_boost_a.disabled and _sealed_boost_b != null and _sealed_boost_b.disabled and _sealed_boost_c != null and _sealed_boost_c.disabled,
+		"authored_target_moves_hierarchy": objective_icon != null and objective_icon.texture != null and objective_label != null and objective_label.get_theme_stylebox("normal") != null and moves_label != null and moves_label.get_theme_stylebox("normal") != null,
+		"authored_board_frame": get_node_or_null("Layout/BoardView/OrnateFrame") != null,
 		"authored_result_values": _result_reward_values != null,
 		"authored_result_proclamation": _result_proclamation != null and _result_keeper_cat != null,
 		"runtime_shell_factory": false,
