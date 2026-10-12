@@ -5,44 +5,56 @@
 [ext_resource type="Script" path="res://src/ui/shared/moon_cameo_ritual_view.gd" id="3_cameo"]
 
 [sub_resource type="StyleBoxFlat" id="ButtonNormal"]
-bg_color = Color(0.294, 0.102, 0.318, 0.98)
+bg_color = Color(0.286, 0.075, 0.322, 0.985)
 border_width_left = 2
 border_width_top = 2
 border_width_right = 2
 border_width_bottom = 2
-border_color = Color(0.851, 0.71, 0.416, 0.92)
-corner_radius_top_left = 12
-corner_radius_top_right = 12
-corner_radius_bottom_right = 12
-corner_radius_bottom_left = 12
-shadow_color = Color(0, 0, 0, 0.54)
-shadow_size = 12
+border_color = Color(0.925, 0.76, 0.48, 0.96)
+corner_radius_top_left = 28
+corner_radius_top_right = 28
+corner_radius_bottom_right = 28
+corner_radius_bottom_left = 28
+content_margin_left = 34.0
+content_margin_top = 8.0
+content_margin_right = 34.0
+content_margin_bottom = 8.0
+shadow_color = Color(0.11, 0.02, 0.14, 0.74)
+shadow_size = 18
 
 [sub_resource type="StyleBoxFlat" id="ButtonHover"]
-bg_color = Color(0.39, 0.16, 0.42, 1)
+bg_color = Color(0.412, 0.122, 0.45, 1)
 border_width_left = 2
 border_width_top = 2
 border_width_right = 2
 border_width_bottom = 2
-border_color = Color(0.976, 0.835, 0.552, 1)
-corner_radius_top_left = 12
-corner_radius_top_right = 12
-corner_radius_bottom_right = 12
-corner_radius_bottom_left = 12
-shadow_color = Color(0, 0, 0, 0.6)
-shadow_size = 14
+border_color = Color(1, 0.886, 0.623, 1)
+corner_radius_top_left = 28
+corner_radius_top_right = 28
+corner_radius_bottom_right = 28
+corner_radius_bottom_left = 28
+content_margin_left = 34.0
+content_margin_top = 8.0
+content_margin_right = 34.0
+content_margin_bottom = 8.0
+shadow_color = Color(0.17, 0.035, 0.2, 0.8)
+shadow_size = 20
 
 [sub_resource type="StyleBoxFlat" id="ButtonPressed"]
-bg_color = Color(0.235, 0.08, 0.255, 1)
+bg_color = Color(0.218, 0.055, 0.251, 1)
 border_width_left = 2
 border_width_top = 2
 border_width_right = 2
 border_width_bottom = 2
-border_color = Color(0.851, 0.71, 0.416, 0.9)
-corner_radius_top_left = 12
-corner_radius_top_right = 12
-corner_radius_bottom_right = 12
-corner_radius_bottom_left = 12
+border_color = Color(0.878, 0.714, 0.455, 0.96)
+corner_radius_top_left = 28
+corner_radius_top_right = 28
+corner_radius_bottom_right = 28
+corner_radius_bottom_left = 28
+content_margin_left = 34.0
+content_margin_top = 8.0
+content_margin_right = 34.0
+content_margin_bottom = 8.0
 
 [sub_resource type="StyleBoxFlat" id="CurioChip"]
 bg_color = Color(0.055, 0.035, 0.065, 0.82)
@@ -142,7 +154,7 @@ anchor_bottom = 1.0
 offset_left = 14.0
 offset_top = 62.0
 offset_right = -14.0
-offset_bottom = -8.0
+offset_bottom = -96.0
 grow_horizontal = 2
 grow_vertical = 2
 theme_override_constants/separation = 6
@@ -378,12 +390,13 @@ horizontal_alignment = 1
 autowrap_mode = 2
 
 [node name="PlayButton" type="Button" parent="Layout"]
-custom_minimum_size = Vector2(0, 60)
+custom_minimum_size = Vector2(690, 78)
 layout_mode = 2
+size_flags_horizontal = 4
 theme_override_colors/font_color = Color(0.988, 0.933, 0.831, 1)
 theme_override_colors/font_hover_color = Color(1, 0.965, 0.86, 1)
 theme_override_colors/font_pressed_color = Color(0.988, 0.933, 0.831, 1)
-theme_override_font_sizes/font_size = 22
+theme_override_font_sizes/font_size = 25
 theme_override_styles/normal = SubResource("ButtonNormal")
 theme_override_styles/hover = SubResource("ButtonHover")
 theme_override_styles/pressed = SubResource("ButtonPressed")
