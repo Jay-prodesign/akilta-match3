@@ -44,6 +44,8 @@ var _pending_terminal_result: String = ""
 var _pending_hud_refresh: bool = false
 var haptics = HapticsController.new()
 var _potion_used_for_attempt := false
+var _idle_hint_seconds: float = 0.0
+const AUTO_HINT_DELAY_SECONDS := 9.0
 var _level_badge_label: Label
 var _booster_tray: PanelContainer
 var _resource_life_label: Label
@@ -81,6 +83,20 @@ var _reduced_motion: bool = false
 @onready var result_house_change: Label = $ResultOverlay/Card/Content/HouseChange
 @onready var result_ritual: Control = $ResultOverlay/Card/Content/RewardRitual
 @onready var result_action: Button = $ResultOverlay/Card/Content/Action
+
+func _process(delta: float) -> void:
+	if board_state == null or result_overlay.visible or pause_overlay.visible or _pending_terminal_result != "":
+		_idle_hint_seconds = 0.0
+		return
+	if board_view.has_method("is_motion_active") and bool(board_view.is_motion_active()):
+		_idle_hint_seconds = 0.0
+		return
+	_idle_hint_seconds += delta
+	if _idle_hint_seconds >= AUTO_HINT_DELAY_SECONDS:
+		_idle_hint_seconds = 0.0
+		var legal_move: Dictionary = MoveFinder.first_legal_move(board_state)
+		if not legal_move.is_empty() and board_view.has_method("set_teaching_move"):
+			board_view.set_teaching_move(legal_move["from"], legal_move["to"])
 
 func _ready() -> void:
 	world_backdrop.texture = ScreenArt.texture("gameplay_bg_curio_boutique")
@@ -138,6 +154,7 @@ func load_level_path(path: String, seed_value: int = 1001) -> bool:
 	current_level_path = path
 	current_seed = seed_value
 	_potion_used_for_attempt = false
+	_idle_hint_seconds = 0.0
 	current_level_id = String(parsed.get("id", ""))
 	_update_level_badge()
 	current_reward_curio = String(parsed.get("reward_curio", ""))
@@ -222,6 +239,7 @@ func _configure_teaching_move(level_data: Dictionary) -> void:
 		board_view.clear_teaching_move()
 
 func show_pause() -> bool:
+	_idle_hint_seconds = 0.0
 	if board_state == null or result_overlay.visible or pause_overlay.visible:
 		return false
 	if board_view.has_method("is_motion_active") and bool(board_view.is_motion_active()):
@@ -252,6 +270,7 @@ func _on_pause_exit() -> void:
 	level_exit_requested.emit()
 
 func attempt_swap(from: Vector2i, to: Vector2i):
+	_idle_hint_seconds = 0.0
 	if board_state == null or result_overlay.visible or pause_overlay.visible:
 		return null
 	if board_view.has_method("is_motion_active") and bool(board_view.is_motion_active()):
