@@ -26,8 +26,8 @@ signal back_requested
 const PieceAssetLoader = preload("res://src/match3/presentation/piece_asset_loader.gd")
 const ScreenArt = preload("res://src/ui/shared/screen_art_registry.gd")
 
-const MOON_SEALED_PATH := "res://assets/curios/ch01_curio_moon_cameo_sealed_v01.svg"
-const MOON_AWAKENED_PATH := "res://assets/curios/ch01_curio_moon_cameo_awakened_v01.svg"
+const MOON_SEALED_PATH := "res://assets/curios/ch01_curio_moon_cameo_sealed_v01.webp"
+const MOON_AWAKENED_PATH := "res://assets/curios/ch01_curio_moon_cameo_awakened_v01.webp"
 var _moon_textures: Dictionary = {}
 
 var progress
@@ -37,8 +37,8 @@ var _detail_overlay: Control
 func _ready() -> void:
 	back_button.pressed.connect(func(): back_requested.emit())
 	_install_moon_art()
-	_install_reward_art(slot2_number, "res://assets/curios/ch01_curio_moth_reliquary.svg")
-	_install_reward_art(slot3_number, "res://assets/curios/ch01_curio_thorned_locket.svg")
+	_install_reward_art(slot2_number, "res://assets/curios/ch01_curio_moth_reliquary.png")
+	_install_reward_art(slot3_number, "res://assets/curios/ch01_curio_thorned_locket.png")
 	_install_collection_atmosphere()
 	_install_card_actions()
 	_refresh()
@@ -344,9 +344,9 @@ func _detail_texture(curio_id: String, awakened: bool) -> Texture2D:
 		"moon_cameo":
 			return _load_moon_texture(MOON_AWAKENED_PATH if awakened else MOON_SEALED_PATH)
 		"moth_reliquary":
-			return PieceAssetLoader.ornament("res://assets/curios/ch01_curio_moth_reliquary.svg")
+			return PieceAssetLoader.ornament("res://assets/curios/ch01_curio_moth_reliquary.png")
 		"thorned_locket":
-			return PieceAssetLoader.ornament("res://assets/curios/ch01_curio_thorned_locket.svg")
+			return PieceAssetLoader.ornament("res://assets/curios/ch01_curio_thorned_locket.png")
 		_:
 			return null
 
