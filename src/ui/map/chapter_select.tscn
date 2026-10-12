@@ -255,7 +255,8 @@ theme_override_styles/hover = SubResource("LockedHover")
 theme_override_styles/pressed = SubResource("LockedHover")
 theme_override_styles/focus = SubResource("LockedHover")
 text = "WITCH ATELIER
-SEALED · FUTURE CHAPTER"
+POTIONS & EXPERIMENTS
+SEALED"
 alignment = 1
 
 [node name="Chapter_dark_vanity" type="Button" parent="Layout/ChapterGrid"]
@@ -269,7 +270,8 @@ theme_override_styles/hover = SubResource("LockedHover")
 theme_override_styles/pressed = SubResource("LockedHover")
 theme_override_styles/focus = SubResource("LockedHover")
 text = "DARK VANITY
-SEALED · FUTURE CHAPTER"
+MIRRORS & SECRETS
+SEALED"
 alignment = 1
 
 [node name="Chapter_archive" type="Button" parent="Layout/ChapterGrid"]
@@ -283,7 +285,8 @@ theme_override_styles/hover = SubResource("LockedHover")
 theme_override_styles/pressed = SubResource("LockedHover")
 theme_override_styles/focus = SubResource("LockedHover")
 text = "THE ARCHIVE
-SEALED · FUTURE CHAPTER"
+LOST KNOWLEDGE
+SEALED"
 alignment = 1
 
 [node name="Chapter_moon_conservatory" type="Button" parent="Layout/ChapterGrid"]
@@ -297,7 +300,8 @@ theme_override_styles/hover = SubResource("LockedHover")
 theme_override_styles/pressed = SubResource("LockedHover")
 theme_override_styles/focus = SubResource("LockedHover")
 text = "MOON CONSERVATORY
-SEALED · FUTURE CHAPTER"
+CELESTIAL BOTANICALS
+SEALED"
 alignment = 1
 
 [node name="Chapter_cemetery_garden" type="Button" parent="Layout/ChapterGrid"]
@@ -311,7 +315,8 @@ theme_override_styles/hover = SubResource("LockedHover")
 theme_override_styles/pressed = SubResource("LockedHover")
 theme_override_styles/focus = SubResource("LockedHover")
 text = "CEMETERY GARDEN
-SEALED · FUTURE CHAPTER"
+RESTING BEAUTIES
+SEALED"
 alignment = 1
 
 [node name="LockReason" type="Label" parent="Layout"]
