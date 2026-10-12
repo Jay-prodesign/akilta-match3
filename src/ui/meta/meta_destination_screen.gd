@@ -12,16 +12,21 @@ var _feature_key: String = ""
 var _daily_level: int = 0
 
 @onready var world_art: TextureRect = $WorldArt
-@onready var title: Label = $Layout/Title
-@onready var detail: Label = $Layout/Detail
-@onready var hero_art: TextureRect = $Layout/Hero/HeroRow/HeroArt
-@onready var hero_kicker: Label = $Layout/Hero/HeroRow/HeroCopy/HeroKicker
-@onready var hero_title: Label = $Layout/Hero/HeroRow/HeroCopy/HeroTitle
-@onready var hero_body: Label = $Layout/Hero/HeroRow/HeroCopy/HeroBody
-@onready var primary_action: Button = $Layout/Actions/Primary
-@onready var secondary_action: Button = $Layout/Actions/Secondary
-@onready var truth_strip: Label = $Layout/TruthStrip
-@onready var back_button: Button = $Layout/Back
+@onready var title: Label = $FeatureLayout/Title
+@onready var detail: Label = $FeatureLayout/Detail
+@onready var hero_art: TextureRect = $FeatureLayout/Hero/HeroRow/HeroArt
+@onready var hero_kicker: Label = $FeatureLayout/Hero/HeroRow/HeroCopy/HeroKicker
+@onready var hero_title: Label = $FeatureLayout/Hero/HeroRow/HeroCopy/HeroTitle
+@onready var hero_body: Label = $FeatureLayout/Hero/HeroRow/HeroCopy/HeroBody
+@onready var primary_action: Button = $FeatureLayout/Actions/Primary
+@onready var secondary_action: Button = $FeatureLayout/Actions/Secondary
+@onready var save_health_card: PanelContainer = $FeatureLayout/SaveHealthCard
+@onready var local_save_status: Label = $FeatureLayout/SaveHealthCard/SaveHealthContent/LocalSaveStatus
+@onready var local_save_detail: Label = $FeatureLayout/SaveHealthCard/SaveHealthContent/LocalSaveDetail
+@onready var cloud_sync_status: Label = $FeatureLayout/SaveHealthCard/SaveHealthContent/CloudSyncStatus
+@onready var cloud_sync_detail: Label = $FeatureLayout/SaveHealthCard/SaveHealthContent/CloudSyncDetail
+@onready var truth_strip: Label = $FeatureLayout/TruthStrip
+@onready var back_button: Button = $FeatureLayout/Back
 
 func _ready() -> void:
 	primary_action.pressed.connect(_on_primary_pressed)
@@ -41,6 +46,11 @@ func configure(feature_key: String, state: Dictionary) -> bool:
 	var background_id := ""
 	var hero_path := ""
 	var cards: Array[Dictionary] = []
+	save_health_card.visible = _feature_key == "profile"
+	local_save_status.text = String(state.get("save_status", "LOCAL SAVE · DEVICE-LOCAL"))
+	local_save_detail.text = String(state.get("save_detail", "Progress is stored on this device."))
+	cloud_sync_status.text = "CLOUD SYNC · NOT CONNECTED"
+	cloud_sync_detail.text = "No account sign-in, remote backup, or cross-device restore is active in this build."
 
 	match _feature_key:
 		"events":
@@ -111,9 +121,9 @@ func configure(feature_key: String, state: Dictionary) -> bool:
 
 func _apply_cards(cards: Array[Dictionary]) -> void:
 	var nodes: Array[PanelContainer] = [
-		$Layout/CardScroll/Cards/Card1,
-		$Layout/CardScroll/Cards/Card2,
-		$Layout/CardScroll/Cards/Card3,
+		$FeatureLayout/CardScroll/Cards/Card1,
+		$FeatureLayout/CardScroll/Cards/Card2,
+		$FeatureLayout/CardScroll/Cards/Card3,
 	]
 	for i in nodes.size():
 		var card := nodes[i]
