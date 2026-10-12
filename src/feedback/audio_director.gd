@@ -9,6 +9,7 @@ const AMBIENT_PATH := "res://assets/audio/music/curio_house_ambient.ogg"
 const CHIME_PATH := "res://assets/audio/sfx/ritual_chime.wav"
 
 const FEEDBACK := {
+	"ui": {"pitch": 0.82, "gain_db": -38.0},
 	"match": {"pitch": 0.88, "gain_db": -34.0},
 	"special": {"pitch": 0.94, "gain_db": -32.0},
 	"win": {"pitch": 0.98, "gain_db": -28.0},
@@ -82,22 +83,22 @@ func request_feedback(kind: String) -> bool:
 	if not FEEDBACK.has(kind):
 		return false
 	_ensure_players()
-	if kind != "match" and _chime_stream == null:
+	if kind not in ["match", "ui"] and _chime_stream == null:
 		_load_candidates()
-	if kind != "match" and _chime_stream == null:
+	if kind not in ["match", "ui"] and _chime_stream == null:
 		return false
 	var profile: Dictionary = FEEDBACK[kind]
 	_feedback_counts[kind] = int(_feedback_counts.get(kind, 0)) + 1
 	if _play_sink.is_valid():
 		_play_sink.call(kind, profile.duplicate(true))
 		return true
-	if kind == "match":
+	if kind in ["match", "ui"]:
 		if _soft_match_stream == null:
 			_soft_match_stream = _make_soft_match_stream()
 		match_player.stream = _soft_match_stream
-		var variation: float = float([0.94, 1.0, 1.035][int(_feedback_counts[kind]) % 3])
+		var variation: float = 0.86 if kind == "ui" else float([0.94, 1.0, 1.035][int(_feedback_counts[kind]) % 3])
 		match_player.pitch_scale = variation
-		match_player.volume_db = -34.0
+		match_player.volume_db = -38.0 if kind == "ui" else -34.0
 		match_player.play()
 		return true
 	sfx_player.stream = _chime_stream
@@ -120,9 +121,11 @@ func contract() -> Dictionary:
 		"chime_loaded": _chime_stream != null,
 		"soft_match_loaded": _soft_match_stream != null,
 		"match_feedback": "procedural_soft_wood_glass_tap",
+		"ui_feedback": "procedural_soft_ui_tap",
 		"mix_profile": "restrained_dark_cabinet_v3",
 		"ambient_gain_db": -34.0,
 		"match_gain_db": -34.0,
+		"ui_gain_db": -38.0,
 		"music_bus": String(music_player.bus) if music_player != null else "",
 		"sfx_bus": String(sfx_player.bus) if sfx_player != null else "",
 		"feedback": FEEDBACK.duplicate(true),

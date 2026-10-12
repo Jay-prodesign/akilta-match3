@@ -133,6 +133,8 @@ func _run() -> void:
 	_expect(str(app.current_route_name()) == "house", "restoration Continue must return to House")
 	var house_curios_nav: Button = awakened_house.get_node_or_null("ProductNavigation/Scroll/Items/NavCurios") as Button
 	_expect(house_curios_nav != null and house_curios_nav.visible, "House navigation must return after restoration completes")
+	var house_active_nav: Button = awakened_house.get_node_or_null("ProductNavigation/Scroll/Items/NavHouse") as Button
+	_expect(house_active_nav != null and house_active_nav.disabled and String(house_active_nav.get_meta("interaction_state", "")) == "selected", "active House tab must be visibly selected and non-repeatable")
 	if house_curios_nav != null:
 		house_curios_nav.emit_signal("pressed")
 	await process_frame
@@ -172,6 +174,8 @@ func _run() -> void:
 	var events_preview = app.current_screen()
 	_expect(events_preview != null and events_preview.name == "EventsScreen" and events_preview.get_node("FeatureLayout/FeatureTitle").text == "EVENT CENTER", "Events tab must open as the S10 Event Center screen")
 	_expect(events_preview != null and events_preview.get_node_or_null("ProductNavigation") != null, "Events screen must retain shared product navigation")
+	var events_active_nav: Button = events_preview.get_node_or_null("ProductNavigation/Scroll/Items/NavEvents") as Button if events_preview != null else null
+	_expect(events_active_nav != null and events_active_nav.disabled and String(events_active_nav.get_meta("interaction_state", "")) == "selected", "active Events tab must be selected and duplicate-safe")
 	if events_preview != null:
 		var weekly_action: Button = events_preview.get_node_or_null("FeatureLayout/WeeklyMissionsAction") as Button
 		_expect(weekly_action != null, "Event Center must expose the S09 Weekly Rituals destination")
@@ -207,6 +211,8 @@ func _run() -> void:
 	var shop_preview = app.current_screen()
 	_expect(shop_preview != null and shop_preview.name == "ShopScreen" and shop_preview.get_node("FeatureLayout/FeatureTitle").text == "THE CURIO EMPORIUM", "Shop must open directly from Events navigation")
 	_expect(shop_preview != null and shop_preview.get_node_or_null("ProductNavigation") != null, "Shop screen must retain shared product navigation")
+	var shop_active_nav: Button = shop_preview.get_node_or_null("ProductNavigation/Scroll/Items/NavShop") as Button if shop_preview != null else null
+	_expect(shop_active_nav != null and shop_active_nav.disabled and String(shop_active_nav.get_meta("interaction_state", "")) == "selected", "active Shop tab must be selected and duplicate-safe")
 	_expect(shop_preview != null and shop_preview.get_node_or_null("FeatureLayout/NoPurchasesNotice") != null, "Shop must truthfully expose that purchases are disabled")
 	var shop_currency: Label = shop_preview.get_node_or_null("FeatureLayout/ShopCurrencySummary") as Label if shop_preview != null else null
 	var shop_truth: Label = shop_preview.get_node_or_null("FeatureLayout/ShopCurrencyTruth") as Label if shop_preview != null else null
@@ -216,6 +222,11 @@ func _run() -> void:
 	_expect(shop_truth != null and shop_truth.text.contains("NOT PURCHASABLE"), "Shop balances must be explicitly non-purchasable")
 	_expect(shop_offer_art != null and shop_offer_art.texture != null, "Shop featured offer must own content artwork")
 	_expect(shop_disabled_action != null and shop_disabled_action.disabled, "Shop commerce CTA must remain disabled before commerce is connected")
+	var ui_audio_before: int = int(app.audio_director.get_feedback_count("ui"))
+	app._on_shell_navigation_requested("house")
+	app._on_shell_navigation_requested("events")
+	_expect(app.audio_director.get_feedback_count("ui") == ui_audio_before + 1, "duplicate shell navigation in one frame must emit feedback only once")
+	await process_frame
 	if shop_preview != null:
 		shop_preview.get_node("ProductNavigation/Scroll/Items/NavHouse").emit_signal("pressed")
 	await process_frame

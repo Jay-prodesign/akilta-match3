@@ -31,6 +31,7 @@ on:
       - "assets/board/**"
       - "assets/curios/**"
       - "src/ui/shared/**"
+      - "src/feedback/**"
       - "src/settings/**"
       - "src/ui/settings/**"
       - "assets/manifests/screen_contracts.json"
