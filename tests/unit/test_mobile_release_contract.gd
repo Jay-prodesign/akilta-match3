@@ -9,7 +9,7 @@ func _run() -> void:
 	var project := ConfigFile.new()
 	_expect(project.load("res://project.godot") == OK, "project.godot must parse")
 	_expect(String(project.get_value("application", "config/name", "")) == "Cat & Coven", "native product identity must be Cat & Coven")
-	_expect(String(project.get_value("application", "config/icon", "")) == "res://assets/pieces/black_cat.webp", "native project icon must use first-party Cat art")
+	_expect(String(project.get_value("application", "config/icon", "")) == "res://assets/ui/cat_coven_launch.png", "native project icon must use first-party Cat art")
 	_expect(bool(project.get_value("application", "boot_splash/show_image", false)), "native launch artwork must be enabled")
 	_expect(String(project.get_value("application", "boot_splash/image", "")) == "res://assets/mobile/black_cat_launch.png", "native launch must use the valid first-party Cat PNG")
 	_expect(int(project.get_value("display", "window/handheld/orientation", 0)) == 1, "mobile release must remain portrait")
