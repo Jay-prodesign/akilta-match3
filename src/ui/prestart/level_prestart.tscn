@@ -1,4 +1,4 @@
-[gd_scene load_steps=7 format=3]
+[gd_scene load_steps=11 format=3]
 
 [ext_resource type="Script" path="res://src/ui/prestart/level_prestart.gd" id="1_pre"]
 [ext_resource type="Script" path="res://src/ui/shared/moon_cameo_ritual_view.gd" id="2_cameo"]
@@ -61,6 +61,46 @@ content_margin_right = 14.0
 content_margin_top = 6.0
 content_margin_bottom = 6.0
 
+[sub_resource type="StyleBoxFlat" id="StartHover"]
+bg_color = Color(0.38, 0.22, 0.36, 1)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.976, 0.835, 0.552, 1)
+corner_radius_top_left = 12
+corner_radius_top_right = 12
+corner_radius_bottom_right = 12
+corner_radius_bottom_left = 12
+
+[sub_resource type="StyleBoxFlat" id="AidPanel"]
+bg_color = Color(0.071, 0.051, 0.094, 0.94)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.831, 0.678, 0.439, 0.46)
+corner_radius_top_left = 12
+corner_radius_top_right = 12
+corner_radius_bottom_right = 12
+corner_radius_bottom_left = 12
+content_margin_left = 10.0
+content_margin_top = 10.0
+content_margin_right = 10.0
+content_margin_bottom = 10.0
+
+[sub_resource type="StyleBoxFlat" id="AidChip"]
+bg_color = Color(0.157, 0.078, 0.176, 0.96)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.831, 0.678, 0.439, 0.44)
+corner_radius_top_left = 22
+corner_radius_top_right = 22
+corner_radius_bottom_right = 22
+corner_radius_bottom_left = 22
+
 [node name="LevelPrestart" type="Control"]
 layout_mode = 3
 anchors_preset = 15
@@ -78,6 +118,17 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 color = Color(0.025, 0.019, 0.035, 1)
+
+[node name="NorthStarWorldBackdrop" type="TextureRect" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+expand_mode = 1
+stretch_mode = 6
 
 [node name="Layout" type="VBoxContainer" parent="."]
 layout_mode = 1
@@ -122,6 +173,19 @@ clip_contents = true
 script = ExtResource("2_cameo")
 mode = "prestart"
 glow_strength = 0.5
+
+[node name="LevelArtwork" type="TextureRect" parent="Layout/Card/Content/RitualArt"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+show_behind_parent = true
+expand_mode = 1
+stretch_mode = 6
+modulate = Color(0.88, 0.82, 0.9, 0.72)
 
 [node name="Level" type="Label" parent="Layout/Card/Content"]
 layout_mode = 2
@@ -168,18 +232,92 @@ text = "Wake the Moon Cameo. The first cabinet will remember this victory."
 horizontal_alignment = 1
 autowrap_mode = 2
 
+[node name="RitualAids" type="PanelContainer" parent="Layout/Card/Content"]
+custom_minimum_size = Vector2(0, 102)
+layout_mode = 2
+theme_override_styles/panel = SubResource("AidPanel")
+
+[node name="Column" type="VBoxContainer" parent="Layout/Card/Content/RitualAids"]
+layout_mode = 2
+theme_override_constants/separation = 5
+
+[node name="RitualAidsHeading" type="Label" parent="Layout/Card/Content/RitualAids/Column"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.831, 0.678, 0.439, 1)
+theme_override_font_sizes/font_size = 18
+text = "RITUAL HELP"
+horizontal_alignment = 1
+
+[node name="AidRow" type="HBoxContainer" parent="Layout/Card/Content/RitualAids/Column"]
+layout_mode = 2
+theme_override_constants/separation = 6
+
+[node name="KeeperChip" type="PanelContainer" parent="Layout/Card/Content/RitualAids/Column/AidRow"]
+custom_minimum_size = Vector2(0, 56)
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_styles/panel = SubResource("AidChip")
+
+[node name="Content" type="HBoxContainer" parent="Layout/Card/Content/RitualAids/Column/AidRow/KeeperChip"]
+layout_mode = 2
+theme_override_constants/separation = 4
+alignment = 1
+
+[node name="Art" type="TextureRect" parent="Layout/Card/Content/RitualAids/Column/AidRow/KeeperChip/Content"]
+custom_minimum_size = Vector2(36, 36)
+layout_mode = 2
+mouse_filter = 2
+expand_mode = 1
+stretch_mode = 5
+
+[node name="Caption" type="Label" parent="Layout/Card/Content/RitualAids/Column/AidRow/KeeperChip/Content"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.96, 0.9, 0.83, 1)
+theme_override_font_sizes/font_size = 20
+text = "ASK KEEPER"
+
+[node name="RecoveryChip" type="PanelContainer" parent="Layout/Card/Content/RitualAids/Column/AidRow"]
+custom_minimum_size = Vector2(0, 56)
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_styles/panel = SubResource("AidChip")
+
+[node name="Content" type="HBoxContainer" parent="Layout/Card/Content/RitualAids/Column/AidRow/RecoveryChip"]
+layout_mode = 2
+theme_override_constants/separation = 4
+alignment = 1
+
+[node name="Art" type="TextureRect" parent="Layout/Card/Content/RitualAids/Column/AidRow/RecoveryChip/Content"]
+custom_minimum_size = Vector2(36, 36)
+layout_mode = 2
+mouse_filter = 2
+expand_mode = 1
+stretch_mode = 5
+
+[node name="Caption" type="Label" parent="Layout/Card/Content/RitualAids/Column/AidRow/RecoveryChip/Content"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.96, 0.9, 0.83, 1)
+theme_override_font_sizes/font_size = 20
+text = "FAIL RECOVERY · +3"
+
 [node name="Start" type="Button" parent="Layout/Card/Content"]
 custom_minimum_size = Vector2(0, 72)
 layout_mode = 2
 theme_override_colors/font_color = Color(0.988, 0.933, 0.831, 1)
+theme_override_colors/font_hover_color = Color(0.988, 0.933, 0.831, 1)
 theme_override_font_sizes/font_size = 26
 theme_override_styles/normal = SubResource("Start")
+theme_override_styles/hover = SubResource("StartHover")
+theme_override_styles/pressed = SubResource("StartHover")
 text = "PLAY"
 
 [node name="Back" type="Button" parent="Layout"]
-custom_minimum_size = Vector2(0, 58)
+custom_minimum_size = Vector2(0, 64)
 layout_mode = 2
 theme_override_colors/font_color = Color(0.945, 0.91, 0.866, 1)
-theme_override_font_sizes/font_size = 20
+theme_override_colors/font_hover_color = Color(0.988, 0.933, 0.831, 1)
+theme_override_font_sizes/font_size = 21
 theme_override_styles/normal = SubResource("Back")
+theme_override_styles/hover = SubResource("StartHover")
+theme_override_styles/pressed = SubResource("StartHover")
 text = "BACK TO HOUSE"

@@ -48,6 +48,7 @@ on:
       - "tests/unit/test_reliquary_production_screen.gd"
       - "tests/unit/test_house_authored_state_family.gd"
       - "tests/unit/test_gameplay_authored_presentation_shell.gd"
+      - "tests/unit/test_prestart_authored_production_screen.gd"
       - "tests/unit/test_meta_destination_screen.gd"
       - "assets/manifests/screen_contracts.json"
       - "assets/manifests/screen_asset_manifest.json"
@@ -366,6 +367,18 @@ jobs:
           if [ "$status" -ne 0 ]; then exit "$status"; fi
           if grep -Eq "SCRIPT ERROR:|(^| )ERROR:|TEST_FAIL:" <<<"$output"; then exit 1; fi
           grep -Fq "TEST_PASS: authored Reliquary production display" <<<"$output"
+
+      - name: Run authored prestart production screen contract
+        shell: bash
+        run: |
+          set +e
+          output=$(timeout 35s ./godot --headless --path . -s res://tests/unit/test_prestart_authored_production_screen.gd 2>&1)
+          status=$?
+          set -e
+          printf '%s\n' "$output"
+          if [ "$status" -ne 0 ]; then exit "$status"; fi
+          if grep -Eq "SCRIPT ERROR:|(^| )ERROR:|TEST_FAIL:" <<<"$output"; then exit 1; fi
+          grep -Fq "TEST_PASS: authored prestart production screen" <<<"$output"
 
       - name: Run authored gameplay presentation shell contract
         shell: bash
