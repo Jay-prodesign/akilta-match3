@@ -334,7 +334,7 @@ func _capture() -> void:
 	var completed_chapters = app.current_screen()
 	var completed_boutique: Button = completed_chapters.get_node_or_null("Layout/ChapterGrid/CurioBoutiqueButton") as Button
 	var completed_summary: Label = completed_chapters.get_node_or_null("Layout/ChapterSummary") as Label
-	if completed_boutique == null or not completed_boutique.text.contains("RESTORED WING · 3 / 3 DISPLAYS") or not completed_boutique.text.contains("REVISIT RITUALS"):
+	if completed_boutique == null or not completed_boutique.text.contains("RARE FINDS · RESTORED 3 / 3") or not completed_boutique.text.contains("REVISIT RITUALS"):
 		return _fail(app, "completed Chapter Select must identify the restored 3/3 Curio Boutique")
 	if completed_summary == null or not completed_summary.text.begins_with("The opening wing is restored"):
 		return _fail(app, "completed Chapter Select must describe the restored opening wing")
