@@ -755,8 +755,13 @@ func show_settings() -> bool:
 	if _settings_screen.has_method("set_return_context"):
 		_settings_screen.set_return_context(navigation.route_name().to_lower())
 	_settings_screen.bind_settings(user_settings)
+	if _settings_screen.has_signal("interaction_feedback_requested"):
+		_settings_screen.interaction_feedback_requested.connect(_on_settings_feedback_requested)
 	_settings_screen.close_requested.connect(close_settings)
 	return true
+
+func _on_settings_feedback_requested(_kind: String = "ui") -> void:
+	_emit_shell_feedback()
 
 func close_settings() -> bool:
 	if navigation == null or not navigation.close_settings():
@@ -852,6 +857,8 @@ func _on_presentation_settings_changed(state: Dictionary) -> void:
 		ui_haptics.apply_settings(state)
 	if _current_screen != null and is_instance_valid(_current_screen) and _current_screen.has_method("apply_presentation_settings"):
 		_current_screen.apply_presentation_settings(state)
+	if _settings_screen != null and is_instance_valid(_settings_screen) and _settings_screen.has_method("apply_presentation_settings"):
+		_settings_screen.apply_presentation_settings(state)
 
 func _level_path(level_number: int) -> String:
 	return "res://content/levels/ch01/level_%03d.json" % level_number

@@ -203,14 +203,22 @@ func _capture() -> void:
 	if settings_close == null or settings_close.text != "RETURN TO PROFILE":
 		return _fail(app, "Profile Settings must return to its origin screen")
 	var reduced_toggle: CheckButton = settings_panel.get_node_or_null("Card/Content/Reduced") as CheckButton
+	var contrast_toggle: CheckButton = settings_panel.get_node_or_null("Card/Content/Contrast") as CheckButton
 	var saved_note: Label = settings_panel.get_node_or_null("Card/Content/SavedNote") as Label
-	if reduced_toggle == null or saved_note == null:
+	if reduced_toggle == null or contrast_toggle == null or saved_note == null:
 		return _fail(app, "Settings changed-state controls missing")
 	reduced_toggle.button_pressed = true
 	reduced_toggle.emit_signal("toggled", true)
 	await _frames(2)
 	if not saved_note.text.contains("SAVED ON THIS DEVICE") or not saved_note.text.contains("REDUCED MOTION UPDATED"):
 		return _fail(app, "Settings changed state must confirm persisted preference")
+	contrast_toggle.button_pressed = true
+	contrast_toggle.emit_signal("toggled", true)
+	await _frames(2)
+	if not saved_note.text.contains("HIGH CONTRAST UPDATED"):
+		return _fail(app, "Settings high-contrast changed state must confirm persisted preference")
+	if settings_panel.has_method("state_contract") and not bool(settings_panel.state_contract().get("high_contrast", false)):
+		return _fail(app, "open Settings must apply high contrast before capture")
 	if not await _save(app, "progression-final-settings.png"):
 		return
 	if not app.close_settings():
