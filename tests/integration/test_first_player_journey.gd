@@ -41,7 +41,7 @@ func _run() -> void:
 		_expect(bool(house_keeper.get("raster_runtime", false)), "House Keeper must use raster runtime art")
 		_expect(bool(house_keeper.get("touch_target_ok", false)), "House Keeper hotspot must meet the mobile touch target contract")
 		_expect(not bool(house_keeper.get("spends_resources", true)) and not bool(house_keeper.get("changes_board", true)) and not bool(house_keeper.get("adds_moves", true)), "House Keeper role must remain non-economic and non-mutating")
-	var keeper_hotspot: Button = house.get_node_or_null("Layout/RoomView/CurioHotspots/KeeperHotspot") as Button
+	var keeper_hotspot: Button = house.get_node_or_null("RoomView/CurioHotspots/KeeperHotspot") as Button
 	_expect(keeper_hotspot != null and not keeper_hotspot.disabled, "House must expose an interactive Keeper hotspot")
 	if keeper_hotspot != null:
 		keeper_hotspot.emit_signal("pressed")
