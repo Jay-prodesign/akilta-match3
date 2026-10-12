@@ -15,6 +15,7 @@ const SettingsScene = preload("res://src/ui/settings/settings_panel.tscn")
 const SplashScene = preload("res://src/ui/splash/splash_screen.tscn")
 const AudioDirectorScript = preload("res://src/feedback/audio_director.gd")
 const HapticsControllerScript = preload("res://src/feedback/haptics_controller.gd")
+const AnalyticsScript = preload("res://src/analytics/product_analytics.gd")
 const Typography = preload("res://src/ui/theme/typography.gd")
 const CurioMaterials = preload("res://src/ui/theme/curio_materials.gd")
 const PieceAssetLoader = preload("res://src/match3/presentation/piece_asset_loader.gd")
@@ -25,12 +26,14 @@ const MobileSafeArea = preload("res://src/ui/shared/mobile_safe_area.gd")
 @export var environment: String = "development"
 @export var save_path_override: String = ""
 @export var settings_path_override: String = ""
+@export var analytics_path_override: String = ""
 
 var progress
 var navigation
 var user_settings
 var audio_director
 var ui_haptics
+var analytics
 var _store
 var _save_load_status: String = "not_loaded"
 var _save_write_blocked_reason: String = ""
@@ -61,6 +64,17 @@ func _complete_bootstrap() -> void:
 	_save_write_blocked_reason = String(_store.write_blocked_reason)
 	progress = ProgressScript.from_dict(loaded)
 	_returning_player_entry = _has_durable_progress(progress)
+
+	var analytics_path := analytics_path_override if analytics_path_override != "" else AnalyticsScript.DEFAULT_PATH
+	analytics = AnalyticsScript.new(analytics_path)
+	analytics.start_session({
+		"environment": environment,
+		"returning": _returning_player_entry,
+		"save_status": _save_load_status,
+	})
+	if not navigation.route_changed.is_connected(_on_navigation_route_changed):
+		navigation.route_changed.connect(_on_navigation_route_changed)
+	analytics.track("screen_view", {"route": "boot", "from": "", "via": "bootstrap"})
 
 	user_settings = UserSettingsScript.new()
 	var settings_path := settings_path_override if settings_path_override != "" else UserSettingsScript.DEFAULT_PATH
@@ -189,6 +203,11 @@ func start_level(level_number: int = 1) -> bool:
 		screen.settings_requested.connect(show_settings)
 	if screen.has_signal("result_state_changed"):
 		screen.result_state_changed.connect(_on_gameplay_result_state_changed)
+	_track_analytics("level_started", {
+		"level_id": level_id,
+		"level_number": level_number,
+		"replay": bool(screen.replay_mode),
+	})
 	return true
 
 func complete_level_win(transaction_id: String, level_id: String, curio_id: String = "moon_cameo", house_stage_reward: int = -1) -> bool:
@@ -217,6 +236,14 @@ func complete_level_win(transaction_id: String, level_id: String, curio_id: Stri
 		_save_load_status = "primary"
 	_save_write_blocked_reason = ""
 	progress = candidate
+	_track_analytics("level_reward", {
+		"level_id": level_id,
+		"curio_id": curio_id,
+		"first_clear": true,
+		"house_stage": int(candidate.house_stage),
+		"coins_awarded": int(ProgressScript.FIRST_CLEAR_COIN_REWARD),
+		"gems_awarded": int(ProgressScript.FIRST_CLEAR_GEM_REWARD),
+	})
 	if restoration_needed:
 		if not navigation.go(NavigationScript.Route.RESTORATION, {"reason": "level_reward_restoration"}):
 			return false
@@ -947,6 +974,7 @@ func save_health_contract() -> Dictionary:
 func show_settings() -> bool:
 	if navigation == null or not navigation.open_settings():
 		return false
+	_track_analytics("settings_opened", {"route": navigation.route_name().to_lower()})
 	_settings_screen = SettingsScene.instantiate()
 	screen_host.add_child(_settings_screen)
 	Typography.apply(_settings_screen)
@@ -1036,6 +1064,12 @@ func _on_level_exit_requested() -> void:
 	show_house()
 
 func _on_gameplay_result_state_changed(kind: String) -> void:
+	var level_id := ""
+	if _current_screen != null and is_instance_valid(_current_screen):
+		level_id = String(_current_screen.get("current_level_id"))
+	_track_analytics("level_result", {"level_id": level_id, "result": kind})
+	if kind == "recovered":
+		_track_analytics("recovery_used", {"level_id": level_id, "kind": "free_plus_3_moves"})
 	if kind == "won" and navigation.current() == NavigationScript.Route.GAMEPLAY:
 		navigation.go(NavigationScript.Route.WIN_REWARDS, {"result": "won"})
 
@@ -1049,6 +1083,7 @@ func _on_level_won(level_id: String, curio_id: String, house_stage_reward: int) 
 
 func _on_level_replay_finished(level_id: String) -> void:
 	_pending_level_number = 0
+	_track_analytics("level_replay_complete", {"level_id": level_id})
 	if navigation.current() != NavigationScript.Route.WIN_REWARDS or progress == null or not progress.completed_levels.has(level_id):
 		return
 	if navigation.go(NavigationScript.Route.HOUSE, {"reason": "level_replay_complete", "level": level_id}):
@@ -1059,6 +1094,11 @@ func _on_gameplay_feedback_requested(kind: String) -> void:
 		audio_director.request_feedback(kind)
 
 func _on_presentation_settings_changed(state: Dictionary) -> void:
+	_track_analytics("settings_changed", {
+		"reduced_motion": bool(state.get("reduced_motion", false)),
+		"high_contrast": bool(state.get("high_contrast", false)),
+		"haptics_enabled": bool(state.get("haptics_enabled", true)),
+	})
 	if ui_haptics != null:
 		ui_haptics.apply_settings(state)
 	if _current_screen != null and is_instance_valid(_current_screen) and _current_screen.has_method("apply_presentation_settings"):
@@ -1068,6 +1108,33 @@ func _on_presentation_settings_changed(state: Dictionary) -> void:
 
 func _level_path(level_number: int) -> String:
 	return "res://content/levels/ch01/level_%03d.json" % level_number
+
+func _on_navigation_route_changed(from_route: int, to_route: int, payload: Dictionary) -> void:
+	var via := String(payload.get("via", payload.get("reason", "")))
+	_track_analytics("screen_view", {
+		"from": navigation.route_name(from_route).to_lower(),
+		"route": navigation.route_name(to_route).to_lower(),
+		"via": via,
+		"level": int(payload.get("level", 0)),
+	})
+
+func _track_analytics(event_name: String, payload: Dictionary = {}) -> void:
+	if analytics != null:
+		analytics.track(event_name, payload)
+
+func analytics_status_contract() -> Dictionary:
+	if analytics == null:
+		return {
+			"local_queue": false,
+			"transport_connected": false,
+			"persistent_user_id": false,
+			"advertising_id": false,
+			"pii_allowed": false,
+		}
+	return analytics.status_contract()
+
+func analytics_events_snapshot() -> Array[Dictionary]:
+	return analytics.events_snapshot() if analytics != null else []
 
 func _show_screen(screen: Node) -> void:
 	if _current_screen != null and is_instance_valid(_current_screen):
