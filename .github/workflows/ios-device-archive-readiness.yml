@@ -1,0 +1,116 @@
+name: iOS Device Archive Readiness
+
+on:
+  push:
+    branches:
+      - "main"
+      - "feat/ios-device-archive-readiness"
+    paths:
+      - ".github/workflows/ios-device-archive-readiness.yml"
+      - ".github/release-proof.trigger"
+      - "project.godot"
+      - "export_presets.cfg"
+      - "src/**"
+      - "assets/**"
+      - "content/**"
+      - "tests/unit/test_mobile_release_contract.gd"
+      - "tests/unit/test_mobile_safe_area.gd"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  ios-device-archive:
+    runs-on: macos-latest
+    timeout-minutes: 35
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install pinned Godot 4.7.2 and export templates
+        shell: bash
+        run: |
+          set -euo pipefail
+          curl -L --fail --retry 8 --retry-all-errors --retry-delay 2 --connect-timeout 20 -o godot.zip "https://github.com/godotengine/godot-builds/releases/download/4.7.2-stable/Godot_v4.7.2-stable_macos.universal.zip"
+          echo "c58a24e31d720be9d62f60cb5627c4e695fb72f21b0cfe1bc9ccaa9a3b3ba63e  godot.zip" | shasum -a 256 -c -
+          unzip -q godot.zip
+          GODOT="./Godot.app/Contents/MacOS/Godot"
+          "$GODOT" --version
+          curl -L --fail --retry 8 --retry-all-errors --retry-delay 3 --connect-timeout 20 -o templates.tpz "https://github.com/godotengine/godot-builds/releases/download/4.7.2-stable/Godot_v4.7.2-stable_export_templates.tpz"
+          echo "f298490b8d44d934be425a5a65a51bf15f422428b229a06a6e11d9ffea248011  templates.tpz" | shasum -a 256 -c -
+          mkdir -p "$HOME/Library/Application Support/Godot/export_templates/4.7.2.stable" /tmp/godot-templates
+          unzip -q templates.tpz -d /tmp/godot-templates
+          cp -R /tmp/godot-templates/templates/. "$HOME/Library/Application Support/Godot/export_templates/4.7.2.stable/"
+
+      - name: Verify native mobile contracts
+        shell: bash
+        run: |
+          set -euo pipefail
+          ./Godot.app/Contents/MacOS/Godot --headless --path . -s res://tests/unit/test_mobile_release_contract.gd
+          ./Godot.app/Contents/MacOS/Godot --headless --path . -s res://tests/unit/test_mobile_safe_area.gd
+
+      - name: Export iOS Xcode project
+        shell: bash
+        run: |
+          set -euo pipefail
+          sed -i '' 's/__IOS_TEAM_ID__/CIABCDE12X/g' export_presets.cfg
+          mkdir -p build/ios artifacts
+          ./Godot.app/Contents/MacOS/Godot --headless --path . --export-release "iOS Xcode Project" build/ios/CatAndCoven.zip
+          test -f build/ios/CatAndCoven.xcodeproj/project.pbxproj
+          test -d build/ios/CatAndCoven.xcframework/ios-arm64
+          test -d build/ios/MoltenVK.xcframework/ios-arm64
+
+      - name: Archive unsigned arm64 iOS device build
+        shell: bash
+        run: |
+          set -euo pipefail
+          ARCHIVE_PATH="$PWD/build/ios-archive/CatAndCoven.xcarchive"
+          mkdir -p build/ios-archive artifacts
+          xcodebuild \
+            -project build/ios/CatAndCoven.xcodeproj \
+            -scheme CatAndCoven \
+            -configuration Release \
+            -sdk iphoneos \
+            -destination 'generic/platform=iOS' \
+            -archivePath "$ARCHIVE_PATH" \
+            ARCHS=arm64 \
+            EXCLUDED_ARCHS=x86_64 \
+            ONLY_ACTIVE_ARCH=YES \
+            CODE_SIGNING_ALLOWED=NO \
+            CODE_SIGNING_REQUIRED=NO \
+            CODE_SIGN_IDENTITY="" \
+            archive | tee artifacts/xcodebuild-device-archive.txt
+
+          APP_PATH="$ARCHIVE_PATH/Products/Applications/CatAndCoven.app"
+          EXECUTABLE="$APP_PATH/CatAndCoven"
+          test -d "$ARCHIVE_PATH"
+          test -f "$ARCHIVE_PATH/Info.plist"
+          test -d "$APP_PATH"
+          test -x "$EXECUTABLE"
+
+          file "$EXECUTABLE" | tee artifacts/ios-device-executable-file.txt
+          lipo -archs "$EXECUTABLE" | tee artifacts/ios-device-executable-archs.txt
+          grep -Eq '(^|[[:space:]])arm64($|[[:space:]])' artifacts/ios-device-executable-archs.txt
+
+          BUNDLE_ID="$(/usr/libexec/PlistBuddy -c 'Print :CFBundleIdentifier' "$APP_PATH/Info.plist")"
+          SHORT_VERSION="$(/usr/libexec/PlistBuddy -c 'Print :CFBundleShortVersionString' "$APP_PATH/Info.plist")"
+          BUILD_VERSION="$(/usr/libexec/PlistBuddy -c 'Print :CFBundleVersion' "$APP_PATH/Info.plist")"
+          {
+            echo "IOS_DEVICE_ARCHIVE_PASS"
+            echo "BUNDLE_ID=$BUNDLE_ID"
+            echo "SHORT_VERSION=$SHORT_VERSION"
+            echo "BUILD_VERSION=$BUILD_VERSION"
+            echo "ARCHS=$(cat artifacts/ios-device-executable-archs.txt)"
+          } | tee artifacts/ios-device-archive-summary.txt
+
+          test "$BUNDLE_ID" = "com.akilta.catandcoven"
+
+      - name: Upload unsigned device archive evidence
+        uses: actions/upload-artifact@v4
+        with:
+          name: cat-and-coven-ios-device-archive-readiness
+          path: |
+            artifacts/
+            build/ios-archive/CatAndCoven.xcarchive
+          if-no-files-found: error
+          retention-days: 7
