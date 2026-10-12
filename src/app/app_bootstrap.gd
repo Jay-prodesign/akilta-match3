@@ -39,6 +39,8 @@ var _save_load_status: String = "not_loaded"
 var _save_write_blocked_reason: String = ""
 var _current_screen: Node
 var _settings_screen: Node
+var _settings_suspended_screen: CanvasItem
+var _settings_suspended_process_mode: int = Node.PROCESS_MODE_INHERIT
 var _pending_level_number: int = 0
 var _returning_player_entry: bool = false
 var _shell_navigation_locked: bool = false
@@ -426,6 +428,7 @@ func show_settings() -> bool:
 	if navigation == null or not navigation.open_settings():
 		return false
 	_track_analytics("settings_opened", {"route": navigation.route_name().to_lower()})
+	_suspend_current_screen_for_settings()
 	_settings_screen = SettingsScene.instantiate()
 	screen_host.add_child(_settings_screen)
 	Typography.apply(_settings_screen)
@@ -438,15 +441,43 @@ func show_settings() -> bool:
 	_settings_screen.close_requested.connect(close_settings)
 	return true
 
+func _suspend_current_screen_for_settings() -> void:
+	_settings_suspended_screen = null
+	if _current_screen == null or not is_instance_valid(_current_screen) or not (_current_screen is CanvasItem):
+		return
+	_settings_suspended_screen = _current_screen as CanvasItem
+	_settings_suspended_process_mode = _current_screen.process_mode
+	_settings_suspended_screen.visible = false
+	_current_screen.process_mode = Node.PROCESS_MODE_DISABLED
+
+func _restore_current_screen_after_settings() -> void:
+	if _settings_suspended_screen != null and is_instance_valid(_settings_suspended_screen):
+		_settings_suspended_screen.visible = true
+		_settings_suspended_screen.process_mode = _settings_suspended_process_mode
+	_settings_suspended_screen = null
+	_settings_suspended_process_mode = Node.PROCESS_MODE_INHERIT
+
+func _dismiss_settings_surface_without_navigation() -> void:
+	if _settings_screen != null and is_instance_valid(_settings_screen):
+		_settings_screen.queue_free()
+	_settings_screen = null
+	_restore_current_screen_after_settings()
+
+func settings_surface_contract() -> Dictionary:
+	return {
+		"open": _settings_screen != null and is_instance_valid(_settings_screen),
+		"origin_suspended": _settings_suspended_screen != null and is_instance_valid(_settings_suspended_screen) and not _settings_suspended_screen.visible and _settings_suspended_screen.process_mode == Node.PROCESS_MODE_DISABLED,
+		"origin_preserved": _settings_suspended_screen == _current_screen if _settings_suspended_screen != null else true,
+		"standalone_surface": true,
+	}
+
 func _on_settings_feedback_requested(_kind: String = "ui") -> void:
 	_emit_shell_feedback()
 
 func close_settings() -> bool:
 	if navigation == null or not navigation.close_settings():
 		return false
-	if _settings_screen != null and is_instance_valid(_settings_screen):
-		_settings_screen.queue_free()
-	_settings_screen = null
+	_dismiss_settings_surface_without_navigation()
 	return true
 
 func _render_house(restoration_mode: bool = false, curio_id: String = "", restoration_stage: int = 0, returning_player: bool = false) -> void:
@@ -561,6 +592,8 @@ func _level_path(level_number: int) -> String:
 	return "res://content/levels/ch01/level_%03d.json" % level_number
 
 func _on_navigation_route_changed(from_route: int, to_route: int, payload: Dictionary) -> void:
+	if _settings_screen != null and is_instance_valid(_settings_screen) and navigation != null and not navigation.is_settings_open():
+		_dismiss_settings_surface_without_navigation()
 	var via := String(payload.get("via", payload.get("reason", "")))
 	_track_analytics("screen_view", {
 		"from": navigation.route_name(from_route).to_lower(),
