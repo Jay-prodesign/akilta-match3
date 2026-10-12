@@ -1723,7 +1723,7 @@
       ],
       "reuse": "global",
       "priority": "P0",
-      "production_status": "production_variant_set_candidate_runtime_validation",
+      "production_status": "runtime_connected_raster_badge_family_verified",
       "current_path": "assets/specials/gbl_special_global_idle_v01.webp",
       "architecture_owned": true,
       "contract_owners": [
@@ -1777,7 +1777,7 @@
       ],
       "reuse": "global",
       "priority": "P0",
-      "production_status": "production_special_candidate_runtime_validation",
+      "production_status": "runtime_connected_raster_badge_verified",
       "current_path": "assets/specials/gbl_special_line_h_idle_v01.webp",
       "architecture_owned": true,
       "contract_owners": [
@@ -1818,7 +1818,7 @@
       ],
       "reuse": "global",
       "priority": "P0",
-      "production_status": "production_special_candidate_runtime_validation",
+      "production_status": "runtime_connected_raster_badge_verified",
       "current_path": "assets/specials/gbl_special_line_v_idle_v01.webp",
       "architecture_owned": true,
       "contract_owners": [
@@ -1859,7 +1859,7 @@
       ],
       "reuse": "global",
       "priority": "P0",
-      "production_status": "production_special_candidate_runtime_validation",
+      "production_status": "runtime_connected_raster_badge_verified",
       "current_path": "assets/specials/gbl_special_area_idle_v01.webp",
       "architecture_owned": true,
       "contract_owners": [
@@ -1900,7 +1900,7 @@
       ],
       "reuse": "global",
       "priority": "P0",
-      "production_status": "production_special_candidate_runtime_validation",
+      "production_status": "runtime_connected_raster_badge_verified",
       "current_path": "assets/specials/gbl_special_smart_idle_v01.webp",
       "architecture_owned": true,
       "contract_owners": [
@@ -1941,7 +1941,7 @@
       ],
       "reuse": "global",
       "priority": "P0",
-      "production_status": "production_special_candidate_runtime_validation",
+      "production_status": "runtime_connected_raster_badge_verified",
       "current_path": "assets/specials/gbl_special_global_idle_v01.webp",
       "architecture_owned": true,
       "contract_owners": [

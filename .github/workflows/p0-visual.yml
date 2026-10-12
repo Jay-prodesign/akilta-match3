@@ -5,7 +5,7 @@ on:
     branches:
       - p0/bootstrap
       - "p1/**"
-      - feat/north-star-product-experience
+      - "feat/**"
     paths:
       - ".github/workflows/p0-visual.yml"
       - "tests/visual/capture_level1_journey.gd"
