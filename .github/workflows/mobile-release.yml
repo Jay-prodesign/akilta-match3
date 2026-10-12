@@ -71,7 +71,9 @@ jobs:
           keytool -genkeypair -noprompt -keystore /tmp/cat-coven-ci.keystore -storepass changeit -keypass changeit -alias catcoven -keyalg RSA -keysize 2048 -validity 3650 -dname "CN=Cat Coven CI,O=AKILTA,C=US"
 
       - name: Verify native release contract in Godot
-        run: ./godot --headless --path . -s res://tests/unit/test_mobile_release_contract.gd
+        run: |
+          ./godot --headless --path . -s res://tests/unit/test_mobile_release_contract.gd
+          ./godot --headless --path . -s res://tests/unit/test_mobile_safe_area.gd
 
       - name: Export signed Android release APK
         shell: bash
@@ -130,7 +132,9 @@ jobs:
           cp -R /tmp/godot-templates/templates/. "$HOME/Library/Application Support/Godot/export_templates/4.7.2.stable/"
 
       - name: Verify committed mobile release contract
-        run: ./Godot.app/Contents/MacOS/Godot --headless --path . -s res://tests/unit/test_mobile_release_contract.gd
+        run: |
+          ./Godot.app/Contents/MacOS/Godot --headless --path . -s res://tests/unit/test_mobile_release_contract.gd
+          ./Godot.app/Contents/MacOS/Godot --headless --path . -s res://tests/unit/test_mobile_safe_area.gd
 
       - name: Export unsigned iOS Xcode project
         shell: bash
