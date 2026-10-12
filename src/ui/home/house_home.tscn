@@ -277,7 +277,7 @@ theme_override_styles/disabled = SubResource("HotspotDisabled")
 text = "·"
 
 [node name="KeeperHotspot" type="Button" parent="RoomView/CurioHotspots"]
-custom_minimum_size = Vector2(68, 68)
+custom_minimum_size = Vector2(52, 52)
 layout_mode = 1
 anchor_left = 0.27
 anchor_top = 0.56
@@ -330,13 +330,13 @@ vertical_alignment = 1
 
 [node name="FirstRitualGuide" type="PanelContainer" parent="Layout"]
 visible = false
-custom_minimum_size = Vector2(0, 96)
+custom_minimum_size = Vector2(0, 74)
 layout_mode = 2
 theme_override_styles/panel = SubResource("Banner")
 
 [node name="GuideRow" type="HBoxContainer" parent="Layout/FirstRitualGuide"]
 layout_mode = 2
-theme_override_constants/separation = 10
+theme_override_constants/separation = 8
 
 [node name="KeeperArt" type="TextureRect" parent="Layout/FirstRitualGuide/GuideRow"]
 custom_minimum_size = Vector2(68, 68)
@@ -352,18 +352,18 @@ alignment = 1
 [node name="Heading" type="Label" parent="Layout/FirstRitualGuide/GuideRow/CopyColumn"]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.949, 0.816, 0.545, 1)
-theme_override_font_sizes/font_size = 18
+theme_override_font_sizes/font_size = 16
 text = "FIRST RITUAL"
 
 [node name="Copy" type="Label" parent="Layout/FirstRitualGuide/GuideRow/CopyColumn"]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.9, 0.85, 0.89, 1)
-theme_override_font_sizes/font_size = 17
-text = "ENTER CURIO BOUTIQUE → LEVEL 1 → SWIPE THE MOONLIT PAIR. ASK KEEPER IF YOU WANT A LEGAL SWAP."
+theme_override_font_sizes/font_size = 16
+text = "SWIPE THE MOONLIT PAIR · ASK KEEPER MARKS A LEGAL MOVE."
 autowrap_mode = 2
 
 [node name="Dismiss" type="Button" parent="Layout/FirstRitualGuide/GuideRow"]
-custom_minimum_size = Vector2(90, 58)
+custom_minimum_size = Vector2(78, 52)
 layout_mode = 2
 theme_override_colors/font_color = Color(0.96, 0.9, 0.83, 1)
 theme_override_font_sizes/font_size = 16
