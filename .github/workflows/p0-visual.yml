@@ -213,6 +213,7 @@ jobs:
           test -s artifacts/progression-final-reliquary.png
           test -s artifacts/progression-final-reliquary-moth-detail.png
           test -s artifacts/progression-final-reliquary-thorned-detail.png
+          test -s artifacts/progression-curio-to-house-thorned.png
           test -s artifacts/progression-final-events.png
           test -s artifacts/progression-final-weekly-missions.png
           test -s artifacts/progression-final-shop.png
@@ -339,6 +340,7 @@ jobs:
             artifacts/progression-final-reliquary.png
             artifacts/progression-final-reliquary-moth-detail.png
             artifacts/progression-final-reliquary-thorned-detail.png
+            artifacts/progression-curio-to-house-thorned.png
             artifacts/progression-final-events.png
             artifacts/progression-final-weekly-missions.png
             artifacts/progression-final-shop.png

@@ -104,6 +104,8 @@ func show_collection() -> bool:
 	screen.set_progress(progress)
 	_install_product_navigation(screen, "curios")
 	screen.back_requested.connect(_on_collection_back)
+	if screen.has_signal("house_inspect_requested"):
+		screen.house_inspect_requested.connect(_on_collection_house_inspect_requested)
 	return true
 
 func show_map() -> bool:
@@ -799,6 +801,13 @@ func _on_restoration_finished() -> void:
 		navigation.go(NavigationScript.Route.HOUSE, {"reason": "restoration_complete"})
 		# House is already rendered beneath the restoration ceremony.
 		# Keep the next-level CTA available without forcing another route.
+
+func _on_collection_house_inspect_requested(curio_id: String) -> void:
+	if not show_house():
+		return
+	var house := current_screen()
+	if house != null and house.has_method("open_curio_inspect"):
+		house.open_curio_inspect(curio_id)
 
 func _on_collection_back() -> void:
 	if navigation.go(NavigationScript.Route.HOUSE, {"via": "collection_back"}):

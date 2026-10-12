@@ -2,6 +2,7 @@ class_name Match3CurioCollection
 extends Control
 
 signal back_requested
+signal house_inspect_requested(curio_id: String)
 
 @onready var count_label: Label = $Layout/Count
 @onready var moon_card: PanelContainer = $Layout/Cards/MoonCard
@@ -334,6 +335,27 @@ func _open_curio_detail(curio_id: String) -> void:
 	lore.add_theme_color_override("font_color", Color("#DDD0D7"))
 	lore.add_theme_font_size_override("font_size", 20)
 	content.add_child(lore)
+
+	if awakened:
+		var view_house := Button.new()
+		view_house.name = "ViewInHouse"
+		view_house.text = "VIEW IN HOUSE"
+		view_house.custom_minimum_size = Vector2(0, 56)
+		view_house.add_theme_font_size_override("font_size", 20)
+		var view_box := StyleBoxFlat.new()
+		view_box.bg_color = Color("#4A1A51")
+		view_box.border_color = Color("#D5AD70")
+		view_box.set_border_width_all(2)
+		view_box.set_corner_radius_all(10)
+		view_house.add_theme_stylebox_override("normal", view_box)
+		var view_hover := view_box.duplicate() as StyleBoxFlat
+		view_hover.bg_color = Color("#63306A")
+		view_house.add_theme_stylebox_override("hover", view_hover)
+		view_house.add_theme_stylebox_override("pressed", view_hover)
+		view_house.add_theme_stylebox_override("focus", view_hover)
+		view_house.add_theme_color_override("font_color", Color("#FFF0D8"))
+		content.add_child(view_house)
+		view_house.pressed.connect(func(): house_inspect_requested.emit(curio_id))
 
 	var close := Button.new()
 	close.name = "Close"
