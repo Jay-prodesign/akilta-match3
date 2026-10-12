@@ -106,5 +106,10 @@
       "type": "wax_seal",
       "hp": 2
     }
+  ],
+  "validation_seeds": [
+    1003,
+    1020,
+    1104
   ]
 }
