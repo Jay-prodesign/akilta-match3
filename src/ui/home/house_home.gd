@@ -101,15 +101,15 @@ func _refresh() -> void:
 	var level1_completed: bool = progress != null and progress.completed_levels.has("ch01_level_001")
 	play_button.disabled = available_level_count < 1
 	if has_started and next_level > 1 and next_level <= available_level_count:
-		play_button.text = "CONTINUE CURIO BOUTIQUE"
+		play_button.text = "PLAY LEVEL %d" % next_level
 	elif opening_complete:
-		play_button.text = "REVISIT CURIO BOUTIQUE"
+		play_button.text = "EXPLORE LEVEL MAP"
 	elif level1_completed and next_level > available_level_count:
 		play_button.text = "REVISIT CURIO BOUTIQUE"
 	elif next_level > available_level_count:
 		play_button.text = "MORE CURIOS STIR SOON"
 	else:
-		play_button.text = "ENTER CURIO BOUTIQUE"
+		play_button.text = "PLAY LEVEL 1"
 
 func _on_play_pressed() -> void:
 	if available_level_count < 1:
