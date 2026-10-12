@@ -237,17 +237,17 @@ func show_weekly_missions() -> bool:
 	world_art.texture = ScreenArt.texture("events_bg_curio_house")
 	world_art.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
 	world_art.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_COVERED
-	world_art.modulate = Color(0.48, 0.44, 0.62, 0.40)
+	world_art.modulate = Color(0.58, 0.52, 0.70, 0.52)
 	world_art.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	screen.add_child(world_art)
 	var layout := VBoxContainer.new()
 	layout.name = "MissionLayout"
 	layout.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	layout.offset_left = 22
-	layout.offset_top = 72
+	layout.offset_top = 52
 	layout.offset_right = -22
-	layout.offset_bottom = -28
-	layout.add_theme_constant_override("separation", 14)
+	layout.offset_bottom = -22
+	layout.add_theme_constant_override("separation", 12)
 	screen.add_child(layout)
 	var eyebrow := Label.new()
 	eyebrow.text = "THE HOUSE OF CURIOS · WEEKLY ALTAR"
@@ -273,29 +273,34 @@ func show_weekly_missions() -> bool:
 	layout.add_child(timer)
 	var empty := PanelContainer.new()
 	empty.name = "MissionEmptyState"
-	empty.custom_minimum_size = Vector2(0, 430)
+	empty.custom_minimum_size = Vector2(0, 520)
+	empty.size_flags_vertical = Control.SIZE_EXPAND_FILL
+	empty.set_meta("offline_contract", "truthful_empty_state")
 	var empty_style := StyleBoxFlat.new()
-	empty_style.bg_color = Color("#14101B", 0.82)
-	empty_style.border_color = Color("#9B6FA6", 0.72)
+	empty_style.bg_color = Color("#100C16", 0.68)
+	empty_style.border_color = Color("#B88AB8", 0.72)
 	empty_style.set_border_width_all(2)
 	empty_style.set_corner_radius_all(18)
 	empty_style.content_margin_left = 22
 	empty_style.content_margin_right = 22
-	empty_style.content_margin_top = 20
-	empty_style.content_margin_bottom = 20
+	empty_style.content_margin_top = 26
+	empty_style.content_margin_bottom = 26
 	empty_style.shadow_color = Color(0, 0, 0, 0.48)
-	empty_style.shadow_size = 12
+	empty_style.shadow_size = 18
 	empty.add_theme_stylebox_override("panel", empty_style)
 	layout.add_child(empty)
 	var empty_content := VBoxContainer.new()
 	empty_content.name = "EmptyContent"
 	empty_content.alignment = BoxContainer.ALIGNMENT_CENTER
+	empty_content.size_flags_vertical = Control.SIZE_EXPAND_FILL
 	empty_content.add_theme_constant_override("separation", 10)
 	empty.add_child(empty_content)
 	var emblem := TextureRect.new()
 	emblem.name = "MissionRewardArt"
-	emblem.custom_minimum_size = Vector2(0, 300)
-	emblem.texture = PieceAssetLoader.ornament("res://assets/curios/ch01_curio_moon_cameo_sealed_v01.svg")
+	emblem.custom_minimum_size = Vector2(0, 360)
+	var weekly_art_path := "res://assets/curios/ch01_curio_moon_cameo_sealed_v01.webp"
+	emblem.texture = PieceAssetLoader.ornament(weekly_art_path)
+	emblem.set_meta("asset_path", weekly_art_path)
 	emblem.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
 	emblem.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
 	emblem.mouse_filter = Control.MOUSE_FILTER_IGNORE
@@ -304,15 +309,23 @@ func show_weekly_missions() -> bool:
 	empty_title.text = "THE WEEKLY ALTAR IS QUIET"
 	empty_title.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	empty_title.add_theme_color_override("font_color", Color("#F4E5D3"))
-	empty_title.add_theme_font_size_override("font_size", 31)
+	empty_title.add_theme_font_size_override("font_size", 34)
 	empty_content.add_child(empty_title)
 	var empty_body := Label.new()
 	empty_body.text = "No live weekly mission feed is connected. Mission timers, progress and rewards are intentionally not fabricated."
 	empty_body.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	empty_body.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	empty_body.add_theme_color_override("font_color", Color("#D8C6C3"))
-	empty_body.add_theme_font_size_override("font_size", 18)
+	empty_body.add_theme_font_size_override("font_size", 19)
 	empty_content.add_child(empty_body)
+	var availability := Label.new()
+	availability.name = "MissionAvailability"
+	availability.text = "LIVE RITUALS WILL APPEAR HERE ONLY WHEN A MISSION FEED IS CONNECTED"
+	availability.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	availability.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	availability.add_theme_color_override("font_color", Color("#BFA5D8"))
+	availability.add_theme_font_size_override("font_size", 15)
+	empty_content.add_child(availability)
 	var empty_state := Label.new()
 	empty_state.name = "MissionEmptyStateTruth"
 	empty_state.text = "RESET / OFFLINE STATE · NOTHING TO CLAIM"
