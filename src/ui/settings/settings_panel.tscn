@@ -1,4 +1,4 @@
-[gd_scene load_steps=5 format=3]
+[gd_scene load_steps=14 format=3]
 
 [ext_resource type="Script" path="res://src/ui/settings/settings_panel.gd" id="1_settings"]
 
@@ -38,6 +38,130 @@ corner_radius_top_right = 16
 corner_radius_bottom_right = 16
 corner_radius_bottom_left = 16
 
+[sub_resource type="StyleBoxFlat" id="CardHigh"]
+bg_color = Color(0.031, 0.039, 0.071, 1)
+border_width_left = 3
+border_width_top = 3
+border_width_right = 3
+border_width_bottom = 3
+border_color = Color(1, 0.945, 0.714, 1)
+corner_radius_top_left = 18
+corner_radius_top_right = 18
+corner_radius_bottom_right = 18
+corner_radius_bottom_left = 18
+content_margin_left = 24.0
+content_margin_top = 20.0
+content_margin_right = 24.0
+content_margin_bottom = 20.0
+shadow_color = Color(0, 0, 0, 0.72)
+shadow_size = 24
+
+[sub_resource type="StyleBoxFlat" id="ToggleHover"]
+bg_color = Color(0.165, 0.129, 0.188, 1)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.835, 0.678, 0.439, 1)
+corner_radius_top_left = 12
+corner_radius_top_right = 12
+corner_radius_bottom_right = 12
+corner_radius_bottom_left = 12
+content_margin_left = 14.0
+content_margin_right = 14.0
+
+[sub_resource type="StyleBoxFlat" id="TogglePressed"]
+bg_color = Color(0.227, 0.149, 0.251, 1)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.941, 0.808, 0.541, 1)
+corner_radius_top_left = 12
+corner_radius_top_right = 12
+corner_radius_bottom_right = 12
+corner_radius_bottom_left = 12
+content_margin_left = 14.0
+content_margin_right = 14.0
+
+[sub_resource type="StyleBoxFlat" id="ToggleHigh"]
+bg_color = Color(0.035, 0.039, 0.063, 0.98)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(1, 0.945, 0.714, 0.84)
+corner_radius_top_left = 12
+corner_radius_top_right = 12
+corner_radius_bottom_right = 12
+corner_radius_bottom_left = 12
+content_margin_left = 14.0
+content_margin_right = 14.0
+
+[sub_resource type="StyleBoxFlat" id="ToggleHighHover"]
+bg_color = Color(0.165, 0.129, 0.188, 1)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(1, 0.945, 0.714, 1)
+corner_radius_top_left = 12
+corner_radius_top_right = 12
+corner_radius_bottom_right = 12
+corner_radius_bottom_left = 12
+content_margin_left = 14.0
+content_margin_right = 14.0
+
+[sub_resource type="StyleBoxFlat" id="ToggleHighPressed"]
+bg_color = Color(0.227, 0.149, 0.251, 1)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(1, 0.945, 0.714, 1)
+corner_radius_top_left = 12
+corner_radius_top_right = 12
+corner_radius_bottom_right = 12
+corner_radius_bottom_left = 12
+content_margin_left = 14.0
+content_margin_right = 14.0
+
+[sub_resource type="StyleBoxFlat" id="CloseHover"]
+bg_color = Color(0.482, 0.267, 0.51, 1)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.835, 0.678, 0.439, 1)
+corner_radius_top_left = 12
+corner_radius_top_right = 12
+corner_radius_bottom_right = 12
+corner_radius_bottom_left = 12
+
+[sub_resource type="StyleBoxFlat" id="ClosePressed"]
+bg_color = Color(0.243, 0.114, 0.263, 1)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.835, 0.678, 0.439, 1)
+corner_radius_top_left = 12
+corner_radius_top_right = 12
+corner_radius_bottom_right = 12
+corner_radius_bottom_left = 12
+
+[sub_resource type="StyleBoxFlat" id="CloseHigh"]
+bg_color = Color(0.388, 0.208, 0.416, 1)
+border_width_left = 3
+border_width_top = 3
+border_width_right = 3
+border_width_bottom = 3
+border_color = Color(1, 0.945, 0.714, 1)
+corner_radius_top_left = 12
+corner_radius_top_right = 12
+corner_radius_bottom_right = 12
+corner_radius_bottom_left = 12
+
 [node name="SettingsPanel" type="Control"]
 layout_mode = 3
 anchors_preset = 15
@@ -47,6 +171,18 @@ grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 0
 script = ExtResource("1_settings")
+card_normal_style = SubResource("Card")
+card_high_style = SubResource("CardHigh")
+toggle_normal_style = SubResource("Toggle")
+toggle_hover_style = SubResource("ToggleHover")
+toggle_pressed_style = SubResource("TogglePressed")
+toggle_high_style = SubResource("ToggleHigh")
+toggle_high_hover_style = SubResource("ToggleHighHover")
+toggle_high_pressed_style = SubResource("ToggleHighPressed")
+close_normal_style = SubResource("Close")
+close_hover_style = SubResource("CloseHover")
+close_pressed_style = SubResource("ClosePressed")
+close_high_style = SubResource("CloseHigh")
 
 [node name="Dim" type="ColorRect" parent="."]
 layout_mode = 1
@@ -94,6 +230,14 @@ theme_override_font_sizes/font_size = 15
 text = "Tune the room without disturbing your progress."
 horizontal_alignment = 1
 autowrap_mode = 2
+
+[node name="HouseSigil" type="TextureRect" parent="Card/Content"]
+custom_minimum_size = Vector2(0, 72)
+layout_mode = 2
+mouse_filter = 2
+expand_mode = 1
+stretch_mode = 5
+modulate = Color(0.91, 0.788, 0.529, 1)
 
 [node name="AudioLabel" type="Label" parent="Card/Content"]
 layout_mode = 2
