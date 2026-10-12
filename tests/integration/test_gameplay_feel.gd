@@ -30,6 +30,19 @@ func _run() -> void:
 	if board_view != null and bool(board_view.is_motion_active()):
 		await board_view.trace_motion_finished
 
+	var press_center: Vector2 = board_view._cell_center(Vector2i(0, 0))
+	board_view._begin_pointer(press_center)
+	var pressed: Dictionary = board_view.pointer_feedback_contract()
+	_expect(bool(pressed.get("tracking", false)), "pointer feedback must begin tracking on press")
+	_expect(pressed.get("pressed_cell", Vector2i(-1, -1)) == Vector2i(0, 0), "pressed feedback must own the touched piece")
+	board_view._update_pointer(press_center + Vector2(42, 0))
+	var dragged: Dictionary = board_view.pointer_feedback_contract()
+	_expect(dragged.get("intent_target", Vector2i(-1, -1)) == Vector2i(1, 0), "drag feedback must preview the adjacent swap target")
+	_expect(String(dragged.get("mode", "")) == "piece_lift_with_direction_thread", "drag feedback must expose production lift/thread language")
+	_expect(bool(dragged.get("non_color_target_cue", false)), "drag target must not rely on color alone")
+	board_view.cancel_pointer_feedback()
+	_expect(not bool(board_view.pointer_feedback_contract().get("tracking", true)), "pointer feedback must clear after cancel")
+
 	board.moves_remaining = 3
 	screen._refresh_hud()
 	var warning: Dictionary = screen.gameplay_feel_contract()
@@ -47,6 +60,12 @@ func _run() -> void:
 	_expect(bool(accessible.get("reduced_motion", false)), "gameplay feel contract must preserve Reduced Motion")
 	_expect(bool(accessible.get("high_contrast", false)), "gameplay feel contract must preserve High Contrast")
 	_expect(bool(accessible.get("urgency_non_color_cue", false)), "urgency must remain understandable without color")
+	board_view._begin_pointer(press_center)
+	board_view._update_pointer(press_center + Vector2(42, 0))
+	var accessible_pointer: Dictionary = board_view.pointer_feedback_contract()
+	_expect(bool(accessible_pointer.get("reduced_motion", false)) and bool(accessible_pointer.get("high_contrast", false)), "pointer feedback must preserve Reduced Motion and High Contrast")
+	_expect(accessible_pointer.get("intent_target", Vector2i(-1, -1)) == Vector2i(1, 0), "accessible pointer feedback must retain directional target")
+	board_view.cancel_pointer_feedback()
 
 	screen.queue_free()
 	await process_frame

@@ -12,11 +12,18 @@ func _capture() -> void:
 	screen.apply_presentation_settings({"reduced_motion": false, "high_contrast": false, "haptics_enabled": false})
 	screen.board_state.moves_remaining = 3
 	screen._refresh_hud()
+	var board_view = screen.get_node("Layout/BoardView")
+	var press_center: Vector2 = board_view._cell_center(Vector2i(0, 0))
+	board_view._begin_pointer(press_center)
+	board_view._update_pointer(press_center + Vector2(42, 0))
 	await _frames(2)
+	if board_view.pointer_feedback_contract().get("intent_target", Vector2i(-1, -1)) != Vector2i(1, 0):
+		return _fail(screen, "pointer drag preview missing")
 	if String(screen.gameplay_feel_contract().get("moves_urgency_state", "")) != "warning":
 		return _fail(screen, "three-move warning state missing")
 	if not await _save(screen, "gameplay-low-moves-warning.png"):
 		return
+	board_view.cancel_pointer_feedback()
 
 	screen.board_state.moves_remaining = 1
 	screen.apply_presentation_settings({"reduced_motion": true, "high_contrast": true, "haptics_enabled": false})
