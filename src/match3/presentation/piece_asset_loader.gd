@@ -155,6 +155,7 @@ static func ornament(path: String) -> Texture2D:
 			_resolved_paths[path] = chosen
 			return decoded
 	_failures[path] = candidates
+	push_error("Missing required gameplay asset: %s -> %s" % [path, ",".join(candidates)])
 	return null
 
 static func resolved_path(path: String) -> String:
