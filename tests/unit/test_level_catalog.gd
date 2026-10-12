@@ -10,6 +10,7 @@ func _init() -> void:
 		var issues: Array[String] = catalog.validate()
 		_expect(issues.is_empty(), "canonical level catalog must validate: %s" % str(issues))
 		_expect(catalog.count() == 3, "current opening catalog must own exactly three verified levels")
+		_expect(catalog.entries().size() == catalog.count(), "catalog entries and count must share one authority")
 		for number in range(1, catalog.count() + 1):
 			var entry: Dictionary = catalog.entry(number)
 			_expect(int(entry.get("number", 0)) == number, "catalog level numbers must be contiguous")

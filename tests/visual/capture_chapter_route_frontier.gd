@@ -5,6 +5,7 @@ const ProductNavigation = preload("res://src/ui/shared/product_navigation.gd")
 const Typography = preload("res://src/ui/theme/typography.gd")
 const CurioMaterials = preload("res://src/ui/theme/curio_materials.gd")
 const ProgressScript = preload("res://src/progression/player_progress.gd")
+const LevelCatalog = preload("res://src/content/level_catalog.gd")
 
 func _init() -> void:
 	call_deferred("_capture")
@@ -16,10 +17,14 @@ func _capture() -> void:
 		{"name":"chapter-route-02-frontier3.png","wins":2},
 		{"name":"chapter-route-03-complete.png","wins":3},
 	]
+	var catalog = LevelCatalog.new()
+	if not catalog.load_default() or not catalog.validate().is_empty():
+		return _fail(null, "S03 canonical level catalog failed to load")
 	for state in states:
 		var screen = MapScene.instantiate()
-		screen.canonical_level_cap = 3
-		screen.visible_route_levels = 10
+		screen.canonical_level_cap = catalog.count()
+		screen.visible_route_levels = max(10, catalog.count())
+		screen.set_level_catalog(catalog.entries())
 		root.add_child(screen)
 		Typography.apply(screen)
 		CurioMaterials.apply(screen)
@@ -38,6 +43,9 @@ func _capture() -> void:
 		var focus: TextureRect = route.get_node_or_null("FrontierFocus") as TextureRect
 		if focus == null or focus.texture == null:
 			return _fail(screen, "S03 authored frontier focus missing")
+		var relic_art: TextureRect = route.get_node_or_null("RelicArt1") as TextureRect
+		if relic_art == null or relic_art.texture == null:
+			return _fail(screen, "S03 catalog-driven raster Curio route art missing")
 		if (expected_frontier > 0) != focus.visible:
 			return _fail(screen, "S03 frontier focus visibility mismatch")
 		if not await _save(screen, String(state["name"])):

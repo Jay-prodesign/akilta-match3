@@ -70,8 +70,13 @@ func get_frontier_level() -> int:
 	return _frontier_level
 
 func _build_route() -> void:
+	# Rebuild synchronously so same-frame catalog/cap updates never leave stale
+	# named controls competing with the live frontier marker.
 	for child in get_children():
+		remove_child(child)
 		child.queue_free()
+	_frontier_focus = null
+	_frontier_label = null
 	_level_buttons.clear()
 	_level_labels.clear()
 	_centers.clear()
