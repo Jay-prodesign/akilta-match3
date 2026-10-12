@@ -934,10 +934,14 @@ func _on_splash_continue() -> void:
 	_returning_player_entry = false
 	_render_house(false, "", 0, returning_player)
 
-func _on_house_play_requested(_level_number: int) -> void:
+func _on_house_play_requested(level_number: int) -> void:
 	if navigation.current() != NavigationScript.Route.HOUSE:
 		return
-	show_map()
+	# The primary Play CTA should lead to the next level, not require a map detour.
+	if level_number >= 1 and level_number <= INTERNAL_REVIEW_LEVEL_COUNT:
+		show_prestart(level_number)
+	else:
+		show_map()
 
 func show_chapters() -> bool:
 	if navigation == null or navigation.current() != NavigationScript.Route.HOUSE:
