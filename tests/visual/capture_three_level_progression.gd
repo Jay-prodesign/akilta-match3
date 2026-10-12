@@ -194,7 +194,7 @@ func _capture() -> void:
 	if String(app.current_route_name()) != "missions" or app.current_screen() == null or app.current_screen().name != "WeeklyMissionsScreen":
 		return _fail(app, "Weekly Missions must render as its own S09 route-backed screen")
 	var mission_timer: Label = app.current_screen().get_node_or_null("MissionLayout/MissionTimer") as Label
-	var mission_truth: Label = app.current_screen().get_node_or_null("MissionLayout/MissionEmptyState/EmptyContent/MissionEmptyStateTruth") as Label
+	var mission_truth: Label = app.current_screen().get_node_or_null("MissionLayout/MissionEmptyState/EmptyContent/AltarCopy/MissionEmptyStateTruth") as Label
 	var mission_art: TextureRect = app.current_screen().get_node_or_null("MissionLayout/MissionEmptyState/EmptyContent/MissionRewardArt") as TextureRect
 	if mission_timer == null or not mission_timer.text.contains("OFFLINE"):
 		return _fail(app, "Weekly Missions must expose offline timer truth when no live feed exists")
