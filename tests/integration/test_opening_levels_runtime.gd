@@ -104,8 +104,10 @@ func _run_level(entry: Dictionary) -> void:
 	else:
 		if String(screen.current_reward_curio) != String(entry["reward"]):
 			failures.append("Level %d must grant its authored relic" % number)
-		if screen.result_title.text != String(level_data.get("win_title", "")):
-			failures.append("Level %d win title must match authored content" % number)
+		if String(screen.current_win_title) != String(level_data.get("win_title", "")):
+			failures.append("Level %d must retain its authored narrative win title in level state" % number)
+		if screen.result_title.text != "LEVEL COMPLETE!":
+			failures.append("Level %d win overlay must lead with the clear North Star completion title" % number)
 		var reward_art = screen.get_node_or_null("ResultOverlay/Card/Content/RewardRitual")
 		if reward_art == null or str(reward_art.get("relic_id")) != String(entry["reward"]):
 			failures.append("Level %d win ritual must render its authored relic" % number)
