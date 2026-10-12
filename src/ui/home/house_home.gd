@@ -134,15 +134,24 @@ func _refresh() -> void:
 	var level1_completed: bool = progress != null and progress.completed_levels.has("ch01_level_001")
 	play_button.disabled = available_level_count < 1
 	if has_started and next_level > 1 and next_level <= available_level_count:
-		play_button.text = "CONTINUE CURIO BOUTIQUE"
+		play_button.text = "PLAY LEVEL %d" % next_level
 	elif opening_complete:
-		play_button.text = "REVISIT CURIO BOUTIQUE"
+		play_button.text = "EXPLORE CURIO BOUTIQUE"
 	elif level1_completed and next_level > available_level_count:
-		play_button.text = "REVISIT CURIO BOUTIQUE"
+		play_button.text = "EXPLORE CURIO BOUTIQUE"
 	elif next_level > available_level_count:
-		play_button.text = "MORE CURIOS STIR SOON"
+		play_button.text = "EXPLORE CURIO BOUTIQUE"
 	else:
-		play_button.text = "ENTER CURIO BOUTIQUE"
+		play_button.text = "PLAY LEVEL 1"
+
+func north_star_home_contract() -> Dictionary:
+	return {
+		"primary_cta_height": play_button.custom_minimum_size.y if play_button != null else 0.0,
+		"primary_cta_width": play_button.custom_minimum_size.x if play_button != null else 0.0,
+		"primary_cta_centered": play_button != null and (play_button.size_flags_horizontal & Control.SIZE_SHRINK_CENTER) != 0,
+		"bottom_nav_reserved": ($Layout.offset_bottom <= -90.0),
+		"direct_level_cta": play_button != null and (play_button.text.begins_with("PLAY LEVEL") or play_button.text.begins_with("EXPLORE")),
+	}
 
 func _on_play_pressed() -> void:
 	if available_level_count < 1:
