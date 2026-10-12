@@ -257,7 +257,6 @@ func _configure_teaching_move(level_data: Dictionary) -> void:
 
 func show_pause() -> bool:
 	_idle_hint_seconds = 0.0
-	_idle_hint_seconds = 0.0
 	if board_state == null or result_overlay.visible or pause_overlay.visible:
 		return false
 	if board_view.has_method("is_motion_active") and bool(board_view.is_motion_active()):
@@ -288,7 +287,6 @@ func _on_pause_exit() -> void:
 	level_exit_requested.emit()
 
 func attempt_swap(from: Vector2i, to: Vector2i):
-	_idle_hint_seconds = 0.0
 	_idle_hint_seconds = 0.0
 	if board_state == null or result_overlay.visible or pause_overlay.visible:
 		return null
