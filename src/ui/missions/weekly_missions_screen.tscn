@@ -27,10 +27,10 @@ border_width_top = 2
 border_width_right = 2
 border_width_bottom = 2
 border_color = Color(0.831, 0.678, 0.439, 0.9)
-corner_radius_top_left = 14
-corner_radius_top_right = 14
-corner_radius_bottom_right = 14
-corner_radius_bottom_left = 14
+corner_radius_top_left = 26
+corner_radius_top_right = 26
+corner_radius_bottom_right = 26
+corner_radius_bottom_left = 26
 
 [sub_resource type="StyleBoxFlat" id="Secondary"]
 bg_color = Color(0.082, 0.061, 0.103, 0.94)
@@ -39,10 +39,10 @@ border_width_top = 1
 border_width_right = 1
 border_width_bottom = 1
 border_color = Color(0.721, 0.541, 0.721, 0.62)
-corner_radius_top_left = 14
-corner_radius_top_right = 14
-corner_radius_bottom_right = 14
-corner_radius_bottom_left = 14
+corner_radius_top_left = 26
+corner_radius_top_right = 26
+corner_radius_bottom_right = 26
+corner_radius_bottom_left = 26
 
 [node name="WeeklyMissionsScreen" type="Control"]
 layout_mode = 3
@@ -91,7 +91,7 @@ layout_mode = 2
 theme_override_colors/font_color = Color(0.831, 0.678, 0.439, 1)
 theme_override_colors/font_outline_color = Color(0.02, 0.014, 0.028, 0.95)
 theme_override_constants/outline_size = 3
-theme_override_font_sizes/font_size = 18
+theme_override_font_sizes/font_size = 20
 text = "THE HOUSE OF CURIOS · WEEKLY ALTAR"
 horizontal_alignment = 1
 
@@ -100,7 +100,7 @@ layout_mode = 2
 theme_override_colors/font_color = Color(1, 0.941, 0.847, 1)
 theme_override_colors/font_outline_color = Color(0.02, 0.014, 0.028, 0.97)
 theme_override_constants/outline_size = 6
-theme_override_font_sizes/font_size = 48
+theme_override_font_sizes/font_size = 54
 text = "WEEKLY RITUALS"
 horizontal_alignment = 1
 
@@ -109,22 +109,22 @@ layout_mode = 2
 theme_override_colors/font_color = Color(0.82, 0.72, 0.90, 1)
 theme_override_colors/font_outline_color = Color(0.02, 0.014, 0.028, 0.92)
 theme_override_constants/outline_size = 3
-theme_override_font_sizes/font_size = 22
+theme_override_font_sizes/font_size = 20
 text = "OFFLINE · LIVE RESET TIME UNAVAILABLE"
 horizontal_alignment = 1
 
 [node name="MissionEmptyState" type="PanelContainer" parent="MissionLayout"]
-custom_minimum_size = Vector2(0, 520)
+custom_minimum_size = Vector2(0, 560)
 layout_mode = 2
 theme_override_styles/panel = SubResource("Altar")
 
-[node name="EmptyContent" type="HBoxContainer" parent="MissionLayout/MissionEmptyState"]
+[node name="EmptyContent" type="VBoxContainer" parent="MissionLayout/MissionEmptyState"]
 layout_mode = 2
-theme_override_constants/separation = 26
+theme_override_constants/separation = 12
 alignment = 1
 
 [node name="MissionRewardArt" type="TextureRect" parent="MissionLayout/MissionEmptyState/EmptyContent"]
-custom_minimum_size = Vector2(330, 410)
+custom_minimum_size = Vector2(300, 245)
 layout_mode = 2
 expand_mode = 1
 stretch_mode = 5
@@ -140,7 +140,7 @@ layout_mode = 2
 theme_override_colors/font_color = Color(1, 0.941, 0.847, 1)
 theme_override_colors/font_outline_color = Color(0.02, 0.014, 0.028, 0.96)
 theme_override_constants/outline_size = 4
-theme_override_font_sizes/font_size = 38
+theme_override_font_sizes/font_size = 42
 text = "THE WEEKLY ALTAR IS QUIET"
 horizontal_alignment = 1
 autowrap_mode = 2
@@ -150,8 +150,8 @@ layout_mode = 2
 theme_override_colors/font_color = Color(0.95, 0.89, 0.92, 1)
 theme_override_colors/font_outline_color = Color(0.02, 0.014, 0.028, 0.94)
 theme_override_constants/outline_size = 2
-theme_override_font_sizes/font_size = 25
-text = "No live weekly mission feed is connected. Mission timers, progress and rewards are intentionally not fabricated."
+theme_override_font_sizes/font_size = 22
+text = "No live mission feed is connected. Timers, progress and rewards are not fabricated."
 horizontal_alignment = 1
 autowrap_mode = 2
 
@@ -160,7 +160,7 @@ layout_mode = 2
 theme_override_colors/font_color = Color(0.86, 0.77, 0.93, 1)
 theme_override_colors/font_outline_color = Color(0.02, 0.014, 0.028, 0.94)
 theme_override_constants/outline_size = 2
-theme_override_font_sizes/font_size = 21
+theme_override_font_sizes/font_size = 20
 text = "LIVE RITUALS APPEAR ONLY WHEN A MISSION FEED IS CONNECTED"
 horizontal_alignment = 1
 autowrap_mode = 2
@@ -170,8 +170,8 @@ layout_mode = 2
 theme_override_colors/font_color = Color(0.95, 0.80, 0.50, 1)
 theme_override_colors/font_outline_color = Color(0.02, 0.014, 0.028, 0.94)
 theme_override_constants/outline_size = 2
-theme_override_font_sizes/font_size = 21
-text = "RESET / OFFLINE STATE · NOTHING TO CLAIM"
+theme_override_font_sizes/font_size = 22
+text = "OFFLINE · NOTHING TO CLAIM"
 horizontal_alignment = 1
 autowrap_mode = 2
 
@@ -186,7 +186,7 @@ horizontal_alignment = 1
 autowrap_mode = 2
 
 [node name="ReturnToEvents" type="Button" parent="MissionLayout"]
-custom_minimum_size = Vector2(0, 68)
+custom_minimum_size = Vector2(0, 74)
 layout_mode = 2
 theme_override_colors/font_color = Color(1, 0.941, 0.847, 1)
 theme_override_font_sizes/font_size = 22
@@ -196,7 +196,7 @@ theme_override_styles/pressed = SubResource("Primary")
 text = "RETURN TO EVENT CENTER"
 
 [node name="ReturnToHouse" type="Button" parent="MissionLayout"]
-custom_minimum_size = Vector2(0, 62)
+custom_minimum_size = Vector2(0, 64)
 layout_mode = 2
 theme_override_colors/font_color = Color(0.96, 0.9, 0.84, 1)
 theme_override_font_sizes/font_size = 22
