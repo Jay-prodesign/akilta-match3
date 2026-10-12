@@ -34,6 +34,8 @@ func _run() -> void:
 	_expect(String(presets.get_value("preset.4.options", "package/unique_name", "")) == "com.akilta.catandcoven", "Android emulator package identity mismatch")
 	_expect(bool(presets.get_value("preset.4.options", "architectures/x86_64", false)), "CI emulator APK must include x86_64")
 	_expect(not bool(presets.get_value("preset.4.options", "architectures/arm64-v8a", true)), "CI emulator APK must remain separate from the production arm64 artifact contract")
+	var emulator_args := String(presets.get_value("preset.4.options", "command_line/extra_args", ""))
+	_expect(emulator_args.contains("--rendering-method mobile") and emulator_args.contains("--rendering-driver vulkan"), "CI emulator must use Mobile/Vulkan to avoid the known SwiftShader Compatibility renderer bug")
 	for native_index in [1, 2, 3, 4]:
 		var include_filter := String(presets.get_value("preset.%d" % native_index, "include_filter", ""))
 		_expect(include_filter.contains("*.webp") and include_filter.contains("*.png"), "native export must retain raw authored raster files")
