@@ -10,9 +10,8 @@ var _entries: Array[Dictionary] = []
 var _by_number: Dictionary = {}
 var _by_id: Dictionary = {}
 
-static func load_default():
-	var catalog = Match3LevelCatalog.new()
-	return catalog if catalog.load_path(DEFAULT_PATH) else null
+func load_default() -> bool:
+	return load_path(DEFAULT_PATH)
 
 func load_path(path: String) -> bool:
 	_entries.clear()
