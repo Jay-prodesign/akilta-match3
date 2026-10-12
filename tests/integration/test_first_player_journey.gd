@@ -34,6 +34,27 @@ func _run() -> void:
 	var house = app.current_screen()
 	var dormant_cameo: Control = house.get_node("Layout/RoomView/MoonCameoOverlay")
 	_expect(not dormant_cameo.visible, "Moon Cameo physical relic must stay hidden before Level 1 is won")
+	_expect(house.has_method("keeper_house_contract"), "House must expose the Keeper familiar contract")
+	if house.has_method("keeper_house_contract"):
+		var house_keeper: Dictionary = house.keeper_house_contract()
+		_expect(String(house_keeper.get("role", "")) == "non_mutating_legal_move_guide", "House must identify Keeper as the puzzle guide")
+		_expect(bool(house_keeper.get("raster_runtime", false)), "House Keeper must use raster runtime art")
+		_expect(bool(house_keeper.get("touch_target_ok", false)), "House Keeper hotspot must meet the mobile touch target contract")
+		_expect(not bool(house_keeper.get("spends_resources", true)) and not bool(house_keeper.get("changes_board", true)) and not bool(house_keeper.get("adds_moves", true)), "House Keeper role must remain non-economic and non-mutating")
+	var keeper_hotspot: Button = house.get_node_or_null("Layout/RoomView/CurioHotspots/KeeperHotspot") as Button
+	_expect(keeper_hotspot != null and not keeper_hotspot.disabled, "House must expose an interactive Keeper hotspot")
+	if keeper_hotspot != null:
+		keeper_hotspot.emit_signal("pressed")
+		await process_frame
+		var keeper_name: Label = house.get_node_or_null("KeeperRoleOverlay/Card/Content/Name") as Label
+		var keeper_role: Label = house.get_node_or_null("KeeperRoleOverlay/Card/Content/Role") as Label
+		_expect(keeper_name != null and keeper_name.text == "THE KEEPER", "House familiar card must name the Keeper")
+		_expect(keeper_role != null and keeper_role.text.contains("NO COST") and keeper_role.text.contains("NO BOARD CHANGES"), "House familiar card must state the truthful utility boundary")
+		var keeper_close: Button = house.get_node_or_null("KeeperRoleOverlay/Card/Content/Close") as Button
+		_expect(keeper_close != null, "House familiar card must expose a return action")
+		if keeper_close != null:
+			keeper_close.emit_signal("pressed")
+			await process_frame
 	var settings_button: Button = house.get_node("Layout/ActionDock/Actions/SettingsButton")
 	settings_button.emit_signal("pressed")
 	await process_frame
@@ -89,11 +110,19 @@ func _run() -> void:
 			_expect(bool(loaded_boosters.get(booster_key, false)), "%s booster artwork must load" % booster_key)
 	var booster_row: HBoxContainer = gameplay.get_node("BoosterTray/BoosterActions")
 	var hint_booster: Button = booster_row.get_node("HintBoost")
+	_expect(hint_booster.text == "ASK KEEPER", "gameplay familiar utility must be presented as ASK KEEPER")
 	_expect(booster_row.get_node_or_null("PlusMovesBoost") == null, "active gameplay must not expose the fail-only +3 Moves recovery as a free booster")
 	_expect(booster_row.get_node_or_null("RetryBoost") == null, "active gameplay must not duplicate retry as a booster")
+	var keeper_board_signature := String(gameplay.board_state.signature())
 	hint_booster.emit_signal("pressed")
-	_expect(gameplay.hint_label.text == "Follow the moonlit highlight for a legal match.", "hint utility must find and highlight a legal move")
-	_expect(int(gameplay.board_state.moves_remaining) == 20, "utility actions must preserve the authored Level 1 move budget")
+	_expect(gameplay.hint_label.text == "KEEPER HINT · FOLLOW THE MARKED PAIR", "Keeper utility must find and highlight a legal move")
+	_expect(String(gameplay.board_state.signature()) == keeper_board_signature, "Keeper utility must not mutate the board")
+	_expect(int(gameplay.board_state.moves_remaining) == 20, "Keeper utility must preserve the authored Level 1 move budget")
+	_expect(gameplay.has_method("keeper_familiar_contract"), "gameplay must expose the Keeper familiar contract")
+	if gameplay.has_method("keeper_familiar_contract"):
+		var gameplay_keeper: Dictionary = gameplay.keeper_familiar_contract()
+		_expect(bool(gameplay_keeper.get("raster_runtime", false)), "gameplay Keeper must use raster runtime art")
+		_expect(String(gameplay_keeper.get("manual_action", "")) == "ASK KEEPER", "Keeper contract must expose the manual familiar action")
 
 	var trace = gameplay.attempt_swap(Vector2i(1, 4), Vector2i(2, 4))
 	_expect(trace != null and trace.accepted and str(trace.result) == "won", "Level 1 teaching swipe must win")

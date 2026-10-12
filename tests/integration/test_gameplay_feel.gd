@@ -30,6 +30,22 @@ func _run() -> void:
 	if board_view != null and bool(board_view.is_motion_active()):
 		await board_view.trace_motion_finished
 
+	var keeper_before_signature := String(board.signature())
+	var keeper_before_moves := int(board.moves_remaining)
+	screen._use_hint_boost()
+	_expect(String(board.signature()) == keeper_before_signature, "Keeper hint must not mutate board state")
+	_expect(int(board.moves_remaining) == keeper_before_moves, "Keeper hint must not spend or add moves")
+	_expect(screen.hint_label.text == "KEEPER HINT · FOLLOW THE MARKED PAIR", "manual familiar action must identify the Keeper")
+	_expect(screen.has_method("keeper_familiar_contract"), "gameplay must expose Keeper familiar contract")
+	if screen.has_method("keeper_familiar_contract"):
+		var keeper: Dictionary = screen.keeper_familiar_contract()
+		_expect(String(keeper.get("role", "")) == "non_mutating_legal_move_guide", "Keeper role must remain a legal-move guide")
+		_expect(bool(keeper.get("raster_runtime", false)), "Keeper gameplay art must use raster runtime asset")
+		_expect(int(keeper.get("hint_count", 0)) >= 1, "Keeper hint count must record the guide action")
+		_expect(not (keeper.get("last_move", {}) as Dictionary).is_empty(), "Keeper must expose the legal move it marked")
+		_expect(not bool(keeper.get("changes_board", true)) and not bool(keeper.get("spends_resources", true)) and not bool(keeper.get("adds_moves", true)), "Keeper must not alter difficulty or economy")
+	_expect(bool(board_view.teaching_contract().get("active", false)), "Keeper hint must visibly mark a legal move")
+
 	var press_center: Vector2 = board_view._cell_center(Vector2i(0, 0))
 	board_view._begin_pointer(press_center)
 	var pressed: Dictionary = board_view.pointer_feedback_contract()

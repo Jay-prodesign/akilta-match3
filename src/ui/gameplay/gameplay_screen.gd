@@ -47,10 +47,13 @@ var _potion_used_for_attempt := false
 var _idle_hint_seconds: float = 0.0
 var _consecutive_failures: int = 0
 var _guided_retry_pending: bool = false
+var _keeper_hint_count: int = 0
+var _keeper_last_move: Dictionary = {}
+const KEEPER_ART_PATH := "res://assets/pieces/black_cat.webp"
 const AUTO_HINT_DELAY_SECONDS := 9.0
 const GUIDED_HINT_DELAY_SECONDS := 4.0
 const BOOSTER_ART_PATHS := {
-	"hint": "res://assets/pieces/moon_sigil.webp",
+	"hint": KEEPER_ART_PATH,
 	"plus_moves": "res://assets/pieces/potion.webp",
 	"retry": "res://assets/pieces/skull.webp"
 }
@@ -120,9 +123,8 @@ func _process(delta: float) -> void:
 	if _idle_hint_seconds >= _current_auto_hint_delay():
 		_idle_hint_seconds = 0.0
 		var legal_move: Dictionary = MoveFinder.first_legal_move(board_state)
-		if not legal_move.is_empty() and board_view.has_method("set_teaching_move"):
-			board_view.set_teaching_move(legal_move["from"], legal_move["to"])
-			hint_label.text = "GUIDED HINT · FOLLOW THE MOONLIT PAIR" if _consecutive_failures >= 3 else "Follow the moonlit pair for your next match."
+		if not legal_move.is_empty():
+			_present_keeper_hint(legal_move, false, _consecutive_failures >= 3)
 
 func _current_auto_hint_delay() -> float:
 	return GUIDED_HINT_DELAY_SECONDS if _consecutive_failures >= 3 else AUTO_HINT_DELAY_SECONDS
@@ -1014,7 +1016,7 @@ func _build_result_proclamation() -> void:
 	var cat := TextureRect.new()
 	cat.name = "KeeperCat"
 	cat.custom_minimum_size = Vector2(64, 64)
-	cat.texture = PieceAssetLoader.ornament("res://assets/pieces/black_cat.svg")
+	cat.texture = PieceAssetLoader.ornament("res://assets/pieces/black_cat.webp")
 	cat.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
 	cat.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
 	cat.mouse_filter = Control.MOUSE_FILTER_IGNORE
@@ -1227,7 +1229,7 @@ func _build_booster_tray() -> void:
 	row.name = "BoosterActions"
 	row.add_theme_constant_override("separation", 6)
 	panel.add_child(row)
-	_hint_boost_button = _add_booster_button(row, "HintBoost", "HINT", String(BOOSTER_ART_PATHS["hint"]), _use_hint_boost)
+	_hint_boost_button = _add_booster_button(row, "HintBoost", "ASK KEEPER", String(BOOSTER_ART_PATHS["hint"]), _use_hint_boost)
 	# The explicit fail-screen +3 rescue is truthful and remains available there.
 	# Do not also expose difficulty-changing free boosters during active play.
 	_potion_boost_button = null
@@ -1316,11 +1318,36 @@ func _use_hint_boost() -> void:
 		return
 	var move: Dictionary = MoveFinder.first_legal_move(board_state)
 	if move.is_empty():
-		hint_label.text = "The House is reshaping the sigils. Try a different line."
+		hint_label.text = "THE KEEPER SEES NO PATH · THE HOUSE IS RESHAPING THE SIGILS"
+		return
+	_present_keeper_hint(move, true, false)
+
+func _present_keeper_hint(move: Dictionary, manual: bool, guided: bool) -> void:
+	if move.is_empty() or board_view == null or not board_view.has_method("set_teaching_move"):
 		return
 	board_view.set_teaching_move(move["from"], move["to"])
-	hint_label.text = "Follow the moonlit highlight for a legal match."
+	_keeper_last_move = move.duplicate(true)
+	_keeper_hint_count += 1
+	if guided:
+		hint_label.text = "KEEPER GUIDANCE · FOLLOW THE MOONLIT PAIR"
+	elif manual:
+		hint_label.text = "KEEPER HINT · FOLLOW THE MARKED PAIR"
+	else:
+		hint_label.text = "THE KEEPER NOTICES A PATH · FOLLOW THE MOONLIT PAIR"
 	feedback_requested.emit("match")
+
+func keeper_familiar_contract() -> Dictionary:
+	return {
+		"role": "non_mutating_legal_move_guide",
+		"asset": KEEPER_ART_PATH,
+		"raster_runtime": KEEPER_ART_PATH.ends_with(".webp") or KEEPER_ART_PATH.ends_with(".png"),
+		"hint_count": _keeper_hint_count,
+		"last_move": _keeper_last_move.duplicate(true),
+		"changes_board": false,
+		"spends_resources": false,
+		"adds_moves": false,
+		"manual_action": "ASK KEEPER",
+	}
 
 func _use_retry_boost() -> void:
 	_idle_hint_seconds = 0.0
