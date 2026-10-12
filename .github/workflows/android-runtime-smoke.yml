@@ -3,6 +3,8 @@ name: Android Native Runtime Smoke
 on:
   push:
     branches:
+      - "main"
+      - "feat/native-main-lifecycle-gate"
       - "feat/native-android-runtime-smoke"
     paths:
       - ".github/workflows/android-runtime-smoke.yml"
