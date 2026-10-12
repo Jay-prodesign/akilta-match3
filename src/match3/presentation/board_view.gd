@@ -52,7 +52,9 @@ const MOTION_PROFILE := {
 var board_state
 var _visual_profile: String = "curio_boutique_opening"
 var _press_position := Vector2.ZERO
+var _pointer_position := Vector2.ZERO
 var _pressed_cell := Vector2i(-1, -1)
+var _intent_target := Vector2i(-1, -1)
 var _tracking := false
 var _tap_selected := Vector2i(-1, -1)
 var _feedback_strength: float = 0.0
@@ -473,23 +475,52 @@ func _gui_input(event: InputEvent) -> void:
 		else:
 			_finish_pointer(event.position)
 		accept_event()
+	elif event is InputEventScreenDrag and _tracking:
+		_update_pointer(event.position)
+		accept_event()
 	elif event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_LEFT:
 		if event.pressed:
 			_begin_pointer(event.position)
 		else:
 			_finish_pointer(event.position)
 		accept_event()
+	elif event is InputEventMouseMotion and _tracking:
+		_update_pointer(event.position)
+		accept_event()
 
 func _begin_pointer(position: Vector2) -> void:
 	_press_position = position
+	_pointer_position = position
 	_pressed_cell = cell_at_local(position)
+	_intent_target = Vector2i(-1, -1)
 	_tracking = _pressed_cell.x >= 0
+	queue_redraw()
+
+func _update_pointer(position: Vector2) -> void:
+	if not _tracking:
+		return
+	_pointer_position = position
+	_intent_target = Vector2i(-1, -1)
+	var delta := position - _press_position
+	if delta.length() >= swipe_threshold * 0.35:
+		var step := Vector2i.ZERO
+		if abs(delta.x) > abs(delta.y):
+			step = Vector2i(1 if delta.x > 0.0 else -1, 0)
+		else:
+			step = Vector2i(0, 1 if delta.y > 0.0 else -1)
+		var candidate := _pressed_cell + step
+		if board_state.in_bounds(candidate) and not board_state.is_hole(candidate):
+			_intent_target = candidate
+	queue_redraw()
 
 func _finish_pointer(position: Vector2) -> void:
 	if not _tracking:
 		return
-	_tracking = false
+	_update_pointer(position)
+	var source := _pressed_cell
+	var intent := _intent_target
 	var delta := position - _press_position
+	_clear_pointer_feedback()
 	if delta.length() < swipe_threshold:
 		var tapped := cell_at_local(position)
 		if tapped.x < 0:
@@ -497,22 +528,37 @@ func _finish_pointer(position: Vector2) -> void:
 			queue_redraw()
 			return
 		if _tap_selected.x >= 0 and board_state.is_adjacent(_tap_selected, tapped):
-			var source := _tap_selected
+			var tap_source := _tap_selected
 			_tap_selected = Vector2i(-1, -1)
-			swap_requested.emit(source, tapped)
+			swap_requested.emit(tap_source, tapped)
 		else:
 			_tap_selected = tapped
 		queue_redraw()
 		return
 	_tap_selected = Vector2i(-1, -1)
-	var step := Vector2i.ZERO
-	if abs(delta.x) > abs(delta.y):
-		step = Vector2i(1 if delta.x > 0.0 else -1, 0)
-	else:
-		step = Vector2i(0, 1 if delta.y > 0.0 else -1)
-	var target := _pressed_cell + step
-	if board_state.in_bounds(target) and not board_state.is_hole(target):
-		swap_requested.emit(_pressed_cell, target)
+	if intent.x >= 0:
+		swap_requested.emit(source, intent)
+
+func _clear_pointer_feedback() -> void:
+	_tracking = false
+	_pressed_cell = Vector2i(-1, -1)
+	_intent_target = Vector2i(-1, -1)
+	_pointer_position = Vector2.ZERO
+	queue_redraw()
+
+func cancel_pointer_feedback() -> void:
+	_clear_pointer_feedback()
+
+func pointer_feedback_contract() -> Dictionary:
+	return {
+		"tracking": _tracking,
+		"pressed_cell": _pressed_cell,
+		"intent_target": _intent_target,
+		"mode": "piece_lift_with_direction_thread",
+		"reduced_motion": _reduced_motion,
+		"high_contrast": _high_contrast,
+		"non_color_target_cue": true,
+	}
 
 func cell_at_local(position: Vector2) -> Vector2i:
 	if board_state == null:
@@ -560,6 +606,7 @@ func _draw() -> void:
 
 	_draw_teaching_cue()
 	_draw_tap_selection()
+	_draw_press_feedback()
 	_draw_feedback()
 	_draw_motion()
 
@@ -572,6 +619,30 @@ func _draw_tap_selection() -> void:
 	var half := float(_board_geometry()["cell_size"]) * 0.45
 	var rect := Rect2(center - Vector2.ONE * half, Vector2.ONE * half * 2.0)
 	draw_rect(rect, Color(GOLD, 0.92), false, 3.0)
+
+func _draw_press_feedback() -> void:
+	if board_state == null or not _tracking or _pressed_cell.x < 0 or _motion_active:
+		return
+	var geometry := _board_geometry()
+	var cell_size := float(geometry["cell_size"])
+	var center := _cell_center(_pressed_cell)
+	var ring := Color("#FFF1B6") if _high_contrast else Color(GOLD)
+	ring.a = 0.96
+	draw_arc(center, cell_size * 0.44, 0.0, TAU, 40, ring, 4.0 if _high_contrast else 3.0)
+	if _intent_target.x < 0:
+		return
+	var target_center := _cell_center(_intent_target)
+	var thread := Color("#FFFFFF") if _high_contrast else Color("#DDB7F5")
+	thread.a = 0.90
+	var direction := (target_center - center).normalized()
+	draw_line(center + direction * cell_size * 0.18, target_center - direction * cell_size * 0.22, thread, 4.0 if _high_contrast else 3.0)
+	var half := cell_size * 0.40
+	var target_rect := Rect2(target_center - Vector2.ONE * half, Vector2.ONE * half * 2.0)
+	draw_rect(target_rect, thread, false, 4.0 if _high_contrast else 3.0)
+	var tip := target_center - direction * cell_size * 0.10
+	var side := Vector2(-direction.y, direction.x)
+	draw_line(tip, tip - direction * cell_size * 0.12 + side * cell_size * 0.08, thread, 3.0)
+	draw_line(tip, tip - direction * cell_size * 0.12 - side * cell_size * 0.08, thread, 3.0)
 
 func _draw_teaching_cue() -> void:
 	if not _teaching_active or _motion_active or board_state == null:
@@ -675,6 +746,8 @@ func _draw_cell(rect: Rect2, pos: Vector2i) -> void:
 	var radius := rect.size.x * 0.18
 	draw_style_box(_cell_box(radius), rect)
 	var inset := rect.grow(-rect.size.x * 0.045)
+	if _tracking and pos == _pressed_cell and not _motion_active:
+		inset = _piece_rect(_cell_center(pos), 1.04)
 	var family: String = String(board_state.get_cell(pos))
 	var special: String = String(board_state.get_special(pos))
 	if _motion_active and not _motion_initial_cells.is_empty():
