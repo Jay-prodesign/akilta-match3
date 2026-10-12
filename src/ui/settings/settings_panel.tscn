@@ -61,9 +61,9 @@ color = Color(0.02, 0.015, 0.025, 0.72)
 layout_mode = 1
 anchors_preset = 15
 anchor_left = 0.07
-anchor_top = 0.18
+anchor_top = 0.12
 anchor_right = 0.93
-anchor_bottom = 0.60
+anchor_bottom = 0.72
 grow_horizontal = 2
 grow_vertical = 2
 theme_override_styles/panel = SubResource("Card")
@@ -171,11 +171,11 @@ text = "  High contrast"
 layout_mode = 2
 theme_override_colors/font_color = Color(0.663, 0.6, 0.659, 1)
 theme_override_font_sizes/font_size = 15
-text = "Changes save on this device."
+text = "CHANGES SAVE ON THIS DEVICE"
 horizontal_alignment = 1
 
 [node name="Close" type="Button" parent="Card/Content"]
-custom_minimum_size = Vector2(0, 52)
+custom_minimum_size = Vector2(0, 60)
 layout_mode = 2
 theme_override_colors/font_color = Color(0.0627, 0.051, 0.0706, 1)
 theme_override_font_sizes/font_size = 20
