@@ -3,7 +3,7 @@
 [ext_resource type="Script" path="res://src/ui/meta/meta_destination_screen.gd" id="1_meta"]
 
 [sub_resource type="StyleBoxFlat" id="Hero"]
-bg_color = Color(0.035, 0.027, 0.047, 0.78)
+bg_color = Color(0.035, 0.027, 0.047, 0.86)
 border_width_left = 2
 border_width_top = 2
 border_width_right = 2
@@ -21,7 +21,7 @@ shadow_color = Color(0, 0, 0, 0.46)
 shadow_size = 18
 
 [sub_resource type="StyleBoxFlat" id="Card"]
-bg_color = Color(0.043, 0.032, 0.055, 0.72)
+bg_color = Color(0.043, 0.032, 0.055, 0.82)
 border_width_left = 1
 border_width_top = 1
 border_width_right = 1
@@ -89,7 +89,7 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
-color = Color(0.018, 0.012, 0.026, 0.32)
+color = Color(0.018, 0.012, 0.026, 0.38)
 
 [node name="FeatureLayout" type="VBoxContainer" parent="."]
 layout_mode = 1
@@ -127,7 +127,7 @@ layout_mode = 2
 theme_override_colors/font_color = Color(0.89, 0.824, 0.83, 1)
 theme_override_colors/font_outline_color = Color(0.02, 0.014, 0.028, 0.9)
 theme_override_constants/outline_size = 3
-theme_override_font_sizes/font_size = 18
+theme_override_font_sizes/font_size = 20
 text = "Destination detail"
 horizontal_alignment = 1
 autowrap_mode = 2
@@ -214,7 +214,7 @@ autowrap_mode = 2
 [node name="HeroBody" type="Label" parent="FeatureLayout/FeatureHero/HeroRow/HeroCopy"]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.84, 0.76, 0.82, 1)
-theme_override_font_sizes/font_size = 17
+theme_override_font_sizes/font_size = 19
 text = "Hero body"
 autowrap_mode = 2
 
@@ -365,20 +365,26 @@ text = "KICKER"
 [node name="Title" type="Label" parent="FeatureLayout/CardScroll/Cards/Card1/Row/Copy"]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.96, 0.9, 0.84, 1)
-theme_override_font_sizes/font_size = 24
+theme_override_colors/font_outline_color = Color(0.02, 0.014, 0.028, 0.96)
+theme_override_constants/outline_size = 2
+theme_override_font_sizes/font_size = 25
 text = "TITLE"
 
 [node name="Body" type="Label" parent="FeatureLayout/CardScroll/Cards/Card1/Row/Copy"]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.84, 0.76, 0.82, 1)
-theme_override_font_sizes/font_size = 16
+theme_override_colors/font_outline_color = Color(0.02, 0.014, 0.028, 0.96)
+theme_override_constants/outline_size = 2
+theme_override_font_sizes/font_size = 18
 text = "BODY"
 autowrap_mode = 2
 
 [node name="Status" type="Label" parent="FeatureLayout/CardScroll/Cards/Card1/Row/Copy"]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.75, 0.65, 0.84, 1)
-theme_override_font_sizes/font_size = 14
+theme_override_colors/font_outline_color = Color(0.02, 0.014, 0.028, 0.96)
+theme_override_constants/outline_size = 2
+theme_override_font_sizes/font_size = 16
 text = "STATUS"
 autowrap_mode = 2
 
@@ -411,20 +417,26 @@ text = "KICKER"
 [node name="Title" type="Label" parent="FeatureLayout/CardScroll/Cards/Card2/Row/Copy"]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.96, 0.9, 0.84, 1)
-theme_override_font_sizes/font_size = 24
+theme_override_colors/font_outline_color = Color(0.02, 0.014, 0.028, 0.96)
+theme_override_constants/outline_size = 2
+theme_override_font_sizes/font_size = 25
 text = "TITLE"
 
 [node name="Body" type="Label" parent="FeatureLayout/CardScroll/Cards/Card2/Row/Copy"]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.84, 0.76, 0.82, 1)
-theme_override_font_sizes/font_size = 16
+theme_override_colors/font_outline_color = Color(0.02, 0.014, 0.028, 0.96)
+theme_override_constants/outline_size = 2
+theme_override_font_sizes/font_size = 18
 text = "BODY"
 autowrap_mode = 2
 
 [node name="Status" type="Label" parent="FeatureLayout/CardScroll/Cards/Card2/Row/Copy"]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.75, 0.65, 0.84, 1)
-theme_override_font_sizes/font_size = 14
+theme_override_colors/font_outline_color = Color(0.02, 0.014, 0.028, 0.96)
+theme_override_constants/outline_size = 2
+theme_override_font_sizes/font_size = 16
 text = "STATUS"
 autowrap_mode = 2
 
@@ -457,20 +469,26 @@ text = "KICKER"
 [node name="Title" type="Label" parent="FeatureLayout/CardScroll/Cards/Card3/Row/Copy"]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.96, 0.9, 0.84, 1)
-theme_override_font_sizes/font_size = 24
+theme_override_colors/font_outline_color = Color(0.02, 0.014, 0.028, 0.96)
+theme_override_constants/outline_size = 2
+theme_override_font_sizes/font_size = 25
 text = "TITLE"
 
 [node name="Body" type="Label" parent="FeatureLayout/CardScroll/Cards/Card3/Row/Copy"]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.84, 0.76, 0.82, 1)
-theme_override_font_sizes/font_size = 16
+theme_override_colors/font_outline_color = Color(0.02, 0.014, 0.028, 0.96)
+theme_override_constants/outline_size = 2
+theme_override_font_sizes/font_size = 18
 text = "BODY"
 autowrap_mode = 2
 
 [node name="Status" type="Label" parent="FeatureLayout/CardScroll/Cards/Card3/Row/Copy"]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.75, 0.65, 0.84, 1)
-theme_override_font_sizes/font_size = 14
+theme_override_colors/font_outline_color = Color(0.02, 0.014, 0.028, 0.96)
+theme_override_constants/outline_size = 2
+theme_override_font_sizes/font_size = 16
 text = "STATUS"
 autowrap_mode = 2
 
@@ -501,7 +519,7 @@ horizontal_alignment = 1
 [node name="LocalSaveDetail" type="Label" parent="FeatureLayout/SaveHealthCard/SaveHealthContent"]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.84, 0.76, 0.82, 1)
-theme_override_font_sizes/font_size = 15
+theme_override_font_sizes/font_size = 17
 text = "Progress is stored on this device."
 horizontal_alignment = 1
 autowrap_mode = 2
@@ -516,7 +534,7 @@ horizontal_alignment = 1
 [node name="CloudSyncDetail" type="Label" parent="FeatureLayout/SaveHealthCard/SaveHealthContent"]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.72, 0.66, 0.72, 1)
-theme_override_font_sizes/font_size = 14
+theme_override_font_sizes/font_size = 16
 text = "No account sign-in, remote backup, or cross-device restore is active in this build."
 horizontal_alignment = 1
 autowrap_mode = 2
