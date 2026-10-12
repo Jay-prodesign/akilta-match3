@@ -118,19 +118,23 @@ static func contract() -> Dictionary:
 static func ornament(path: String) -> Texture2D:
 	if _ornaments.has(path):
 		return _ornaments[path]
-	# Production art is raster-first, but a malformed candidate must never make
-	# the canonical semantic object disappear. Prefer authored WebP, then PNG,
-	# and only then the owned SVG source for that exact object.
 	var candidates: Array[String] = []
 	if path.get_extension().to_lower() == "svg":
 		var webp_preferred := path.get_basename() + ".webp"
 		var png_preferred := path.get_basename() + ".png"
-		if FileAccess.file_exists(webp_preferred):
+		if ResourceLoader.exists(webp_preferred) or FileAccess.file_exists(webp_preferred):
 			candidates.append(webp_preferred)
-		if FileAccess.file_exists(png_preferred):
+		if ResourceLoader.exists(png_preferred) or FileAccess.file_exists(png_preferred):
 			candidates.append(png_preferred)
 	candidates.append(path)
+
 	for chosen in candidates:
+		if ResourceLoader.exists(chosen):
+			var imported := ResourceLoader.load(chosen, "Texture2D", ResourceLoader.CACHE_MODE_REUSE) as Texture2D
+			if imported != null:
+				_ornaments[path] = imported
+				_resolved_paths[path] = chosen
+				return imported
 		if not FileAccess.file_exists(chosen):
 			continue
 		var image := Image.new()
@@ -146,11 +150,12 @@ static func ornament(path: String) -> Texture2D:
 					err = image.load_svg_from_string(file.get_as_text(), 1.0)
 					file.close()
 		if err == OK and not image.is_empty():
-			var result := ImageTexture.create_from_image(image)
-			_ornaments[path] = result
+			var decoded := ImageTexture.create_from_image(image)
+			_ornaments[path] = decoded
 			_resolved_paths[path] = chosen
-			return result
+			return decoded
 	_failures[path] = candidates
+	push_error("Missing required gameplay asset: %s -> %s" % [path, ",".join(candidates)])
 	return null
 
 static func resolved_path(path: String) -> String:

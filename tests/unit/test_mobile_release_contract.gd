@@ -21,6 +21,7 @@ func _run() -> void:
 	_expect(_preset_contract(presets, 1, "Android Release APK", "Android"), "Android release APK preset missing")
 	_expect(_preset_contract(presets, 2, "Android Play AAB", "Android"), "Android Play AAB preset missing")
 	_expect(_preset_contract(presets, 3, "iOS Xcode Project", "iOS"), "iOS Xcode project preset missing")
+	_expect(_preset_contract(presets, 4, "Android CI Emulator APK", "Android"), "Android CI emulator APK preset missing")
 	_expect(String(presets.get_value("preset.1.options", "package/unique_name", "")) == "com.akilta.catandcoven", "Android package identity mismatch")
 	_expect(String(presets.get_value("preset.2.options", "package/unique_name", "")) == "com.akilta.catandcoven", "Android AAB package identity mismatch")
 	_expect(bool(presets.get_value("preset.2.options", "gradle_build/use_gradle_build", false)), "AAB preset must use Gradle")
@@ -30,6 +31,15 @@ func _run() -> void:
 	_expect(bool(presets.get_value("preset.3.options", "application/export_project_only", false)), "CI iOS path must export an unsigned Xcode project")
 	_expect(int(presets.get_value("preset.3.options", "application/targeted_device_family", -1)) == 0, "iOS V1 target must be iPhone")
 	_expect(String(presets.get_value("preset.3.options", "application/app_store_team_id", "")) == "__IOS_TEAM_ID__", "committed iOS preset must retain a non-secret Team ID placeholder")
+	_expect(String(presets.get_value("preset.4.options", "package/unique_name", "")) == "com.akilta.catandcoven", "Android emulator package identity mismatch")
+	_expect(bool(presets.get_value("preset.4.options", "architectures/x86_64", false)), "CI emulator APK must include x86_64")
+	_expect(not bool(presets.get_value("preset.4.options", "architectures/arm64-v8a", true)), "CI emulator APK must remain separate from the production arm64 artifact contract")
+	var emulator_args := String(presets.get_value("preset.4.options", "command_line/extra_args", ""))
+	_expect(emulator_args.contains("--rendering-method gl_compatibility") and emulator_args.contains("--rendering-driver opengl3"), "CI emulator must explicitly exercise the production Compatibility/OpenGL renderer")
+	for native_index in [1, 2, 3, 4]:
+		var include_filter := String(presets.get_value("preset.%d" % native_index, "include_filter", ""))
+		_expect(include_filter.contains("*.webp") and include_filter.contains("*.png"), "native export must retain raw authored raster files")
+		_expect(include_filter.contains("*.json"), "native export must retain raw authored level/content JSON")
 
 	var raw := FileAccess.get_file_as_string("res://export_presets.cfg")
 	_expect(raw.contains('exclude_filter="build/*,tests/*,tools/*,docs/*"'), "production mobile exports must exclude tests/tools/docs")
