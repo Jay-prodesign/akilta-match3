@@ -31,10 +31,10 @@ static func attach(screen: Control, active_section: String, handler: Callable, c
 	if panel == null:
 		push_error("Global ProductNavigation authored scene could not instantiate.")
 		return null
-	panel.offset_left = 12.0 + safe_insets.x
-	panel.offset_right = -12.0 - safe_insets.z
-	panel.offset_top = -114.0 - safe_insets.w
-	panel.offset_bottom = -10.0 - safe_insets.w
+	panel.offset_left = 6.0 + safe_insets.x
+	panel.offset_right = -6.0 - safe_insets.z
+	panel.offset_top = -90.0 - safe_insets.w
+	panel.offset_bottom = -4.0 - safe_insets.w
 	screen.add_child(panel)
 
 	for item in ITEMS:
@@ -71,6 +71,7 @@ static func authored_contract(panel: PanelContainer) -> Dictionary:
 	var all_slots_present := true
 	var icons_loaded := true
 	var touch_targets_ok := true
+	var compact_house_bar := true
 	for item in ITEMS:
 		var button := panel.get_node_or_null("Scroll/Items/%s" % String(item["node"])) as Button
 		all_slots_present = all_slots_present and button != null
@@ -81,10 +82,12 @@ static func authored_contract(panel: PanelContainer) -> Dictionary:
 		var icon := button.get_node_or_null("Content/Icon") as TextureRect
 		icons_loaded = icons_loaded and icon != null and icon.texture != null
 		touch_targets_ok = touch_targets_ok and button.custom_minimum_size.y >= 56.0
+		compact_house_bar = compact_house_bar and button.custom_minimum_size.y <= 80.0
 	return {
 		"authored_scene": true,
 		"all_slots_present": all_slots_present,
 		"icons_loaded": icons_loaded,
 		"touch_targets_ok": touch_targets_ok,
+		"compact_house_bar": compact_house_bar and absf(panel.offset_top) <= 96.0,
 		"runtime_ui_factory": false,
 	}
