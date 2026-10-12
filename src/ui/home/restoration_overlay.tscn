@@ -1,4 +1,4 @@
-[gd_scene load_steps=4 format=3]
+[gd_scene load_steps=6 format=3]
 
 [ext_resource type="Script" path="res://src/ui/home/restoration_overlay.gd" id="1_restoration"]
 
@@ -27,10 +27,41 @@ border_width_top = 2
 border_width_right = 2
 border_width_bottom = 2
 border_color = Color(0.831, 0.678, 0.439, 0.92)
-corner_radius_top_left = 11
-corner_radius_top_right = 11
-corner_radius_bottom_right = 11
-corner_radius_bottom_left = 11
+corner_radius_top_left = 24
+corner_radius_top_right = 24
+corner_radius_bottom_right = 24
+corner_radius_bottom_left = 24
+
+
+[sub_resource type="StyleBoxFlat" id="MotifFrame"]
+bg_color = Color(0.025, 0.017, 0.035, 0.88)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.878, 0.714, 0.455, 0.86)
+corner_radius_top_left = 24
+corner_radius_top_right = 24
+corner_radius_bottom_right = 24
+corner_radius_bottom_left = 24
+shadow_color = Color(0, 0, 0, 0.66)
+shadow_size = 16
+
+[sub_resource type="StyleBoxFlat" id="StateRail"]
+bg_color = Color(0.031, 0.021, 0.043, 0.90)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.749, 0.647, 0.847, 0.44)
+corner_radius_top_left = 16
+corner_radius_top_right = 16
+corner_radius_bottom_right = 16
+corner_radius_bottom_left = 16
+content_margin_left = 14.0
+content_margin_top = 8.0
+content_margin_right = 14.0
+content_margin_bottom = 8.0
 
 [node name="RestorationOverlay" type="Control"]
 layout_mode = 3
@@ -67,7 +98,7 @@ layout_mode = 2
 theme_override_colors/font_color = Color(0.831, 0.678, 0.439, 1)
 theme_override_colors/font_outline_color = Color(0.02, 0.01, 0.03, 0.95)
 theme_override_constants/outline_size = 3
-theme_override_font_sizes/font_size = 19
+theme_override_font_sizes/font_size = 22
 text = "HOUSE RESTORATION"
 horizontal_alignment = 1
 
@@ -76,23 +107,35 @@ layout_mode = 2
 theme_override_colors/font_color = Color(1, 0.941, 0.847, 1)
 theme_override_colors/font_outline_color = Color(0.02, 0.01, 0.03, 0.96)
 theme_override_constants/outline_size = 5
-theme_override_font_sizes/font_size = 36
+theme_override_font_sizes/font_size = 42
 text = "CURIO"
 horizontal_alignment = 1
 
 [node name="HeroCopy" type="Label" parent="RestorationHeader"]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.85, 0.77, 0.82, 1)
-theme_override_font_sizes/font_size = 17
+theme_override_font_sizes/font_size = 20
 text = "THE HOUSE REMEMBERS"
 horizontal_alignment = 1
 
+
+[node name="RecoveredDisplayFrame" type="Panel" parent="."]
+layout_mode = 1
+anchor_left = 0.34
+anchor_top = 0.265
+anchor_right = 0.66
+anchor_bottom = 0.535
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+theme_override_styles/panel = SubResource("MotifFrame")
+
 [node name="AwakeningMotif" type="TextureRect" parent="."]
 layout_mode = 1
-anchor_left = 0.28
-anchor_top = 0.25
-anchor_right = 0.72
-anchor_bottom = 0.58
+anchor_left = 0.385
+anchor_top = 0.305
+anchor_right = 0.615
+anchor_bottom = 0.495
 grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
@@ -100,12 +143,54 @@ expand_mode = 1
 stretch_mode = 5
 modulate = Color(1, 0.96, 0.88, 1)
 
+
+[node name="StateRail" type="PanelContainer" parent="."]
+layout_mode = 1
+anchor_left = 0.18
+anchor_top = 0.56
+anchor_right = 0.82
+anchor_bottom = 0.64
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_styles/panel = SubResource("StateRail")
+
+[node name="States" type="HBoxContainer" parent="StateRail"]
+layout_mode = 2
+theme_override_constants/separation = 12
+alignment = 1
+
+[node name="Before" type="Label" parent="StateRail/States"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_colors/font_color = Color(0.72, 0.66, 0.73, 1)
+theme_override_font_sizes/font_size = 17
+text = "BEFORE · DORMANT"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Arrow" type="Label" parent="StateRail/States"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.878, 0.714, 0.455, 1)
+theme_override_font_sizes/font_size = 24
+text = "→"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="After" type="Label" parent="StateRail/States"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_colors/font_color = Color(0.965, 0.878, 0.66, 1)
+theme_override_font_sizes/font_size = 17
+text = "AFTER · AWAKENED"
+horizontal_alignment = 1
+vertical_alignment = 1
+
 [node name="CeremonyCard" type="PanelContainer" parent="."]
 layout_mode = 1
 anchor_left = 0.06
-anchor_top = 0.70
+anchor_top = 0.68
 anchor_right = 0.94
-anchor_bottom = 0.82
+anchor_bottom = 0.81
 grow_horizontal = 2
 grow_vertical = 2
 theme_override_styles/panel = SubResource("Card")
@@ -119,7 +204,7 @@ layout_mode = 2
 theme_override_constants/separation = 12
 
 [node name="RestoredCurioArt" type="TextureRect" parent="CeremonyCard/CeremonyContent/CeremonyRow"]
-custom_minimum_size = Vector2(92, 92)
+custom_minimum_size = Vector2(82, 82)
 layout_mode = 2
 expand_mode = 1
 stretch_mode = 5
@@ -132,12 +217,12 @@ theme_override_constants/separation = 6
 [node name="Body" type="Label" parent="CeremonyCard/CeremonyContent/CeremonyRow/Copy"]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.9, 0.84, 0.88, 1)
-theme_override_font_sizes/font_size = 20
+theme_override_font_sizes/font_size = 21
 text = "A recovered Curio takes its place in the House."
 autowrap_mode = 2
 
 [node name="Continue" type="Button" parent="CeremonyCard/CeremonyContent/CeremonyRow/Copy"]
-custom_minimum_size = Vector2(0, 60)
+custom_minimum_size = Vector2(0, 64)
 layout_mode = 2
 theme_override_colors/font_color = Color(1, 0.941, 0.847, 1)
 theme_override_font_sizes/font_size = 21
