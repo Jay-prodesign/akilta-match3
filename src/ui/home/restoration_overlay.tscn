@@ -1,0 +1,147 @@
+[gd_scene load_steps=4 format=3]
+
+[ext_resource type="Script" path="res://src/ui/home/restoration_overlay.gd" id="1_restoration"]
+
+[sub_resource type="StyleBoxFlat" id="Card"]
+bg_color = Color(0.035, 0.024, 0.045, 0.92)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.831, 0.678, 0.439, 0.9)
+corner_radius_top_left = 18
+corner_radius_top_right = 18
+corner_radius_bottom_right = 18
+corner_radius_bottom_left = 18
+content_margin_left = 16.0
+content_margin_top = 12.0
+content_margin_right = 16.0
+content_margin_bottom = 12.0
+shadow_color = Color(0, 0, 0, 0.58)
+shadow_size = 16
+
+[sub_resource type="StyleBoxFlat" id="Action"]
+bg_color = Color(0.286, 0.102, 0.318, 0.96)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.831, 0.678, 0.439, 0.92)
+corner_radius_top_left = 11
+corner_radius_top_right = 11
+corner_radius_bottom_right = 11
+corner_radius_bottom_left = 11
+
+[node name="RestorationOverlay" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+z_index = 90
+script = ExtResource("1_restoration")
+
+[node name="Veil" type="ColorRect" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+color = Color(0.02, 0.015, 0.03, 0.18)
+
+[node name="RestorationHeader" type="VBoxContainer" parent="."]
+layout_mode = 1
+anchor_left = 0.08
+anchor_top = 0.08
+anchor_right = 0.92
+anchor_bottom = 0.23
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/separation = 4
+
+[node name="Section" type="Label" parent="RestorationHeader"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.831, 0.678, 0.439, 1)
+theme_override_colors/font_outline_color = Color(0.02, 0.01, 0.03, 0.95)
+theme_override_constants/outline_size = 3
+theme_override_font_sizes/font_size = 19
+text = "HOUSE RESTORATION"
+horizontal_alignment = 1
+
+[node name="RestorationHeroTitle" type="Label" parent="RestorationHeader"]
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 0.941, 0.847, 1)
+theme_override_colors/font_outline_color = Color(0.02, 0.01, 0.03, 0.96)
+theme_override_constants/outline_size = 5
+theme_override_font_sizes/font_size = 36
+text = "CURIO"
+horizontal_alignment = 1
+
+[node name="HeroCopy" type="Label" parent="RestorationHeader"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.85, 0.77, 0.82, 1)
+theme_override_font_sizes/font_size = 17
+text = "THE HOUSE REMEMBERS"
+horizontal_alignment = 1
+
+[node name="AwakeningMotif" type="TextureRect" parent="."]
+layout_mode = 1
+anchor_left = 0.28
+anchor_top = 0.25
+anchor_right = 0.72
+anchor_bottom = 0.58
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+expand_mode = 1
+stretch_mode = 5
+modulate = Color(1, 0.96, 0.88, 1)
+
+[node name="CeremonyCard" type="PanelContainer" parent="."]
+layout_mode = 1
+anchor_left = 0.06
+anchor_top = 0.70
+anchor_right = 0.94
+anchor_bottom = 0.82
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_styles/panel = SubResource("Card")
+
+[node name="CeremonyContent" type="VBoxContainer" parent="CeremonyCard"]
+layout_mode = 2
+theme_override_constants/separation = 6
+
+[node name="CeremonyRow" type="HBoxContainer" parent="CeremonyCard/CeremonyContent"]
+layout_mode = 2
+theme_override_constants/separation = 12
+
+[node name="RestoredCurioArt" type="TextureRect" parent="CeremonyCard/CeremonyContent/CeremonyRow"]
+custom_minimum_size = Vector2(92, 92)
+layout_mode = 2
+expand_mode = 1
+stretch_mode = 5
+
+[node name="Copy" type="VBoxContainer" parent="CeremonyCard/CeremonyContent/CeremonyRow"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 6
+
+[node name="Body" type="Label" parent="CeremonyCard/CeremonyContent/CeremonyRow/Copy"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.9, 0.84, 0.88, 1)
+theme_override_font_sizes/font_size = 20
+text = "A recovered Curio takes its place in the House."
+autowrap_mode = 2
+
+[node name="Continue" type="Button" parent="CeremonyCard/CeremonyContent/CeremonyRow/Copy"]
+custom_minimum_size = Vector2(0, 60)
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 0.941, 0.847, 1)
+theme_override_font_sizes/font_size = 21
+theme_override_styles/normal = SubResource("Action")
+theme_override_styles/hover = SubResource("Action")
+theme_override_styles/pressed = SubResource("Action")
+text = "CONTINUE"

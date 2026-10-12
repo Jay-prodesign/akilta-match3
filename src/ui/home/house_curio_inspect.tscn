@@ -1,0 +1,115 @@
+[gd_scene load_steps=4 format=3]
+
+[ext_resource type="Script" path="res://src/ui/home/house_curio_inspect.gd" id="1_inspect"]
+
+[sub_resource type="StyleBoxFlat" id="Card"]
+bg_color = Color(0.035, 0.024, 0.045, 0.95)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.831, 0.678, 0.439, 0.9)
+corner_radius_top_left = 22
+corner_radius_top_right = 22
+corner_radius_bottom_right = 22
+corner_radius_bottom_left = 22
+content_margin_left = 24.0
+content_margin_top = 20.0
+content_margin_right = 24.0
+content_margin_bottom = 20.0
+shadow_color = Color(0, 0, 0, 0.66)
+shadow_size = 20
+
+[sub_resource type="StyleBoxFlat" id="Action"]
+bg_color = Color(0.286, 0.102, 0.318, 0.96)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.831, 0.678, 0.439, 0.9)
+corner_radius_top_left = 12
+corner_radius_top_right = 12
+corner_radius_bottom_right = 12
+corner_radius_bottom_left = 12
+
+[node name="HouseCurioInspect" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 0
+z_index = 140
+script = ExtResource("1_inspect")
+
+[node name="Veil" type="ColorRect" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 0
+color = Color(0.012, 0.008, 0.018, 0.66)
+
+[node name="Card" type="PanelContainer" parent="."]
+layout_mode = 1
+anchor_left = 0.08
+anchor_top = 0.11
+anchor_right = 0.92
+anchor_bottom = 0.58
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_styles/panel = SubResource("Card")
+
+[node name="Content" type="VBoxContainer" parent="Card"]
+layout_mode = 2
+theme_override_constants/separation = 9
+alignment = 1
+
+[node name="Kicker" type="Label" parent="Card/Content"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.831, 0.678, 0.439, 1)
+theme_override_font_sizes/font_size = 18
+text = "HOUSE · RESTORED CURIO"
+horizontal_alignment = 1
+
+[node name="HeroArt" type="TextureRect" parent="Card/Content"]
+custom_minimum_size = Vector2(0, 260)
+layout_mode = 2
+expand_mode = 1
+stretch_mode = 5
+
+[node name="Name" type="Label" parent="Card/Content"]
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 0.941, 0.847, 1)
+theme_override_font_sizes/font_size = 32
+text = "CURIO"
+horizontal_alignment = 1
+
+[node name="Origin" type="Label" parent="Card/Content"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.76, 0.68, 0.78, 1)
+theme_override_font_sizes/font_size = 18
+text = "ORIGIN"
+horizontal_alignment = 1
+autowrap_mode = 2
+
+[node name="HouseEffect" type="Label" parent="Card/Content"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.9, 0.84, 0.88, 1)
+theme_override_font_sizes/font_size = 21
+text = "House effect"
+horizontal_alignment = 1
+autowrap_mode = 2
+
+[node name="Close" type="Button" parent="Card/Content"]
+custom_minimum_size = Vector2(0, 58)
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 0.941, 0.847, 1)
+theme_override_font_sizes/font_size = 21
+theme_override_styles/normal = SubResource("Action")
+theme_override_styles/hover = SubResource("Action")
+theme_override_styles/pressed = SubResource("Action")
+text = "RETURN TO HOUSE"

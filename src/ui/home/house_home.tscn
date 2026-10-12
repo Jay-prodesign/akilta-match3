@@ -68,6 +68,54 @@ corner_radius_top_right = 10
 corner_radius_bottom_right = 10
 corner_radius_bottom_left = 10
 
+[sub_resource type="StyleBoxFlat" id="Banner"]
+bg_color = Color(0.065, 0.043, 0.08, 0.88)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.831, 0.678, 0.439, 0.62)
+corner_radius_top_left = 11
+corner_radius_top_right = 11
+corner_radius_bottom_right = 11
+corner_radius_bottom_left = 11
+
+[sub_resource type="StyleBoxFlat" id="Hotspot"]
+bg_color = Color(0.055, 0.04, 0.07, 0.18)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.941, 0.808, 0.541, 0.58)
+corner_radius_top_left = 34
+corner_radius_top_right = 34
+corner_radius_bottom_right = 34
+corner_radius_bottom_left = 34
+
+[sub_resource type="StyleBoxFlat" id="HotspotHover"]
+bg_color = Color(0.23, 0.14, 0.25, 0.72)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(1, 0.945, 0.714, 0.94)
+corner_radius_top_left = 34
+corner_radius_top_right = 34
+corner_radius_bottom_right = 34
+corner_radius_bottom_left = 34
+
+[sub_resource type="StyleBoxFlat" id="HotspotDisabled"]
+bg_color = Color(0.04, 0.03, 0.05, 0.10)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.5, 0.44, 0.5, 0.2)
+corner_radius_top_left = 34
+corner_radius_top_right = 34
+corner_radius_bottom_right = 34
+corner_radius_bottom_left = 34
+
 [node name="HouseHome" type="Control"]
 layout_mode = 3
 anchors_preset = 15
@@ -106,6 +154,109 @@ size_flags_vertical = 3
 clip_contents = true
 script = ExtResource("2_room")
 
+[node name="CurioHotspots" type="Control" parent="Layout/RoomView"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+
+[node name="MoonHotspot" type="Button" parent="Layout/RoomView/CurioHotspots"]
+custom_minimum_size = Vector2(60, 60)
+layout_mode = 1
+anchor_left = 0.93
+anchor_top = 0.27
+anchor_right = 0.93
+anchor_bottom = 0.27
+offset_left = -30.0
+offset_top = -30.0
+offset_right = 30.0
+offset_bottom = 30.0
+grow_horizontal = 2
+grow_vertical = 2
+focus_mode = 1
+mouse_filter = 0
+mouse_default_cursor_shape = 2
+theme_override_colors/font_color = Color(1, 0.945, 0.714, 0.86)
+theme_override_colors/font_disabled_color = Color(0.51, 0.47, 0.52, 0.58)
+theme_override_font_sizes/font_size = 24
+theme_override_styles/normal = SubResource("Hotspot")
+theme_override_styles/hover = SubResource("HotspotHover")
+theme_override_styles/pressed = SubResource("HotspotHover")
+theme_override_styles/focus = SubResource("HotspotHover")
+theme_override_styles/disabled = SubResource("HotspotDisabled")
+text = "·"
+
+[node name="MothHotspot" type="Button" parent="Layout/RoomView/CurioHotspots"]
+custom_minimum_size = Vector2(60, 60)
+layout_mode = 1
+anchor_left = 0.93
+anchor_top = 0.38
+anchor_right = 0.93
+anchor_bottom = 0.38
+offset_left = -30.0
+offset_top = -30.0
+offset_right = 30.0
+offset_bottom = 30.0
+grow_horizontal = 2
+grow_vertical = 2
+focus_mode = 1
+mouse_filter = 0
+mouse_default_cursor_shape = 2
+theme_override_styles/normal = SubResource("Hotspot")
+theme_override_styles/hover = SubResource("HotspotHover")
+theme_override_styles/pressed = SubResource("HotspotHover")
+theme_override_styles/focus = SubResource("HotspotHover")
+theme_override_styles/disabled = SubResource("HotspotDisabled")
+text = "·"
+
+[node name="ThornHotspot" type="Button" parent="Layout/RoomView/CurioHotspots"]
+custom_minimum_size = Vector2(60, 60)
+layout_mode = 1
+anchor_left = 0.93
+anchor_top = 0.49
+anchor_right = 0.93
+anchor_bottom = 0.49
+offset_left = -30.0
+offset_top = -30.0
+offset_right = 30.0
+offset_bottom = 30.0
+grow_horizontal = 2
+grow_vertical = 2
+focus_mode = 1
+mouse_filter = 0
+mouse_default_cursor_shape = 2
+theme_override_styles/normal = SubResource("Hotspot")
+theme_override_styles/hover = SubResource("HotspotHover")
+theme_override_styles/pressed = SubResource("HotspotHover")
+theme_override_styles/focus = SubResource("HotspotHover")
+theme_override_styles/disabled = SubResource("HotspotDisabled")
+text = "·"
+
+[node name="KeeperHotspot" type="Button" parent="Layout/RoomView/CurioHotspots"]
+custom_minimum_size = Vector2(68, 68)
+layout_mode = 1
+anchor_left = 0.27
+anchor_top = 0.56
+anchor_right = 0.27
+anchor_bottom = 0.56
+offset_left = -34.0
+offset_top = -34.0
+offset_right = 34.0
+offset_bottom = 34.0
+grow_horizontal = 2
+grow_vertical = 2
+focus_mode = 1
+mouse_filter = 0
+mouse_default_cursor_shape = 2
+expand_icon = true
+theme_override_styles/normal = SubResource("Hotspot")
+theme_override_styles/hover = SubResource("HotspotHover")
+theme_override_styles/pressed = SubResource("HotspotHover")
+theme_override_styles/focus = SubResource("HotspotHover")
+
 [node name="MoonCameoOverlay" type="Control" parent="Layout/RoomView"]
 visible = false
 layout_mode = 1
@@ -133,6 +284,76 @@ theme_override_colors/font_outline_color = Color(0.02, 0.015, 0.025, 0.92)
 theme_override_constants/outline_size = 2
 theme_override_font_sizes/font_size = 16
 text = "DORMANT DISPLAY"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="FirstRitualGuide" type="PanelContainer" parent="Layout"]
+visible = false
+custom_minimum_size = Vector2(0, 96)
+layout_mode = 2
+theme_override_styles/panel = SubResource("Banner")
+
+[node name="GuideRow" type="HBoxContainer" parent="Layout/FirstRitualGuide"]
+layout_mode = 2
+theme_override_constants/separation = 10
+
+[node name="KeeperArt" type="TextureRect" parent="Layout/FirstRitualGuide/GuideRow"]
+custom_minimum_size = Vector2(68, 68)
+layout_mode = 2
+expand_mode = 1
+stretch_mode = 5
+
+[node name="CopyColumn" type="VBoxContainer" parent="Layout/FirstRitualGuide/GuideRow"]
+layout_mode = 2
+size_flags_horizontal = 3
+alignment = 1
+
+[node name="Heading" type="Label" parent="Layout/FirstRitualGuide/GuideRow/CopyColumn"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.949, 0.816, 0.545, 1)
+theme_override_font_sizes/font_size = 18
+text = "FIRST RITUAL"
+
+[node name="Copy" type="Label" parent="Layout/FirstRitualGuide/GuideRow/CopyColumn"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.9, 0.85, 0.89, 1)
+theme_override_font_sizes/font_size = 17
+text = "ENTER CURIO BOUTIQUE → LEVEL 1 → SWIPE THE MOONLIT PAIR. ASK KEEPER IF YOU WANT A LEGAL SWAP."
+autowrap_mode = 2
+
+[node name="Dismiss" type="Button" parent="Layout/FirstRitualGuide/GuideRow"]
+custom_minimum_size = Vector2(90, 58)
+layout_mode = 2
+theme_override_colors/font_color = Color(0.96, 0.9, 0.83, 1)
+theme_override_font_sizes/font_size = 16
+theme_override_styles/normal = SubResource("SecondaryButton")
+theme_override_styles/hover = SubResource("ButtonHover")
+theme_override_styles/pressed = SubResource("ButtonPressed")
+text = "GOT IT"
+
+[node name="ReturningPlayerBanner" type="PanelContainer" parent="Layout"]
+visible = false
+custom_minimum_size = Vector2(0, 44)
+layout_mode = 2
+theme_override_styles/panel = SubResource("Banner")
+
+[node name="Label" type="Label" parent="Layout/ReturningPlayerBanner"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.949, 0.816, 0.545, 1)
+theme_override_font_sizes/font_size = 15
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="ChapterCompletionBanner" type="PanelContainer" parent="Layout"]
+visible = false
+custom_minimum_size = Vector2(0, 42)
+layout_mode = 2
+theme_override_styles/panel = SubResource("Banner")
+
+[node name="Label" type="Label" parent="Layout/ChapterCompletionBanner"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.949, 0.816, 0.545, 1)
+theme_override_font_sizes/font_size = 15
 horizontal_alignment = 1
 vertical_alignment = 1
 
