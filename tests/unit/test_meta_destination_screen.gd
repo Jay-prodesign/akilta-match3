@@ -33,6 +33,7 @@ func _run() -> void:
 		_expect(bool(contract.get("north_star_title_hierarchy", false)), "%s must retain a strong North Star page title" % feature)
 		_expect(bool(contract.get("north_star_hero_scale", false)), "%s must retain a hero-scale authored feature card" % feature)
 		_expect(bool(contract.get("raster_feature_art", false)), "%s hero art must use production raster assets" % feature)
+		_expect(bool(contract.get("card_copy_compact", false)), "%s cards must prioritize art/title/status instead of paragraph copy" % feature)
 		_expect(screen.get_node_or_null("FeatureLayout/FeatureHero/HeroRow/HeroArt") != null, "%s must keep a scene-owned hero art slot" % feature)
 		var expected_title := "EVENT CENTER" if feature == "events" else ("THE CURIO EMPORIUM" if feature == "shop" else "THE KEEPER")
 		_expect((screen.get_node("FeatureLayout/FeatureTitle") as Label).text == expected_title, "%s must preserve its authored route title" % feature)
@@ -53,6 +54,7 @@ func _run() -> void:
 		if feature == "profile":
 			var profile_hero := screen.get_node("FeatureLayout/FeatureHero/HeroRow/HeroArt") as TextureRect
 			_expect(profile_hero != null and String(contract.get("hero_asset_path", "")).ends_with("black_cat.webp"), "profile hero must use the Keeper familiar rather than a generic Curio")
+			_expect(bool(contract.get("profile_save_health_compact", false)), "profile save-health truth must stay compact instead of dominating the screen")
 			var settings := {"hit": false}
 			screen.settings_requested.connect(func(): settings["hit"] = true)
 			(screen.get_node("FeatureLayout/ProfileSettings") as Button).emit_signal("pressed")

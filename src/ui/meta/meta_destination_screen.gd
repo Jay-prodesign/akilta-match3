@@ -70,6 +70,7 @@ func configure(feature_key: String, state: Dictionary) -> bool:
 	hero_art.visible = _feature_key != "shop"
 	profile_settings.visible = _feature_key == "profile"
 	save_health_card.visible = _feature_key == "profile"
+	hero_body.visible = false
 
 	local_save_status.text = String(state.get("save_status", "LOCAL SAVE · DEVICE-LOCAL"))
 	local_save_detail.text = String(state.get("save_detail", "Progress is stored on this device."))
@@ -189,5 +190,7 @@ func screen_contract() -> Dictionary:
 		"hero_asset_path": _hero_asset_path,
 		"raster_feature_art": _hero_asset_path.to_lower().ends_with(".webp") or _hero_asset_path.to_lower().ends_with(".png"),
 		"rounded_primary_actions": weekly_action.get_theme_stylebox("normal") != null and profile_settings.get_theme_stylebox("normal") != null,
+		"card_copy_compact": not ($FeatureLayout/CardScroll/Cards/Card1/Row/Copy/Body as Label).visible and not ($FeatureLayout/CardScroll/Cards/Card2/Row/Copy/Body as Label).visible and not ($FeatureLayout/CardScroll/Cards/Card3/Row/Copy/Body as Label).visible,
+		"profile_save_health_compact": _feature_key != "profile" or (save_health_card != null and save_health_card.custom_minimum_size.y <= 200.0),
 
 	}

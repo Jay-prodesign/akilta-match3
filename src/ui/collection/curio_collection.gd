@@ -72,7 +72,7 @@ func _refresh() -> void:
 	_apply_copy_style(null, moon_detail, moon_state, moon_origin, has_moon)
 
 	var has_moth := curios.has("moth_reliquary")
-	slot2_name.text = "MOTH RELIQUARY" if has_moth else "SEALED · MOTH RELIQUARY"
+	slot2_name.text = "MOTH RELIQUARY"
 	slot2_hint.text = "Recovered from the sealed side cabinet." if has_moth else "Clear both wax seals in Level 2."
 	slot2_state.text = "AWAKENED · RELIC 02" if has_moth else "DORMANT · RELIC 02"
 	slot2_origin.text = "RECOVERED FROM · SEALED DISPLAY" if has_moth else "SEALED BEHIND · WAX DISPLAY"
@@ -81,7 +81,7 @@ func _refresh() -> void:
 	_apply_copy_style(slot2_name, slot2_hint, slot2_state, slot2_origin, has_moth)
 
 	var has_locket := curios.has("thorned_locket")
-	slot3_name.text = "THORNED LOCKET" if has_locket else "SEALED · THORNED LOCKET"
+	slot3_name.text = "THORNED LOCKET"
 	slot3_hint.text = "A moon-beam sigil opened its thorned clasp." if has_locket else "Create and trigger a line special in Level 3."
 	slot3_state.text = "AWAKENED · RELIC 03" if has_locket else "DORMANT · RELIC 03"
 	slot3_origin.text = "RECOVERED FROM · THORNLIGHT ARRANGEMENT" if has_locket else "SEALED BEHIND · THORNLIGHT"
@@ -145,7 +145,10 @@ func curio_asset_contract() -> Dictionary:
 		"authored_detail_scene": true,
 		"north_star_title_hierarchy": ($Layout/Title as Label).get_theme_font_size("font_size") >= 50,
 		"north_star_count_plate": count_label != null and count_label.get_theme_stylebox("normal") != null and count_label.custom_minimum_size.y >= 50.0,
-		"hero_curio_scale": moon_art != null and moon_art.custom_minimum_size.x >= 260.0,
+		"hero_curio_scale": moon_art != null and moon_art.custom_minimum_size.y >= 210.0,
+		"compact_collection_cards": ($Layout/Cards as HBoxContainer).custom_minimum_size.y <= 440.0 and ($Layout/Cards as HBoxContainer).size_flags_vertical != Control.SIZE_EXPAND_FILL and moon_card.custom_minimum_size.y <= 440.0 and slot2_card.custom_minimum_size.y <= 440.0 and slot3_card.custom_minimum_size.y <= 440.0,
+		"north_star_collection_grid": ($Layout/Cards as HBoxContainer) != null and moon_card.size_flags_horizontal == Control.SIZE_EXPAND_FILL and slot2_card.size_flags_horizontal == Control.SIZE_EXPAND_FILL and slot3_card.size_flags_horizontal == Control.SIZE_EXPAND_FILL,
+		"collection_copy_subordinate": not moon_detail.visible and not moon_origin.visible and not slot2_hint.visible and not slot2_origin.visible and not slot3_hint.visible and not slot3_origin.visible,
 		"intro_subordinate": ($Layout/Intro as Label) != null and not ($Layout/Intro as Label).visible,
 		"runtime_ui_factory": false,
 	}

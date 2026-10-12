@@ -337,7 +337,7 @@ size_flags_horizontal = 3
 theme_override_constants/separation = 12
 
 [node name="Card1" type="PanelContainer" parent="FeatureLayout/CardScroll/Cards"]
-custom_minimum_size = Vector2(0, 222)
+custom_minimum_size = Vector2(0, 198)
 layout_mode = 2
 theme_override_styles/panel = SubResource("Card")
 
@@ -346,7 +346,7 @@ layout_mode = 2
 theme_override_constants/separation = 18
 
 [node name="Art" type="TextureRect" parent="FeatureLayout/CardScroll/Cards/Card1/Row"]
-custom_minimum_size = Vector2(170, 170)
+custom_minimum_size = Vector2(185, 168)
 layout_mode = 2
 expand_mode = 1
 stretch_mode = 5
@@ -371,6 +371,7 @@ theme_override_font_sizes/font_size = 31
 text = "TITLE"
 
 [node name="Body" type="Label" parent="FeatureLayout/CardScroll/Cards/Card1/Row/Copy"]
+visible = false
 layout_mode = 2
 theme_override_colors/font_color = Color(0.90, 0.84, 0.88, 1)
 theme_override_colors/font_outline_color = Color(0.02, 0.014, 0.028, 0.96)
@@ -389,7 +390,7 @@ text = "STATUS"
 autowrap_mode = 2
 
 [node name="Card2" type="PanelContainer" parent="FeatureLayout/CardScroll/Cards"]
-custom_minimum_size = Vector2(0, 222)
+custom_minimum_size = Vector2(0, 198)
 layout_mode = 2
 theme_override_styles/panel = SubResource("Card")
 
@@ -398,7 +399,7 @@ layout_mode = 2
 theme_override_constants/separation = 18
 
 [node name="Art" type="TextureRect" parent="FeatureLayout/CardScroll/Cards/Card2/Row"]
-custom_minimum_size = Vector2(170, 170)
+custom_minimum_size = Vector2(185, 168)
 layout_mode = 2
 expand_mode = 1
 stretch_mode = 5
@@ -423,6 +424,7 @@ theme_override_font_sizes/font_size = 31
 text = "TITLE"
 
 [node name="Body" type="Label" parent="FeatureLayout/CardScroll/Cards/Card2/Row/Copy"]
+visible = false
 layout_mode = 2
 theme_override_colors/font_color = Color(0.90, 0.84, 0.88, 1)
 theme_override_colors/font_outline_color = Color(0.02, 0.014, 0.028, 0.96)
@@ -441,7 +443,7 @@ text = "STATUS"
 autowrap_mode = 2
 
 [node name="Card3" type="PanelContainer" parent="FeatureLayout/CardScroll/Cards"]
-custom_minimum_size = Vector2(0, 222)
+custom_minimum_size = Vector2(0, 198)
 layout_mode = 2
 theme_override_styles/panel = SubResource("Card")
 
@@ -450,7 +452,7 @@ layout_mode = 2
 theme_override_constants/separation = 18
 
 [node name="Art" type="TextureRect" parent="FeatureLayout/CardScroll/Cards/Card3/Row"]
-custom_minimum_size = Vector2(170, 170)
+custom_minimum_size = Vector2(185, 168)
 layout_mode = 2
 expand_mode = 1
 stretch_mode = 5
@@ -475,6 +477,7 @@ theme_override_font_sizes/font_size = 31
 text = "TITLE"
 
 [node name="Body" type="Label" parent="FeatureLayout/CardScroll/Cards/Card3/Row/Copy"]
+visible = false
 layout_mode = 2
 theme_override_colors/font_color = Color(0.90, 0.84, 0.88, 1)
 theme_override_colors/font_outline_color = Color(0.02, 0.014, 0.028, 0.96)
@@ -494,7 +497,7 @@ autowrap_mode = 2
 
 [node name="SaveHealthCard" type="PanelContainer" parent="FeatureLayout"]
 visible = false
-custom_minimum_size = Vector2(0, 250)
+custom_minimum_size = Vector2(0, 194)
 layout_mode = 2
 theme_override_styles/panel = SubResource("Card")
 
@@ -519,7 +522,7 @@ horizontal_alignment = 1
 [node name="LocalSaveDetail" type="Label" parent="FeatureLayout/SaveHealthCard/SaveHealthContent"]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.90, 0.84, 0.88, 1)
-theme_override_font_sizes/font_size = 21
+theme_override_font_sizes/font_size = 18
 text = "Progress is stored on this device."
 horizontal_alignment = 1
 autowrap_mode = 2
@@ -527,7 +530,7 @@ autowrap_mode = 2
 [node name="CloudSyncStatus" type="Label" parent="FeatureLayout/SaveHealthCard/SaveHealthContent"]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.82, 0.72, 0.90, 1)
-theme_override_font_sizes/font_size = 20
+theme_override_font_sizes/font_size = 18
 text = "CLOUD SYNC · NOT CONNECTED"
 horizontal_alignment = 1
 
