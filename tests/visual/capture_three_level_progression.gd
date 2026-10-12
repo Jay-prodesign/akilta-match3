@@ -224,10 +224,13 @@ func _capture() -> void:
 	var shop_disabled_action: Button = app.current_screen().get_node_or_null("FeatureLayout/FeatureHero/HeroRow/HeroCopy/ShopDisabledAction") as Button
 	if shop_notice == null or not shop_notice.text.contains("NO PURCHASES OR PAYMENTS"):
 		return _fail(app, "Shop must truthfully expose that purchases are disabled")
-	if shop_currency == null or not shop_currency.text.contains("HOUSE COINS  12700") or not shop_currency.text.contains("MOONSTONES  523"):
-		return _fail(app, "Shop currency summary must reflect persisted review balances")
-	if shop_truth == null or not shop_truth.text.contains("NOT PURCHASABLE"):
-		return _fail(app, "Shop currency summary must not imply commerce availability")
+	if shop_currency == null or not shop_currency.text.contains("HOUSE COINS  360") or not shop_currency.text.contains("MOONSTONES  3"):
+		return _fail(app, "Shop currency summary must reflect only three earned first-clear rewards")
+	if shop_truth == null or not shop_truth.text.contains("EARNED IN PLAY") or not shop_truth.text.contains("NOT PURCHASABLE"):
+		return _fail(app, "Shop currency summary must state earned-only non-purchasable truth")
+	var shop_life_chip = app.current_screen().find_child("LifeResourceChip", true, false)
+	if shop_life_chip != null:
+		return _fail(app, "Shop resource bar must not expose an unimplemented life economy")
 	if shop_hero_title == null or shop_hero_title.text != "NO PURCHASES ENABLED":
 		return _fail(app, "Shop hero must remain an admitted unavailable state")
 	if shop_art == null or shop_art.texture == null or shop_disabled_action == null or not shop_disabled_action.disabled:
