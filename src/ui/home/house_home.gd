@@ -152,6 +152,7 @@ func north_star_home_contract() -> Dictionary:
 		"bottom_nav_reserved": ($Layout.offset_bottom <= -90.0),
 		"world_underlays_home_ui": room_view != null and room_view.get_parent() == self and $Layout/WorldSpacer != null,
 		"direct_level_cta": play_button != null and (play_button.text.begins_with("PLAY LEVEL") or play_button.text.begins_with("EXPLORE")),
+		"compact_ftue_guide": _first_ritual_panel != null and _first_ritual_panel.custom_minimum_size.y <= 78.0 and _first_ritual_copy != null and _first_ritual_copy.text.length() <= 72,
 	}
 
 func _on_play_pressed() -> void:
