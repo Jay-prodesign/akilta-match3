@@ -29,14 +29,15 @@ func _run() -> void:
 	_expect(float(profiles["win"]["gain_db"]) > float(profiles["special"]["gain_db"]), "win can lift above ordinary special feedback without becoming loud")
 	_expect(float(profiles["fail"]["gain_db"]) <= -30.0, "failure feedback must remain restrained")
 	_expect(float(profiles["ui"]["gain_db"]) <= -36.0, "navigation feedback must remain subtle")
+	_expect(float(profiles["invalid"]["gain_db"]) <= -38.0, "invalid-swap feedback must remain a muted rejection cue")
 
 	director.set_play_sink(func(kind: String, profile: Dictionary): calls.append({"kind": kind, "profile": profile}))
-	for kind in ["ui", "match", "special", "win", "fail", "retry"]:
+	for kind in ["invalid", "ui", "match", "special", "win", "fail", "retry"]:
 		_expect(director.request_feedback(kind), "%s feedback must be accepted" % kind)
 	_expect(not director.request_feedback("unknown"), "unknown feedback must fail open")
-	_expect(calls.size() == 6, "six semantic feedback requests must reach the sink")
-	_expect(float(calls[3]["profile"]["pitch"]) > float(calls[1]["profile"]["pitch"]), "win chime must read brighter than match")
-	_expect(float(calls[4]["profile"]["pitch"]) < float(calls[1]["profile"]["pitch"]), "fail chime must read lower than match")
+	_expect(calls.size() == 7, "seven semantic feedback requests must reach the sink")
+	_expect(float(calls[4]["profile"]["pitch"]) > float(calls[2]["profile"]["pitch"]), "win chime must read brighter than match")
+	_expect(float(calls[5]["profile"]["pitch"]) < float(calls[2]["profile"]["pitch"]), "fail chime must read lower than match")
 
 	director.queue_free()
 	await process_frame
