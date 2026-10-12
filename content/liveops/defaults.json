@@ -1,0 +1,13 @@
+{
+  "schema_version": 1,
+  "revision": "bundled-2026-10-12",
+  "flags": {
+    "daily_house_ritual_enabled": true,
+    "weekly_rituals_surface_enabled": true,
+    "seasonal_events_enabled": false,
+    "commerce_enabled": false,
+    "keeper_guidance_enabled": true,
+    "fail_plus3_recovery_enabled": true,
+    "analytics_transport_enabled": false
+  }
+}
