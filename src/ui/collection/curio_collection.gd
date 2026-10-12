@@ -143,6 +143,10 @@ func curio_asset_contract() -> Dictionary:
 		"authored_display_slots": moon_art != null and slot2_art != null and slot3_art != null,
 		"world_backdrop_loaded": backdrop != null and backdrop.texture != null,
 		"authored_detail_scene": true,
+		"north_star_title_hierarchy": ($Layout/Title as Label).get_theme_font_size("font_size") >= 50,
+		"north_star_count_plate": count_label != null and count_label.get_theme_stylebox("normal") != null and count_label.custom_minimum_size.y >= 50.0,
+		"hero_curio_scale": moon_art != null and moon_art.custom_minimum_size.x >= 260.0,
+		"intro_subordinate": ($Layout/Intro as Label) != null and not ($Layout/Intro as Label).visible,
 		"runtime_ui_factory": false,
 	}
 

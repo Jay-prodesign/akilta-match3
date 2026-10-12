@@ -19,6 +19,8 @@ func _run() -> void:
 	_expect(String(contract.get("offline_contract", "")) == "truthful_empty_state", "Weekly Rituals must identify truthful offline state")
 	_expect(String(contract.get("reward_asset_path", "")).ends_with(".webp"), "Weekly Rituals must use raster Curio art")
 	_expect(not bool(contract.get("code_built_panels", true)), "Weekly Rituals must not return to bootstrap-built panels")
+	_expect(bool(contract.get("north_star_title_hierarchy", false)), "Weekly Rituals must retain a strong North Star page title")
+	_expect(bool(contract.get("north_star_altar_stack", false)), "Weekly Rituals empty state must use a compact vertical altar composition")
 
 	var timer := screen.get_node_or_null("MissionLayout/MissionTimer") as Label
 	var empty := screen.get_node_or_null("MissionLayout/MissionEmptyState") as PanelContainer
@@ -27,10 +29,10 @@ func _run() -> void:
 	var art := screen.get_node_or_null("MissionLayout/MissionEmptyState/EmptyContent/MissionRewardArt") as TextureRect
 	var record := screen.get_node_or_null("MissionLayout/MissionOpeningRecord") as Label
 	_expect(timer != null and timer.text.contains("OFFLINE"), "Weekly Rituals must disclose unavailable reset timing")
-	_expect(empty != null and empty.custom_minimum_size.y >= 500.0, "Weekly altar must reserve a bounded hero stage without becoming an empty full-height slab")
+	_expect(empty != null and empty.custom_minimum_size.y >= 540.0, "Weekly altar must reserve a bounded hero stage without becoming an empty full-height slab")
 	_expect(truth != null and truth.text.contains("NOTHING TO CLAIM"), "Weekly Rituals must not fabricate claimable rewards")
 	_expect(availability != null and availability.text.contains("ONLY WHEN A MISSION FEED IS CONNECTED"), "Weekly Rituals must explain live-feed dependency")
-	_expect(art != null and art.texture != null and art.custom_minimum_size.x >= 300.0 and String(art.get_meta("asset_path", "")).ends_with(".webp"), "Weekly altar must retain a hero-scale raster Curio")
+	_expect(art != null and art.texture != null and art.custom_minimum_size.x >= 280.0 and String(art.get_meta("asset_path", "")).ends_with(".webp"), "Weekly altar must retain a hero-scale raster Curio")
 	_expect(record != null and record.text.contains("3 / 3 DISPLAYS AWAKENED"), "Weekly Rituals must reflect opening cabinet record")
 
 	var event_signal := {"hit": false}

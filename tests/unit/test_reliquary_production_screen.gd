@@ -25,12 +25,16 @@ func _run() -> void:
 	_expect(bool(contract.get("authored_display_slots", false)), "Reliquary must own three authored Curio art slots")
 	_expect(bool(contract.get("world_backdrop_loaded", false)), "Reliquary must load authored House-world backdrop")
 	_expect(bool(contract.get("authored_detail_scene", false)), "Curio detail must be an authored scene")
+	_expect(bool(contract.get("north_star_title_hierarchy", false)), "Reliquary must retain a strong North Star page title")
+	_expect(bool(contract.get("north_star_count_plate", false)), "Reliquary progress must sit on an authored readable plate")
+	_expect(bool(contract.get("hero_curio_scale", false)), "Reliquary Moon Cameo must remain a hero-scale Curio")
+	_expect(bool(contract.get("intro_subordinate", false)), "Reliquary explanatory prose must not compete with the collection")
 	_expect(not bool(contract.get("runtime_ui_factory", true)), "Reliquary must not rebuild presentation nodes at runtime")
 
 	var moon_art := screen.get_node_or_null("Layout/Cards/MoonCard/Content/RitualArt") as TextureRect
 	var moth_art := screen.get_node_or_null("Layout/Cards/Slot2/Content/Number/RewardArt") as TextureRect
 	var locket_art := screen.get_node_or_null("Layout/Cards/Slot3/Content/Number/RewardArt") as TextureRect
-	_expect(moon_art != null and moon_art.texture != null and moon_art.custom_minimum_size.x >= 240.0, "Moon Cameo must render as a hero-scale authored display")
+	_expect(moon_art != null and moon_art.texture != null and moon_art.custom_minimum_size.x >= 260.0, "Moon Cameo must render as a hero-scale authored display")
 	_expect(moth_art != null and moth_art.texture != null, "Moth Reliquary authored display art missing")
 	_expect(locket_art != null and locket_art.texture != null, "Thorned Locket authored display art missing")
 
@@ -51,6 +55,7 @@ func _run() -> void:
 		_expect(bool(detail_contract.get("authored_scene", false)), "Curio detail contract must identify authored presentation")
 		_expect(bool(detail_contract.get("art_loaded", false)), "Curio detail hero art must load")
 		_expect(bool(detail_contract.get("view_in_house_visible", false)), "Owned Curio detail must expose View in House")
+		_expect(bool(detail_contract.get("north_star_actions", false)), "Curio detail actions must retain the rounded North Star mobile CTA scale")
 		var close := detail.get_node_or_null("CurioDetailCard/Content/Close") as Button
 		_expect(close != null, "Curio detail close action missing")
 		if close != null:

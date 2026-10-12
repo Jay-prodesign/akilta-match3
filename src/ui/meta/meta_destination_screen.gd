@@ -10,6 +10,7 @@ const PieceAssetLoader = preload("res://src/match3/presentation/piece_asset_load
 
 var _feature_key: String = ""
 var _daily_level: int = 0
+var _hero_asset_path: String = ""
 
 @onready var world_art: TextureRect = $WorldArt
 @onready var title: Label = $FeatureLayout/FeatureTitle
@@ -78,9 +79,9 @@ func configure(feature_key: String, state: Dictionary) -> bool:
 	match _feature_key:
 		"events":
 			background_id = "events_bg_curio_house"
-			hero_path = "res://assets/curios/ch01_curio_moon_cameo_awakened_v01.svg"
+			hero_path = "res://assets/curios/ch01_curio_moon_cameo_awakened_v01.webp"
 			title.text = "EVENT CENTER"
-			detail.text = "Seasonal events gather here; Weekly Rituals has its own truthful mission state."
+			detail.text = "SEASONAL RITUALS · WEEKLY ALTAR · DAILY PRACTICE"
 			hero_kicker.text = "OPENING RITUAL COMPLETE" if opening_complete else "OPENING RITUAL IN PROGRESS"
 			hero_title.text = "%d / %d DISPLAYS AWAKENED" % [completed_count, opening_cap]
 			hero_body.text = "The House remembers every completed display; future weekly events remain sealed."
@@ -92,15 +93,15 @@ func configure(feature_key: String, state: Dictionary) -> bool:
 			daily_action.set_meta("daily_level", _daily_level)
 			truth_strip.text = "LIVE EVENT REWARDS ARE NOT FABRICATED · DAILY PRACTICE IS DEVICE-LOCAL"
 			cards = [
-				{"art":"res://assets/curios/ch01_curio_moon_cameo_awakened_v01.svg", "kicker":"RITUAL I", "title":"MOONLIGHT MARKET", "body":"The opening cabinet set is restored. The House is ready for a future moonlit event." if opening_complete else "Awaken the three opening displays to restore the Curio House.", "status":"OPENING CHAPTER COMPLETE · FUTURE MARKET EVENT REMAINS SEALED" if opening_complete else "CHAPTER PROGRESS TRACKED · MARKET EVENT NOT YET ACTIVE"},
-				{"art":"res://assets/curios/ch01_curio_moth_reliquary.svg", "kicker":"RITUAL II", "title":"THE LOST RELICS", "body":"A sealed reliquary marks a future cabinet journey.", "status":"UPPER CABINETS SEALED · FUTURE JOURNEY" if opening_complete else "LOCKED · COMPLETE THE OPENING CHAPTER"},
-				{"art":"res://assets/curios/ch01_curio_thorned_locket.svg", "kicker":"RITUAL III", "title":"WEEKLY RITUALS", "body":"Weekly ritual challenges will live here when a live mission feed exists.", "status":"FUTURE FEATURE · NO CLAIMABLE REWARDS"}
+				{"art":"res://assets/curios/ch01_curio_moon_cameo_awakened_v01.webp", "kicker":"RITUAL I", "title":"MOONLIGHT MARKET", "body":"The opening cabinet set is restored. The House is ready for a future moonlit event." if opening_complete else "Awaken the three opening displays to restore the Curio House.", "status":"OPENING CHAPTER COMPLETE · FUTURE MARKET EVENT REMAINS SEALED" if opening_complete else "CHAPTER PROGRESS TRACKED · MARKET EVENT NOT YET ACTIVE"},
+				{"art":"res://assets/curios/ch01_curio_moth_reliquary.png", "kicker":"RITUAL II", "title":"THE LOST RELICS", "body":"A sealed reliquary marks a future cabinet journey.", "status":"UPPER CABINETS SEALED · FUTURE JOURNEY" if opening_complete else "LOCKED · COMPLETE THE OPENING CHAPTER"},
+				{"art":"res://assets/curios/ch01_curio_thorned_locket.png", "kicker":"RITUAL III", "title":"WEEKLY RITUALS", "body":"Weekly ritual challenges will live here when a live mission feed exists.", "status":"FUTURE FEATURE · NO CLAIMABLE REWARDS"}
 			]
 		"shop":
 			background_id = "shop_bg_curio_house"
-			hero_path = "res://assets/curios/ch01_curio_moth_reliquary.svg"
+			hero_path = "res://assets/curios/ch01_curio_moth_reliquary.png"
 			title.text = "THE CURIO EMPORIUM"
-			detail.text = "A sealed preview of the House economy. Nothing here can charge you."
+			detail.text = "SEALED ECONOMY PREVIEW · NOTHING HERE CAN CHARGE YOU"
 			hero_kicker.text = "EMPORIUM PREVIEW · SEALED"
 			hero_title.text = "NO PURCHASES ENABLED"
 			hero_body.text = "These balances come only from first clears. Purchases and spending are not connected."
@@ -110,22 +111,22 @@ func configure(feature_key: String, state: Dictionary) -> bool:
 			shop_disabled_action.disabled = true
 			truth_strip.text = "EARNED IN PLAY · NOT PURCHASABLE · NO REAL-MONEY COMMERCE"
 			cards = [
-				{"art":"res://assets/curios/ch01_curio_moon_cameo_awakened_v01.svg", "kicker":"SEALED CABINET I", "title":"CANDLELIGHT KIT", "body":"A future soft-currency cabinet for restoration supplies.", "status":"SEALED · ECONOMY PREVIEW ONLY"},
-				{"art":"res://assets/curios/ch01_curio_moth_reliquary.svg", "kicker":"SEALED CABINET II", "title":"MOONSTONE CACHE", "body":"A future premium-currency cabinet. No price or payment flow is active.", "status":"SEALED · NO REAL-MONEY PURCHASES"},
-				{"art":"res://assets/curios/ch01_curio_thorned_locket.svg", "kicker":"SEALED CABINET III", "title":"RESTORER'S RELIQUARY", "body":"A future curated bundle surface for boosters and curios.", "status":"SEALED · STORE NOT CONNECTED"}
+				{"art":"res://assets/curios/ch01_curio_moon_cameo_awakened_v01.webp", "kicker":"SEALED CABINET I", "title":"CANDLELIGHT KIT", "body":"A future soft-currency cabinet for restoration supplies.", "status":"SEALED · ECONOMY PREVIEW ONLY"},
+				{"art":"res://assets/curios/ch01_curio_moth_reliquary.png", "kicker":"SEALED CABINET II", "title":"MOONSTONE CACHE", "body":"A future premium-currency cabinet. No price or payment flow is active.", "status":"SEALED · NO REAL-MONEY PURCHASES"},
+				{"art":"res://assets/curios/ch01_curio_thorned_locket.png", "kicker":"SEALED CABINET III", "title":"RESTORER'S RELIQUARY", "body":"A future curated bundle surface for boosters and curios.", "status":"SEALED · STORE NOT CONNECTED"}
 			]
 		"profile":
 			background_id = "profile_bg_curio_house"
-			hero_path = "res://assets/curios/ch01_curio_moon_cameo_awakened_v01.svg"
+			hero_path = "res://assets/pieces/black_cat.webp"
 			title.text = "THE KEEPER"
-			detail.text = "Your restored curios, House progress and preferences."
+			detail.text = "YOUR HOUSE · CURIOS · PROGRESS · PREFERENCES"
 			hero_kicker.text = "FIRST CABINET SET RESTORED" if opening_complete else "KEEPER RECORD"
 			hero_title.text = "%d CURIOS · RESTORATION STAGE %d" % [collected_count, restored_stage]
 			hero_body.text = "Your opening journey is stored locally and reflected across the House, map and Reliquary."
 			truth_strip.text = "CLOUD SYNC · NOT CONNECTED · NO REMOTE BACKUP CLAIM"
 			cards = [
-				{"art":"res://assets/pieces/moon_sigil.svg", "kicker":"KEEPER RECORD I", "title":"CHAPTER PROGRESS", "body":"Opening chapter complete · %d of %d rituals." % [completed_count, opening_cap] if opening_complete else "%d of %d opening rituals completed." % [completed_count, opening_cap], "status":"FIRST CABINET SET RESTORED" if opening_complete else "YOUR SAVED JOURNEY"},
-				{"art":"res://assets/curios/ch01_curio_moon_cameo_awakened_v01.svg", "kicker":"KEEPER RECORD II", "title":"RELIQUARY", "body":"%d of %d opening curios awakened." % [collected_count, opening_cap], "status":"OPENING SET COMPLETE" if opening_complete else "RELICS RECOVERED"},
+				{"art":"res://assets/pieces/moon_sigil.webp", "kicker":"KEEPER RECORD I", "title":"CHAPTER PROGRESS", "body":"Opening chapter complete · %d of %d rituals." % [completed_count, opening_cap] if opening_complete else "%d of %d opening rituals completed." % [completed_count, opening_cap], "status":"FIRST CABINET SET RESTORED" if opening_complete else "YOUR SAVED JOURNEY"},
+				{"art":"res://assets/curios/ch01_curio_moon_cameo_awakened_v01.webp", "kicker":"KEEPER RECORD II", "title":"RELIQUARY", "body":"%d of %d opening curios awakened." % [collected_count, opening_cap], "status":"OPENING SET COMPLETE" if opening_complete else "RELICS RECOVERED"},
 				{"art":"res://assets/world/ch01_curio_boutique/hub_bg_grandhall.webp", "kicker":"KEEPER RECORD III", "title":"HOUSE RESTORATION", "body":"Restoration stage %d." % restored_stage, "status":"OPENING RESTORATION COMPLETE" if opening_complete else "PROGRESS SAVED ON THIS DEVICE"}
 			]
 		_:
@@ -142,6 +143,7 @@ func configure(feature_key: String, state: Dictionary) -> bool:
 		hero_art.texture = PieceAssetLoader.ornament(hero_path)
 		if hero_art.texture == null:
 			return false
+	_hero_asset_path = hero_path
 	_apply_cards(cards)
 	return true
 
@@ -162,7 +164,9 @@ func _apply_cards(cards: Array[Dictionary]) -> void:
 		var card_title := card.get_node("Row/Copy/Title") as Label
 		var body := card.get_node("Row/Copy/Body") as Label
 		var status := card.get_node("Row/Copy/Status") as Label
-		art.texture = PieceAssetLoader.ornament(String(entry.get("art", "")))
+		var art_path := String(entry.get("art", ""))
+		art.texture = PieceAssetLoader.ornament(art_path)
+		art.set_meta("asset_path", art_path)
 		kicker.text = String(entry.get("kicker", ""))
 		card_title.text = String(entry.get("title", ""))
 		body.text = String(entry.get("body", ""))
@@ -180,4 +184,10 @@ func screen_contract() -> Dictionary:
 		"hero_art_loaded": hero_loaded,
 		"static_card_slots": 3,
 		"code_built_panels": false,
+		"north_star_title_hierarchy": title != null and title.get_theme_font_size("font_size") >= 52,
+		"north_star_hero_scale": ($FeatureLayout/FeatureHero as PanelContainer).custom_minimum_size.y >= 320.0 and ((shop_offer_art.custom_minimum_size.x if _feature_key == "shop" else hero_art.custom_minimum_size.x) >= 290.0),
+		"hero_asset_path": _hero_asset_path,
+		"raster_feature_art": _hero_asset_path.to_lower().ends_with(".webp") or _hero_asset_path.to_lower().ends_with(".png"),
+		"rounded_primary_actions": weekly_action.get_theme_stylebox("normal") != null and profile_settings.get_theme_stylebox("normal") != null,
+
 	}
