@@ -45,7 +45,10 @@ var _pending_hud_refresh: bool = false
 var haptics = HapticsController.new()
 var _potion_used_for_attempt := false
 var _idle_hint_seconds: float = 0.0
+var _consecutive_failures: int = 0
+var _guided_retry_pending: bool = false
 const AUTO_HINT_DELAY_SECONDS := 9.0
+const GUIDED_HINT_DELAY_SECONDS := 4.0
 const BOOSTER_ART_PATHS := {
 	"hint": "res://assets/pieces/moon_sigil.webp",
 	"plus_moves": "res://assets/pieces/potion.webp",
@@ -113,12 +116,15 @@ func _process(delta: float) -> void:
 		_idle_hint_seconds = 0.0
 		return
 	_idle_hint_seconds += delta
-	if _idle_hint_seconds >= AUTO_HINT_DELAY_SECONDS:
+	if _idle_hint_seconds >= _current_auto_hint_delay():
 		_idle_hint_seconds = 0.0
 		var legal_move: Dictionary = MoveFinder.first_legal_move(board_state)
 		if not legal_move.is_empty() and board_view.has_method("set_teaching_move"):
 			board_view.set_teaching_move(legal_move["from"], legal_move["to"])
-			hint_label.text = "Follow the moonlit pair for your next match."
+			hint_label.text = "GUIDED HINT · FOLLOW THE MOONLIT PAIR" if _consecutive_failures >= 3 else "Follow the moonlit pair for your next match."
+
+func _current_auto_hint_delay() -> float:
+	return GUIDED_HINT_DELAY_SECONDS if _consecutive_failures >= 3 else AUTO_HINT_DELAY_SECONDS
 
 func _ready() -> void:
 	world_backdrop.texture = ScreenArt.texture("gameplay_bg_curio_boutique")
@@ -429,12 +435,20 @@ func restore_reward_claim() -> void:
 func retry_current_level() -> bool:
 	if current_level_path == "":
 		return false
+	var guided_retry := _consecutive_failures >= 2
 	haptics.reset_for_new_attempt()
 	haptics.request_retry()
 	feedback_requested.emit("retry")
 	var reloaded := load_level_path(current_level_path, current_seed)
 	if reloaded:
-		hint_label.text = "RITUAL RESET · %d MOVES RESTORED" % int(board_state.moves_remaining)
+		if guided_retry:
+			var legal_move: Dictionary = MoveFinder.first_legal_move(board_state)
+			if not legal_move.is_empty() and board_view.has_method("set_teaching_move"):
+				board_view.set_teaching_move(legal_move["from"], legal_move["to"])
+			hint_label.text = "GUIDED RETRY · FOLLOW THE MOONLIT PAIR · %d MOVES RESTORED" % int(board_state.moves_remaining)
+		else:
+			hint_label.text = "RITUAL RESET · %d MOVES RESTORED" % int(board_state.moves_remaining)
+		_guided_retry_pending = false
 		_style_impact_hint("normal")
 	return reloaded
 
@@ -672,8 +686,10 @@ func _show_result_if_terminal(result: String) -> void:
 		haptics.request_terminal("failed")
 		feedback_requested.emit("fail")
 		_pending_win = false
+		_consecutive_failures += 1
+		_guided_retry_pending = _consecutive_failures >= 2
 		result_title.text = "THE ROOM WAITS"
-		result_detail.text = "The House keeps its secrets. %s" % current_retry_hint if current_retry_hint != "" else "The House keeps its secrets. Try another arrangement."
+		result_detail.text = _failure_recovery_copy()
 		_configure_result_reward_copy(false)
 		if result_ritual != null:
 			result_ritual.set("mode", "fail")
@@ -692,6 +708,32 @@ func _show_result_if_terminal(result: String) -> void:
 		result_objective_summary.text = _terminal_objective_summary(false)
 		_present_result_overlay("failed")
 		result_state_changed.emit("failed")
+
+func _failure_recovery_copy() -> String:
+	var authored := current_retry_hint if current_retry_hint != "" else "Try another arrangement."
+	if _consecutive_failures <= 1:
+		return "The House keeps its secrets. %s" % authored
+	if _consecutive_failures == 2:
+		return "The House keeps its secrets. %s On retry, the House will mark a legal opening." % authored
+	return "The House keeps its secrets. Guided retry is active: the first legal opening is marked and hints return sooner."
+
+func difficulty_recovery_contract() -> Dictionary:
+	var tier := "standard"
+	if _consecutive_failures >= 3:
+		tier = "assisted"
+	elif _consecutive_failures >= 2:
+		tier = "guided"
+	return {
+		"consecutive_failures": _consecutive_failures,
+		"guidance_tier": tier,
+		"guided_retry_pending": _guided_retry_pending,
+		"auto_hint_delay_seconds": _current_auto_hint_delay(),
+		"life_economy_visible": _resource_life_label != null,
+		"hint_booster_visible": _hint_boost_button != null,
+		"plus_moves_visible": _potion_boost_button != null,
+		"retry_booster_visible": _retry_boost_button != null,
+		"authored_move_budget_preserved": true,
+	}
 
 func _terminal_objective_summary(won: bool) -> String:
 	if board_state == null:
@@ -1048,7 +1090,9 @@ func _build_top_resource_bar() -> void:
 	row.alignment = BoxContainer.ALIGNMENT_CENTER
 	row.add_theme_constant_override("separation", 5)
 	panel.add_child(row)
-	_resource_life_label = _add_resource_chip(row, "LifeResource", "res://assets/ui/ui_heart.svg", "FULL")
+	# Lives are intentionally not exposed until the economy/refill contract is real.
+	# Coins and gems are already durable first-completion rewards, so they remain truthful.
+	_resource_life_label = null
 	_resource_coin_label = _add_resource_chip(row, "CoinResource", "res://assets/ui/ui_coin.svg", _format_number(_player_coins))
 	_resource_gem_label = _add_resource_chip(row, "GemResource", "res://assets/ui/ui_gem.svg", _format_number(_player_gems))
 	var level := Label.new()
@@ -1131,8 +1175,10 @@ func _build_booster_tray() -> void:
 	row.add_theme_constant_override("separation", 6)
 	panel.add_child(row)
 	_hint_boost_button = _add_booster_button(row, "HintBoost", "HINT", String(BOOSTER_ART_PATHS["hint"]), _use_hint_boost)
-	_potion_boost_button = _add_booster_button(row, "PlusMovesBoost", "+3 MOVES", String(BOOSTER_ART_PATHS["plus_moves"]), _use_potion_boost)
-	_retry_boost_button = _add_booster_button(row, "RetryBoost", "RETRY", String(BOOSTER_ART_PATHS["retry"]), _use_retry_boost)
+	# Economy/entitlement is not connected yet. Do not expose free move-budget
+	# mutation or a duplicate retry booster that would invalidate authored difficulty.
+	_potion_boost_button = null
+	_retry_boost_button = null
 
 func _position_booster_tray() -> void:
 	if _booster_tray == null or hint_label == null or not is_node_ready():
@@ -1187,7 +1233,11 @@ func booster_asset_contract() -> Dictionary:
 		"loaded": loaded,
 		"raster_runtime": raster_runtime,
 		"plus_moves_used": _potion_used_for_attempt,
-		"plus_moves_disabled": _potion_boost_button != null and _potion_boost_button.disabled
+		"plus_moves_disabled": true,
+		"hint_exposed": _hint_boost_button != null,
+		"plus_moves_exposed": _potion_boost_button != null,
+		"retry_exposed": _retry_boost_button != null,
+		"economy_entitlement_connected": false
 	}
 
 func _use_potion_boost() -> void:

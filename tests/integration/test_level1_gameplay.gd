@@ -38,9 +38,13 @@ func _run() -> void:
 		var booster_contract: Dictionary = screen.booster_asset_contract()
 		_expect(bool(booster_contract.get("raster_runtime", false)), "all gameplay booster art must be raster-first at runtime")
 		var loaded_boosters: Dictionary = booster_contract.get("loaded", {})
-		_expect(loaded_boosters.size() == 3, "gameplay must register Hint, +3 Moves and Retry booster art")
+		_expect(loaded_boosters.size() == 3, "gameplay must keep registered booster art available for later entitlement work")
 		for booster_key in ["hint", "plus_moves", "retry"]:
 			_expect(bool(loaded_boosters.get(booster_key, false)), "%s gameplay booster art must load" % booster_key)
+		_expect(bool(booster_contract.get("hint_exposed", false)), "truthful free Hint utility must remain exposed")
+		_expect(not bool(booster_contract.get("plus_moves_exposed", true)), "+3 Moves must stay hidden until economy/entitlement is connected")
+		_expect(not bool(booster_contract.get("retry_exposed", true)), "duplicate Retry booster must stay hidden; failure result owns retry recovery")
+		_expect(not bool(booster_contract.get("economy_entitlement_connected", true)), "gameplay must not claim a connected booster economy")
 
 	var board = screen.get("board_state")
 	_expect(board != null, "GameplayScreen must own logical board_state")
@@ -101,6 +105,10 @@ func _run() -> void:
 			_expect(silhouettes.size() == 8, "piece silhouettes must be unique; hue-only differentiation is forbidden")
 			_expect(motifs.size() == 8, "piece motifs must be unique; hue-only differentiation is forbidden")
 
+	_expect(screen.get_node_or_null("ResourceBar/Resources/LifeResource") == null, "gameplay must not expose a fake lives economy before refill/consumption is implemented")
+	_expect(screen.get_node_or_null("BoosterTray/BoosterActions/HintBoost") != null, "gameplay must expose the truthful Hint utility")
+	_expect(screen.get_node_or_null("BoosterTray/BoosterActions/PlusMovesBoost") == null, "gameplay must hide free +3 Moves until entitlement is real")
+	_expect(screen.get_node_or_null("BoosterTray/BoosterActions/RetryBoost") == null, "gameplay must not duplicate retry as a free booster")
 	_expect(screen.find_child("Objective", true, false) != null, "HUD must expose Objective")
 	_expect(screen.find_child("Moves", true, false) != null, "HUD must expose Moves")
 	_expect(screen.get_node_or_null("Layout/BoardView") != null, "board must be the dominant gameplay surface")

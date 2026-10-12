@@ -69,6 +69,43 @@ func _run() -> void:
 	_expect(String(app.current_route_name()) == "gameplay", "retry must remain inside gameplay route")
 	_expect(gameplay.hint_label.text.contains("RITUAL RESET") and gameplay.hint_label.text.contains("MOVES RESTORED"), "retry must visibly confirm restored move budget")
 	_expect(retry_haptics.any(func(call): return int(call["ms"]) == gameplay.haptics.RETRY_MS), "retry must emit a short tactile recovery cue")
+	_expect(gameplay.has_method("difficulty_recovery_contract"), "gameplay must expose difficulty/recovery truth")
+	if gameplay.has_method("difficulty_recovery_contract"):
+		var first_retry_contract: Dictionary = gameplay.difficulty_recovery_contract()
+		_expect(int(first_retry_contract.get("consecutive_failures", 0)) == 1, "first retry must preserve one observed failure")
+		_expect(String(first_retry_contract.get("guidance_tier", "")) == "standard", "first retry must remain standard assistance")
+		_expect(not bool(first_retry_contract.get("life_economy_visible", true)), "failure recovery must not expose fake lives economy")
+		_expect(not bool(first_retry_contract.get("plus_moves_visible", true)), "failure recovery must preserve authored move budget")
+
+	# Fail a second time: retry must now mark a legal opening without changing the board or move budget.
+	gameplay.board_state.moves_remaining = 1
+	gameplay._refresh_hud()
+	var second_fail = gameplay.attempt_swap(failing_move["from"], failing_move["to"])
+	_expect(second_fail != null and String(second_fail.result) == "failed", "second exhaustion attempt must fail deterministically")
+	if board_view.is_motion_active():
+		await board_view.trace_motion_finished
+	var second_contract: Dictionary = gameplay.difficulty_recovery_contract()
+	_expect(int(second_contract.get("consecutive_failures", 0)) == 2, "second failure must advance recovery tier")
+	_expect(String(second_contract.get("guidance_tier", "")) == "guided", "second failure must unlock guided retry")
+	_expect(bool(second_contract.get("guided_retry_pending", false)), "second failure must queue guided retry")
+	_expect(gameplay.result_detail.text.contains("mark a legal opening"), "second failure result must explain guided retry")
+	_expect(gameplay.retry_current_level(), "guided retry must reload the authored level")
+	_expect(int(gameplay.board_state.moves_remaining) == int(level_data["moves"]), "guided retry must preserve the authored move budget")
+	_expect(gameplay.hint_label.text.contains("GUIDED RETRY"), "guided retry must identify itself without relying on color")
+	var teaching: Dictionary = board_view.teaching_contract()
+	_expect(bool(teaching.get("active", false)), "guided retry must visibly mark a legal opening")
+
+	# Third failure does not alter difficulty; it only shortens future hint latency.
+	gameplay.board_state.moves_remaining = 1
+	gameplay._refresh_hud()
+	var third_fail = gameplay.attempt_swap(failing_move["from"], failing_move["to"])
+	_expect(third_fail != null and String(third_fail.result) == "failed", "third exhaustion attempt must fail deterministically")
+	if board_view.is_motion_active():
+		await board_view.trace_motion_finished
+	var third_contract: Dictionary = gameplay.difficulty_recovery_contract()
+	_expect(String(third_contract.get("guidance_tier", "")) == "assisted", "third failure must enter assisted recovery tier")
+	_expect(is_equal_approx(float(third_contract.get("auto_hint_delay_seconds", 0.0)), 4.0), "assisted recovery must shorten hint latency without adding moves")
+	_expect(bool(third_contract.get("authored_move_budget_preserved", false)), "adaptive recovery must never silently change authored difficulty")
 
 	app.queue_free()
 	await process_frame

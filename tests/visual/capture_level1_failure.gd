@@ -69,7 +69,28 @@ func _capture() -> void:
 	if gameplay.result_overlay.visible or int(gameplay.board_state.moves_remaining) != int(level_data["moves"]):
 		return _fail(app, "retry did not restore clean Level 1")
 	if booster_tray == null or not booster_tray.visible:
-		return _fail(app, "retry must restore gameplay boosters")
+		return _fail(app, "retry must restore gameplay utility")
+	if gameplay.get_node_or_null("BoosterTray/BoosterActions/PlusMovesBoost") != null or gameplay.get_node_or_null("BoosterTray/BoosterActions/RetryBoost") != null:
+		return _fail(app, "unentitled difficulty-changing boosters must remain hidden")
+
+	# Produce the player-facing guided-retry state after a second deterministic failure.
+	gameplay.board_state.moves_remaining = 1
+	gameplay._refresh_hud()
+	var second_fail = gameplay.attempt_swap(move["from"], move["to"])
+	if second_fail == null or String(second_fail.result) != "failed":
+		return _fail(app, "second exhaustion move did not fail")
+	if board_view != null and board_view.is_motion_active():
+		await board_view.trace_motion_finished
+	await _frames(2)
+	if not gameplay.result_detail.text.contains("mark a legal opening"):
+		return _fail(app, "guided retry explanation missing")
+	if not gameplay.retry_current_level():
+		return _fail(app, "guided retry failed")
+	await _frames(3)
+	if not gameplay.hint_label.text.contains("GUIDED RETRY"):
+		return _fail(app, "guided retry visible cue missing")
+	if not bool(board_view.teaching_contract().get("active", false)):
+		return _fail(app, "guided retry legal-opening marker missing")
 	if not await _save(app, "level1-retry-restored.png"):
 		return
 
