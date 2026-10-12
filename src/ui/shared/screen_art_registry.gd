@@ -11,6 +11,7 @@ const ART := {
 	"events_bg_curio_house": "res://assets/world/ch01_curio_boutique/chapter_route_curio_boutique.webp",
 	"shop_bg_curio_house": "res://assets/world/ch01_curio_boutique/hub_bg_grandhall.webp",
 	"profile_bg_curio_house": "res://assets/world/ch01_curio_boutique/hub_bg_grandhall.webp",
+	"settings_bg_curio_house": "res://assets/world/ch01_curio_boutique/hub_bg_grandhall.webp",
 	"chapters_bg_curio_house": "res://assets/world/ch01_curio_boutique/chapter_route_curio_boutique.webp",
 	"prestart_bg_curio_boutique": "res://assets/world/ch01_curio_boutique/prestart_bg_curio_boutique.webp",
 	"prestart_ch01_level01_art": "res://assets/world/ch01_curio_boutique/prestart_level01_cabinet.webp",
