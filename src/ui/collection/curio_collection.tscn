@@ -162,8 +162,9 @@ horizontal_alignment = 1
 autowrap_mode = 2
 
 [node name="Cards" type="HBoxContainer" parent="Layout"]
+custom_minimum_size = Vector2(0, 430)
 layout_mode = 2
-size_flags_vertical = 3
+size_flags_vertical = 0
 theme_override_constants/separation = 12
 alignment = 1
 
