@@ -36,6 +36,7 @@ on:
       - "src/ui/collection/**"
       - "src/world/**"
       - "src/ui/shared/**"
+      - "src/ui/theme/**"
       - "src/settings/**"
       - "src/ui/settings/**"
       - "src/ui/meta/**"
