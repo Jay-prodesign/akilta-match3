@@ -21,6 +21,7 @@ const PieceAssetLoader = preload("res://src/match3/presentation/piece_asset_load
 const ProductNavigation = preload("res://src/ui/shared/product_navigation.gd")
 const ScreenArt = preload("res://src/ui/shared/screen_art_registry.gd")
 const MobileSafeArea = preload("res://src/ui/shared/mobile_safe_area.gd")
+const EventJournalScript = preload("res://src/analytics/event_journal.gd")
 
 @export var environment: String = "development"
 @export var save_path_override: String = ""
@@ -31,12 +32,14 @@ var navigation
 var user_settings
 var audio_director
 var ui_haptics
+var analytics
 var _store
 var _save_load_status: String = "not_loaded"
 var _save_write_blocked_reason: String = ""
 var _current_screen: Node
 var _settings_screen: Node
 var _pending_level_number: int = 0
+var _active_level_number: int = 0
 var _returning_player_entry: bool = false
 var _shell_navigation_locked: bool = false
 ## Founder-authorized internal review exposes three provisional levels.
@@ -61,6 +64,12 @@ func _complete_bootstrap() -> void:
 	_save_write_blocked_reason = String(_store.write_blocked_reason)
 	progress = ProgressScript.from_dict(loaded)
 	_returning_player_entry = _has_durable_progress(progress)
+
+	analytics = EventJournalScript.new()
+	navigation.route_changed.connect(_on_analytics_route_changed)
+	analytics.record("session_boot", {"load_status": _save_load_status})
+	if _save_load_status in ["backup_recovered", "default_after_invalid_primary", "future_schema"]:
+		analytics.record("save_recovery", {"status": _save_load_status})
 
 	user_settings = UserSettingsScript.new()
 	var settings_path := settings_path_override if settings_path_override != "" else UserSettingsScript.DEFAULT_PATH
@@ -170,7 +179,8 @@ func start_level(level_number: int = 1) -> bool:
 	screen.set("default_level_path", level_path)
 	screen.set("default_seed", 1000 + level_number)
 	var level_id := String((level_data as Dictionary).get("id", ""))
-	screen.set("replay_mode", progress.completed_levels.has(level_id))
+	var replay_mode: bool = progress.completed_levels.has(level_id)
+	screen.set("replay_mode", replay_mode)
 	_show_screen(screen)
 	if screen.has_method("set_player_resources"):
 		screen.set_player_resources(int(progress.lives), int(progress.coins), int(progress.gems))
@@ -189,6 +199,9 @@ func start_level(level_number: int = 1) -> bool:
 		screen.settings_requested.connect(show_settings)
 	if screen.has_signal("result_state_changed"):
 		screen.result_state_changed.connect(_on_gameplay_result_state_changed)
+	_active_level_number = level_number
+	if analytics != null:
+		analytics.record("level_started", {"level_number": level_number, "replay": replay_mode})
 	return true
 
 func complete_level_win(transaction_id: String, level_id: String, curio_id: String = "moon_cameo", house_stage_reward: int = -1) -> bool:
@@ -217,6 +230,12 @@ func complete_level_win(transaction_id: String, level_id: String, curio_id: Stri
 		_save_load_status = "primary"
 	_save_write_blocked_reason = ""
 	progress = candidate
+	if analytics != null:
+		analytics.record("reward_committed", {
+			"level_number": _level_number_from_id(level_id),
+			"curio_id": curio_id,
+			"restoration": restoration_needed,
+		})
 	if restoration_needed:
 		if not navigation.go(NavigationScript.Route.RESTORATION, {"reason": "level_reward_restoration"}):
 			return false
@@ -225,6 +244,7 @@ func complete_level_win(transaction_id: String, level_id: String, curio_id: Stri
 		if not navigation.go(NavigationScript.Route.HOUSE, {"reason": "level_replay_complete"}):
 			return false
 		_render_house(false, "", int(candidate.house_stage))
+	_active_level_number = 0
 	return true
 
 func show_weekly_missions() -> bool:
@@ -424,7 +444,8 @@ func _open_daily_practice(level_number: int) -> void:
 	_render_house()
 	if not show_map():
 		return
-	show_prestart(level_number)
+	if show_prestart(level_number) and analytics != null:
+		analytics.record("daily_practice_opened", {"level_number": level_number})
 
 func show_feature_preview(feature: String) -> bool:
 	# Truthful internal-review destinations are real product routes/screens.
@@ -1036,6 +1057,8 @@ func _on_level_exit_requested() -> void:
 	show_house()
 
 func _on_gameplay_result_state_changed(kind: String) -> void:
+	if analytics != null and kind in ["won", "failed"] and _active_level_number > 0:
+		analytics.record("level_result", {"level_number": _active_level_number, "result": kind})
 	if kind == "won" and navigation.current() == NavigationScript.Route.GAMEPLAY:
 		navigation.go(NavigationScript.Route.WIN_REWARDS, {"result": "won"})
 
@@ -1049,6 +1072,7 @@ func _on_level_won(level_id: String, curio_id: String, house_stage_reward: int) 
 
 func _on_level_replay_finished(level_id: String) -> void:
 	_pending_level_number = 0
+	_active_level_number = 0
 	if navigation.current() != NavigationScript.Route.WIN_REWARDS or progress == null or not progress.completed_levels.has(level_id):
 		return
 	if navigation.go(NavigationScript.Route.HOUSE, {"reason": "level_replay_complete", "level": level_id}):
@@ -1065,6 +1089,31 @@ func _on_presentation_settings_changed(state: Dictionary) -> void:
 		_current_screen.apply_presentation_settings(state)
 	if _settings_screen != null and is_instance_valid(_settings_screen) and _settings_screen.has_method("apply_presentation_settings"):
 		_settings_screen.apply_presentation_settings(state)
+
+func _on_analytics_route_changed(from_route: int, to_route: int, _payload: Dictionary) -> void:
+	if analytics == null or navigation == null:
+		return
+	analytics.record("route_changed", {
+		"from": navigation.route_name(from_route).to_lower(),
+		"to": navigation.route_name(to_route).to_lower(),
+	})
+
+func _level_number_from_id(level_id: String) -> int:
+	var parts := level_id.split("_")
+	if parts.is_empty():
+		return maxi(1, _active_level_number)
+	return maxi(1, int(parts[parts.size() - 1]))
+
+func analytics_contract() -> Dictionary:
+	if analytics == null:
+		return {
+			"transport_mode": "local_only",
+			"network_transport_connected": false,
+			"events": [],
+		}
+	var diagnostics: Dictionary = analytics.diagnostics()
+	diagnostics["events"] = analytics.snapshot()
+	return diagnostics
 
 func _level_path(level_number: int) -> String:
 	return "res://content/levels/ch01/level_%03d.json" % level_number
