@@ -17,9 +17,14 @@ func _run() -> void:
 	var title := screen.get_node_or_null("Layout/Title") as Label
 	var progress_label := screen.get_node_or_null("Layout/Progress") as Label
 	var intro := screen.get_node_or_null("Layout/Intro") as Label
-	_expect(title != null and title.get_theme_font_size("font_size") >= 46, "S03 Chapter title must retain mobile-readable hierarchy")
-	_expect(progress_label != null and progress_label.get_theme_font_size("font_size") >= 22, "S03 chapter progress must remain legible")
-	_expect(intro != null and intro.get_theme_font_size("font_size") >= 19, "S03 chapter intro copy must remain legible")
+	_expect(title != null and title.get_theme_font_size("font_size") >= 52, "S03 Chapter title must retain mobile-readable hierarchy")
+	_expect(progress_label != null and progress_label.get_theme_font_size("font_size") >= 26, "S03 chapter progress must remain legible")
+	_expect(intro != null and intro.get_theme_font_size("font_size") >= 21, "S03 chapter intro copy must remain legible")
+	var visual_contract: Dictionary = screen.north_star_map_contract()
+	_expect(bool(visual_contract.get("strong_title", false)), "S03 must retain a strong North Star chapter title")
+	_expect(bool(visual_contract.get("progress_plate", false)), "S03 progress must sit on an authored readable plate")
+	_expect(bool(visual_contract.get("concise_route_instruction", false)), "S03 route instruction must not become a tiny paragraph")
+	_expect(bool(visual_contract.get("route_world_dominant", false)), "S03 authored route world must remain the dominant visual surface")
 	var route = screen.get_node_or_null("Layout/RoutePanel/Scroll/RouteView")
 	_expect(route != null, "S03 authored RouteView missing")
 	if route == null:
