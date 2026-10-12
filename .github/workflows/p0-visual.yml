@@ -39,6 +39,7 @@ on:
       - "src/settings/**"
       - "src/ui/settings/**"
       - "src/ui/meta/**"
+      - "src/ui/missions/**"
       - "src/match3/domain/**"
       - "src/match3/presentation/**"
       - "content/levels/**"
