@@ -68,10 +68,11 @@ jobs:
           echo "Before repair: $(lipo -info "$SIM_LIB")" | tee artifacts/ios-simulator-template-arch.txt
           if ! lipo -archs "$SIM_LIB" | tr ' ' '\n' | grep -Fxq arm64; then
             git clone --depth 1 --branch 4.7.2-stable https://github.com/godotengine/godot.git /tmp/godot-4.7.2
-            python3 -m pip install --user scons
+            python3 -m venv /tmp/godot-scons-env
+            /tmp/godot-scons-env/bin/python -m pip install --disable-pip-version-check scons
             (
               cd /tmp/godot-4.7.2
-              python3 -m SCons platform=ios target=template_release ios_simulator=yes arch=arm64 -j"$(sysctl -n hw.logicalcpu)"
+              /tmp/godot-scons-env/bin/scons platform=ios target=template_release ios_simulator=yes arch=arm64 -j"$(sysctl -n hw.logicalcpu)"
             )
             ARM64_LIB="$(find /tmp/godot-4.7.2/bin -maxdepth 1 -type f -name '*arm64*simulator*.a' | head -1)"
             test -n "$ARM64_LIB"
