@@ -18,6 +18,7 @@ on:
       - "src/progression/**"
       - "src/save/**"
       - "src/world/**"
+      - "src/match3/domain/**"
       - "src/match3/presentation/**"
       - "assets/pieces/**"
       - "assets/curios/**"

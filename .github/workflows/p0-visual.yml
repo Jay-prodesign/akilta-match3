@@ -28,6 +28,7 @@ on:
       - "src/ui/shared/**"
       - "src/settings/**"
       - "src/ui/settings/**"
+      - "src/match3/domain/**"
       - "src/match3/presentation/**"
       - "assets/pieces/**"
       - "assets/curios/**"
