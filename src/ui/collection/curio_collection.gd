@@ -28,6 +28,8 @@ const ScreenArt = preload("res://src/ui/shared/screen_art_registry.gd")
 
 const MOON_SEALED_PATH := "res://assets/curios/ch01_curio_moon_cameo_sealed_v01.webp"
 const MOON_AWAKENED_PATH := "res://assets/curios/ch01_curio_moon_cameo_awakened_v01.webp"
+const MOTH_RELIQUARY_PATH := "res://assets/curios/ch01_curio_moth_reliquary.png"
+const THORNED_LOCKET_PATH := "res://assets/curios/ch01_curio_thorned_locket.png"
 var _moon_textures: Dictionary = {}
 
 var progress
@@ -37,8 +39,8 @@ var _detail_overlay: Control
 func _ready() -> void:
 	back_button.pressed.connect(func(): back_requested.emit())
 	_install_moon_art()
-	_install_reward_art(slot2_number, "res://assets/curios/ch01_curio_moth_reliquary.png")
-	_install_reward_art(slot3_number, "res://assets/curios/ch01_curio_thorned_locket.png")
+	_install_reward_art(slot2_number, MOTH_RELIQUARY_PATH)
+	_install_reward_art(slot3_number, THORNED_LOCKET_PATH)
 	_install_collection_atmosphere()
 	_install_card_actions()
 	_refresh()
@@ -154,6 +156,25 @@ func _install_reward_art(label: Label, path: String) -> void:
 	art.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
 	art.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	label.add_child(art)
+
+func curio_asset_contract() -> Dictionary:
+	var paths := {
+		"moon_sealed": MOON_SEALED_PATH,
+		"moon_awakened": MOON_AWAKENED_PATH,
+		"moth_reliquary": MOTH_RELIQUARY_PATH,
+		"thorned_locket": THORNED_LOCKET_PATH
+	}
+	var loaded := {}
+	var raster_runtime := true
+	for key in paths:
+		var path := String(paths[key])
+		raster_runtime = raster_runtime and (path.ends_with(".webp") or path.ends_with(".png"))
+		loaded[key] = PieceAssetLoader.ornament(path) != null
+	return {
+		"paths": paths,
+		"loaded": loaded,
+		"raster_runtime": raster_runtime
+	}
 
 func _install_collection_atmosphere() -> void:
 	var backdrop := TextureRect.new()
@@ -344,9 +365,9 @@ func _detail_texture(curio_id: String, awakened: bool) -> Texture2D:
 		"moon_cameo":
 			return _load_moon_texture(MOON_AWAKENED_PATH if awakened else MOON_SEALED_PATH)
 		"moth_reliquary":
-			return PieceAssetLoader.ornament("res://assets/curios/ch01_curio_moth_reliquary.png")
+			return PieceAssetLoader.ornament(MOTH_RELIQUARY_PATH)
 		"thorned_locket":
-			return PieceAssetLoader.ornament("res://assets/curios/ch01_curio_thorned_locket.png")
+			return PieceAssetLoader.ornament(THORNED_LOCKET_PATH)
 		_:
 			return null
 
