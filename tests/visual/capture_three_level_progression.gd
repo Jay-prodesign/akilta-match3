@@ -292,8 +292,18 @@ func _capture() -> void:
 		if button == null or button.disabled or button.text != "✓":
 			return _fail(app, "completed map must keep Level %d replayable and awakened" % level_number)
 	var level4: Button = completed_map.get_level_button(4)
-	if level4 == null or not level4.disabled:
-		return _fail(app, "completed opening map must keep Level 4 sealed")
+	var completed_route = completed_map.get_node_or_null("Layout/RoutePanel/Scroll/RouteView")
+	if level4 == null or level4.disabled or completed_route == null or String(completed_route.get_level_state(4)) != "locked":
+		return _fail(app, "completed opening map must keep Level 4 sealed and inspectable")
+	level4.emit_signal("pressed")
+	await _frames(2)
+	var sealed_contract: Dictionary = completed_map.sealed_explanation_contract()
+	if String(sealed_contract.get("sealed_kind", "")) != "future_content" or not bool(sealed_contract.get("no_fake_unlock", false)):
+		return _fail(app, "completed opening map must explain Level 4 without fake availability")
+	var sealed_close: Button = completed_map.get_node_or_null("LockedExplanation/LockedPanel/Content/Close") as Button
+	if sealed_close != null:
+		sealed_close.emit_signal("pressed")
+		await _frames(2)
 	if not await _save(app, "progression-final-map.png"):
 		return
 
