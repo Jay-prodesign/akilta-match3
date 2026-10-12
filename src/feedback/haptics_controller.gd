@@ -14,11 +14,12 @@ const SPECIAL_MS := 42
 const WIN_MS := 180
 const FAIL_MS := 55
 const RETRY_MS := 24
+const SHUFFLE_MS := 34
 const INVALID_THROTTLE_MS := 120
 const UI_THROTTLE_MS := 90
 const MATCH_THROTTLE_MS := 55
 
-enum Category { BLOCKER, COMBO, INVALID, UI, MATCH, SPECIAL, WIN, FAIL, RETRY }
+enum Category { BLOCKER, COMBO, INVALID, UI, MATCH, SPECIAL, WIN, FAIL, RETRY, SHUFFLE }
 
 var _enabled := true
 var _last_invalid_ms := -100000
@@ -114,6 +115,13 @@ func request_retry() -> bool:
 		_suppressed[Category.RETRY] += 1
 		return false
 	return _emit(RETRY_MS, Category.RETRY)
+
+func request_shuffle() -> bool:
+	_requests[Category.SHUFFLE] += 1
+	if not _enabled:
+		_suppressed[Category.SHUFFLE] += 1
+		return false
+	return _emit(SHUFFLE_MS, Category.SHUFFLE)
 
 func reset_for_new_attempt() -> void:
 	_terminal_emitted = false
