@@ -74,7 +74,7 @@ func _run() -> void:
 	await process_frame
 	_expect(str(app.current_route_name()) == "house", "restoration Continue must return to House")
 	var replay_button: Button = app.current_screen().get_node("Layout/PlayButton")
-	_expect(not replay_button.disabled and replay_button.text == "CONTINUE CURIO BOUTIQUE", "House must offer the next provisional review level after restoration completes")
+	_expect(not replay_button.disabled and replay_button.text == "PLAY LEVEL 2", "House must offer the next provisional review level after restoration completes")
 	_expect(app.show_chapters(), "House must reopen chapter selection after Level 1 restoration")
 	await process_frame
 	var replay_chapters = app.current_screen()
