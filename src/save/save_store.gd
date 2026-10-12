@@ -7,7 +7,8 @@ extends RefCounted
 ## The schema and progression truth remain Match-3-specific.
 
 const DEFAULT_PATH := "user://player_progress.json"
-const SCHEMA_VERSION := 1
+const SCHEMA_VERSION := 2
+const MIN_SUPPORTED_SCHEMA_VERSION := 1
 
 var save_path: String
 var write_blocked_reason: String = ""
@@ -18,7 +19,7 @@ func _init(path: String = DEFAULT_PATH) -> void:
 
 func save(data: Dictionary) -> bool:
 	write_blocked_reason = ""
-	if not _validate_candidate(data):
+	if not _validate_current_candidate(data):
 		return false
 
 	var existing = _read_json(save_path)
@@ -38,7 +39,7 @@ func save(data: Dictionary) -> bool:
 	file.close()
 
 	var temp_candidate = _read_json(temp_path)
-	if not temp_candidate is Dictionary or not _validate_candidate(temp_candidate):
+	if not temp_candidate is Dictionary or not _validate_current_candidate(temp_candidate):
 		_remove(temp_path)
 		return false
 
@@ -102,9 +103,13 @@ func is_write_blocked() -> bool:
 func load_status() -> String:
 	return last_load_status
 
+func _validate_current_candidate(data: Dictionary) -> bool:
+	var version = _exact_int(data.get("schema_version", null))
+	return version != null and int(version) == SCHEMA_VERSION and _validate_candidate(data)
+
 func _validate_candidate(data: Dictionary) -> bool:
 	var version = _exact_int(data.get("schema_version", null))
-	if version == null or int(version) != SCHEMA_VERSION:
+	if version == null or int(version) < MIN_SUPPORTED_SCHEMA_VERSION or int(version) > SCHEMA_VERSION:
 		return false
 	var highest = _exact_int(data.get("highest_level_unlocked", null))
 	var stage = _exact_int(data.get("house_stage", null))
