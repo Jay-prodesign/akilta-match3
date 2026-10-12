@@ -25,12 +25,17 @@ on:
       - "src/save/**"
       - "src/world/**"
       - "src/match3/domain/**"
+      - "tests/integration/test_opening_levels_runtime.gd"
+      - "tools/simulation/**"
+      - "tools/level_authoring/**"
+      - "content/levels/**"
       - "src/match3/presentation/**"
       - "assets/pieces/**"
       - "assets/blockers/**"
       - "assets/board/**"
       - "assets/curios/**"
       - "src/ui/shared/**"
+      - "src/feedback/**"
       - "src/settings/**"
       - "src/ui/settings/**"
       - "assets/manifests/screen_contracts.json"
@@ -45,7 +50,11 @@ on:
       - "tests/integration/test_chapter_route_frontier.gd"
       - "tests/integration/test_restoration_presentation.gd"
       - "tests/integration/test_level1_gameplay.gd"
+      - "tests/integration/test_level1_failure_recovery.gd"
       - "tests/integration/test_golden_feedback_vfx.gd"
+      - "tests/integration/test_gameplay_feel.gd"
+      - "tests/integration/test_gameplay_impact_hierarchy.gd"
+      - "tests/integration/test_gameplay_objective_terminal_feedback.gd"
       - "tests/integration/test_opening_two_level_journey.gd"
       - "tests/integration/test_returning_player_resume.gd"
   # Milestone trigger: canonical Golden Loop architecture + playable journey verification (2026-10-11).
@@ -211,6 +220,42 @@ jobs:
           if [ "$status" -ne 0 ]; then exit "$status"; fi
           if grep -Eq "SCRIPT ERROR:|(^| )ERROR:|TEST_FAIL:" <<<"$output"; then exit 1; fi
           grep -Fq "TEST_PASS: Golden Loop match-clear and reward-reveal VFX contract" <<<"$output"
+
+      - name: Run gameplay feel rejection and urgency contract
+        shell: bash
+        run: |
+          set +e
+          output=$(timeout 35s ./godot --headless --path . -s res://tests/integration/test_gameplay_feel.gd 2>&1)
+          status=$?
+          set -e
+          printf '%s\n' "$output"
+          if [ "$status" -ne 0 ]; then exit "$status"; fi
+          if grep -Eq "SCRIPT ERROR:|(^| )ERROR:|TEST_FAIL:" <<<"$output"; then exit 1; fi
+          grep -Fq "TEST_PASS: invalid-swap tactile return and low-move urgency" <<<"$output"
+
+      - name: Run gameplay impact hierarchy contract
+        shell: bash
+        run: |
+          set +e
+          output=$(timeout 40s ./godot --headless --path . -s res://tests/integration/test_gameplay_impact_hierarchy.gd 2>&1)
+          status=$?
+          set -e
+          printf '%s\n' "$output"
+          if [ "$status" -ne 0 ]; then exit "$status"; fi
+          if grep -Eq "SCRIPT ERROR:|(^| )ERROR:|TEST_FAIL:" <<<"$output"; then exit 1; fi
+          grep -Fq "TEST_PASS: gameplay blocker special and cascade impact hierarchy" <<<"$output"
+
+      - name: Run gameplay objective and terminal feel contract
+        shell: bash
+        run: |
+          set +e
+          output=$(timeout 45s ./godot --headless --path . -s res://tests/integration/test_gameplay_objective_terminal_feedback.gd 2>&1)
+          status=$?
+          set -e
+          printf '%s\n' "$output"
+          if [ "$status" -ne 0 ]; then exit "$status"; fi
+          if grep -Eq "SCRIPT ERROR:|(^| )ERROR:|TEST_FAIL:" <<<"$output"; then exit 1; fi
+          grep -Fq "TEST_PASS: gameplay objective progress and terminal transition feel" <<<"$output"
 
       - name: Run durable progression contract
         shell: bash

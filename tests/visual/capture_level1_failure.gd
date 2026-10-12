@@ -54,6 +54,11 @@ func _capture() -> void:
 	var failure_eyebrow: Label = gameplay.get_node("ResultOverlay/Card/Content/Eyebrow")
 	var failure_reward: Label = gameplay.get_node("ResultOverlay/Card/Content/RewardName")
 	var failure_house_change: Label = gameplay.get_node("ResultOverlay/Card/Content/HouseChange")
+	var recovery_action: Button = gameplay.get_node_or_null("ResultOverlay/Card/Content/RecoveryAction") as Button
+	if recovery_action == null or not recovery_action.visible or recovery_action.disabled:
+		return _fail(app, "failure must expose the free +3 Moves recovery action")
+	if not recovery_action.text.contains("FREE"):
+		return _fail(app, "failure recovery must truthfully label its free state")
 	if failure_eyebrow.text != "RITUAL UNFINISHED":
 		return _fail(app, "failed Level 1 must not claim a recovered Curio")
 	if failure_reward.text != "MOON CAMEO · STILL SEALED":
@@ -63,13 +68,44 @@ func _capture() -> void:
 	if not await _save(app, "level1-fail-result.png"):
 		return
 
+	if not gameplay.recover_failed_attempt_with_plus_moves():
+		return _fail(app, "free +3 Moves recovery failed")
+	await _frames(3)
+	if gameplay.result_overlay.visible or int(gameplay.board_state.moves_remaining) != 3:
+		return _fail(app, "recovery must resume same board with exactly three moves")
+	if not gameplay.hint_label.text.contains("RECOVERY"):
+		return _fail(app, "recovery confirmation missing")
+	if not await _save(app, "level1-fail-plus3-recovery.png"):
+		return
+
 	if not gameplay.retry_current_level():
 		return _fail(app, "retry failed")
 	await _frames(3)
 	if gameplay.result_overlay.visible or int(gameplay.board_state.moves_remaining) != int(level_data["moves"]):
 		return _fail(app, "retry did not restore clean Level 1")
 	if booster_tray == null or not booster_tray.visible:
-		return _fail(app, "retry must restore gameplay boosters")
+		return _fail(app, "retry must restore gameplay utility")
+	if gameplay.get_node_or_null("BoosterTray/BoosterActions/PlusMovesBoost") != null or gameplay.get_node_or_null("BoosterTray/BoosterActions/RetryBoost") != null:
+		return _fail(app, "active gameplay must not expose unentitled difficulty-changing boosters")
+
+	# Fail the clean board again, then capture the guided retry state.
+	gameplay.board_state.moves_remaining = 1
+	gameplay._refresh_hud()
+	var second_fail = gameplay.attempt_swap(move["from"], move["to"])
+	if second_fail == null or String(second_fail.result) != "failed":
+		return _fail(app, "second exhaustion move did not fail")
+	if board_view != null and board_view.is_motion_active():
+		await board_view.trace_motion_finished
+	await _frames(2)
+	if not gameplay.result_detail.text.contains("mark a legal opening"):
+		return _fail(app, "guided retry explanation missing")
+	if not gameplay.retry_current_level():
+		return _fail(app, "guided retry failed")
+	await _frames(3)
+	if not gameplay.hint_label.text.contains("GUIDED RETRY"):
+		return _fail(app, "guided retry visible cue missing")
+	if not bool(board_view.teaching_contract().get("active", false)):
+		return _fail(app, "guided retry legal-opening marker missing")
 	if not await _save(app, "level1-retry-restored.png"):
 		return
 

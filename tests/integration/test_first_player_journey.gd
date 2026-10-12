@@ -89,17 +89,11 @@ func _run() -> void:
 			_expect(bool(loaded_boosters.get(booster_key, false)), "%s booster artwork must load" % booster_key)
 	var booster_row: HBoxContainer = gameplay.get_node("BoosterTray/BoosterActions")
 	var hint_booster: Button = booster_row.get_node("HintBoost")
-	var potion_booster: Button = booster_row.get_node("PlusMovesBoost")
+	_expect(booster_row.get_node_or_null("PlusMovesBoost") == null, "active gameplay must not expose the fail-only +3 Moves recovery as a free booster")
+	_expect(booster_row.get_node_or_null("RetryBoost") == null, "active gameplay must not duplicate retry as a booster")
 	hint_booster.emit_signal("pressed")
-	_expect(gameplay.hint_label.text == "Follow the moonlit highlight for a legal match.", "hint booster must find and highlight a legal move")
-	var moves_before_potion := int(gameplay.board_state.moves_remaining)
-	potion_booster.emit_signal("pressed")
-	_expect(int(gameplay.board_state.moves_remaining) == moves_before_potion + 3, "potion booster must grant three moves")
-	_expect(potion_booster.disabled, "+3 Moves booster must visibly disable after its one allowed use")
-	if gameplay.has_method("booster_asset_contract"):
-		_expect(bool(gameplay.booster_asset_contract().get("plus_moves_disabled", false)), "booster contract must expose consumed +3 Moves state")
-	potion_booster.emit_signal("pressed")
-	_expect(int(gameplay.board_state.moves_remaining) == moves_before_potion + 3, "potion booster must be limited to once per attempt")
+	_expect(gameplay.hint_label.text == "Follow the moonlit highlight for a legal match.", "hint utility must find and highlight a legal move")
+	_expect(int(gameplay.board_state.moves_remaining) == 20, "utility actions must preserve the authored Level 1 move budget")
 
 	var trace = gameplay.attempt_swap(Vector2i(1, 4), Vector2i(2, 4))
 	_expect(trace != null and trace.accepted and str(trace.result) == "won", "Level 1 teaching swipe must win")
@@ -133,6 +127,8 @@ func _run() -> void:
 	_expect(str(app.current_route_name()) == "house", "restoration Continue must return to House")
 	var house_curios_nav: Button = awakened_house.get_node_or_null("ProductNavigation/Scroll/Items/NavCurios") as Button
 	_expect(house_curios_nav != null and house_curios_nav.visible, "House navigation must return after restoration completes")
+	var house_active_nav: Button = awakened_house.get_node_or_null("ProductNavigation/Scroll/Items/NavHouse") as Button
+	_expect(house_active_nav != null and house_active_nav.disabled and String(house_active_nav.get_meta("interaction_state", "")) == "selected", "active House tab must be visibly selected and non-repeatable")
 	if house_curios_nav != null:
 		house_curios_nav.emit_signal("pressed")
 	await process_frame
@@ -172,6 +168,8 @@ func _run() -> void:
 	var events_preview = app.current_screen()
 	_expect(events_preview != null and events_preview.name == "EventsScreen" and events_preview.get_node("FeatureLayout/FeatureTitle").text == "EVENT CENTER", "Events tab must open as the S10 Event Center screen")
 	_expect(events_preview != null and events_preview.get_node_or_null("ProductNavigation") != null, "Events screen must retain shared product navigation")
+	var events_active_nav: Button = events_preview.get_node_or_null("ProductNavigation/Scroll/Items/NavEvents") as Button if events_preview != null else null
+	_expect(events_active_nav != null and events_active_nav.disabled and String(events_active_nav.get_meta("interaction_state", "")) == "selected", "active Events tab must be selected and duplicate-safe")
 	if events_preview != null:
 		var weekly_action: Button = events_preview.get_node_or_null("FeatureLayout/WeeklyMissionsAction") as Button
 		_expect(weekly_action != null, "Event Center must expose the S09 Weekly Rituals destination")
@@ -207,6 +205,8 @@ func _run() -> void:
 	var shop_preview = app.current_screen()
 	_expect(shop_preview != null and shop_preview.name == "ShopScreen" and shop_preview.get_node("FeatureLayout/FeatureTitle").text == "THE CURIO EMPORIUM", "Shop must open directly from Events navigation")
 	_expect(shop_preview != null and shop_preview.get_node_or_null("ProductNavigation") != null, "Shop screen must retain shared product navigation")
+	var shop_active_nav: Button = shop_preview.get_node_or_null("ProductNavigation/Scroll/Items/NavShop") as Button if shop_preview != null else null
+	_expect(shop_active_nav != null and shop_active_nav.disabled and String(shop_active_nav.get_meta("interaction_state", "")) == "selected", "active Shop tab must be selected and duplicate-safe")
 	_expect(shop_preview != null and shop_preview.get_node_or_null("FeatureLayout/NoPurchasesNotice") != null, "Shop must truthfully expose that purchases are disabled")
 	var shop_currency: Label = shop_preview.get_node_or_null("FeatureLayout/ShopCurrencySummary") as Label if shop_preview != null else null
 	var shop_truth: Label = shop_preview.get_node_or_null("FeatureLayout/ShopCurrencyTruth") as Label if shop_preview != null else null
@@ -216,6 +216,11 @@ func _run() -> void:
 	_expect(shop_truth != null and shop_truth.text.contains("NOT PURCHASABLE"), "Shop balances must be explicitly non-purchasable")
 	_expect(shop_offer_art != null and shop_offer_art.texture != null, "Shop featured offer must own content artwork")
 	_expect(shop_disabled_action != null and shop_disabled_action.disabled, "Shop commerce CTA must remain disabled before commerce is connected")
+	var ui_audio_before: int = int(app.audio_director.get_feedback_count("ui"))
+	app._on_shell_navigation_requested("house")
+	app._on_shell_navigation_requested("events")
+	_expect(app.audio_director.get_feedback_count("ui") == ui_audio_before + 1, "duplicate shell navigation in one frame must emit feedback only once")
+	await process_frame
 	if shop_preview != null:
 		shop_preview.get_node("ProductNavigation/Scroll/Items/NavHouse").emit_signal("pressed")
 	await process_frame
@@ -354,15 +359,27 @@ func _run() -> void:
 				var settings_panel = app.get_node_or_null("ScreenHost/SettingsPanel")
 				var settings_close: Button = settings_panel.get_node_or_null("Card/Content/Close") as Button if settings_panel != null else null
 				var reduced: CheckButton = settings_panel.get_node_or_null("Card/Content/Reduced") as CheckButton if settings_panel != null else null
+				var contrast: CheckButton = settings_panel.get_node_or_null("Card/Content/Contrast") as CheckButton if settings_panel != null else null
 				var saved_note: Label = settings_panel.get_node_or_null("Card/Content/SavedNote") as Label if settings_panel != null else null
 				_expect(settings_close != null and settings_close.text == "RETURN TO PROFILE", "Profile-origin Settings must return to Profile")
-				_expect(reduced != null and saved_note != null, "Settings controls and saved-state feedback must exist")
+				_expect(reduced != null and contrast != null and saved_note != null, "Settings controls and saved-state feedback must exist")
+				_expect(settings_panel != null and settings_panel.has_method("state_contract"), "Settings must expose its release utility state contract")
 				if reduced != null:
 					reduced.button_pressed = true
 					reduced.emit_signal("toggled", true)
 					await process_frame
 				_expect(bool(app.user_settings.get_value("reduced_motion", false)), "Settings change must persist into user settings")
 				_expect(saved_note != null and saved_note.text.contains("SAVED ON THIS DEVICE"), "Settings changed state must visibly confirm persistence")
+				if contrast != null:
+					contrast.button_pressed = true
+					contrast.emit_signal("toggled", true)
+					await process_frame
+				_expect(bool(app.user_settings.get_value("high_contrast", false)), "high-contrast setting must persist immediately")
+				if settings_panel != null and settings_panel.has_method("state_contract"):
+					var settings_contract: Dictionary = settings_panel.state_contract()
+					_expect(bool(settings_contract.get("high_contrast", false)), "open Settings modal must reflect high-contrast immediately")
+					_expect(bool(settings_contract.get("touch_targets_ok", false)), "Settings controls must meet mobile touch target contract")
+					_expect(String(settings_contract.get("return_cta", "")) == "RETURN TO PROFILE", "Settings state contract must preserve origin-aware return CTA")
 				_expect(app.close_settings(), "Profile Settings must close cleanly")
 				_expect(app.current_screen() == profile_preview and str(app.current_route_name()) == "profile_settings", "closing Settings must reveal the original Profile screen")
 			app.current_screen().get_node("FeatureLayout/BackToHouse").emit_signal("pressed")

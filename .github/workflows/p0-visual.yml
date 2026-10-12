@@ -15,6 +15,9 @@ on:
       - "tests/unit/test_mobile_safe_area.gd"
       - "tests/visual/capture_level1_journey.gd"
       - "tests/visual/capture_golden_feedback_vfx.gd"
+      - "tests/visual/capture_gameplay_urgency.gd"
+      - "tests/visual/capture_gameplay_impact_hierarchy.gd"
+      - "tests/visual/capture_gameplay_objective_terminal.gd"
       - "tests/visual/capture_splash_states.gd"
       - "tests/visual/capture_level1_failure.gd"
       - "tests/visual/capture_three_level_progression.gd"
@@ -35,6 +38,7 @@ on:
       - "src/ui/settings/**"
       - "src/match3/domain/**"
       - "src/match3/presentation/**"
+      - "content/levels/**"
       - "assets/pieces/**"
       - "assets/blockers/**"
       - "assets/board/**"
@@ -122,6 +126,51 @@ jobs:
           test -s artifacts/feedback-01-match-clear.png
           test -s artifacts/feedback-02-reward-reveal.png
 
+      - name: Render gameplay low-move urgency
+        shell: bash
+        run: |
+          set -uo pipefail
+          set +e
+          output=$(LIBGL_ALWAYS_SOFTWARE=1 xvfb-run -a ./godot --audio-driver Dummy --path . -s res://tests/visual/capture_gameplay_urgency.gd 2>&1)
+          status=$?
+          set -e
+          printf '%s\n' "$output"
+          if [ "$status" -ne 0 ]; then exit "$status"; fi
+          if grep -Eq "SCRIPT ERROR:|(^| )ERROR:|CAPTURE_FAIL:" <<<"$output"; then exit 1; fi
+          grep -Fq "CAPTURE_PASS: gameplay low-move urgency states" <<<"$output"
+          test -s artifacts/gameplay-low-moves-warning.png
+          test -s artifacts/gameplay-last-move-high-contrast.png
+
+      - name: Render gameplay impact hierarchy
+        shell: bash
+        run: |
+          set -uo pipefail
+          set +e
+          output=$(LIBGL_ALWAYS_SOFTWARE=1 xvfb-run -a ./godot --audio-driver Dummy --path . -s res://tests/visual/capture_gameplay_impact_hierarchy.gd 2>&1)
+          status=$?
+          set -e
+          printf '%s\n' "$output"
+          if [ "$status" -ne 0 ]; then exit "$status"; fi
+          if grep -Eq "SCRIPT ERROR:|(^| )ERROR:|CAPTURE_FAIL:" <<<"$output"; then exit 1; fi
+          grep -Fq "CAPTURE_PASS: gameplay blocker and special impact hierarchy" <<<"$output"
+          test -s artifacts/gameplay-blocker-clear-impact.png
+          test -s artifacts/gameplay-special-trigger-impact.png
+
+      - name: Render gameplay objective and terminal feel
+        shell: bash
+        run: |
+          set -uo pipefail
+          set +e
+          output=$(LIBGL_ALWAYS_SOFTWARE=1 xvfb-run -a ./godot --audio-driver Dummy --path . -s res://tests/visual/capture_gameplay_objective_terminal.gd 2>&1)
+          status=$?
+          set -e
+          printf '%s\n' "$output"
+          if [ "$status" -ne 0 ]; then exit "$status"; fi
+          if grep -Eq "SCRIPT ERROR:|(^| )ERROR:|CAPTURE_FAIL:" <<<"$output"; then exit 1; fi
+          grep -Fq "CAPTURE_PASS: gameplay objective and terminal transition feel" <<<"$output"
+          test -s artifacts/gameplay-objective-progress.png
+          test -s artifacts/gameplay-win-terminal-settled.png
+
       - name: Render Golden Loop failure and retry branch
         shell: bash
         run: |
@@ -135,6 +184,7 @@ jobs:
           if grep -Eq "SCRIPT ERROR:|(^| )ERROR:|CAPTURE_FAIL:" <<<"$output"; then exit 1; fi
           grep -Fq "CAPTURE_PASS: Level 1 fail retry" <<<"$output"
           test -s artifacts/level1-fail-result.png
+          test -s artifacts/level1-fail-plus3-recovery.png
           test -s artifacts/level1-retry-restored.png
 
       - name: Render whole-product three-level review shell
@@ -152,6 +202,7 @@ jobs:
           test -s artifacts/progression-house-stage1.png
           test -s artifacts/progression-house-stage2.png
           test -s artifacts/progression-house-stage3.png
+          test -s artifacts/progression-house-thorn-detail.png
           test -s artifacts/progression-level1-gameplay.png
           test -s artifacts/progression-level2-gameplay.png
           test -s artifacts/progression-level3-gameplay.png
@@ -242,6 +293,12 @@ jobs:
             artifacts/splash-03-update-required.png
             artifacts/feedback-01-match-clear.png
             artifacts/feedback-02-reward-reveal.png
+            artifacts/gameplay-low-moves-warning.png
+            artifacts/gameplay-last-move-high-contrast.png
+            artifacts/gameplay-blocker-clear-impact.png
+            artifacts/gameplay-special-trigger-impact.png
+            artifacts/gameplay-objective-progress.png
+            artifacts/gameplay-win-terminal-settled.png
             artifacts/golden-00-splash.png
             artifacts/golden-01-house-dormant.png
             artifacts/golden-02-chapter-route.png
@@ -254,10 +311,12 @@ jobs:
             artifacts/golden-08-curio-verification.png
             artifacts/golden-09-curio-detail.png
             artifacts/level1-fail-result.png
+            artifacts/level1-fail-plus3-recovery.png
             artifacts/level1-retry-restored.png
             artifacts/progression-house-stage1.png
             artifacts/progression-house-stage2.png
             artifacts/progression-house-stage3.png
+            artifacts/progression-house-thorn-detail.png
             artifacts/progression-level1-gameplay.png
             artifacts/progression-level2-gameplay.png
             artifacts/progression-level3-gameplay.png

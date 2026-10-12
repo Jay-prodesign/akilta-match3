@@ -35,6 +35,7 @@ var current_objective_type: String = "collect_family"
 var current_objective_family: String = "moon"
 var current_objective_target: int = 6
 var current_initial_blocker_count: int = 0
+var current_initial_blocker_hp: int = 0
 var current_win_title: String = "THE CABINET STIRS"
 var current_win_detail: String = "Something in the Curio Boutique has awakened."
 var current_retry_hint: String = ""
@@ -44,7 +45,10 @@ var _pending_hud_refresh: bool = false
 var haptics = HapticsController.new()
 var _potion_used_for_attempt := false
 var _idle_hint_seconds: float = 0.0
+var _consecutive_failures: int = 0
+var _guided_retry_pending: bool = false
 const AUTO_HINT_DELAY_SECONDS := 9.0
+const GUIDED_HINT_DELAY_SECONDS := 4.0
 const BOOSTER_ART_PATHS := {
 	"hint": "res://assets/pieces/moon_sigil.webp",
 	"plus_moves": "res://assets/pieces/potion.webp",
@@ -65,6 +69,18 @@ var _result_proclamation: Label
 var _result_reward_values: Control
 var _result_reveal_fx: Control
 var _reduced_motion: bool = false
+var _high_contrast: bool = false
+var _moves_urgency_state: String = "normal"
+var _last_impact_feedback: String = ""
+var _last_cascade_depth: int = 1
+var _last_objective_progress: int = 0
+var _last_objective_delta: int = 0
+var _objective_pulse_tween: Tween
+var _result_transition_kind: String = ""
+var _result_transition_active: bool = false
+var _result_transition_tween: Tween
+const LOW_MOVE_WARNING_THRESHOLD := 3
+const LAST_MOVE_THRESHOLD := 1
 
 @onready var world_backdrop: TextureRect = $WorldBackdrop
 @onready var eyebrow_label: Label = $Layout/Eyebrow
@@ -85,10 +101,12 @@ var _reduced_motion: bool = false
 @onready var result_overlay: Control = $ResultOverlay
 @onready var result_title: Label = $ResultOverlay/Card/Content/Title
 @onready var result_detail: Label = $ResultOverlay/Card/Content/Detail
+@onready var result_objective_summary: Label = $ResultOverlay/Card/Content/ObjectiveSummary
 @onready var result_eyebrow: Label = $ResultOverlay/Card/Content/Eyebrow
 @onready var result_reward_name: Label = $ResultOverlay/Card/Content/RewardName
 @onready var result_house_change: Label = $ResultOverlay/Card/Content/HouseChange
 @onready var result_ritual: Control = $ResultOverlay/Card/Content/RewardRitual
+@onready var result_recovery_action: Button = $ResultOverlay/Card/Content/RecoveryAction
 @onready var result_action: Button = $ResultOverlay/Card/Content/Action
 
 func _process(delta: float) -> void:
@@ -99,12 +117,15 @@ func _process(delta: float) -> void:
 		_idle_hint_seconds = 0.0
 		return
 	_idle_hint_seconds += delta
-	if _idle_hint_seconds >= AUTO_HINT_DELAY_SECONDS:
+	if _idle_hint_seconds >= _current_auto_hint_delay():
 		_idle_hint_seconds = 0.0
 		var legal_move: Dictionary = MoveFinder.first_legal_move(board_state)
 		if not legal_move.is_empty() and board_view.has_method("set_teaching_move"):
 			board_view.set_teaching_move(legal_move["from"], legal_move["to"])
-			hint_label.text = "Follow the moonlit pair for your next match."
+			hint_label.text = "GUIDED HINT · FOLLOW THE MOONLIT PAIR" if _consecutive_failures >= 3 else "Follow the moonlit pair for your next match."
+
+func _current_auto_hint_delay() -> float:
+	return GUIDED_HINT_DELAY_SECONDS if _consecutive_failures >= 3 else AUTO_HINT_DELAY_SECONDS
 
 func _ready() -> void:
 	world_backdrop.texture = ScreenArt.texture("gameplay_bg_curio_boutique")
@@ -121,6 +142,9 @@ func _ready() -> void:
 		board_view.swap_requested.connect(_on_swap_requested)
 	if board_view.has_signal("trace_motion_finished"):
 		board_view.trace_motion_finished.connect(_on_board_trace_motion_finished)
+	if board_view.has_signal("motion_feedback_requested"):
+		board_view.motion_feedback_requested.connect(_on_board_motion_feedback_requested)
+	result_recovery_action.pressed.connect(_on_result_recovery_pressed)
 	result_action.pressed.connect(_on_result_action_pressed)
 	pause_button.pressed.connect(show_pause)
 	pause_resume.pressed.connect(resume_level)
@@ -145,9 +169,11 @@ func set_player_resources(lives: int, coins: int, gems: int) -> void:
 
 func apply_presentation_settings(state: Dictionary) -> void:
 	_reduced_motion = bool(state.get("reduced_motion", false))
+	_high_contrast = bool(state.get("high_contrast", false))
 	if board_view != null and board_view.has_method("apply_presentation_settings"):
 		board_view.apply_presentation_settings(state)
 	haptics.apply_settings(state)
+	_apply_moves_urgency()
 
 func load_level_path(path: String, seed_value: int = 1001) -> bool:
 	if not FileAccess.file_exists(path):
@@ -173,15 +199,27 @@ func load_level_path(path: String, seed_value: int = 1001) -> bool:
 	current_objective_target = int(parsed.get("objective_target", 1))
 	var blockers_data: Variant = parsed.get("blockers", [])
 	current_initial_blocker_count = blockers_data.size() if blockers_data is Array else 0
+	current_initial_blocker_hp = 0
+	if blockers_data is Array:
+		for raw_blocker in blockers_data:
+			if raw_blocker is Dictionary:
+				current_initial_blocker_hp += maxi(1, int(raw_blocker.get("hp", 1)))
 	current_win_title = String(parsed.get("win_title", "THE CABINET STIRS"))
 	current_win_detail = String(parsed.get("win_detail", "Something in the Curio Boutique has awakened."))
 	current_retry_hint = String(parsed.get("retry_hint", ""))
+	_last_impact_feedback = ""
+	_last_cascade_depth = 1
+	_last_objective_progress = 0
+	_last_objective_delta = 0
+	_reset_terminal_transition()
+	_style_impact_hint("normal")
 	eyebrow_label.text = String(parsed.get("eyebrow", "CURIO BOUTIQUE"))
 	title_label.text = String(parsed.get("title", "Hidden Display"))
 	hint_label.text = String(parsed.get("hint", "Swipe a sigil."))
 	var art_profile := String(parsed.get("visual_profile", "curio_boutique_opening"))
 	_apply_level_art_profile(art_profile)
 	board_state = BoardState.from_level(parsed, seed_value)
+	_last_objective_progress = _objective_progress_value()
 	if board_view.has_method("set_visual_profile"):
 		board_view.set_visual_profile(art_profile)
 	board_view.set_board(board_state)
@@ -191,6 +229,8 @@ func load_level_path(path: String, seed_value: int = 1001) -> bool:
 	_pending_hud_refresh = false
 	pause_overlay.visible = false
 	result_overlay.visible = false
+	if result_recovery_action != null:
+		result_recovery_action.visible = false
 	if _booster_tray != null:
 		_booster_tray.visible = true
 	if result_ritual != null:
@@ -281,13 +321,18 @@ func _on_pause_exit() -> void:
 
 func attempt_swap(from: Vector2i, to: Vector2i):
 	_idle_hint_seconds = 0.0
+	_last_objective_delta = 0
 	if board_state == null or result_overlay.visible or pause_overlay.visible:
 		return null
 	if board_view.has_method("is_motion_active") and bool(board_view.is_motion_active()):
 		return null
+	var objective_before := _objective_progress_value()
 	if board_view.has_method("snapshot_before_move"):
 		board_view.snapshot_before_move()
 	last_trace = MoveResolver.try_swap(board_state, from, to)
+	var objective_after := _objective_progress_value()
+	_last_objective_delta = maxi(0, objective_after - objective_before)
+	_last_objective_progress = objective_after
 	board_view.set_board(board_state)
 	var motion_started := false
 	if board_view.has_method("play_trace"):
@@ -298,17 +343,18 @@ func attempt_swap(from: Vector2i, to: Vector2i):
 		_pending_hud_refresh = true
 	else:
 		_refresh_hud()
+		_present_objective_progress()
 	_refresh_move_feedback(last_trace)
+	if not bool(last_trace.accepted):
+		haptics.request_invalid()
+		feedback_requested.emit("invalid")
 	if last_trace.accepted:
 		if board_view.has_method("clear_teaching_move"):
 			board_view.clear_teaching_move()
-		var feedback_types: Array[String] = last_trace.event_types()
-		if feedback_types.has("combo_triggered") or feedback_types.has("special_triggered") or feedback_types.has("special_created"):
-			haptics.request_special()
-			feedback_requested.emit("special")
-		else:
-			haptics.request_match()
-			feedback_requested.emit("match")
+		_last_cascade_depth = _trace_cascade_depth(last_trace)
+		_set_trace_impact_state(last_trace)
+		if not motion_started:
+			_emit_trace_feedback_immediate(last_trace)
 		var terminal_result := String(last_trace.result)
 		if terminal_result == "won" or terminal_result == "failed":
 			if motion_started:
@@ -316,6 +362,60 @@ func attempt_swap(from: Vector2i, to: Vector2i):
 			else:
 				_show_result_if_terminal(terminal_result)
 	return last_trace
+
+func _set_trace_impact_state(trace) -> void:
+	if trace == null:
+		_last_impact_feedback = ""
+		return
+	var feedback_types: Array[String] = trace.event_types()
+	if feedback_types.has("combo_triggered"):
+		_last_impact_feedback = "combo"
+	elif feedback_types.has("special_triggered"):
+		_last_impact_feedback = "special_triggered"
+	elif feedback_types.has("special_created"):
+		_last_impact_feedback = "special_created"
+	elif feedback_types.has("blocker_cleared") or feedback_types.has("blocker_damaged"):
+		_last_impact_feedback = "blocker_cleared" if feedback_types.has("blocker_cleared") else "blocker_damaged"
+	elif _last_cascade_depth > 1:
+		_last_impact_feedback = "cascade_%d" % _last_cascade_depth
+	else:
+		_last_impact_feedback = "match"
+
+func _trace_primary_feedback_kind(trace) -> String:
+	if trace == null:
+		return "match"
+	var feedback_types: Array[String] = trace.event_types()
+	if feedback_types.has("combo_triggered"):
+		return "combo"
+	if feedback_types.has("special_triggered"):
+		return "special"
+	if feedback_types.has("special_created"):
+		return "special_create"
+	if feedback_types.has("blocker_cleared") or feedback_types.has("blocker_damaged"):
+		return "blocker"
+	if _trace_cascade_depth(trace) > 1:
+		return "cascade"
+	return "match"
+
+func _emit_trace_feedback_immediate(trace) -> void:
+	_emit_semantic_impact_feedback(_trace_primary_feedback_kind(trace))
+
+func _on_board_motion_feedback_requested(kind: String, cascade: int, _clock: float) -> void:
+	if kind == "cascade":
+		_last_impact_feedback = "cascade_%d" % cascade
+	_emit_semantic_impact_feedback(kind)
+
+func _emit_semantic_impact_feedback(kind: String) -> void:
+	match kind:
+		"combo":
+			haptics.request_combo()
+		"blocker":
+			haptics.request_blocker()
+		"special", "special_create", "cascade":
+			haptics.request_special()
+		_:
+			haptics.request_match()
+	feedback_requested.emit(kind)
 
 func continue_after_win() -> bool:
 	if not _pending_win:
@@ -339,9 +439,22 @@ func restore_reward_claim() -> void:
 func retry_current_level() -> bool:
 	if current_level_path == "":
 		return false
+	var guided_retry := _consecutive_failures >= 2
 	haptics.reset_for_new_attempt()
+	haptics.request_retry()
 	feedback_requested.emit("retry")
-	return load_level_path(current_level_path, current_seed)
+	var reloaded := load_level_path(current_level_path, current_seed)
+	if reloaded:
+		if guided_retry:
+			var legal_move: Dictionary = MoveFinder.first_legal_move(board_state)
+			if not legal_move.is_empty() and board_view.has_method("set_teaching_move"):
+				board_view.set_teaching_move(legal_move["from"], legal_move["to"])
+			hint_label.text = "GUIDED RETRY · FOLLOW THE MOONLIT PAIR · %d MOVES RESTORED" % int(board_state.moves_remaining)
+		else:
+			hint_label.text = "RITUAL RESET · %d MOVES RESTORED" % int(board_state.moves_remaining)
+		_guided_retry_pending = false
+		_style_impact_hint("normal")
+	return reloaded
 
 func _on_swap_requested(from: Vector2i, to: Vector2i) -> void:
 	attempt_swap(from, to)
@@ -350,32 +463,81 @@ func _refresh_move_feedback(trace) -> void:
 	if trace == null:
 		return
 	var types: Array[String] = trace.event_types()
+	var cascade_depth := _trace_cascade_depth(trace)
 	if types.has("combo_triggered"):
-		hint_label.text = "The relics answer together. The whole cabinet shudders."
+		hint_label.text = "COVEN COMBO · THE WHOLE CABINET ANSWERS"
+		_style_impact_hint("combo")
+	elif types.has("blocker_cleared"):
+		var remaining := int(board_state.remaining_blockers()) if board_state != null else 0
+		hint_label.text = "WAX SEAL SHATTERED · %s" % ("DISPLAY OPEN" if remaining == 0 else "%d REMAIN" % remaining)
+		_style_impact_hint("blocker")
+	elif types.has("blocker_damaged"):
+		hint_label.text = "WAX SEAL CRACKED · STRIKE BESIDE IT AGAIN"
+		_style_impact_hint("blocker")
 	elif types.has("special_created"):
-		hint_label.text = "A Moon Beam formed. Match it to unleash the whole row."
+		hint_label.text = "MOON BEAM FORMED · MATCH IT TO RELEASE THE LINE"
+		_style_impact_hint("special")
 	elif types.has("special_triggered"):
-		hint_label.text = "The sigil opens. Follow the chain reaction."
+		hint_label.text = "MOON BEAM RELEASED · THE CABINET ANSWERS"
+		_style_impact_hint("special")
+	elif cascade_depth > 1:
+		hint_label.text = "RITUAL CHAIN ×%d · KEEP WATCHING THE FALL" % cascade_depth
+		_style_impact_hint("cascade")
 	elif types.has("shuffle"):
-		hint_label.text = "No path remained. The House rearranged the sigils."
+		hint_label.text = "NO PATH REMAINED · THE HOUSE REARRANGES THE SIGILS"
+		_style_impact_hint("normal")
 	elif not bool(trace.accepted):
-		hint_label.text = "Those sigils refuse the arrangement. Try another adjacent swap."
+		hint_label.text = "THOSE SIGILS REFUSE THE ARRANGEMENT · TRY ANOTHER ADJACENT SWAP"
+		_style_impact_hint("invalid")
+
+func _trace_cascade_depth(trace) -> int:
+	if trace == null:
+		return 1
+	var depth := 1
+	for event in trace.events:
+		depth = maxi(depth, int(event.get("cascade", 1)))
+	return depth
+
+func _style_impact_hint(mode: String) -> void:
+	if hint_label == null:
+		return
+	var color := Color("#F4E5D3")
+	var size_px := 20
+	match mode:
+		"blocker":
+			color = Color("#F0CE8A")
+			size_px = 21
+		"special":
+			color = Color("#E8C987")
+			size_px = 21
+		"combo":
+			color = Color("#E7C8FF")
+			size_px = 22
+		"cascade":
+			color = Color("#DDB7F5")
+			size_px = 21
+		"invalid":
+			color = Color("#D8C5D2")
+		_:
+			pass
+	hint_label.add_theme_color_override("font_color", Color("#FFFFFF") if _high_contrast else color)
+	hint_label.add_theme_font_size_override("font_size", size_px)
 
 func _refresh_hud() -> void:
 	if board_state == null:
 		objective_label.text = "Awaken the collection"
 		moves_label.text = "—"
 		return
-	moves_label.text = "%d MOVES LEFT" % int(board_state.moves_remaining)
+	_apply_moves_urgency()
 	var progress_value := int(board_state.objective_progress)
 	var target_value := int(board_state.objective_target)
 	var progress_family := String(board_state.objective_family)
 	var progress_unit := "SIGILS"
 	if String(board_state.objective_type) == "clear_blockers":
-		progress_value = maxi(0, current_initial_blocker_count - int(board_state.remaining_blockers()))
-		target_value = maxi(1, current_initial_blocker_count)
+		progress_value = maxi(0, current_initial_blocker_hp - _remaining_blocker_hp())
+		target_value = maxi(1, current_initial_blocker_hp)
 		progress_family = "wax_seal"
-		progress_unit = "SEALS"
+		progress_unit = "SEAL LAYERS"
 	if awakening_title != null:
 		var relic_name := current_reward_curio.replace("_", " ").to_upper()
 		awakening_title.text = "AWAKENING · MOON CAMEO" if current_reward_curio == "moon_cameo" else "RELIC · %s" % relic_name
@@ -400,9 +562,104 @@ func _refresh_hud() -> void:
 			int(board_state.objective_target)
 		]
 	elif String(board_state.objective_type) == "clear_blockers":
-		objective_label.text = "Break the wax seals  %d left" % int(board_state.remaining_blockers())
+		objective_label.text = "Break wax seal layers  %d/%d" % [_objective_progress_value(), _objective_target_value()]
 	else:
 		objective_label.text = "Awaken the collection"
+
+func _remaining_blocker_hp() -> int:
+	if board_state == null:
+		return 0
+	var total := 0
+	for raw_pos in board_state.blockers.keys():
+		var blocker: Dictionary = board_state.get_blocker(raw_pos)
+		total += maxi(0, int(blocker.get("hp", 0)))
+	return total
+
+func _objective_progress_value() -> int:
+	if board_state == null:
+		return 0
+	if String(board_state.objective_type) == "clear_blockers":
+		return maxi(0, current_initial_blocker_hp - _remaining_blocker_hp())
+	return maxi(0, int(board_state.objective_progress))
+
+func _objective_target_value() -> int:
+	if board_state == null:
+		return maxi(1, current_objective_target)
+	if String(board_state.objective_type) == "clear_blockers":
+		return maxi(1, current_initial_blocker_hp)
+	return maxi(1, int(board_state.objective_target))
+
+func _present_objective_progress() -> void:
+	if objective_label == null or board_state == null or _last_objective_delta <= 0:
+		return
+	var progress := _objective_progress_value()
+	var target := _objective_target_value()
+	var complete := progress >= target
+	if String(board_state.objective_type) == "clear_blockers":
+		objective_label.text = "WAX SEAL LAYERS %d/%d · %s" % [progress, target, "DISPLAY OPEN" if complete else "+%d THIS MOVE" % _last_objective_delta]
+	else:
+		var family := String(board_state.objective_family).to_upper()
+		objective_label.text = "%s SIGILS %d/%d · %s" % [family, progress, target, "OBJECTIVE COMPLETE" if complete else "+%d THIS MOVE" % _last_objective_delta]
+	objective_label.set_meta("objective_feedback_state", "complete" if complete else "progress")
+	objective_label.add_theme_color_override("font_color", Color("#FFFFFF") if _high_contrast else (Color("#F0CE8A") if complete else Color("#E4CDEB")))
+	if _objective_pulse_tween != null and _objective_pulse_tween.is_valid():
+		_objective_pulse_tween.kill()
+	objective_label.scale = Vector2.ONE
+	if _reduced_motion:
+		return
+	objective_label.pivot_offset = objective_label.size * 0.5
+	objective_label.scale = Vector2(1.06, 1.06)
+	_objective_pulse_tween = create_tween()
+	_objective_pulse_tween.set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
+	_objective_pulse_tween.tween_property(objective_label, "scale", Vector2.ONE, 0.24)
+
+func _apply_moves_urgency() -> void:
+	if moves_label == null:
+		return
+	if board_state == null:
+		_moves_urgency_state = "normal"
+		moves_label.text = "—"
+		moves_label.set_meta("urgency_state", _moves_urgency_state)
+		return
+	var moves := maxi(0, int(board_state.moves_remaining))
+	if moves <= LAST_MOVE_THRESHOLD:
+		_moves_urgency_state = "critical"
+		moves_label.text = "LAST MOVE" if moves == 1 else "NO MOVES"
+		moves_label.add_theme_color_override("font_color", Color("#FFFFFF") if _high_contrast else Color("#FF9B8E"))
+		moves_label.add_theme_font_size_override("font_size", 27)
+		moves_label.add_theme_constant_override("outline_size", 5 if _high_contrast else 4)
+	elif moves <= LOW_MOVE_WARNING_THRESHOLD:
+		_moves_urgency_state = "warning"
+		moves_label.text = "⚠ %d MOVES LEFT" % moves
+		moves_label.add_theme_color_override("font_color", Color("#FFF1B6") if _high_contrast else Color("#F2B36D"))
+		moves_label.add_theme_font_size_override("font_size", 26)
+		moves_label.add_theme_constant_override("outline_size", 4)
+	else:
+		_moves_urgency_state = "normal"
+		moves_label.text = "%d MOVES LEFT" % moves
+		moves_label.add_theme_color_override("font_color", Color("#FFF1B6") if _high_contrast else Color("#F2C66D"))
+		moves_label.add_theme_font_size_override("font_size", 24)
+		moves_label.add_theme_constant_override("outline_size", 3)
+	moves_label.set_meta("urgency_state", _moves_urgency_state)
+
+func gameplay_feel_contract() -> Dictionary:
+	return {
+		"invalid_swap_feedback": "visual_return_audio_haptic",
+		"low_move_warning_threshold": LOW_MOVE_WARNING_THRESHOLD,
+		"last_move_threshold": LAST_MOVE_THRESHOLD,
+		"moves_urgency_state": _moves_urgency_state,
+		"moves_copy": moves_label.text if moves_label != null else "",
+		"reduced_motion": _reduced_motion,
+		"high_contrast": _high_contrast,
+		"urgency_non_color_cue": _moves_urgency_state == "normal" or moves_label.text.contains("⚠") or moves_label.text.contains("LAST MOVE") or moves_label.text.contains("NO MOVES"),
+		"last_impact_feedback": _last_impact_feedback,
+		"last_cascade_depth": _last_cascade_depth,
+		"impact_copy": hint_label.text if hint_label != null else "",
+		"objective_progress": _last_objective_progress,
+		"objective_delta": _last_objective_delta,
+		"objective_target": _objective_target_value(),
+		"objective_copy": objective_label.text if objective_label != null else "",
+	}
 
 func _show_result_if_terminal(result: String) -> void:
 	if result == "won":
@@ -418,13 +675,15 @@ func _show_result_if_terminal(result: String) -> void:
 			result_ritual.set("glow_strength", 0.75)
 			result_ritual.queue_redraw()
 		result_action.text = "RETURN TO HOUSE" if replay_mode else "CONTINUE"
+		result_recovery_action.visible = false
 		if _result_reward_values != null:
 			_result_reward_values.visible = not replay_mode
 		if _result_proclamation != null:
 			_result_proclamation.text = "Replay complete · House state and owned Curios stay unchanged." if replay_mode else "The recovered Curio now changes the House."
 		if _booster_tray != null:
 			_booster_tray.visible = false
-		result_overlay.visible = true
+		result_objective_summary.text = _terminal_objective_summary(true)
+		_present_result_overlay("won")
 		if _result_reveal_fx != null and _result_reveal_fx.has_method("play"):
 			_result_reveal_fx.play(_reduced_motion or replay_mode)
 		result_state_changed.emit("won")
@@ -432,8 +691,10 @@ func _show_result_if_terminal(result: String) -> void:
 		haptics.request_terminal("failed")
 		feedback_requested.emit("fail")
 		_pending_win = false
+		_consecutive_failures += 1
+		_guided_retry_pending = _consecutive_failures >= 2
 		result_title.text = "THE ROOM WAITS"
-		result_detail.text = "The House keeps its secrets. %s" % current_retry_hint if current_retry_hint != "" else "The House keeps its secrets. Try another arrangement."
+		result_detail.text = _failure_recovery_copy()
 		_configure_result_reward_copy(false)
 		if result_ritual != null:
 			result_ritual.set("mode", "fail")
@@ -441,6 +702,8 @@ func _show_result_if_terminal(result: String) -> void:
 			result_ritual.set("glow_strength", 0.12)
 			result_ritual.queue_redraw()
 		result_action.text = "TRY AGAIN"
+		result_recovery_action.visible = not _potion_used_for_attempt
+		result_recovery_action.disabled = _potion_used_for_attempt
 		if _result_reward_values != null:
 			_result_reward_values.visible = false
 		if _result_proclamation != null:
@@ -449,8 +712,178 @@ func _show_result_if_terminal(result: String) -> void:
 			_booster_tray.visible = false
 		if _result_reveal_fx != null and _result_reveal_fx.has_method("stop"):
 			_result_reveal_fx.stop()
-		result_overlay.visible = true
+		result_objective_summary.text = _terminal_objective_summary(false)
+		_present_result_overlay("failed")
 		result_state_changed.emit("failed")
+
+func _failure_gap_copy() -> String:
+	if board_state == null:
+		return "The ritual remains unfinished."
+	var remaining := maxi(0, _objective_target_value() - _objective_progress_value())
+	if String(board_state.objective_type) == "collect_family":
+		var family := String(board_state.objective_family).capitalize()
+		return "%d %s sigil%s remained." % [remaining, family, "" if remaining == 1 else "s"]
+	if String(board_state.objective_type) == "clear_blockers":
+		return "%d wax seal layer%s remained." % [remaining, "" if remaining == 1 else "s"]
+	return "The ritual remains unfinished."
+
+func _failure_recovery_copy() -> String:
+	var authored := current_retry_hint if current_retry_hint != "" else "Try another arrangement."
+	var base := "%s %s" % [_failure_gap_copy(), authored]
+	if _consecutive_failures <= 1:
+		return base
+	if _consecutive_failures == 2:
+		return "%s On retry, the House will mark a legal opening." % base
+	return "%s Guided retry is active: the first legal opening is marked and hints return sooner." % base
+
+func difficulty_recovery_contract() -> Dictionary:
+	var tier := "standard"
+	if _consecutive_failures >= 3:
+		tier = "assisted"
+	elif _consecutive_failures >= 2:
+		tier = "guided"
+	return {
+		"consecutive_failures": _consecutive_failures,
+		"guidance_tier": tier,
+		"guided_retry_pending": _guided_retry_pending,
+		"auto_hint_delay_seconds": _current_auto_hint_delay(),
+		"life_economy_visible": _resource_life_label != null,
+		"hint_utility_visible": _hint_boost_button != null,
+		"active_plus_moves_booster_visible": _potion_boost_button != null,
+		"active_retry_booster_visible": _retry_boost_button != null,
+		"fail_screen_plus_three_rescue_available": result_recovery_action != null and result_recovery_action.visible and not result_recovery_action.disabled,
+		"guided_retry_changes_move_budget": false,
+		"plus_three_rescue_is_explicit": true,
+	}
+
+func recover_failed_attempt_with_plus_moves() -> bool:
+	if board_state == null or not result_overlay.visible or _potion_used_for_attempt:
+		return false
+	if String(terminal_transition_contract().get("kind", "")) != "failed":
+		return false
+	_potion_used_for_attempt = true
+	board_state.moves_remaining += 3
+	_pending_win = false
+	_pending_terminal_result = ""
+	_last_objective_delta = 0
+	if _potion_boost_button != null:
+		_potion_boost_button.disabled = true
+	if result_recovery_action != null:
+		result_recovery_action.visible = false
+	result_overlay.visible = false
+	_reset_terminal_transition()
+	haptics.reset_for_new_attempt()
+	haptics.request_special()
+	feedback_requested.emit("special")
+	if _booster_tray != null:
+		_booster_tray.visible = true
+	_refresh_hud()
+	hint_label.text = "RECOVERY · +3 MOVES · CONTINUE FROM THIS BOARD"
+	_style_impact_hint("special")
+	result_state_changed.emit("recovered")
+	return true
+
+func _on_result_recovery_pressed() -> void:
+	recover_failed_attempt_with_plus_moves()
+
+func _terminal_objective_summary(won: bool) -> String:
+	if board_state == null:
+		return "OBJECTIVE COMPLETE" if won else "OBJECTIVE UNFINISHED"
+	var prefix := "OBJECTIVE COMPLETE" if won else "OBJECTIVE UNFINISHED"
+	if String(board_state.objective_type) == "collect_family":
+		var progress := mini(_objective_progress_value(), _objective_target_value())
+		return "%s · %d / %d %s SIGILS" % [prefix, progress, _objective_target_value(), String(board_state.objective_family).to_upper()]
+	if String(board_state.objective_type) == "clear_blockers":
+		return "%s · %d / %d WAX SEAL LAYERS" % [prefix, _objective_progress_value(), _objective_target_value()]
+	return prefix
+
+func _style_terminal_result(kind: String) -> void:
+	if result_overlay == null:
+		return
+	var card := result_overlay.get_node_or_null("Card") as PanelContainer
+	if card == null:
+		return
+	var won := kind == "won"
+	var panel := StyleBoxFlat.new()
+	panel.bg_color = Color("#100D17", 0.99) if won else Color("#120D14", 0.99)
+	panel.border_color = (Color("#FFF1B6") if _high_contrast else Color("#D5AD70")) if won else (Color("#FFD3DF") if _high_contrast else Color("#9A6073"))
+	panel.set_border_width_all(3 if _high_contrast else 2)
+	panel.set_corner_radius_all(18)
+	panel.shadow_color = Color(0, 0, 0, 0.72)
+	panel.shadow_size = 26
+	panel.content_margin_left = 24
+	panel.content_margin_right = 24
+	panel.content_margin_top = 20
+	panel.content_margin_bottom = 20
+	card.add_theme_stylebox_override("panel", panel)
+	result_title.add_theme_color_override("font_color", Color("#FFF1B6") if won else Color("#F2D6DE"))
+	result_objective_summary.add_theme_color_override("font_color", Color("#F0CE8A") if won else Color("#E5B2C1"))
+
+func terminal_result_polish_contract() -> Dictionary:
+	return {
+		"objective_summary": result_objective_summary.text if result_objective_summary != null else "",
+		"transition": terminal_transition_contract(),
+		"retry_copy": hint_label.text if hint_label != null else "",
+		"distinct_result_material": true,
+		"failure_gap": _failure_gap_copy() if result_overlay != null and result_overlay.visible and String(terminal_transition_contract().get("kind", "")) == "failed" else "",
+		"plus_three_recovery_available": result_recovery_action != null and result_recovery_action.visible and not result_recovery_action.disabled,
+	}
+
+func _present_result_overlay(kind: String) -> void:
+	_result_transition_kind = kind
+	_style_terminal_result(kind)
+	if _result_transition_tween != null and _result_transition_tween.is_valid():
+		_result_transition_tween.kill()
+	result_overlay.visible = true
+	var card := result_overlay.get_node_or_null("Card") as Control
+	var dim := result_overlay.get_node_or_null("Dim") as CanvasItem
+	if card == null:
+		_result_transition_active = false
+		return
+	card.pivot_offset = card.size * 0.5
+	card.scale = Vector2.ONE
+	card.modulate = Color.WHITE
+	if dim != null:
+		dim.modulate = Color.WHITE
+	if _reduced_motion:
+		_result_transition_active = false
+		return
+	_result_transition_active = true
+	card.scale = Vector2(0.985, 0.985)
+	card.modulate = Color(1, 1, 1, 0.94)
+	if dim != null:
+		dim.modulate = Color(1, 1, 1, 0.92)
+	_result_transition_tween = create_tween()
+	_result_transition_tween.set_parallel(true)
+	_result_transition_tween.set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
+	_result_transition_tween.tween_property(card, "scale", Vector2.ONE, 0.18)
+	_result_transition_tween.tween_property(card, "modulate", Color.WHITE, 0.18)
+	if dim != null:
+		_result_transition_tween.tween_property(dim, "modulate", Color.WHITE, 0.18)
+	_result_transition_tween.finished.connect(func(): _result_transition_active = false)
+
+func _reset_terminal_transition() -> void:
+	if _result_transition_tween != null and _result_transition_tween.is_valid():
+		_result_transition_tween.kill()
+	_result_transition_kind = ""
+	_result_transition_active = false
+	if result_overlay != null:
+		var card := result_overlay.get_node_or_null("Card") as Control
+		var dim := result_overlay.get_node_or_null("Dim") as CanvasItem
+		if card != null:
+			card.scale = Vector2.ONE
+			card.modulate = Color.WHITE
+		if dim != null:
+			dim.modulate = Color.WHITE
+
+func terminal_transition_contract() -> Dictionary:
+	return {
+		"kind": _result_transition_kind,
+		"active": _result_transition_active,
+		"mode": "subtle_card_settle",
+		"reduced_motion": _reduced_motion,
+		"overlay_visible": result_overlay.visible if result_overlay != null else false,
+	}
 
 func _install_reward_reveal_fx() -> void:
 	if _result_reveal_fx != null:
@@ -467,6 +900,7 @@ func feedback_vfx_contract() -> Dictionary:
 	return {
 		"match_clear": board_view.feedback_vfx_contract() if board_view != null and board_view.has_method("feedback_vfx_contract") else {},
 		"reward_reveal": _result_reveal_fx.contract() if _result_reveal_fx != null and _result_reveal_fx.has_method("contract") else {},
+		"terminal_transition": terminal_transition_contract(),
 		"reduced_motion": _reduced_motion
 	}
 
@@ -511,6 +945,7 @@ func _on_board_trace_motion_finished() -> void:
 	if _pending_hud_refresh:
 		_pending_hud_refresh = false
 		_refresh_hud()
+		_present_objective_progress()
 	if _pending_terminal_result == "":
 		return
 	var result := _pending_terminal_result
@@ -708,7 +1143,9 @@ func _build_top_resource_bar() -> void:
 	row.alignment = BoxContainer.ALIGNMENT_CENTER
 	row.add_theme_constant_override("separation", 5)
 	panel.add_child(row)
-	_resource_life_label = _add_resource_chip(row, "LifeResource", "res://assets/ui/ui_heart.svg", "FULL")
+	# Lives are not exposed until consumption/refill is a complete economy contract.
+	# Coins and gems already have durable first-completion semantics and remain visible.
+	_resource_life_label = null
 	_resource_coin_label = _add_resource_chip(row, "CoinResource", "res://assets/ui/ui_coin.svg", _format_number(_player_coins))
 	_resource_gem_label = _add_resource_chip(row, "GemResource", "res://assets/ui/ui_gem.svg", _format_number(_player_gems))
 	var level := Label.new()
@@ -791,8 +1228,10 @@ func _build_booster_tray() -> void:
 	row.add_theme_constant_override("separation", 6)
 	panel.add_child(row)
 	_hint_boost_button = _add_booster_button(row, "HintBoost", "HINT", String(BOOSTER_ART_PATHS["hint"]), _use_hint_boost)
-	_potion_boost_button = _add_booster_button(row, "PlusMovesBoost", "+3 MOVES", String(BOOSTER_ART_PATHS["plus_moves"]), _use_potion_boost)
-	_retry_boost_button = _add_booster_button(row, "RetryBoost", "RETRY", String(BOOSTER_ART_PATHS["retry"]), _use_retry_boost)
+	# The explicit fail-screen +3 rescue is truthful and remains available there.
+	# Do not also expose difficulty-changing free boosters during active play.
+	_potion_boost_button = null
+	_retry_boost_button = null
 
 func _position_booster_tray() -> void:
 	if _booster_tray == null or hint_label == null or not is_node_ready():
@@ -847,7 +1286,12 @@ func booster_asset_contract() -> Dictionary:
 		"loaded": loaded,
 		"raster_runtime": raster_runtime,
 		"plus_moves_used": _potion_used_for_attempt,
-		"plus_moves_disabled": _potion_boost_button != null and _potion_boost_button.disabled
+		"plus_moves_disabled": true,
+		"hint_exposed": _hint_boost_button != null,
+		"plus_moves_exposed_in_active_play": _potion_boost_button != null,
+		"retry_exposed_in_active_play": _retry_boost_button != null,
+		"fail_screen_plus_three_rescue": result_recovery_action != null,
+		"economy_entitlement_connected": false
 	}
 
 func _use_potion_boost() -> void:

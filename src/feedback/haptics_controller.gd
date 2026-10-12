@@ -5,15 +5,24 @@ extends RefCounted
 ## Sekiph82/Scrubbots scripts/haptics/haptics_controller.gd.
 ## Product-neutral infrastructure only: Match Game owns the event vocabulary and timings.
 
+const BLOCKER_MS := 28
+const COMBO_MS := 72
+const INVALID_MS := 9
+const UI_MS := 12
 const MATCH_MS := 18
 const SPECIAL_MS := 42
 const WIN_MS := 180
 const FAIL_MS := 55
+const RETRY_MS := 24
+const INVALID_THROTTLE_MS := 120
+const UI_THROTTLE_MS := 90
 const MATCH_THROTTLE_MS := 55
 
-enum Category { MATCH, SPECIAL, WIN, FAIL }
+enum Category { BLOCKER, COMBO, INVALID, UI, MATCH, SPECIAL, WIN, FAIL, RETRY }
 
 var _enabled := true
+var _last_invalid_ms := -100000
+var _last_ui_ms := -100000
 var _last_match_ms := -100000
 var _terminal_emitted := false
 var _platform_sink: Callable = Callable()
@@ -32,6 +41,44 @@ func apply_settings(state: Dictionary) -> void:
 
 func is_enabled() -> bool:
 	return _enabled
+
+func request_blocker() -> bool:
+	_requests[Category.BLOCKER] += 1
+	if not _enabled:
+		_suppressed[Category.BLOCKER] += 1
+		return false
+	return _emit(BLOCKER_MS, Category.BLOCKER)
+
+func request_combo() -> bool:
+	_requests[Category.COMBO] += 1
+	if not _enabled:
+		_suppressed[Category.COMBO] += 1
+		return false
+	return _emit(COMBO_MS, Category.COMBO)
+
+func request_invalid() -> bool:
+	_requests[Category.INVALID] += 1
+	if not _enabled:
+		_suppressed[Category.INVALID] += 1
+		return false
+	var now := Time.get_ticks_msec()
+	if now - _last_invalid_ms < INVALID_THROTTLE_MS:
+		_suppressed[Category.INVALID] += 1
+		return false
+	_last_invalid_ms = now
+	return _emit(INVALID_MS, Category.INVALID)
+
+func request_ui() -> bool:
+	_requests[Category.UI] += 1
+	if not _enabled:
+		_suppressed[Category.UI] += 1
+		return false
+	var now := Time.get_ticks_msec()
+	if now - _last_ui_ms < UI_THROTTLE_MS:
+		_suppressed[Category.UI] += 1
+		return false
+	_last_ui_ms = now
+	return _emit(UI_MS, Category.UI)
 
 func request_match() -> bool:
 	_requests[Category.MATCH] += 1
@@ -60,6 +107,13 @@ func request_terminal(result: String) -> bool:
 		return false
 	_terminal_emitted = true
 	return _emit(WIN_MS if result == "won" else FAIL_MS, category)
+
+func request_retry() -> bool:
+	_requests[Category.RETRY] += 1
+	if not _enabled:
+		_suppressed[Category.RETRY] += 1
+		return false
+	return _emit(RETRY_MS, Category.RETRY)
 
 func reset_for_new_attempt() -> void:
 	_terminal_emitted = false

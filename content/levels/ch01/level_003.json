@@ -19,14 +19,16 @@
   ],
   "validation_expect": {
     "special_created_min": 1,
-    "special_triggered_min": 1
+    "special_triggered_min": 1,
+    "blocker_damaged_min": 1,
+    "blocker_cleared_min": 1
   },
   "id": "ch01_level_003",
   "chapter": "curio_boutique",
   "title": "Thornlight Arrangement",
-  "eyebrow": "CURIO BOUTIQUE · FORM A MOON BEAM",
-  "hint": "Slide the center moon down. Four moon sigils will bind into a line sigil.",
-  "retry_hint": "Build a four-Moon line sigil, then trigger the Moon Beam before your moves run out.",
+  "eyebrow": "CURIO BOUTIQUE · MOON BEAM / DEEP SEAL",
+  "hint": "Form the Moon Beam to crack the deep wax seal, then trigger it to break the seal completely.",
+  "retry_hint": "Build the four-Moon line, then trigger the Moon Beam again to finish the two-layer wax seal.",
   "win_title": "THE BEAM FINDS A KEY",
   "win_detail": "A Thorned Locket slips free from the velvet lining.",
   "reward_curio": "thorned_locket",
@@ -34,9 +36,7 @@
   "width": 5,
   "height": 5,
   "moves": 6,
-  "objective": "collect_family",
-  "objective_family": "moon",
-  "objective_target": 4,
+  "objective": "clear_blockers",
   "families": [
     "moon",
     "rose",
@@ -84,5 +84,32 @@
   "visual_status": "north_star_candidate_v3",
   "piece_set": "north_star_five_family_candidate_v3",
   "visual_profile": "thornlight_arrangement",
-  "prestart_note": "Form the Moon Beam. The Thorned Locket will complete the first restored cabinet set."
+  "prestart_note": "Crack the deep wax seal with the Moon Beam, then shatter it to free the Thorned Locket.",
+  "holes": [
+    [
+      4,
+      0
+    ],
+    [
+      4,
+      1
+    ],
+    [
+      4,
+      2
+    ]
+  ],
+  "blockers": [
+    {
+      "x": 4,
+      "y": 4,
+      "type": "wax_seal",
+      "hp": 2
+    }
+  ],
+  "validation_seeds": [
+    1003,
+    1020,
+    1104
+  ]
 }

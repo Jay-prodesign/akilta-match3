@@ -32,6 +32,9 @@ var _returning_player: bool = false
 var _returning_banner: PanelContainer
 var _returning_label: Label
 var _reduced_motion: bool = false
+var _hotspot_layer: Control
+var _hotspot_buttons: Dictionary = {}
+var _house_curio_overlay: Control
 
 func _ready() -> void:
 	play_button.pressed.connect(_on_play_pressed)
@@ -41,6 +44,7 @@ func _ready() -> void:
 	ProductNavigation.attach(self, "house", Callable(self, "_navigate_dock"), NodePath("Layout"))
 	_build_returning_banner()
 	_build_completion_banner()
+	_build_room_hotspots()
 
 func set_available_level_count(value: int) -> void:
 	available_level_count = max(0, value)
@@ -57,6 +61,8 @@ func set_returning_player(value: bool) -> void:
 
 func apply_presentation_settings(state: Dictionary) -> void:
 	_reduced_motion = bool(state.get("reduced_motion", false))
+	if room_view != null and room_view.has_method("apply_presentation_settings"):
+		room_view.apply_presentation_settings(state)
 
 func _refresh() -> void:
 	var stage: int = 0
@@ -71,6 +77,7 @@ func _refresh() -> void:
 	detail.text = String(state.get("detail", ""))
 	room_view.set_house_state(stage, owned_curios)
 	TopResourceBar.refresh(_resource_bar, progress)
+	_refresh_room_hotspots()
 
 	if stage >= 3:
 		curio_label.text = "FIRST CABINET SET · 3 / 3 CURIOS"
@@ -184,6 +191,217 @@ func _build_completion_banner() -> void:
 	$Layout.move_child(panel, $Layout/CurioChip.get_index() + 1)
 	_completion_banner = panel
 	_completion_label = label
+
+func _build_room_hotspots() -> void:
+	if room_view == null or _hotspot_layer != null:
+		return
+	var layer := Control.new()
+	layer.name = "CurioHotspots"
+	layer.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	layer.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	room_view.add_child(layer)
+	_hotspot_layer = layer
+	for spec in [
+		{"id":"moon_cameo", "name":"MoonHotspot", "x":0.93, "y":0.27},
+		{"id":"moth_reliquary", "name":"MothHotspot", "x":0.93, "y":0.38},
+		{"id":"thorned_locket", "name":"ThornHotspot", "x":0.93, "y":0.49}
+	]:
+		var button := Button.new()
+		button.name = String(spec["name"])
+		var x := float(spec["x"])
+		var y := float(spec["y"])
+		button.anchor_left = x
+		button.anchor_right = x
+		button.anchor_top = y
+		button.anchor_bottom = y
+		button.offset_left = -30
+		button.offset_right = 30
+		button.offset_top = -30
+		button.offset_bottom = 30
+		button.custom_minimum_size = Vector2(60, 60)
+		button.focus_mode = Control.FOCUS_ALL
+		button.mouse_default_cursor_shape = Control.CURSOR_POINTING_HAND
+		button.tooltip_text = "Inspect %s" % _curio_name(String(spec["id"])).capitalize()
+		button.add_theme_font_size_override("font_size", 25)
+		var normal := StyleBoxFlat.new()
+		normal.bg_color = Color("#18111F", 0.22)
+		normal.border_color = Color("#F0CE8A", 0.58)
+		normal.set_border_width_all(2)
+		normal.set_corner_radius_all(30)
+		var hover := normal.duplicate() as StyleBoxFlat
+		hover.bg_color = Color("#3A2340", 0.72)
+		hover.border_color = Color("#FFF1B6", 0.92)
+		var disabled := normal.duplicate() as StyleBoxFlat
+		disabled.bg_color = Color("#0D0A11", 0.12)
+		disabled.border_color = Color("#7F7180", 0.24)
+		button.add_theme_stylebox_override("normal", normal)
+		button.add_theme_stylebox_override("hover", hover)
+		button.add_theme_stylebox_override("pressed", hover)
+		button.add_theme_stylebox_override("focus", hover)
+		button.add_theme_stylebox_override("disabled", disabled)
+		button.add_theme_color_override("font_color", Color("#FFF1B6", 0.86))
+		button.add_theme_color_override("font_disabled_color", Color("#817783", 0.58))
+		button.pressed.connect(_open_house_curio_inspect.bind(String(spec["id"])))
+		layer.add_child(button)
+		_hotspot_buttons[String(spec["id"])] = button
+	_refresh_room_hotspots()
+
+func _refresh_room_hotspots() -> void:
+	if _hotspot_buttons.is_empty():
+		return
+	var owned: Array = progress.curios if progress != null else []
+	for curio_id in _hotspot_buttons.keys():
+		var button := _hotspot_buttons[curio_id] as Button
+		if button == null:
+			continue
+		var awakened := owned.has(String(curio_id))
+		button.disabled = not awakened
+		button.text = "✦" if awakened else "◇"
+		button.set_meta("curio_id", String(curio_id))
+		button.set_meta("ownership_state", "owned" if awakened else "locked")
+
+func house_hotspot_contract() -> Dictionary:
+	var states := {}
+	for curio_id in _hotspot_buttons.keys():
+		var button := _hotspot_buttons[curio_id] as Button
+		states[String(curio_id)] = {
+			"disabled": button.disabled if button != null else true,
+			"state": String(button.get_meta("ownership_state", "missing")) if button != null else "missing",
+			"visible": button.visible if button != null else false,
+		}
+	return {
+		"states": states,
+		"owned_count": progress.curios.size() if progress != null else 0,
+		"overlay_open": _house_curio_overlay != null and is_instance_valid(_house_curio_overlay),
+	}
+
+func _open_house_curio_inspect(curio_id: String) -> void:
+	if progress == null or not progress.curios.has(curio_id):
+		return
+	_close_house_curio_inspect()
+	var data := _house_curio_data(curio_id)
+	if data.is_empty():
+		return
+	var overlay := Control.new()
+	overlay.name = "HouseCurioInspect"
+	overlay.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	overlay.z_index = 140
+	overlay.mouse_filter = Control.MOUSE_FILTER_STOP
+	add_child(overlay)
+	_house_curio_overlay = overlay
+
+	var veil := ColorRect.new()
+	veil.color = Color(0.012, 0.008, 0.018, 0.64)
+	veil.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	veil.mouse_filter = Control.MOUSE_FILTER_STOP
+	overlay.add_child(veil)
+
+	var card := PanelContainer.new()
+	card.name = "Card"
+	card.anchor_left = 0.09
+	card.anchor_right = 0.91
+	card.anchor_top = 0.16
+	card.anchor_bottom = 0.45
+	var shell := StyleBoxFlat.new()
+	shell.bg_color = Color("#0D0912", 0.985)
+	shell.border_color = Color("#D5AD70", 0.88)
+	shell.set_border_width_all(2)
+	shell.set_corner_radius_all(20)
+	shell.content_margin_left = 22
+	shell.content_margin_right = 22
+	shell.content_margin_top = 18
+	shell.content_margin_bottom = 18
+	shell.shadow_color = Color(0, 0, 0, 0.66)
+	shell.shadow_size = 18
+	card.add_theme_stylebox_override("panel", shell)
+	overlay.add_child(card)
+
+	var content := VBoxContainer.new()
+	content.name = "Content"
+	content.add_theme_constant_override("separation", 7)
+	card.add_child(content)
+
+	var kicker := Label.new()
+	kicker.text = "HOUSE · RESTORED CURIO"
+	kicker.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	kicker.add_theme_color_override("font_color", Color("#D5AD70"))
+	kicker.add_theme_font_size_override("font_size", 18)
+	content.add_child(kicker)
+
+	var art := TextureRect.new()
+	art.name = "HeroArt"
+	art.custom_minimum_size = Vector2(0, 170)
+	art.texture = _curio_texture(curio_id)
+	art.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+	art.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+	content.add_child(art)
+
+	var title := Label.new()
+	title.name = "Name"
+	title.text = _curio_name(curio_id)
+	title.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	title.add_theme_color_override("font_color", Color("#FFF0D8"))
+	title.add_theme_font_size_override("font_size", 30)
+	content.add_child(title)
+
+	var origin := Label.new()
+	origin.name = "Origin"
+	origin.text = String(data.get("origin", ""))
+	origin.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	origin.add_theme_color_override("font_color", Color("#BDAFC3"))
+	origin.add_theme_font_size_override("font_size", 18)
+	content.add_child(origin)
+
+	var effect := Label.new()
+	effect.name = "HouseEffect"
+	effect.text = String(data.get("effect", ""))
+	effect.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	effect.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	effect.add_theme_color_override("font_color", Color("#E7D9DF"))
+	effect.add_theme_font_size_override("font_size", 20)
+	content.add_child(effect)
+
+	var close := Button.new()
+	close.name = "Close"
+	close.text = "RETURN TO HOUSE"
+	close.custom_minimum_size = Vector2(0, 56)
+	close.add_theme_font_size_override("font_size", 20)
+	var close_box := StyleBoxFlat.new()
+	close_box.bg_color = Color("#4A1A51")
+	close_box.border_color = Color("#D5AD70")
+	close_box.set_border_width_all(2)
+	close_box.set_corner_radius_all(12)
+	close.add_theme_stylebox_override("normal", close_box)
+	close.add_theme_stylebox_override("hover", close_box)
+	close.add_theme_stylebox_override("pressed", close_box)
+	close.add_theme_color_override("font_color", Color("#FFF0D8"))
+	content.add_child(close)
+	close.pressed.connect(_close_house_curio_inspect)
+
+func _close_house_curio_inspect() -> void:
+	if _house_curio_overlay != null and is_instance_valid(_house_curio_overlay):
+		_house_curio_overlay.queue_free()
+	_house_curio_overlay = null
+
+func _house_curio_data(curio_id: String) -> Dictionary:
+	match curio_id:
+		"moon_cameo":
+			return {
+				"origin": "RECOVERED FROM · MOONLIT CABINET · LEVEL 1",
+				"effect": "Moonlight now remains visible in the first restored cabinet niche."
+			}
+		"moth_reliquary":
+			return {
+				"origin": "RECOVERED FROM · SEALED DISPLAY · LEVEL 2",
+				"effect": "The side display stays open and the Moth Reliquary remains part of the House."
+			}
+		"thorned_locket":
+			return {
+				"origin": "RECOVERED FROM · THORNLIGHT ARRANGEMENT · LEVEL 3",
+				"effect": "The third restored niche completes the opening cabinet set."
+			}
+		_:
+			return {}
 
 func show_restoration_ceremony(curio_id: String, stage: int) -> void:
 	if get_node_or_null("RestorationOverlay") != null:

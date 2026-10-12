@@ -3,6 +3,7 @@ extends Control
 
 signal swap_requested(from: Vector2i, to: Vector2i)
 signal trace_motion_finished
+signal motion_feedback_requested(kind: String, cascade: int, clock: float)
 
 const PieceVisuals = preload("res://src/match3/presentation/piece_visuals.gd")
 const PieceAssetLoader = preload("res://src/match3/presentation/piece_asset_loader.gd")
@@ -52,7 +53,9 @@ const MOTION_PROFILE := {
 var board_state
 var _visual_profile: String = "curio_boutique_opening"
 var _press_position := Vector2.ZERO
+var _pointer_position := Vector2.ZERO
 var _pressed_cell := Vector2i(-1, -1)
+var _intent_target := Vector2i(-1, -1)
 var _tracking := false
 var _tap_selected := Vector2i(-1, -1)
 var _feedback_strength: float = 0.0
@@ -69,6 +72,16 @@ var _motion_stages: Array[Dictionary] = []
 var _motion_visible_cells: Dictionary = {}
 var _reveal_at: Dictionary = {}
 var _last_clear_fx_count: int = 0
+var _last_blocker_fx_count: int = 0
+var _last_blocker_clear_fx_count: int = 0
+var _last_cascade_depth: int = 1
+var _last_landing_fx_count: int = 0
+var _last_longest_drop_rows: int = 0
+var _motion_feedback_events: Array[Dictionary] = []
+var _motion_feedback_emitted: Dictionary = {}
+var _last_motion_feedback_kind: String = ""
+var _last_motion_feedback_clock: float = -1.0
+var _last_motion_feedback_count: int = 0
 
 func _motion_stage_cells() -> Dictionary:
 	var visible: Dictionary = _motion_initial_cells.duplicate()
@@ -129,6 +142,9 @@ func piece_asset_contract() -> Dictionary:
 func motion_contract() -> Dictionary:
 	var contract := MOTION_PROFILE.duplicate(true)
 	contract["cascade_sequencing"] = "separate_clear_fall_refill_windows"
+	contract["cascade_escalation"] = "depth_scaled_clear_burst"
+	contract["landing_settle"] = "depth_weighted_squash_ring"
+	contract["gravity_ease"] = "cubic_out_with_settle"
 	contract["reduced_motion_supported"] = true
 	return contract
 
@@ -161,6 +177,11 @@ func feedback_vfx_contract() -> Dictionary:
 		"slot": "S05/match_board/board_fx",
 		"mode": "runtime_match_clear_fragment_burst",
 		"last_clear_fx_count": _last_clear_fx_count,
+		"last_blocker_fx_count": _last_blocker_fx_count,
+		"last_blocker_clear_fx_count": _last_blocker_clear_fx_count,
+		"last_cascade_depth": _last_cascade_depth,
+		"last_landing_fx_count": _last_landing_fx_count,
+		"last_longest_drop_rows": _last_longest_drop_rows,
 		"reduced_motion_supported": true,
 		"reduced_motion": _reduced_motion
 	}
@@ -243,6 +264,7 @@ func play_trace(trace) -> bool:
 
 	_build_motion(trace)
 	_build_motion_stages(trace)
+	_build_motion_feedback_schedule(trace)
 	if _reduced_motion:
 		_motion_initial_cells.clear()
 		_motion_initial_specials.clear()
@@ -250,6 +272,8 @@ func play_trace(trace) -> bool:
 		_motion_stages.clear()
 		_motion_visible_cells.clear()
 		_reveal_at.clear()
+		_motion_feedback_events.clear()
+		_motion_feedback_emitted.clear()
 		_motion_clock = 1.0
 		_motion_active = false
 		queue_redraw()
@@ -274,10 +298,16 @@ func play_trace(trace) -> bool:
 func _build_motion(trace) -> void:
 	_motion_items.clear()
 	_last_clear_fx_count = 0
+	_last_blocker_fx_count = 0
+	_last_blocker_clear_fx_count = 0
+	_last_cascade_depth = 1
+	_last_landing_fx_count = 0
+	_last_longest_drop_rows = 0
 	_reveal_at.clear()
 	_motion_cascade_count = 1
 	for event in trace.events:
 		_motion_cascade_count = maxi(_motion_cascade_count, int(event.get("cascade", 1)))
+	_last_cascade_depth = _motion_cascade_count
 	for event in trace.events:
 		var cascade := maxi(1, int(event.get("cascade", 1)))
 		var window := _cascade_window(cascade)
@@ -337,14 +367,19 @@ func _build_motion(trace) -> void:
 					"at": _parse_pos(event.get("to", ""))
 				})
 			"gravity":
+				var gravity_from := _parse_pos(event.get("from", ""))
 				var gravity_to := _parse_pos(event.get("to", ""))
 				var gravity_family := String(event.get("family", ""))
 				if gravity_family != "":
+					var drop_rows := absi(gravity_to.y - gravity_from.y)
+					_last_landing_fx_count += 1
+					_last_longest_drop_rows = maxi(_last_longest_drop_rows, drop_rows)
 					_motion_items.append({
 						"type": "gravity",
 						"family": gravity_family,
 						"cascade": cascade,
-						"from": _parse_pos(event.get("from", "")),
+						"drop_rows": drop_rows,
+						"from": gravity_from,
 						"to": gravity_to
 					})
 				_remember_reveal(gravity_to, lerpf(window.x, window.y, 0.96))
@@ -352,12 +387,18 @@ func _build_motion(trace) -> void:
 				var spawn_pos := _parse_pos(event.get("at", ""))
 				var spawn_family := String(event.get("family", ""))
 				if spawn_family != "":
-					_motion_items.append({"type": "spawn", "family": spawn_family, "at": spawn_pos, "cascade": cascade})
+					_last_landing_fx_count += 1
+					_last_longest_drop_rows = maxi(_last_longest_drop_rows, spawn_pos.y + 1)
+					_motion_items.append({"type": "spawn", "family": spawn_family, "at": spawn_pos, "cascade": cascade, "drop_rows": spawn_pos.y + 1})
 				_remember_reveal(spawn_pos, lerpf(window.x, window.y, 0.98))
 			"blocker_damaged", "blocker_cleared":
+				var blocker_cleared := event_type == "blocker_cleared"
+				_last_blocker_fx_count += 1
+				if blocker_cleared:
+					_last_blocker_clear_fx_count += 1
 				_motion_items.append({
 					"type": "blocker",
-					"cleared": event_type == "blocker_cleared",
+					"cleared": blocker_cleared,
 					"at": _parse_pos(event.get("at", ""))
 				})
 			"shuffle":
@@ -413,6 +454,7 @@ func _remember_reveal(pos: Vector2i, at_clock: float) -> void:
 
 func _set_motion_clock(value: float) -> void:
 	_motion_clock = value
+	_emit_due_motion_feedback()
 	queue_redraw()
 
 func _finish_motion() -> void:
@@ -424,8 +466,88 @@ func _finish_motion() -> void:
 	_reveal_at.clear()
 	_motion_initial_cells.clear()
 	_motion_initial_specials.clear()
+	_motion_feedback_events.clear()
+	_motion_feedback_emitted.clear()
 	queue_redraw()
 	trace_motion_finished.emit()
+
+func _build_motion_feedback_schedule(trace) -> void:
+	_motion_feedback_events.clear()
+	_motion_feedback_emitted.clear()
+	_last_motion_feedback_kind = ""
+	_last_motion_feedback_clock = -1.0
+	_last_motion_feedback_count = 0
+	if trace == null or not bool(trace.accepted):
+		return
+	var types: Array[String] = trace.event_types()
+	var primary_kind := "match"
+	var primary_cascade := 1
+	if types.has("combo_triggered"):
+		primary_kind = "combo"
+		primary_cascade = _first_event_cascade(trace, "combo_triggered")
+	elif types.has("special_triggered"):
+		primary_kind = "special"
+		primary_cascade = _first_event_cascade(trace, "special_triggered")
+	elif types.has("special_created"):
+		primary_kind = "special_create"
+		primary_cascade = _first_event_cascade(trace, "special_created")
+	elif types.has("blocker_cleared") or types.has("blocker_damaged"):
+		primary_kind = "blocker"
+		primary_cascade = _first_event_cascade(trace, "blocker_cleared" if types.has("blocker_cleared") else "blocker_damaged")
+	var primary_clock := _feedback_clock_for_kind(primary_kind, primary_cascade)
+	_motion_feedback_events.append({"id": "primary", "kind": primary_kind, "cascade": primary_cascade, "at": primary_clock})
+	for cascade in range(2, _motion_cascade_count + 1):
+		var window := _cascade_window(cascade)
+		_motion_feedback_events.append({
+			"id": "cascade_%d" % cascade,
+			"kind": "cascade",
+			"cascade": cascade,
+			"at": lerpf(window.x, window.y, 0.16)
+		})
+	_motion_feedback_events.sort_custom(func(a: Dictionary, b: Dictionary): return float(a["at"]) < float(b["at"]))
+
+func _first_event_cascade(trace, event_type: String) -> int:
+	for event in trace.events:
+		if String(event.get("type", "")) == event_type:
+			return maxi(1, int(event.get("cascade", 1)))
+	return 1
+
+func _feedback_clock_for_kind(kind: String, cascade: int) -> float:
+	match kind:
+		"combo":
+			return 0.20
+		"blocker":
+			return 0.24
+		"special", "special_create":
+			var window := _cascade_window(cascade)
+			return lerpf(window.x, window.y, 0.28)
+		_:
+			var window := _cascade_window(cascade)
+			return lerpf(window.x, window.y, 0.18)
+
+func _emit_due_motion_feedback() -> void:
+	for event in _motion_feedback_events:
+		var event_id := String(event.get("id", ""))
+		if event_id == "" or bool(_motion_feedback_emitted.get(event_id, false)):
+			continue
+		var at := float(event.get("at", 1.0))
+		if _motion_clock + 0.0001 < at:
+			continue
+		_motion_feedback_emitted[event_id] = true
+		_last_motion_feedback_kind = String(event.get("kind", "match"))
+		_last_motion_feedback_clock = _motion_clock
+		_last_motion_feedback_count += 1
+		motion_feedback_requested.emit(_last_motion_feedback_kind, int(event.get("cascade", 1)), _motion_clock)
+
+func motion_feedback_contract() -> Dictionary:
+	return {
+		"scheduled": _motion_feedback_events.size(),
+		"emitted": _last_motion_feedback_count,
+		"last_kind": _last_motion_feedback_kind,
+		"last_clock": _last_motion_feedback_clock,
+		"reduced_motion": _reduced_motion,
+		"timeline_synced": true,
+	}
 
 func _parse_pos(value) -> Vector2i:
 	var parts := String(value).split(",")
@@ -458,23 +580,52 @@ func _gui_input(event: InputEvent) -> void:
 		else:
 			_finish_pointer(event.position)
 		accept_event()
+	elif event is InputEventScreenDrag and _tracking:
+		_update_pointer(event.position)
+		accept_event()
 	elif event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_LEFT:
 		if event.pressed:
 			_begin_pointer(event.position)
 		else:
 			_finish_pointer(event.position)
 		accept_event()
+	elif event is InputEventMouseMotion and _tracking:
+		_update_pointer(event.position)
+		accept_event()
 
 func _begin_pointer(position: Vector2) -> void:
 	_press_position = position
+	_pointer_position = position
 	_pressed_cell = cell_at_local(position)
+	_intent_target = Vector2i(-1, -1)
 	_tracking = _pressed_cell.x >= 0
+	queue_redraw()
+
+func _update_pointer(position: Vector2) -> void:
+	if not _tracking:
+		return
+	_pointer_position = position
+	_intent_target = Vector2i(-1, -1)
+	var delta := position - _press_position
+	if delta.length() >= swipe_threshold * 0.35:
+		var step := Vector2i.ZERO
+		if abs(delta.x) > abs(delta.y):
+			step = Vector2i(1 if delta.x > 0.0 else -1, 0)
+		else:
+			step = Vector2i(0, 1 if delta.y > 0.0 else -1)
+		var candidate := _pressed_cell + step
+		if board_state.in_bounds(candidate) and not board_state.is_hole(candidate):
+			_intent_target = candidate
+	queue_redraw()
 
 func _finish_pointer(position: Vector2) -> void:
 	if not _tracking:
 		return
-	_tracking = false
+	_update_pointer(position)
+	var source := _pressed_cell
+	var intent := _intent_target
 	var delta := position - _press_position
+	_clear_pointer_feedback()
 	if delta.length() < swipe_threshold:
 		var tapped := cell_at_local(position)
 		if tapped.x < 0:
@@ -482,22 +633,37 @@ func _finish_pointer(position: Vector2) -> void:
 			queue_redraw()
 			return
 		if _tap_selected.x >= 0 and board_state.is_adjacent(_tap_selected, tapped):
-			var source := _tap_selected
+			var tap_source := _tap_selected
 			_tap_selected = Vector2i(-1, -1)
-			swap_requested.emit(source, tapped)
+			swap_requested.emit(tap_source, tapped)
 		else:
 			_tap_selected = tapped
 		queue_redraw()
 		return
 	_tap_selected = Vector2i(-1, -1)
-	var step := Vector2i.ZERO
-	if abs(delta.x) > abs(delta.y):
-		step = Vector2i(1 if delta.x > 0.0 else -1, 0)
-	else:
-		step = Vector2i(0, 1 if delta.y > 0.0 else -1)
-	var target := _pressed_cell + step
-	if board_state.in_bounds(target) and not board_state.is_hole(target):
-		swap_requested.emit(_pressed_cell, target)
+	if intent.x >= 0:
+		swap_requested.emit(source, intent)
+
+func _clear_pointer_feedback() -> void:
+	_tracking = false
+	_pressed_cell = Vector2i(-1, -1)
+	_intent_target = Vector2i(-1, -1)
+	_pointer_position = Vector2.ZERO
+	queue_redraw()
+
+func cancel_pointer_feedback() -> void:
+	_clear_pointer_feedback()
+
+func pointer_feedback_contract() -> Dictionary:
+	return {
+		"tracking": _tracking,
+		"pressed_cell": _pressed_cell,
+		"intent_target": _intent_target,
+		"mode": "piece_lift_with_direction_thread",
+		"reduced_motion": _reduced_motion,
+		"high_contrast": _high_contrast,
+		"non_color_target_cue": true,
+	}
 
 func cell_at_local(position: Vector2) -> Vector2i:
 	if board_state == null:
@@ -545,6 +711,7 @@ func _draw() -> void:
 
 	_draw_teaching_cue()
 	_draw_tap_selection()
+	_draw_press_feedback()
 	_draw_feedback()
 	_draw_motion()
 
@@ -557,6 +724,30 @@ func _draw_tap_selection() -> void:
 	var half := float(_board_geometry()["cell_size"]) * 0.45
 	var rect := Rect2(center - Vector2.ONE * half, Vector2.ONE * half * 2.0)
 	draw_rect(rect, Color(GOLD, 0.92), false, 3.0)
+
+func _draw_press_feedback() -> void:
+	if board_state == null or not _tracking or _pressed_cell.x < 0 or _motion_active:
+		return
+	var geometry := _board_geometry()
+	var cell_size := float(geometry["cell_size"])
+	var center := _cell_center(_pressed_cell)
+	var ring := Color("#FFF1B6") if _high_contrast else Color(GOLD)
+	ring.a = 0.96
+	draw_arc(center, cell_size * 0.44, 0.0, TAU, 40, ring, 4.0 if _high_contrast else 3.0)
+	if _intent_target.x < 0:
+		return
+	var target_center := _cell_center(_intent_target)
+	var thread := Color("#FFFFFF") if _high_contrast else Color("#DDB7F5")
+	thread.a = 0.90
+	var direction := (target_center - center).normalized()
+	draw_line(center + direction * cell_size * 0.18, target_center - direction * cell_size * 0.22, thread, 4.0 if _high_contrast else 3.0)
+	var half := cell_size * 0.40
+	var target_rect := Rect2(target_center - Vector2.ONE * half, Vector2.ONE * half * 2.0)
+	draw_rect(target_rect, thread, false, 4.0 if _high_contrast else 3.0)
+	var tip := target_center - direction * cell_size * 0.10
+	var side := Vector2(-direction.y, direction.x)
+	draw_line(tip, tip - direction * cell_size * 0.12 + side * cell_size * 0.08, thread, 3.0)
+	draw_line(tip, tip - direction * cell_size * 0.12 - side * cell_size * 0.08, thread, 3.0)
 
 func _draw_teaching_cue() -> void:
 	if not _teaching_active or _motion_active or board_state == null:
@@ -660,6 +851,8 @@ func _draw_cell(rect: Rect2, pos: Vector2i) -> void:
 	var radius := rect.size.x * 0.18
 	draw_style_box(_cell_box(radius), rect)
 	var inset := rect.grow(-rect.size.x * 0.045)
+	if _tracking and pos == _pressed_cell and not _motion_active:
+		inset = _piece_rect(_cell_center(pos), 1.04)
 	var family: String = String(board_state.get_cell(pos))
 	var special: String = String(board_state.get_special(pos))
 	if _motion_active and not _motion_initial_cells.is_empty():
@@ -923,18 +1116,22 @@ func _draw_motion() -> void:
 				var center := rstart + direction * (0.26 * sin(rp * PI))
 				_draw_motion_piece(center, String(item["family"]), 1.0)
 			"clear":
-				var cp := _cascade_phase(int(item.get("cascade", 1)), 0.06, 0.46)
+				var cascade := int(item.get("cascade", 1))
+				var cp := _cascade_phase(cascade, 0.06, 0.46)
 				if cp <= 0.0 or cp >= 1.0:
 					continue
 				var ccenter := _cell_center(item["at"])
 				var cell_size := float(_board_geometry()["cell_size"])
-				_draw_motion_piece(ccenter, String(item["family"]), maxf(0.16, 1.0 - cp * 0.88))
+				var cascade_scale := 1.0 + 0.12 * float(maxi(0, cascade - 1))
+				_draw_motion_piece(ccenter, String(item["family"]), maxf(0.16, 1.0 - cp * 0.88) * cascade_scale)
 				var pulse := sin(cp * PI)
 				var clear_color := Color(GOLD)
-				clear_color.a = 0.72 * pulse
+				clear_color.a = minf(0.92, (0.72 + 0.06 * float(maxi(0, cascade - 1))) * pulse)
 				var lilac := Color(LILAC)
-				lilac.a = 0.34 * pulse
-				draw_arc(ccenter, cell_size * (0.16 + cp * 0.38), 0.0, TAU, 32, clear_color, 2.0 + 1.5 * pulse)
+				lilac.a = minf(0.58, (0.34 + 0.08 * float(maxi(0, cascade - 1))) * pulse)
+				draw_arc(ccenter, cell_size * (0.16 + cp * 0.38) * cascade_scale, 0.0, TAU, 32, clear_color, 2.0 + 1.5 * pulse)
+				for ring in range(mini(2, maxi(0, cascade - 1))):
+					draw_arc(ccenter, cell_size * (0.22 + cp * (0.42 + 0.10 * ring)), 0.0, TAU, 36, lilac, 1.8)
 				for ray_index in range(6):
 					var angle := TAU * float(ray_index) / 6.0 + float(item.get("cascade", 1)) * 0.19
 					var direction := Vector2(cos(angle), sin(angle))
@@ -947,23 +1144,37 @@ func _draw_motion() -> void:
 					var mote := ccenter + Vector2(cos(angle), sin(angle)) * orbit
 					draw_circle(mote, maxf(1.3, cell_size * 0.026 * (1.0 - cp)), Color("#FFF0C7", 0.66 * pulse))
 			"gravity":
-				var gp := _cascade_phase(int(item.get("cascade", 1)), 0.42, 0.84)
+				var cascade := int(item.get("cascade", 1))
+				var gp := _cascade_phase(cascade, 0.42, 0.84)
 				if gp <= 0.0 or gp >= 1.0:
 					continue
 				var gstart := _cell_center(item["from"])
 				var gfinish := _cell_center(item["to"])
 				var geased := 1.0 - pow(1.0 - gp, 3.0)
-				_draw_motion_piece(gstart.lerp(gfinish, geased), String(item["family"]), 1.0)
+				var settle := clampf((gp - 0.72) / 0.28, 0.0, 1.0)
+				var bounce := sin(settle * PI)
+				var cell_size := float(_board_geometry()["cell_size"])
+				var weight := 1.0 + 0.08 * float(maxi(0, cascade - 1)) + 0.03 * float(mini(3, int(item.get("drop_rows", 1))))
+				var center := gstart.lerp(gfinish, geased) + Vector2(0, -cell_size * 0.035 * bounce * weight)
+				_draw_motion_piece(center, String(item["family"]), 1.0 + 0.035 * bounce * weight)
+				_draw_landing_settle(gfinish, settle, cascade, weight)
 			"spawn":
-				var sp := _cascade_phase(int(item.get("cascade", 1)), 0.48, 0.98)
+				var cascade := int(item.get("cascade", 1))
+				var sp := _cascade_phase(cascade, 0.48, 0.98)
 				if sp <= 0.0 or sp >= 1.0:
 					continue
 				var target := _cell_center(item["at"])
 				var geometry := _board_geometry()
-				var start_y := float(geometry["origin"].y) - float(geometry["cell_size"]) * 1.25
+				var cell_size := float(geometry["cell_size"])
+				var start_y := float(geometry["origin"].y) - cell_size * 1.25
 				var spawn_start := Vector2(target.x, start_y)
 				var seased := 1.0 - pow(1.0 - sp, 3.0)
-				_draw_motion_piece(spawn_start.lerp(target, seased), String(item["family"]), 0.82 + 0.18 * seased)
+				var settle := clampf((sp - 0.74) / 0.26, 0.0, 1.0)
+				var bounce := sin(settle * PI)
+				var weight := 1.0 + 0.08 * float(maxi(0, cascade - 1))
+				var center := spawn_start.lerp(target, seased) + Vector2(0, -cell_size * 0.03 * bounce * weight)
+				_draw_motion_piece(center, String(item["family"]), (0.82 + 0.18 * seased) * (1.0 + 0.03 * bounce * weight))
+				_draw_landing_settle(target, settle, cascade, weight)
 			"special":
 				_draw_special_motion(item)
 			"special_created":
@@ -982,12 +1193,24 @@ func _draw_motion() -> void:
 					for ring in range(3):
 						draw_arc(combo_center, float(_board_geometry()["cell_size"]) * (0.22 + combo_p * (0.30 + ring * 0.12)), 0.0, TAU, 40, combo_color, 2.0)
 			"blocker":
-				var bp := _phase_progress(0.18, 0.48)
+				var bp := _phase_progress(0.16, 0.52)
 				if bp > 0.0 and bp < 1.0:
 					var bcenter := _cell_center(item["at"])
-					var wax := Color("#C7728F")
-					wax.a = 0.78 * (1.0 - bp)
-					draw_arc(bcenter, float(_board_geometry()["cell_size"]) * (0.20 + bp * 0.30), 0.0, TAU, 28, wax, 3.0)
+					var cell_size := float(_board_geometry()["cell_size"])
+					var cleared := bool(item.get("cleared", false))
+					var impact := Color("#F0CE8A") if cleared else Color("#C7728F")
+					impact.a = (0.92 if cleared else 0.76) * (1.0 - bp)
+					draw_arc(bcenter, cell_size * (0.18 + bp * (0.48 if cleared else 0.30)), 0.0, TAU, 32, impact, 4.0 if cleared else 3.0)
+					if cleared:
+						for shard in range(6):
+							var angle := TAU * float(shard) / 6.0 + 0.18
+							var direction := Vector2(cos(angle), sin(angle))
+							var inner := bcenter + direction * cell_size * (0.10 + bp * 0.08)
+							var outer := bcenter + direction * cell_size * (0.20 + bp * 0.40)
+							draw_line(inner, outer, impact, 2.2)
+					else:
+						draw_line(bcenter + Vector2(-1, -1) * cell_size * 0.16, bcenter + Vector2(1, 1) * cell_size * 0.16, impact, 2.4)
+						draw_line(bcenter + Vector2(1, -1) * cell_size * 0.16, bcenter + Vector2(-1, 1) * cell_size * 0.16, impact, 2.4)
 			"shuffle":
 				var shuffle_p := _phase_progress(0.0, 0.62)
 				if shuffle_p > 0.0 and shuffle_p < 1.0:
@@ -997,6 +1220,17 @@ func _draw_motion() -> void:
 					draw_rect(frame, shuffle_color, false, 4.0)
 			_:
 				pass
+
+func _draw_landing_settle(center: Vector2, settle: float, cascade: int, weight: float) -> void:
+	if settle <= 0.0 or settle >= 1.0 or _reduced_motion:
+		return
+	var pulse := sin(settle * PI)
+	var cell_size := float(_board_geometry()["cell_size"])
+	var color := Color("#FFF1B6") if _high_contrast else Color(GOLD)
+	color.a = minf(0.42, (0.18 + 0.05 * float(maxi(0, cascade - 1))) * pulse)
+	var radius := cell_size * (0.20 + settle * 0.22) * minf(1.25, weight)
+	draw_arc(center, radius, 0.0, TAU, 28, color, 2.4 if _high_contrast else 1.8)
+	draw_line(center + Vector2(-cell_size * 0.18, cell_size * 0.28), center + Vector2(cell_size * 0.18, cell_size * 0.28), color, 2.0)
 
 func _draw_motion_piece(center: Vector2, family: String, scale_factor: float) -> void:
 	var descriptor := PieceVisuals.descriptor(family)

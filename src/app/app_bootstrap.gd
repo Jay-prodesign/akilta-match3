@@ -14,6 +14,7 @@ const PrestartScene = preload("res://src/ui/prestart/level_prestart.tscn")
 const SettingsScene = preload("res://src/ui/settings/settings_panel.tscn")
 const SplashScene = preload("res://src/ui/splash/splash_screen.tscn")
 const AudioDirectorScript = preload("res://src/feedback/audio_director.gd")
+const HapticsControllerScript = preload("res://src/feedback/haptics_controller.gd")
 const Typography = preload("res://src/ui/theme/typography.gd")
 const CurioMaterials = preload("res://src/ui/theme/curio_materials.gd")
 const PieceAssetLoader = preload("res://src/match3/presentation/piece_asset_loader.gd")
@@ -29,11 +30,13 @@ var progress
 var navigation
 var user_settings
 var audio_director
+var ui_haptics
 var _store
 var _current_screen: Node
 var _settings_screen: Node
 var _pending_level_number: int = 0
 var _returning_player_entry: bool = false
+var _shell_navigation_locked: bool = false
 ## Founder-authorized internal review exposes three provisional levels.
 ## This does not confer D-024B/D-027 shipping or final-art approval.
 const INTERNAL_REVIEW_LEVEL_COUNT := 3
@@ -63,6 +66,8 @@ func _complete_bootstrap() -> void:
 	audio_director = AudioDirectorScript.new()
 	audio_director.name = "AudioDirector"
 	add_child(audio_director)
+	ui_haptics = HapticsControllerScript.new()
+	ui_haptics.apply_settings(user_settings.get_presentation_state())
 
 	var splash := _current_screen
 	if splash == null or not splash.has_method("set_boot_state"):
@@ -750,8 +755,13 @@ func show_settings() -> bool:
 	if _settings_screen.has_method("set_return_context"):
 		_settings_screen.set_return_context(navigation.route_name().to_lower())
 	_settings_screen.bind_settings(user_settings)
+	if _settings_screen.has_signal("interaction_feedback_requested"):
+		_settings_screen.interaction_feedback_requested.connect(_on_settings_feedback_requested)
 	_settings_screen.close_requested.connect(close_settings)
 	return true
+
+func _on_settings_feedback_requested(_kind: String = "ui") -> void:
+	_emit_shell_feedback()
 
 func close_settings() -> bool:
 	if navigation == null or not navigation.close_settings():
@@ -843,8 +853,12 @@ func _on_gameplay_feedback_requested(kind: String) -> void:
 		audio_director.request_feedback(kind)
 
 func _on_presentation_settings_changed(state: Dictionary) -> void:
+	if ui_haptics != null:
+		ui_haptics.apply_settings(state)
 	if _current_screen != null and is_instance_valid(_current_screen) and _current_screen.has_method("apply_presentation_settings"):
 		_current_screen.apply_presentation_settings(state)
+	if _settings_screen != null and is_instance_valid(_settings_screen) and _settings_screen.has_method("apply_presentation_settings"):
+		_settings_screen.apply_presentation_settings(state)
 
 func _level_path(level_number: int) -> String:
 	return "res://content/levels/ch01/level_%03d.json" % level_number
@@ -887,6 +901,11 @@ func _ensure_house_route() -> bool:
 	return show_house()
 
 func _on_shell_navigation_requested(section: String) -> void:
+	if _shell_navigation_locked or section == _active_shell_section():
+		return
+	_shell_navigation_locked = true
+	_emit_shell_feedback()
+	call_deferred("_release_shell_navigation_lock")
 	_dismiss_feature_preview()
 	match section:
 		"house":
@@ -906,6 +925,32 @@ func _on_shell_navigation_requested(section: String) -> void:
 		"profile":
 			if _ensure_house_route():
 				show_feature_preview("Profile")
+
+func _active_shell_section() -> String:
+	match current_route_name():
+		"house":
+			return "house"
+		"collection":
+			return "curios"
+		"map", "chapters":
+			return "map"
+		"events", "missions":
+			return "events"
+		"shop":
+			return "shop"
+		"profile_settings":
+			return "profile"
+		_:
+			return ""
+
+func _emit_shell_feedback() -> void:
+	if audio_director != null:
+		audio_director.request_feedback("ui")
+	if ui_haptics != null:
+		ui_haptics.request_ui()
+
+func _release_shell_navigation_lock() -> void:
+	_shell_navigation_locked = false
 
 func _on_gameplay_navigation_requested(section: String) -> void:
 	if navigation.current() == NavigationScript.Route.GAMEPLAY:
