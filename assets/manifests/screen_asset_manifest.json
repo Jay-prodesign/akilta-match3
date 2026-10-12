@@ -731,7 +731,9 @@
             "high_contrast"
           ]
         }
-      ]
+      ],
+      "source_master": "assets/board/gbl_board_ritual_frame_9s_base_v01.svg",
+      "runtime_dependency": "owned_only"
     },
     {
       "asset_id": "booster_hint",
