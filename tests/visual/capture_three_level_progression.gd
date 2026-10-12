@@ -110,6 +110,22 @@ func _capture() -> void:
 		return _fail(app, "completed Events hero does not resolve to the 3/3 ritual state")
 	if not await _save(app, "progression-final-events.png"):
 		return
+	var event_lock_action: Button = app.current_screen().get_node_or_null("FeatureLayout/FeatureCardScroll/FeatureCards/FeatureCard1/CardRow/CardCopy/CardAction1") as Button
+	if event_lock_action == null or event_lock_action.disabled:
+		return _fail(app, "Event Center sealed event explanation action missing")
+	event_lock_action.emit_signal("pressed")
+	await _frames(2)
+	var event_lock_reason: Label = app.current_screen().get_node_or_null("LockedExplanation/LockedPanel/Content/Reason") as Label
+	var event_lock_requirement: Label = app.current_screen().get_node_or_null("LockedExplanation/LockedPanel/Content/Requirement") as Label
+	if event_lock_reason == null or event_lock_requirement == null:
+		return _fail(app, "Event Center O05 locked explanation missing reason or requirement")
+	if not await _save(app, "progression-final-event-locked.png"):
+		return
+	var event_lock_close: Button = app.current_screen().get_node_or_null("LockedExplanation/LockedPanel/Content/Close") as Button
+	if event_lock_close == null:
+		return _fail(app, "Event Center O05 close action missing")
+	event_lock_close.emit_signal("pressed")
+	await _frames(2)
 	var weekly_button: Button = app.current_screen().get_node_or_null("FeatureLayout/WeeklyMissionsAction") as Button
 	if weekly_button == null:
 		return _fail(app, "Event Center must expose the S09 Weekly Rituals destination")

@@ -4,6 +4,8 @@ extends Control
 signal back_requested
 signal level_requested(level_number: int)
 
+const LockedExplanation = preload("res://src/ui/shared/locked_explanation.gd")
+
 @export var canonical_level_cap: int = 1
 @export var visible_route_levels: int = 10
 
@@ -18,6 +20,7 @@ var progress
 func _ready() -> void:
 	back_button.pressed.connect(func(): back_requested.emit())
 	route_view.level_requested.connect(func(level_number: int): level_requested.emit(level_number))
+	route_view.locked_level_requested.connect(_open_locked_level_explanation)
 	route_view.visible_route_levels = visible_route_levels
 	route_view.set_canonical_level_cap(canonical_level_cap)
 	_refresh()
@@ -47,6 +50,13 @@ func _refresh() -> void:
 		else:
 			intro.text = "Complete the opening three rituals to restore the first cabinet set. Upper cabinets remain visible but sealed for later journeys."
 	route_view.set_progress(progress)
+
+func _open_locked_level_explanation(level_number: int) -> void:
+	var future_content := level_number > canonical_level_cap
+	var title := "UPPER CABINET %d" % level_number if future_content else "LEVEL %d" % level_number
+	var reason := "This upper cabinet belongs to a future chapter and is not playable in the current Curio Boutique." if future_content else "This ritual is still sealed by your current Curio Boutique progress."
+	var requirement := "Future chapter content must be released first. Completing the opening cabinet set does not unlock this cabinet." if future_content else "Complete Level %d first to unlock this ritual." % max(1, level_number - 1)
+	LockedExplanation.present(self, title, reason, requirement, "RETURN TO CHAPTER ROUTE")
 
 func _focus_frontier() -> void:
 	if scroll == null or route_view == null:
