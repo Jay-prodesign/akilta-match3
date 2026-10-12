@@ -12,6 +12,12 @@ const CYAN := Color("#9BBED0")
 const ROSE := Color("#C98BA8")
 const PieceAssetLoader = preload("res://src/match3/presentation/piece_asset_loader.gd")
 const ScreenArt = preload("res://src/ui/shared/screen_art_registry.gd")
+const FRONTIER_ART_PATH := "res://assets/pieces/moon_sigil.webp"
+const RELIC_ART_PATHS := {
+	1: "res://assets/curios/ch01_curio_moon_cameo_awakened_v01.webp",
+	2: "res://assets/curios/ch01_curio_moth_reliquary.png",
+	3: "res://assets/curios/ch01_curio_thorned_locket.png",
+}
 
 @export var canonical_level_cap: int = 1
 @export var visible_route_levels: int = 10
@@ -29,7 +35,7 @@ var _frontier_focus: TextureRect
 var _frontier_label: Label
 
 func _ready() -> void:
-	_build_route()
+	_bind_authored_route()
 	_refresh()
 
 func set_progress(value) -> void:
@@ -52,137 +58,52 @@ func get_level_state(level_number: int) -> String:
 func get_frontier_level() -> int:
 	return _frontier_level
 
-func _build_route() -> void:
-	for child in get_children():
-		child.queue_free()
+func _bind_authored_route() -> void:
+	custom_minimum_size = Vector2(route_width, 1500.0)
+	size = custom_minimum_size
 	_level_buttons.clear()
 	_level_labels.clear()
 	_centers.clear()
 	_level_states.clear()
 
-	var content_height := 1500.0
-	custom_minimum_size = Vector2(route_width, content_height)
-	size = custom_minimum_size
-
-	var future_caption := Label.new()
-	future_caption.name = "FutureCabinetsCaption"
-	future_caption.position = Vector2(route_width * 0.12, 24.0)
-	future_caption.size = Vector2(route_width * 0.76, 44.0)
-	future_caption.text = "UPPER CABINETS · SEALED FOR LATER"
-	future_caption.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	future_caption.add_theme_font_size_override("font_size", 19)
-	future_caption.add_theme_color_override("font_color", Color("#D7B9D8"))
-	future_caption.add_theme_color_override("font_outline_color", Color("#090711", 0.92))
-	future_caption.add_theme_constant_override("outline_size", 3)
-	add_child(future_caption)
-
-	_frontier_focus = TextureRect.new()
-	_frontier_focus.name = "FrontierFocus"
-	_frontier_focus.texture = PieceAssetLoader.ornament("res://assets/pieces/moon_sigil.svg")
-	_frontier_focus.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
-	_frontier_focus.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
-	_frontier_focus.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	_frontier_focus.size = Vector2(72, 72)
-	_frontier_focus.modulate = Color(1.0, 0.94, 0.78, 1.0)
-	_frontier_focus.visible = false
-	add_child(_frontier_focus)
-
-	_frontier_label = Label.new()
-	_frontier_label.name = "FrontierFocusLabel"
-	_frontier_label.text = "CURRENT RITUAL"
-	_frontier_label.size = Vector2(190, 38)
-	_frontier_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	_frontier_label.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
-	_frontier_label.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	_frontier_label.add_theme_font_size_override("font_size", 18)
-	_frontier_label.add_theme_color_override("font_color", Color("#FFF0B8"))
-	_frontier_label.add_theme_color_override("font_outline_color", Color("#080710", 0.96))
-	_frontier_label.add_theme_constant_override("outline_size", 4)
-	_frontier_label.visible = false
-	add_child(_frontier_label)
+	_frontier_focus = get_node_or_null("FrontierFocus") as TextureRect
+	_frontier_label = get_node_or_null("FrontierFocusLabel") as Label
+	if _frontier_focus != null:
+		_frontier_focus.texture = PieceAssetLoader.ornament(FRONTIER_ART_PATH)
 
 	for level_number in range(1, visible_route_levels + 1):
-		var center := _center_for(level_number, content_height)
-		_centers[level_number] = center
-
-		var button := Button.new()
-		button.name = "Level%d" % level_number
-		var diameter := 160.0 if level_number == 1 else (148.0 if level_number <= 3 else 52.0)
-		button.position = center - Vector2.ONE * diameter * 0.5
-		button.size = Vector2.ONE * diameter
-		button.focus_mode = Control.FOCUS_ALL
+		var button := get_node_or_null("Level%d" % level_number) as Button
+		var label := get_node_or_null("Label%d" % level_number) as Label
+		if button == null or label == null:
+			push_error("S03 authored route slot missing for level %d." % level_number)
+			continue
 		button.tooltip_text = _tooltip_for(level_number)
-		button.pressed.connect(func(n := level_number): _request(n))
-		add_child(button)
+		button.pressed.connect(_request.bind(level_number))
 		_level_buttons[level_number] = button
-
-		var label := Label.new()
-		label.name = "Label%d" % level_number
-		label.size = Vector2(280.0, 88.0)
-		label.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
-		label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-		label.add_theme_font_size_override("font_size", 25 if level_number == 1 else 23)
-		label.add_theme_color_override("font_color", BONE if level_number == 1 else Color("#E0D2E2"))
-		label.add_theme_color_override("font_outline_color", Color("#07060B", 0.94))
-		label.add_theme_constant_override("outline_size", 3)
-		var label_plate := StyleBoxFlat.new()
-		label_plate.bg_color = Color("#100B16", 0.82)
-		label_plate.border_color = Color(GOLD, 0.30)
-		label_plate.set_border_width_all(1)
-		label_plate.set_corner_radius_all(10)
-		label_plate.content_margin_left = 12
-		label_plate.content_margin_right = 12
-		label.add_theme_stylebox_override("normal", label_plate)
-		label.visible = level_number <= 3
-		var on_right := center.x < route_width * 0.50
-		if on_right:
-			label.position = Vector2(center.x + diameter * 0.60, center.y - 44.0)
-			label.horizontal_alignment = HORIZONTAL_ALIGNMENT_LEFT
-		else:
-			label.position = Vector2(center.x - diameter * 0.60 - label.size.x, center.y - 44.0)
-			label.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
-		add_child(label)
 		_level_labels[level_number] = label
-		if level_number <= 3:
-			_add_relic_art(level_number, center, diameter, on_right)
+		_centers[level_number] = button.position + button.size * 0.5
+
+	for level_number in RELIC_ART_PATHS:
+		var art := get_node_or_null("RelicArt%d" % int(level_number)) as TextureRect
+		if art != null:
+			art.texture = PieceAssetLoader.ornament(String(RELIC_ART_PATHS[level_number]))
 
 	queue_redraw()
 
-func _center_for(level_number: int, content_height: float) -> Vector2:
-	var base_y := content_height - bottom_margin
-	match level_number:
-		1:
-			return Vector2(route_width * 0.50, base_y)
-		2:
-			return Vector2(route_width * 0.34, base_y - 370.0)
-		3:
-			return Vector2(route_width * 0.66, base_y - 720.0)
-		_:
-			# Future Levels 4–10 stay visible as one compact sealed cabinet cluster.
-			var future_index := level_number - 4
-			if future_index < 4:
-				return Vector2(route_width * (0.20 + float(future_index) * 0.20), 158.0)
-			return Vector2(route_width * (0.30 + float(future_index - 4) * 0.20), 250.0)
-
-func _add_relic_art(level_number: int, center: Vector2, diameter: float, label_on_right: bool) -> void:
-	var paths := {
-		1: "res://assets/curios/ch01_curio_moon_cameo_awakened_v01.svg",
-		2: "res://assets/curios/ch01_curio_moth_reliquary.svg",
-		3: "res://assets/curios/ch01_curio_thorned_locket.svg",
+func route_authored_contract() -> Dictionary:
+	var raster_relics_loaded := true
+	for level_number in RELIC_ART_PATHS:
+		var path := String(RELIC_ART_PATHS[level_number])
+		var art := get_node_or_null("RelicArt%d" % int(level_number)) as TextureRect
+		raster_relics_loaded = raster_relics_loaded and (path.ends_with(".webp") or path.ends_with(".png")) and art != null and art.texture != null
+	return {
+		"authored_level_slots": _level_buttons.size() == visible_route_levels and _level_labels.size() == visible_route_levels,
+		"authored_frontier_slots": _frontier_focus != null and _frontier_label != null,
+		"frontier_raster_loaded": FRONTIER_ART_PATH.ends_with(".webp") and _frontier_focus != null and _frontier_focus.texture != null,
+		"raster_relics_loaded": raster_relics_loaded,
+		"runtime_node_factory": false,
+		"runtime_route_vfx_allowed": true,
 	}
-	var art := TextureRect.new()
-	art.name = "RelicArt%d" % level_number
-	art.texture = PieceAssetLoader.ornament(String(paths.get(level_number, "")))
-	art.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
-	art.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
-	art.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	art.custom_minimum_size = Vector2(108, 108)
-	art.size = Vector2(108, 108)
-	var side := -1.0 if label_on_right else 1.0
-	art.position = center + Vector2(side * (diameter * 0.5 + 82.0), -54.0) - Vector2(54, 0)
-	art.modulate = Color(1, 1, 1, 0.94)
-	add_child(art)
-	move_child(art, max(0, get_child_count() - 3))
 
 func _request(level_number: int) -> void:
 	if level_number <= canonical_level_cap and (progress == null or level_number <= int(progress.highest_level_unlocked)):
