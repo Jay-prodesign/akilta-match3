@@ -8,6 +8,7 @@ const PieceAssetLoader = preload("res://src/match3/presentation/piece_asset_load
 const ScreenArt = preload("res://src/ui/shared/screen_art_registry.gd")
 const TopResourceBar = preload("res://src/ui/shared/top_resource_bar.gd")
 const OPENING_LEVEL_COUNT := 3
+const CURRENT_WING_ART_PATH := "res://assets/world/ch01_curio_boutique/prestart_curio_boutique_shared.webp"
 
 const WINGS := [
 	{"id":"curio_boutique","name":"CURIO BOUTIQUE","x":0.08,"y":0.04,"w":0.84,"h":0.20},
@@ -146,8 +147,9 @@ func _ready() -> void:
 		button.icon_alignment = HORIZONTAL_ALIGNMENT_LEFT
 		button.add_theme_font_size_override("font_size", 27 if id == "curio_boutique" else 21)
 		if id == "curio_boutique":
-			button.icon = PieceAssetLoader.ornament("res://assets/curios/ch01_curio_moon_cameo_awakened_v01.svg")
-			button.add_theme_constant_override("icon_max_width", 156)
+			button.icon = null
+			button.clip_contents = true
+			_install_current_wing_art(button)
 			button.pressed.connect(func(): chapter_requested.emit("curio_boutique"))
 		else:
 			button.disabled = true
@@ -174,6 +176,23 @@ func _ready() -> void:
 
 	_refresh_progress_state()
 
+func _install_current_wing_art(button: Button) -> void:
+	if button == null or button.get_node_or_null("CurrentWingArtwork") != null:
+		return
+	var art := TextureRect.new()
+	art.name = "CurrentWingArtwork"
+	art.anchor_left = 0.015
+	art.anchor_right = 0.39
+	art.anchor_top = 0.08
+	art.anchor_bottom = 0.92
+	art.grow_horizontal = Control.GROW_DIRECTION_BOTH
+	art.grow_vertical = Control.GROW_DIRECTION_BOTH
+	art.texture = PieceAssetLoader.ornament(CURRENT_WING_ART_PATH)
+	art.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+	art.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_COVERED
+	art.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	button.add_child(art)
+
 func _refresh_progress_state() -> void:
 	var current := get_chapter_button("curio_boutique")
 	if current == null or _chapter_summary == null or _lock_reason == null:
@@ -189,18 +208,18 @@ func _refresh_progress_state() -> void:
 	var state := "first_wing_open"
 	if opening_complete:
 		state = "current_complete"
-		current.text = "CURIO BOUTIQUE\nRESTORED · 3 / 3 · FIRST CABINET SET"
+		current.text = "CURIO BOUTIQUE\nRESTORED WING · 3 / 3 DISPLAYS\nREVISIT RITUALS"
 		current.tooltip_text = "Curio Boutique · first cabinet set restored · Levels 1–3 replayable"
 		_chapter_summary.text = "The opening wing is restored. Revisit its rituals while the deeper House remains sealed."
 		_lock_reason.text = "FIVE WINGS REMAIN SEALED · FUTURE CHAPTERS"
 	elif completed > 0:
 		state = "current_partial"
-		current.text = "CURIO BOUTIQUE\n%d / %d DISPLAYS AWAKENED · CONTINUE" % [completed, OPENING_LEVEL_COUNT]
+		current.text = "CURIO BOUTIQUE\nCURRENT WING · %d / %d DISPLAYS\nCONTINUE RESTORATION" % [completed, OPENING_LEVEL_COUNT]
 		current.tooltip_text = "Curio Boutique · %d / %d opening displays awakened" % [completed, OPENING_LEVEL_COUNT]
 		_chapter_summary.text = "%d of %d displays are awake. Continue the Curio Boutique restoration." % [completed, OPENING_LEVEL_COUNT]
 		_lock_reason.text = "RESTORE THE CURRENT WING · FUTURE WINGS STAY SEALED"
 	else:
-		current.text = "CURIO BOUTIQUE\nOPENING RITUALS · 0 / 3"
+		current.text = "CURIO BOUTIQUE\nCURRENT WING · 0 / 3 DISPLAYS\nBEGIN RESTORATION"
 		current.tooltip_text = "Curio Boutique · opening rituals · Levels 1–3"
 		_chapter_summary.text = "The Curio Boutique is the House's first open wing. Begin its three opening rituals."
 		_lock_reason.text = "FUTURE WINGS ARE SEALED UNTIL LATER CHAPTERS"
@@ -219,19 +238,27 @@ func _layout_chapter_hotspots(grid: Control, buttons: Array[Button]) -> void:
 	var count := buttons.size()
 	for i in range(count):
 		var button := buttons[i]
+		var current := String(button.get_meta("chapter_id", "")) == "curio_boutique"
 		if compact:
 			var spacing := 6.0
 			var card_height := maxf(52.0, (grid.size.y - spacing * float(count - 1)) / float(count))
 			button.position = Vector2(0, float(i) * (card_height + spacing))
 			button.size = Vector2(grid.size.x, card_height)
-			button.add_theme_font_size_override("font_size", 14)
-			button.add_theme_constant_override("icon_max_width", 56)
+			button.add_theme_font_size_override("font_size", 15 if current else 14)
+			button.add_theme_constant_override("icon_max_width", 175 if current else 0)
 		else:
 			button.position = Vector2(grid.size.x * float(button.get_meta("map_x")), grid.size.y * float(button.get_meta("map_y")))
 			button.size = Vector2(grid.size.x * float(button.get_meta("map_w")), grid.size.y * float(button.get_meta("map_h")))
-			var current := String(button.get_meta("chapter_id", "")) == "curio_boutique"
 			button.add_theme_font_size_override("font_size", 27 if current else 21)
-			button.add_theme_constant_override("icon_max_width", 156 if current else 0)
+			button.add_theme_constant_override("icon_max_width", 210 if current else 0)
+
+func chapter_visual_contract() -> Dictionary:
+	return {
+		"current_wing_art_path": CURRENT_WING_ART_PATH,
+		"current_wing_art_loaded": PieceAssetLoader.ornament(CURRENT_WING_ART_PATH) != null,
+		"current_wing_art_is_raster": CURRENT_WING_ART_PATH.ends_with(".webp") or CURRENT_WING_ART_PATH.ends_with(".png"),
+		"future_wings_artless_until_authored": true
+	}
 
 func _apply_current_style(button: Button, state: String) -> void:
 	button.disabled = false
@@ -246,6 +273,10 @@ func _apply_current_style(button: Button, state: String) -> void:
 		box.border_color = Color("#E4C67F")
 	box.set_border_width_all(2)
 	box.set_corner_radius_all(14)
+	box.content_margin_left = 182
+	box.content_margin_right = 14
+	box.content_margin_top = 10
+	box.content_margin_bottom = 10
 	box.shadow_color = Color(0, 0, 0, 0.62)
 	box.shadow_size = 12
 	button.add_theme_stylebox_override("normal", box)
