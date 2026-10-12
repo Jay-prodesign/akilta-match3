@@ -50,6 +50,9 @@ func _run() -> void:
 		_expect(int(living.get("restored_curio_count", 0)) == 2, "stage 2 Living House must reflect two persistent Curios")
 	_expect(reduced_card != null and reduced_card.size.y <= reduced.size.y * 0.13, "Restoration ceremony summary must stay compact over the House world")
 	_expect(reduced_hero != null and reduced_hero.texture != null, "Restoration must render the recovered Curio motif as production hero artwork while exact item identity remains in the summary")
+	var reduced_overlay_contract: Dictionary = reduced.get_node("RestorationOverlay").restoration_contract()
+	_expect(bool(reduced_overlay_contract.get("house_first_composition", false)), "Restoration must keep the recovered Curio bounded so the House remains the visual hero")
+	_expect(bool(reduced_overlay_contract.get("before_after_state_rail", false)), "Restoration must expose a truthful dormant-to-awakened state comparison")
 	reduced.queue_free()
 	await _frames(2)
 
@@ -79,6 +82,8 @@ func _run() -> void:
 		_expect(int(living.get("restored_curio_count", 0)) == 3, "stage 3 Living House must reflect all three persistent Curios")
 	_expect(animated_card != null and animated_card.size.y <= animated.size.y * 0.13, "Animated ceremony summary must stay compact over the House world")
 	_expect(animated_hero != null and animated_hero.texture != null, "Animated restoration must retain the recovered Curio production motif")
+	var animated_overlay_contract: Dictionary = animated.get_node("RestorationOverlay").restoration_contract()
+	_expect(bool(animated_overlay_contract.get("house_first_composition", false)), "Animated restoration must preserve the bounded House-first Curio composition")
 	animated.queue_free()
 	await _frames(2)
 
