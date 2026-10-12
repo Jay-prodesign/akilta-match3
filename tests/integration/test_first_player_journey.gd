@@ -111,7 +111,7 @@ func _run() -> void:
 		for booster_key in ["hint", "plus_moves", "retry"]:
 			_expect(bool(loaded_boosters.get(booster_key, false)), "%s booster artwork must load" % booster_key)
 	var booster_row: HBoxContainer = gameplay.get_node("BoosterTray/BoosterActions")
-	var hint_booster: Button = booster_row.get_node("HintBoost")
+	var hint_booster: Button = booster_row.get_node("HintSlot/HintBoost")
 	_expect(hint_booster.text == "ASK KEEPER", "gameplay familiar utility must be presented as ASK KEEPER")
 	_expect(booster_row.get_node_or_null("PlusMovesBoost") == null, "active gameplay must not expose the fail-only +3 Moves recovery as a free booster")
 	_expect(booster_row.get_node_or_null("RetryBoost") == null, "active gameplay must not duplicate retry as a booster")
