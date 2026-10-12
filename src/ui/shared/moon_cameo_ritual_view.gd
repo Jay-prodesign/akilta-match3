@@ -7,11 +7,11 @@ const BONE := Color("#F1E8DD")
 const INK := Color("#100D12")
 const ROSE := Color("#C66A88")
 const PieceAssetLoader = preload("res://src/match3/presentation/piece_asset_loader.gd")
-const CAMEO_SEALED_PATH := "res://assets/curios/ch01_curio_moon_cameo_sealed_v01.svg"
-const CAMEO_AWAKENED_PATH := "res://assets/curios/ch01_curio_moon_cameo_awakened_v01.svg"
+const CAMEO_SEALED_PATH := "res://assets/curios/ch01_curio_moon_cameo_sealed_v01.webp"
+const CAMEO_AWAKENED_PATH := "res://assets/curios/ch01_curio_moon_cameo_awakened_v01.webp"
 const RELIC_PATHS := {
-	"moth_reliquary": "res://assets/curios/ch01_curio_moth_reliquary.svg",
-	"thorned_locket": "res://assets/curios/ch01_curio_thorned_locket.svg"
+	"moth_reliquary": "res://assets/curios/ch01_curio_moth_reliquary.png",
+	"thorned_locket": "res://assets/curios/ch01_curio_thorned_locket.png"
 }
 var _textures: Dictionary = {}
 
@@ -56,10 +56,23 @@ func _draw() -> void:
 		draw_line(center + Vector2(short * 0.18, -short * 0.18), center + Vector2(-short * 0.18, short * 0.18), Color(ROSE, 0.52), 3.0)
 
 func _relic_texture(dormant: bool) -> Texture2D:
-	if relic_id == "moon_cameo":
-		return _load_texture(CAMEO_SEALED_PATH if dormant or mode == "prestart" else CAMEO_AWAKENED_PATH)
-	var path := String(RELIC_PATHS.get(relic_id, ""))
+	var path := _relic_path(dormant)
 	return _load_texture(path) if path != "" else null
+
+func _relic_path(dormant: bool) -> String:
+	if relic_id == "moon_cameo":
+		return CAMEO_SEALED_PATH if dormant or mode == "prestart" else CAMEO_AWAKENED_PATH
+	return String(RELIC_PATHS.get(relic_id, ""))
+
+func relic_asset_contract() -> Dictionary:
+	var path := _relic_path(mode == "fail")
+	return {
+		"relic_id": relic_id,
+		"mode": mode,
+		"runtime_path": path,
+		"raster_runtime": path.ends_with(".webp") or path.ends_with(".png"),
+		"loaded": _load_texture(path) != null if path != "" else false
+	}
 
 func _panel_box() -> StyleBoxFlat:
 	var box := StyleBoxFlat.new()
