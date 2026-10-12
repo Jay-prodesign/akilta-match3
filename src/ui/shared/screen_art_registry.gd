@@ -33,26 +33,21 @@ static func texture(asset_id: String) -> Texture2D:
 	if extension != "png" and extension != "webp":
 		push_error("Screen art must be raster: %s -> %s" % [asset_id, asset_path])
 		return null
-	if not FileAccess.file_exists(asset_path):
+	# Exported Godot builds remap imported raster sources to engine resources.
+	# ResourceLoader follows that remap; raw FileAccess to source bytes does not.
+	if not ResourceLoader.exists(asset_path):
 		push_error("Missing required production screen art: %s -> %s" % [asset_id, asset_path])
 		return null
-	var image := Image.new()
-	var bytes := FileAccess.get_file_as_bytes(asset_path)
-	var err := ERR_FILE_UNRECOGNIZED
-	if extension == "png":
-		err = image.load_png_from_buffer(bytes)
-	elif extension == "webp":
-		err = image.load_webp_from_buffer(bytes)
-	if err != OK or image.is_empty():
+	var resource := ResourceLoader.load(asset_path, "Texture2D", ResourceLoader.CACHE_MODE_REUSE) as Texture2D
+	if resource == null:
 		push_error("Failed to decode production screen art: %s -> %s" % [asset_id, asset_path])
 		return null
-	var resource := ImageTexture.create_from_image(image)
 	_cache[asset_id] = resource
 	return resource
 
 static func missing_required() -> PackedStringArray:
 	var missing := PackedStringArray()
 	for asset_id in ART:
-		if not FileAccess.file_exists(String(ART[asset_id])):
+		if not ResourceLoader.exists(String(ART[asset_id])):
 			missing.append(String(asset_id))
 	return missing
