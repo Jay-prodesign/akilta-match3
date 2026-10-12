@@ -64,6 +64,12 @@ func _verify_reduced_motion_feedback() -> void:
 	_expect(int(reward.get("play_count", 0)) == 1, "Reduced Motion reward state must still be registered")
 	_expect(bool(reward.get("last_reduced_motion", false)), "S06 reward_fx must report Reduced Motion")
 	_expect(not bool(reward.get("active", true)), "Reduced Motion must not leave decorative reward animation active")
+	_expect(screen.has_method("terminal_result_contract"), "Reduced Motion terminal result must expose a contract")
+	if screen.has_method("terminal_result_contract"):
+		var terminal: Dictionary = screen.terminal_result_contract()
+		_expect(String(terminal.get("state", "")) == "won", "terminal result must identify win")
+		_expect(String(terminal.get("transition", "")) == "reduced_motion_immediate", "Reduced Motion must skip decorative terminal transition")
+		_expect(String(terminal.get("objective_summary", "")).contains("6 / 6 MOON SIGILS"), "terminal result must preserve objective completion copy")
 	screen.queue_free()
 	await _frames(2)
 
