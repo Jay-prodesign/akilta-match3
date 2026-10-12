@@ -128,7 +128,7 @@ func _capture() -> void:
 	if String(app.current_route_name()) != "collection":
 		return _fail(app, "House Curios destination must enter S08 Curio Collection")
 	var collection = app.current_screen()
-	var moon_state: Label = collection.get_node_or_null("Layout/Cards/MoonCard/Content/State") as Label if collection != null else null
+	var moon_state: Label = collection.get_node_or_null("Layout/Cards/MoonCard/Content/Copy/State") as Label if collection != null else null
 	if moon_state == null or not moon_state.text.begins_with("AWAKENED"):
 		return _fail(app, "S08 must show the exact earned Moon Cameo as awakened")
 	if not await _save(app, "golden-08-curio-verification.png"):
