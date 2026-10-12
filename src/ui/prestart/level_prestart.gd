@@ -84,7 +84,7 @@ func _build_ritual_aids() -> void:
 	heading.text = "IN-LEVEL AIDS"
 	heading.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	heading.add_theme_color_override("font_color", Color("#D5AD70"))
-	heading.add_theme_font_size_override("font_size", 16)
+	heading.add_theme_font_size_override("font_size", 18)
 	column.add_child(heading)
 	var row := HBoxContainer.new()
 	row.name = "AidRow"
@@ -95,7 +95,7 @@ func _build_ritual_aids() -> void:
 		{"label":"+3 MOVES", "art":"res://assets/pieces/potion.svg"}
 	]:
 		var chip := PanelContainer.new()
-		chip.custom_minimum_size = Vector2(0, 52)
+		chip.custom_minimum_size = Vector2(0, 56)
 		chip.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 		var chip_style := StyleBoxFlat.new()
 		chip_style.bg_color = Color("#28142D", 0.96)
@@ -118,7 +118,7 @@ func _build_ritual_aids() -> void:
 		var caption := Label.new()
 		caption.text = String(entry["label"])
 		caption.add_theme_color_override("font_color", Color("#F4E5D3"))
-		caption.add_theme_font_size_override("font_size", 17)
+		caption.add_theme_font_size_override("font_size", 20)
 		chip_row.add_child(caption)
 
 func _style_ritual_actions() -> void:
