@@ -38,6 +38,7 @@ on:
       - "assets/board/**"
       - "assets/curios/**"
       - "src/ui/shared/**"
+      - "src/ui/theme/**"
       - "src/feedback/**"
       - "src/settings/**"
       - "src/ui/settings/**"
