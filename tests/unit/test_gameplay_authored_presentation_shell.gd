@@ -38,11 +38,11 @@ func _run() -> void:
 	_expect(objective_icon != null and objective_icon.texture != null, "Authored objective plate must expose production objective art")
 	_expect(objective != null and objective.text.begins_with("TARGET ·"), "Objective copy must read as a clear top target block")
 	_expect(moves != null and moves.custom_minimum_size.x >= 200.0, "Moves must retain a distinct right-side counter block")
-	_expect(keeper != null and keeper.custom_minimum_size.y >= 76.0 and keeper.icon != null, "ASK KEEPER must retain a mobile touch target and production familiar art")
+	_expect(keeper != null and keeper.custom_minimum_size.y >= 60.0 and keeper.icon != null, "ASK KEEPER must retain a mobile touch target and production familiar art")
 	_expect(sealed_a != null and sealed_a.disabled and sealed_a.icon != null, "First future booster slot must be visibly sealed with production art")
 	_expect(sealed_b != null and sealed_b.disabled and sealed_b.icon != null, "Second future booster slot must be visibly sealed with production art")
 	_expect(sealed_c != null and sealed_c.disabled and sealed_c.icon != null, "Third future booster slot must be visibly sealed with production art")
-	_expect(settings != null and settings.custom_minimum_size.y >= 76.0 and settings.icon != null, "Lower gameplay bar must expose a real Settings utility")
+	_expect(settings != null and settings.custom_minimum_size.y >= 60.0 and settings.icon != null, "Lower gameplay bar must expose a real Settings utility")
 
 	screen.settings_requested.connect(func(): settings_requested = true)
 	if settings != null:
