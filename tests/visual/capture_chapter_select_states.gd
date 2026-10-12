@@ -31,10 +31,22 @@ func _capture() -> void:
 			return _fail(screen, "current Curio Boutique hotspot unavailable")
 		for id in ["witch_atelier", "dark_vanity", "archive", "moon_conservatory", "cemetery_garden"]:
 			var future: Button = screen.get_chapter_button(id)
-			if future == null or not future.disabled or future.icon != null:
-				return _fail(screen, "future wing state is not a truthful sealed card: %s" % id)
+			if future == null or future.disabled or future.icon != null:
+				return _fail(screen, "future wing must be an inspectable sealed card: %s" % id)
 		if not await _save(screen, String(state["name"])):
 			return
+		if int(state["wins"]) == 3:
+			var sealed_wing: Button = screen.get_chapter_button("witch_atelier")
+			sealed_wing.emit_signal("pressed")
+			await process_frame
+			await process_frame
+			var sealed_contract: Dictionary = screen.sealed_explanation_contract()
+			if not bool(sealed_contract.get("open", false)) or String(sealed_contract.get("sealed_kind", "")) != "future_chapter":
+				return _fail(screen, "sealed future wing explanation missing")
+			if not String(sealed_contract.get("requirement", "")).contains("No unlock date"):
+				return _fail(screen, "sealed future wing explanation fabricated availability")
+			if not await _save(screen, "chapters-03-sealed-wing-inspection.png"):
+				return
 		screen.queue_free()
 		await process_frame
 	print("CAPTURE_PASS: S02 Chapters production states")

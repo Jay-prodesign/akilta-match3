@@ -38,9 +38,23 @@ func _run() -> void:
 	_expect(backdrop != null and backdrop.texture != null, "S02 authored chapter-world raster missing")
 	for id in ["witch_atelier", "dark_vanity", "archive", "moon_conservatory", "cemetery_garden"]:
 		var locked: Button = screen.get_chapter_button(id)
-		_expect(locked != null and locked.disabled, "%s must remain locked" % id)
+		_expect(locked != null and not locked.disabled, "%s sealed card must remain inspectable" % id)
 		_expect(screen.chapter_state(id) == "future_wings_locked", "%s must expose future_wings_locked" % id)
 		_expect(locked.icon == null, "%s must not use placeholder wing artwork" % id)
+	var future_wing: Button = screen.get_chapter_button("witch_atelier")
+	future_wing.emit_signal("pressed")
+	await process_frame
+	var sealed_contract: Dictionary = screen.sealed_explanation_contract()
+	_expect(bool(sealed_contract.get("open", false)), "sealed future wing must open an explanation")
+	_expect(bool(sealed_contract.get("sealed_truth", false)) and bool(sealed_contract.get("no_fake_unlock", false)), "sealed explanation must forbid fabricated unlock truth")
+	_expect(String(sealed_contract.get("sealed_kind", "")) == "future_chapter", "future wing sealed kind mismatch")
+	_expect(String(sealed_contract.get("reason", "")).contains("not playable in this build"), "future wing reason must state build availability")
+	_expect(String(sealed_contract.get("requirement", "")).contains("No unlock date") and String(sealed_contract.get("requirement", "")).contains("purchase path"), "future wing explanation must not invent date or commerce")
+	var sealed_close: Button = screen.get_node_or_null("LockedExplanation/LockedPanel/Content/Close") as Button
+	_expect(sealed_close != null, "sealed wing explanation close action missing")
+	if sealed_close != null:
+		sealed_close.emit_signal("pressed")
+		await process_frame
 
 	var partial = ProgressScript.new()
 	partial.apply_level_win("chapters-l1", "ch01_level_001", "moon_cameo", 1)

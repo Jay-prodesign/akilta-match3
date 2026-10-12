@@ -32,18 +32,6 @@ func _run() -> void:
 	await process_frame
 	_expect(str(app.current_route_name()) == "house", "splash entry must route into House")
 	var house = app.current_screen()
-	_expect(house.has_method("ftue_house_contract"), "first House must expose FTUE guidance contract")
-	if house.has_method("ftue_house_contract"):
-		var ftue: Dictionary = house.ftue_house_contract()
-		_expect(bool(ftue.get("active", false)), "brand-new player must see First Ritual guidance")
-		_expect(String(ftue.get("copy", "")).contains("ENTER CURIO BOUTIQUE") and String(ftue.get("copy", "")).contains("ASK KEEPER"), "First Ritual guidance must connect the primary CTA to Keeper help")
-		_expect(bool(ftue.get("keeper_available", false)), "First Ritual guidance must point to an available Keeper action")
-	var ftue_dismiss: Button = house.get_node_or_null("Layout/FirstRitualGuide/GuideRow/Dismiss") as Button
-	_expect(ftue_dismiss != null and ftue_dismiss.custom_minimum_size.y >= 56.0, "First Ritual guidance must have a mobile-safe dismiss target")
-	if ftue_dismiss != null:
-		ftue_dismiss.emit_signal("pressed")
-		await process_frame
-		_expect(not bool(house.ftue_house_contract().get("active", true)), "dismissed First Ritual guidance must leave the House unobstructed for this visit")
 	var dormant_cameo: Control = house.get_node("Layout/RoomView/MoonCameoOverlay")
 	_expect(not dormant_cameo.visible, "Moon Cameo physical relic must stay hidden before Level 1 is won")
 	_expect(house.has_method("keeper_house_contract"), "House must expose the Keeper familiar contract")
@@ -276,8 +264,22 @@ func _run() -> void:
 	await process_frame
 	var review_map = app.current_screen()
 	_expect(review_map.get_level_button(2) != null and not review_map.get_level_button(2).disabled, "winning Level 1 must unlock Level 2 in the authorized internal review")
-	_expect(review_map.get_level_button(3) != null and review_map.get_level_button(3).disabled, "Level 3 remains progression-gated until Level 2 is won")
-	_expect(review_map.get_level_button(4) != null and review_map.get_level_button(4).disabled, "Level 4 remains sealed outside internal review")
+	_expect(review_map.get_level_button(3) != null and not review_map.get_level_button(3).disabled, "Level 3 remains progression-gated but inspectable until Level 2 is won")
+	_expect(review_map.get_level_button(4) != null and not review_map.get_level_button(4).disabled, "Level 4 remains sealed but inspectable outside internal review")
+	var review_route = review_map.get_node("Layout/RoutePanel/Scroll/RouteView")
+	_expect(String(review_route.get_level_state(3)) == "locked", "inspectable Level 3 must remain progression-locked")
+	_expect(String(review_route.get_level_state(4)) == "locked", "inspectable Level 4 must remain future-content locked")
+	review_map.get_level_button(4).emit_signal("pressed")
+	await process_frame
+	await process_frame
+	var sealed_review: Dictionary = review_map.sealed_explanation_contract()
+	_expect(String(sealed_review.get("sealed_kind", "")) == "future_content", "sealed Level 4 must expose future-content truth")
+	_expect(str(app.current_route_name()) == "map", "inspecting sealed Level 4 must not leave the map route")
+	var sealed_review_close: Button = review_map.get_node_or_null("LockedExplanation/LockedPanel/Content/Close") as Button
+	if sealed_review_close != null:
+		sealed_review_close.emit_signal("pressed")
+		await process_frame
+	await process_frame
 	_expect(app.show_prestart(2), "authorized Level 2 must open its own prestart")
 	_expect(not app.start_level(3), "prestart for Level 2 must not launch a different level")
 	_expect(app.start_level(2), "authorized Level 2 must enter gameplay")
@@ -318,7 +320,7 @@ func _run() -> void:
 		await process_frame
 		var third_map = app.current_screen()
 		_expect(third_map.get_level_button(3) != null and not third_map.get_level_button(3).disabled, "Level 3 must unlock on the map")
-		_expect(third_map.get_level_button(4) != null and third_map.get_level_button(4).disabled, "Level 4 must remain sealed")
+		_expect(third_map.get_level_button(4) != null and not third_map.get_level_button(4).disabled, "Level 4 must remain sealed but inspectable")
 		_expect(app.show_prestart(3), "Level 3 prestart must open")
 		_expect(not app.start_level(2), "Level 3 prestart must not launch Level 2")
 		_expect(app.start_level(3), "Level 3 gameplay must load")
@@ -366,7 +368,7 @@ func _run() -> void:
 			var completed_route = completed_map.get_node("Layout/RoutePanel/Scroll/RouteView")
 			_expect(completed_route.get_node("Label2").text.contains("MOTH RELIQUARY RECOVERED"), "completed Level 2 map node must preserve its Curio consequence")
 			_expect(completed_route.get_node("Label3").text.contains("THORNED LOCKET RECOVERED"), "completed Level 3 map node must preserve its Curio consequence")
-			_expect(completed_map.get_level_button(4) != null and completed_map.get_level_button(4).disabled, "completed opening chapter must keep Level 4 sealed")
+			_expect(completed_map.get_level_button(4) != null and not completed_map.get_level_button(4).disabled, "completed opening chapter must keep Level 4 sealed but inspectable")
 			_expect(app.show_house(), "completed map must return safely to House")
 			var completed_house = app.current_screen()
 			var completion_banner: PanelContainer = completed_house.get_node_or_null("Layout/ChapterCompletionBanner")

@@ -42,6 +42,20 @@ func _capture() -> void:
 			return _fail(screen, "S03 frontier focus visibility mismatch")
 		if not await _save(screen, String(state["name"])):
 			return
+		if int(state["wins"]) == 3:
+			var future_button: Button = route.get_level_button(4)
+			if future_button == null or future_button.disabled:
+				return _fail(screen, "future cabinet must remain inspectable")
+			future_button.emit_signal("pressed")
+			await process_frame
+			await process_frame
+			var sealed_contract: Dictionary = screen.sealed_explanation_contract()
+			if not bool(sealed_contract.get("open", false)) or String(sealed_contract.get("sealed_kind", "")) != "future_content":
+				return _fail(screen, "future cabinet sealed explanation missing")
+			if int(sealed_contract.get("sealed_level", 0)) != 4 or not String(sealed_contract.get("requirement", "")).contains("No unlock date"):
+				return _fail(screen, "future cabinet explanation lost truthful availability")
+			if not await _save(screen, "chapter-route-04-sealed-cabinet.png"):
+				return
 		screen.queue_free()
 		await process_frame
 	print("CAPTURE_PASS: S03 frontier state progression")
