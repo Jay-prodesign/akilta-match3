@@ -108,7 +108,7 @@ jobs:
           hw.keyboard=yes
           showDeviceFrame=no
           EOF
-          nohup emulator -avd cat_coven_runtime             -no-window -noaudio -no-boot-anim -no-snapshot             -gpu swiftshader_indirect -accel auto             > artifacts/emulator.log 2>&1 &
+          nohup emulator -avd cat_coven_runtime             -no-window -noaudio -no-boot-anim -no-snapshot             -gpu host -accel auto             > artifacts/emulator.log 2>&1 &
           echo $! > artifacts/emulator.pid
           adb wait-for-device
           for i in $(seq 1 180); do
