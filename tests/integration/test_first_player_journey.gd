@@ -243,8 +243,10 @@ func _run() -> void:
 	var shop_truth: Label = shop_preview.get_node_or_null("FeatureLayout/ShopCurrencyTruth") as Label if shop_preview != null else null
 	var shop_offer_art: TextureRect = shop_preview.get_node_or_null("FeatureLayout/FeatureHero/HeroRow/ShopFeaturedOfferArt") as TextureRect if shop_preview != null else null
 	var shop_disabled_action: Button = shop_preview.get_node_or_null("FeatureLayout/FeatureHero/HeroRow/HeroCopy/ShopDisabledAction") as Button if shop_preview != null else null
-	_expect(shop_currency != null and shop_currency.text.contains("HOUSE COINS") and shop_currency.text.contains("MOONSTONES"), "Shop must expose real local currency balances")
-	_expect(shop_truth != null and shop_truth.text.contains("NOT PURCHASABLE"), "Shop balances must be explicitly non-purchasable")
+	_expect(shop_currency != null and shop_currency.text.contains("HOUSE COINS") and shop_currency.text.contains("120") and shop_currency.text.contains("MOONSTONES") and shop_currency.text.ends_with("1"), "Shop must expose only the earned Level 1 first-clear balances")
+	_expect(shop_truth != null and shop_truth.text.contains("EARNED IN PLAY") and shop_truth.text.contains("NOT PURCHASABLE"), "Shop balances must state earned-only non-purchasable truth")
+	var shared_life_chip = shop_preview.find_child("LifeResourceChip", true, false) if shop_preview != null else null
+	_expect(shared_life_chip == null, "shared resource bar must not expose life economy before consumption/refill exists")
 	_expect(shop_offer_art != null and shop_offer_art.texture != null, "Shop featured offer must own content artwork")
 	_expect(shop_disabled_action != null and shop_disabled_action.disabled, "Shop commerce CTA must remain disabled before commerce is connected")
 	var ui_audio_before: int = int(app.audio_director.get_feedback_count("ui"))
