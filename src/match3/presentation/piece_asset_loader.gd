@@ -118,26 +118,42 @@ static func contract() -> Dictionary:
 static func ornament(path: String) -> Texture2D:
 	if _ornaments.has(path):
 		return _ornaments[path]
-	# Exported Godot builds remap imported image sources into engine resources.
-	# ResourceLoader follows that remap on Android/iOS/Web; raw FileAccess to
-	# source image bytes is not a valid production loading contract.
 	var candidates: Array[String] = []
 	if path.get_extension().to_lower() == "svg":
 		var webp_preferred := path.get_basename() + ".webp"
 		var png_preferred := path.get_basename() + ".png"
-		if ResourceLoader.exists(webp_preferred):
+		if ResourceLoader.exists(webp_preferred) or FileAccess.file_exists(webp_preferred):
 			candidates.append(webp_preferred)
-		if ResourceLoader.exists(png_preferred):
+		if ResourceLoader.exists(png_preferred) or FileAccess.file_exists(png_preferred):
 			candidates.append(png_preferred)
 	candidates.append(path)
+
 	for chosen in candidates:
-		if not ResourceLoader.exists(chosen):
+		if ResourceLoader.exists(chosen):
+			var imported := ResourceLoader.load(chosen, "Texture2D", ResourceLoader.CACHE_MODE_REUSE) as Texture2D
+			if imported != null:
+				_ornaments[path] = imported
+				_resolved_paths[path] = chosen
+				return imported
+		if not FileAccess.file_exists(chosen):
 			continue
-		var resource := ResourceLoader.load(chosen, "Texture2D", ResourceLoader.CACHE_MODE_REUSE) as Texture2D
-		if resource != null:
-			_ornaments[path] = resource
+		var image := Image.new()
+		var err := ERR_FILE_UNRECOGNIZED
+		match chosen.get_extension().to_lower():
+			"png":
+				err = image.load_png_from_buffer(FileAccess.get_file_as_bytes(chosen))
+			"webp":
+				err = image.load_webp_from_buffer(FileAccess.get_file_as_bytes(chosen))
+			"svg":
+				var file := FileAccess.open(chosen, FileAccess.READ)
+				if file != null:
+					err = image.load_svg_from_string(file.get_as_text(), 1.0)
+					file.close()
+		if err == OK and not image.is_empty():
+			var decoded := ImageTexture.create_from_image(image)
+			_ornaments[path] = decoded
 			_resolved_paths[path] = chosen
-			return resource
+			return decoded
 	_failures[path] = candidates
 	return null
 
