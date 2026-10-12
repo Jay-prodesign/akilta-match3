@@ -45,8 +45,16 @@ var haptics = HapticsController.new()
 var _potion_used_for_attempt := false
 var _idle_hint_seconds: float = 0.0
 const AUTO_HINT_DELAY_SECONDS := 9.0
+const BOOSTER_ART_PATHS := {
+	"hint": "res://assets/pieces/moon_sigil.webp",
+	"plus_moves": "res://assets/pieces/potion.webp",
+	"retry": "res://assets/pieces/skull.webp"
+}
 var _level_badge_label: Label
 var _booster_tray: PanelContainer
+var _hint_boost_button: Button
+var _potion_boost_button: Button
+var _retry_boost_button: Button
 var _resource_life_label: Label
 var _resource_coin_label: Label
 var _resource_gem_label: Label
@@ -153,6 +161,8 @@ func load_level_path(path: String, seed_value: int = 1001) -> bool:
 	current_level_path = path
 	current_seed = seed_value
 	_potion_used_for_attempt = false
+	if _potion_boost_button != null:
+		_potion_boost_button.disabled = false
 	_idle_hint_seconds = 0.0
 	current_level_id = String(parsed.get("id", ""))
 	_update_level_badge()
@@ -777,11 +787,12 @@ func _build_booster_tray() -> void:
 	add_child(panel)
 	_booster_tray = panel
 	var row := HBoxContainer.new()
+	row.name = "BoosterActions"
 	row.add_theme_constant_override("separation", 6)
 	panel.add_child(row)
-	_add_booster_button(row, "HINT", "res://assets/pieces/moon_sigil.svg", _use_hint_boost)
-	_add_booster_button(row, "+3 MOVES", "res://assets/pieces/potion.svg", _use_potion_boost)
-	_add_booster_button(row, "RETRY", "res://assets/pieces/skull.svg", _use_retry_boost)
+	_hint_boost_button = _add_booster_button(row, "HintBoost", "HINT", String(BOOSTER_ART_PATHS["hint"]), _use_hint_boost)
+	_potion_boost_button = _add_booster_button(row, "PlusMovesBoost", "+3 MOVES", String(BOOSTER_ART_PATHS["plus_moves"]), _use_potion_boost)
+	_retry_boost_button = _add_booster_button(row, "RetryBoost", "RETRY", String(BOOSTER_ART_PATHS["retry"]), _use_retry_boost)
 
 func _position_booster_tray() -> void:
 	if _booster_tray == null or hint_label == null or not is_node_ready():
@@ -797,13 +808,15 @@ func _position_booster_tray() -> void:
 	_booster_tray.offset_bottom = top + 70.0
 
 
-func _add_booster_button(parent: HBoxContainer, caption: String, art_path: String, action: Callable) -> void:
+func _add_booster_button(parent: HBoxContainer, node_name: String, caption: String, art_path: String, action: Callable) -> Button:
 	var button := Button.new()
+	button.name = node_name
 	button.text = caption
 	button.custom_minimum_size = Vector2(0, 62)
 	button.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	button.add_theme_font_size_override("font_size", 19)
 	button.add_theme_color_override("font_color", Color("#F4E5D3"))
+	button.add_theme_color_override("font_disabled_color", Color("#9B879A"))
 	button.icon = PieceAssetLoader.ornament(art_path)
 	button.expand_icon = true
 	var box := StyleBoxFlat.new()
@@ -811,10 +824,31 @@ func _add_booster_button(parent: HBoxContainer, caption: String, art_path: Strin
 	box.border_color = Color("#D5AD70", 0.72)
 	box.set_border_width_all(2)
 	box.set_corner_radius_all(26)
+	var disabled_box := box.duplicate() as StyleBoxFlat
+	disabled_box.bg_color = Color("#19111D", 0.92)
+	disabled_box.border_color = Color("#765E6B", 0.54)
 	button.add_theme_stylebox_override("normal", box)
 	button.add_theme_stylebox_override("hover", box)
+	button.add_theme_stylebox_override("pressed", box)
+	button.add_theme_stylebox_override("disabled", disabled_box)
 	button.pressed.connect(action)
 	parent.add_child(button)
+	return button
+
+func booster_asset_contract() -> Dictionary:
+	var loaded := {}
+	var raster_runtime := true
+	for key in BOOSTER_ART_PATHS:
+		var path := String(BOOSTER_ART_PATHS[key])
+		loaded[key] = PieceAssetLoader.ornament(path) != null
+		raster_runtime = raster_runtime and (path.ends_with(".webp") or path.ends_with(".png"))
+	return {
+		"paths": BOOSTER_ART_PATHS.duplicate(true),
+		"loaded": loaded,
+		"raster_runtime": raster_runtime,
+		"plus_moves_used": _potion_used_for_attempt,
+		"plus_moves_disabled": _potion_boost_button != null and _potion_boost_button.disabled
+	}
 
 func _use_potion_boost() -> void:
 	_idle_hint_seconds = 0.0
@@ -823,6 +857,8 @@ func _use_potion_boost() -> void:
 	if board_view.has_method("is_motion_active") and bool(board_view.is_motion_active()):
 		return
 	_potion_used_for_attempt = true
+	if _potion_boost_button != null:
+		_potion_boost_button.disabled = true
 	board_state.moves_remaining += 3
 	_refresh_hud()
 	hint_label.text = "The emerald potion grants three extra moves."

@@ -58,6 +58,13 @@ func _run() -> void:
 	_expect(prestart_back != null, "pre-start must own a focused back affordance")
 	var objective: Label = prestart.get_node("Layout/Card/Content/Objective")
 	_expect(objective.text == "GOAL · GATHER 6 MOON SIGILS", "prestart must reflect the canonical Level 1 collect-family objective")
+	_expect(prestart.has_method("aid_asset_contract"), "prestart must expose its contract-owned aid artwork")
+	if prestart.has_method("aid_asset_contract"):
+		var prestart_aids: Dictionary = prestart.aid_asset_contract()
+		_expect(bool(prestart_aids.get("raster_runtime", false)), "prestart aids must use raster runtime artwork")
+		var prestart_loaded: Dictionary = prestart_aids.get("loaded", {})
+		_expect(bool(prestart_loaded.get("hint", false)), "prestart Hint artwork must load")
+		_expect(bool(prestart_loaded.get("plus_moves", false)), "prestart +3 Moves artwork must load")
 	var start_button: Button = prestart.get_node("Layout/Card/Content/Start")
 	start_button.emit_signal("pressed")
 	await process_frame
@@ -73,14 +80,24 @@ func _run() -> void:
 	_expect(not gameplay.pause_overlay.visible, "resume must close pause overlay")
 	_expect(app.audio_director != null and bool(app.audio_director.contract().get("ambient_loaded", false)), "Level 1 app shell must own the CC0 ambient director")
 	_expect(gameplay.get_node_or_null("BoosterTray") != null, "gameplay must expose the touch booster tray")
-	var booster_row: HBoxContainer = gameplay.get_node("BoosterTray").get_child(0)
-	var hint_booster: Button = booster_row.get_child(0)
-	var potion_booster: Button = booster_row.get_child(1)
+	_expect(gameplay.has_method("booster_asset_contract"), "gameplay must expose the booster art/state contract")
+	if gameplay.has_method("booster_asset_contract"):
+		var booster_assets: Dictionary = gameplay.booster_asset_contract()
+		_expect(bool(booster_assets.get("raster_runtime", false)), "gameplay booster tray must use raster runtime artwork")
+		var loaded_boosters: Dictionary = booster_assets.get("loaded", {})
+		for booster_key in ["hint", "plus_moves", "retry"]:
+			_expect(bool(loaded_boosters.get(booster_key, false)), "%s booster artwork must load" % booster_key)
+	var booster_row: HBoxContainer = gameplay.get_node("BoosterTray/BoosterActions")
+	var hint_booster: Button = booster_row.get_node("HintBoost")
+	var potion_booster: Button = booster_row.get_node("PlusMovesBoost")
 	hint_booster.emit_signal("pressed")
 	_expect(gameplay.hint_label.text == "Follow the moonlit highlight for a legal match.", "hint booster must find and highlight a legal move")
 	var moves_before_potion := int(gameplay.board_state.moves_remaining)
 	potion_booster.emit_signal("pressed")
 	_expect(int(gameplay.board_state.moves_remaining) == moves_before_potion + 3, "potion booster must grant three moves")
+	_expect(potion_booster.disabled, "+3 Moves booster must visibly disable after its one allowed use")
+	if gameplay.has_method("booster_asset_contract"):
+		_expect(bool(gameplay.booster_asset_contract().get("plus_moves_disabled", false)), "booster contract must expose consumed +3 Moves state")
 	potion_booster.emit_signal("pressed")
 	_expect(int(gameplay.board_state.moves_remaining) == moves_before_potion + 3, "potion booster must be limited to once per attempt")
 
