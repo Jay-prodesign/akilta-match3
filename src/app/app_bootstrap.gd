@@ -498,7 +498,7 @@ func show_feature_preview(feature: String) -> bool:
 	if not bool(screen.configure(feature_key, state)):
 		_ensure_house_route()
 		return false
-	_install_product_navigation(screen, feature_key)
+	_install_product_navigation(screen, feature_key, NodePath("FeatureLayout"))
 	if screen.has_signal("back_requested"):
 		screen.back_requested.connect(_dismiss_feature_preview)
 	if screen.has_signal("settings_requested"):
