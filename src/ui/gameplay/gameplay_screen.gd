@@ -44,6 +44,8 @@ var _pending_terminal_result: String = ""
 var _pending_hud_refresh: bool = false
 var haptics = HapticsController.new()
 var _potion_used_for_attempt := false
+var _idle_hint_seconds := 0.0
+const AUTO_HINT_DELAY := 9.0
 var _idle_hint_seconds: float = 0.0
 const AUTO_HINT_DELAY_SECONDS := 9.0
 var _level_badge_label: Label
@@ -124,6 +126,21 @@ func _ready() -> void:
 	result_overlay.visible = false
 	if FileAccess.file_exists(default_level_path):
 		load_level_path(default_level_path, default_seed)
+
+func _process(delta: float) -> void:
+	if board_state == null or result_overlay.visible or pause_overlay.visible:
+		_idle_hint_seconds = 0.0
+		return
+	if board_view.has_method("is_motion_active") and bool(board_view.is_motion_active()):
+		return
+	_idle_hint_seconds += delta
+	if _idle_hint_seconds < AUTO_HINT_DELAY:
+		return
+	_idle_hint_seconds = 0.0
+	var move: Dictionary = MoveFinder.first_legal_move(board_state)
+	if not move.is_empty() and board_view.has_method("set_teaching_move"):
+		board_view.set_teaching_move(move["from"], move["to"])
+		hint_label.text = "A moonlit sigil reveals a possible match."
 
 func set_player_resources(lives: int, coins: int, gems: int) -> void:
 	_player_lives = clampi(lives, 0, 5)
@@ -240,6 +257,7 @@ func _configure_teaching_move(level_data: Dictionary) -> void:
 
 func show_pause() -> bool:
 	_idle_hint_seconds = 0.0
+	_idle_hint_seconds = 0.0
 	if board_state == null or result_overlay.visible or pause_overlay.visible:
 		return false
 	if board_view.has_method("is_motion_active") and bool(board_view.is_motion_active()):
@@ -270,6 +288,7 @@ func _on_pause_exit() -> void:
 	level_exit_requested.emit()
 
 func attempt_swap(from: Vector2i, to: Vector2i):
+	_idle_hint_seconds = 0.0
 	_idle_hint_seconds = 0.0
 	if board_state == null or result_overlay.visible or pause_overlay.visible:
 		return null
@@ -847,6 +866,7 @@ func _use_potion_boost() -> void:
 	feedback_requested.emit("special")
 
 func _use_hint_boost() -> void:
+	_idle_hint_seconds = 0.0
 	if board_state == null or result_overlay.visible or pause_overlay.visible:
 		return
 	var move: Dictionary = MoveFinder.first_legal_move(board_state)
