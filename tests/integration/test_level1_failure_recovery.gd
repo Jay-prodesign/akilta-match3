@@ -51,15 +51,24 @@ func _run() -> void:
 	_expect(gameplay.result_overlay.visible, "failure must show a result overlay after resolution")
 	_expect(gameplay.result_action.text == "TRY AGAIN", "failure result must offer Try Again")
 	_expect(gameplay.result_detail.text.contains("Moon sigils"), "Level 1 failure must give authored Moon-sigil retry assistance")
+	_expect(gameplay.has_method("terminal_result_polish_contract"), "failure result must expose terminal polish contract")
+	if gameplay.has_method("terminal_result_polish_contract"):
+		var terminal_polish: Dictionary = gameplay.terminal_result_polish_contract()
+		_expect(String(terminal_polish.get("objective_summary", "")).begins_with("OBJECTIVE UNFINISHED"), "terminal polish contract must expose unfinished objective")
+		_expect(bool(terminal_polish.get("distinct_result_material", false)), "failure result must use distinct terminal material")
 	var fail_ritual: Control = gameplay.get_node("ResultOverlay/Card/Content/RewardRitual")
 	_expect(String(fail_ritual.get("mode")) == "fail", "failure must keep Moon Cameo visually sealed rather than showing an awakened reward")
 	_expect(int(app.progress.house_stage) == 0, "failure must not advance House")
 	_expect(not app.progress.curios.has("moon_cameo"), "failure must not grant Moon Cameo")
+	var retry_haptics: Array[Dictionary] = []
+	gameplay.haptics.set_platform_sink(func(ms: int, category: int): retry_haptics.append({"ms": ms, "category": category}))
 	_expect(gameplay.retry_current_level(), "Try Again contract must reload Level 1")
 	_expect(not gameplay.result_overlay.visible, "retry must clear failure overlay")
 	_expect(int(gameplay.board_state.moves_remaining) == int(level_data["moves"]), "retry must restore full authored move budget")
 	_expect(String(gameplay.current_level_id) == "ch01_level_001", "retry must remain on canonical Level 1")
 	_expect(String(app.current_route_name()) == "gameplay", "retry must remain inside gameplay route")
+	_expect(gameplay.hint_label.text.contains("RITUAL RESET") and gameplay.hint_label.text.contains("MOVES RESTORED"), "retry must visibly confirm restored move budget")
+	_expect(retry_haptics.any(func(call): return int(call["ms"]) == gameplay.haptics.RETRY_MS), "retry must emit a short tactile recovery cue")
 
 	app.queue_free()
 	await process_frame
