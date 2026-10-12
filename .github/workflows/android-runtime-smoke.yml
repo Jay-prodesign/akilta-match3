@@ -4,10 +4,12 @@ on:
   push:
     branches:
       - "main"
+      - "feat/release-proof-*"
       - "feat/native-main-lifecycle-gate"
       - "feat/native-android-runtime-smoke"
     paths:
       - ".github/workflows/android-runtime-smoke.yml"
+      - ".github/release-proof.trigger"
       - "project.godot"
       - "export_presets.cfg"
       - "src/**"
