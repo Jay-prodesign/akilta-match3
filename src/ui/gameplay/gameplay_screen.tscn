@@ -1,4 +1,4 @@
-[gd_scene load_steps=20 format=3]
+[gd_scene load_steps=22 format=3]
 
 [ext_resource type="Script" path="res://src/ui/gameplay/gameplay_screen.gd" id="1_game"]
 [ext_resource type="Script" path="res://src/match3/presentation/board_view.gd" id="2_board"]
@@ -207,6 +207,37 @@ corner_radius_top_left = 34
 corner_radius_top_right = 34
 corner_radius_bottom_right = 34
 corner_radius_bottom_left = 34
+
+
+[sub_resource type="StyleBoxFlat" id="ResultObjectivePlate"]
+bg_color = Color(0.035, 0.025, 0.05, 0.92)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.835, 0.678, 0.439, 0.58)
+corner_radius_top_left = 16
+corner_radius_top_right = 16
+corner_radius_bottom_right = 16
+corner_radius_bottom_left = 16
+content_margin_left = 14.0
+content_margin_top = 7.0
+content_margin_right = 14.0
+content_margin_bottom = 7.0
+
+[sub_resource type="StyleBoxFlat" id="ResultActionStyle"]
+bg_color = Color(0.286, 0.075, 0.322, 0.99)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.941, 0.808, 0.541, 0.98)
+corner_radius_top_left = 28
+corner_radius_top_right = 28
+corner_radius_bottom_right = 28
+corner_radius_bottom_left = 28
+shadow_color = Color(0.12, 0.02, 0.15, 0.62)
+shadow_size = 12
 
 [sub_resource type="StyleBoxFlat" id="RewardChipStyle"]
 bg_color = Color(0.09, 0.063, 0.114, 0.94)
@@ -788,6 +819,7 @@ horizontal_alignment = 1
 vertical_alignment = 1
 
 [node name="Detail" type="Label" parent="ResultOverlay/Card/Content"]
+visible = false
 layout_mode = 2
 theme_override_colors/font_color = Color(0.851, 0.804, 0.835, 1)
 theme_override_font_sizes/font_size = 22
@@ -797,17 +829,18 @@ vertical_alignment = 1
 autowrap_mode = 2
 
 [node name="ObjectiveSummary" type="Label" parent="ResultOverlay/Card/Content"]
-custom_minimum_size = Vector2(0, 48)
+custom_minimum_size = Vector2(0, 52)
 layout_mode = 2
 theme_override_colors/font_color = Color(0.851, 0.71, 0.416, 1)
-theme_override_font_sizes/font_size = 20
+theme_override_font_sizes/font_size = 21
+theme_override_styles/normal = SubResource("ResultObjectivePlate")
 text = "OBJECTIVE COMPLETE"
 horizontal_alignment = 1
 vertical_alignment = 1
 autowrap_mode = 2
 
 [node name="RewardRitual" type="Control" parent="ResultOverlay/Card/Content"]
-custom_minimum_size = Vector2(0, 220)
+custom_minimum_size = Vector2(0, 240)
 layout_mode = 2
 mouse_filter = 2
 script = ExtResource("9_cameo")
@@ -819,7 +852,7 @@ layout_mode = 2
 theme_override_colors/font_color = Color(0.851, 0.71, 0.416, 1)
 theme_override_colors/font_outline_color = Color(0.02, 0.015, 0.025, 0.9)
 theme_override_constants/outline_size = 3
-theme_override_font_sizes/font_size = 24
+theme_override_font_sizes/font_size = 27
 text = "MOON CAMEO · AWAKENED"
 horizontal_alignment = 1
 
@@ -830,7 +863,7 @@ theme_override_constants/separation = 10
 alignment = 1
 
 [node name="CoinReward" type="PanelContainer" parent="ResultOverlay/Card/Content/ResultRewardValues"]
-custom_minimum_size = Vector2(136, 50)
+custom_minimum_size = Vector2(150, 54)
 layout_mode = 2
 theme_override_styles/panel = SubResource("RewardChipStyle")
 
@@ -852,7 +885,7 @@ theme_override_font_sizes/font_size = 20
 text = "+120"
 
 [node name="GemReward" type="PanelContainer" parent="ResultOverlay/Card/Content/ResultRewardValues"]
-custom_minimum_size = Vector2(136, 50)
+custom_minimum_size = Vector2(150, 54)
 layout_mode = 2
 theme_override_styles/panel = SubResource("RewardChipStyle")
 
@@ -874,6 +907,7 @@ theme_override_font_sizes/font_size = 20
 text = "+1"
 
 [node name="HouseChange" type="Label" parent="ResultOverlay/Card/Content"]
+visible = false
 layout_mode = 2
 theme_override_colors/font_color = Color(0.851, 0.804, 0.835, 1)
 theme_override_font_sizes/font_size = 19
@@ -914,7 +948,7 @@ autowrap_mode = 2
 
 [node name="RecoveryAction" type="Button" parent="ResultOverlay/Card/Content"]
 visible = false
-custom_minimum_size = Vector2(0, 72)
+custom_minimum_size = Vector2(0, 80)
 layout_mode = 2
 theme_override_colors/font_color = Color(0.988, 0.933, 0.831, 1)
 theme_override_font_sizes/font_size = 23
@@ -924,11 +958,12 @@ theme_override_styles/pressed = SubResource("ActionPressed")
 text = "CONTINUE · +3 MOVES · FREE"
 
 [node name="Action" type="Button" parent="ResultOverlay/Card/Content"]
-custom_minimum_size = Vector2(0, 78)
+custom_minimum_size = Vector2(0, 84)
 layout_mode = 2
-theme_override_colors/font_color = Color(0.0627, 0.051, 0.0706, 1)
-theme_override_font_sizes/font_size = 25
-theme_override_styles/normal = SubResource("ActionNormal")
-theme_override_styles/hover = SubResource("ActionHover")
-theme_override_styles/pressed = SubResource("ActionPressed")
+theme_override_colors/font_color = Color(0.988, 0.933, 0.831, 1)
+theme_override_colors/font_hover_color = Color(1, 0.97, 0.88, 1)
+theme_override_font_sizes/font_size = 27
+theme_override_styles/normal = SubResource("ResultActionStyle")
+theme_override_styles/hover = SubResource("ResultActionStyle")
+theme_override_styles/pressed = SubResource("ResultActionStyle")
 text = "RETURN TO THE HOUSE"
