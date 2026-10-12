@@ -8,6 +8,7 @@ const PieceAssetLoader = preload("res://src/match3/presentation/piece_asset_load
 const ScreenArt = preload("res://src/ui/shared/screen_art_registry.gd")
 const TopResourceBar = preload("res://src/ui/shared/top_resource_bar.gd")
 const OPENING_LEVEL_COUNT := 3
+const CURRENT_WING_ART_PATH := "res://assets/world/ch01_curio_boutique/prestart_curio_boutique_shared.webp"
 
 const WINGS := [
 	{"id":"curio_boutique","name":"CURIO BOUTIQUE","x":0.08,"y":0.04,"w":0.84,"h":0.20},
@@ -146,8 +147,8 @@ func _ready() -> void:
 		button.icon_alignment = HORIZONTAL_ALIGNMENT_LEFT
 		button.add_theme_font_size_override("font_size", 27 if id == "curio_boutique" else 21)
 		if id == "curio_boutique":
-			button.icon = PieceAssetLoader.ornament("res://assets/curios/ch01_curio_moon_cameo_awakened_v01.svg")
-			button.add_theme_constant_override("icon_max_width", 156)
+			button.icon = PieceAssetLoader.ornament(CURRENT_WING_ART_PATH)
+			button.add_theme_constant_override("icon_max_width", 210)
 			button.pressed.connect(func(): chapter_requested.emit("curio_boutique"))
 		else:
 			button.disabled = true
@@ -189,18 +190,18 @@ func _refresh_progress_state() -> void:
 	var state := "first_wing_open"
 	if opening_complete:
 		state = "current_complete"
-		current.text = "CURIO BOUTIQUE\nRESTORED · 3 / 3 · FIRST CABINET SET"
+		current.text = "CURIO BOUTIQUE\nRESTORED WING · 3 / 3 DISPLAYS\nREVISIT RITUALS"
 		current.tooltip_text = "Curio Boutique · first cabinet set restored · Levels 1–3 replayable"
 		_chapter_summary.text = "The opening wing is restored. Revisit its rituals while the deeper House remains sealed."
 		_lock_reason.text = "FIVE WINGS REMAIN SEALED · FUTURE CHAPTERS"
 	elif completed > 0:
 		state = "current_partial"
-		current.text = "CURIO BOUTIQUE\n%d / %d DISPLAYS AWAKENED · CONTINUE" % [completed, OPENING_LEVEL_COUNT]
+		current.text = "CURIO BOUTIQUE\nCURRENT WING · %d / %d DISPLAYS\nCONTINUE RESTORATION" % [completed, OPENING_LEVEL_COUNT]
 		current.tooltip_text = "Curio Boutique · %d / %d opening displays awakened" % [completed, OPENING_LEVEL_COUNT]
 		_chapter_summary.text = "%d of %d displays are awake. Continue the Curio Boutique restoration." % [completed, OPENING_LEVEL_COUNT]
 		_lock_reason.text = "RESTORE THE CURRENT WING · FUTURE WINGS STAY SEALED"
 	else:
-		current.text = "CURIO BOUTIQUE\nOPENING RITUALS · 0 / 3"
+		current.text = "CURIO BOUTIQUE\nCURRENT WING · 0 / 3 DISPLAYS\nBEGIN RESTORATION"
 		current.tooltip_text = "Curio Boutique · opening rituals · Levels 1–3"
 		_chapter_summary.text = "The Curio Boutique is the House's first open wing. Begin its three opening rituals."
 		_lock_reason.text = "FUTURE WINGS ARE SEALED UNTIL LATER CHAPTERS"
@@ -231,7 +232,7 @@ func _layout_chapter_hotspots(grid: Control, buttons: Array[Button]) -> void:
 			button.size = Vector2(grid.size.x * float(button.get_meta("map_w")), grid.size.y * float(button.get_meta("map_h")))
 			var current := String(button.get_meta("chapter_id", "")) == "curio_boutique"
 			button.add_theme_font_size_override("font_size", 27 if current else 21)
-			button.add_theme_constant_override("icon_max_width", 156 if current else 0)
+			button.add_theme_constant_override("icon_max_width", 210 if current else 0)
 
 func _apply_current_style(button: Button, state: String) -> void:
 	button.disabled = false
