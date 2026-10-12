@@ -6,14 +6,14 @@ signal return_house_requested
 const ScreenArt = preload("res://src/ui/shared/screen_art_registry.gd")
 const PieceAssetLoader = preload("res://src/match3/presentation/piece_asset_loader.gd")
 
-const WEEKLY_ART_PATH := "res://assets/curios/ch01_curio_moon_cameo_sealed_v01.webp"
+const WEEKLY_ART_PATH := "res://assets/curios/ch01_curio_moon_cameo_awakened_v01.webp"
 
 @onready var world_art: TextureRect = $MissionWorldArt
 @onready var mission_timer: Label = $MissionLayout/MissionTimer
 @onready var empty_state: PanelContainer = $MissionLayout/MissionEmptyState
 @onready var reward_art: TextureRect = $MissionLayout/MissionEmptyState/EmptyContent/MissionRewardArt
-@onready var availability: Label = $MissionLayout/MissionEmptyState/EmptyContent/MissionAvailability
-@onready var truth: Label = $MissionLayout/MissionEmptyState/EmptyContent/MissionEmptyStateTruth
+@onready var availability: Label = $MissionLayout/MissionEmptyState/EmptyContent/AltarCopy/MissionAvailability
+@onready var truth: Label = $MissionLayout/MissionEmptyState/EmptyContent/AltarCopy/MissionEmptyStateTruth
 @onready var opening_record: Label = $MissionLayout/MissionOpeningRecord
 @onready var return_events: Button = $MissionLayout/ReturnToEvents
 @onready var return_house: Button = $MissionLayout/ReturnToHouse
