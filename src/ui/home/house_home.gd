@@ -299,7 +299,7 @@ func _open_house_curio_inspect(curio_id: String) -> void:
 	card.anchor_left = 0.09
 	card.anchor_right = 0.91
 	card.anchor_top = 0.16
-	card.anchor_bottom = 0.54
+	card.anchor_bottom = 0.45
 	var shell := StyleBoxFlat.new()
 	shell.bg_color = Color("#0D0912", 0.985)
 	shell.border_color = Color("#D5AD70", 0.88)
@@ -328,7 +328,7 @@ func _open_house_curio_inspect(curio_id: String) -> void:
 
 	var art := TextureRect.new()
 	art.name = "HeroArt"
-	art.custom_minimum_size = Vector2(0, 200)
+	art.custom_minimum_size = Vector2(0, 170)
 	art.texture = _curio_texture(curio_id)
 	art.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
 	art.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
