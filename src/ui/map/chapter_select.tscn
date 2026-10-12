@@ -188,7 +188,7 @@ layout_mode = 2
 theme_override_colors/font_color = Color(0.95, 0.86, 0.80, 1)
 theme_override_colors/font_outline_color = Color(0.02, 0.014, 0.028, 0.9)
 theme_override_constants/outline_size = 2
-theme_override_font_sizes/font_size = 22
+theme_override_font_sizes/font_size = 23
 horizontal_alignment = 1
 autowrap_mode = 2
 
@@ -226,8 +226,10 @@ stretch_mode = 6
 
 [node name="Chapter_witch_atelier" type="Button" parent="Layout/ChapterGrid"]
 layout_mode = 0
-theme_override_colors/font_color = Color(0.93, 0.87, 0.93, 1)
-theme_override_font_sizes/font_size = 23
+theme_override_colors/font_color = Color(0.97, 0.92, 0.96, 1)
+theme_override_colors/font_outline_color = Color(0.02, 0.014, 0.028, 0.96)
+theme_override_constants/outline_size = 3
+theme_override_font_sizes/font_size = 25
 theme_override_styles/normal = SubResource("LockedNormal")
 theme_override_styles/hover = SubResource("LockedHover")
 theme_override_styles/pressed = SubResource("LockedHover")
@@ -238,8 +240,10 @@ alignment = 1
 
 [node name="Chapter_dark_vanity" type="Button" parent="Layout/ChapterGrid"]
 layout_mode = 0
-theme_override_colors/font_color = Color(0.93, 0.87, 0.93, 1)
-theme_override_font_sizes/font_size = 23
+theme_override_colors/font_color = Color(0.97, 0.92, 0.96, 1)
+theme_override_colors/font_outline_color = Color(0.02, 0.014, 0.028, 0.96)
+theme_override_constants/outline_size = 3
+theme_override_font_sizes/font_size = 25
 theme_override_styles/normal = SubResource("LockedNormal")
 theme_override_styles/hover = SubResource("LockedHover")
 theme_override_styles/pressed = SubResource("LockedHover")
@@ -250,8 +254,10 @@ alignment = 1
 
 [node name="Chapter_archive" type="Button" parent="Layout/ChapterGrid"]
 layout_mode = 0
-theme_override_colors/font_color = Color(0.93, 0.87, 0.93, 1)
-theme_override_font_sizes/font_size = 23
+theme_override_colors/font_color = Color(0.97, 0.92, 0.96, 1)
+theme_override_colors/font_outline_color = Color(0.02, 0.014, 0.028, 0.96)
+theme_override_constants/outline_size = 3
+theme_override_font_sizes/font_size = 25
 theme_override_styles/normal = SubResource("LockedNormal")
 theme_override_styles/hover = SubResource("LockedHover")
 theme_override_styles/pressed = SubResource("LockedHover")
@@ -262,8 +268,10 @@ alignment = 1
 
 [node name="Chapter_moon_conservatory" type="Button" parent="Layout/ChapterGrid"]
 layout_mode = 0
-theme_override_colors/font_color = Color(0.93, 0.87, 0.93, 1)
-theme_override_font_sizes/font_size = 23
+theme_override_colors/font_color = Color(0.97, 0.92, 0.96, 1)
+theme_override_colors/font_outline_color = Color(0.02, 0.014, 0.028, 0.96)
+theme_override_constants/outline_size = 3
+theme_override_font_sizes/font_size = 25
 theme_override_styles/normal = SubResource("LockedNormal")
 theme_override_styles/hover = SubResource("LockedHover")
 theme_override_styles/pressed = SubResource("LockedHover")
@@ -274,8 +282,10 @@ alignment = 1
 
 [node name="Chapter_cemetery_garden" type="Button" parent="Layout/ChapterGrid"]
 layout_mode = 0
-theme_override_colors/font_color = Color(0.93, 0.87, 0.93, 1)
-theme_override_font_sizes/font_size = 23
+theme_override_colors/font_color = Color(0.97, 0.92, 0.96, 1)
+theme_override_colors/font_outline_color = Color(0.02, 0.014, 0.028, 0.96)
+theme_override_constants/outline_size = 3
+theme_override_font_sizes/font_size = 25
 theme_override_styles/normal = SubResource("LockedNormal")
 theme_override_styles/hover = SubResource("LockedHover")
 theme_override_styles/pressed = SubResource("LockedHover")
@@ -289,6 +299,6 @@ layout_mode = 2
 theme_override_colors/font_color = Color(0.82, 0.72, 0.9, 1)
 theme_override_colors/font_outline_color = Color(0.02, 0.014, 0.028, 0.88)
 theme_override_constants/outline_size = 2
-theme_override_font_sizes/font_size = 19
+theme_override_font_sizes/font_size = 20
 horizontal_alignment = 1
 autowrap_mode = 2
