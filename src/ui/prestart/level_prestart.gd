@@ -53,6 +53,8 @@ func aid_asset_contract() -> Dictionary:
 		"authored_world_backdrop": world_backdrop != null and world_backdrop.texture != null,
 		"authored_level_artwork": level_artwork != null and level_artwork.texture != null,
 		"authored_ritual_aids": keeper_aid_art != null and keeper_aid_art.texture != null and recovery_aid_art != null and recovery_aid_art.texture != null,
+		"north_star_readability": title_label != null and title_label.get_theme_font_size("font_size") >= 48 and objective_label != null and objective_label.get_theme_font_size("font_size") >= 32 and start_button != null and start_button.custom_minimum_size.y >= 84.0,
+		"note_subordinate": note_label != null and not note_label.visible,
 		"runtime_ui_factory": false
 	}
 

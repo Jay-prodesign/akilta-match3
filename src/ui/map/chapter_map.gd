@@ -69,12 +69,22 @@ func _refresh() -> void:
 	chapter_progress.text = "CURIO BOUTIQUE  ·  %d / %d DISPLAYS AWAKENED" % [awakened, canonical_level_cap]
 	if intro != null:
 		if canonical_level_cap > 0 and awakened >= canonical_level_cap:
-			intro.text = "The opening cabinet set is restored. Revisit any awakened ritual while the upper cabinets remain sealed."
+			intro.text = "OPENING CABINET RESTORED · REVISIT ANY AWAKENED RITUAL."
 		elif awakened > 0:
-			intro.text = "%d of %d displays are awake. The next cabinet has opened; continue the Curio Boutique ritual." % [awakened, canonical_level_cap]
+			intro.text = "DISPLAY %d / %d AWAKENED · THE NEXT RITUAL IS OPEN." % [awakened, canonical_level_cap]
 		else:
-			intro.text = "Complete the opening three rituals to restore the first cabinet set. Upper cabinets remain visible but sealed for later journeys."
+			intro.text = "RESTORE THE OPENING CABINET · FOLLOW THE GOLDEN ROUTE."
 	route_view.set_progress(progress)
+
+func north_star_map_contract() -> Dictionary:
+	var title := get_node_or_null("Layout/Title") as Label
+	return {
+		"strong_title": title != null and title.get_theme_font_size("font_size") >= 52,
+		"progress_plate": chapter_progress != null and chapter_progress.get_theme_stylebox("normal") != null and chapter_progress.get_theme_font_size("font_size") >= 26,
+		"concise_route_instruction": intro != null and intro.text.length() <= 72,
+		"route_world_dominant": route_view != null and route_view.custom_minimum_size.y >= 1400.0,
+	}
+
 
 func _focus_frontier() -> void:
 	if scroll == null or route_view == null:

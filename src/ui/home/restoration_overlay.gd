@@ -3,7 +3,9 @@ extends Control
 signal continue_requested
 
 @onready var hero_title: Label = $RestorationHeader/RestorationHeroTitle
+@onready var motif_frame: Panel = $RecoveredDisplayFrame
 @onready var motif: TextureRect = $AwakeningMotif
+@onready var state_rail: PanelContainer = $StateRail
 @onready var curio_art: TextureRect = $CeremonyCard/CeremonyContent/CeremonyRow/RestoredCurioArt
 @onready var body: Label = $CeremonyCard/CeremonyContent/CeremonyRow/Copy/Body
 @onready var continue_button: Button = $CeremonyCard/CeremonyContent/CeremonyRow/Copy/Continue
@@ -25,4 +27,6 @@ func restoration_contract() -> Dictionary:
 		"authored_scene": true,
 		"motif_loaded": motif != null and motif.texture != null,
 		"curio_art_loaded": curio_art != null and curio_art.texture != null,
+		"house_first_composition": motif_frame != null and state_rail != null and motif != null and motif.anchor_left >= 0.36 and motif.anchor_right <= 0.64,
+		"before_after_state_rail": state_rail != null and state_rail.get_node_or_null("States/Before") != null and state_rail.get_node_or_null("States/After") != null,
 	}
