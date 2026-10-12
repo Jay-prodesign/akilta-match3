@@ -112,7 +112,7 @@ func _refresh() -> void:
 	if _completion_label != null:
 		_completion_label.text = "OPENING CABINET SET COMPLETE · %d / %d" % [finished, available_level_count]
 
-	var first_ritual := progress != null and progress.completed_levels.is_empty() and progress.curios.is_empty() and stage == 0 and not _returning_player
+	var first_ritual: bool = progress != null and progress.completed_levels.is_empty() and progress.curios.is_empty() and stage == 0 and not _returning_player
 	if _first_ritual_panel != null:
 		_first_ritual_panel.visible = first_ritual and not _first_ritual_dismissed
 
