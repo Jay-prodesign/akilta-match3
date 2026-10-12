@@ -1,0 +1,562 @@
+[gd_scene load_steps=6 format=3]
+
+[ext_resource type="Script" path="res://src/ui/meta/meta_destination_screen.gd" id="1_meta"]
+
+[sub_resource type="StyleBoxFlat" id="Hero"]
+bg_color = Color(0.035, 0.027, 0.047, 0.86)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.831, 0.678, 0.439, 0.74)
+corner_radius_top_left = 22
+corner_radius_top_right = 22
+corner_radius_bottom_right = 22
+corner_radius_bottom_left = 22
+content_margin_left = 22.0
+content_margin_top = 18.0
+content_margin_right = 22.0
+content_margin_bottom = 18.0
+shadow_color = Color(0, 0, 0, 0.46)
+shadow_size = 18
+
+[sub_resource type="StyleBoxFlat" id="Card"]
+bg_color = Color(0.043, 0.032, 0.055, 0.82)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.721, 0.541, 0.721, 0.56)
+corner_radius_top_left = 18
+corner_radius_top_right = 18
+corner_radius_bottom_right = 18
+corner_radius_bottom_left = 18
+content_margin_left = 18.0
+content_margin_top = 14.0
+content_margin_right = 18.0
+content_margin_bottom = 14.0
+shadow_color = Color(0, 0, 0, 0.34)
+shadow_size = 10
+
+[sub_resource type="StyleBoxFlat" id="Primary"]
+bg_color = Color(0.286, 0.157, 0.282, 0.96)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.831, 0.678, 0.439, 0.9)
+corner_radius_top_left = 14
+corner_radius_top_right = 14
+corner_radius_bottom_right = 14
+corner_radius_bottom_left = 14
+
+[sub_resource type="StyleBoxFlat" id="Secondary"]
+bg_color = Color(0.082, 0.061, 0.103, 0.94)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.721, 0.541, 0.721, 0.62)
+corner_radius_top_left = 14
+corner_radius_top_right = 14
+corner_radius_bottom_right = 14
+corner_radius_bottom_left = 14
+
+[node name="MetaDestinationScreen" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_meta")
+
+[node name="WorldArt" type="TextureRect" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+expand_mode = 1
+stretch_mode = 6
+
+[node name="WorldShade" type="ColorRect" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+color = Color(0.018, 0.012, 0.026, 0.38)
+
+[node name="FeatureLayout" type="VBoxContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 34.0
+offset_top = 32.0
+offset_right = -34.0
+offset_bottom = -132.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/separation = 12
+
+[node name="MetaEyebrow" type="Label" parent="FeatureLayout"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.831, 0.678, 0.439, 1)
+theme_override_colors/font_outline_color = Color(0.02, 0.014, 0.028, 0.95)
+theme_override_constants/outline_size = 4
+theme_override_font_sizes/font_size = 18
+text = "THE HOUSE OF CURIOS"
+horizontal_alignment = 1
+
+[node name="FeatureTitle" type="Label" parent="FeatureLayout"]
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 0.941, 0.847, 1)
+theme_override_colors/font_outline_color = Color(0.02, 0.014, 0.028, 0.97)
+theme_override_constants/outline_size = 6
+theme_override_font_sizes/font_size = 44
+text = "DESTINATION"
+horizontal_alignment = 1
+
+[node name="Detail" type="Label" parent="FeatureLayout"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.95, 0.89, 0.90, 1)
+theme_override_colors/font_outline_color = Color(0.02, 0.014, 0.028, 0.9)
+theme_override_constants/outline_size = 3
+theme_override_font_sizes/font_size = 24
+text = "Destination detail"
+horizontal_alignment = 1
+autowrap_mode = 2
+
+[node name="ChapterRitualProgress" type="Label" parent="FeatureLayout"]
+visible = false
+layout_mode = 2
+theme_override_colors/font_color = Color(0.831, 0.678, 0.439, 1)
+theme_override_colors/font_outline_color = Color(0.02, 0.014, 0.028, 0.9)
+theme_override_constants/outline_size = 3
+theme_override_font_sizes/font_size = 20
+text = "OPENING RITUAL · 0 / 3 DISPLAYS AWAKENED"
+horizontal_alignment = 1
+autowrap_mode = 2
+
+[node name="NoPurchasesNotice" type="Label" parent="FeatureLayout"]
+visible = false
+layout_mode = 2
+theme_override_colors/font_color = Color(0.831, 0.678, 0.439, 1)
+theme_override_font_sizes/font_size = 19
+text = "THE EMPORIUM IS SEALED · NO PURCHASES OR PAYMENTS"
+horizontal_alignment = 1
+autowrap_mode = 2
+
+[node name="ShopCurrencySummary" type="Label" parent="FeatureLayout"]
+visible = false
+layout_mode = 2
+theme_override_colors/font_color = Color(0.95, 0.816, 0.545, 1)
+theme_override_font_sizes/font_size = 21
+text = "HOUSE COINS  0 · MOONSTONES  0"
+horizontal_alignment = 1
+
+[node name="ShopCurrencyTruth" type="Label" parent="FeatureLayout"]
+visible = false
+layout_mode = 2
+theme_override_colors/font_color = Color(0.82, 0.72, 0.90, 1)
+theme_override_font_sizes/font_size = 18
+text = "EARNED IN PLAY · NOT PURCHASABLE"
+horizontal_alignment = 1
+
+[node name="FeatureHero" type="PanelContainer" parent="FeatureLayout"]
+custom_minimum_size = Vector2(0, 286)
+layout_mode = 2
+theme_override_styles/panel = SubResource("Hero")
+
+[node name="HeroRow" type="HBoxContainer" parent="FeatureLayout/FeatureHero"]
+layout_mode = 2
+theme_override_constants/separation = 20
+
+[node name="HeroArt" type="TextureRect" parent="FeatureLayout/FeatureHero/HeroRow"]
+custom_minimum_size = Vector2(270, 246)
+layout_mode = 2
+expand_mode = 1
+stretch_mode = 5
+
+[node name="ShopFeaturedOfferArt" type="TextureRect" parent="FeatureLayout/FeatureHero/HeroRow"]
+visible = false
+custom_minimum_size = Vector2(270, 246)
+layout_mode = 2
+expand_mode = 1
+stretch_mode = 5
+
+[node name="HeroCopy" type="VBoxContainer" parent="FeatureLayout/FeatureHero/HeroRow"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 7
+alignment = 1
+
+[node name="FeatureHeroKicker" type="Label" parent="FeatureLayout/FeatureHero/HeroRow/HeroCopy"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.831, 0.678, 0.439, 1)
+theme_override_font_sizes/font_size = 18
+text = "STATE"
+
+[node name="FeatureHeroTitle" type="Label" parent="FeatureLayout/FeatureHero/HeroRow/HeroCopy"]
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 0.941, 0.847, 1)
+theme_override_colors/font_outline_color = Color(0.02, 0.014, 0.028, 0.9)
+theme_override_constants/outline_size = 3
+theme_override_font_sizes/font_size = 32
+text = "HERO TITLE"
+autowrap_mode = 2
+
+[node name="HeroBody" type="Label" parent="FeatureLayout/FeatureHero/HeroRow/HeroCopy"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.90, 0.84, 0.88, 1)
+theme_override_font_sizes/font_size = 24
+text = "Hero body"
+autowrap_mode = 2
+
+[node name="ShopDisabledAction" type="Button" parent="FeatureLayout/FeatureHero/HeroRow/HeroCopy"]
+visible = false
+custom_minimum_size = Vector2(0, 52)
+layout_mode = 2
+disabled = true
+theme_override_colors/font_color = Color(0.93, 0.86, 0.91, 1)
+theme_override_colors/font_disabled_color = Color(0.67, 0.61, 0.67, 1)
+theme_override_font_sizes/font_size = 20
+theme_override_styles/normal = SubResource("Secondary")
+theme_override_styles/disabled = SubResource("Secondary")
+text = "COMMERCE NOT CONNECTED"
+
+[node name="Actions" type="HBoxContainer" parent="FeatureLayout"]
+visible = false
+layout_mode = 2
+theme_override_constants/separation = 10
+
+[node name="Primary" type="Button" parent="FeatureLayout/Actions"]
+custom_minimum_size = Vector2(0, 62)
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_colors/font_color = Color(1, 0.941, 0.847, 1)
+theme_override_font_sizes/font_size = 22
+theme_override_styles/normal = SubResource("Primary")
+theme_override_styles/hover = SubResource("Primary")
+theme_override_styles/pressed = SubResource("Primary")
+text = "PRIMARY"
+
+[node name="Secondary" type="Button" parent="FeatureLayout/Actions"]
+custom_minimum_size = Vector2(0, 62)
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_colors/font_color = Color(0.93, 0.86, 0.91, 1)
+theme_override_colors/font_disabled_color = Color(0.56, 0.49, 0.56, 1)
+theme_override_font_sizes/font_size = 22
+theme_override_styles/normal = SubResource("Secondary")
+theme_override_styles/hover = SubResource("Secondary")
+theme_override_styles/pressed = SubResource("Secondary")
+theme_override_styles/disabled = SubResource("Secondary")
+text = "SECONDARY"
+
+[node name="DailyPracticeCard" type="PanelContainer" parent="FeatureLayout"]
+visible = false
+custom_minimum_size = Vector2(0, 138)
+layout_mode = 2
+theme_override_styles/panel = SubResource("Card")
+
+[node name="DailyContent" type="VBoxContainer" parent="FeatureLayout/DailyPracticeCard"]
+layout_mode = 2
+theme_override_constants/separation = 5
+
+[node name="DailyPracticeKicker" type="Label" parent="FeatureLayout/DailyPracticeCard/DailyContent"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.82, 0.72, 0.90, 1)
+theme_override_font_sizes/font_size = 18
+text = "DEVICE-LOCAL DAILY PRACTICE"
+horizontal_alignment = 1
+
+[node name="DailyPracticeTitle" type="Label" parent="FeatureLayout/DailyPracticeCard/DailyContent"]
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 0.941, 0.847, 1)
+theme_override_font_sizes/font_size = 24
+text = "DAILY HOUSE RITUAL · SEALED"
+horizontal_alignment = 1
+
+[node name="DailyPracticeTruth" type="Label" parent="FeatureLayout/DailyPracticeCard/DailyContent"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.831, 0.678, 0.439, 1)
+theme_override_font_sizes/font_size = 18
+text = "COMPLETE AN OPENING RITUAL TO UNLOCK LOCAL PRACTICE"
+horizontal_alignment = 1
+autowrap_mode = 2
+
+[node name="DailyPracticeAction" type="Button" parent="FeatureLayout/DailyPracticeCard/DailyContent"]
+custom_minimum_size = Vector2(0, 50)
+layout_mode = 2
+disabled = true
+theme_override_colors/font_color = Color(1, 0.941, 0.847, 1)
+theme_override_colors/font_disabled_color = Color(0.56, 0.49, 0.56, 1)
+theme_override_font_sizes/font_size = 22
+theme_override_styles/normal = SubResource("Secondary")
+theme_override_styles/hover = SubResource("Primary")
+theme_override_styles/pressed = SubResource("Primary")
+theme_override_styles/disabled = SubResource("Secondary")
+text = "RESTORE A DISPLAY TO UNLOCK"
+
+[node name="WeeklyMissionsAction" type="Button" parent="FeatureLayout"]
+visible = false
+custom_minimum_size = Vector2(0, 60)
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 0.941, 0.847, 1)
+theme_override_font_sizes/font_size = 22
+theme_override_styles/normal = SubResource("Primary")
+theme_override_styles/hover = SubResource("Primary")
+theme_override_styles/pressed = SubResource("Primary")
+text = "OPEN WEEKLY RITUALS"
+
+[node name="ProfileSettings" type="Button" parent="FeatureLayout"]
+visible = false
+custom_minimum_size = Vector2(0, 60)
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 0.941, 0.847, 1)
+theme_override_font_sizes/font_size = 22
+theme_override_styles/normal = SubResource("Primary")
+theme_override_styles/hover = SubResource("Primary")
+theme_override_styles/pressed = SubResource("Primary")
+text = "AUDIO & ACCESSIBILITY"
+
+[node name="CardScroll" type="ScrollContainer" parent="FeatureLayout"]
+layout_mode = 2
+size_flags_vertical = 3
+horizontal_scroll_mode = 0
+
+[node name="Cards" type="VBoxContainer" parent="FeatureLayout/CardScroll"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 12
+
+[node name="Card1" type="PanelContainer" parent="FeatureLayout/CardScroll/Cards"]
+custom_minimum_size = Vector2(0, 202)
+layout_mode = 2
+theme_override_styles/panel = SubResource("Card")
+
+[node name="Row" type="HBoxContainer" parent="FeatureLayout/CardScroll/Cards/Card1"]
+layout_mode = 2
+theme_override_constants/separation = 18
+
+[node name="Art" type="TextureRect" parent="FeatureLayout/CardScroll/Cards/Card1/Row"]
+custom_minimum_size = Vector2(156, 156)
+layout_mode = 2
+expand_mode = 1
+stretch_mode = 5
+
+[node name="Copy" type="VBoxContainer" parent="FeatureLayout/CardScroll/Cards/Card1/Row"]
+layout_mode = 2
+size_flags_horizontal = 3
+alignment = 1
+
+[node name="Kicker" type="Label" parent="FeatureLayout/CardScroll/Cards/Card1/Row/Copy"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.831, 0.678, 0.439, 1)
+theme_override_font_sizes/font_size = 16
+text = "KICKER"
+
+[node name="Title" type="Label" parent="FeatureLayout/CardScroll/Cards/Card1/Row/Copy"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.96, 0.9, 0.84, 1)
+theme_override_colors/font_outline_color = Color(0.02, 0.014, 0.028, 0.96)
+theme_override_constants/outline_size = 2
+theme_override_font_sizes/font_size = 28
+text = "TITLE"
+
+[node name="Body" type="Label" parent="FeatureLayout/CardScroll/Cards/Card1/Row/Copy"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.90, 0.84, 0.88, 1)
+theme_override_colors/font_outline_color = Color(0.02, 0.014, 0.028, 0.96)
+theme_override_constants/outline_size = 2
+theme_override_font_sizes/font_size = 23
+text = "BODY"
+autowrap_mode = 2
+
+[node name="Status" type="Label" parent="FeatureLayout/CardScroll/Cards/Card1/Row/Copy"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.82, 0.72, 0.90, 1)
+theme_override_colors/font_outline_color = Color(0.02, 0.014, 0.028, 0.96)
+theme_override_constants/outline_size = 2
+theme_override_font_sizes/font_size = 19
+text = "STATUS"
+autowrap_mode = 2
+
+[node name="Card2" type="PanelContainer" parent="FeatureLayout/CardScroll/Cards"]
+custom_minimum_size = Vector2(0, 202)
+layout_mode = 2
+theme_override_styles/panel = SubResource("Card")
+
+[node name="Row" type="HBoxContainer" parent="FeatureLayout/CardScroll/Cards/Card2"]
+layout_mode = 2
+theme_override_constants/separation = 18
+
+[node name="Art" type="TextureRect" parent="FeatureLayout/CardScroll/Cards/Card2/Row"]
+custom_minimum_size = Vector2(156, 156)
+layout_mode = 2
+expand_mode = 1
+stretch_mode = 5
+
+[node name="Copy" type="VBoxContainer" parent="FeatureLayout/CardScroll/Cards/Card2/Row"]
+layout_mode = 2
+size_flags_horizontal = 3
+alignment = 1
+
+[node name="Kicker" type="Label" parent="FeatureLayout/CardScroll/Cards/Card2/Row/Copy"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.831, 0.678, 0.439, 1)
+theme_override_font_sizes/font_size = 16
+text = "KICKER"
+
+[node name="Title" type="Label" parent="FeatureLayout/CardScroll/Cards/Card2/Row/Copy"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.96, 0.9, 0.84, 1)
+theme_override_colors/font_outline_color = Color(0.02, 0.014, 0.028, 0.96)
+theme_override_constants/outline_size = 2
+theme_override_font_sizes/font_size = 28
+text = "TITLE"
+
+[node name="Body" type="Label" parent="FeatureLayout/CardScroll/Cards/Card2/Row/Copy"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.90, 0.84, 0.88, 1)
+theme_override_colors/font_outline_color = Color(0.02, 0.014, 0.028, 0.96)
+theme_override_constants/outline_size = 2
+theme_override_font_sizes/font_size = 23
+text = "BODY"
+autowrap_mode = 2
+
+[node name="Status" type="Label" parent="FeatureLayout/CardScroll/Cards/Card2/Row/Copy"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.82, 0.72, 0.90, 1)
+theme_override_colors/font_outline_color = Color(0.02, 0.014, 0.028, 0.96)
+theme_override_constants/outline_size = 2
+theme_override_font_sizes/font_size = 19
+text = "STATUS"
+autowrap_mode = 2
+
+[node name="Card3" type="PanelContainer" parent="FeatureLayout/CardScroll/Cards"]
+custom_minimum_size = Vector2(0, 202)
+layout_mode = 2
+theme_override_styles/panel = SubResource("Card")
+
+[node name="Row" type="HBoxContainer" parent="FeatureLayout/CardScroll/Cards/Card3"]
+layout_mode = 2
+theme_override_constants/separation = 18
+
+[node name="Art" type="TextureRect" parent="FeatureLayout/CardScroll/Cards/Card3/Row"]
+custom_minimum_size = Vector2(156, 156)
+layout_mode = 2
+expand_mode = 1
+stretch_mode = 5
+
+[node name="Copy" type="VBoxContainer" parent="FeatureLayout/CardScroll/Cards/Card3/Row"]
+layout_mode = 2
+size_flags_horizontal = 3
+alignment = 1
+
+[node name="Kicker" type="Label" parent="FeatureLayout/CardScroll/Cards/Card3/Row/Copy"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.831, 0.678, 0.439, 1)
+theme_override_font_sizes/font_size = 16
+text = "KICKER"
+
+[node name="Title" type="Label" parent="FeatureLayout/CardScroll/Cards/Card3/Row/Copy"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.96, 0.9, 0.84, 1)
+theme_override_colors/font_outline_color = Color(0.02, 0.014, 0.028, 0.96)
+theme_override_constants/outline_size = 2
+theme_override_font_sizes/font_size = 28
+text = "TITLE"
+
+[node name="Body" type="Label" parent="FeatureLayout/CardScroll/Cards/Card3/Row/Copy"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.90, 0.84, 0.88, 1)
+theme_override_colors/font_outline_color = Color(0.02, 0.014, 0.028, 0.96)
+theme_override_constants/outline_size = 2
+theme_override_font_sizes/font_size = 23
+text = "BODY"
+autowrap_mode = 2
+
+[node name="Status" type="Label" parent="FeatureLayout/CardScroll/Cards/Card3/Row/Copy"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.82, 0.72, 0.90, 1)
+theme_override_colors/font_outline_color = Color(0.02, 0.014, 0.028, 0.96)
+theme_override_constants/outline_size = 2
+theme_override_font_sizes/font_size = 19
+text = "STATUS"
+autowrap_mode = 2
+
+[node name="SaveHealthCard" type="PanelContainer" parent="FeatureLayout"]
+visible = false
+custom_minimum_size = Vector2(0, 250)
+layout_mode = 2
+theme_override_styles/panel = SubResource("Card")
+
+[node name="SaveHealthContent" type="VBoxContainer" parent="FeatureLayout/SaveHealthCard"]
+layout_mode = 2
+theme_override_constants/separation = 5
+
+[node name="Kicker" type="Label" parent="FeatureLayout/SaveHealthCard/SaveHealthContent"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.831, 0.678, 0.439, 1)
+theme_override_font_sizes/font_size = 16
+text = "SAVE & ACCOUNT"
+horizontal_alignment = 1
+
+[node name="LocalSaveStatus" type="Label" parent="FeatureLayout/SaveHealthCard/SaveHealthContent"]
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 0.941, 0.847, 1)
+theme_override_font_sizes/font_size = 24
+text = "LOCAL SAVE · DEVICE-LOCAL"
+horizontal_alignment = 1
+
+[node name="LocalSaveDetail" type="Label" parent="FeatureLayout/SaveHealthCard/SaveHealthContent"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.90, 0.84, 0.88, 1)
+theme_override_font_sizes/font_size = 21
+text = "Progress is stored on this device."
+horizontal_alignment = 1
+autowrap_mode = 2
+
+[node name="CloudSyncStatus" type="Label" parent="FeatureLayout/SaveHealthCard/SaveHealthContent"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.82, 0.72, 0.90, 1)
+theme_override_font_sizes/font_size = 20
+text = "CLOUD SYNC · NOT CONNECTED"
+horizontal_alignment = 1
+
+[node name="CloudSyncDetail" type="Label" parent="FeatureLayout/SaveHealthCard/SaveHealthContent"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.72, 0.66, 0.72, 1)
+theme_override_font_sizes/font_size = 20
+text = "No account sign-in, remote backup, or cross-device restore is active in this build."
+horizontal_alignment = 1
+autowrap_mode = 2
+
+[node name="TruthStrip" type="Label" parent="FeatureLayout"]
+custom_minimum_size = Vector2(0, 44)
+layout_mode = 2
+theme_override_colors/font_color = Color(0.831, 0.678, 0.439, 1)
+theme_override_colors/font_outline_color = Color(0.02, 0.014, 0.028, 0.9)
+theme_override_constants/outline_size = 3
+theme_override_font_sizes/font_size = 18
+text = "TRUTH"
+horizontal_alignment = 1
+vertical_alignment = 1
+autowrap_mode = 2
+
+[node name="BackToHouse" type="Button" parent="FeatureLayout"]
+custom_minimum_size = Vector2(0, 58)
+layout_mode = 2
+theme_override_colors/font_color = Color(0.96, 0.9, 0.84, 1)
+theme_override_font_sizes/font_size = 22
+theme_override_styles/normal = SubResource("Secondary")
+theme_override_styles/hover = SubResource("Primary")
+theme_override_styles/pressed = SubResource("Primary")
+text = "RETURN TO THE HOUSE"
