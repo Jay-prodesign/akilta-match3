@@ -385,10 +385,10 @@ func _play_level(app: Node, level_number: int) -> bool:
 		_fail(app, "Curio Boutique entry missing before Level %d" % level_number)
 		return false
 	if completed_before == 0:
-		if not boutique.text.contains("CURRENT WING · 0 / 3 DISPLAYS") or not boutique.text.contains("BEGIN RESTORATION"):
+		if not boutique.text.contains("RARE FINDS · 0 / 3 AWAKENED") or not boutique.text.contains("BEGIN RESTORATION"):
 			_fail(app, "Chapter Select must begin at 0 / 3 before Level 1")
 			return false
-	elif not boutique.text.contains("CURRENT WING · %d / 3 DISPLAYS" % completed_before) or not boutique.text.contains("CONTINUE RESTORATION"):
+	elif not boutique.text.contains("RARE FINDS · %d / 3 AWAKENED" % completed_before) or not boutique.text.contains("CONTINUE RESTORATION"):
 		_fail(app, "Chapter Select must reflect %d / 3 progress before Level %d" % [completed_before, level_number])
 		return false
 	if chapter_summary == null:
