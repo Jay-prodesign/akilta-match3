@@ -26,7 +26,6 @@ static func attach(screen: Control, progress, profile_handler: Callable = Callab
 	screen.add_child(panel)
 
 	var life_icon := panel.get_node_or_null("Resources/LifeResourceChip/Content/Icon") as TextureRect
-	var life_icon := panel.get_node_or_null("Resources/LifeResourceChip/Content/Icon") as TextureRect
 	var coin_icon := panel.get_node_or_null("Resources/CoinResourceChip/Content/Icon") as TextureRect
 	var gem_icon := panel.get_node_or_null("Resources/GemResourceChip/Content/Icon") as TextureRect
 	if life_icon != null:
@@ -59,7 +58,6 @@ static func refresh(panel: PanelContainer, progress) -> void:
 		coins = maxi(0, int(progress.coins))
 		gems = maxi(0, int(progress.gems))
 	var life := panel.find_child("LifeResource", true, false) as Label
-	var life := panel.find_child("LifeResource", true, false) as Label
 	var coin := panel.find_child("CoinResource", true, false) as Label
 	var gem := panel.find_child("GemResource", true, false) as Label
 	if life != null:
@@ -78,8 +76,10 @@ static func authored_contract(panel: PanelContainer) -> Dictionary:
 			"profile_touch_target_ok": false,
 			"runtime_ui_factory": false,
 		}
+	var life := panel.find_child("LifeResource", true, false) as Label
 	var coin := panel.find_child("CoinResource", true, false) as Label
 	var gem := panel.find_child("GemResource", true, false) as Label
+	var life_icon := panel.get_node_or_null("Resources/LifeResourceChip/Content/Icon") as TextureRect
 	var coin_icon := panel.get_node_or_null("Resources/CoinResourceChip/Content/Icon") as TextureRect
 	var gem_icon := panel.get_node_or_null("Resources/GemResourceChip/Content/Icon") as TextureRect
 	var profile := panel.get_node_or_null("Resources/KeeperProfile") as Button
