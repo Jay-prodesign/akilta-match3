@@ -7,6 +7,7 @@ signal chapter_requested(chapter_id: String)
 const PieceAssetLoader = preload("res://src/match3/presentation/piece_asset_loader.gd")
 const ScreenArt = preload("res://src/ui/shared/screen_art_registry.gd")
 const TopResourceBar = preload("res://src/ui/shared/top_resource_bar.gd")
+const LockedExplanation = preload("res://src/ui/shared/locked_explanation.gd")
 const OPENING_LEVEL_COUNT := 3
 const CURRENT_WING_ART_PATH := "res://assets/world/ch01_curio_boutique/prestart_curio_boutique_shared.webp"
 
@@ -152,9 +153,10 @@ func _ready() -> void:
 			_install_current_wing_art(button)
 			button.pressed.connect(func(): chapter_requested.emit("curio_boutique"))
 		else:
-			button.disabled = true
+			button.disabled = false
 			button.text = "%s\nSEALED WING" % String(wing["name"])
-			button.tooltip_text = "%s · future chapter remains sealed" % String(wing["name"]).capitalize()
+			button.tooltip_text = "%s · inspect why this future chapter remains sealed" % String(wing["name"]).capitalize()
+			button.pressed.connect(_show_sealed_wing.bind(id, String(wing["name"])))
 		_apply_locked_style(button)
 		grid.add_child(button)
 		_buttons[id] = button
@@ -175,6 +177,26 @@ func _ready() -> void:
 	_lock_reason = lock_reason
 
 	_refresh_progress_state()
+
+func _show_sealed_wing(chapter_id: String, chapter_name: String) -> void:
+	var overlay := LockedExplanation.present(
+		self,
+		chapter_name,
+		"This wing belongs to a future chapter and is not playable in this build.",
+		"No unlock date, currency cost, reward, timer, or purchase path is active.",
+		"RETURN TO CHAPTERS"
+	)
+	if overlay != null:
+		overlay.set_meta("sealed_id", chapter_id)
+		overlay.set_meta("sealed_kind", "future_chapter")
+
+func sealed_explanation_contract() -> Dictionary:
+	var overlay := get_node_or_null("LockedExplanation") as Control
+	var contract := LockedExplanation.contract(overlay)
+	if overlay != null:
+		contract["sealed_id"] = String(overlay.get_meta("sealed_id", ""))
+		contract["sealed_kind"] = String(overlay.get_meta("sealed_kind", ""))
+	return contract
 
 func _install_current_wing_art(button: Button) -> void:
 	if button == null or button.get_node_or_null("CurrentWingArtwork") != null:
@@ -288,6 +310,7 @@ func _apply_current_style(button: Button, state: String) -> void:
 	button.add_theme_stylebox_override("focus", hover)
 
 func _apply_locked_style(button: Button) -> void:
+	button.add_theme_color_override("font_color", Color("#E1D4E2"))
 	button.add_theme_color_override("font_disabled_color", Color("#E1D4E2"))
 	var box := StyleBoxFlat.new()
 	box.bg_color = Color("#0F1017", 0.72)
@@ -296,6 +319,13 @@ func _apply_locked_style(button: Button) -> void:
 	box.set_corner_radius_all(12)
 	box.shadow_color = Color(0, 0, 0, 0.42)
 	box.shadow_size = 7
+	var hover := box.duplicate() as StyleBoxFlat
+	hover.bg_color = Color("#1A1521", 0.90)
+	hover.border_color = Color("#C4A9C8", 0.74)
+	button.add_theme_stylebox_override("normal", box)
+	button.add_theme_stylebox_override("hover", hover)
+	button.add_theme_stylebox_override("pressed", hover)
+	button.add_theme_stylebox_override("focus", hover)
 	button.add_theme_stylebox_override("disabled", box)
 
 func _style_header_back(button: Button) -> void:
