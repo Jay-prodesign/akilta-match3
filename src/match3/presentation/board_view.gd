@@ -3,6 +3,7 @@ extends Control
 
 signal swap_requested(from: Vector2i, to: Vector2i)
 signal trace_motion_finished
+signal motion_feedback_requested(kind: String, cascade: int, clock: float)
 
 const PieceVisuals = preload("res://src/match3/presentation/piece_visuals.gd")
 const PieceAssetLoader = preload("res://src/match3/presentation/piece_asset_loader.gd")
@@ -76,6 +77,11 @@ var _last_blocker_clear_fx_count: int = 0
 var _last_cascade_depth: int = 1
 var _last_landing_fx_count: int = 0
 var _last_longest_drop_rows: int = 0
+var _motion_feedback_events: Array[Dictionary] = []
+var _motion_feedback_emitted: Dictionary = {}
+var _last_motion_feedback_kind: String = ""
+var _last_motion_feedback_clock: float = -1.0
+var _last_motion_feedback_count: int = 0
 
 func _motion_stage_cells() -> Dictionary:
 	var visible: Dictionary = _motion_initial_cells.duplicate()
@@ -258,6 +264,7 @@ func play_trace(trace) -> bool:
 
 	_build_motion(trace)
 	_build_motion_stages(trace)
+	_build_motion_feedback_schedule(trace)
 	if _reduced_motion:
 		_motion_initial_cells.clear()
 		_motion_initial_specials.clear()
@@ -265,6 +272,8 @@ func play_trace(trace) -> bool:
 		_motion_stages.clear()
 		_motion_visible_cells.clear()
 		_reveal_at.clear()
+		_motion_feedback_events.clear()
+		_motion_feedback_emitted.clear()
 		_motion_clock = 1.0
 		_motion_active = false
 		queue_redraw()
@@ -445,6 +454,7 @@ func _remember_reveal(pos: Vector2i, at_clock: float) -> void:
 
 func _set_motion_clock(value: float) -> void:
 	_motion_clock = value
+	_emit_due_motion_feedback()
 	queue_redraw()
 
 func _finish_motion() -> void:
@@ -456,8 +466,88 @@ func _finish_motion() -> void:
 	_reveal_at.clear()
 	_motion_initial_cells.clear()
 	_motion_initial_specials.clear()
+	_motion_feedback_events.clear()
+	_motion_feedback_emitted.clear()
 	queue_redraw()
 	trace_motion_finished.emit()
+
+func _build_motion_feedback_schedule(trace) -> void:
+	_motion_feedback_events.clear()
+	_motion_feedback_emitted.clear()
+	_last_motion_feedback_kind = ""
+	_last_motion_feedback_clock = -1.0
+	_last_motion_feedback_count = 0
+	if trace == null or not bool(trace.accepted):
+		return
+	var types: Array[String] = trace.event_types()
+	var primary_kind := "match"
+	var primary_cascade := 1
+	if types.has("combo_triggered"):
+		primary_kind = "combo"
+		primary_cascade = _first_event_cascade(trace, "combo_triggered")
+	elif types.has("special_triggered"):
+		primary_kind = "special"
+		primary_cascade = _first_event_cascade(trace, "special_triggered")
+	elif types.has("special_created"):
+		primary_kind = "special_create"
+		primary_cascade = _first_event_cascade(trace, "special_created")
+	elif types.has("blocker_cleared") or types.has("blocker_damaged"):
+		primary_kind = "blocker"
+		primary_cascade = _first_event_cascade(trace, "blocker_cleared" if types.has("blocker_cleared") else "blocker_damaged")
+	var primary_clock := _feedback_clock_for_kind(primary_kind, primary_cascade)
+	_motion_feedback_events.append({"id": "primary", "kind": primary_kind, "cascade": primary_cascade, "at": primary_clock})
+	for cascade in range(2, _motion_cascade_count + 1):
+		var window := _cascade_window(cascade)
+		_motion_feedback_events.append({
+			"id": "cascade_%d" % cascade,
+			"kind": "cascade",
+			"cascade": cascade,
+			"at": lerpf(window.x, window.y, 0.16)
+		})
+	_motion_feedback_events.sort_custom(func(a: Dictionary, b: Dictionary): return float(a["at"]) < float(b["at"]))
+
+func _first_event_cascade(trace, event_type: String) -> int:
+	for event in trace.events:
+		if String(event.get("type", "")) == event_type:
+			return maxi(1, int(event.get("cascade", 1)))
+	return 1
+
+func _feedback_clock_for_kind(kind: String, cascade: int) -> float:
+	match kind:
+		"combo":
+			return 0.20
+		"blocker":
+			return 0.24
+		"special", "special_create":
+			var window := _cascade_window(cascade)
+			return lerpf(window.x, window.y, 0.28)
+		_:
+			var window := _cascade_window(cascade)
+			return lerpf(window.x, window.y, 0.18)
+
+func _emit_due_motion_feedback() -> void:
+	for event in _motion_feedback_events:
+		var event_id := String(event.get("id", ""))
+		if event_id == "" or bool(_motion_feedback_emitted.get(event_id, false)):
+			continue
+		var at := float(event.get("at", 1.0))
+		if _motion_clock + 0.0001 < at:
+			continue
+		_motion_feedback_emitted[event_id] = true
+		_last_motion_feedback_kind = String(event.get("kind", "match"))
+		_last_motion_feedback_clock = _motion_clock
+		_last_motion_feedback_count += 1
+		motion_feedback_requested.emit(_last_motion_feedback_kind, int(event.get("cascade", 1)), _motion_clock)
+
+func motion_feedback_contract() -> Dictionary:
+	return {
+		"scheduled": _motion_feedback_events.size(),
+		"emitted": _last_motion_feedback_count,
+		"last_kind": _last_motion_feedback_kind,
+		"last_clock": _last_motion_feedback_clock,
+		"reduced_motion": _reduced_motion,
+		"timeline_synced": true,
+	}
 
 func _parse_pos(value) -> Vector2i:
 	var parts := String(value).split(",")
