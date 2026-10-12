@@ -92,7 +92,7 @@ layout_mode = 2
 theme_override_colors/font_color = Color(0.84, 0.73, 0.66, 1)
 theme_override_colors/font_outline_color = Color(0.03, 0.02, 0.04, 0.9)
 theme_override_constants/outline_size = 3
-theme_override_font_sizes/font_size = 22
+theme_override_font_sizes/font_size = 20
 text = "THE HOUSE · CHAPTER I"
 horizontal_alignment = 1
 
@@ -101,27 +101,30 @@ layout_mode = 2
 theme_override_colors/font_color = Color(0.975, 0.91, 0.79, 1)
 theme_override_colors/font_outline_color = Color(0.03, 0.02, 0.04, 0.94)
 theme_override_constants/outline_size = 5
-theme_override_font_sizes/font_size = 46
+theme_override_font_sizes/font_size = 54
 text = "Curio Boutique"
 horizontal_alignment = 1
 
 [node name="Progress" type="Label" parent="Layout"]
+custom_minimum_size = Vector2(0, 54)
 layout_mode = 2
 theme_override_colors/font_color = Color(0.851, 0.71, 0.416, 1)
-theme_override_font_sizes/font_size = 22
+theme_override_font_sizes/font_size = 27
+theme_override_styles/normal = SubResource("RouteLabelPlate")
 text = "CURIO BOUTIQUE · 0 / 3 DISPLAYS AWAKENED"
+vertical_alignment = 1
 horizontal_alignment = 1
 
 [node name="Intro" type="Label" parent="Layout"]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.851, 0.804, 0.835, 1)
-theme_override_font_sizes/font_size = 19
-text = "Complete the opening three rituals to restore the first cabinet set. Upper cabinets remain visible but sealed for later journeys."
+theme_override_font_sizes/font_size = 22
+text = "RESTORE THE OPENING CABINET · FOLLOW THE GOLDEN ROUTE."
 horizontal_alignment = 1
 autowrap_mode = 2
 
 [node name="RoutePanel" type="PanelContainer" parent="Layout"]
-custom_minimum_size = Vector2(0, 1100)
+custom_minimum_size = Vector2(0, 1160)
 layout_mode = 2
 size_flags_vertical = 3
 theme_override_styles/panel = SubResource("Panel")
@@ -373,7 +376,7 @@ visible = false
 layout_mode = 0
 
 [node name="Back" type="Button" parent="Layout"]
-custom_minimum_size = Vector2(0, 60)
+custom_minimum_size = Vector2(0, 56)
 layout_mode = 2
 theme_override_colors/font_color = Color(0.945, 0.91, 0.866, 1)
 theme_override_font_sizes/font_size = 22
