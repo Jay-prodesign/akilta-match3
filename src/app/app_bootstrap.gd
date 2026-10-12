@@ -13,6 +13,7 @@ const ChapterSelectScene = preload("res://src/ui/map/chapter_select.tscn")
 const PrestartScene = preload("res://src/ui/prestart/level_prestart.tscn")
 const SettingsScene = preload("res://src/ui/settings/settings_panel.tscn")
 const MetaDestinationScene = preload("res://src/ui/meta/meta_destination_screen.tscn")
+const WeeklyMissionsScene = preload("res://src/ui/missions/weekly_missions_screen.tscn")
 const SplashScene = preload("res://src/ui/splash/splash_screen.tscn")
 const AudioDirectorScript = preload("res://src/feedback/audio_director.gd")
 const HapticsControllerScript = preload("res://src/feedback/haptics_controller.gd")
@@ -266,155 +267,22 @@ func show_weekly_missions() -> bool:
 			return false
 	elif navigation.current() != NavigationScript.Route.MISSIONS:
 		return false
-	var screen := Control.new()
-	screen.name = "WeeklyMissionsScreen"
-	screen.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
-	_show_screen(screen)
-	var backdrop := ColorRect.new()
-	backdrop.color = Color("#090A13")
-	backdrop.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
-	screen.add_child(backdrop)
-	var world_art := TextureRect.new()
-	world_art.name = "MissionWorldArt"
-	world_art.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
-	world_art.texture = ScreenArt.texture("events_bg_curio_house")
-	world_art.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
-	world_art.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_COVERED
-	world_art.modulate = Color(0.58, 0.52, 0.70, 0.52)
-	world_art.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	screen.add_child(world_art)
-	var layout := VBoxContainer.new()
-	layout.name = "MissionLayout"
-	layout.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
-	layout.offset_left = 22
-	layout.offset_top = 52
-	layout.offset_right = -22
-	layout.offset_bottom = -22
-	layout.add_theme_constant_override("separation", 12)
-	screen.add_child(layout)
-	var eyebrow := Label.new()
-	eyebrow.text = "THE HOUSE OF CURIOS · WEEKLY ALTAR"
-	eyebrow.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	eyebrow.add_theme_color_override("font_color", Color("#D5AD70"))
-	eyebrow.add_theme_font_size_override("font_size", 15)
-	layout.add_child(eyebrow)
-	var title := Label.new()
-	title.name = "MissionTitle"
-	title.text = "WEEKLY RITUALS"
-	title.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	title.add_theme_color_override("font_color", Color("#FFF0D8"))
-	title.add_theme_color_override("font_outline_color", Color("#080710", 0.92))
-	title.add_theme_constant_override("outline_size", 4)
-	title.add_theme_font_size_override("font_size", 38)
-	layout.add_child(title)
-	var timer := Label.new()
-	timer.name = "MissionTimer"
-	timer.text = "OFFLINE · LIVE RESET TIME UNAVAILABLE"
-	timer.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	timer.add_theme_color_override("font_color", Color("#BFA5D8"))
-	timer.add_theme_font_size_override("font_size", 16)
-	layout.add_child(timer)
-	var empty := PanelContainer.new()
-	empty.name = "MissionEmptyState"
-	empty.custom_minimum_size = Vector2(0, 520)
-	empty.size_flags_vertical = Control.SIZE_EXPAND_FILL
-	empty.set_meta("offline_contract", "truthful_empty_state")
-	var empty_style := StyleBoxFlat.new()
-	empty_style.bg_color = Color("#100C16", 0.68)
-	empty_style.border_color = Color("#B88AB8", 0.72)
-	empty_style.set_border_width_all(2)
-	empty_style.set_corner_radius_all(18)
-	empty_style.content_margin_left = 22
-	empty_style.content_margin_right = 22
-	empty_style.content_margin_top = 26
-	empty_style.content_margin_bottom = 26
-	empty_style.shadow_color = Color(0, 0, 0, 0.48)
-	empty_style.shadow_size = 18
-	empty.add_theme_stylebox_override("panel", empty_style)
-	layout.add_child(empty)
-	var empty_content := VBoxContainer.new()
-	empty_content.name = "EmptyContent"
-	empty_content.alignment = BoxContainer.ALIGNMENT_CENTER
-	empty_content.size_flags_vertical = Control.SIZE_EXPAND_FILL
-	empty_content.add_theme_constant_override("separation", 10)
-	empty.add_child(empty_content)
-	var emblem := TextureRect.new()
-	emblem.name = "MissionRewardArt"
-	emblem.custom_minimum_size = Vector2(0, 360)
-	var weekly_art_path := "res://assets/curios/ch01_curio_moon_cameo_sealed_v01.webp"
-	emblem.texture = PieceAssetLoader.ornament(weekly_art_path)
-	emblem.set_meta("asset_path", weekly_art_path)
-	emblem.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
-	emblem.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
-	emblem.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	empty_content.add_child(emblem)
-	var empty_title := Label.new()
-	empty_title.text = "THE WEEKLY ALTAR IS QUIET"
-	empty_title.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	empty_title.add_theme_color_override("font_color", Color("#F4E5D3"))
-	empty_title.add_theme_font_size_override("font_size", 34)
-	empty_content.add_child(empty_title)
-	var empty_body := Label.new()
-	empty_body.text = "No live weekly mission feed is connected. Mission timers, progress and rewards are intentionally not fabricated."
-	empty_body.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	empty_body.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-	empty_body.add_theme_color_override("font_color", Color("#D8C6C3"))
-	empty_body.add_theme_font_size_override("font_size", 19)
-	empty_content.add_child(empty_body)
-	var availability := Label.new()
-	availability.name = "MissionAvailability"
-	availability.text = "LIVE RITUALS WILL APPEAR HERE ONLY WHEN A MISSION FEED IS CONNECTED"
-	availability.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	availability.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-	availability.add_theme_color_override("font_color", Color("#BFA5D8"))
-	availability.add_theme_font_size_override("font_size", 15)
-	empty_content.add_child(availability)
-	var empty_state := Label.new()
-	empty_state.name = "MissionEmptyStateTruth"
-	empty_state.text = "RESET / OFFLINE STATE · NOTHING TO CLAIM"
-	empty_state.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	empty_state.add_theme_color_override("font_color", Color("#D5AD70"))
-	empty_state.add_theme_font_size_override("font_size", 15)
-	empty_content.add_child(empty_state)
-	var record := Label.new()
+
 	var completed_count := mini(int(progress.completed_levels.size()) if progress != null else 0, INTERNAL_REVIEW_LEVEL_COUNT)
-	record.name = "MissionOpeningRecord"
-	record.text = "OPENING CABINET RECORD · %d / %d DISPLAYS AWAKENED" % [completed_count, INTERNAL_REVIEW_LEVEL_COUNT]
-	record.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	record.add_theme_color_override("font_color", Color("#BFA5D8"))
-	record.add_theme_font_size_override("font_size", 16)
-	layout.add_child(record)
-	var events_button := Button.new()
-	events_button.name = "ReturnToEvents"
-	events_button.text = "RETURN TO EVENT CENTER"
-	events_button.custom_minimum_size.y = 62
-	_style_meta_action(events_button, true)
-	layout.add_child(events_button)
-	events_button.pressed.connect(_on_missions_back)
-	var house_button := Button.new()
-	house_button.name = "ReturnToHouse"
-	house_button.text = "RETURN TO HOUSE"
-	house_button.custom_minimum_size.y = 56
-	_style_meta_action(house_button, false)
-	layout.add_child(house_button)
-	house_button.pressed.connect(_on_missions_house)
+	var screen: Node = WeeklyMissionsScene.instantiate()
+	_show_screen(screen)
+	if not bool(screen.configure({
+		"completed_count": completed_count,
+		"opening_cap": INTERNAL_REVIEW_LEVEL_COUNT,
+	})):
+		_on_missions_back()
+		return false
+	if screen.has_signal("return_events_requested"):
+		screen.return_events_requested.connect(_on_missions_back)
+	if screen.has_signal("return_house_requested"):
+		screen.return_house_requested.connect(_on_missions_house)
 	return true
 
-func _style_meta_action(button: Button, primary: bool) -> void:
-	var normal := StyleBoxFlat.new()
-	normal.bg_color = Color("#4A2848") if primary else Color("#211827")
-	normal.border_color = Color("#D5AD70") if primary else Color("#8D7694")
-	normal.set_border_width_all(2 if primary else 1)
-	normal.set_corner_radius_all(12)
-	var hover := normal.duplicate() as StyleBoxFlat
-	hover.bg_color = Color("#61385B") if primary else Color("#34263D")
-	button.add_theme_stylebox_override("normal", normal)
-	button.add_theme_stylebox_override("hover", hover)
-	button.add_theme_stylebox_override("pressed", hover)
-	button.add_theme_stylebox_override("disabled", normal)
-	button.add_theme_color_override("font_color", Color("#FFF0D8"))
-	button.add_theme_color_override("font_disabled_color", Color("#CFC0CF"))
-	button.add_theme_font_size_override("font_size", 19)
 
 func _on_missions_back() -> void:
 	if navigation != null and navigation.current() == NavigationScript.Route.MISSIONS and navigation.go(NavigationScript.Route.EVENTS, {"via": "missions_back"}):
