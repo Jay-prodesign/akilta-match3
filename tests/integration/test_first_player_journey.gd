@@ -222,7 +222,7 @@ func _run() -> void:
 	_expect(shop_truth != null and shop_truth.text.contains("NOT PURCHASABLE"), "Shop balances must be explicitly non-purchasable")
 	_expect(shop_offer_art != null and shop_offer_art.texture != null, "Shop featured offer must own content artwork")
 	_expect(shop_disabled_action != null and shop_disabled_action.disabled, "Shop commerce CTA must remain disabled before commerce is connected")
-	var ui_audio_before := app.audio_director.get_feedback_count("ui")
+	var ui_audio_before: int = int(app.audio_director.get_feedback_count("ui"))
 	app._on_shell_navigation_requested("house")
 	app._on_shell_navigation_requested("events")
 	_expect(app.audio_director.get_feedback_count("ui") == ui_audio_before + 1, "duplicate shell navigation in one frame must emit feedback only once")
