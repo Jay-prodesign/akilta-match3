@@ -40,7 +40,7 @@ func _run() -> void:
 			var art := screen.get_node_or_null("FeatureLayout/CardScroll/Cards/%s/Row/Art" % card_name) as TextureRect
 			_expect(art != null and art.texture != null, "%s %s must render object art" % [feature, card_name])
 			if art != null and art.texture != null:
-				_expect(String(art.texture.resource_path).ends_with(".webp") or String(art.texture.resource_path).ends_with(".png"), "%s %s must use raster object art" % [feature, card_name])
+				_expect(String(art.get_meta("asset_path", "")).ends_with(".webp") or String(art.get_meta("asset_path", "")).ends_with(".png"), "%s %s must use raster object art" % [feature, card_name])
 		if feature == "events":
 			var weekly := {"hit": false}
 			screen.weekly_requested.connect(func(): weekly["hit"] = true)
@@ -52,7 +52,7 @@ func _run() -> void:
 			_expect(int(daily["level"]) == 2, "events secondary action must preserve daily practice level")
 		if feature == "profile":
 			var profile_hero := screen.get_node("FeatureLayout/FeatureHero/HeroRow/HeroArt") as TextureRect
-			_expect(profile_hero != null and String(profile_hero.texture.resource_path).ends_with("black_cat.webp"), "profile hero must use the Keeper familiar rather than a generic Curio")
+			_expect(profile_hero != null and String(contract.get("hero_asset_path", "")).ends_with("black_cat.webp"), "profile hero must use the Keeper familiar rather than a generic Curio")
 			var settings := {"hit": false}
 			screen.settings_requested.connect(func(): settings["hit"] = true)
 			(screen.get_node("FeatureLayout/ProfileSettings") as Button).emit_signal("pressed")
