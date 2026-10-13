@@ -73,6 +73,15 @@ grow_vertical = 2
 mouse_filter = 2
 color = Color(0.018, 0.012, 0.026, 0.26)
 
+[node name="HeaderShade" type="ColorRect" parent="."]
+layout_mode = 1
+anchors_preset = 10
+anchor_right = 1.0
+offset_bottom = 300.0
+grow_horizontal = 2
+mouse_filter = 2
+color = Color(0.016, 0.011, 0.025, 0.42)
+
 [node name="MissionLayout" type="VBoxContainer" parent="."]
 layout_mode = 1
 anchors_preset = 15
@@ -114,7 +123,7 @@ text = "OFFLINE · LIVE RESET TIME UNAVAILABLE"
 horizontal_alignment = 1
 
 [node name="MissionEmptyState" type="PanelContainer" parent="MissionLayout"]
-custom_minimum_size = Vector2(0, 560)
+custom_minimum_size = Vector2(0, 510)
 layout_mode = 2
 theme_override_styles/panel = SubResource("Altar")
 
@@ -124,7 +133,7 @@ theme_override_constants/separation = 12
 alignment = 1
 
 [node name="MissionRewardArt" type="TextureRect" parent="MissionLayout/MissionEmptyState/EmptyContent"]
-custom_minimum_size = Vector2(300, 245)
+custom_minimum_size = Vector2(330, 255)
 layout_mode = 2
 expand_mode = 1
 stretch_mode = 5
@@ -150,7 +159,7 @@ layout_mode = 2
 theme_override_colors/font_color = Color(0.95, 0.89, 0.92, 1)
 theme_override_colors/font_outline_color = Color(0.02, 0.014, 0.028, 0.94)
 theme_override_constants/outline_size = 2
-theme_override_font_sizes/font_size = 22
+theme_override_font_sizes/font_size = 24
 text = "No live mission feed is connected. Timers, progress and rewards are not fabricated."
 horizontal_alignment = 1
 autowrap_mode = 2
@@ -160,7 +169,7 @@ layout_mode = 2
 theme_override_colors/font_color = Color(0.86, 0.77, 0.93, 1)
 theme_override_colors/font_outline_color = Color(0.02, 0.014, 0.028, 0.94)
 theme_override_constants/outline_size = 2
-theme_override_font_sizes/font_size = 20
+theme_override_font_sizes/font_size = 18
 text = "LIVE RITUALS APPEAR ONLY WHEN A MISSION FEED IS CONNECTED"
 horizontal_alignment = 1
 autowrap_mode = 2
@@ -170,7 +179,7 @@ layout_mode = 2
 theme_override_colors/font_color = Color(0.95, 0.80, 0.50, 1)
 theme_override_colors/font_outline_color = Color(0.02, 0.014, 0.028, 0.94)
 theme_override_constants/outline_size = 2
-theme_override_font_sizes/font_size = 22
+theme_override_font_sizes/font_size = 24
 text = "OFFLINE · NOTHING TO CLAIM"
 horizontal_alignment = 1
 autowrap_mode = 2
