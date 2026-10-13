@@ -55,22 +55,22 @@ corner_radius_bottom_right = 18
 corner_radius_bottom_left = 18
 
 [sub_resource type="StyleBoxFlat" id="HintBand"]
-bg_color = Color(0.035, 0.025, 0.045, 0.9)
+bg_color = Color(0.035, 0.025, 0.045, 0.72)
 border_width_left = 1
 border_width_top = 1
 border_width_right = 1
 border_width_bottom = 1
-border_color = Color(0.835, 0.678, 0.439, 0.38)
-corner_radius_top_left = 10
-corner_radius_top_right = 10
-corner_radius_bottom_right = 10
-corner_radius_bottom_left = 10
-content_margin_left = 14.0
-content_margin_top = 8.0
-content_margin_right = 14.0
-content_margin_bottom = 8.0
-shadow_color = Color(0, 0, 0, 0.42)
-shadow_size = 8
+border_color = Color(0.835, 0.678, 0.439, 0.30)
+corner_radius_top_left = 14
+corner_radius_top_right = 14
+corner_radius_bottom_right = 14
+corner_radius_bottom_left = 14
+content_margin_left = 12.0
+content_margin_top = 5.0
+content_margin_right = 12.0
+content_margin_bottom = 5.0
+shadow_color = Color(0, 0, 0, 0.34)
+shadow_size = 6
 
 [sub_resource type="StyleBoxFlat" id="GameplayHUDPlate"]
 bg_color = Color(0.071, 0.051, 0.094, 0.94)
@@ -376,7 +376,7 @@ anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 offset_left = 24.0
-offset_top = 76.0
+offset_top = 40.0
 offset_right = -24.0
 offset_bottom = -112.0
 grow_horizontal = 2
@@ -384,15 +384,17 @@ grow_vertical = 2
 theme_override_constants/separation = 8
 
 [node name="Eyebrow" type="Label" parent="Layout"]
+custom_minimum_size = Vector2(0, 36)
 layout_mode = 2
 theme_override_colors/font_color = Color(0.84, 0.73, 0.66, 1)
 theme_override_colors/font_outline_color = Color(0.035, 0.025, 0.045, 0.92)
 theme_override_constants/outline_size = 4
-theme_override_font_sizes/font_size = 18
-text = "CURIO BOUTIQUE · LEVEL 1"
+theme_override_font_sizes/font_size = 24
+text = "LEVEL 1 · CURIO BOUTIQUE"
 horizontal_alignment = 1
 
 [node name="Title" type="Label" parent="Layout"]
+visible = false
 layout_mode = 2
 theme_override_colors/font_color = Color(0.975, 0.91, 0.79, 1)
 theme_override_colors/font_outline_color = Color(0.035, 0.025, 0.045, 0.95)
@@ -402,13 +404,13 @@ text = "Moonlit Cabinet"
 horizontal_alignment = 1
 
 [node name="HUDPlate" type="PanelContainer" parent="Layout"]
-custom_minimum_size = Vector2(0, 164)
+custom_minimum_size = Vector2(0, 128)
 layout_mode = 2
 theme_override_styles/panel = SubResource("GameplayHUDPlate")
 
 [node name="HUD" type="HBoxContainer" parent="Layout/HUDPlate"]
 layout_mode = 2
-theme_override_constants/separation = 8
+theme_override_constants/separation = 10
 
 
 [node name="LeftInset" type="Control" parent="Layout/HUDPlate/HUD"]
@@ -416,41 +418,41 @@ custom_minimum_size = Vector2(6, 0)
 layout_mode = 2
 
 [node name="ObjectiveIcon" type="TextureRect" parent="Layout/HUDPlate/HUD"]
-custom_minimum_size = Vector2(88, 88)
+custom_minimum_size = Vector2(76, 76)
 layout_mode = 2
 mouse_filter = 2
 expand_mode = 1
 stretch_mode = 5
 
 [node name="Objective" type="Label" parent="Layout/HUDPlate/HUD"]
-custom_minimum_size = Vector2(0, 132)
+custom_minimum_size = Vector2(0, 96)
 layout_mode = 2
 size_flags_horizontal = 3
 theme_override_colors/font_color = Color(1, 0.94, 0.82, 1)
 theme_override_colors/font_outline_color = Color(0.03, 0.02, 0.04, 0.92)
 theme_override_constants/outline_size = 5
-theme_override_font_sizes/font_size = 36
-text = "TARGET\nMOON SIGILS  0 / 6"
+theme_override_font_sizes/font_size = 28
+text = "MOON SIGILS\n0 / 6"
 horizontal_alignment = 0
 vertical_alignment = 1
 
 [node name="Moves" type="Label" parent="Layout/HUDPlate/HUD"]
-custom_minimum_size = Vector2(180, 132)
+custom_minimum_size = Vector2(148, 96)
 layout_mode = 2
 theme_override_colors/font_color = Color(0.94, 0.80, 0.52, 1)
 theme_override_colors/font_outline_color = Color(0.03, 0.02, 0.04, 0.94)
 theme_override_constants/outline_size = 4
-theme_override_font_sizes/font_size = 46
+theme_override_font_sizes/font_size = 42
 theme_override_styles/normal = SubResource("MovesBlockStyle")
 text = "20\nMOVES"
 horizontal_alignment = 1
 vertical_alignment = 1
 
 [node name="Pause" type="Button" parent="Layout/HUDPlate/HUD"]
-custom_minimum_size = Vector2(96, 96)
+custom_minimum_size = Vector2(84, 84)
 layout_mode = 2
 theme_override_colors/font_color = Color(0.945, 0.91, 0.866, 1)
-theme_override_font_sizes/font_size = 30
+theme_override_font_sizes/font_size = 28
 theme_override_styles/normal = SubResource("PauseUtility")
 theme_override_styles/hover = SubResource("PauseUtility")
 theme_override_styles/pressed = SubResource("PauseUtility")
@@ -458,7 +460,7 @@ text = "Ⅱ"
 tooltip_text = "Pause"
 
 [node name="BoardView" type="Control" parent="Layout"]
-custom_minimum_size = Vector2(0, 1000)
+custom_minimum_size = Vector2(0, 1080)
 layout_mode = 2
 size_flags_vertical = 0
 mouse_filter = 0
@@ -481,13 +483,13 @@ mouse_filter = 2
 theme_override_styles/panel = SubResource("BoardFrameStyle")
 
 [node name="Hint" type="Label" parent="Layout"]
-custom_minimum_size = Vector2(820, 64)
+custom_minimum_size = Vector2(720, 52)
 layout_mode = 2
 size_flags_horizontal = 4
 theme_override_colors/font_color = Color(0.965, 0.89, 0.72, 1)
 theme_override_colors/font_outline_color = Color(0.02, 0.015, 0.025, 0.98)
 theme_override_constants/outline_size = 4
-theme_override_font_sizes/font_size = 24
+theme_override_font_sizes/font_size = 21
 theme_override_styles/normal = SubResource("HintBand")
 text = "Slide the moon sigil right. Wake the cabinet in one luminous move."
 horizontal_alignment = 1
@@ -527,19 +529,19 @@ horizontal_alignment = 1
 
 [node name="BoosterTray" type="PanelContainer" parent="."]
 layout_mode = 1
-anchor_left = 0.12
-anchor_top = 0.795
-anchor_right = 0.88
-anchor_bottom = 0.795
+anchor_left = 0.08
+anchor_top = 0.755
+anchor_right = 0.92
+anchor_bottom = 0.755
 offset_top = 0.0
-offset_bottom = 228.0
+offset_bottom = 196.0
 grow_horizontal = 2
 z_index = 18
 theme_override_styles/panel = SubResource("BoosterTrayStyle")
 
 [node name="BoosterActions" type="HBoxContainer" parent="BoosterTray"]
 layout_mode = 2
-theme_override_constants/separation = 36
+theme_override_constants/separation = 24
 alignment = 1
 
 [node name="HintSlot" type="VBoxContainer" parent="BoosterTray/BoosterActions"]
@@ -576,14 +578,14 @@ horizontal_alignment = 1
 vertical_alignment = 1
 
 [node name="SealedSlotA" type="VBoxContainer" parent="BoosterTray/BoosterActions"]
-custom_minimum_size = Vector2(170, 176)
+custom_minimum_size = Vector2(150, 156)
 layout_mode = 2
 size_flags_vertical = 4
-theme_override_constants/separation = 6
+theme_override_constants/separation = 4
 alignment = 1
 
 [node name="SealedBoostA" type="Button" parent="BoosterTray/BoosterActions/SealedSlotA"]
-custom_minimum_size = Vector2(124, 124)
+custom_minimum_size = Vector2(108, 108)
 layout_mode = 2
 size_flags_horizontal = 4
 disabled = true
@@ -594,29 +596,29 @@ theme_override_font_sizes/font_size = 1
 theme_override_styles/disabled = SubResource("BoosterSealedStyle")
 text = "SHUFFLE"
 expand_icon = true
-theme_override_constants/icon_max_width = 98
+theme_override_constants/icon_max_width = 84
 tooltip_text = "Shuffle booster · sealed until its gameplay entitlement is implemented"
 
 [node name="Label" type="Label" parent="BoosterTray/BoosterActions/SealedSlotA"]
-custom_minimum_size = Vector2(0, 44)
+custom_minimum_size = Vector2(0, 36)
 layout_mode = 2
 theme_override_colors/font_color = Color(0.94, 0.80, 0.52, 1)
 theme_override_colors/font_outline_color = Color(0.02, 0.014, 0.028, 0.96)
 theme_override_constants/outline_size = 4
-theme_override_font_sizes/font_size = 26
+theme_override_font_sizes/font_size = 24
 text = "SHUFFLE"
 horizontal_alignment = 1
 vertical_alignment = 1
 
 [node name="SealedSlotB" type="VBoxContainer" parent="BoosterTray/BoosterActions"]
-custom_minimum_size = Vector2(170, 176)
+custom_minimum_size = Vector2(150, 156)
 layout_mode = 2
 size_flags_vertical = 4
-theme_override_constants/separation = 6
+theme_override_constants/separation = 4
 alignment = 1
 
 [node name="SealedBoostB" type="Button" parent="BoosterTray/BoosterActions/SealedSlotB"]
-custom_minimum_size = Vector2(124, 124)
+custom_minimum_size = Vector2(108, 108)
 layout_mode = 2
 size_flags_horizontal = 4
 disabled = true
@@ -627,29 +629,29 @@ theme_override_font_sizes/font_size = 1
 theme_override_styles/disabled = SubResource("BoosterSealedStyle")
 text = "HAND"
 expand_icon = true
-theme_override_constants/icon_max_width = 98
+theme_override_constants/icon_max_width = 84
 tooltip_text = "Hand booster · sealed until its gameplay entitlement is implemented"
 
 [node name="Label" type="Label" parent="BoosterTray/BoosterActions/SealedSlotB"]
-custom_minimum_size = Vector2(0, 44)
+custom_minimum_size = Vector2(0, 36)
 layout_mode = 2
 theme_override_colors/font_color = Color(0.94, 0.80, 0.52, 1)
 theme_override_colors/font_outline_color = Color(0.02, 0.014, 0.028, 0.96)
 theme_override_constants/outline_size = 4
-theme_override_font_sizes/font_size = 26
+theme_override_font_sizes/font_size = 24
 text = "HAND"
 horizontal_alignment = 1
 vertical_alignment = 1
 
 [node name="SealedSlotC" type="VBoxContainer" parent="BoosterTray/BoosterActions"]
-custom_minimum_size = Vector2(170, 176)
+custom_minimum_size = Vector2(150, 156)
 layout_mode = 2
 size_flags_vertical = 4
-theme_override_constants/separation = 6
+theme_override_constants/separation = 4
 alignment = 1
 
 [node name="SealedBoostC" type="Button" parent="BoosterTray/BoosterActions/SealedSlotC"]
-custom_minimum_size = Vector2(124, 124)
+custom_minimum_size = Vector2(108, 108)
 layout_mode = 2
 size_flags_horizontal = 4
 disabled = true
@@ -660,16 +662,16 @@ theme_override_font_sizes/font_size = 1
 theme_override_styles/disabled = SubResource("BoosterSealedStyle")
 text = "MAGIC"
 expand_icon = true
-theme_override_constants/icon_max_width = 98
+theme_override_constants/icon_max_width = 84
 tooltip_text = "Magic booster · sealed until its gameplay entitlement is implemented"
 
 [node name="Label" type="Label" parent="BoosterTray/BoosterActions/SealedSlotC"]
-custom_minimum_size = Vector2(0, 44)
+custom_minimum_size = Vector2(0, 36)
 layout_mode = 2
 theme_override_colors/font_color = Color(0.94, 0.80, 0.52, 1)
 theme_override_colors/font_outline_color = Color(0.02, 0.014, 0.028, 0.96)
 theme_override_constants/outline_size = 4
-theme_override_font_sizes/font_size = 26
+theme_override_font_sizes/font_size = 24
 text = "MAGIC"
 horizontal_alignment = 1
 vertical_alignment = 1
@@ -921,7 +923,7 @@ theme_override_styles/panel = SubResource("RewardChipStyle")
 
 [node name="Content" type="HBoxContainer" parent="ResultOverlay/Card/Content/ResultRewardValues/CoinReward"]
 layout_mode = 2
-theme_override_constants/separation = 6
+theme_override_constants/separation = 4
 alignment = 1
 
 [node name="Icon" type="TextureRect" parent="ResultOverlay/Card/Content/ResultRewardValues/CoinReward/Content"]
@@ -943,7 +945,7 @@ theme_override_styles/panel = SubResource("RewardChipStyle")
 
 [node name="Content" type="HBoxContainer" parent="ResultOverlay/Card/Content/ResultRewardValues/GemReward"]
 layout_mode = 2
-theme_override_constants/separation = 6
+theme_override_constants/separation = 4
 alignment = 1
 
 [node name="Icon" type="TextureRect" parent="ResultOverlay/Card/Content/ResultRewardValues/GemReward/Content"]

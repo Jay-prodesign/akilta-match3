@@ -167,6 +167,9 @@ func _ready() -> void:
 	ProductionChrome.apply_compact_panel($ResourceBar/Resources/LevelBadgePlate, "gameplay_level_badge")
 	ProductionChrome.apply_gameplay_shell($Layout/HUDPlate, "objective")
 	ProductionChrome.apply_gameplay_booster_tray($BoosterTray)
+	var gameplay_hud := $Layout/HUDPlate/HUD as HBoxContainer
+	if gameplay_hud != null:
+		gameplay_hud.move_child(pause_button, 1)
 	ProductionChrome.apply_interactive_button(pause_button, false, "gameplay_pause")
 	ProductionChrome.apply_action_button(pause_resume, "primary", "pause_resume")
 	ProductionChrome.apply_action_button(pause_retry, "utility", "pause_retry")
@@ -271,7 +274,9 @@ func load_level_path(path: String, seed_value: int = 1001) -> bool:
 	_last_objective_delta = 0
 	_reset_terminal_transition()
 	_style_impact_hint("normal")
-	eyebrow_label.text = String(parsed.get("eyebrow", "CURIO BOUTIQUE"))
+	var chapter_identity := String(parsed.get("eyebrow", "CURIO BOUTIQUE")).split("·")[0].strip_edges()
+	var level_identity := _level_badge_label.text if _level_badge_label != null else "LEVEL"
+	eyebrow_label.text = "%s · %s" % [level_identity, chapter_identity]
 	title_label.text = String(parsed.get("title", "Hidden Display"))
 	hint_label.text = String(parsed.get("hint", "Swipe a sigil."))
 	var art_profile := String(parsed.get("visual_profile", "curio_boutique_opening"))
@@ -585,7 +590,7 @@ func _refresh_hud() -> void:
 	if objective_icon != null:
 		objective_icon.texture = PieceAssetLoader.ornament(_objective_art_path())
 	if board_state == null:
-		objective_label.text = "TARGET\nAWAKEN THE COLLECTION"
+		objective_label.text = "AWAKEN\nTHE COLLECTION"
 		moves_label.text = "—"
 		return
 	_apply_moves_urgency()
@@ -616,15 +621,15 @@ func _refresh_hud() -> void:
 		]
 	if String(board_state.objective_type) == "collect_family":
 		var family_label: String = String(board_state.objective_family).capitalize()
-		objective_label.text = "TARGET\n%s SIGILS  %d / %d" % [
+		objective_label.text = "%s SIGILS\n%d / %d" % [
 			family_label.to_upper(),
 			int(board_state.objective_progress),
 			int(board_state.objective_target)
 		]
 	elif String(board_state.objective_type) == "clear_blockers":
-		objective_label.text = "TARGET\nWAX SEAL LAYERS  %d / %d" % [_objective_progress_value(), _objective_target_value()]
+		objective_label.text = "WAX SEAL LAYERS\n%d / %d" % [_objective_progress_value(), _objective_target_value()]
 	else:
-		objective_label.text = "TARGET\nAWAKEN THE COLLECTION"
+		objective_label.text = "AWAKEN\nTHE COLLECTION"
 
 func _objective_art_path() -> String:
 	if board_state != null and String(board_state.objective_type) == "clear_blockers":
@@ -665,10 +670,10 @@ func _present_objective_progress() -> void:
 	var target := _objective_target_value()
 	var complete := progress >= target
 	if String(board_state.objective_type) == "clear_blockers":
-		objective_label.text = "TARGET\nWAX SEAL LAYERS  %d / %d\n%s" % [progress, target, "OBJECTIVE COMPLETE" if complete else "+%d THIS MOVE" % _last_objective_delta]
+		objective_label.text = "WAX SEAL LAYERS\n%d / %d · %s" % [progress, target, "COMPLETE" if complete else "+%d" % _last_objective_delta]
 	else:
 		var family := String(board_state.objective_family).to_upper()
-		objective_label.text = "TARGET\n%s SIGILS  %d / %d\n%s" % [family, progress, target, "OBJECTIVE COMPLETE" if complete else "+%d THIS MOVE" % _last_objective_delta]
+		objective_label.text = "%s SIGILS\n%d / %d · %s" % [family, progress, target, "COMPLETE" if complete else "+%d" % _last_objective_delta]
 	objective_label.set_meta("objective_feedback_state", "complete" if complete else "progress")
 	objective_label.add_theme_color_override("font_color", Color("#FFFFFF") if _high_contrast else (Color("#F0CE8A") if complete else Color("#E4CDEB")))
 	if _objective_pulse_tween != null and _objective_pulse_tween.is_valid():
@@ -1046,20 +1051,22 @@ func gameplay_presentation_contract() -> Dictionary:
 		and not $BoosterTray/BoosterActions/SettingsSlot.visible
 	)
 	var hierarchy_locked: bool = (
-		title_label.get_theme_font_size("font_size") >= 50
-		and objective_icon.custom_minimum_size.x >= 80.0
-		and objective_label.get_theme_font_size("font_size") >= 32
-		and moves_label.get_theme_font_size("font_size") >= 44
-		and ($Layout/HUDPlate as PanelContainer).custom_minimum_size.y >= 160.0
+		not title_label.visible
+		and eyebrow_label.get_theme_font_size("font_size") >= 22
+		and objective_icon.custom_minimum_size.x >= 72.0
+		and objective_label.get_theme_font_size("font_size") >= 26
+		and moves_label.get_theme_font_size("font_size") >= 40
+		and ($Layout/HUDPlate as PanelContainer).custom_minimum_size.y >= 120.0
 	)
 	var integrated_hud_surface: bool = (
 		not objective_label.has_theme_stylebox_override("normal")
-		and objective_label.text.begins_with("TARGET\n")
+		and objective_label.text.contains("\n")
+		and not objective_label.text.begins_with("TARGET\n")
 		and moves_label.get_theme_stylebox("normal") != null
 	)
 	var hint_readable: bool = (
-		hint_label.custom_minimum_size.y >= 60.0
-		and hint_label.get_theme_font_size("font_size") >= 24
+		hint_label.custom_minimum_size.y >= 50.0
+		and hint_label.get_theme_font_size("font_size") >= 21
 	)
 	var booster_family_locked: bool = (
 		$BoosterTray/BoosterActions/SealedSlotA.visible
@@ -1072,10 +1079,10 @@ func gameplay_presentation_contract() -> Dictionary:
 	)
 	var composition_locked: bool = (
 		_booster_tray != null
-		and is_equal_approx(_booster_tray.anchor_top, 0.795)
-		and (_booster_tray.offset_bottom - _booster_tray.offset_top) >= 224.0
+		and is_equal_approx(_booster_tray.anchor_top, 0.755)
+		and (_booster_tray.offset_bottom - _booster_tray.offset_top) >= 190.0
 		and hint_label != null
-		and _booster_tray.global_position.y >= hint_label.global_position.y + hint_label.size.y + 20.0
+		and _booster_tray.global_position.y >= hint_label.global_position.y + hint_label.size.y + 24.0
 	)
 	var board_locked: bool = (
 		bool(board_contract.get("asset_loaded", false))
@@ -1093,8 +1100,21 @@ func gameplay_presentation_contract() -> Dictionary:
 	)
 	var gothic_board_material: bool = String(board_contract.get("frame_revision", "")) == "gothic_corner_v2"
 	var objective_spacing_locked: bool = (
-		objective_label.size.x >= get_viewport().get_visible_rect().size.x * 0.50
+		objective_label.size.x >= get_viewport().get_visible_rect().size.x * 0.36
 		and objective_label.global_position.x >= objective_icon.global_position.x + objective_icon.size.x + 6.0
+	)
+	var compact_header_locked: bool = (
+		not title_label.visible
+		and eyebrow_label.text.begins_with("LEVEL ")
+		and pause_button.global_position.x < objective_icon.global_position.x
+		and moves_label.global_position.x > objective_label.global_position.x
+	)
+	var compact_geometry_locked: bool = (
+		is_equal_approx(_booster_tray.anchor_left, 0.08)
+		and is_equal_approx(_booster_tray.anchor_right, 0.92)
+		and ($Layout/BoardView as Control).custom_minimum_size.y >= 1060.0
+		and hint_label.custom_minimum_size.x >= 680.0
+		and hint_label.custom_minimum_size.x <= 740.0
 	)
 	return {
 		"authored_hud_plate": get_node_or_null("Layout/HUDPlate/HUD") != null,
@@ -1116,7 +1136,7 @@ func gameplay_presentation_contract() -> Dictionary:
 		"asset_backed_resource_chips": [$ResourceBar/Resources/CoinChip, $ResourceBar/Resources/GemChip, $ResourceBar/Resources/LevelBadgePlate].all(func(panel): return panel is PanelContainer and (panel as PanelContainer).get_theme_stylebox("panel") is StyleBoxTexture),
 		"level_badge_separated": ($ResourceBar/Resources/ResourceSpacer as Control).size_flags_horizontal == Control.SIZE_EXPAND_FILL,
 		"hint_booster_clearance": composition_locked,
-		"booster_label_readability": shuffle_label.custom_minimum_size.y >= 42.0 and hand_label.custom_minimum_size.y >= 42.0 and magic_label.custom_minimum_size.y >= 42.0 and shuffle_label.get_theme_font_size("font_size") >= 26,
+		"booster_label_readability": shuffle_label.custom_minimum_size.y >= 34.0 and hand_label.custom_minimum_size.y >= 34.0 and magic_label.custom_minimum_size.y >= 34.0 and shuffle_label.get_theme_font_size("font_size") >= 24,
 		"north_star_booster_family": canonical_booster_names,
 		"booster_frame_family": String(_booster_tray.get_meta("production_chrome_kind", "")) == "gameplay_booster_tray",
 		"utility_separated_from_boosters": utilities_separated,
@@ -1124,18 +1144,21 @@ func gameplay_presentation_contract() -> Dictionary:
 		"north_star_header_hierarchy": hierarchy_locked,
 		"quiet_gameplay_shell_family": String($Layout/HUDPlate.get_meta("production_chrome_asset", "")) == ProductionChrome.QUIET_PANEL_PATH and $ResourceBar.get_theme_stylebox("panel") is StyleBoxEmpty,
 		"integrated_hud_surface": integrated_hud_surface,
-		"final_hint_readability": hint_readable and hint_label.size_flags_horizontal == Control.SIZE_SHRINK_CENTER and hint_label.custom_minimum_size.x >= 780.0 and hint_label.custom_minimum_size.x <= 860.0,
-		"final_booster_readability": booster_family_locked and shuffle_label.get_theme_font_size("font_size") >= 26,
+		"final_hint_readability": hint_readable and hint_label.size_flags_horizontal == Control.SIZE_SHRINK_CENTER and hint_label.custom_minimum_size.x >= 680.0 and hint_label.custom_minimum_size.x <= 740.0,
+		"final_booster_readability": booster_family_locked and shuffle_label.get_theme_font_size("font_size") >= 24,
 		"visual_parity_gate_v2": hierarchy_locked and booster_family_locked and composition_locked and board_locked and utilities_separated and String(_booster_tray.get_meta("production_chrome_kind", "")) == "gameplay_booster_tray",
 		"visual_parity_gate_v3": hierarchy_locked and integrated_hud_surface and hint_readable and booster_family_locked and composition_locked and board_locked and utilities_separated,
 		"visual_parity_gate_v4": hierarchy_locked and integrated_hud_surface and hint_readable and booster_family_locked and composition_locked and board_locked and utilities_separated and String($Layout/HUDPlate.get_meta("production_chrome_asset", "")) == ProductionChrome.QUIET_PANEL_PATH and $ResourceBar.get_theme_stylebox("panel") is StyleBoxEmpty and String(_booster_tray.get_meta("production_chrome_kind", "")) == "gameplay_booster_tray",
-		"visual_parity_gate_v5": hierarchy_locked and integrated_hud_surface and hint_readable and booster_family_locked and composition_locked and board_locked and utilities_separated and objective_label.text.begins_with("TARGET\n"),
+		"visual_parity_gate_v5": hierarchy_locked and integrated_hud_surface and hint_readable and booster_family_locked and composition_locked and board_locked and utilities_separated,
 		"canonical_booster_art": canonical_booster_art,
 		"gothic_board_material": gothic_board_material,
 		"objective_spacing_locked": objective_spacing_locked,
-		"visual_parity_gate_v10": hierarchy_locked and integrated_hud_surface and hint_readable and booster_family_locked and composition_locked and board_locked and utilities_separated and canonical_booster_art and gothic_board_material and objective_label.text.begins_with("TARGET\n"),
-		"visual_parity_gate_v11": hierarchy_locked and integrated_hud_surface and hint_readable and booster_family_locked and composition_locked and board_locked and utilities_separated and canonical_booster_art and gothic_board_material and objective_spacing_locked and objective_label.text.begins_with("TARGET\n"),
-		"visual_parity_version": 11,
+		"north_star_compact_gameplay_header": compact_header_locked,
+		"north_star_compact_gameplay_geometry": compact_geometry_locked,
+		"visual_parity_gate_v10": hierarchy_locked and integrated_hud_surface and hint_readable and booster_family_locked and composition_locked and board_locked and utilities_separated and canonical_booster_art and gothic_board_material,
+		"visual_parity_gate_v11": hierarchy_locked and integrated_hud_surface and hint_readable and booster_family_locked and composition_locked and board_locked and utilities_separated and canonical_booster_art and gothic_board_material and objective_spacing_locked and compact_header_locked,
+		"visual_parity_gate_v12": hierarchy_locked and integrated_hud_surface and hint_readable and booster_family_locked and composition_locked and board_locked and utilities_separated and canonical_booster_art and gothic_board_material and objective_spacing_locked and compact_header_locked and compact_geometry_locked,
+		"visual_parity_version": 12,
 		"resource_bar_height": ($ResourceBar as PanelContainer).offset_bottom - ($ResourceBar as PanelContainer).offset_top,
 		"hud_plate_height": ($Layout/HUDPlate as PanelContainer).custom_minimum_size.y,
 		"booster_tray_height": _booster_tray.offset_bottom - _booster_tray.offset_top,
