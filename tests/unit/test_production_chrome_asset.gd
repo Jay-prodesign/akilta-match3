@@ -33,7 +33,7 @@ func _run() -> void:
 	await _expect_action(CHAPTER_MAP, "Layout/Back", "utility")
 	await _expect_action(PRESTART, "Layout/Card/Content/Start", "primary")
 	await _expect_action(PRESTART, "Layout/Back", "utility")
-	await _expect_interactive(GAMEPLAY, "Layout/HUDPlate/HUD/Pause", "gameplay_pause")
+	await _expect_gameplay_pause()
 	await _expect_action(GAMEPLAY, "PauseOverlay/Card/Content/Resume", "primary")
 	await _expect_action(GAMEPLAY, "PauseOverlay/Card/Content/Retry", "utility")
 	await _expect_action(GAMEPLAY, "PauseOverlay/Card/Content/Settings", "utility")
@@ -79,6 +79,20 @@ func _expect_interactive(scene: PackedScene, path: String, role: String) -> void
 	_expect(button != null and button.get_theme_stylebox("pressed") is StyleBoxTexture, "interactive pressed state must be asset-backed: %s" % path)
 	_expect(button != null and button.get_theme_stylebox("disabled") is StyleBoxTexture, "interactive disabled state must be asset-backed: %s" % path)
 	_expect(button != null and String(button.get_meta("production_chrome_kind", "")) == "interactive_" + role, "interactive provenance mismatch: %s" % path)
+	instance.queue_free()
+	await process_frame
+
+func _expect_gameplay_pause() -> void:
+	var instance := GAMEPLAY.instantiate()
+	root.add_child(instance)
+	await process_frame
+	var button := instance.get_node_or_null("Layout/HUDPlate/HUD/Pause") as Button
+	_expect(button != null, "gameplay pause control missing")
+	_expect(button != null and button.icon != null, "gameplay pause must use authored icon art")
+	_expect(button != null and button.text == "", "gameplay pause must not fall back to a text glyph")
+	_expect(button != null and button.get_theme_stylebox("normal") is StyleBoxFlat, "gameplay pause must retain compact local control chrome")
+	_expect(button != null and String(button.get_meta("production_chrome_kind", "")) == "gameplay_pause_icon", "gameplay pause provenance mismatch")
+	_expect(button != null and String(button.get_meta("production_chrome_asset", "")).ends_with("/ui/gameplay/pause_gothic_v01.svg"), "gameplay pause icon asset mismatch")
 	instance.queue_free()
 	await process_frame
 
