@@ -443,8 +443,8 @@ func _run() -> void:
 				_expect(str(app.current_route_name()) == "profile_settings", "Settings modal must preserve the Profile route")
 				var settings_panel = app.get_node_or_null("ScreenHost/SettingsPanel")
 				var settings_close: Button = settings_panel.get_node_or_null("Card/Content/Close") as Button if settings_panel != null else null
-				var reduced: CheckButton = settings_panel.get_node_or_null("Card/Content/ExperienceRow/Reduced") as CheckButton if settings_panel != null else null
-				var contrast: CheckButton = settings_panel.get_node_or_null("Card/Content/ExperienceRow/Contrast") as CheckButton if settings_panel != null else null
+				var reduced: Button = settings_panel.get_node_or_null("Card/Content/ExperienceRow/Reduced") as Button if settings_panel != null else null
+				var contrast: Button = settings_panel.get_node_or_null("Card/Content/ExperienceRow/Contrast") as Button if settings_panel != null else null
 				var saved_note: Label = settings_panel.get_node_or_null("Card/Content/SavedNote") as Label if settings_panel != null else null
 				_expect(settings_close != null and settings_close.text == "RETURN TO PROFILE", "Profile-origin Settings must return to Profile")
 				_expect(reduced != null and contrast != null and saved_note != null, "Settings controls and saved-state feedback must exist")

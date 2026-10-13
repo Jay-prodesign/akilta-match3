@@ -211,7 +211,7 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
-color = Color(0.018, 0.012, 0.026, 0.18)
+color = Color(0.018, 0.012, 0.026, 0.12)
 
 [node name="Dim" type="ColorRect" parent="."]
 layout_mode = 1
@@ -220,36 +220,38 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-color = Color(0.02, 0.015, 0.025, 0.10)
+color = Color(0.02, 0.015, 0.025, 0.04)
 
 [node name="Card" type="PanelContainer" parent="."]
 layout_mode = 1
 anchors_preset = 15
 anchor_left = 0.08
-anchor_top = 0.075
+anchor_top = 0.07
 anchor_right = 0.92
-anchor_bottom = 0.47
+anchor_bottom = 0.78
 grow_horizontal = 2
 grow_vertical = 2
 theme_override_styles/panel = SubResource("Card")
 
 [node name="Content" type="VBoxContainer" parent="Card"]
 layout_mode = 2
-theme_override_constants/separation = 12
+theme_override_constants/separation = 10
 alignment = 0
 
 [node name="Eyebrow" type="Label" parent="Card/Content"]
 layout_mode = 2
-theme_override_colors/font_color = Color(0.663, 0.6, 0.659, 1)
-theme_override_font_sizes/font_size = 18
+theme_override_colors/font_color = Color(0.831, 0.678, 0.439, 1)
+theme_override_font_sizes/font_size = 19
 text = "THE HOUSE · SETTINGS"
 horizontal_alignment = 1
 
 [node name="Title" type="Label" parent="Card/Content"]
 layout_mode = 2
-theme_override_colors/font_color = Color(0.945, 0.91, 0.866, 1)
-theme_override_font_sizes/font_size = 52
-text = "House Settings"
+theme_override_colors/font_color = Color(1, 0.941, 0.847, 1)
+theme_override_colors/font_outline_color = Color(0.02, 0.014, 0.028, 0.96)
+theme_override_constants/outline_size = 4
+theme_override_font_sizes/font_size = 58
+text = "SETTINGS"
 horizontal_alignment = 1
 
 [node name="Intro" type="Label" parent="Card/Content"]
@@ -262,7 +264,7 @@ horizontal_alignment = 1
 autowrap_mode = 2
 
 [node name="HouseSigil" type="TextureRect" parent="Card/Content"]
-custom_minimum_size = Vector2(0, 132)
+custom_minimum_size = Vector2(0, 164)
 layout_mode = 2
 mouse_filter = 2
 expand_mode = 1
@@ -272,106 +274,123 @@ modulate = Color(0.91, 0.788, 0.529, 1)
 [node name="AudioLabel" type="Label" parent="Card/Content"]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.851, 0.71, 0.416, 1)
-theme_override_font_sizes/font_size = 18
+theme_override_font_sizes/font_size = 20
 text = "AUDIO"
 horizontal_alignment = 1
 
-[node name="AudioRow" type="HBoxContainer" parent="Card/Content"]
-custom_minimum_size = Vector2(0, 100)
+[node name="AudioRow" type="VBoxContainer" parent="Card/Content"]
+custom_minimum_size = Vector2(0, 284)
 layout_mode = 2
-theme_override_constants/separation = 10
+theme_override_constants/separation = 8
 
-[node name="Master" type="CheckButton" parent="Card/Content/AudioRow"]
-custom_minimum_size = Vector2(0, 96)
+[node name="Master" type="Button" parent="Card/Content/AudioRow"]
+custom_minimum_size = Vector2(0, 88)
 layout_mode = 2
 size_flags_horizontal = 3
+toggle_mode = true
 theme_override_colors/font_color = Color(0.945, 0.91, 0.866, 1)
-theme_override_font_sizes/font_size = 19
+theme_override_font_sizes/font_size = 20
 theme_override_styles/normal = SubResource("Toggle")
 theme_override_styles/hover = SubResource("Toggle")
 theme_override_styles/pressed = SubResource("Toggle")
-text = "Master audio"
+text = "MASTER AUDIO"
 
-[node name="Music" type="CheckButton" parent="Card/Content/AudioRow"]
-custom_minimum_size = Vector2(0, 96)
+[node name="Music" type="Button" parent="Card/Content/AudioRow"]
+custom_minimum_size = Vector2(0, 88)
 layout_mode = 2
 size_flags_horizontal = 3
-theme_override_colors/font_color = Color(0.851, 0.804, 0.835, 1)
-theme_override_font_sizes/font_size = 19
+toggle_mode = true
+theme_override_colors/font_color = Color(0.945, 0.91, 0.866, 1)
+theme_override_font_sizes/font_size = 25
 theme_override_styles/normal = SubResource("Toggle")
 theme_override_styles/hover = SubResource("Toggle")
 theme_override_styles/pressed = SubResource("Toggle")
-text = "Music"
+text = "MUSIC"
 
-[node name="SFX" type="CheckButton" parent="Card/Content/AudioRow"]
-custom_minimum_size = Vector2(0, 96)
+[node name="SFX" type="Button" parent="Card/Content/AudioRow"]
+custom_minimum_size = Vector2(0, 88)
 layout_mode = 2
 size_flags_horizontal = 3
-theme_override_colors/font_color = Color(0.851, 0.804, 0.835, 1)
-theme_override_font_sizes/font_size = 19
+toggle_mode = true
+theme_override_colors/font_color = Color(0.945, 0.91, 0.866, 1)
+theme_override_font_sizes/font_size = 25
 theme_override_styles/normal = SubResource("Toggle")
 theme_override_styles/hover = SubResource("Toggle")
 theme_override_styles/pressed = SubResource("Toggle")
-text = "Ritual sounds"
+text = "RITUAL SOUNDS"
 
 [node name="ExperienceLabel" type="Label" parent="Card/Content"]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.851, 0.71, 0.416, 1)
-theme_override_font_sizes/font_size = 18
+theme_override_font_sizes/font_size = 20
 text = "EXPERIENCE"
 horizontal_alignment = 1
 
-[node name="ExperienceRow" type="HBoxContainer" parent="Card/Content"]
-custom_minimum_size = Vector2(0, 100)
+[node name="ExperienceRow" type="VBoxContainer" parent="Card/Content"]
+custom_minimum_size = Vector2(0, 284)
 layout_mode = 2
-theme_override_constants/separation = 10
+theme_override_constants/separation = 8
 
-[node name="Haptics" type="CheckButton" parent="Card/Content/ExperienceRow"]
-custom_minimum_size = Vector2(0, 96)
+[node name="Haptics" type="Button" parent="Card/Content/ExperienceRow"]
+custom_minimum_size = Vector2(0, 88)
 layout_mode = 2
 size_flags_horizontal = 3
-theme_override_colors/font_color = Color(0.851, 0.804, 0.835, 1)
-theme_override_font_sizes/font_size = 19
+toggle_mode = true
+theme_override_colors/font_color = Color(0.945, 0.91, 0.866, 1)
+theme_override_font_sizes/font_size = 25
 theme_override_styles/normal = SubResource("Toggle")
 theme_override_styles/hover = SubResource("Toggle")
 theme_override_styles/pressed = SubResource("Toggle")
-text = "Haptics"
+text = "HAPTICS"
 
-[node name="Reduced" type="CheckButton" parent="Card/Content/ExperienceRow"]
-custom_minimum_size = Vector2(0, 96)
+[node name="Reduced" type="Button" parent="Card/Content/ExperienceRow"]
+custom_minimum_size = Vector2(0, 88)
 layout_mode = 2
 size_flags_horizontal = 3
-theme_override_colors/font_color = Color(0.851, 0.804, 0.835, 1)
-theme_override_font_sizes/font_size = 19
+toggle_mode = true
+theme_override_colors/font_color = Color(0.945, 0.91, 0.866, 1)
+theme_override_font_sizes/font_size = 25
 theme_override_styles/normal = SubResource("Toggle")
 theme_override_styles/hover = SubResource("Toggle")
 theme_override_styles/pressed = SubResource("Toggle")
-text = "Reduced motion"
+text = "REDUCED MOTION"
 
-[node name="Contrast" type="CheckButton" parent="Card/Content/ExperienceRow"]
-custom_minimum_size = Vector2(0, 96)
+[node name="Contrast" type="Button" parent="Card/Content/ExperienceRow"]
+custom_minimum_size = Vector2(0, 88)
 layout_mode = 2
 size_flags_horizontal = 3
-theme_override_colors/font_color = Color(0.851, 0.804, 0.835, 1)
-theme_override_font_sizes/font_size = 19
+toggle_mode = true
+theme_override_colors/font_color = Color(0.945, 0.91, 0.866, 1)
+theme_override_font_sizes/font_size = 25
 theme_override_styles/normal = SubResource("Toggle")
 theme_override_styles/hover = SubResource("Toggle")
 theme_override_styles/pressed = SubResource("Toggle")
-text = "High contrast"
+text = "HIGH CONTRAST"
 
 [node name="SavedNote" type="Label" parent="Card/Content"]
+custom_minimum_size = Vector2(0, 38)
 layout_mode = 2
-theme_override_colors/font_color = Color(0.663, 0.6, 0.659, 1)
-theme_override_font_sizes/font_size = 15
+theme_override_colors/font_color = Color(0.72, 0.66, 0.74, 1)
+theme_override_font_sizes/font_size = 16
 text = "CHANGES SAVE ON THIS DEVICE"
 horizontal_alignment = 1
+vertical_alignment = 1
 
 [node name="Close" type="Button" parent="Card/Content"]
-custom_minimum_size = Vector2(0, 96)
+custom_minimum_size = Vector2(380, 88)
 layout_mode = 2
+size_flags_horizontal = 4
 theme_override_colors/font_color = Color(0.0627, 0.051, 0.0706, 1)
-theme_override_font_sizes/font_size = 21
+theme_override_font_sizes/font_size = 24
 theme_override_styles/normal = SubResource("Close")
 theme_override_styles/hover = SubResource("Close")
 theme_override_styles/pressed = SubResource("Close")
 text = "RETURN"
+
+[node name="FooterRose" type="TextureRect" parent="Card/Content"]
+custom_minimum_size = Vector2(0, 116)
+layout_mode = 2
+mouse_filter = 2
+expand_mode = 1
+stretch_mode = 5
+modulate = Color(0.9, 0.68, 0.76, 0.88)
