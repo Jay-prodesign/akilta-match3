@@ -20,6 +20,7 @@ const RewardRevealFx = preload("res://src/ui/shared/reward_reveal_fx.gd")
 const MoveResolver = preload("res://src/match3/domain/move_resolver.gd")
 const HapticsController = preload("res://src/feedback/haptics_controller.gd")
 const ProductionChrome = preload("res://src/ui/theme/production_chrome.gd")
+const Typography = preload("res://src/ui/theme/typography.gd")
 
 @export var default_level_path := "res://content/levels/ch01/level_001.json"
 @export var default_seed := 1001
@@ -186,6 +187,9 @@ func _current_auto_hint_delay() -> float:
 func _ready() -> void:
 	ProductionChrome.apply_gameplay_pause_modal($PauseOverlay/Card)
 	ProductionChrome.apply_gameplay_reward_modal($ResultOverlay/Card)
+	var gameplay_display_font := Typography.display_font()
+	if gameplay_display_font != null:
+		eyebrow_label.add_theme_font_override("font", gameplay_display_font)
 	$ResourceBar.add_theme_stylebox_override("panel", StyleBoxEmpty.new())
 	$ResourceBar.set_meta("production_chrome_kind", "gameplay_resource_cluster")
 	ProductionChrome.apply_compact_panel($ResourceBar/Resources/CoinChip, "gameplay_coin_resource")
