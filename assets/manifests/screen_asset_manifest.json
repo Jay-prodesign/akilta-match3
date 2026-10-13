@@ -2529,7 +2529,7 @@
       "production_status": "runtime_connected_authored_9slice_render_required",
       "current_path": "assets/ui/chrome/gbl_ui_action_primary_9s_v01.svg",
       "runtime_style_script": "src/ui/theme/production_chrome.gd",
-      "technical_policy": "runtime_decoded_svg_to_imagetexture_9slice__primary_cta__render_verification_required",
+      "technical_policy": "runtime_decoded_svg_to_imagetexture_9slice__compact_corner_primary_cta__render_verification_required",
       "contract_owners": [
         {
           "screen": "S01",
@@ -2599,7 +2599,7 @@
           ]
         }
       ],
-      "provenance": "AKILTA first-party primary action 9-slice derived from the approved gothic chrome family at locked CTA geometry."
+      "provenance": "AKILTA first-party primary action 9-slice derived from the approved gothic chrome family with compact 20px slice corners sized for the locked CTA height range."
     },
     {
       "asset_id": "gbl_utility_cta_frame",
@@ -2619,12 +2619,12 @@
         "pressed",
         "disabled"
       ],
-      "reuse": "declared_reuse_of_gbl_primary_panel_frame_quiet_variant",
+      "reuse": "golden_loop_utility_action_family",
       "priority": "P0",
       "production_status": "runtime_connected_authored_9slice_render_required",
-      "current_path": "assets/ui/chrome/gbl_ui_ritual_panel_9s_quiet_v01.svg",
+      "current_path": "assets/ui/chrome/gbl_ui_action_utility_9s_v01.svg",
       "runtime_style_script": "src/ui/theme/production_chrome.gd",
-      "technical_policy": "runtime_decoded_svg_to_imagetexture_9slice__utility_cta__render_verification_required",
+      "technical_policy": "runtime_decoded_svg_to_imagetexture_9slice__compact_corner_utility_cta__render_verification_required",
       "contract_owners": [
         {
           "screen": "S03",
@@ -2681,7 +2681,7 @@
           ]
         }
       ],
-      "provenance": "AKILTA first-party quiet action 9-slice reused only for contract-owned utility actions at locked geometry."
+      "provenance": "AKILTA first-party quiet utility action 9-slice with compact 20px slice corners sized for the locked header/pause action height range."
     }
   ],
   "vertical_slice_art_policy": {

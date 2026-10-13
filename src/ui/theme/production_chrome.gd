@@ -5,6 +5,7 @@ const PieceAssetLoader = preload("res://src/match3/presentation/piece_asset_load
 const PRIMARY_PANEL_PATH := "res://assets/ui/chrome/gbl_ui_ritual_panel_9s_base_v01.svg"
 const QUIET_PANEL_PATH := "res://assets/ui/chrome/gbl_ui_ritual_panel_9s_quiet_v01.svg"
 const PRIMARY_ACTION_PATH := "res://assets/ui/chrome/gbl_ui_action_primary_9s_v01.svg"
+const UTILITY_ACTION_PATH := "res://assets/ui/chrome/gbl_ui_action_utility_9s_v01.svg"
 
 static var _primary_panel: StyleBoxTexture
 static var _top_shell: StyleBoxTexture
@@ -114,47 +115,47 @@ static func apply_interactive_button(button: Button, selected: bool, role: Strin
 
 static func primary_action_normal() -> StyleBoxTexture:
 	if _primary_action_normal == null:
-		_primary_action_normal = _style(6.0, 40.0, PRIMARY_ACTION_PATH)
+		_primary_action_normal = _style(6.0, 20.0, PRIMARY_ACTION_PATH)
 	return _primary_action_normal
 
 static func primary_action_hover() -> StyleBoxTexture:
 	if _primary_action_hover == null:
-		_primary_action_hover = _style(6.0, 40.0, PRIMARY_ACTION_PATH)
+		_primary_action_hover = _style(6.0, 20.0, PRIMARY_ACTION_PATH)
 		if _primary_action_hover != null:
 			_primary_action_hover.modulate_color = Color(1.0, 0.96, 1.0, 1.0)
 	return _primary_action_hover
 
 static func primary_action_pressed() -> StyleBoxTexture:
 	if _primary_action_pressed == null:
-		_primary_action_pressed = _style(6.0, 40.0, PRIMARY_ACTION_PATH)
+		_primary_action_pressed = _style(6.0, 20.0, PRIMARY_ACTION_PATH)
 		if _primary_action_pressed != null:
 			_primary_action_pressed.modulate_color = Color(0.80, 0.74, 0.84, 0.96)
 	return _primary_action_pressed
 
 static func utility_action_normal() -> StyleBoxTexture:
 	if _utility_action_normal == null:
-		_utility_action_normal = _style(6.0, 38.0, QUIET_PANEL_PATH)
+		_utility_action_normal = _style(6.0, 20.0, UTILITY_ACTION_PATH)
 		if _utility_action_normal != null:
 			_utility_action_normal.modulate_color = Color(0.72, 0.66, 0.76, 0.86)
 	return _utility_action_normal
 
 static func utility_action_hover() -> StyleBoxTexture:
 	if _utility_action_hover == null:
-		_utility_action_hover = _style(6.0, 38.0, QUIET_PANEL_PATH)
+		_utility_action_hover = _style(6.0, 20.0, UTILITY_ACTION_PATH)
 		if _utility_action_hover != null:
 			_utility_action_hover.modulate_color = Color(0.96, 0.92, 0.98, 1.0)
 	return _utility_action_hover
 
 static func utility_action_pressed() -> StyleBoxTexture:
 	if _utility_action_pressed == null:
-		_utility_action_pressed = _style(6.0, 38.0, QUIET_PANEL_PATH)
+		_utility_action_pressed = _style(6.0, 20.0, UTILITY_ACTION_PATH)
 		if _utility_action_pressed != null:
 			_utility_action_pressed.modulate_color = Color(0.62, 0.56, 0.68, 0.92)
 	return _utility_action_pressed
 
 static func action_disabled() -> StyleBoxTexture:
 	if _action_disabled == null:
-		_action_disabled = _style(6.0, 38.0, QUIET_PANEL_PATH)
+		_action_disabled = _style(6.0, 20.0, UTILITY_ACTION_PATH)
 		if _action_disabled != null:
 			_action_disabled.modulate_color = Color(0.44, 0.40, 0.48, 0.62)
 	return _action_disabled
@@ -174,7 +175,7 @@ static func apply_action_button(button: Button, hierarchy: String, role: String)
 	button.add_theme_stylebox_override("pressed", pressed_style)
 	button.add_theme_stylebox_override("focus", hover_style)
 	button.add_theme_stylebox_override("disabled", disabled_style)
-	button.set_meta("production_chrome_asset", PRIMARY_ACTION_PATH if primary else QUIET_PANEL_PATH)
+	button.set_meta("production_chrome_asset", PRIMARY_ACTION_PATH if primary else UTILITY_ACTION_PATH)
 	button.set_meta("production_chrome_kind", "action_" + hierarchy + "_" + role)
 	return true
 
@@ -246,5 +247,5 @@ static func contract() -> Dictionary:
 		"utility_action_asset_backed": utility_action_normal() != null and utility_action_normal().texture != null and utility_action_hover() != null and utility_action_pressed() != null,
 		"action_family_ready": primary_action_normal() != null and primary_action_normal().texture != null and utility_action_normal() != null and utility_action_normal().texture != null and action_disabled() != null and action_disabled().texture != null,
 		"primary_action_runtime_path": PieceAssetLoader.resolved_path(PRIMARY_ACTION_PATH),
-		"utility_action_runtime_path": PieceAssetLoader.resolved_path(QUIET_PANEL_PATH),
+		"utility_action_runtime_path": PieceAssetLoader.resolved_path(UTILITY_ACTION_PATH),
 	}
