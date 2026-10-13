@@ -30,6 +30,8 @@ func _capture() -> void:
 		return _fail(app, "S00 must enter S01 House")
 	var house = app.current_screen()
 	var house_contract: Dictionary = house.north_star_home_contract() if house != null and house.has_method("north_star_home_contract") else {}
+	if int(house_contract.get("home_visual_parity_version", 0)) < 2:
+		return _fail(app, "S01 Home visual parity contract version is stale")
 	for house_key in [
 		"controlled_primary_cta",
 		"floating_headline",

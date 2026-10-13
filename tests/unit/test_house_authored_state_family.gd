@@ -32,6 +32,7 @@ func _run() -> void:
 	_expect(bool(north_star.get("compact_first_ritual", false)), "First Ritual guide must remain a compact centered card")
 	_expect(bool(north_star.get("quiet_global_shells", false)), "House top and bottom shells must use quiet production chrome")
 	_expect(bool(north_star.get("home_visual_parity_gate", false)), "House final visual parity gate must pass")
+	_expect(int(north_star.get("home_visual_parity_version", 0)) >= 2, "House visual parity contract version must be current")
 	_expect(bool(north_star.get("primary_cta_centered", false)), "House primary CTA must remain centered above navigation")
 	_expect(bool(north_star.get("bottom_nav_reserved", false)), "House content must reserve vertical space for the compact bottom navigation")
 	_expect(bool(north_star.get("world_underlays_home_ui", false)), "House world must continue behind the lower Home UI instead of ending in a dead slab")
