@@ -68,7 +68,8 @@ func _capture() -> void:
 	var gameplay = app.current_screen()
 	var gameplay_contract: Dictionary = gameplay.gameplay_presentation_contract() if gameplay != null and gameplay.has_method("gameplay_presentation_contract") else {}
 	for parity_key in [
-		"visual_parity_gate_v3",
+		"visual_parity_gate_v4",
+		"quiet_gameplay_shell_family",
 		"integrated_hud_surface",
 		"final_hint_readability",
 		"final_booster_readability",
@@ -113,9 +114,9 @@ func _capture() -> void:
 		return _fail(app, "S05 title and objective HUD overlap")
 	if gameplay_objective.has_theme_stylebox_override("normal"):
 		return _fail(app, "S05 target regressed into a detached inner panel")
-	if gameplay_title.get_theme_font_size("font_size") < 44 or gameplay_moves.get_theme_font_size("font_size") < 42:
+	if gameplay_title.get_theme_font_size("font_size") < 48 or gameplay_moves.get_theme_font_size("font_size") < 42:
 		return _fail(app, "S05 title/moves visual hierarchy regressed")
-	if gameplay_hint.get_theme_font_size("font_size") < 21:
+	if gameplay_hint.get_theme_font_size("font_size") < 23:
 		return _fail(app, "S05 hint readability regressed")
 	if not hud_rect.grow(-4.0).encloses(objective_icon_rect):
 		return _fail(app, "S05 objective icon escapes the authored HUD frame")
