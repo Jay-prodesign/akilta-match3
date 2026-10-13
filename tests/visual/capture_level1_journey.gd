@@ -63,6 +63,7 @@ func _capture() -> void:
 		return _fail(app, "S04 Play action missing")
 	start.emit_signal("pressed")
 	await _frames(30)
+	await create_timer(0.62).timeout
 	if String(app.current_route_name()) != "gameplay":
 		return _fail(app, "S04 must enter S05 Gameplay")
 	var gameplay = app.current_screen()
@@ -179,11 +180,13 @@ func _capture() -> void:
 	if not gameplay.show_pause():
 		return _fail(app, "S05 pause state must open")
 	await _frames(28)
+	await create_timer(0.42).timeout
 	if not await _save(app, "golden-04b-pause.png"):
 		return
 	if not gameplay.resume_level():
 		return _fail(app, "S05 pause state must resume")
 	await _frames(18)
+	await create_timer(0.24).timeout
 
 	var trace = gameplay.attempt_swap(Vector2i(1, 4), Vector2i(2, 4))
 	if trace == null or not bool(trace.accepted) or String(trace.result) != "won":
