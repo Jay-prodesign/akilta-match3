@@ -1015,9 +1015,9 @@ func _position_booster_tray() -> void:
 		return
 	var hint_rect := hint_label.get_global_rect()
 	var screen_rect := get_global_rect()
-	var desired_top := hint_rect.end.y - screen_rect.position.y + 8.0
-	var safe_bottom := maxf(0.0, size.y - 12.0)
-	var tray_height := 96.0
+	var desired_top := hint_rect.end.y - screen_rect.position.y + 12.0
+	var safe_bottom := maxf(0.0, size.y - 18.0)
+	var tray_height := 136.0
 	var top := minf(desired_top, maxf(0.0, safe_bottom - tray_height))
 	_booster_tray.anchor_top = 0.0
 	_booster_tray.anchor_bottom = 0.0
@@ -1034,6 +1034,10 @@ func gameplay_presentation_contract() -> Dictionary:
 		"truthful_sealed_slots": _sealed_boost_a != null and _sealed_boost_a.disabled and _sealed_boost_b != null and _sealed_boost_b.disabled and _sealed_boost_c != null and _sealed_boost_c.disabled,
 		"authored_target_moves_hierarchy": objective_icon != null and objective_icon.texture != null and objective_label != null and objective_label.get_theme_stylebox("normal") != null and moves_label != null and moves_label.get_theme_stylebox("normal") != null,
 		"authored_board_frame": get_node_or_null("Layout/BoardView/OrnateFrame") != null,
+		"north_star_gameplay_geometry": ($ResourceBar as PanelContainer).offset_bottom - ($ResourceBar as PanelContainer).offset_top >= 76.0 and ($Layout/HUDPlate as PanelContainer).custom_minimum_size.y >= 108.0 and _booster_tray != null and (_booster_tray.offset_bottom - _booster_tray.offset_top) >= 132.0 and _hint_boost_button.custom_minimum_size.y >= 88.0 and pause_button.custom_minimum_size.y >= 88.0,
+		"resource_bar_height": ($ResourceBar as PanelContainer).offset_bottom - ($ResourceBar as PanelContainer).offset_top,
+		"hud_plate_height": ($Layout/HUDPlate as PanelContainer).custom_minimum_size.y,
+		"booster_tray_height": (_booster_tray.offset_bottom - _booster_tray.offset_top) if _booster_tray != null else 0.0,
 		"authored_result_values": _result_reward_values != null,
 		"authored_result_proclamation": _result_proclamation != null and _result_keeper_cat != null,
 		"north_star_result_hierarchy": result_title != null and result_title.get_theme_font_size("font_size") >= 46 and result_objective_summary != null and result_objective_summary.get_theme_stylebox("normal") != null,
