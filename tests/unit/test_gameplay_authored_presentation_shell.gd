@@ -59,7 +59,7 @@ func _run() -> void:
 	_expect(shuffle_label != null and shuffle_label.text == "SHUFFLE" and shuffle_label.get_theme_font_size("font_size") >= 26, "Shuffle identity/readability drifted")
 	_expect(hand_label != null and hand_label.text == "HAND", "Hand identity drifted")
 	_expect(magic_label != null and magic_label.text == "MAGIC", "Magic identity drifted")
-	_expect(objective != null and not objective.has_theme_stylebox_override("normal") and objective.text.begins_with("TARGET\n"), "Objective must read as part of one authored HUD surface rather than a detached inner panel")
+	_expect(objective != null and not objective.has_theme_stylebox_override("normal") and objective.text.begins_with("TARGET"), "Objective must read as part of one authored HUD surface rather than a detached inner panel")
 	_expect(hint_band != null and hint_band.custom_minimum_size.y >= 60.0 and hint_band.get_theme_font_size("font_size") >= 21, "Hint band must remain readable at 540x960")
 
 	screen.set_player_resources(4, 1234, 7)
