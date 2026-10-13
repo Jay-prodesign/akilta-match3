@@ -68,7 +68,6 @@ func _capture() -> void:
 	var gameplay = app.current_screen()
 	var gameplay_contract: Dictionary = gameplay.gameplay_presentation_contract() if gameplay != null and gameplay.has_method("gameplay_presentation_contract") else {}
 	for parity_key in [
-		"visual_parity_gate_v12",
 		"objective_spacing_locked",
 		"north_star_compact_gameplay_header",
 		"north_star_compact_gameplay_geometry",
@@ -83,6 +82,7 @@ func _capture() -> void:
 		"north_star_booster_family",
 		"utility_separated_from_boosters",
 		"hint_booster_clearance",
+		"visual_parity_gate_v12",
 	]:
 		if not bool(gameplay_contract.get(parity_key, false)):
 			return _fail(app, "S05 North Star render gate failed: %s" % parity_key)

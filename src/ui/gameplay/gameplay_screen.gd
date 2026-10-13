@@ -670,10 +670,10 @@ func _present_objective_progress() -> void:
 	var target := _objective_target_value()
 	var complete := progress >= target
 	if String(board_state.objective_type) == "clear_blockers":
-		objective_label.text = "WAX SEAL LAYERS\n%d / %d · %s" % [progress, target, "COMPLETE" if complete else "+%d" % _last_objective_delta]
+		objective_label.text = "WAX SEAL LAYERS\n%d / %d · %s" % [progress, target, "OBJECTIVE COMPLETE" if complete else "+%d THIS MOVE" % _last_objective_delta]
 	else:
 		var family := String(board_state.objective_family).to_upper()
-		objective_label.text = "%s SIGILS\n%d / %d · %s" % [family, progress, target, "COMPLETE" if complete else "+%d" % _last_objective_delta]
+		objective_label.text = "%s SIGILS\n%d / %d · %s" % [family, progress, target, "OBJECTIVE COMPLETE" if complete else "+%d THIS MOVE" % _last_objective_delta]
 	objective_label.set_meta("objective_feedback_state", "complete" if complete else "progress")
 	objective_label.add_theme_color_override("font_color", Color("#FFFFFF") if _high_contrast else (Color("#F0CE8A") if complete else Color("#E4CDEB")))
 	if _objective_pulse_tween != null and _objective_pulse_tween.is_valid():
@@ -1074,7 +1074,7 @@ func gameplay_presentation_contract() -> Dictionary:
 		and $BoosterTray/BoosterActions/SealedSlotC.visible
 		and canonical_booster_names
 		and [_sealed_boost_a, _sealed_boost_b, _sealed_boost_c].all(
-			func(button): return button.disabled and button.custom_minimum_size.y >= 120.0 and button.icon != null
+			func(button): return button.disabled and button.custom_minimum_size.y >= 104.0 and button.icon != null
 		)
 	)
 	var composition_locked: bool = (
