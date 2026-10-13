@@ -97,8 +97,9 @@ func _capture() -> void:
 	var gameplay_eyebrow := gameplay.get_node_or_null("Layout/LevelPlaque/Eyebrow") as Label
 	var gameplay_title := gameplay.get_node_or_null("Layout/Title") as Label
 	var gameplay_hud := gameplay.get_node_or_null("Layout/HUDPlate") as Control
-	var gameplay_objective_icon := gameplay.get_node_or_null("Layout/HUDPlate/HUD/ObjectiveIcon") as Control
-	var gameplay_objective := gameplay.get_node_or_null("Layout/HUDPlate/HUD/Objective") as Label
+	var gameplay_objective_icon := gameplay.get_node_or_null("Layout/HUDPlate/HUD/ObjectiveSlot/ObjectiveIcon") as Control
+	var gameplay_objective_name := gameplay.get_node_or_null("Layout/HUDPlate/HUD/ObjectiveSlot/ObjectiveName") as Label
+	var gameplay_objective := gameplay.get_node_or_null("Layout/HUDPlate/HUD/ObjectiveSlot/Objective") as Label
 	var gameplay_moves := gameplay.get_node_or_null("Layout/HUDPlate/HUD/Moves") as Label
 	var gameplay_pause := gameplay.get_node_or_null("Layout/HUDPlate/HUD/Pause") as Button
 	var gameplay_board := gameplay.get_node_or_null("Layout/BoardView") as Control
@@ -107,7 +108,7 @@ func _capture() -> void:
 	var shuffle_label := gameplay.get_node_or_null("BoosterTray/BoosterActions/SealedSlotA/Label") as Control
 	var hand_label := gameplay.get_node_or_null("BoosterTray/BoosterActions/SealedSlotB/Label") as Control
 	var magic_label := gameplay.get_node_or_null("BoosterTray/BoosterActions/SealedSlotC/Label") as Control
-	if gameplay_resource_bar == null or gameplay_level_plaque == null or gameplay_eyebrow == null or gameplay_title == null or gameplay_hud == null or gameplay_objective_icon == null or gameplay_objective == null or gameplay_moves == null or gameplay_pause == null or gameplay_board == null or gameplay_hint == null or gameplay_tray == null:
+	if gameplay_resource_bar == null or gameplay_level_plaque == null or gameplay_eyebrow == null or gameplay_title == null or gameplay_hud == null or gameplay_objective_icon == null or gameplay_objective_name == null or gameplay_objective == null or gameplay_moves == null or gameplay_pause == null or gameplay_board == null or gameplay_hint == null or gameplay_tray == null:
 		return _fail(app, "S05 North Star render gate missing level/HUD/board/hint/tray")
 	if gameplay_resource_bar.visible:
 		return _fail(app, "S05 meta currency/level row regressed into gameplay")
@@ -145,9 +146,9 @@ func _capture() -> void:
 		return _fail(app, "S05 Level plaque and objective HUD overlap")
 	if gameplay_objective.has_theme_stylebox_override("normal"):
 		return _fail(app, "S05 objective regressed into a detached inner panel")
-	if gameplay_objective.text.begins_with("TARGET\n"):
-		return _fail(app, "S05 redundant target heading regressed")
-	if gameplay_moves.get_theme_font_size("font_size") < 38 or gameplay_moves.get_theme_font_size("font_size") > 42 or gameplay_objective.get_theme_font_size("font_size") < 30:
+	if gameplay_objective_name.text == "" or not gameplay_objective.text.contains("/"):
+		return _fail(app, "S05 objective slot lost its compact icon-and-counter identity")
+	if gameplay_moves.get_theme_font_size("font_size") < 38 or gameplay_moves.get_theme_font_size("font_size") > 42 or gameplay_objective.get_theme_font_size("font_size") < 28:
 		return _fail(app, "S05 objective/moves visual hierarchy regressed")
 	if gameplay_hint.get_theme_font_size("font_size") < 26:
 		return _fail(app, "S05 hint readability regressed")
@@ -157,12 +158,10 @@ func _capture() -> void:
 	if not hud_rect.grow(-4.0).encloses(objective_icon_rect):
 		return _fail(app, "S05 objective icon escapes the authored HUD frame")
 	var objective_rect: Rect2 = gameplay_objective.get_global_rect()
-	if objective_rect.size.x < 220.0:
-		return _fail(app, "S05 objective copy width collapsed: %.1f" % objective_rect.size.x)
 	if gameplay_objective.horizontal_alignment != HORIZONTAL_ALIGNMENT_CENTER:
-		return _fail(app, "S05 objective copy lost its centered North Star alignment")
-	if objective_rect.position.x < objective_icon_rect.end.x + 6.0:
-		return _fail(app, "S05 objective icon-to-copy clearance collapsed")
+		return _fail(app, "S05 objective counter lost its centered North Star alignment")
+	if objective_rect.position.y < objective_icon_rect.end.y - 8.0:
+		return _fail(app, "S05 objective counter detached from its icon slot")
 	if pause_rect.position.x >= objective_icon_rect.position.x:
 		return _fail(app, "S05 pause control must remain at the quiet left edge of the HUD")
 	if gameplay_pause.icon == null or gameplay_pause.text != "" or not (gameplay_pause.get_theme_stylebox("normal") is StyleBoxFlat) or String(gameplay_pause.get_meta("production_chrome_kind", "")) != "gameplay_pause_icon":
