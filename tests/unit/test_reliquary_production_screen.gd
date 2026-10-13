@@ -62,6 +62,9 @@ func _run() -> void:
 		_expect(bool(detail_contract.get("art_loaded", false)), "Curio detail hero art must load")
 		_expect(bool(detail_contract.get("view_in_house_visible", false)), "Owned Curio detail must expose View in House")
 		_expect(bool(detail_contract.get("north_star_actions", false)), "Curio detail actions must retain the rounded North Star mobile CTA scale")
+		_expect(bool(detail_contract.get("asset_backed_actions", false)), "Curio detail actions must use verified primary/utility production chrome")
+		_expect(bool(detail_contract.get("content_bounded_card", false)), "Curio detail card must fit its content instead of leaving oversized dead vertical space")
+		_expect(bool(detail_contract.get("modal_veil_strength", false)), "Curio detail modal must sufficiently suppress the collection UI behind it")
 		var close := detail.get_node_or_null("CurioDetailCard/Content/Close") as Button
 		_expect(close != null, "Curio detail close action missing")
 		if close != null:
