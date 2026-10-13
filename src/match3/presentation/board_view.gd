@@ -47,7 +47,7 @@ const MOTION_PROFILE := {
 }
 
 @export var cell_gap: float = 6.0
-@export var board_frame_padding: float = 18.0
+@export var board_frame_padding: float = 28.0
 @export var swipe_threshold: float = 24.0
 
 var board_state
@@ -100,7 +100,8 @@ func _cascade_window(cascade: int) -> Vector2:
 func _cascade_phase(cascade: int, from_fraction: float, to_fraction: float) -> float:
 	var window := _cascade_window(cascade)
 	return _phase_progress(lerpf(window.x, window.y, from_fraction), lerpf(window.x, window.y, to_fraction))
-var _board_frame_texture: ImageTexture
+var _board_frame_texture: Texture2D
+var _board_frame_style: StyleBoxTexture
 var _reduced_motion: bool = false
 var _high_contrast: bool = false
 var _teaching_from := Vector2i(-1, -1)
@@ -117,12 +118,18 @@ func _ready() -> void:
 	queue_redraw()
 
 func _load_board_frame() -> void:
-	if not FileAccess.file_exists(BOARD_FRAME_PATH):
+	_board_frame_texture = PieceAssetLoader.ornament(BOARD_FRAME_PATH)
+	if _board_frame_texture == null:
 		return
-	var image := Image.load_from_file(BOARD_FRAME_PATH)
-	if image == null or image.is_empty():
-		return
-	_board_frame_texture = ImageTexture.create_from_image(image)
+	var style := StyleBoxTexture.new()
+	style.texture = _board_frame_texture
+	var edge_margin := clampf(minf(float(_board_frame_texture.get_width()), float(_board_frame_texture.get_height())) * 0.30, 32.0, 48.0)
+	style.texture_margin_left = edge_margin
+	style.texture_margin_top = edge_margin
+	style.texture_margin_right = edge_margin
+	style.texture_margin_bottom = edge_margin
+	style.draw_center = true
+	_board_frame_style = style
 
 func set_visual_profile(profile: String) -> void:
 	_visual_profile = profile if PieceAssetLoader.PROFILE_PATHS.has(profile) else "curio_boutique_opening"
@@ -138,6 +145,15 @@ func visual_contract() -> Dictionary:
 
 func piece_asset_contract() -> Dictionary:
 	return PieceAssetLoader.contract()
+
+func frame_contract() -> Dictionary:
+	return {
+		"asset_loaded": _board_frame_texture != null,
+		"nine_slice_frame": _board_frame_style != null and _board_frame_style.texture != null and _board_frame_style.texture_margin_left >= 32.0,
+		"frame_padding": board_frame_padding,
+		"normalized_piece_scale": true,
+		"runtime_path": BOARD_FRAME_PATH,
+	}
 
 func motion_contract() -> Dictionary:
 	var contract := MOTION_PROFILE.duplicate(true)
@@ -806,7 +822,7 @@ func _draw_empty_state() -> void:
 func _board_geometry() -> Dictionary:
 	if board_state == null or board_state.width <= 0 or board_state.height <= 0:
 		return {"origin": Vector2.ZERO, "cell_size": 1.0}
-	var available: Vector2 = Vector2(maxf(1.0, size.x - 28.0), maxf(1.0, size.y - 28.0))
+	var available: Vector2 = Vector2(maxf(1.0, size.x - board_frame_padding * 2.0), maxf(1.0, size.y - board_frame_padding * 2.0))
 	var by_width: float = (available.x - cell_gap * float(board_state.width - 1)) / float(board_state.width)
 	var by_height: float = (available.y - cell_gap * float(board_state.height - 1)) / float(board_state.height)
 	var cell_size: float = maxf(1.0, minf(by_width, by_height))
@@ -819,13 +835,14 @@ func _board_geometry() -> Dictionary:
 	return {"origin": Vector2(origin_x, origin_y), "cell_size": cell_size}
 
 func _draw_board_frame(rect: Rect2) -> void:
-	var framed_rect := rect.grow(12.0)
-	var shadow := framed_rect.grow(8.0)
-	draw_rect(shadow, Color(0.015, 0.01, 0.02, 0.74), true)
-	if _board_frame_texture != null:
-		draw_texture_rect(_board_frame_texture, framed_rect, false)
+	var framed_rect := rect.grow(20.0)
+	var shadow := framed_rect.grow(12.0)
+	draw_rect(shadow, Color(0.012, 0.008, 0.018, 0.80), true)
+	if _board_frame_style != null:
+		draw_style_box(_board_frame_style, framed_rect)
+		draw_rect(rect.grow(5.0), Color(GOLD, 0.24), false, 2.0)
+		draw_rect(rect.grow(-5.0), Color("#6E4A77", 0.24), false, 2.0)
 	else:
-		# Semantic fallback only; production runtime should use the owned raster.
 		draw_rect(rect, Color("#100B15"), true)
 		draw_rect(rect, Color(GOLD, 0.74), false, 3.0)
 	if _high_contrast:
@@ -874,11 +891,11 @@ func _draw_cell(rect: Rect2, pos: Vector2i) -> void:
 
 func _cell_box(radius: float) -> StyleBoxFlat:
 	var box := StyleBoxFlat.new()
-	var fill := Color("#16111B", 0.94)
+	var fill := Color("#100C14", 0.68)
 	if _visual_profile == "sealed_display":
-		fill = Color("#111923", 0.94)
+		fill = Color("#0D141C", 0.70)
 	elif _visual_profile == "thornlight_arrangement":
-		fill = Color("#1B1018", 0.94)
+		fill = Color("#160D14", 0.70)
 	box.bg_color = fill
 	box.border_color = Color(GOLD, 0.22) if _high_contrast else Color(0, 0, 0, 0)
 	box.set_border_width_all(1 if _high_contrast else 0)
@@ -892,7 +909,22 @@ func _draw_piece(rect: Rect2, family: String, descriptor: Dictionary) -> void:
 		return
 	var texture := PieceAssetLoader.texture_for_profile(_visual_profile, family)
 	if texture != null:
-		var asset_rect := rect.grow(rect.size.x * 0.06)
+		var render_scale := 0.96
+		match family:
+			"skull":
+				render_scale = 0.86
+			"key":
+				render_scale = 0.90
+			"candle":
+				render_scale = 0.92
+			"cat":
+				render_scale = 0.93
+			"moth":
+				render_scale = 0.95
+			_:
+				render_scale = 0.96
+		var asset_size := rect.size * render_scale
+		var asset_rect := Rect2(rect.get_center() - asset_size * 0.5, asset_size)
 		draw_texture_rect(texture, asset_rect, false)
 		return
 	var color: Color = descriptor["color"]
