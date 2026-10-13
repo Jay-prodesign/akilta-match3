@@ -2438,10 +2438,10 @@
       ],
       "reuse": "declared_reuse_of_gbl_primary_panel_frame",
       "priority": "P0",
-      "production_status": "runtime_connected_authored_9slice_render_required",
+      "production_status": "runtime_connected_authored_9slice_verified",
       "current_path": "assets/ui/chrome/gbl_ui_ritual_panel_9s_quiet_v01.svg",
       "runtime_style_script": "src/ui/theme/production_chrome.gd",
-      "technical_policy": "runtime_decoded_svg_to_imagetexture_9slice__global_resource_chip__render_verification_required",
+      "technical_policy": "runtime_decoded_svg_to_imagetexture_9slice__global_resource_chip__godot_4_7_2_render_verified",
       "provenance": "Derived quiet structural 9-slice from the approved authored ritual-frame family; removes the ceremonial center medallions from repeated compact controls while preserving the same border/material language."
     },
     {
@@ -2469,10 +2469,10 @@
       ],
       "reuse": "declared_reuse_of_gbl_primary_panel_frame",
       "priority": "P0",
-      "production_status": "runtime_connected_authored_9slice_render_required",
+      "production_status": "runtime_connected_authored_9slice_verified",
       "current_path": "assets/ui/chrome/gbl_ui_ritual_panel_9s_quiet_v01.svg",
       "runtime_style_script": "src/ui/theme/production_chrome.gd",
-      "technical_policy": "runtime_decoded_svg_to_imagetexture_9slice__global_navigation_state__render_verification_required",
+      "technical_policy": "runtime_decoded_svg_to_imagetexture_9slice__global_navigation_state__godot_4_7_2_render_verified",
       "provenance": "Derived quiet structural 9-slice from the approved authored ritual-frame family; removes the ceremonial center medallions from repeated compact controls while preserving the same border/material language."
     },
     {
@@ -2498,10 +2498,10 @@
       ],
       "reuse": "declared_reuse_of_gbl_primary_panel_frame",
       "priority": "P0",
-      "production_status": "runtime_connected_authored_9slice_render_required",
+      "production_status": "runtime_connected_authored_9slice_verified",
       "current_path": "assets/ui/chrome/gbl_ui_ritual_panel_9s_quiet_v01.svg",
       "runtime_style_script": "src/ui/theme/production_chrome.gd",
-      "technical_policy": "runtime_decoded_svg_to_imagetexture_9slice__global_profile_action__render_verification_required",
+      "technical_policy": "runtime_decoded_svg_to_imagetexture_9slice__global_profile_action__godot_4_7_2_render_verified",
       "provenance": "Derived quiet structural 9-slice from the approved authored ritual-frame family; removes the ceremonial center medallions from repeated compact controls while preserving the same border/material language."
     }
   ],
@@ -2597,6 +2597,7 @@
     "global_shell_chrome": "RUNTIME_AND_RENDER_VERIFIED",
     "gameplay_chrome": "RUNTIME_AND_RENDER_VERIFIED",
     "secondary_hero_chrome": "RUNTIME_AND_RENDER_VERIFIED",
-    "global_interactive_chrome": "IN_PROGRESS_RENDER_REQUIRED"
+    "global_interactive_chrome": "RUNTIME_AND_RENDER_VERIFIED",
+    "global_interactive_chrome_evidence_head": "d66f1659367474ee6c21f7a2beef281a477ac7a6"
   }
 }
