@@ -106,7 +106,7 @@ func state_contract() -> Dictionary:
 	return {
 		"bound": settings != null,
 		"high_contrast": _high_contrast,
-		"touch_targets_ok": [master_toggle, music_toggle, sfx_toggle, haptics_toggle, reduced_toggle, contrast_toggle, close_button].all(func(control): return control.custom_minimum_size.y >= 56.0),
+		"touch_targets_ok": [master_toggle, music_toggle, sfx_toggle, haptics_toggle, reduced_toggle, contrast_toggle, close_button].all(func(control): return control.custom_minimum_size.y >= 88.0),
 		"save_feedback": saved_note.text,
 		"return_cta": close_button.text,
 	}
@@ -155,7 +155,7 @@ func settings_authored_contract() -> Dictionary:
 		"authored_style_resources": card_normal_style != null and card_high_style != null and toggle_normal_style != null and toggle_high_style != null and close_normal_style != null and close_high_style != null,
 		"runtime_ui_factory": false,
 		"north_star_title_hierarchy": ($Card/Content/Title as Label).get_theme_font_size("font_size") >= 46,
-		"north_star_toggle_height": [master_toggle, music_toggle, sfx_toggle, haptics_toggle, reduced_toggle, contrast_toggle].all(func(control): return control.custom_minimum_size.y >= 68.0),
+		"north_star_toggle_height": [master_toggle, music_toggle, sfx_toggle, haptics_toggle, reduced_toggle, contrast_toggle].all(func(control): return control.custom_minimum_size.y >= 88.0),
 		"intro_subordinate": ($Card/Content/Intro as Label) != null and not ($Card/Content/Intro as Label).visible,
 		"runtime_style_factory": false,
 	}
