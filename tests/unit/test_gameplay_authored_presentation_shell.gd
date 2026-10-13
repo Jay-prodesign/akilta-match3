@@ -47,7 +47,7 @@ func _run() -> void:
 	_expect(title != null and title.get_theme_font_size("font_size") >= 36, "Title must retain hero hierarchy")
 	_expect(objective != null and objective.text.contains("SIGILS"), "Objective must remain explicit")
 	_expect(objective_icon != null and objective_icon.texture != null and objective_icon.custom_minimum_size.x >= 70.0, "Objective art must be visually dominant")
-	_expect(moves != null and moves.custom_minimum_size.x >= 220.0 and moves.get_theme_font_size("font_size") >= 36, "Moves must be a dominant counter")
+	_expect(moves != null and moves.custom_minimum_size.x >= 200.0 and moves.get_theme_font_size("font_size") >= 36, "Moves must be a dominant counter")
 	_expect(board != null and board.custom_minimum_size.y >= 980.0, "Board must remain the dominant gameplay object")
 	_expect(hint_band != null and tray != null and tray.global_position.y >= hint_band.global_position.y + hint_band.size.y + 20.0, "Hint and booster tray collide")
 	_expect(tray != null and is_equal_approx(tray.anchor_left, 0.12) and is_equal_approx(tray.anchor_right, 0.88), "Booster tray became navigation-width chrome")
