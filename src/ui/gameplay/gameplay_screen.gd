@@ -1045,9 +1045,9 @@ func gameplay_presentation_contract() -> Dictionary:
 		and not $BoosterTray/BoosterActions/SettingsSlot.visible
 	)
 	var hierarchy_locked: bool = (
-		title_label.get_theme_font_size("font_size") >= 44
-		and objective_icon.custom_minimum_size.x >= 84.0
-		and objective_label.get_theme_font_size("font_size") >= 28
+		title_label.get_theme_font_size("font_size") >= 48
+		and objective_icon.custom_minimum_size.x >= 80.0
+		and objective_label.get_theme_font_size("font_size") >= 30
 		and moves_label.get_theme_font_size("font_size") >= 42
 		and ($Layout/HUDPlate as PanelContainer).custom_minimum_size.y >= 152.0
 	)
@@ -1058,7 +1058,7 @@ func gameplay_presentation_contract() -> Dictionary:
 	)
 	var hint_readable: bool = (
 		hint_label.custom_minimum_size.y >= 60.0
-		and hint_label.get_theme_font_size("font_size") >= 21
+		and hint_label.get_theme_font_size("font_size") >= 23
 	)
 	var booster_family_locked: bool = (
 		$BoosterTray/BoosterActions/SealedSlotA.visible
@@ -1108,12 +1108,14 @@ func gameplay_presentation_contract() -> Dictionary:
 		"utility_separated_from_boosters": utilities_separated,
 		"north_star_board_object": board_locked,
 		"north_star_header_hierarchy": hierarchy_locked,
+		"quiet_gameplay_shell_family": [$ResourceBar, $Layout/HUDPlate, _booster_tray].all(func(panel): return String(panel.get_meta("production_chrome_asset", "")) == ProductionChrome.QUIET_PANEL_PATH),
 		"integrated_hud_surface": integrated_hud_surface,
 		"final_hint_readability": hint_readable,
 		"final_booster_readability": booster_family_locked and shuffle_label.get_theme_font_size("font_size") >= 26,
 		"visual_parity_gate_v2": hierarchy_locked and booster_family_locked and composition_locked and board_locked and utilities_separated and String(_booster_tray.get_meta("production_chrome_kind", "")) == "gameplay_booster_tray",
 		"visual_parity_gate_v3": hierarchy_locked and integrated_hud_surface and hint_readable and booster_family_locked and composition_locked and board_locked and utilities_separated,
-		"visual_parity_version": 4,
+		"visual_parity_gate_v4": hierarchy_locked and integrated_hud_surface and hint_readable and booster_family_locked and composition_locked and board_locked and utilities_separated and [$ResourceBar, $Layout/HUDPlate, _booster_tray].all(func(panel): return String(panel.get_meta("production_chrome_asset", "")) == ProductionChrome.QUIET_PANEL_PATH),
+		"visual_parity_version": 5,
 		"resource_bar_height": ($ResourceBar as PanelContainer).offset_bottom - ($ResourceBar as PanelContainer).offset_top,
 		"hud_plate_height": ($Layout/HUDPlate as PanelContainer).custom_minimum_size.y,
 		"booster_tray_height": _booster_tray.offset_bottom - _booster_tray.offset_top,
