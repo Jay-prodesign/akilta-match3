@@ -155,6 +155,7 @@ func frame_contract() -> Dictionary:
 		"normalized_piece_scale": true,
 		"runtime_path": BOARD_FRAME_PATH,
 		"frame_revision": BOARD_FRAME_REVISION,
+		"corner_preservation_margin": _board_frame_style.texture_margin_left if _board_frame_style != null else 0.0,
 	}
 
 func motion_contract() -> Dictionary:
