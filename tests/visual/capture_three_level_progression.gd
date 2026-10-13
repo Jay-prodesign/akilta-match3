@@ -207,7 +207,7 @@ func _capture() -> void:
 	var weekly_contract: Dictionary = app.current_screen().screen_contract() if app.current_screen().has_method("screen_contract") else {}
 	if not bool(weekly_contract.get("visual_parity_gate_v2", false)):
 		return _fail(app, "Weekly Missions final-direction visual parity gate failed")
-	var weekly_viewport := app.current_screen().get_viewport().get_visible_rect().size
+	var weekly_viewport: Vector2 = app.current_screen().get_viewport().get_visible_rect().size
 	var weekly_altar := app.current_screen().get_node_or_null("MissionLayout/MissionEmptyState") as Control
 	var weekly_spacer := app.current_screen().get_node_or_null("MissionLayout/WorldStageSpacer") as Control
 	if weekly_altar == null or weekly_spacer == null:
@@ -320,7 +320,7 @@ func _capture() -> void:
 	var settings_contract: Dictionary = settings_panel.settings_authored_contract() if settings_panel.has_method("settings_authored_contract") else {}
 	if not bool(settings_contract.get("visual_parity_gate_v2", false)):
 		return _fail(app, "Settings final-direction visual parity gate failed")
-	var settings_viewport := settings_panel.get_viewport().get_visible_rect().size
+	var settings_viewport: Vector2 = settings_panel.get_viewport().get_visible_rect().size
 	var settings_card := settings_panel.get_node_or_null("Card") as Control
 	var settings_sigil := settings_panel.get_node_or_null("Card/Content/HouseSigil") as Control
 	if settings_card == null or settings_sigil == null:
