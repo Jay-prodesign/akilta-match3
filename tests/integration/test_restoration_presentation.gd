@@ -44,6 +44,7 @@ func _run() -> void:
 	var reduced_card: PanelContainer = reduced.get_node_or_null("RestorationOverlay/CeremonyCard") as PanelContainer
 	var reduced_hero: TextureRect = reduced.get_node_or_null("RestorationOverlay/AwakeningMotif") as TextureRect
 	_expect(reduced_room != null, "Reduced Motion restoration room missing")
+	_expect(reduced_room != null and reduced_room.offset_bottom >= -0.5, "Restoration ceremony must expand House world into the hidden bottom-nav slot")
 	if reduced_room != null:
 		var contract: Dictionary = reduced_room.restoration_contract()
 		_expect(int(contract.get("stage", -1)) == 2, "Reduced Motion must resolve immediately to restoration stage 2")
@@ -85,6 +86,7 @@ func _run() -> void:
 	var animated_card: PanelContainer = animated.get_node_or_null("RestorationOverlay/CeremonyCard") as PanelContainer
 	var animated_hero: TextureRect = animated.get_node_or_null("RestorationOverlay/AwakeningMotif") as TextureRect
 	_expect(animated_room != null, "Animated restoration room missing")
+	_expect(animated_room != null and animated_room.offset_bottom >= -0.5, "Animated restoration must keep House world full-height while navigation is hidden")
 	if animated_room != null:
 		var contract: Dictionary = animated_room.restoration_contract()
 		_expect(int(contract.get("stage", -1)) == 3, "Animated restoration must reach stage 3")
