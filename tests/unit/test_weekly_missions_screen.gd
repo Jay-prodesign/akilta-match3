@@ -26,19 +26,26 @@ func _run() -> void:
 	_expect(bool(contract.get("header_readability_scrim", false)), "Weekly Rituals must retain a dedicated header readability scrim over world art")
 	_expect(bool(contract.get("production_return_actions", false)), "Weekly Rituals returns must use the verified production action chrome family")
 	_expect(bool(contract.get("compact_offline_copy", false)), "Weekly Rituals offline state must hide redundant live-feed copy from the visual stack")
+	_expect(bool(contract.get("intentional_world_stage", false)), "Weekly Rituals must reserve authored world breathing room between altar and footer")
+	_expect(bool(contract.get("asset_backed_opening_record", false)), "Weekly Rituals opening record must use quiet asset-backed production chrome")
+	_expect(bool(contract.get("world_art_not_overdimmed", false)), "Weekly Rituals must keep the authored Events world readable")
+	_expect(bool(contract.get("visual_parity_gate_v2", false)), "Weekly Rituals must satisfy the final-direction visual parity gate")
 
 	var timer := screen.get_node_or_null("MissionLayout/MissionTimer") as Label
 	var empty := screen.get_node_or_null("MissionLayout/MissionEmptyState") as PanelContainer
 	var truth := screen.get_node_or_null("MissionLayout/MissionEmptyState/EmptyContent/AltarCopy/MissionEmptyStateTruth") as Label
 	var availability := screen.get_node_or_null("MissionLayout/MissionEmptyState/EmptyContent/AltarCopy/MissionAvailability") as Label
 	var art := screen.get_node_or_null("MissionLayout/MissionEmptyState/EmptyContent/MissionRewardArt") as TextureRect
+	var stage_spacer := screen.get_node_or_null("MissionLayout/WorldStageSpacer") as Control
 	var record := screen.get_node_or_null("MissionLayout/MissionOpeningRecord") as Label
 	_expect(timer != null and timer.text.contains("OFFLINE"), "Weekly Rituals must disclose unavailable reset timing")
-	_expect(empty != null and empty.custom_minimum_size.y >= 500.0 and empty.custom_minimum_size.y <= 520.0, "Weekly altar must keep a bounded hero stage without becoming an empty full-height slab")
+	_expect(empty != null and empty.custom_minimum_size.y >= 600.0 and empty.custom_minimum_size.y <= 640.0, "Weekly altar must keep a bounded hero stage without becoming an empty full-height slab")
 	_expect(truth != null and truth.text.contains("NOTHING TO CLAIM"), "Weekly Rituals must not fabricate claimable rewards")
 	_expect(availability != null and availability.text.contains("ONLY WHEN A MISSION FEED IS CONNECTED") and not availability.visible, "Weekly Rituals must retain live-feed truth without duplicating it visually")
-	_expect(art != null and art.texture != null and art.custom_minimum_size.x >= 320.0 and String(art.get_meta("asset_path", "")).contains("_sealed_"), "Weekly altar must retain a hero-scale sealed raster Curio")
-	_expect(record != null and record.text.contains("3 / 3 DISPLAYS AWAKENED"), "Weekly Rituals must reflect opening cabinet record")
+	_expect(art != null and art.texture != null and art.custom_minimum_size.x >= 360.0 and art.custom_minimum_size.y >= 290.0 and String(art.get_meta("asset_path", "")).contains("_sealed_"), "Weekly altar must retain a hero-scale sealed raster Curio")
+	_expect(stage_spacer != null and stage_spacer.size_flags_vertical == Control.SIZE_EXPAND_FILL and stage_spacer.custom_minimum_size.y >= 100.0, "Weekly Rituals world stage spacer missing")
+	_expect(record != null and record.custom_minimum_size.y >= 70.0 and record.text.contains("3 / 3 DISPLAYS AWAKENED"), "Weekly Rituals must reflect opening cabinet record")
+	_expect(record != null and record.get_theme_stylebox("normal") is StyleBoxTexture, "Weekly Rituals opening record must render on quiet production chrome")
 
 	var event_signal := {"hit": false}
 	screen.return_events_requested.connect(func(): event_signal["hit"] = true)

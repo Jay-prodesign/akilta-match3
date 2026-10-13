@@ -204,6 +204,18 @@ func _capture() -> void:
 		return _fail(app, "Weekly Missions must not fabricate claimable rewards")
 	if mission_art == null or mission_art.texture == null:
 		return _fail(app, "Weekly Missions empty state must retain authored content artwork")
+	var weekly_contract: Dictionary = app.current_screen().screen_contract() if app.current_screen().has_method("screen_contract") else {}
+	if not bool(weekly_contract.get("visual_parity_gate_v2", false)):
+		return _fail(app, "Weekly Missions final-direction visual parity gate failed")
+	var weekly_viewport: Vector2 = app.current_screen().get_viewport().get_visible_rect().size
+	var weekly_altar := app.current_screen().get_node_or_null("MissionLayout/MissionEmptyState") as Control
+	var weekly_spacer := app.current_screen().get_node_or_null("MissionLayout/WorldStageSpacer") as Control
+	if weekly_altar == null or weekly_spacer == null:
+		return _fail(app, "Weekly Missions visual parity geometry missing")
+	if weekly_altar.custom_minimum_size.y / weekly_viewport.y < 0.30:
+		return _fail(app, "Weekly Missions altar no longer owns a hero-scale stage")
+	if weekly_spacer.custom_minimum_size.y < 100.0:
+		return _fail(app, "Weekly Missions world breathing room collapsed")
 	if not await _save(app, "progression-final-weekly-missions.png"):
 		return
 	app.current_screen().get_node("MissionLayout/ReturnToEvents").emit_signal("pressed")
@@ -305,8 +317,20 @@ func _capture() -> void:
 	var settings_close: Button = settings_panel.get_node_or_null("Card/Content/Close") as Button
 	if settings_close == null or settings_close.text != "RETURN TO PROFILE":
 		return _fail(app, "Profile Settings must return to its origin screen")
-	var reduced_toggle: CheckButton = settings_panel.get_node_or_null("Card/Content/Reduced") as CheckButton
-	var contrast_toggle: CheckButton = settings_panel.get_node_or_null("Card/Content/Contrast") as CheckButton
+	var settings_contract: Dictionary = settings_panel.settings_authored_contract() if settings_panel.has_method("settings_authored_contract") else {}
+	if not bool(settings_contract.get("visual_parity_gate_v2", false)):
+		return _fail(app, "Settings final-direction visual parity gate failed")
+	var settings_viewport: Vector2 = settings_panel.get_viewport().get_visible_rect().size
+	var settings_card := settings_panel.get_node_or_null("Card") as Control
+	var settings_sigil := settings_panel.get_node_or_null("Card/Content/HouseSigil") as Control
+	if settings_card == null or settings_sigil == null:
+		return _fail(app, "Settings visual parity geometry missing")
+	if settings_card.size.x / settings_viewport.x > 0.86 or settings_card.size.y / settings_viewport.y > 0.42:
+		return _fail(app, "Settings card expanded back into a full-screen form")
+	if settings_sigil.custom_minimum_size.y < 120.0:
+		return _fail(app, "Settings House sigil visual anchor collapsed")
+	var reduced_toggle: CheckButton = settings_panel.get_node_or_null("Card/Content/ExperienceRow/Reduced") as CheckButton
+	var contrast_toggle: CheckButton = settings_panel.get_node_or_null("Card/Content/ExperienceRow/Contrast") as CheckButton
 	var saved_note: Label = settings_panel.get_node_or_null("Card/Content/SavedNote") as Label
 	if reduced_toggle == null or contrast_toggle == null or saved_note == null:
 		return _fail(app, "Settings changed-state controls missing")

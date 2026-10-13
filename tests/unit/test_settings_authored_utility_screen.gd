@@ -27,13 +27,18 @@ func _run() -> void:
 	_expect(bool(contract.get("production_card_chrome", false)), "Settings card must use the verified secondary production chrome in normal mode")
 	_expect(bool(contract.get("production_toggle_chrome", false)), "Settings toggle rows must use the verified quiet interactive production chrome in normal mode")
 	_expect(bool(contract.get("production_return_chrome", false)), "Settings return CTA must use the verified primary action production chrome in normal mode")
+	_expect(bool(contract.get("settings_grid_layout", false)), "Settings controls must use the authored two-row ritual grid instead of one long form")
+	_expect(bool(contract.get("house_sigil_hero_scale", false)), "Settings House sigil must retain a hero-scale visual anchor")
+	_expect(bool(contract.get("world_art_not_overdimmed", false)), "Settings must keep House world art visible around the control surface")
+	_expect(bool(contract.get("compact_control_surface", false)), "Settings control card must remain a focused surface rather than covering the whole world")
+	_expect(bool(contract.get("visual_parity_gate_v2", false)), "Settings must satisfy the final-direction visual parity gate")
 
 	var card := screen.get_node_or_null("Card") as PanelContainer
 	var sigil := screen.get_node_or_null("Card/Content/HouseSigil") as TextureRect
 	var world_art := screen.get_node_or_null("WorldArt") as TextureRect
 	var close := screen.get_node_or_null("Card/Content/Close") as Button
 	_expect(card != null, "Settings authored Card missing")
-	_expect(sigil != null and sigil.texture != null and sigil.custom_minimum_size.y >= 72.0, "Settings authored raster sigil slot missing")
+	_expect(sigil != null and sigil.texture != null and sigil.custom_minimum_size.y >= 120.0, "Settings authored raster sigil must anchor the control surface")
 	_expect(world_art != null and world_art.texture != null, "Settings authored world backdrop slot missing")
 	_expect(close != null and close.custom_minimum_size.y >= 88.0, "Settings close CTA must retain mobile touch target")
 	_expect(card.get_theme_stylebox("panel") is StyleBoxTexture, "Default Settings card must use asset-backed production chrome")
@@ -41,7 +46,7 @@ func _run() -> void:
 	screen.apply_presentation_settings({"high_contrast": true})
 	await process_frame
 	_expect(card.get_theme_stylebox("panel") == screen.card_high_style, "High contrast Settings card must switch to authored high-contrast resource")
-	for path in ["Master", "Music", "SFX", "Haptics", "Reduced", "Contrast"]:
+	for path in ["AudioRow/Master", "AudioRow/Music", "AudioRow/SFX", "ExperienceRow/Haptics", "ExperienceRow/Reduced", "ExperienceRow/Contrast"]:
 		var toggle := screen.get_node_or_null("Card/Content/%s" % path) as CheckButton
 		_expect(toggle != null and toggle.custom_minimum_size.y >= 88.0, "Settings toggle touch target missing: %s" % path)
 		if toggle != null:
