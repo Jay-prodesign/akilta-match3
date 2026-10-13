@@ -58,6 +58,7 @@ const BOOSTER_ART_PATHS := {
 	"plus_moves": "res://assets/pieces/potion.webp",
 	"retry": "res://assets/pieces/skull.webp"
 }
+const GAMEPLAY_PAUSE_ICON_PATH := "res://assets/ui/gameplay/pause_gothic_v01.svg"
 const NORTH_STAR_BOOSTER_ART_PATHS := {
 	"shuffle": "res://assets/ui/gameplay/booster_shuffle_gothic_v01.svg",
 	"hand": "res://assets/ui/gameplay/booster_hand_gothic_v01.svg",
@@ -170,7 +171,9 @@ func _ready() -> void:
 	var gameplay_hud := $Layout/HUDPlate/HUD as HBoxContainer
 	if gameplay_hud != null:
 		gameplay_hud.move_child(pause_button, 1)
-	ProductionChrome.apply_interactive_button(pause_button, false, "gameplay_pause")
+	pause_button.icon = PieceAssetLoader.ornament(GAMEPLAY_PAUSE_ICON_PATH)
+	pause_button.set_meta("production_chrome_kind", "gameplay_pause_icon")
+	pause_button.set_meta("production_chrome_asset", GAMEPLAY_PAUSE_ICON_PATH)
 	ProductionChrome.apply_action_button(pause_resume, "primary", "pause_resume")
 	ProductionChrome.apply_action_button(pause_retry, "utility", "pause_retry")
 	ProductionChrome.apply_action_button(pause_settings, "utility", "pause_settings")
@@ -317,19 +320,19 @@ func _apply_level_art_profile(profile: String) -> void:
 	match profile:
 		"sealed_display":
 			world_backdrop.modulate = Color.WHITE
-			eyebrow_label.add_theme_color_override("font_color", Color("#ead5aa"))
+			eyebrow_label.add_theme_color_override("font_color", Color("#f7e6b8"))
 			title_label.add_theme_color_override("font_color", Color("#f1e6d2"))
 			objective_label.add_theme_color_override("font_color", Color("#a8c6d2"))
 			moves_label.add_theme_color_override("font_color", Color("#d8c8a1"))
 		"thornlight_arrangement":
 			world_backdrop.modulate = Color.WHITE
-			eyebrow_label.add_theme_color_override("font_color", Color("#ead5aa"))
+			eyebrow_label.add_theme_color_override("font_color", Color("#f7e6b8"))
 			title_label.add_theme_color_override("font_color", Color("#f5e6e2"))
 			objective_label.add_theme_color_override("font_color", Color("#c7a0df"))
 			moves_label.add_theme_color_override("font_color", Color("#e6bd83"))
 		_:
 			world_backdrop.modulate = Color.WHITE
-			eyebrow_label.add_theme_color_override("font_color", Color("#ead5aa"))
+			eyebrow_label.add_theme_color_override("font_color", Color("#f7e6b8"))
 			title_label.add_theme_color_override("font_color", Color("#f1e8dc"))
 			objective_label.add_theme_color_override("font_color", Color("#f0dec2"))
 			moves_label.add_theme_color_override("font_color", Color("#d9b56a"))
@@ -564,20 +567,20 @@ func _style_impact_hint(mode: String) -> void:
 	if hint_label == null:
 		return
 	var color := Color("#F4E5D3")
-	var size_px := 25
+	var size_px := 28
 	match mode:
 		"blocker":
 			color = Color("#F0CE8A")
-			size_px = 26
+			size_px = 29
 		"special":
 			color = Color("#E8C987")
-			size_px = 26
+			size_px = 29
 		"combo":
 			color = Color("#E7C8FF")
-			size_px = 27
+			size_px = 30
 		"cascade":
 			color = Color("#DDB7F5")
-			size_px = 26
+			size_px = 29
 		"invalid":
 			color = Color("#D8C5D2")
 		_:
@@ -699,19 +702,19 @@ func _apply_moves_urgency() -> void:
 		_moves_urgency_state = "critical"
 		moves_label.text = "LAST MOVE" if moves == 1 else "NO MOVES"
 		moves_label.add_theme_color_override("font_color", Color("#FFFFFF") if _high_contrast else Color("#FF9B8E"))
-		moves_label.add_theme_font_size_override("font_size", 42)
+		moves_label.add_theme_font_size_override("font_size", 40)
 		moves_label.add_theme_constant_override("outline_size", 5 if _high_contrast else 4)
 	elif moves <= LOW_MOVE_WARNING_THRESHOLD:
 		_moves_urgency_state = "warning"
 		moves_label.text = "⚠ %d\nMOVES" % moves
 		moves_label.add_theme_color_override("font_color", Color("#FFF1B6") if _high_contrast else Color("#F2B36D"))
-		moves_label.add_theme_font_size_override("font_size", 44)
+		moves_label.add_theme_font_size_override("font_size", 42)
 		moves_label.add_theme_constant_override("outline_size", 4)
 	else:
 		_moves_urgency_state = "normal"
 		moves_label.text = "%d\nMOVES" % moves
 		moves_label.add_theme_color_override("font_color", Color("#FFF1B6") if _high_contrast else Color("#F2C66D"))
-		moves_label.add_theme_font_size_override("font_size", 46)
+		moves_label.add_theme_font_size_override("font_size", 40)
 		moves_label.add_theme_constant_override("outline_size", 3)
 	moves_label.set_meta("urgency_state", _moves_urgency_state)
 
@@ -1051,10 +1054,11 @@ func gameplay_presentation_contract() -> Dictionary:
 	)
 	var hierarchy_locked: bool = (
 		not title_label.visible
-		and eyebrow_label.get_theme_font_size("font_size") >= 26
-		and objective_icon.custom_minimum_size.x >= 72.0
-		and objective_label.get_theme_font_size("font_size") >= 26
-		and moves_label.get_theme_font_size("font_size") >= 40
+		and eyebrow_label.get_theme_font_size("font_size") >= 30
+		and objective_icon.custom_minimum_size.x >= 80.0
+		and objective_label.get_theme_font_size("font_size") >= 30
+		and moves_label.get_theme_font_size("font_size") >= 38
+		and moves_label.get_theme_font_size("font_size") <= 42
 		and ($Layout/HUDPlate as PanelContainer).custom_minimum_size.y >= 120.0
 	)
 	var integrated_hud_surface: bool = (
@@ -1065,7 +1069,7 @@ func gameplay_presentation_contract() -> Dictionary:
 	)
 	var hint_readable: bool = (
 		hint_label.custom_minimum_size.y >= 54.0
-		and hint_label.get_theme_font_size("font_size") >= 24
+		and hint_label.get_theme_font_size("font_size") >= 28
 	)
 	var booster_family_locked: bool = (
 		$BoosterTray/BoosterActions/SealedSlotA.visible
@@ -1097,10 +1101,11 @@ func gameplay_presentation_contract() -> Dictionary:
 		and PieceAssetLoader.ornament(String(NORTH_STAR_BOOSTER_ART_PATHS["hand"])) != null
 		and PieceAssetLoader.ornament(String(NORTH_STAR_BOOSTER_ART_PATHS["magic"])) != null
 	)
-	var gothic_board_material: bool = String(board_contract.get("frame_revision", "")) == "gothic_corner_v2"
+	var gothic_board_material: bool = String(board_contract.get("frame_revision", "")) == "gothic_corner_v3" and float(board_contract.get("corner_preservation_margin", 0.0)) >= 72.0
 	var objective_spacing_locked: bool = (
 		objective_label.size.x >= get_viewport().get_visible_rect().size.x * 0.36
 		and objective_label.global_position.x >= objective_icon.global_position.x + objective_icon.size.x + 6.0
+		and objective_label.horizontal_alignment == HORIZONTAL_ALIGNMENT_LEFT
 	)
 	var compact_header_locked: bool = (
 		not title_label.visible
@@ -1120,6 +1125,13 @@ func gameplay_presentation_contract() -> Dictionary:
 		String($Layout/HUDPlate.get_meta("production_chrome_asset", "")) == ProductionChrome.GAMEPLAY_HUD_FRAME_PATH
 		and String($Layout/HUDPlate.get_meta("production_chrome_kind", "")) == "gameplay_objective_frame"
 		and ($Layout/HUDPlate as PanelContainer).get_theme_stylebox("panel") is StyleBoxTexture
+	)
+	var hint_style := hint_label.get_theme_stylebox("normal")
+	var integrated_hint_surface: bool = (
+		hint_style is StyleBoxFlat
+		and (hint_style as StyleBoxFlat).bg_color.a <= 0.10
+		and (hint_style as StyleBoxFlat).border_color.a <= 0.08
+		and (hint_style as StyleBoxFlat).shadow_color.a <= 0.08
 	)
 	return {
 		"authored_hud_plate": get_node_or_null("Layout/HUDPlate/HUD") != null,
@@ -1147,8 +1159,10 @@ func gameplay_presentation_contract() -> Dictionary:
 		"utility_separated_from_boosters": utilities_separated,
 		"north_star_board_object": board_locked,
 		"north_star_header_hierarchy": hierarchy_locked,
-		"quiet_gameplay_shell_family": $ResourceBar.get_theme_stylebox("panel") is StyleBoxEmpty and String(pause_button.get_meta("production_chrome_asset", "")) == ProductionChrome.QUIET_PANEL_PATH,
+		"quiet_gameplay_shell_family": $ResourceBar.get_theme_stylebox("panel") is StyleBoxEmpty,
+		"clear_pause_control": pause_button.icon != null and pause_button.text == "" and String(pause_button.get_meta("production_chrome_asset", "")) == GAMEPLAY_PAUSE_ICON_PATH and pause_button.get_theme_stylebox("normal") is StyleBoxFlat,
 		"north_star_gameplay_hud_frame": north_star_gameplay_hud_frame,
+		"integrated_hint_surface": integrated_hint_surface,
 		"integrated_hud_surface": integrated_hud_surface,
 		"final_hint_readability": hint_readable and hint_label.size_flags_horizontal == Control.SIZE_SHRINK_CENTER and hint_label.custom_minimum_size.x >= 680.0 and hint_label.custom_minimum_size.x <= 740.0,
 		"final_booster_readability": booster_family_locked and shuffle_label.get_theme_font_size("font_size") >= 26,
@@ -1164,7 +1178,9 @@ func gameplay_presentation_contract() -> Dictionary:
 		"visual_parity_gate_v10": hierarchy_locked and integrated_hud_surface and hint_readable and booster_family_locked and composition_locked and board_locked and utilities_separated and canonical_booster_art and gothic_board_material,
 		"visual_parity_gate_v11": hierarchy_locked and integrated_hud_surface and hint_readable and booster_family_locked and composition_locked and board_locked and utilities_separated and canonical_booster_art and gothic_board_material and objective_spacing_locked and compact_header_locked,
 		"visual_parity_gate_v12": hierarchy_locked and integrated_hud_surface and hint_readable and booster_family_locked and composition_locked and board_locked and utilities_separated and canonical_booster_art and gothic_board_material and objective_spacing_locked and compact_header_locked and compact_geometry_locked and north_star_gameplay_hud_frame,
-		"visual_parity_version": 12,
+		"visual_parity_gate_v13": hierarchy_locked and integrated_hud_surface and integrated_hint_surface and hint_readable and booster_family_locked and composition_locked and board_locked and utilities_separated and canonical_booster_art and gothic_board_material and objective_spacing_locked and compact_header_locked and compact_geometry_locked and north_star_gameplay_hud_frame,
+		"visual_parity_gate_v14": hierarchy_locked and integrated_hud_surface and integrated_hint_surface and hint_readable and booster_family_locked and composition_locked and board_locked and utilities_separated and canonical_booster_art and gothic_board_material and objective_spacing_locked and compact_header_locked and compact_geometry_locked and north_star_gameplay_hud_frame and pause_button.icon != null and pause_button.text == "" and String(pause_button.get_meta("production_chrome_asset", "")) == GAMEPLAY_PAUSE_ICON_PATH and pause_button.get_theme_stylebox("normal") is StyleBoxFlat,
+		"visual_parity_version": 14,
 		"resource_bar_height": ($ResourceBar as PanelContainer).offset_bottom - ($ResourceBar as PanelContainer).offset_top,
 		"hud_plate_height": ($Layout/HUDPlate as PanelContainer).custom_minimum_size.y,
 		"booster_tray_height": _booster_tray.offset_bottom - _booster_tray.offset_top,

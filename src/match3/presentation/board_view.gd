@@ -7,8 +7,8 @@ signal motion_feedback_requested(kind: String, cascade: int, clock: float)
 
 const PieceVisuals = preload("res://src/match3/presentation/piece_visuals.gd")
 const PieceAssetLoader = preload("res://src/match3/presentation/piece_asset_loader.gd")
-const BOARD_FRAME_PATH := "res://assets/board/gbl_board_ritual_frame_9s_gothic_v02.svg"
-const BOARD_FRAME_REVISION := "gothic_corner_v2"
+const BOARD_FRAME_PATH := "res://assets/board/gbl_board_ritual_frame_9s_gothic_v03.svg"
+const BOARD_FRAME_REVISION := "gothic_corner_v3"
 const SPECIAL_ASSET_PATHS := {
 	"line_h": "res://assets/specials/gbl_special_line_h_idle_v01.webp",
 	"line_v": "res://assets/specials/gbl_special_line_v_idle_v01.webp",
@@ -124,7 +124,7 @@ func _load_board_frame() -> void:
 		return
 	var style := StyleBoxTexture.new()
 	style.texture = _board_frame_texture
-	var edge_margin := clampf(minf(float(_board_frame_texture.get_width()), float(_board_frame_texture.get_height())) * 0.30, 32.0, 48.0)
+	var edge_margin := clampf(minf(float(_board_frame_texture.get_width()), float(_board_frame_texture.get_height())) * 0.18, 72.0, 96.0)
 	style.texture_margin_left = edge_margin
 	style.texture_margin_top = edge_margin
 	style.texture_margin_right = edge_margin
@@ -155,6 +155,7 @@ func frame_contract() -> Dictionary:
 		"normalized_piece_scale": true,
 		"runtime_path": BOARD_FRAME_PATH,
 		"frame_revision": BOARD_FRAME_REVISION,
+		"corner_preservation_margin": _board_frame_style.texture_margin_left if _board_frame_style != null else 0.0,
 	}
 
 func motion_contract() -> Dictionary:

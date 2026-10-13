@@ -20,10 +20,10 @@ func _run() -> void:
 		"gameplay_header_clearance", "compact_resource_chips", "asset_backed_resource_chips",
 		"level_badge_separated", "hint_booster_clearance", "booster_label_readability",
 		"north_star_booster_family", "utility_separated_from_boosters", "north_star_board_object",
-		"north_star_header_hierarchy", "booster_frame_family", "quiet_gameplay_shell_family", "integrated_hud_surface",
+		"north_star_header_hierarchy", "booster_frame_family", "quiet_gameplay_shell_family", "clear_pause_control", "integrated_hint_surface", "integrated_hud_surface",
 		"final_hint_readability", "final_booster_readability", "canonical_booster_art", "gothic_board_material", "objective_spacing_locked",
 		"north_star_compact_gameplay_header", "north_star_compact_gameplay_geometry", "north_star_gameplay_hud_frame",
-		"visual_parity_gate_v2", "visual_parity_gate_v3", "visual_parity_gate_v4", "visual_parity_gate_v5", "visual_parity_gate_v10", "visual_parity_gate_v11", "visual_parity_gate_v12",
+		"visual_parity_gate_v2", "visual_parity_gate_v3", "visual_parity_gate_v4", "visual_parity_gate_v5", "visual_parity_gate_v10", "visual_parity_gate_v11", "visual_parity_gate_v12", "visual_parity_gate_v13", "visual_parity_gate_v14",
 	]:
 		_expect(bool(contract.get(key, false)), "Gameplay North Star parity contract failed: %s" % key)
 	_expect(int(contract.get("visible_booster_count", 0)) == 3, "Exactly three gameplay boosters must be visible")
@@ -50,13 +50,14 @@ func _run() -> void:
 	var magic_label := screen.get_node_or_null("BoosterTray/BoosterActions/SealedSlotC/Label") as Label
 
 	_expect(title != null and not title.visible, "Room title must not compete with the compact Level identity")
-	_expect(eyebrow != null and eyebrow.text.begins_with("LEVEL ") and not eyebrow.text.contains("·") and eyebrow.get_theme_font_size("font_size") >= 26, "Compact Level identity must anchor the gameplay header")
+	_expect(eyebrow != null and eyebrow.text.begins_with("LEVEL ") and not eyebrow.text.contains("·") and eyebrow.get_theme_font_size("font_size") >= 30, "Compact Level identity must anchor the gameplay header")
 	_expect(objective != null and objective.text.contains("SIGILS"), "Objective must remain explicit")
-	_expect(objective_icon != null and objective_icon.texture != null and objective_icon.custom_minimum_size.x >= 72.0, "Objective art must remain visually legible")
-	_expect(moves != null and moves.custom_minimum_size.x >= 140.0 and moves.get_theme_font_size("font_size") >= 40, "Moves must remain a dominant counter")
-	_expect(objective != null and objective.size.x >= screen.get_viewport().get_visible_rect().size.x * 0.36, "Objective copy width collapsed")
+	_expect(objective_icon != null and objective_icon.texture != null and objective_icon.custom_minimum_size.x >= 80.0, "Objective art must remain visually legible")
+	_expect(moves != null and moves.custom_minimum_size.x >= 136.0 and moves.get_theme_font_size("font_size") >= 38 and moves.get_theme_font_size("font_size") <= 42, "Moves must remain a dominant counter")
+	_expect(objective != null and objective.size.x >= screen.get_viewport().get_visible_rect().size.x * 0.36 and objective.get_theme_font_size("font_size") >= 30 and objective.horizontal_alignment == HORIZONTAL_ALIGNMENT_LEFT, "Objective copy must remain readable and attached to its icon")
 	_expect(objective != null and objective_icon != null and objective.global_position.x >= objective_icon.global_position.x + objective_icon.size.x + 6.0, "Objective icon and copy must retain readable clearance")
 	_expect(pause != null and objective_icon != null and pause.global_position.x < objective_icon.global_position.x, "Pause must sit at the quiet left edge of the gameplay HUD")
+	_expect(pause != null and pause.icon != null and pause.text == "" and pause.get_theme_stylebox("normal") is StyleBoxFlat and String(pause.get_meta("production_chrome_kind", "")) == "gameplay_pause_icon", "Pause must render as the clear authored icon rather than a clipped text glyph")
 	_expect(board != null and board.custom_minimum_size.y >= 1120.0, "Board must remain the dominant gameplay object")
 	_expect(hint_band != null and tray != null and tray.global_position.y >= hint_band.global_position.y + hint_band.size.y + 32.0, "Hint and booster tray collide")
 	_expect(tray != null and is_equal_approx(tray.anchor_left, 0.08) and is_equal_approx(tray.anchor_right, 0.92), "Booster tray width drifted from the final gameplay family")
@@ -68,8 +69,10 @@ func _run() -> void:
 	_expect(hand_label != null and hand_label.text == "HAND", "Hand identity drifted")
 	_expect(magic_label != null and magic_label.text == "MAGIC", "Magic identity drifted")
 	_expect(objective != null and not objective.has_theme_stylebox_override("normal") and objective.text.contains("\n") and not objective.text.begins_with("TARGET\n"), "Objective must read as a compact authored HUD objective rather than a detached text panel")
-	_expect(hint_band != null and hint_band.custom_minimum_size.y >= 54.0 and hint_band.get_theme_font_size("font_size") >= 24, "Hint callout must remain readable at 540x960")
+	_expect(hint_band != null and hint_band.custom_minimum_size.y >= 54.0 and hint_band.get_theme_font_size("font_size") >= 28, "Hint callout must remain readable at 540x960")
 	_expect(hint_band != null and hint_band.size_flags_horizontal == Control.SIZE_SHRINK_CENTER and hint_band.custom_minimum_size.x >= 680.0 and hint_band.custom_minimum_size.x <= 740.0, "Hint must remain a restrained centered gameplay callout")
+	var hint_style := hint_band.get_theme_stylebox("normal") if hint_band != null else null
+	_expect(hint_style is StyleBoxFlat and (hint_style as StyleBoxFlat).bg_color.a <= 0.10 and (hint_style as StyleBoxFlat).border_color.a <= 0.08 and (hint_style as StyleBoxFlat).shadow_color.a <= 0.08, "Hint must integrate into the world instead of reading as a detached UI strip")
 	var resource_bar := screen.get_node_or_null("ResourceBar") as PanelContainer
 	_expect(resource_bar != null and not resource_bar.visible, "Gameplay must not expose meta currency/level chrome above the final target-and-moves HUD")
 

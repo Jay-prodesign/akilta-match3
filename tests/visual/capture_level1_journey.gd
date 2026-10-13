@@ -72,9 +72,11 @@ func _capture() -> void:
 		"north_star_compact_gameplay_header",
 		"north_star_compact_gameplay_geometry",
 		"north_star_gameplay_hud_frame",
+		"integrated_hint_surface",
 		"canonical_booster_art",
 		"gothic_board_material",
 		"quiet_gameplay_shell_family",
+		"clear_pause_control",
 		"integrated_hud_surface",
 		"final_hint_readability",
 		"final_booster_readability",
@@ -83,7 +85,7 @@ func _capture() -> void:
 		"north_star_booster_family",
 		"utility_separated_from_boosters",
 		"hint_booster_clearance",
-		"visual_parity_gate_v12",
+		"visual_parity_gate_v14",
 	]:
 		if not bool(gameplay_contract.get(parity_key, false)):
 			return _fail(app, "S05 North Star render gate failed: %s" % parity_key)
@@ -127,7 +129,7 @@ func _capture() -> void:
 		return _fail(app, "S05 hint callout width drifted: %.3f" % hint_width_ratio)
 	if gameplay_title.visible:
 		return _fail(app, "S05 room title regressed into the compact gameplay header")
-	if not gameplay_eyebrow.text.begins_with("LEVEL ") or gameplay_eyebrow.text.contains("·") or gameplay_eyebrow.get_theme_font_size("font_size") < 26:
+	if not gameplay_eyebrow.text.begins_with("LEVEL ") or gameplay_eyebrow.text.contains("·") or gameplay_eyebrow.get_theme_font_size("font_size") < 30:
 		return _fail(app, "S05 compact Level identity regressed")
 	if eyebrow_rect.end.y + 4.0 > hud_rect.position.y:
 		return _fail(app, "S05 Level identity and objective HUD overlap")
@@ -135,19 +137,26 @@ func _capture() -> void:
 		return _fail(app, "S05 objective regressed into a detached inner panel")
 	if gameplay_objective.text.begins_with("TARGET\n"):
 		return _fail(app, "S05 redundant target heading regressed")
-	if gameplay_moves.get_theme_font_size("font_size") < 40 or gameplay_objective.get_theme_font_size("font_size") < 26:
+	if gameplay_moves.get_theme_font_size("font_size") < 38 or gameplay_moves.get_theme_font_size("font_size") > 42 or gameplay_objective.get_theme_font_size("font_size") < 30:
 		return _fail(app, "S05 objective/moves visual hierarchy regressed")
-	if gameplay_hint.get_theme_font_size("font_size") < 24:
+	if gameplay_hint.get_theme_font_size("font_size") < 28:
 		return _fail(app, "S05 hint readability regressed")
+	var hint_style := gameplay_hint.get_theme_stylebox("normal")
+	if not (hint_style is StyleBoxFlat) or (hint_style as StyleBoxFlat).bg_color.a > 0.10 or (hint_style as StyleBoxFlat).border_color.a > 0.08 or (hint_style as StyleBoxFlat).shadow_color.a > 0.08:
+		return _fail(app, "S05 hint regressed into a detached UI strip")
 	if not hud_rect.grow(-4.0).encloses(objective_icon_rect):
 		return _fail(app, "S05 objective icon escapes the authored HUD frame")
 	var objective_rect: Rect2 = gameplay_objective.get_global_rect()
 	if objective_rect.size.x < gameplay_viewport.x * 0.36:
 		return _fail(app, "S05 objective copy width collapsed: %.3f" % (objective_rect.size.x / gameplay_viewport.x))
+	if gameplay_objective.horizontal_alignment != HORIZONTAL_ALIGNMENT_LEFT:
+		return _fail(app, "S05 objective copy detached from its icon")
 	if objective_rect.position.x < objective_icon_rect.end.x + 6.0:
 		return _fail(app, "S05 objective icon-to-copy clearance collapsed")
 	if pause_rect.position.x >= objective_icon_rect.position.x:
 		return _fail(app, "S05 pause control must remain at the quiet left edge of the HUD")
+	if gameplay_pause.icon == null or gameplay_pause.text != "" or not (gameplay_pause.get_theme_stylebox("normal") is StyleBoxFlat) or String(gameplay_pause.get_meta("production_chrome_kind", "")) != "gameplay_pause_icon":
+		return _fail(app, "S05 pause control regressed into clipped text or mismatched chrome")
 	if hud_rect.end.y > board_rect.position.y + 2.0:
 		return _fail(app, "S05 objective HUD collides with board")
 	if board_rect.end.y > hint_rect.position.y + 2.0:
