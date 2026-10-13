@@ -828,6 +828,17 @@ grow_horizontal = 2
 grow_vertical = 2
 theme_override_styles/panel = SubResource("StylePanel")
 
+[node name="FrameArt" type="TextureRect" parent="PauseOverlay/Card"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+expand_mode = 1
+stretch_mode = 0
+
 [node name="Content" type="VBoxContainer" parent="PauseOverlay/Card"]
 layout_mode = 2
 theme_override_constants/separation = 14
@@ -883,6 +894,19 @@ theme_override_styles/hover = SubResource("ActionHover")
 theme_override_styles/pressed = SubResource("ActionPressed")
 text = "RESUME"
 
+
+[node name="FrameArt" type="TextureRect" parent="PauseOverlay/Card/Content/Resume"]
+show_behind_parent = true
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+expand_mode = 1
+stretch_mode = 0
+
 [node name="Retry" type="Button" parent="PauseOverlay/Card/Content"]
 custom_minimum_size = Vector2(480, 70)
 layout_mode = 2
@@ -895,6 +919,19 @@ theme_override_styles/normal = SubResource("PauseUtility")
 theme_override_styles/hover = SubResource("PauseUtility")
 theme_override_styles/pressed = SubResource("PauseUtility")
 text = "RESTART LEVEL"
+
+
+[node name="FrameArt" type="TextureRect" parent="PauseOverlay/Card/Content/Retry"]
+show_behind_parent = true
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+expand_mode = 1
+stretch_mode = 0
 
 [node name="Settings" type="Button" parent="PauseOverlay/Card/Content"]
 custom_minimum_size = Vector2(480, 70)
@@ -909,6 +946,19 @@ theme_override_styles/hover = SubResource("PauseUtility")
 theme_override_styles/pressed = SubResource("PauseUtility")
 text = "AUDIO & ACCESSIBILITY"
 
+
+[node name="FrameArt" type="TextureRect" parent="PauseOverlay/Card/Content/Settings"]
+show_behind_parent = true
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+expand_mode = 1
+stretch_mode = 0
+
 [node name="Exit" type="Button" parent="PauseOverlay/Card/Content"]
 custom_minimum_size = Vector2(480, 70)
 layout_mode = 2
@@ -919,6 +969,19 @@ theme_override_styles/normal = SubResource("PauseUtility")
 theme_override_styles/hover = SubResource("PauseUtility")
 theme_override_styles/pressed = SubResource("PauseUtility")
 text = "RETURN TO THE HOUSE"
+
+
+[node name="FrameArt" type="TextureRect" parent="PauseOverlay/Card/Content/Exit"]
+show_behind_parent = true
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+expand_mode = 1
+stretch_mode = 0
 
 [node name="ResultOverlay" type="Control" parent="."]
 visible = false
@@ -1152,6 +1215,19 @@ theme_override_styles/hover = SubResource("ActionHover")
 theme_override_styles/pressed = SubResource("ActionPressed")
 text = "CONTINUE · +3 MOVES · FREE"
 
+
+[node name="FrameArt" type="TextureRect" parent="ResultOverlay/Card/Content/RecoveryAction"]
+show_behind_parent = true
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+expand_mode = 1
+stretch_mode = 0
+
 [node name="Action" type="Button" parent="ResultOverlay/Card/Content"]
 custom_minimum_size = Vector2(500, 94)
 layout_mode = 2
@@ -1163,3 +1239,16 @@ theme_override_styles/normal = SubResource("ResultActionStyle")
 theme_override_styles/hover = SubResource("ResultActionStyle")
 theme_override_styles/pressed = SubResource("ResultActionStyle")
 text = "RETURN TO THE HOUSE"
+
+
+[node name="FrameArt" type="TextureRect" parent="ResultOverlay/Card/Content/Action"]
+show_behind_parent = true
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+expand_mode = 1
+stretch_mode = 0
