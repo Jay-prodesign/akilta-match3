@@ -55,6 +55,8 @@ func _capture() -> void:
 	var prestart = app.current_screen()
 	if prestart == null or prestart.get_node_or_null("ProductNavigation") != null:
 		return _fail(app, "S04 must remain a focused surface without meta navigation")
+	# Capture the settled authored entrance rather than a partially transparent transition frame.
+	await create_timer(0.38).timeout
 	if not await _save(app, "golden-03-prestart.png"):
 		return
 
