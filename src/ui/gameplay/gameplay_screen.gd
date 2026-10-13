@@ -167,7 +167,7 @@ func _ready() -> void:
 	ProductionChrome.apply_compact_panel($ResourceBar/Resources/LevelBadgePlate, "gameplay_level_badge")
 	ProductionChrome.apply_gameplay_shell($Layout/HUDPlate, "objective")
 	ProductionChrome.apply_gameplay_booster_tray($BoosterTray)
-	ProductionChrome.apply_action_button(pause_button, "utility", "gameplay_pause")
+	ProductionChrome.apply_interactive_button(pause_button, false, "gameplay_pause")
 	ProductionChrome.apply_action_button(pause_resume, "primary", "pause_resume")
 	ProductionChrome.apply_action_button(pause_retry, "utility", "pause_retry")
 	ProductionChrome.apply_action_button(pause_settings, "utility", "pause_settings")
