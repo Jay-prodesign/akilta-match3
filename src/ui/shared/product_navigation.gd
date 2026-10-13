@@ -97,6 +97,7 @@ static func authored_contract(panel: PanelContainer) -> Dictionary:
 		"north_star_nav_zone": north_star_nav_zone and (panel.offset_bottom - panel.offset_top) >= 128.0 and (panel.offset_bottom - panel.offset_top) <= 144.0,
 		"nav_zone_height": panel.offset_bottom - panel.offset_top,
 		"asset_backed_shell": panel.get_theme_stylebox("panel") is StyleBoxTexture and String(panel.get_meta("production_chrome_kind", "")) == "bottom",
+		"quiet_shell": String(panel.get_meta("production_chrome_asset", "")) == ProductionChrome.QUIET_PANEL_PATH,
 		"asset_backed_interactive_chrome": interactive_chrome,
 		"runtime_ui_factory": false,
 	}
