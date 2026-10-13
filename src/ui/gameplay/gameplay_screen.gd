@@ -1116,7 +1116,7 @@ func gameplay_presentation_contract() -> Dictionary:
 		"visual_parity_gate_v3": hierarchy_locked and integrated_hud_surface and hint_readable and booster_family_locked and composition_locked and board_locked and utilities_separated,
 		"visual_parity_gate_v4": hierarchy_locked and integrated_hud_surface and hint_readable and booster_family_locked and composition_locked and board_locked and utilities_separated and [$ResourceBar, $Layout/HUDPlate].all(func(panel): return String(panel.get_meta("production_chrome_asset", "")) == ProductionChrome.QUIET_PANEL_PATH) and String(_booster_tray.get_meta("production_chrome_kind", "")) == "gameplay_booster_tray",
 		"visual_parity_gate_v5": hierarchy_locked and integrated_hud_surface and hint_readable and booster_family_locked and composition_locked and board_locked and utilities_separated and objective_label.text.begins_with("TARGET\n"),
-		"visual_parity_version": 8,
+		"visual_parity_version": 9,
 		"resource_bar_height": ($ResourceBar as PanelContainer).offset_bottom - ($ResourceBar as PanelContainer).offset_top,
 		"hud_plate_height": ($Layout/HUDPlate as PanelContainer).custom_minimum_size.y,
 		"booster_tray_height": _booster_tray.offset_bottom - _booster_tray.offset_top,
