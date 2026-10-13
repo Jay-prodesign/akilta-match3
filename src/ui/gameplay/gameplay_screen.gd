@@ -1113,6 +1113,7 @@ func gameplay_presentation_contract() -> Dictionary:
 		"final_booster_readability": booster_family_locked and shuffle_label.get_theme_font_size("font_size") >= 26,
 		"visual_parity_gate_v2": hierarchy_locked and booster_family_locked and composition_locked and board_locked and utilities_separated and String(_booster_tray.get_meta("production_chrome_kind", "")) == "gameplay_booster_tray",
 		"visual_parity_gate_v3": hierarchy_locked and integrated_hud_surface and hint_readable and booster_family_locked and composition_locked and board_locked and utilities_separated,
+		"visual_parity_version": 3,
 		"resource_bar_height": ($ResourceBar as PanelContainer).offset_bottom - ($ResourceBar as PanelContainer).offset_top,
 		"hud_plate_height": ($Layout/HUDPlate as PanelContainer).custom_minimum_size.y,
 		"booster_tray_height": _booster_tray.offset_bottom - _booster_tray.offset_top,
