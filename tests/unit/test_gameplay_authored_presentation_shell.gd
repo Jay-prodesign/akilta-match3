@@ -22,6 +22,7 @@ func _run() -> void:
 	_expect(bool(contract.get("north_star_resource_strip", false)), "Gameplay top resource strip must use the locked 80 logical px compact geometry")
 	_expect(bool(contract.get("north_star_objective_strip", false)), "Gameplay target/moves strip must retain the locked North Star hierarchy")
 	_expect(bool(contract.get("north_star_booster_tray", false)), "Gameplay lower booster tray must use the locked 160 logical px family with 88 px touch targets")
+	_expect(bool(contract.get("hint_booster_clearance", false)), "Gameplay hint band must remain fully visible above the booster tray")
 	_expect(bool(contract.get("deterministic_gameplay_geometry", false)), "Gameplay tray geometry must be authored rather than positioned by runtime magic")
 	_expect(bool(contract.get("truthful_sealed_slots", false)), "Unavailable boosters must remain visibly sealed rather than pretending to be usable")
 	_expect(bool(contract.get("authored_target_moves_hierarchy", false)), "Gameplay target and moves hierarchy must use authored production plates")
@@ -61,7 +62,9 @@ func _run() -> void:
 	var gameplay_layout := screen.get_node_or_null("Layout") as VBoxContainer
 	_expect(gameplay_layout != null and gameplay_layout.offset_top - resource_bar.offset_bottom >= 56.0, "Gameplay title stack must preserve mobile header clearance")
 	_expect(hud_plate != null and hud_plate.custom_minimum_size.y == 112.0, "Gameplay objective strip height drifted")
-	_expect(booster_tray != null and booster_tray.offset_bottom - booster_tray.offset_top == 160.0 and is_equal_approx(booster_tray.anchor_top, 0.735), "Gameplay booster tray geometry drifted")
+	_expect(booster_tray != null and booster_tray.offset_bottom - booster_tray.offset_top == 160.0 and is_equal_approx(booster_tray.anchor_top, 0.805), "Gameplay booster tray geometry drifted")
+	var hint_band := screen.get_node_or_null("Layout/Hint") as Label
+	_expect(hint_band != null and booster_tray.global_position.y >= hint_band.global_position.y + hint_band.size.y + 12.0, "Gameplay booster tray must not cover the hint band")
 	_expect(resource_bar != null and resource_bar.get_theme_stylebox("panel") is StyleBoxTexture, "Gameplay resource strip must use production chrome")
 	_expect(hud_plate != null and hud_plate.get_theme_stylebox("panel") is StyleBoxTexture, "Gameplay objective/moves HUD must use production chrome")
 	_expect(booster_tray != null and booster_tray.get_theme_stylebox("panel") is StyleBoxTexture, "Gameplay booster tray must use production chrome")
