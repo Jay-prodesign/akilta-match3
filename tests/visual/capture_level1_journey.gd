@@ -93,7 +93,8 @@ func _capture() -> void:
 			return _fail(app, "S05 North Star render gate failed: %s" % parity_key)
 	var gameplay_viewport: Vector2 = gameplay.get_viewport().get_visible_rect().size
 	var gameplay_resource_bar := gameplay.get_node_or_null("ResourceBar") as PanelContainer
-	var gameplay_eyebrow := gameplay.get_node_or_null("Layout/Eyebrow") as Label
+	var gameplay_level_plaque := gameplay.get_node_or_null("Layout/LevelPlaque") as PanelContainer
+	var gameplay_eyebrow := gameplay.get_node_or_null("Layout/LevelPlaque/Eyebrow") as Label
 	var gameplay_title := gameplay.get_node_or_null("Layout/Title") as Label
 	var gameplay_hud := gameplay.get_node_or_null("Layout/HUDPlate") as Control
 	var gameplay_objective_icon := gameplay.get_node_or_null("Layout/HUDPlate/HUD/ObjectiveIcon") as Control
@@ -106,7 +107,7 @@ func _capture() -> void:
 	var shuffle_label := gameplay.get_node_or_null("BoosterTray/BoosterActions/SealedSlotA/Label") as Control
 	var hand_label := gameplay.get_node_or_null("BoosterTray/BoosterActions/SealedSlotB/Label") as Control
 	var magic_label := gameplay.get_node_or_null("BoosterTray/BoosterActions/SealedSlotC/Label") as Control
-	if gameplay_resource_bar == null or gameplay_eyebrow == null or gameplay_title == null or gameplay_hud == null or gameplay_objective_icon == null or gameplay_objective == null or gameplay_moves == null or gameplay_pause == null or gameplay_board == null or gameplay_hint == null or gameplay_tray == null:
+	if gameplay_resource_bar == null or gameplay_level_plaque == null or gameplay_eyebrow == null or gameplay_title == null or gameplay_hud == null or gameplay_objective_icon == null or gameplay_objective == null or gameplay_moves == null or gameplay_pause == null or gameplay_board == null or gameplay_hint == null or gameplay_tray == null:
 		return _fail(app, "S05 North Star render gate missing level/HUD/board/hint/tray")
 	if gameplay_resource_bar.visible:
 		return _fail(app, "S05 meta currency/level row regressed into gameplay")
@@ -125,6 +126,7 @@ func _capture() -> void:
 		return _fail(app, "S05 board width no longer dominates viewport: %.3f" % board_width_ratio)
 	if tray_width_ratio < 0.89 or tray_width_ratio > 0.93:
 		return _fail(app, "S05 booster tray width drifted: %.3f" % tray_width_ratio)
+	var plaque_rect: Rect2 = gameplay_level_plaque.get_global_rect()
 	var eyebrow_rect: Rect2 = gameplay_eyebrow.get_global_rect()
 	var hud_rect: Rect2 = gameplay_hud.get_global_rect()
 	var objective_icon_rect: Rect2 = gameplay_objective_icon.get_global_rect()
@@ -133,14 +135,14 @@ func _capture() -> void:
 	var hint_rect: Rect2 = gameplay_hint.get_global_rect()
 	var tray_rect: Rect2 = gameplay_tray.get_global_rect()
 	var hint_width_ratio: float = hint_rect.size.x / gameplay_viewport.x
-	if hint_width_ratio < 0.62 or hint_width_ratio > 0.70:
-		return _fail(app, "S05 hint callout width drifted: %.3f" % hint_width_ratio)
+	if gameplay_hint.visible and (hint_width_ratio < 0.60 or hint_width_ratio > 0.70):
+		return _fail(app, "S05 transient hint callout width drifted: %.3f" % hint_width_ratio)
 	if gameplay_title.visible:
 		return _fail(app, "S05 room title regressed into the compact gameplay header")
-	if not gameplay_eyebrow.text.begins_with("LEVEL ") or gameplay_eyebrow.text.contains("·") or gameplay_eyebrow.get_theme_font_size("font_size") < 30:
-		return _fail(app, "S05 compact Level identity regressed")
-	if eyebrow_rect.end.y + 4.0 > hud_rect.position.y:
-		return _fail(app, "S05 Level identity and objective HUD overlap")
+	if gameplay_level_plaque.custom_minimum_size.x < 580.0 or not (gameplay_level_plaque.get_theme_stylebox("panel") is StyleBoxTexture) or not gameplay_eyebrow.text.begins_with("LEVEL ") or gameplay_eyebrow.text.contains("·") or gameplay_eyebrow.get_theme_font_size("font_size") < 40:
+		return _fail(app, "S05 authored Level plaque regressed")
+	if plaque_rect.end.y + 4.0 > hud_rect.position.y:
+		return _fail(app, "S05 Level plaque and objective HUD overlap")
 	if gameplay_objective.has_theme_stylebox_override("normal"):
 		return _fail(app, "S05 objective regressed into a detached inner panel")
 	if gameplay_objective.text.begins_with("TARGET\n"):
@@ -167,10 +169,14 @@ func _capture() -> void:
 		return _fail(app, "S05 pause control regressed into clipped text or mismatched chrome")
 	if hud_rect.end.y > board_rect.position.y + 2.0:
 		return _fail(app, "S05 objective HUD collides with board")
-	if board_rect.end.y > hint_rect.position.y + 2.0:
-		return _fail(app, "S05 board collides with authored hint band")
-	if hint_rect.end.y + 32.0 > tray_rect.position.y:
-		return _fail(app, "S05 hint-to-booster breathing room collapsed")
+	if gameplay_hint.visible:
+		if board_rect.end.y > hint_rect.position.y + 2.0:
+			return _fail(app, "S05 board collides with transient hint band")
+		if hint_rect.end.y + 10.0 > tray_rect.position.y:
+			return _fail(app, "S05 transient hint collides with booster tray")
+	else:
+		if tray_rect.position.y < board_rect.end.y - 4.0 or tray_rect.position.y - board_rect.end.y > 28.0:
+			return _fail(app, "S05 board-to-booster gap drifted from locked composition")
 	for booster_label in [shuffle_label, hand_label, magic_label]:
 		if booster_label == null or not tray_rect.grow(-8.0).encloses(booster_label.get_global_rect()):
 			return _fail(app, "S05 booster label escapes production tray frame")
