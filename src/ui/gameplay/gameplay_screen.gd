@@ -865,18 +865,11 @@ func _style_terminal_result(kind: String) -> void:
 	if card == null:
 		return
 	var won := kind == "won"
-	var panel := StyleBoxFlat.new()
-	panel.bg_color = Color("#100D17", 0.99) if won else Color("#120D14", 0.99)
-	panel.border_color = (Color("#FFF1B6") if _high_contrast else Color("#D5AD70")) if won else (Color("#FFD3DF") if _high_contrast else Color("#9A6073"))
-	panel.set_border_width_all(3 if _high_contrast else 2)
-	panel.set_corner_radius_all(26)
-	panel.shadow_color = Color(0, 0, 0, 0.72)
-	panel.shadow_size = 26
-	panel.content_margin_left = 24
-	panel.content_margin_right = 24
-	panel.content_margin_top = 20
-	panel.content_margin_bottom = 20
-	card.add_theme_stylebox_override("panel", panel)
+	ProductionChrome.apply_primary(card)
+	card.set_meta("production_result_chrome", "verified_primary")
+	var dim := result_overlay.get_node_or_null("Dim") as ColorRect
+	if dim != null:
+		dim.color = Color(0.0314, 0.0235, 0.0353, 0.70 if won else 0.84)
 	result_title.add_theme_color_override("font_color", Color("#FFF1B6") if won else Color("#F2D6DE"))
 	result_objective_summary.add_theme_color_override("font_color", Color("#F0CE8A") if won else Color("#E5B2C1"))
 
@@ -886,6 +879,9 @@ func terminal_result_polish_contract() -> Dictionary:
 		"transition": terminal_transition_contract(),
 		"retry_copy": hint_label.text if hint_label != null else "",
 		"distinct_result_material": true,
+		"asset_backed_result_chrome": result_overlay != null and (result_overlay.get_node_or_null("Card") as PanelContainer).get_theme_stylebox("panel") is StyleBoxTexture and String((result_overlay.get_node_or_null("Card") as PanelContainer).get_meta("production_result_chrome", "")) == "verified_primary",
+		"runtime_result_style_factory": false,
+		"result_dim_alpha": (result_overlay.get_node_or_null("Dim") as ColorRect).color.a if result_overlay != null and result_overlay.get_node_or_null("Dim") != null else 1.0,
 		"failure_gap": _failure_gap_copy() if result_overlay != null and result_overlay.visible and String(terminal_transition_contract().get("kind", "")) == "failed" else "",
 		"plus_three_recovery_available": result_recovery_action != null and result_recovery_action.visible and not result_recovery_action.disabled,
 	}
@@ -1048,6 +1044,8 @@ func gameplay_presentation_contract() -> Dictionary:
 		"authored_result_proclamation": _result_proclamation != null and _result_keeper_cat != null,
 		"north_star_result_hierarchy": result_title != null and result_title.get_theme_font_size("font_size") >= 46 and result_objective_summary != null and result_objective_summary.get_theme_stylebox("normal") != null,
 		"north_star_result_cta": result_action != null and result_action.custom_minimum_size.y >= 82.0 and result_action.get_theme_stylebox("normal") != null,
+		"asset_backed_result_chrome": ($ResultOverlay/Card as PanelContainer).get_theme_stylebox("panel") is StyleBoxTexture,
+		"result_hero_scale": result_ritual != null and result_ritual.custom_minimum_size.y >= 270.0,
 		"win_copy_compact": result_detail != null and result_house_change != null,
 		"runtime_shell_factory": false,
 		"transient_vfx_runtime_allowed": true,
