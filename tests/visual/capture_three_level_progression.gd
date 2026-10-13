@@ -432,6 +432,12 @@ func _play_level(app: Node, level_number: int) -> bool:
 	if start == null or start.disabled:
 		_fail(app, "Level %d start control unavailable" % level_number)
 		return false
+	var prestart_contract: Dictionary = prestart.aid_asset_contract() if prestart.has_method("aid_asset_contract") else {}
+	if level_number > 1 and not String(prestart_contract.get("level_art_asset_path", "")).ends_with("prestart_level01_cabinet.webp"):
+		_fail(app, "Level %d prestart did not resolve the production-resolution shared Curio Boutique art" % level_number)
+		return false
+	if not await _save(app, "progression-level%d-prestart.png" % level_number):
+		return false
 	start.emit_signal("pressed")
 	await _frames(3)
 	if String(app.current_route_name()) != "gameplay":
