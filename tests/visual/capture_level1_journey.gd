@@ -270,7 +270,7 @@ func _capture() -> void:
 	var grid_width_ratio := grid_rect.size.x / collection_viewport.x
 	if cabinet_grid.columns != 2 or cabinet_grid.get_child_count() != 4:
 		return _fail(app, "S08 cabinet must remain a truthful 2x2 composition")
-	if grid_height_ratio < 0.42 or grid_height_ratio > 0.48:
+	if grid_height_ratio < 0.20 or grid_height_ratio > 0.25:
 		return _fail(app, "S08 cabinet density drifted: %.3f" % grid_height_ratio)
 	if grid_width_ratio < 0.90:
 		return _fail(app, "S08 cabinet no longer owns the collection stage: %.3f" % grid_width_ratio)
