@@ -462,11 +462,13 @@ text = "0 / 3 AWAKENED"
 horizontal_alignment = 1
 
 [node name="Copy" type="Label" parent="Layout/Cards/SetSummary/Content"]
+custom_minimum_size = Vector2(0, 70)
 layout_mode = 2
-theme_override_colors/font_color = Color(0.82, 0.76, 0.84, 1)
+theme_override_colors/font_color = Color(0.88, 0.80, 0.88, 1)
 theme_override_font_sizes/font_size = 22
-text = "3 CURIOS STILL DORMANT"
+text = "3 DORMANT\nCURIOS REMAIN"
 horizontal_alignment = 1
+vertical_alignment = 1
 autowrap_mode = 2
 
 [node name="CabinetFooter" type="Label" parent="Layout"]
