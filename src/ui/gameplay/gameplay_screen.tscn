@@ -384,16 +384,18 @@ grow_vertical = 2
 theme_override_constants/separation = 8
 
 [node name="LevelPlaque" type="PanelContainer" parent="Layout"]
-custom_minimum_size = Vector2(600, 96)
+custom_minimum_size = Vector2(620, 104)
 layout_mode = 2
 size_flags_horizontal = 4
 
 [node name="Eyebrow" type="Label" parent="Layout/LevelPlaque"]
 layout_mode = 2
-theme_override_colors/font_color = Color(1, 0.91, 0.69, 1)
-theme_override_colors/font_outline_color = Color(0.015, 0.01, 0.022, 0.99)
-theme_override_constants/outline_size = 5
-theme_override_font_sizes/font_size = 42
+theme_override_colors/font_color = Color(1, 0.94, 0.70, 1)
+theme_override_colors/font_outline_color = Color(0.03, 0.012, 0.04, 1)
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 0.9)
+theme_override_constants/shadow_offset_y = 2
+theme_override_constants/outline_size = 8
+theme_override_font_sizes/font_size = 52
 text = "LEVEL 1"
 horizontal_alignment = 1
 vertical_alignment = 1
@@ -598,14 +600,14 @@ horizontal_alignment = 1
 vertical_alignment = 1
 
 [node name="SealedSlotA" type="VBoxContainer" parent="BoosterTray/BoosterActions"]
-custom_minimum_size = Vector2(166, 182)
+custom_minimum_size = Vector2(156, 166)
 layout_mode = 2
 size_flags_vertical = 4
 theme_override_constants/separation = 4
 alignment = 1
 
 [node name="SealedBoostA" type="Button" parent="BoosterTray/BoosterActions/SealedSlotA"]
-custom_minimum_size = Vector2(128, 128)
+custom_minimum_size = Vector2(118, 118)
 layout_mode = 2
 size_flags_horizontal = 4
 disabled = true
@@ -616,7 +618,7 @@ theme_override_font_sizes/font_size = 1
 theme_override_styles/disabled = SubResource("BoosterSealedStyle")
 text = "SHUFFLE"
 expand_icon = true
-theme_override_constants/icon_max_width = 102
+theme_override_constants/icon_max_width = 94
 tooltip_text = "Shuffle booster · sealed until its gameplay entitlement is implemented"
 
 [node name="SealBadge" type="TextureRect" parent="BoosterTray/BoosterActions/SealedSlotA/SealedBoostA"]
@@ -634,25 +636,25 @@ expand_mode = 1
 stretch_mode = 5
 
 [node name="Label" type="Label" parent="BoosterTray/BoosterActions/SealedSlotA"]
-custom_minimum_size = Vector2(0, 42)
+custom_minimum_size = Vector2(0, 32)
 layout_mode = 2
 theme_override_colors/font_color = Color(0.965, 0.87, 0.69, 1)
 theme_override_colors/font_outline_color = Color(0.02, 0.014, 0.028, 0.98)
 theme_override_constants/outline_size = 5
-theme_override_font_sizes/font_size = 28
+theme_override_font_sizes/font_size = 22
 text = "SHUFFLE"
 horizontal_alignment = 1
 vertical_alignment = 1
 
 [node name="SealedSlotB" type="VBoxContainer" parent="BoosterTray/BoosterActions"]
-custom_minimum_size = Vector2(166, 182)
+custom_minimum_size = Vector2(156, 166)
 layout_mode = 2
 size_flags_vertical = 4
 theme_override_constants/separation = 4
 alignment = 1
 
 [node name="SealedBoostB" type="Button" parent="BoosterTray/BoosterActions/SealedSlotB"]
-custom_minimum_size = Vector2(128, 128)
+custom_minimum_size = Vector2(118, 118)
 layout_mode = 2
 size_flags_horizontal = 4
 disabled = true
@@ -663,7 +665,7 @@ theme_override_font_sizes/font_size = 1
 theme_override_styles/disabled = SubResource("BoosterSealedStyle")
 text = "HAND"
 expand_icon = true
-theme_override_constants/icon_max_width = 102
+theme_override_constants/icon_max_width = 94
 tooltip_text = "Hand booster · sealed until its gameplay entitlement is implemented"
 
 [node name="SealBadge" type="TextureRect" parent="BoosterTray/BoosterActions/SealedSlotB/SealedBoostB"]
@@ -681,25 +683,25 @@ expand_mode = 1
 stretch_mode = 5
 
 [node name="Label" type="Label" parent="BoosterTray/BoosterActions/SealedSlotB"]
-custom_minimum_size = Vector2(0, 42)
+custom_minimum_size = Vector2(0, 32)
 layout_mode = 2
 theme_override_colors/font_color = Color(0.965, 0.87, 0.69, 1)
 theme_override_colors/font_outline_color = Color(0.02, 0.014, 0.028, 0.98)
 theme_override_constants/outline_size = 5
-theme_override_font_sizes/font_size = 28
+theme_override_font_sizes/font_size = 22
 text = "HAND"
 horizontal_alignment = 1
 vertical_alignment = 1
 
 [node name="SealedSlotC" type="VBoxContainer" parent="BoosterTray/BoosterActions"]
-custom_minimum_size = Vector2(166, 182)
+custom_minimum_size = Vector2(156, 166)
 layout_mode = 2
 size_flags_vertical = 4
 theme_override_constants/separation = 4
 alignment = 1
 
 [node name="SealedBoostC" type="Button" parent="BoosterTray/BoosterActions/SealedSlotC"]
-custom_minimum_size = Vector2(128, 128)
+custom_minimum_size = Vector2(118, 118)
 layout_mode = 2
 size_flags_horizontal = 4
 disabled = true
@@ -710,7 +712,7 @@ theme_override_font_sizes/font_size = 1
 theme_override_styles/disabled = SubResource("BoosterSealedStyle")
 text = "MAGIC"
 expand_icon = true
-theme_override_constants/icon_max_width = 102
+theme_override_constants/icon_max_width = 94
 tooltip_text = "Magic booster · sealed until its gameplay entitlement is implemented"
 
 [node name="SealBadge" type="TextureRect" parent="BoosterTray/BoosterActions/SealedSlotC/SealedBoostC"]
@@ -728,12 +730,12 @@ expand_mode = 1
 stretch_mode = 5
 
 [node name="Label" type="Label" parent="BoosterTray/BoosterActions/SealedSlotC"]
-custom_minimum_size = Vector2(0, 42)
+custom_minimum_size = Vector2(0, 32)
 layout_mode = 2
 theme_override_colors/font_color = Color(0.965, 0.87, 0.69, 1)
 theme_override_colors/font_outline_color = Color(0.02, 0.014, 0.028, 0.98)
 theme_override_constants/outline_size = 5
-theme_override_font_sizes/font_size = 28
+theme_override_font_sizes/font_size = 22
 text = "MAGIC"
 horizontal_alignment = 1
 vertical_alignment = 1
