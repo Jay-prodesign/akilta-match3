@@ -505,7 +505,6 @@ script = ExtResource("2_board")
 
 
 [node name="OrnateFrame" type="Panel" parent="Layout/BoardView"]
-show_behind_parent = true
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -896,7 +895,6 @@ text = "RESUME"
 
 
 [node name="FrameArt" type="TextureRect" parent="PauseOverlay/Card/Content/Resume"]
-show_behind_parent = true
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -922,7 +920,6 @@ text = "RESTART LEVEL"
 
 
 [node name="FrameArt" type="TextureRect" parent="PauseOverlay/Card/Content/Retry"]
-show_behind_parent = true
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -948,7 +945,6 @@ text = "AUDIO & ACCESSIBILITY"
 
 
 [node name="FrameArt" type="TextureRect" parent="PauseOverlay/Card/Content/Settings"]
-show_behind_parent = true
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -972,7 +968,6 @@ text = "RETURN TO THE HOUSE"
 
 
 [node name="FrameArt" type="TextureRect" parent="PauseOverlay/Card/Content/Exit"]
-show_behind_parent = true
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -1217,7 +1212,6 @@ text = "CONTINUE · +3 MOVES · FREE"
 
 
 [node name="FrameArt" type="TextureRect" parent="ResultOverlay/Card/Content/RecoveryAction"]
-show_behind_parent = true
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -1242,7 +1236,6 @@ text = "RETURN TO THE HOUSE"
 
 
 [node name="FrameArt" type="TextureRect" parent="ResultOverlay/Card/Content/Action"]
-show_behind_parent = true
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
