@@ -139,7 +139,7 @@ func _capture() -> void:
 		return _fail(app, "S05 redundant target heading regressed")
 	if gameplay_moves.get_theme_font_size("font_size") < 38 or gameplay_moves.get_theme_font_size("font_size") > 42 or gameplay_objective.get_theme_font_size("font_size") < 30:
 		return _fail(app, "S05 objective/moves visual hierarchy regressed")
-	if gameplay_hint.get_theme_font_size("font_size") < 26:
+	if gameplay_hint.get_theme_font_size("font_size") < 28:
 		return _fail(app, "S05 hint readability regressed")
 	var hint_style := gameplay_hint.get_theme_stylebox("normal")
 	if not (hint_style is StyleBoxFlat) or (hint_style as StyleBoxFlat).bg_color.a > 0.10 or (hint_style as StyleBoxFlat).border_color.a > 0.08 or (hint_style as StyleBoxFlat).shadow_color.a > 0.08:
