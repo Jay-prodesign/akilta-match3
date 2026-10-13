@@ -56,6 +56,22 @@ static func _style(content_margin: float, texture_margin: float = 64.0, asset_pa
 	style.content_margin_bottom = content_margin
 	return style
 
+static func _style_xy(content_margin: float, texture_margin_x: float, texture_margin_y: float, asset_path: String) -> StyleBoxTexture:
+	var texture := PieceAssetLoader.ornament(asset_path)
+	if texture == null:
+		return null
+	var style := StyleBoxTexture.new()
+	style.texture = texture
+	style.texture_margin_left = texture_margin_x
+	style.texture_margin_right = texture_margin_x
+	style.texture_margin_top = texture_margin_y
+	style.texture_margin_bottom = texture_margin_y
+	style.content_margin_left = content_margin
+	style.content_margin_top = content_margin
+	style.content_margin_right = content_margin
+	style.content_margin_bottom = content_margin
+	return style
+
 static func primary_panel() -> StyleBoxTexture:
 	if _primary_panel != null:
 		return _primary_panel
@@ -265,24 +281,24 @@ static func apply_gameplay_level_plaque(panel: Control) -> bool:
 
 static func gameplay_primary_action() -> StyleBoxTexture:
 	if _gameplay_primary_action == null:
-		_gameplay_primary_action = _style(10.0, 58.0, GAMEPLAY_PRIMARY_ACTION_PATH)
+		_gameplay_primary_action = _style_xy(10.0, 58.0, 28.0, GAMEPLAY_PRIMARY_ACTION_PATH)
 	return _gameplay_primary_action
 
 static func gameplay_primary_action_pressed() -> StyleBoxTexture:
 	if _gameplay_primary_action_pressed == null:
-		_gameplay_primary_action_pressed = _style(10.0, 58.0, GAMEPLAY_PRIMARY_ACTION_PATH)
+		_gameplay_primary_action_pressed = _style_xy(10.0, 58.0, 28.0, GAMEPLAY_PRIMARY_ACTION_PATH)
 		if _gameplay_primary_action_pressed != null:
 			_gameplay_primary_action_pressed.modulate_color = Color(0.80, 0.72, 0.86, 0.96)
 	return _gameplay_primary_action_pressed
 
 static func gameplay_utility_action() -> StyleBoxTexture:
 	if _gameplay_utility_action == null:
-		_gameplay_utility_action = _style(8.0, 56.0, GAMEPLAY_UTILITY_ACTION_PATH)
+		_gameplay_utility_action = _style_xy(8.0, 56.0, 22.0, GAMEPLAY_UTILITY_ACTION_PATH)
 	return _gameplay_utility_action
 
 static func gameplay_utility_action_pressed() -> StyleBoxTexture:
 	if _gameplay_utility_action_pressed == null:
-		_gameplay_utility_action_pressed = _style(8.0, 56.0, GAMEPLAY_UTILITY_ACTION_PATH)
+		_gameplay_utility_action_pressed = _style_xy(8.0, 56.0, 22.0, GAMEPLAY_UTILITY_ACTION_PATH)
 		if _gameplay_utility_action_pressed != null:
 			_gameplay_utility_action_pressed.modulate_color = Color(0.76, 0.70, 0.82, 0.94)
 	return _gameplay_utility_action_pressed
