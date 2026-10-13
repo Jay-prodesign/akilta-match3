@@ -166,8 +166,10 @@ func set_boot_state(state: String, message: String = "", can_continue: bool = tr
 		_stop_loading_pulse()
 	match state:
 		"loading":
+			boot_state_panel.custom_minimum_size.y = 116.0
 			progress_label.visible = true
 			progress_label.text = "WAKING THE HOUSE…"
+			load_track.visible = true
 			load_track.value = 42.0 if _reduced_motion else load_track.value
 			recovery_message.visible = false
 			enter_button.text = "ENTER THE HOUSE"
@@ -176,8 +178,10 @@ func set_boot_state(state: String, message: String = "", can_continue: bool = tr
 			enter_button.mouse_filter = Control.MOUSE_FILTER_IGNORE
 			enter_button.modulate = Color(1, 1, 1, 0)
 		"ready":
+			boot_state_panel.custom_minimum_size.y = 116.0
 			progress_label.visible = true
 			progress_label.text = "THE HOUSE IS READY"
+			load_track.visible = true
 			load_track.value = 100.0
 			recovery_message.visible = false
 			enter_button.text = "ENTER THE HOUSE"
@@ -186,8 +190,10 @@ func set_boot_state(state: String, message: String = "", can_continue: bool = tr
 			enter_button.mouse_filter = Control.MOUSE_FILTER_STOP
 			_reveal_enter()
 		"recoverable_error":
+			boot_state_panel.custom_minimum_size.y = 170.0
 			progress_label.visible = true
 			progress_label.text = "THE HOUSE NEEDS ATTENTION" if not can_continue else "THE HOUSE RECOVERED SAFELY"
+			load_track.visible = false
 			load_track.value = 100.0
 			recovery_message.visible = true
 			recovery_message.text = message if message != "" else "A local save issue was recovered. Review the restored state before continuing."
