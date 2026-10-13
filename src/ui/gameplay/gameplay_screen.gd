@@ -103,7 +103,8 @@ const LOW_MOVE_WARNING_THRESHOLD := 3
 const LAST_MOVE_THRESHOLD := 1
 
 @onready var world_backdrop: TextureRect = $WorldBackdrop
-@onready var eyebrow_label: Label = $Layout/Eyebrow
+@onready var level_plaque: PanelContainer = $Layout/LevelPlaque
+@onready var eyebrow_label: Label = $Layout/LevelPlaque/Eyebrow
 @onready var title_label: Label = $Layout/Title
 @onready var board_view = $Layout/BoardView
 @onready var objective_icon: TextureRect = $Layout/HUDPlate/HUD/ObjectiveIcon
@@ -180,7 +181,7 @@ func _ready() -> void:
 	ProductionChrome.apply_compact_panel($ResourceBar/Resources/GemChip, "gameplay_gem_resource")
 	ProductionChrome.apply_compact_panel($ResourceBar/Resources/LevelBadgePlate, "gameplay_level_badge")
 	ProductionChrome.apply_gameplay_shell($Layout/HUDPlate, "objective")
-	ProductionChrome.apply_gameplay_level_plaque($Layout/Eyebrow/PlaqueFrame)
+	ProductionChrome.apply_gameplay_level_plaque(level_plaque)
 	ProductionChrome.apply_gameplay_booster_tray($BoosterTray)
 	var gameplay_hud := $Layout/HUDPlate/HUD as HBoxContainer
 	if gameplay_hud != null:
@@ -283,7 +284,7 @@ func _play_gameplay_intro() -> void:
 		return
 	if _gameplay_intro_tween != null and _gameplay_intro_tween.is_valid():
 		_gameplay_intro_tween.kill()
-	var reveal_nodes: Array[Control] = [eyebrow_label, $Layout/HUDPlate, board_view, hint_label, _booster_tray]
+	var reveal_nodes: Array[Control] = [level_plaque, $Layout/HUDPlate, board_view, _booster_tray]
 	_gameplay_intro_tween = create_tween()
 	_gameplay_intro_tween.set_parallel(true)
 	for index in range(reveal_nodes.size()):
@@ -453,6 +454,7 @@ func load_level_path(path: String, seed_value: int = 1001) -> bool:
 		board_view.set_visual_profile(art_profile)
 	board_view.set_board(board_state)
 	_configure_teaching_move(parsed)
+	hint_label.visible = false
 	_pending_win = false
 	_pending_terminal_result = ""
 	_pending_hud_refresh = false
@@ -729,6 +731,7 @@ func _trace_cascade_depth(trace) -> int:
 func _style_impact_hint(mode: String) -> void:
 	if hint_label == null:
 		return
+	hint_label.visible = true
 	var color := Color("#F4E5D3")
 	var size_px := 28
 	match mode:
@@ -1269,10 +1272,11 @@ func gameplay_presentation_contract() -> Dictionary:
 	)
 	var composition_locked: bool = (
 		_booster_tray != null
-		and is_equal_approx(_booster_tray.anchor_top, 0.8)
-		and (_booster_tray.offset_bottom - _booster_tray.offset_top) >= 216.0
+		and is_equal_approx(_booster_tray.anchor_top, 0.755)
+		and (_booster_tray.offset_bottom - _booster_tray.offset_top) >= 200.0
+		and (_booster_tray.offset_bottom - _booster_tray.offset_top) <= 212.0
 		and hint_label != null
-		and _booster_tray.global_position.y >= hint_label.global_position.y + hint_label.size.y + 32.0
+		and (not hint_label.visible or _booster_tray.global_position.y >= hint_label.global_position.y + hint_label.size.y + 10.0)
 	)
 	var board_locked: bool = (
 		bool(board_contract.get("asset_loaded", false))
@@ -1296,7 +1300,10 @@ func gameplay_presentation_contract() -> Dictionary:
 	)
 	var compact_header_locked: bool = (
 		not title_label.visible
+		and level_plaque != null
+		and level_plaque.custom_minimum_size.x >= 580.0
 		and eyebrow_label.text.begins_with("LEVEL ")
+		and eyebrow_label.get_theme_font_size("font_size") >= 40
 		and not eyebrow_label.text.contains("·")
 		and pause_button.global_position.x < objective_icon.global_position.x
 		and moves_label.global_position.x > objective_label.global_position.x
@@ -1304,10 +1311,9 @@ func gameplay_presentation_contract() -> Dictionary:
 	var compact_geometry_locked: bool = (
 		is_equal_approx(_booster_tray.anchor_left, 0.045)
 		and is_equal_approx(_booster_tray.anchor_right, 0.955)
+		and is_equal_approx(_booster_tray.anchor_top, 0.755)
 		and ($Layout/BoardView as Control).custom_minimum_size.y >= 1020.0
 		and ($Layout/BoardView as Control).custom_minimum_size.y <= 1080.0
-		and hint_label.custom_minimum_size.x >= 660.0
-		and hint_label.custom_minimum_size.x <= 720.0
 	)
 	var viewport_size := get_viewport().get_visible_rect().size
 	var hud_rect := ($Layout/HUDPlate as Control).get_global_rect()
@@ -1366,7 +1372,7 @@ func gameplay_presentation_contract() -> Dictionary:
 		"north_star_header_depth": header_depth_locked,
 		"integrated_hint_surface": integrated_hint_surface,
 		"integrated_hud_surface": integrated_hud_surface,
-		"final_hint_readability": hint_readable and hint_label.size_flags_horizontal == Control.SIZE_SHRINK_CENTER and hint_label.custom_minimum_size.x >= 660.0 and hint_label.custom_minimum_size.x <= 720.0,
+		"final_hint_readability": hint_readable and hint_label.size_flags_horizontal == Control.SIZE_SHRINK_CENTER,
 		"final_booster_readability": booster_family_locked and shuffle_label.get_theme_font_size("font_size") >= 26,
 		"visual_parity_gate_v2": hierarchy_locked and booster_family_locked and composition_locked and board_locked and utilities_separated and String(_booster_tray.get_meta("production_chrome_kind", "")) == "gameplay_booster_tray",
 		"visual_parity_gate_v3": hierarchy_locked and integrated_hud_surface and hint_readable and booster_family_locked and composition_locked and board_locked and utilities_separated,
@@ -1443,6 +1449,7 @@ func _use_hint_boost() -> void:
 	var move: Dictionary = MoveFinder.first_legal_move(board_state)
 	if move.is_empty():
 		hint_label.text = "THE KEEPER SEES NO PATH · THE HOUSE IS RESHAPING THE SIGILS"
+		_style_impact_hint("normal")
 		return
 	_present_keeper_hint(move, true, false)
 
@@ -1458,6 +1465,7 @@ func _present_keeper_hint(move: Dictionary, manual: bool, guided: bool) -> void:
 		hint_label.text = "KEEPER HINT · FOLLOW THE MARKED PAIR"
 	else:
 		hint_label.text = "THE KEEPER NOTICES A PATH · FOLLOW THE MOONLIT PAIR"
+	_style_impact_hint("normal")
 	feedback_requested.emit("match")
 
 func keeper_familiar_contract() -> Dictionary:
