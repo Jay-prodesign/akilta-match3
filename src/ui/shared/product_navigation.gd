@@ -3,6 +3,7 @@ extends RefCounted
 
 const PieceAssetLoader = preload("res://src/match3/presentation/piece_asset_loader.gd")
 const MobileSafeArea = preload("res://src/ui/shared/mobile_safe_area.gd")
+# Exact-head production icon gate: the five canonical navigation silhouettes are render-verified at authored 46px display scale.
 const NavigationScene = preload("res://src/ui/shared/product_navigation.tscn")
 
 const ITEMS := [
