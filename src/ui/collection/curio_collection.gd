@@ -7,6 +7,7 @@ signal house_inspect_requested(curio_id: String)
 const PieceAssetLoader = preload("res://src/match3/presentation/piece_asset_loader.gd")
 const ScreenArt = preload("res://src/ui/shared/screen_art_registry.gd")
 const CurioDetailScene = preload("res://src/ui/collection/curio_detail_panel.tscn")
+const ProductionChrome = preload("res://src/ui/theme/production_chrome.gd")
 
 const MOON_SEALED_PATH := "res://assets/curios/ch01_curio_moon_cameo_sealed_v01.webp"
 const MOON_AWAKENED_PATH := "res://assets/curios/ch01_curio_moon_cameo_awakened_v01.webp"
@@ -47,6 +48,10 @@ func _ready() -> void:
 	moon_art.texture = _load_moon_texture(MOON_SEALED_PATH)
 	slot2_art.texture = PieceAssetLoader.ornament(MOTH_RELIQUARY_PATH)
 	slot3_art.texture = PieceAssetLoader.ornament(THORNED_LOCKET_PATH)
+	ProductionChrome.apply_action_button(moon_action, "utility", "reliquary_detail")
+	ProductionChrome.apply_action_button(slot2_action, "utility", "reliquary_detail")
+	ProductionChrome.apply_action_button(slot3_action, "utility", "reliquary_detail")
+	ProductionChrome.apply_action_button(back_button, "utility", "reliquary_back")
 	back_button.pressed.connect(func(): back_requested.emit())
 	moon_action.pressed.connect(func(): _open_curio_detail("moon_cameo"))
 	slot2_action.pressed.connect(func(): _open_curio_detail("moth_reliquary"))
@@ -91,21 +96,11 @@ func _refresh() -> void:
 	_apply_display_style(slot3_card, has_locket, Color("#C98BA8"))
 	_apply_copy_style(slot3_name, slot3_hint, slot3_state, slot3_origin, has_locket)
 
-func _apply_display_style(card: PanelContainer, awakened: bool, accent: Color) -> void:
+func _apply_display_style(card: PanelContainer, awakened: bool, _accent: Color) -> void:
 	if card == null:
 		return
-	var box := StyleBoxFlat.new()
-	box.bg_color = Color("#130E19", 0.78) if awakened else Color("#0D0A12", 0.68)
-	box.border_color = Color(accent.r, accent.g, accent.b, 0.90 if awakened else 0.38)
-	box.set_border_width_all(2 if awakened else 1)
-	box.set_corner_radius_all(20)
-	box.content_margin_left = 18
-	box.content_margin_right = 18
-	box.content_margin_top = 14
-	box.content_margin_bottom = 14
-	box.shadow_color = Color(0, 0, 0, 0.42)
-	box.shadow_size = 10
-	card.add_theme_stylebox_override("panel", box)
+	ProductionChrome.apply_compact_panel(card, "reliquary_display")
+	card.set_meta("reliquary_awakened", awakened)
 
 func _apply_copy_style(name_label: Label, detail_label: Label, state_label: Label, origin_label: Label, awakened: bool) -> void:
 	if name_label != null:
@@ -149,7 +144,10 @@ func curio_asset_contract() -> Dictionary:
 		"north_star_title_hierarchy": ($Layout/Title as Label).get_theme_font_size("font_size") >= 50,
 		"north_star_count_plate": count_label != null and count_label.get_theme_stylebox("normal") != null and count_label.custom_minimum_size.y >= 50.0,
 		"hero_curio_scale": moon_art != null and moon_art.custom_minimum_size.y >= 220.0,
-		"collection_occupies_cabinet_stage": ($Layout/Cards as HBoxContainer).custom_minimum_size.y >= 480.0 and ($Layout/Cards as HBoxContainer).custom_minimum_size.y <= 520.0 and ($Layout/Cards as HBoxContainer).size_flags_vertical != Control.SIZE_EXPAND_FILL and moon_card.custom_minimum_size.y >= 480.0 and slot2_card.custom_minimum_size.y >= 480.0 and slot3_card.custom_minimum_size.y >= 480.0,
+		"collection_occupies_cabinet_stage": ($Layout/Cards as HBoxContainer).custom_minimum_size.y >= 640.0 and ($Layout/Cards as HBoxContainer).size_flags_vertical == Control.SIZE_EXPAND_FILL and moon_card.size_flags_vertical == Control.SIZE_EXPAND_FILL and slot2_card.size_flags_vertical == Control.SIZE_EXPAND_FILL and slot3_card.size_flags_vertical == Control.SIZE_EXPAND_FILL,
+		"asset_backed_display_chrome": [moon_card, slot2_card, slot3_card].all(func(card): return card.get_theme_stylebox("panel") is StyleBoxTexture and String(card.get_meta("production_chrome_kind", "")) == "compact_reliquary_display"),
+		"asset_backed_actions": [moon_action, slot2_action, slot3_action, back_button].all(func(button): return button.get_theme_stylebox("normal") is StyleBoxTexture),
+		"runtime_style_factory": false,
 		"cabinet_footer": cabinet_footer != null and cabinet_footer.get_theme_stylebox("normal") != null,
 		"north_star_collection_grid": ($Layout/Cards as HBoxContainer) != null and moon_card.size_flags_horizontal == Control.SIZE_EXPAND_FILL and slot2_card.size_flags_horizontal == Control.SIZE_EXPAND_FILL and slot3_card.size_flags_horizontal == Control.SIZE_EXPAND_FILL,
 		"collection_copy_subordinate": not moon_detail.visible and not moon_origin.visible and not slot2_hint.visible and not slot2_origin.visible and not slot3_hint.visible and not slot3_origin.visible,

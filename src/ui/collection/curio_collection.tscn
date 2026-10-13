@@ -162,16 +162,17 @@ horizontal_alignment = 1
 autowrap_mode = 2
 
 [node name="Cards" type="HBoxContainer" parent="Layout"]
-custom_minimum_size = Vector2(0, 500)
+custom_minimum_size = Vector2(0, 660)
 layout_mode = 2
-size_flags_vertical = 1
+size_flags_vertical = 3
 theme_override_constants/separation = 12
 alignment = 1
 
 [node name="MoonCard" type="PanelContainer" parent="Layout/Cards"]
-custom_minimum_size = Vector2(0, 490)
+custom_minimum_size = Vector2(0, 650)
 layout_mode = 2
 size_flags_horizontal = 3
+size_flags_vertical = 3
 theme_override_styles/panel = SubResource("Display")
 
 [node name="Content" type="VBoxContainer" parent="Layout/Cards/MoonCard"]
@@ -181,7 +182,7 @@ theme_override_constants/separation = 14
 alignment = 0
 
 [node name="RitualArt" type="TextureRect" parent="Layout/Cards/MoonCard/Content"]
-custom_minimum_size = Vector2(0, 240)
+custom_minimum_size = Vector2(0, 320)
 layout_mode = 2
 size_flags_horizontal = 3
 expand_mode = 1
@@ -254,9 +255,10 @@ theme_override_styles/pressed = SubResource("Action")
 text = "DETAILS"
 
 [node name="Slot2" type="PanelContainer" parent="Layout/Cards"]
-custom_minimum_size = Vector2(0, 490)
+custom_minimum_size = Vector2(0, 650)
 layout_mode = 2
 size_flags_horizontal = 3
+size_flags_vertical = 3
 theme_override_styles/panel = SubResource("DisplayCool")
 
 [node name="Content" type="VBoxContainer" parent="Layout/Cards/Slot2"]
@@ -266,7 +268,7 @@ theme_override_constants/separation = 14
 alignment = 0
 
 [node name="Number" type="Label" parent="Layout/Cards/Slot2/Content"]
-custom_minimum_size = Vector2(0, 240)
+custom_minimum_size = Vector2(0, 320)
 size_flags_horizontal = 3
 size_flags_vertical = 0
 layout_mode = 2
@@ -340,9 +342,10 @@ theme_override_styles/pressed = SubResource("Action")
 text = "DETAILS"
 
 [node name="Slot3" type="PanelContainer" parent="Layout/Cards"]
-custom_minimum_size = Vector2(0, 490)
+custom_minimum_size = Vector2(0, 650)
 layout_mode = 2
 size_flags_horizontal = 3
+size_flags_vertical = 3
 theme_override_styles/panel = SubResource("DisplayCool")
 
 [node name="Content" type="VBoxContainer" parent="Layout/Cards/Slot3"]
@@ -352,7 +355,7 @@ theme_override_constants/separation = 14
 alignment = 0
 
 [node name="Number" type="Label" parent="Layout/Cards/Slot3/Content"]
-custom_minimum_size = Vector2(0, 240)
+custom_minimum_size = Vector2(0, 320)
 size_flags_horizontal = 3
 size_flags_vertical = 0
 layout_mode = 2
