@@ -4,6 +4,7 @@ extends RefCounted
 const PieceAssetLoader = preload("res://src/match3/presentation/piece_asset_loader.gd")
 const MobileSafeArea = preload("res://src/ui/shared/mobile_safe_area.gd")
 const ResourceBarScene = preload("res://src/ui/shared/top_resource_bar.tscn")
+# Exact-head visual gate: shared meta content must begin below this authored 104px resource shell.
 
 static func attach(screen: Control, progress, profile_handler: Callable = Callable(), content_path: NodePath = NodePath("Layout")) -> PanelContainer:
 	if screen == null:
