@@ -29,14 +29,15 @@ func _run() -> void:
 	_expect(int(contract.get("visible_booster_count", 0)) == 3, "Exactly three gameplay boosters must be visible")
 	_expect(float(contract.get("resource_bar_height", 0.0)) == 80.0, "Resource strip height drifted")
 	_expect(float(contract.get("hud_plate_height", 0.0)) >= 184.0 and float(contract.get("hud_plate_height", 0.0)) <= 200.0, "Target/moves HUD depth drifted from North Star composition")
-	_expect(float(contract.get("booster_tray_height", 0.0)) >= 200.0 and float(contract.get("booster_tray_height", 0.0)) <= 212.0, "Booster tray depth drifted")
+	_expect(float(contract.get("booster_tray_height", 0.0)) >= 210.0 and float(contract.get("booster_tray_height", 0.0)) <= 230.0, "Booster tray depth drifted")
 
 	var level_plaque := screen.get_node_or_null("Layout/LevelPlaque") as PanelContainer
 	var eyebrow := screen.get_node_or_null("Layout/LevelPlaque/Eyebrow") as Label
 	var title := screen.get_node_or_null("Layout/Title") as Label
-	var objective := screen.get_node_or_null("Layout/HUDPlate/HUD/Objective") as Label
+	var objective_name := screen.get_node_or_null("Layout/HUDPlate/HUD/ObjectiveSlot/ObjectiveName") as Label
+	var objective := screen.get_node_or_null("Layout/HUDPlate/HUD/ObjectiveSlot/Objective") as Label
 	var moves := screen.get_node_or_null("Layout/HUDPlate/HUD/Moves") as Label
-	var objective_icon := screen.get_node_or_null("Layout/HUDPlate/HUD/ObjectiveIcon") as TextureRect
+	var objective_icon := screen.get_node_or_null("Layout/HUDPlate/HUD/ObjectiveSlot/ObjectiveIcon") as TextureRect
 	var pause := screen.get_node_or_null("Layout/HUDPlate/HUD/Pause") as Button
 	var board := screen.get_node_or_null("Layout/BoardView") as Control
 	var hint_band := screen.get_node_or_null("Layout/Hint") as Label
@@ -52,25 +53,25 @@ func _run() -> void:
 
 	_expect(title != null and not title.visible, "Room title must not compete with the compact Level identity")
 	_expect(level_plaque != null and level_plaque.custom_minimum_size.x >= 580.0 and level_plaque.get_theme_stylebox("panel") is StyleBoxTexture and eyebrow != null and eyebrow.text.begins_with("LEVEL ") and not eyebrow.text.contains("·") and eyebrow.get_theme_font_size("font_size") >= 40, "Authored Level plaque must anchor the gameplay header")
-	_expect(objective != null and objective.text.contains("SIGILS"), "Objective must remain explicit")
+	_expect(objective_name != null and objective_name.text.contains("SIGILS") and objective != null and objective.text.contains("/"), "Objective must remain explicit")
 	_expect(objective_icon != null and objective_icon.texture != null and objective_icon.custom_minimum_size.x >= 80.0, "Objective art must remain visually legible")
 	_expect(moves != null and moves.custom_minimum_size.x >= 136.0 and moves.get_theme_font_size("font_size") >= 38 and moves.get_theme_font_size("font_size") <= 42, "Moves must remain a dominant counter")
-	_expect(objective != null and objective.size.x >= 220.0 and objective.get_theme_font_size("font_size") >= 30 and objective.horizontal_alignment == HORIZONTAL_ALIGNMENT_CENTER, "Objective copy must remain readable and optically centered beside its icon")
-	_expect(objective != null and objective_icon != null and objective.global_position.x >= objective_icon.global_position.x + objective_icon.size.x + 6.0, "Objective icon and copy must retain readable clearance")
+	_expect(objective != null and objective.get_theme_font_size("font_size") >= 28 and objective.horizontal_alignment == HORIZONTAL_ALIGNMENT_CENTER, "Objective counter must remain readable and centered under its icon")
+	_expect(objective != null and objective_icon != null and objective.global_position.y >= objective_icon.global_position.y + objective_icon.size.y - 8.0, "Objective counter must remain attached below its icon")
 	_expect(pause != null and objective_icon != null and pause.global_position.x < objective_icon.global_position.x, "Pause must sit at the quiet left edge of the gameplay HUD")
 	_expect(pause != null and pause.icon != null and pause.text == "" and pause.get_theme_stylebox("normal") is StyleBoxFlat and String(pause.get_meta("production_chrome_kind", "")) == "gameplay_pause_icon", "Pause must render as the clear authored icon rather than a clipped text glyph")
 	_expect(board != null and board.custom_minimum_size.y >= 1020.0 and board.custom_minimum_size.y <= 1080.0, "Board must remain dominant without crowding the North Star header and booster bands")
 	_expect(hint_band != null and not hint_band.visible, "Initial teaching must stay board-led instead of inserting a persistent hint band")
 	_expect(tray != null and board != null and tray.global_position.y >= board.global_position.y + board.size.y - 4.0, "Booster tray must not cover the board")
 	_expect(tray != null and is_equal_approx(tray.anchor_left, 0.045) and is_equal_approx(tray.anchor_right, 0.955), "Booster tray width drifted from the final gameplay family")
-	_expect(keeper_slot != null and not keeper_slot.visible and settings_slot != null and not settings_slot.visible, "Utilities leaked into booster family")
+	_expect(keeper_slot != null and not keeper_slot.visible and settings_slot != null and settings_slot.visible and settings_slot.custom_minimum_size.x < 100.0, "Gameplay utility must remain visually subordinate to the booster family")
 	_expect(shuffle != null and shuffle.disabled and shuffle.icon != null and shuffle.custom_minimum_size.y >= 108.0, "Shuffle booster truth/scale failed")
 	_expect(hand != null and hand.disabled and hand.icon != null and hand.custom_minimum_size.y >= 108.0, "Hand booster truth/scale failed")
 	_expect(magic != null and magic.disabled and magic.icon != null and magic.custom_minimum_size.y >= 108.0, "Magic booster truth/scale failed")
 	_expect(shuffle_label != null and shuffle_label.text == "SHUFFLE" and shuffle_label.get_theme_font_size("font_size") >= 22, "Shuffle identity/readability drifted")
 	_expect(hand_label != null and hand_label.text == "HAND", "Hand identity drifted")
 	_expect(magic_label != null and magic_label.text == "MAGIC", "Magic identity drifted")
-	_expect(objective != null and not objective.has_theme_stylebox_override("normal") and objective.text.contains("\n") and not objective.text.begins_with("TARGET\n"), "Objective must read as a compact authored HUD objective rather than a detached text panel")
+	_expect(objective != null and objective_name != null and not objective.has_theme_stylebox_override("normal") and objective.text.contains("/") and objective_name.text != "", "Objective must read as a compact authored icon-and-counter slot rather than a detached text panel")
 	_expect(hint_band != null and hint_band.custom_minimum_size.y >= 52.0 and hint_band.get_theme_font_size("font_size") >= 26, "Hint callout must remain readable without competing with the board")
 	_expect(hint_band != null and hint_band.size_flags_horizontal == Control.SIZE_SHRINK_CENTER and hint_band.custom_minimum_size.x >= 660.0 and hint_band.custom_minimum_size.x <= 720.0, "Hint must remain a restrained centered gameplay callout")
 	var hint_style := hint_band.get_theme_stylebox("normal") if hint_band != null else null
