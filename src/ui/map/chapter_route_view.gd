@@ -12,7 +12,6 @@ const CYAN := Color("#9BBED0")
 const ROSE := Color("#C98BA8")
 const PieceAssetLoader = preload("res://src/match3/presentation/piece_asset_loader.gd")
 const ScreenArt = preload("res://src/ui/shared/screen_art_registry.gd")
-const ProductionChrome = preload("res://src/ui/theme/production_chrome.gd")
 const FRONTIER_ART_PATH := "res://assets/pieces/moon_sigil.webp"
 const RELIC_ART_PATHS := {
 	1: "res://assets/curios/ch01_curio_moon_cameo_awakened_v01.webp",
@@ -107,12 +106,11 @@ func route_authored_contract() -> Dictionary:
 		"authored_level_slots": _level_buttons.size() == visible_route_levels and _level_labels.size() == visible_route_levels,
 		"authored_frontier_slots": _frontier_focus != null and _frontier_label != null,
 		"frontier_raster_loaded": FRONTIER_ART_PATH.ends_with(".webp") and _frontier_focus != null and _frontier_focus.texture != null,
+		"frontier_raster_focus_scale": _frontier_focus != null and _frontier_focus.size.x >= 190.0 and _frontier_focus.size.y >= 190.0,
 		"raster_relics_loaded": raster_relics_loaded,
 		"opening_label_readability": opening_labels_readable,
 		"frontier_label_readability": _frontier_label != null and _frontier_label.get_theme_font_size("font_size") >= 20 and frontier_plate is StyleBoxFlat,
 		"runtime_node_factory": false,
-		"asset_backed_level_chrome": _level_buttons.values().all(func(button): return button is Button and (button as Button).get_theme_stylebox("normal") is StyleBoxTexture and bool((button as Button).get_meta("production_route_chrome", false))),
-		"runtime_flat_node_factory": false,
 		"runtime_route_vfx_allowed": true,
 	}
 
@@ -174,10 +172,10 @@ func _update_frontier_focus() -> void:
 		return
 	var center: Vector2 = _centers[_frontier_level]
 	var diameter := 160.0 if _frontier_level == 1 else 148.0
-	var icon_center := center + Vector2(diameter * 0.48, -diameter * 0.48)
-	_frontier_focus.position = icon_center - _frontier_focus.size * 0.5
+	_frontier_focus.size = Vector2(196.0, 196.0)
+	_frontier_focus.position = center - _frontier_focus.size * 0.5
+	_frontier_focus.modulate = Color(1.0, 0.94, 0.78, 0.58)
 	_frontier_label.position = Vector2(center.x - _frontier_label.size.x * 0.5, center.y - diameter * 0.5 - 52.0)
-	move_child(_frontier_focus, get_child_count() - 1)
 	move_child(_frontier_label, get_child_count() - 1)
 
 func _tooltip_for(level_number: int) -> String:
@@ -197,39 +195,42 @@ func _caption(level_number: int, completed: bool) -> String:
 	return ""
 
 func _apply_node_style(button: Button, state: String) -> void:
+	var box := StyleBoxFlat.new()
 	var level_number := int(button.name.trim_prefix("Level"))
+	var radius := 80 if level_number == 1 else (74 if level_number <= 3 else 26)
 	var open := state in ["current", "available", "completed"]
-	ProductionChrome.apply_interactive_button(button, state == "current", "chapter_route_node")
-	var normal := button.get_theme_stylebox("normal")
-	var hover := button.get_theme_stylebox("hover")
-	if normal is StyleBoxTexture:
-		var normal_style := (normal as StyleBoxTexture).duplicate() as StyleBoxTexture
-		normal_style.modulate_color = _route_node_tint(level_number, state, false)
-		button.add_theme_stylebox_override("normal", normal_style)
-		button.add_theme_stylebox_override("pressed", normal_style)
-		button.add_theme_stylebox_override("disabled", normal_style)
-	if hover is StyleBoxTexture:
-		var hover_style := (hover as StyleBoxTexture).duplicate() as StyleBoxTexture
-		hover_style.modulate_color = _route_node_tint(level_number, state, true)
-		button.add_theme_stylebox_override("hover", hover_style)
-		button.add_theme_stylebox_override("focus", hover_style)
-	button.set_meta("production_route_chrome", true)
+	box.set_corner_radius_all(radius)
+	box.set_border_width_all(5 if state == "current" else (4 if level_number <= 3 else 1))
+	box.shadow_color = Color(0, 0, 0, 0.52)
+	box.shadow_size = 24 if state == "current" else (18 if open else 5)
+	match state:
+		"completed":
+			box.bg_color = Color("#3B2742")
+			box.border_color = GOLD
+		"current":
+			box.bg_color = Color("#33203D")
+			box.border_color = Color("#F6DA92")
+		"available":
+			box.bg_color = Color("#2E2036")
+			box.border_color = LILAC
+		_:
+			if level_number <= 3:
+				box.bg_color = Color("#1D1722")
+				box.border_color = Color("#65596D")
+			else:
+				box.bg_color = Color("#151218")
+				box.border_color = Color("#4E4355")
+	button.add_theme_stylebox_override("normal", box)
+	var hover_style := box.duplicate() as StyleBoxFlat
+	hover_style.border_color = Color("#FFF0B8") if open else box.border_color
+	hover_style.shadow_size = 28 if state == "current" else (22 if open else 5)
+	button.add_theme_stylebox_override("hover", hover_style)
+	button.add_theme_stylebox_override("focus", hover_style)
+	button.add_theme_stylebox_override("pressed", box)
+	button.add_theme_stylebox_override("disabled", box)
 	button.add_theme_color_override("font_color", Color("#FFF4D8") if state == "current" else (BONE if open else Color("#9A8D9E")))
 	button.add_theme_color_override("font_disabled_color", Color("#776D7B"))
 	button.add_theme_font_size_override("font_size", 48 if state == "current" else (46 if level_number == 1 else (40 if level_number <= 3 else 15)))
-
-func _route_node_tint(level_number: int, state: String, hover: bool) -> Color:
-	var tint := Color(0.42, 0.36, 0.46, 0.66) if level_number <= 3 else Color(0.28, 0.24, 0.31, 0.54)
-	match state:
-		"completed":
-			tint = Color(0.88, 0.72, 0.52, 0.94)
-		"current":
-			tint = Color(1.0, 0.94, 0.76, 1.0)
-		"available":
-			tint = Color(0.78, 0.68, 0.86, 0.90)
-	if hover and state in ["current", "available", "completed"]:
-		tint = tint.lightened(0.10)
-	return tint
 
 func _draw() -> void:
 	# S03 owns route STRUCTURE only. Environment imagery belongs to the

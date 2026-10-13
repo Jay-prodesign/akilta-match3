@@ -85,7 +85,7 @@ func north_star_map_contract() -> Dictionary:
 		"progress_plate": chapter_progress != null and chapter_progress.get_theme_stylebox("normal") != null and chapter_progress.get_theme_font_size("font_size") >= 26,
 		"concise_route_instruction": intro != null and intro.text.length() <= 72,
 		"route_world_dominant": route_view != null and route_view.custom_minimum_size.y >= 1400.0,
-		"resource_header_clearance": ($Layout as VBoxContainer).offset_top >= 60.0,
+		"resource_header_clearance": ($Layout as VBoxContainer).offset_top >= 110.0,
 	}
 
 
