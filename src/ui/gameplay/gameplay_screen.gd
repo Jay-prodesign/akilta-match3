@@ -165,7 +165,7 @@ func _ready() -> void:
 	ProductionChrome.apply_compact_panel($ResourceBar/Resources/GemChip, "gameplay_gem_resource")
 	ProductionChrome.apply_compact_panel($ResourceBar/Resources/LevelBadgePlate, "gameplay_level_badge")
 	ProductionChrome.apply_gameplay_shell($Layout/HUDPlate, "objective")
-	ProductionChrome.apply_gameplay_shell($BoosterTray, "boosters")
+	ProductionChrome.apply_gameplay_booster_tray($BoosterTray)
 	ProductionChrome.apply_action_button(pause_button, "utility", "gameplay_pause")
 	ProductionChrome.apply_action_button(pause_resume, "primary", "pause_resume")
 	ProductionChrome.apply_action_button(pause_retry, "utility", "pause_retry")
@@ -706,7 +706,7 @@ func _apply_moves_urgency() -> void:
 		_moves_urgency_state = "normal"
 		moves_label.text = "%d\nMOVES" % moves
 		moves_label.add_theme_color_override("font_color", Color("#FFF1B6") if _high_contrast else Color("#F2C66D"))
-		moves_label.add_theme_font_size_override("font_size", 42)
+		moves_label.add_theme_font_size_override("font_size", 40)
 		moves_label.add_theme_constant_override("outline_size", 3)
 	moves_label.set_meta("urgency_state", _moves_urgency_state)
 
@@ -1046,7 +1046,7 @@ func gameplay_presentation_contract() -> Dictionary:
 	)
 	var hierarchy_locked: bool = (
 		title_label.get_theme_font_size("font_size") >= 36
-		and objective_icon.custom_minimum_size.x >= 64.0
+		and objective_icon.custom_minimum_size.x >= 70.0
 		and objective_label.get_theme_font_size("font_size") >= 26
 		and moves_label.get_theme_font_size("font_size") >= 36
 		and ($Layout/HUDPlate as PanelContainer).custom_minimum_size.y >= 136.0
@@ -1057,7 +1057,7 @@ func gameplay_presentation_contract() -> Dictionary:
 		and $BoosterTray/BoosterActions/SealedSlotC.visible
 		and canonical_booster_names
 		and [_sealed_boost_a, _sealed_boost_b, _sealed_boost_c].all(
-			func(button): return button.disabled and button.custom_minimum_size.y >= 112.0 and button.icon != null
+			func(button): return button.disabled and button.custom_minimum_size.y >= 108.0 and button.icon != null
 		)
 	)
 	var composition_locked: bool = (
@@ -1093,12 +1093,13 @@ func gameplay_presentation_contract() -> Dictionary:
 		"asset_backed_resource_chips": [$ResourceBar/Resources/CoinChip, $ResourceBar/Resources/GemChip, $ResourceBar/Resources/LevelBadgePlate].all(func(panel): return panel is PanelContainer and (panel as PanelContainer).get_theme_stylebox("panel") is StyleBoxTexture),
 		"level_badge_separated": ($ResourceBar/Resources/ResourceSpacer as Control).size_flags_horizontal == Control.SIZE_EXPAND_FILL,
 		"hint_booster_clearance": composition_locked,
-		"booster_label_readability": shuffle_label.custom_minimum_size.y >= 40.0 and hand_label.custom_minimum_size.y >= 40.0 and magic_label.custom_minimum_size.y >= 40.0,
+		"booster_label_readability": shuffle_label.custom_minimum_size.y >= 34.0 and hand_label.custom_minimum_size.y >= 34.0 and magic_label.custom_minimum_size.y >= 34.0,
 		"north_star_booster_family": canonical_booster_names,
+		"booster_frame_family": String(_booster_tray.get_meta("production_chrome_kind", "")) == "gameplay_booster_tray",
 		"utility_separated_from_boosters": utilities_separated,
 		"north_star_board_object": board_locked,
 		"north_star_header_hierarchy": hierarchy_locked,
-		"visual_parity_gate_v2": hierarchy_locked and booster_family_locked and composition_locked and board_locked and utilities_separated,
+		"visual_parity_gate_v2": hierarchy_locked and booster_family_locked and composition_locked and board_locked and utilities_separated and String(_booster_tray.get_meta("production_chrome_kind", "")) == "gameplay_booster_tray",
 		"resource_bar_height": ($ResourceBar as PanelContainer).offset_bottom - ($ResourceBar as PanelContainer).offset_top,
 		"hud_plate_height": ($Layout/HUDPlate as PanelContainer).custom_minimum_size.y,
 		"booster_tray_height": _booster_tray.offset_bottom - _booster_tray.offset_top,
