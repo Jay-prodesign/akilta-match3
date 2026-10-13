@@ -1261,8 +1261,8 @@
       ],
       "reuse": "S03_curio_boutique",
       "priority": "P0",
-      "production_status": "candidate_runtime_connected_raster",
-      "technical_policy": "authored_raster_only_no_svg_fallback",
+      "production_status": "runtime_connected_production_raster_verified",
+      "technical_policy": "authored_webp_raster_runtime__1080x1500_ship_region__godot_4_7_2_render_verified",
       "architecture_owned": true,
       "contract_owners": [
         {
@@ -1276,9 +1276,10 @@
         }
       ],
       "current_path": "assets/world/ch01_curio_boutique/chapter_route_curio_boutique.webp",
-      "current_runtime_dimensions": "1080x1500_webp",
-      "provenance": "AKILTA first-party generated environment candidate selected after canonical S03 ownership was locked",
-      "deprecated_candidate_path": "assets/world/ch01_curio_boutique/curio_boutique_moonlit_backdrop.svg"
+      "current_runtime_dimensions": "1080x1500_webp_runtime_verified",
+      "provenance": "AKILTA first-party Chapter Route world raster. The checked-in 1080x1500 WebP meets the locked ship-region contract and is verified in the real Godot route render.",
+      "deprecated_candidate_path": "assets/world/ch01_curio_boutique/curio_boutique_moonlit_backdrop.svg",
+      "source_resolution": "1080x1500_runtime_ship_region"
     },
     {
       "asset_id": "reliquary_bg_curio_boutique",
@@ -1301,8 +1302,8 @@
       ],
       "reuse": "declared_reuse_of_S03_curio_boutique_environment",
       "priority": "P0",
-      "production_status": "runtime_connected_declared_reuse_candidate",
-      "technical_policy": "authored_raster_only_no_svg_fallback",
+      "production_status": "runtime_connected_declared_reuse_verified",
+      "technical_policy": "declared_reuse_of_verified_chapter_route_world__authored_raster_only",
       "architecture_owned": true,
       "contract_owners": [
         {
@@ -1318,8 +1319,8 @@
         }
       ],
       "current_path": "assets/world/ch01_curio_boutique/chapter_route_curio_boutique.webp",
-      "current_runtime_dimensions": "1080x1500_webp",
-      "provenance": "AKILTA first-party authored S03 environment reused inside the same Curio Boutique world for Golden Loop S08 verification; no new art identity introduced"
+      "current_runtime_dimensions": "1080x1500_webp_runtime_verified",
+      "provenance": "S08 intentionally reuses the verified Curio Boutique chapter-world raster to preserve opening-wing world continuity."
     },
     {
       "asset_id": "splash_bg_curio_boutique",
@@ -1380,8 +1381,8 @@
       ],
       "reuse": "shared_world_family_with_S03__distinct_S02_composition",
       "priority": "P0",
-      "production_status": "runtime_connected_authored_raster",
-      "technical_policy": "authored_raster_only_no_svg_fallback",
+      "production_status": "runtime_connected_declared_reuse_verified",
+      "technical_policy": "declared_reuse_of_verified_chapter_route_world__authored_raster_only",
       "architecture_owned": true,
       "contract_owners": [
         {
@@ -1395,7 +1396,8 @@
         }
       ],
       "current_path": "assets/world/ch01_curio_boutique/chapter_route_curio_boutique.webp",
-      "provenance": "AKILTA first-party authored moonlit chapter-world environment used by S02 Chapters to establish the House wings and castle context; replaces the former S01 grand-hall reuse after Golden Loop acceptance."
+      "provenance": "S02 intentionally reuses the verified Curio Boutique chapter-world raster; no fabricated future-wing-specific art is implied.",
+      "current_runtime_dimensions": "1080x1500_webp_runtime_verified"
     },
     {
       "asset_id": "events_bg_curio_house",
@@ -2181,7 +2183,7 @@
       ],
       "reuse": "declared_reuse_of_canonical_moon_sigil",
       "priority": "P0",
-      "production_status": "runtime_connected_authored_state_asset",
+      "production_status": "runtime_connected_authored_state_asset_verified",
       "current_path": "assets/pieces/moon_sigil.webp",
       "architecture_owned": true,
       "contract_owners": [
@@ -2196,7 +2198,7 @@
         }
       ],
       "source_silhouette_path": "assets/pieces/moon_sigil.svg",
-      "technical_policy": "webp_raster_first_runtime__semantic_moon_focus_marker__owned_svg_exact_fallback",
+      "technical_policy": "webp_raster_first_runtime__semantic_moon_focus_marker__verified_canonical_piece_reuse",
       "provenance": "AKILTA first-party canonical moon sigil reused as the S03 current-frontier state marker. Runtime halo is focus VFX only; level-state truth remains owned by progression and the route contract."
     },
     {
@@ -2857,6 +2859,8 @@
     "golden_loop_action_chrome": "RUNTIME_AND_RENDER_VERIFIED",
     "golden_loop_action_chrome_evidence_head": "81f19420280e2164af0abbe42571ae06a29961c8",
     "global_functional_icon_family": "RUNTIME_AND_RENDER_VERIFIED",
-    "global_functional_icon_family_note": "Five global destinations plus coin, gem, Keeper profile and settings utility resolve to deterministic 128x128 WebP runtime assets; SVG remains exact-identity fallback only."
+    "global_functional_icon_family_note": "Five global destinations plus coin, gem, Keeper profile and settings utility resolve to deterministic 128x128 WebP runtime assets; SVG remains exact-identity fallback only.",
+    "chapter_world_raster_family": "RUNTIME_AND_RENDER_VERIFIED",
+    "chapter_world_raster_note": "S03 1080x1500 route world is production-resolution runtime art; S02 Chapters and S08 Reliquary reuse it intentionally and truthfully."
   }
 }
