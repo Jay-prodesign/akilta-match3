@@ -246,6 +246,42 @@ func _capture() -> void:
 	var moon_state: Label = collection.get_node_or_null("Layout/Cards/MoonCard/Content/Copy/State") as Label if collection != null else null
 	if moon_state == null or not moon_state.text.begins_with("AWAKENED"):
 		return _fail(app, "S08 must show the exact earned Moon Cameo as awakened")
+	var collection_contract: Dictionary = collection.curio_asset_contract() if collection != null and collection.has_method("curio_asset_contract") else {}
+	for parity_key in [
+		"north_star_collection_grid",
+		"truthful_set_summary",
+		"cabinet_niche_scale",
+		"collection_occupies_cabinet_stage",
+		"redundant_navigation_suppressed",
+		"redundant_status_suppressed",
+		"asset_backed_display_chrome",
+	]:
+		if not bool(collection_contract.get(parity_key, false)):
+			return _fail(app, "S08 Reliquary North Star render gate failed: %s" % parity_key)
+	var collection_viewport: Vector2 = collection.get_viewport().get_visible_rect().size
+	var cabinet_grid := collection.get_node_or_null("Layout/Cards") as GridContainer
+	var moon_card := collection.get_node_or_null("Layout/Cards/MoonCard") as Control
+	var set_summary := collection.get_node_or_null("Layout/Cards/SetSummary") as Control
+	var summary_progress := collection.get_node_or_null("Layout/Cards/SetSummary/Content/Progress") as Label
+	var cabinet_footer := collection.get_node_or_null("Layout/CabinetFooter") as Control
+	var collection_back := collection.get_node_or_null("Layout/Back") as Control
+	if cabinet_grid == null or moon_card == null or set_summary == null or summary_progress == null or cabinet_footer == null or collection_back == null:
+		return _fail(app, "S08 dense cabinet grid nodes missing")
+	var grid_rect: Rect2 = cabinet_grid.get_global_rect()
+	var grid_height_ratio := grid_rect.size.y / collection_viewport.y
+	var grid_width_ratio := grid_rect.size.x / collection_viewport.x
+	if cabinet_grid.columns != 2 or cabinet_grid.get_child_count() != 4:
+		return _fail(app, "S08 cabinet must remain a truthful 2x2 composition")
+	if grid_height_ratio < 0.66 or grid_height_ratio > 0.71:
+		return _fail(app, "S08 cabinet density drifted: %.3f" % grid_height_ratio)
+	if grid_width_ratio < 0.90:
+		return _fail(app, "S08 cabinet no longer owns the collection stage: %.3f" % grid_width_ratio)
+	if moon_card.size.y / collection_viewport.y < 0.31 or moon_card.size.y / collection_viewport.y > 0.36 or set_summary.size.y / collection_viewport.y < 0.31 or set_summary.size.y / collection_viewport.y > 0.36:
+		return _fail(app, "S08 cabinet cells drifted from artwork-dominant niche proportions")
+	if summary_progress.text != "1 / 3 AWAKENED":
+		return _fail(app, "S08 set-summary cell must mirror exact first-Curio progress")
+	if collection_back.visible or cabinet_footer.visible:
+		return _fail(app, "S08 redundant footer/back chrome returned over product navigation")
 	if not await _save(app, "golden-08-curio-verification.png"):
 		return
 

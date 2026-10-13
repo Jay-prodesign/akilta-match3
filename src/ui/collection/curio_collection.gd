@@ -21,6 +21,10 @@ var _moon_textures: Dictionary = {}
 @onready var backdrop: TextureRect = $ReliquaryMoonlitBackdrop
 @onready var count_label: Label = $Layout/Count
 @onready var cabinet_footer: Label = $Layout/CabinetFooter
+@onready var cabinet_grid: GridContainer = $Layout/Cards
+@onready var set_summary: PanelContainer = $Layout/Cards/SetSummary
+@onready var set_summary_progress: Label = $Layout/Cards/SetSummary/Content/Progress
+@onready var set_summary_copy: Label = $Layout/Cards/SetSummary/Content/Copy
 @onready var moon_card: PanelContainer = $Layout/Cards/MoonCard
 @onready var moon_art: TextureRect = $Layout/Cards/MoonCard/Content/RitualArt
 @onready var moon_state: Label = $Layout/Cards/MoonCard/Content/Copy/State
@@ -51,6 +55,7 @@ func _ready() -> void:
 	ProductionChrome.apply_action_button(moon_action, "utility", "reliquary_detail")
 	ProductionChrome.apply_action_button(slot2_action, "utility", "reliquary_detail")
 	ProductionChrome.apply_action_button(slot3_action, "utility", "reliquary_detail")
+	ProductionChrome.apply_compact_panel(set_summary, "reliquary_set_summary")
 	ProductionChrome.apply_action_button(back_button, "utility", "reliquary_back")
 	back_button.pressed.connect(func(): back_requested.emit())
 	moon_action.pressed.connect(func(): _open_curio_detail("moon_cameo"))
@@ -66,8 +71,13 @@ func _refresh() -> void:
 	if not is_node_ready():
 		return
 	var curios: Array = progress.curios if progress != null else []
-	count_label.text = "FIRST CABINET SET · %d / 3 AWAKENED" % curios.size()
-	cabinet_footer.text = "OPENING CABINET COMPLETE · 3 / 3 CURIOS RECOVERED" if curios.size() >= 3 else "OPENING CABINET · %d / 3 CURIOS RECOVERED" % curios.size()
+	var awakened_count := mini(3, curios.size())
+	var dormant_count := maxi(0, 3 - awakened_count)
+	count_label.text = "FIRST CABINET SET · %d / 3 AWAKENED" % awakened_count
+	set_summary_progress.text = "%d / 3 AWAKENED" % awakened_count
+	var dormant_copy := "1 DORMANT\nCURIO REMAINS" if dormant_count == 1 else "%d DORMANT\nCURIOS REMAIN" % dormant_count
+	set_summary_copy.text = "SET COMPLETE\nALL 3 AWAKENED" if awakened_count >= 3 else dormant_copy
+	cabinet_footer.text = "OPENING CABINET COMPLETE · 3 / 3 CURIOS RECOVERED" if awakened_count >= 3 else "OPENING CABINET · %d / 3 CURIOS RECOVERED" % awakened_count
 
 	var has_moon := curios.has("moon_cameo")
 	moon_state.text = "AWAKENED · RELIC 01" if has_moon else "DORMANT · RELIC 01"
@@ -141,16 +151,18 @@ func curio_asset_contract() -> Dictionary:
 		"authored_display_slots": moon_art != null and slot2_art != null and slot3_art != null,
 		"world_backdrop_loaded": backdrop != null and backdrop.texture != null,
 		"authored_detail_scene": true,
-		"north_star_title_hierarchy": ($Layout/Title as Label).get_theme_font_size("font_size") >= 50,
+		"north_star_title_hierarchy": ($Layout/Title as Label).text == "CURIO CABINET" and ($Layout/Title as Label).get_theme_font_size("font_size") >= 48,
 		"north_star_count_plate": count_label != null and count_label.get_theme_stylebox("normal") != null and count_label.custom_minimum_size.y >= 50.0,
-		"hero_curio_scale": moon_art != null and moon_art.custom_minimum_size.y >= 220.0,
-		"collection_occupies_cabinet_stage": ($Layout/Cards as HBoxContainer).custom_minimum_size.y >= 540.0 and ($Layout/Cards as HBoxContainer).custom_minimum_size.y <= 590.0 and ($Layout/Cards as HBoxContainer).size_flags_vertical != Control.SIZE_EXPAND_FILL and moon_card.custom_minimum_size.y >= 540.0 and slot2_card.custom_minimum_size.y >= 540.0 and slot3_card.custom_minimum_size.y >= 540.0,
-		"back_anchored_to_stage_bottom": ($Layout/StageSpacer as Control) != null and ($Layout/StageSpacer as Control).size_flags_vertical == Control.SIZE_EXPAND_FILL,
-		"asset_backed_display_chrome": [moon_card, slot2_card, slot3_card].all(func(card): return card.get_theme_stylebox("panel") is StyleBoxTexture and String(card.get_meta("production_chrome_kind", "")) == "compact_reliquary_display"),
-		"asset_backed_actions": [moon_action, slot2_action, slot3_action, back_button].all(func(button): return button.get_theme_stylebox("normal") is StyleBoxTexture),
+		"curio_art_readable": moon_art != null and moon_art.custom_minimum_size.y >= 380.0 and slot2_art != null and slot3_art != null,
+		"collection_occupies_cabinet_stage": cabinet_grid != null and cabinet_grid.custom_minimum_size.y >= 1280.0 and cabinet_grid.custom_minimum_size.y <= 1360.0 and cabinet_grid.size_flags_vertical != Control.SIZE_EXPAND_FILL and [moon_card, slot2_card, slot3_card, set_summary].all(func(card): return card.custom_minimum_size.y >= 630.0 and card.custom_minimum_size.y <= 670.0),
+		"redundant_navigation_suppressed": back_button != null and not back_button.visible and ($Layout/StageSpacer as Control) != null and not ($Layout/StageSpacer as Control).visible and cabinet_footer != null and not cabinet_footer.visible,
+		"asset_backed_display_chrome": [moon_card, slot2_card, slot3_card].all(func(card): return card.get_theme_stylebox("panel") is StyleBoxTexture and String(card.get_meta("production_chrome_kind", "")) == "compact_reliquary_display") and set_summary.get_theme_stylebox("panel") is StyleBoxTexture and String(set_summary.get_meta("production_chrome_kind", "")) == "compact_reliquary_set_summary",
+		"asset_backed_actions": [moon_action, slot2_action, slot3_action].all(func(button): return button.get_theme_stylebox("normal") is StyleBoxTexture),
 		"runtime_style_factory": false,
-		"cabinet_footer": cabinet_footer != null and cabinet_footer.get_theme_stylebox("normal") != null,
-		"north_star_collection_grid": ($Layout/Cards as HBoxContainer) != null and moon_card.size_flags_horizontal == Control.SIZE_EXPAND_FILL and slot2_card.size_flags_horizontal == Control.SIZE_EXPAND_FILL and slot3_card.size_flags_horizontal == Control.SIZE_EXPAND_FILL,
+		"redundant_status_suppressed": cabinet_footer != null and not cabinet_footer.visible,
+		"north_star_collection_grid": cabinet_grid != null and cabinet_grid.columns == 2 and cabinet_grid.get_child_count() == 4 and moon_card.size_flags_horizontal == Control.SIZE_EXPAND_FILL and slot2_card.size_flags_horizontal == Control.SIZE_EXPAND_FILL and slot3_card.size_flags_horizontal == Control.SIZE_EXPAND_FILL,
+		"truthful_set_summary": set_summary != null and set_summary_progress != null and set_summary_progress.text.contains("/ 3 AWAKENED") and set_summary_copy != null and not set_summary_copy.text.is_empty(),
+		"cabinet_niche_scale": moon_card.custom_minimum_size.y >= 630.0 and slot2_card.custom_minimum_size.y >= 630.0 and slot3_card.custom_minimum_size.y >= 630.0 and moon_action.custom_minimum_size.y >= 68.0 and slot2_action.custom_minimum_size.y >= 68.0 and slot3_action.custom_minimum_size.y >= 68.0,
 		"collection_copy_subordinate": not moon_detail.visible and not moon_origin.visible and not slot2_hint.visible and not slot2_origin.visible and not slot3_hint.visible and not slot3_origin.visible,
 		"intro_subordinate": ($Layout/Intro as Label) != null and not ($Layout/Intro as Label).visible,
 		"runtime_ui_factory": false,

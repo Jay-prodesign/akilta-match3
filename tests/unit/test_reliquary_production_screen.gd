@@ -27,15 +27,17 @@ func _run() -> void:
 	_expect(bool(contract.get("authored_detail_scene", false)), "Curio detail must be an authored scene")
 	_expect(bool(contract.get("north_star_title_hierarchy", false)), "Reliquary must retain a strong North Star page title")
 	_expect(bool(contract.get("north_star_count_plate", false)), "Reliquary progress must sit on an authored readable plate")
-	_expect(bool(contract.get("hero_curio_scale", false)), "Reliquary Moon Cameo must remain a hero-scale Curio")
-	_expect(bool(contract.get("north_star_collection_grid", false)), "Reliquary must present the opening Curios as a visual collection grid")
+	_expect(bool(contract.get("curio_art_readable", false)), "Reliquary Curio art must remain readable inside compact cabinet niches")
+	_expect(bool(contract.get("north_star_collection_grid", false)), "Reliquary must present the opening Curios as a truthful 2x2 cabinet grid")
+	_expect(bool(contract.get("truthful_set_summary", false)), "Reliquary fourth grid cell must summarize the real three-Curio set rather than inventing another collectible")
+	_expect(bool(contract.get("cabinet_niche_scale", false)), "Reliquary Curios must read as artwork-dominant cabinet niches rather than compressed cards")
 	_expect(bool(contract.get("collection_copy_subordinate", false)), "Reliquary must keep long lore/origin copy behind Details instead of crowding the collection")
-	_expect(bool(contract.get("collection_occupies_cabinet_stage", false)), "Reliquary opening set must stay as a bounded cabinet display instead of stretching into empty towers")
-	_expect(bool(contract.get("back_anchored_to_stage_bottom", false)), "Reliquary must use the world stage as breathing room and anchor Back near the navigation edge")
+	_expect(bool(contract.get("collection_occupies_cabinet_stage", false)), "Reliquary opening set must own the collection stage instead of floating above empty world space")
+	_expect(bool(contract.get("redundant_navigation_suppressed", false)), "Reliquary must rely on product navigation instead of a redundant form-like Back region")
 	_expect(bool(contract.get("asset_backed_display_chrome", false)), "Reliquary displays must use verified quiet production chrome")
 	_expect(bool(contract.get("asset_backed_actions", false)), "Reliquary DETAILS and Back actions must use verified production action chrome")
 	_expect(not bool(contract.get("runtime_style_factory", true)), "Reliquary must not create StyleBox presentation resources at runtime")
-	_expect(bool(contract.get("cabinet_footer", false)), "Reliquary must finish the collection stage with an authored cabinet-status footer")
+	_expect(bool(contract.get("redundant_status_suppressed", false)), "Reliquary must avoid repeating the same set status in a detached footer band")
 	_expect(bool(contract.get("intro_subordinate", false)), "Reliquary explanatory prose must not compete with the collection")
 	_expect(not bool(contract.get("runtime_ui_factory", true)), "Reliquary must not rebuild presentation nodes at runtime")
 
@@ -43,10 +45,16 @@ func _run() -> void:
 	var moth_art := screen.get_node_or_null("Layout/Cards/Slot2/Content/Number/RewardArt") as TextureRect
 	var locket_art := screen.get_node_or_null("Layout/Cards/Slot3/Content/Number/RewardArt") as TextureRect
 	var footer := screen.get_node_or_null("Layout/CabinetFooter") as Label
-	_expect(moon_art != null and moon_art.texture != null and moon_art.custom_minimum_size.y >= 260.0, "Moon Cameo must render as a hero-scale authored display")
+	var back := screen.get_node_or_null("Layout/Back") as Button
+	_expect(moon_art != null and moon_art.texture != null and moon_art.custom_minimum_size.y >= 380.0, "Moon Cameo must remain artwork-dominant inside its cabinet niche")
 	_expect(moth_art != null and moth_art.texture != null, "Moth Reliquary authored display art missing")
 	_expect(locket_art != null and locket_art.texture != null, "Thorned Locket authored display art missing")
-	_expect(footer != null and footer.text.contains("3 / 3 CURIOS RECOVERED"), "Reliquary footer must reflect completed opening collection truth")
+	_expect(footer != null and not footer.visible and back != null and not back.visible, "Redundant footer/back chrome must stay out of the collection stage")
+	var grid := screen.get_node_or_null("Layout/Cards") as GridContainer
+	var summary := screen.get_node_or_null("Layout/Cards/SetSummary") as PanelContainer
+	var summary_progress := screen.get_node_or_null("Layout/Cards/SetSummary/Content/Progress") as Label
+	_expect(grid != null and grid.columns == 2 and grid.get_child_count() == 4, "Reliquary must render three real Curios plus one truthful set-summary cell")
+	_expect(summary != null and summary_progress != null and summary_progress.text == "3 / 3 AWAKENED", "Completed Reliquary summary must mirror exact collection truth")
 
 	for path in [
 		"Layout/Cards/MoonCard/DetailActionLayer/InspectAction",
