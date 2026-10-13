@@ -559,20 +559,20 @@ func _style_impact_hint(mode: String) -> void:
 	if hint_label == null:
 		return
 	var color := Color("#F4E5D3")
-	var size_px := 20
+	var size_px := 22
 	match mode:
 		"blocker":
 			color = Color("#F0CE8A")
-			size_px = 21
+			size_px = 23
 		"special":
 			color = Color("#E8C987")
-			size_px = 21
+			size_px = 23
 		"combo":
 			color = Color("#E7C8FF")
-			size_px = 22
+			size_px = 24
 		"cascade":
 			color = Color("#DDB7F5")
-			size_px = 21
+			size_px = 23
 		"invalid":
 			color = Color("#D8C5D2")
 		_:
@@ -615,13 +615,13 @@ func _refresh_hud() -> void:
 		]
 	if String(board_state.objective_type) == "collect_family":
 		var family_label: String = String(board_state.objective_family).capitalize()
-		objective_label.text = "TARGET\n%s SIGILS · %d / %d" % [
+		objective_label.text = "TARGET · %s SIGILS\n%d / %d" % [
 			family_label.to_upper(),
 			int(board_state.objective_progress),
 			int(board_state.objective_target)
 		]
 	elif String(board_state.objective_type) == "clear_blockers":
-		objective_label.text = "TARGET\nWAX SEAL LAYERS · %d / %d" % [_objective_progress_value(), _objective_target_value()]
+		objective_label.text = "TARGET · WAX SEAL LAYERS\n%d / %d" % [_objective_progress_value(), _objective_target_value()]
 	else:
 		objective_label.text = "TARGET\nAWAKEN THE COLLECTION"
 
@@ -664,10 +664,10 @@ func _present_objective_progress() -> void:
 	var target := _objective_target_value()
 	var complete := progress >= target
 	if String(board_state.objective_type) == "clear_blockers":
-		objective_label.text = "TARGET\nWAX SEAL LAYERS · %d / %d" % [progress, target]
+		objective_label.text = "TARGET · WAX SEAL LAYERS\n%d / %d · %s" % [progress, target, "OBJECTIVE COMPLETE" if complete else "+%d THIS MOVE" % _last_objective_delta]
 	else:
 		var family := String(board_state.objective_family).to_upper()
-		objective_label.text = "TARGET\n%s SIGILS · %d / %d" % [family, progress, target]
+		objective_label.text = "TARGET · %s SIGILS\n%d / %d · %s" % [family, progress, target, "OBJECTIVE COMPLETE" if complete else "+%d THIS MOVE" % _last_objective_delta]
 	objective_label.set_meta("objective_feedback_state", "complete" if complete else "progress")
 	objective_label.add_theme_color_override("font_color", Color("#FFFFFF") if _high_contrast else (Color("#F0CE8A") if complete else Color("#E4CDEB")))
 	if _objective_pulse_tween != null and _objective_pulse_tween.is_valid():
@@ -694,19 +694,19 @@ func _apply_moves_urgency() -> void:
 		_moves_urgency_state = "critical"
 		moves_label.text = "LAST MOVE" if moves == 1 else "NO MOVES"
 		moves_label.add_theme_color_override("font_color", Color("#FFFFFF") if _high_contrast else Color("#FF9B8E"))
-		moves_label.add_theme_font_size_override("font_size", 36)
+		moves_label.add_theme_font_size_override("font_size", 40)
 		moves_label.add_theme_constant_override("outline_size", 5 if _high_contrast else 4)
 	elif moves <= LOW_MOVE_WARNING_THRESHOLD:
 		_moves_urgency_state = "warning"
 		moves_label.text = "⚠ %d\nMOVES" % moves
 		moves_label.add_theme_color_override("font_color", Color("#FFF1B6") if _high_contrast else Color("#F2B36D"))
-		moves_label.add_theme_font_size_override("font_size", 38)
+		moves_label.add_theme_font_size_override("font_size", 42)
 		moves_label.add_theme_constant_override("outline_size", 4)
 	else:
 		_moves_urgency_state = "normal"
 		moves_label.text = "%d\nMOVES" % moves
 		moves_label.add_theme_color_override("font_color", Color("#FFF1B6") if _high_contrast else Color("#F2C66D"))
-		moves_label.add_theme_font_size_override("font_size", 40)
+		moves_label.add_theme_font_size_override("font_size", 44)
 		moves_label.add_theme_constant_override("outline_size", 3)
 	moves_label.set_meta("urgency_state", _moves_urgency_state)
 
@@ -1053,7 +1053,7 @@ func gameplay_presentation_contract() -> Dictionary:
 	)
 	var integrated_hud_surface: bool = (
 		not objective_label.has_theme_stylebox_override("normal")
-		and objective_label.text.begins_with("TARGET\n")
+		and objective_label.text.begins_with("TARGET")
 		and moves_label.get_theme_stylebox("normal") != null
 	)
 	var hint_readable: bool = (
@@ -1113,7 +1113,7 @@ func gameplay_presentation_contract() -> Dictionary:
 		"final_booster_readability": booster_family_locked and shuffle_label.get_theme_font_size("font_size") >= 26,
 		"visual_parity_gate_v2": hierarchy_locked and booster_family_locked and composition_locked and board_locked and utilities_separated and String(_booster_tray.get_meta("production_chrome_kind", "")) == "gameplay_booster_tray",
 		"visual_parity_gate_v3": hierarchy_locked and integrated_hud_surface and hint_readable and booster_family_locked and composition_locked and board_locked and utilities_separated,
-		"visual_parity_version": 3,
+		"visual_parity_version": 4,
 		"resource_bar_height": ($ResourceBar as PanelContainer).offset_bottom - ($ResourceBar as PanelContainer).offset_top,
 		"hud_plate_height": ($Layout/HUDPlate as PanelContainer).custom_minimum_size.y,
 		"booster_tray_height": _booster_tray.offset_bottom - _booster_tray.offset_top,
