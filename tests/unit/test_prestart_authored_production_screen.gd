@@ -28,6 +28,8 @@ func _run() -> void:
 	_expect(bool(contract.get("authored_ritual_aids", false)), "Ritual Help chips must be authored and loaded")
 	_expect(not bool(contract.get("runtime_ui_factory", true)), "Prestart must not rebuild persistent presentation UI at runtime")
 	_expect(bool(contract.get("north_star_readability", false)), "Prestart must retain a strong North Star title/objective/Play hierarchy")
+	_expect(bool(contract.get("north_star_decision_stack", false)), "Prestart must follow Level plaque → objective/moves → truthful aids → Play composition")
+	_expect(bool(contract.get("truthful_aid_semantics", false)), "Prestart ritual aids must remain explicitly truthful and not masquerade as pre-spend boosters")
 	_expect(bool(contract.get("note_subordinate", false)), "Long explanatory copy must not compete with the primary prestart decision")
 	_expect(bool(contract.get("asset_backed_prestart_chrome", false)), "Prestart card, Ritual Help chips and actions must use verified production chrome without ceremonial nesting")
 	_expect(bool(contract.get("raster_runtime", false)), "Prestart aid art must use raster runtime assets")
@@ -41,9 +43,15 @@ func _run() -> void:
 	_expect(start != null and start.custom_minimum_size.y >= 84.0, "Prestart primary CTA must retain mobile touch target")
 	_expect(back != null and back.custom_minimum_size.y >= 56.0, "Prestart back CTA must retain mobile touch target")
 
-	var objective := screen.get_node_or_null("Layout/Card/Content/Objective") as Label
+	var level_plaque := screen.get_node_or_null("Layout/LevelPlaque") as PanelContainer
+	var objective_icon := screen.get_node_or_null("Layout/Card/Content/ObjectiveBand/Row/ObjectiveCluster/Icon") as TextureRect
+	var objective := screen.get_node_or_null("Layout/Card/Content/ObjectiveBand/Row/ObjectiveCluster/Copy/Objective") as Label
+	var moves := screen.get_node_or_null("Layout/Card/Content/ObjectiveBand/Row/MovesPlate/Moves") as Label
 	var reward := screen.get_node_or_null("Layout/Card/Content/Reward") as Label
-	_expect(objective != null and objective.text.contains("6 MOON SIGILS"), "Prestart must bind Level 1 objective truth")
+	_expect(level_plaque != null and level_plaque.get_theme_stylebox("panel") is StyleBoxTexture, "Prestart Level plaque must use authored production chrome")
+	_expect(objective_icon != null and objective_icon.texture != null, "Prestart objective icon must be authored and loaded")
+	_expect(objective != null and objective.text.contains("6") and objective.text.contains("MOON SIGILS"), "Prestart must bind Level 1 objective truth")
+	_expect(moves != null and moves.text.contains("20") and moves.text.contains("MOVES"), "Prestart must bind Level 1 move truth")
 	_expect(reward != null and reward.text.contains("MOON CAMEO"), "Prestart must bind Level 1 reward truth")
 
 	_expect(screen.configure_level(1, true), "Level 1 replay prestart must configure")
