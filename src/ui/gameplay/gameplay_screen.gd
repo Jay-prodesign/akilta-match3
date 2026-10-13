@@ -702,19 +702,19 @@ func _apply_moves_urgency() -> void:
 		_moves_urgency_state = "critical"
 		moves_label.text = "LAST MOVE" if moves == 1 else "NO MOVES"
 		moves_label.add_theme_color_override("font_color", Color("#FFFFFF") if _high_contrast else Color("#FF9B8E"))
-		moves_label.add_theme_font_size_override("font_size", 42)
+		moves_label.add_theme_font_size_override("font_size", 40)
 		moves_label.add_theme_constant_override("outline_size", 5 if _high_contrast else 4)
 	elif moves <= LOW_MOVE_WARNING_THRESHOLD:
 		_moves_urgency_state = "warning"
 		moves_label.text = "⚠ %d\nMOVES" % moves
 		moves_label.add_theme_color_override("font_color", Color("#FFF1B6") if _high_contrast else Color("#F2B36D"))
-		moves_label.add_theme_font_size_override("font_size", 44)
+		moves_label.add_theme_font_size_override("font_size", 42)
 		moves_label.add_theme_constant_override("outline_size", 4)
 	else:
 		_moves_urgency_state = "normal"
 		moves_label.text = "%d\nMOVES" % moves
 		moves_label.add_theme_color_override("font_color", Color("#FFF1B6") if _high_contrast else Color("#F2C66D"))
-		moves_label.add_theme_font_size_override("font_size", 46)
+		moves_label.add_theme_font_size_override("font_size", 40)
 		moves_label.add_theme_constant_override("outline_size", 3)
 	moves_label.set_meta("urgency_state", _moves_urgency_state)
 
