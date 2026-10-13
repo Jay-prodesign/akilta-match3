@@ -45,6 +45,13 @@ func _run() -> void:
 			if art != null and art.texture != null:
 				_expect(String(art.get_meta("asset_path", "")).ends_with(".webp") or String(art.get_meta("asset_path", "")).ends_with(".png"), "%s %s must use raster object art" % [feature, card_name])
 		if feature == "events":
+			var events_world := screen.get_node_or_null("WorldArt") as TextureRect
+			_expect(events_world != null and events_world.texture != null and events_world.texture.get_width() >= 1080 and events_world.texture.get_height() >= 1500, "events world reuse must retain the verified 1080x1500 chapter-world raster")
+			var events_hero := screen.get_node_or_null("FeatureLayout/FeatureHero/HeroRow/HeroArt") as TextureRect
+			_expect(events_hero != null and events_hero.texture != null and events_hero.texture.get_width() >= 512 and events_hero.texture.get_height() >= 512, "events hero must retain production-resolution Curio art")
+			for event_card in ["Card1", "Card2", "Card3"]:
+				var event_art := screen.get_node_or_null("FeatureLayout/CardScroll/Cards/%s/Row/Art" % event_card) as TextureRect
+				_expect(event_art != null and event_art.texture != null and event_art.texture.get_width() >= 512 and event_art.texture.get_height() >= 512, "events %s must retain production-resolution Curio art" % event_card)
 			var weekly := {"hit": false}
 			screen.weekly_requested.connect(func(): weekly["hit"] = true)
 			(screen.get_node("FeatureLayout/WeeklyMissionsAction") as Button).emit_signal("pressed")

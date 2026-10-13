@@ -1081,7 +1081,7 @@
       ],
       "reuse": "retention_family_truthful_existing_curio_art",
       "priority": "P1",
-      "production_status": "runtime_connected_owned_content_art_candidate",
+      "production_status": "runtime_connected_owned_content_art_verified",
       "current_path": "assets/curios/ch01_curio_moon_cameo_awakened_v01.webp",
       "architecture_owned": true,
       "contract_owners": [
@@ -1118,8 +1118,9 @@
         "weekly_offline_locked": "assets/curios/ch01_curio_moon_cameo_sealed_v01.webp",
         "weekly_live_reward": "reserved_until_live_mission_data_exists"
       },
-      "technical_policy": "existing_first_party_content_art_only__no_fabricated_event_or_reward_state",
-      "provenance": "AKILTA first-party opening Curio art is deliberately reused as a truthful retention-family content anchor after Golden Loop acceptance. Event cards reference Moon Cameo, Moth Reliquary and Thorned Locket as House-world context only; they do not represent a live event, claimable reward, price or countdown. Live-specific event artwork remains unavailable until real content exists."
+      "technical_policy": "verified_first_party_curio_art_reuse__no_fabricated_event_or_reward_state",
+      "provenance": "S09/S10 event and mission cards reuse verified first-party Curio artwork at production resolution. Reuse is representational only and never implies a live reward or event state.",
+      "current_runtime_dimensions": "512x512_raster_family_verified"
     },
     {
       "asset_id": "shop_offer_art",
@@ -1423,8 +1424,8 @@
       ],
       "reuse": "declared_reuse_of_S03_curio_boutique_environment",
       "priority": "P1",
-      "production_status": "runtime_connected_declared_reuse_candidate",
-      "technical_policy": "authored_raster_only_no_svg_fallback",
+      "production_status": "runtime_connected_declared_reuse_verified",
+      "technical_policy": "declared_reuse_of_verified_chapter_route_world__authored_raster_only",
       "architecture_owned": true,
       "contract_owners": [
         {
@@ -1442,7 +1443,8 @@
         }
       ],
       "current_path": "assets/world/ch01_curio_boutique/chapter_route_curio_boutique.webp",
-      "provenance": "AKILTA first-party authored Curio Boutique environment reused for truthful Event Center shell continuity"
+      "provenance": "S10 Events intentionally reuses the verified Curio Boutique chapter-world raster to preserve House continuity without fabricating a separate live-event environment.",
+      "current_runtime_dimensions": "1080x1500_webp_runtime_verified"
     },
     {
       "asset_id": "shop_bg_curio_house",
@@ -2867,6 +2869,8 @@
     "prestart_level1_hero_note": "S04 Level 1 ritual hero uses the checked-in 1024x768 authored WebP at the locked cover crop. Shared Levels 2–3 transport preview remains blocked on its retained production master handoff.",
     "golden_loop_vfx": "RUNTIME_AND_RENDER_VERIFIED",
     "golden_loop_vfx_evidence_head": "65246eec7e6a3ce15b3b4162e3aaa377558bc536",
-    "golden_loop_vfx_note": "S05 match-clear, S06 reward reveal and S07 House awaken own explicit canonical runtime VFX slots; normal/reduced-motion lifecycles and real 540x960 transition frames verified."
+    "golden_loop_vfx_note": "S05 match-clear, S06 reward reveal and S07 House awaken own explicit canonical runtime VFX slots; normal/reduced-motion lifecycles and real 540x960 transition frames verified.",
+    "events_production_art_family": "RUNTIME_AND_RENDER_VERIFIED",
+    "events_production_art_note": "S10 world art reuses the verified 1080x1500 chapter raster; event hero/card art reuses verified 512x512 first-party Curio assets without fabricating live-event reward truth."
   }
 }
