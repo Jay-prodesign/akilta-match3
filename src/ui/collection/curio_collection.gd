@@ -75,8 +75,8 @@ func _refresh() -> void:
 	var dormant_count := maxi(0, 3 - awakened_count)
 	count_label.text = "FIRST CABINET SET · %d / 3 AWAKENED" % awakened_count
 	set_summary_progress.text = "%d / 3 AWAKENED" % awakened_count
-	var dormant_copy := "1 CURIO STILL DORMANT" if dormant_count == 1 else "%d CURIOS STILL DORMANT" % dormant_count
-	set_summary_copy.text = "ALL THREE CURIOS RESTORED" if awakened_count >= 3 else dormant_copy
+	var dormant_copy := "1 DORMANT\nCURIO REMAINS" if dormant_count == 1 else "%d DORMANT\nCURIOS REMAIN" % dormant_count
+	set_summary_copy.text = "SET COMPLETE\nALL 3 AWAKENED" if awakened_count >= 3 else dormant_copy
 	cabinet_footer.text = "OPENING CABINET COMPLETE · 3 / 3 CURIOS RECOVERED" if awakened_count >= 3 else "OPENING CABINET · %d / 3 CURIOS RECOVERED" % awakened_count
 
 	var has_moon := curios.has("moon_cameo")
