@@ -186,7 +186,7 @@ horizontal_alignment = 1
 autowrap_mode = 2
 
 [node name="ReturnToEvents" type="Button" parent="MissionLayout"]
-custom_minimum_size = Vector2(0, 74)
+custom_minimum_size = Vector2(0, 96)
 layout_mode = 2
 theme_override_colors/font_color = Color(1, 0.941, 0.847, 1)
 theme_override_font_sizes/font_size = 22
@@ -196,7 +196,7 @@ theme_override_styles/pressed = SubResource("Primary")
 text = "RETURN TO EVENT CENTER"
 
 [node name="ReturnToHouse" type="Button" parent="MissionLayout"]
-custom_minimum_size = Vector2(0, 64)
+custom_minimum_size = Vector2(0, 88)
 layout_mode = 2
 theme_override_colors/font_color = Color(0.96, 0.9, 0.84, 1)
 theme_override_font_sizes/font_size = 22

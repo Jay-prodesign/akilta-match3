@@ -94,10 +94,10 @@ border_width_top = 1
 border_width_right = 1
 border_width_bottom = 1
 border_color = Color(0.749, 0.647, 0.847, 0.28)
-corner_radius_top_left = 10
-corner_radius_top_right = 10
-corner_radius_bottom_right = 10
-corner_radius_bottom_left = 10
+corner_radius_top_left = 22
+corner_radius_top_right = 22
+corner_radius_bottom_right = 22
+corner_radius_bottom_left = 22
 
 [sub_resource type="StyleBoxFlat" id="Banner"]
 bg_color = Color(0.065, 0.043, 0.08, 0.88)
@@ -205,16 +205,16 @@ grow_vertical = 2
 mouse_filter = 2
 
 [node name="MoonHotspot" type="Button" parent="RoomView/CurioHotspots"]
-custom_minimum_size = Vector2(60, 60)
+custom_minimum_size = Vector2(88, 88)
 layout_mode = 1
 anchor_left = 0.93
 anchor_top = 0.27
 anchor_right = 0.93
 anchor_bottom = 0.27
-offset_left = -30.0
-offset_top = -30.0
-offset_right = 30.0
-offset_bottom = 30.0
+offset_left = -44.0
+offset_top = -44.0
+offset_right = 44.0
+offset_bottom = 44.0
 grow_horizontal = 2
 grow_vertical = 2
 focus_mode = 1
@@ -231,16 +231,16 @@ theme_override_styles/disabled = SubResource("HotspotDisabled")
 text = "·"
 
 [node name="MothHotspot" type="Button" parent="RoomView/CurioHotspots"]
-custom_minimum_size = Vector2(60, 60)
+custom_minimum_size = Vector2(88, 88)
 layout_mode = 1
 anchor_left = 0.93
 anchor_top = 0.38
 anchor_right = 0.93
 anchor_bottom = 0.38
-offset_left = -30.0
-offset_top = -30.0
-offset_right = 30.0
-offset_bottom = 30.0
+offset_left = -44.0
+offset_top = -44.0
+offset_right = 44.0
+offset_bottom = 44.0
 grow_horizontal = 2
 grow_vertical = 2
 focus_mode = 1
@@ -254,16 +254,16 @@ theme_override_styles/disabled = SubResource("HotspotDisabled")
 text = "·"
 
 [node name="ThornHotspot" type="Button" parent="RoomView/CurioHotspots"]
-custom_minimum_size = Vector2(60, 60)
+custom_minimum_size = Vector2(88, 88)
 layout_mode = 1
 anchor_left = 0.93
 anchor_top = 0.49
 anchor_right = 0.93
 anchor_bottom = 0.49
-offset_left = -30.0
-offset_top = -30.0
-offset_right = 30.0
-offset_bottom = 30.0
+offset_left = -44.0
+offset_top = -44.0
+offset_right = 44.0
+offset_bottom = 44.0
 grow_horizontal = 2
 grow_vertical = 2
 focus_mode = 1
@@ -277,16 +277,16 @@ theme_override_styles/disabled = SubResource("HotspotDisabled")
 text = "·"
 
 [node name="KeeperHotspot" type="Button" parent="RoomView/CurioHotspots"]
-custom_minimum_size = Vector2(68, 68)
+custom_minimum_size = Vector2(88, 88)
 layout_mode = 1
 anchor_left = 0.27
 anchor_top = 0.56
 anchor_right = 0.27
 anchor_bottom = 0.56
-offset_left = -34.0
-offset_top = -34.0
-offset_right = 34.0
-offset_bottom = 34.0
+offset_left = -44.0
+offset_top = -44.0
+offset_right = 44.0
+offset_bottom = 44.0
 grow_horizontal = 2
 grow_vertical = 2
 focus_mode = 1
@@ -363,7 +363,7 @@ text = "ENTER CURIO BOUTIQUE → LEVEL 1 → SWIPE THE MOONLIT PAIR. ASK KEEPER 
 autowrap_mode = 2
 
 [node name="Dismiss" type="Button" parent="Layout/FirstRitualGuide/GuideRow"]
-custom_minimum_size = Vector2(90, 58)
+custom_minimum_size = Vector2(96, 88)
 layout_mode = 2
 theme_override_colors/font_color = Color(0.96, 0.9, 0.83, 1)
 theme_override_font_sizes/font_size = 16
@@ -423,7 +423,7 @@ horizontal_alignment = 1
 autowrap_mode = 2
 
 [node name="PlayButton" type="Button" parent="Layout"]
-custom_minimum_size = Vector2(820, 82)
+custom_minimum_size = Vector2(880, 104)
 layout_mode = 2
 size_flags_horizontal = 4
 theme_override_colors/font_color = Color(0.988, 0.933, 0.831, 1)
@@ -444,11 +444,13 @@ layout_mode = 2
 layout_mode = 2
 
 [node name="CollectionButton" type="Button" parent="Layout/ActionDock/Actions"]
+custom_minimum_size = Vector2(0, 88)
 layout_mode = 2
 theme_override_styles/normal = SubResource("SecondaryButton")
 text = "RELIQUARY · 0 / 3"
 
 [node name="SettingsButton" type="Button" parent="Layout/ActionDock/Actions"]
+custom_minimum_size = Vector2(0, 88)
 layout_mode = 2
 theme_override_styles/normal = SubResource("SecondaryButton")
 text = "SETTINGS"

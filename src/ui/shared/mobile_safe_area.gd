@@ -1,6 +1,8 @@
 class_name Match3MobileSafeArea
 extends RefCounted
 
+const PRODUCT_NAV_CONTENT_RESERVE := 152.0
+
 static func insets_for_geometry(viewport_size: Vector2, display_size: Vector2i, safe_rect: Rect2i) -> Vector4:
 	if viewport_size.x <= 0.0 or viewport_size.y <= 0.0 or display_size.x <= 0 or display_size.y <= 0:
 		return Vector4.ZERO
@@ -30,7 +32,7 @@ static func apply_content(screen: Control, content_path: NodePath = NodePath("La
 		content.set_meta("mobile_safe_base_offsets", Vector4(content.offset_left, content.offset_top, content.offset_right, content.offset_bottom))
 	var base: Vector4 = content.get_meta("mobile_safe_base_offsets")
 	var safe := current_insets(screen)
-	var bottom_reserve := 120.0 if bool(content.get_meta("product_nav_inset_applied", false)) else 0.0
+	var bottom_reserve := PRODUCT_NAV_CONTENT_RESERVE if bool(content.get_meta("product_nav_inset_applied", false)) else 0.0
 	content.offset_left = base.x + safe.x
 	content.offset_top = base.y + safe.y
 	content.offset_right = base.z - safe.z

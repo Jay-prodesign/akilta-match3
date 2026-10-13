@@ -790,8 +790,7 @@
     {
       "asset_id": "booster_plus_moves",
       "screen": [
-        "S04",
-        "S05"
+        "S04"
       ],
       "block": "aid_or_booster_row",
       "slot": "plus_moves",
@@ -819,17 +818,6 @@
           "states": [
             "available",
             "disabled"
-          ]
-        },
-        {
-          "screen": "S05",
-          "region": "actions",
-          "block": "booster_row",
-          "slot": "plus_moves",
-          "states": [
-            "available",
-            "disabled",
-            "pressed"
           ]
         }
       ],
@@ -1504,9 +1492,7 @@
       "block": "keeper_environment",
       "slot": "environment",
       "state": [
-        "profile_summary",
-        "settings_open",
-        "settings_changed"
+        "profile_summary"
       ],
       "type": "background_art",
       "dimensions": "shared_authored_raster_runtime",
@@ -1527,9 +1513,7 @@
           "block": "keeper_environment",
           "slot": "environment",
           "states": [
-            "profile_summary",
-            "settings_open",
-            "settings_changed"
+            "profile_summary"
           ]
         }
       ],
@@ -2209,6 +2193,43 @@
       "source_silhouette_path": "assets/pieces/moon_sigil.svg",
       "technical_policy": "webp_raster_first_runtime__semantic_moon_focus_marker__owned_svg_exact_fallback",
       "provenance": "AKILTA first-party canonical moon sigil reused as the S03 current-frontier state marker. Runtime halo is focus VFX only; level-state truth remains owned by progression and the route contract."
+    },
+    {
+      "asset_id": "settings_bg_curio_house",
+      "screen": [
+        "O02"
+      ],
+      "block": "settings_panel",
+      "slot": "environment",
+      "state": [
+        "open",
+        "changed"
+      ],
+      "type": "background_art",
+      "dimensions": "1080x1920_minimum_raster",
+      "aspect_ratio": "9:16_cover",
+      "transparent": false,
+      "variants": [
+        "internal_review"
+      ],
+      "reuse": "declared_reuse_of_S01_grand_hall_environment",
+      "priority": "P1",
+      "production_status": "runtime_connected_declared_reuse_candidate",
+      "technical_policy": "authored_raster_only_no_svg_fallback",
+      "architecture_owned": true,
+      "contract_owners": [
+        {
+          "overlay": "O02",
+          "block": "settings_panel",
+          "slot": "environment",
+          "states": [
+            "open",
+            "changed"
+          ]
+        }
+      ],
+      "current_path": "assets/world/ch01_curio_boutique/hub_bg_grandhall.webp",
+      "provenance": "AKILTA first-party authored House environment reused for Settings continuity"
     }
   ],
   "vertical_slice_art_policy": {
@@ -2255,8 +2276,8 @@
   "bulk_art_authorized": false,
   "production_gate": {
     "golden_loop": "S01>S04>S05>S06>S07>S01",
-    "status": "ARCHITECTURE_AND_RUNTIME_ROUTE_RECONCILIATION_IN_PROGRESS",
-    "rule": "Only authored-art slots owned by the canonical screen/state contract may enter production. No downstream bulk art before Golden Loop acceptance."
+    "status": "SLOT_GEOMETRY_RECONCILIATION_ACTIVE",
+    "rule": "Existing connected assets may remain for runtime proof, but no new production art or broad polish is authorized until canonical slot geometry and full-screen composition are render-verified."
   },
   "architecture_source": {
     "authority": "North Star Product Board interpreted through canonical product architecture",
@@ -2273,7 +2294,7 @@
     ]
   },
   "asset_production_gate": {
-    "status": "LOCKED_TO_GOLDEN_LOOP_ONLY",
+    "status": "BLOCKED_PENDING_CANONICAL_SLOT_GEOMETRY_AND_VISUAL_AUDIT",
     "golden_loop": [
       "S01",
       "S03",
@@ -2283,7 +2304,7 @@
       "S07",
       "S01"
     ],
-    "rule": "Only assets with explicit canonical Screen -> Region -> Block -> Slot -> State ownership inside the incomplete Golden Loop may be produced or polished.",
+    "rule": "Complete screen/state reconciliation, explicit slot geometry, global component geometry and real Godot render audit before producing or polishing additional assets.",
     "existing_non_golden_candidates": "frozen_do_not_polish"
   },
   "golden_loop_asset_slots": {

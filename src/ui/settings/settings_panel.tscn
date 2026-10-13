@@ -41,10 +41,10 @@ border_width_top = 2
 border_width_right = 2
 border_width_bottom = 2
 border_color = Color(0.835, 0.678, 0.439, 1)
-corner_radius_top_left = 18
-corner_radius_top_right = 18
-corner_radius_bottom_right = 18
-corner_radius_bottom_left = 18
+corner_radius_top_left = 26
+corner_radius_top_right = 26
+corner_radius_bottom_right = 26
+corner_radius_bottom_left = 26
 
 [sub_resource type="StyleBoxFlat" id="CardHigh"]
 bg_color = Color(0.031, 0.039, 0.071, 1)
@@ -276,7 +276,7 @@ theme_override_font_sizes/font_size = 18
 text = "AUDIO"
 
 [node name="Master" type="CheckButton" parent="Card/Content"]
-custom_minimum_size = Vector2(0, 70)
+custom_minimum_size = Vector2(0, 88)
 layout_mode = 2
 theme_override_colors/font_color = Color(0.945, 0.91, 0.866, 1)
 theme_override_font_sizes/font_size = 21
@@ -286,7 +286,7 @@ theme_override_styles/pressed = SubResource("Toggle")
 text = "  Master audio"
 
 [node name="Music" type="CheckButton" parent="Card/Content"]
-custom_minimum_size = Vector2(0, 70)
+custom_minimum_size = Vector2(0, 88)
 layout_mode = 2
 theme_override_colors/font_color = Color(0.851, 0.804, 0.835, 1)
 theme_override_font_sizes/font_size = 21
@@ -296,7 +296,7 @@ theme_override_styles/pressed = SubResource("Toggle")
 text = "  Music"
 
 [node name="SFX" type="CheckButton" parent="Card/Content"]
-custom_minimum_size = Vector2(0, 70)
+custom_minimum_size = Vector2(0, 88)
 layout_mode = 2
 theme_override_colors/font_color = Color(0.851, 0.804, 0.835, 1)
 theme_override_font_sizes/font_size = 21
@@ -312,7 +312,7 @@ theme_override_font_sizes/font_size = 18
 text = "EXPERIENCE"
 
 [node name="Haptics" type="CheckButton" parent="Card/Content"]
-custom_minimum_size = Vector2(0, 70)
+custom_minimum_size = Vector2(0, 88)
 layout_mode = 2
 theme_override_colors/font_color = Color(0.851, 0.804, 0.835, 1)
 theme_override_font_sizes/font_size = 21
@@ -322,7 +322,7 @@ theme_override_styles/pressed = SubResource("Toggle")
 text = "  Haptics"
 
 [node name="Reduced" type="CheckButton" parent="Card/Content"]
-custom_minimum_size = Vector2(0, 70)
+custom_minimum_size = Vector2(0, 88)
 layout_mode = 2
 theme_override_colors/font_color = Color(0.851, 0.804, 0.835, 1)
 theme_override_font_sizes/font_size = 21
@@ -332,7 +332,7 @@ theme_override_styles/pressed = SubResource("Toggle")
 text = "  Reduced motion"
 
 [node name="Contrast" type="CheckButton" parent="Card/Content"]
-custom_minimum_size = Vector2(0, 70)
+custom_minimum_size = Vector2(0, 88)
 layout_mode = 2
 theme_override_colors/font_color = Color(0.851, 0.804, 0.835, 1)
 theme_override_font_sizes/font_size = 21
@@ -349,7 +349,7 @@ text = "CHANGES SAVE ON THIS DEVICE"
 horizontal_alignment = 1
 
 [node name="Close" type="Button" parent="Card/Content"]
-custom_minimum_size = Vector2(0, 76)
+custom_minimum_size = Vector2(0, 96)
 layout_mode = 2
 theme_override_colors/font_color = Color(0.0627, 0.051, 0.0706, 1)
 theme_override_font_sizes/font_size = 21

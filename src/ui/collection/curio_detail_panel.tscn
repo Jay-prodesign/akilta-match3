@@ -117,7 +117,7 @@ horizontal_alignment = 1
 autowrap_mode = 2
 
 [node name="ViewInHouse" type="Button" parent="CurioDetailCard/Content"]
-custom_minimum_size = Vector2(0, 68)
+custom_minimum_size = Vector2(0, 96)
 layout_mode = 2
 theme_override_colors/font_color = Color(1, 0.941, 0.847, 1)
 theme_override_font_sizes/font_size = 22
@@ -127,7 +127,7 @@ theme_override_styles/pressed = SubResource("Action")
 text = "VIEW IN HOUSE"
 
 [node name="Close" type="Button" parent="CurioDetailCard/Content"]
-custom_minimum_size = Vector2(0, 64)
+custom_minimum_size = Vector2(0, 88)
 layout_mode = 2
 theme_override_colors/font_color = Color(1, 0.941, 0.847, 1)
 theme_override_font_sizes/font_size = 21
