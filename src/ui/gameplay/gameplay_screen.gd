@@ -1046,6 +1046,7 @@ func gameplay_presentation_contract() -> Dictionary:
 		"asset_backed_resource_chips": [$ResourceBar/Resources/CoinChip, $ResourceBar/Resources/GemChip, $ResourceBar/Resources/LevelBadgePlate].all(func(panel): return panel is PanelContainer and (panel as PanelContainer).get_theme_stylebox("panel") is StyleBoxTexture),
 		"level_badge_separated": ($ResourceBar/Resources/ResourceSpacer as Control).size_flags_horizontal == Control.SIZE_EXPAND_FILL,
 		"hint_booster_clearance": _booster_tray != null and hint_label != null and _booster_tray.global_position.y >= hint_label.global_position.y + hint_label.size.y + 12.0,
+		"booster_label_readability": [$BoosterTray/BoosterActions/HintSlot/Label, $BoosterTray/BoosterActions/SealedSlotA/Label, $BoosterTray/BoosterActions/SealedSlotB/Label, $BoosterTray/BoosterActions/SealedSlotC/Label, $BoosterTray/BoosterActions/SettingsSlot/Label].all(func(label): return label is Label and (label as Label).custom_minimum_size.y >= 32.0 and (label as Label).get_theme_font_size("font_size") >= 18),
 		"resource_bar_height": ($ResourceBar as PanelContainer).offset_bottom - ($ResourceBar as PanelContainer).offset_top,
 		"hud_plate_height": ($Layout/HUDPlate as PanelContainer).custom_minimum_size.y,
 		"booster_tray_height": (_booster_tray.offset_bottom - _booster_tray.offset_top) if _booster_tray != null else 0.0,
