@@ -175,7 +175,7 @@ func _current_auto_hint_delay() -> float:
 
 func _ready() -> void:
 	ProductionChrome.apply_gameplay_pause_modal($PauseOverlay/Card)
-	ProductionChrome.apply_primary($ResultOverlay/Card)
+	ProductionChrome.apply_gameplay_reward_modal($ResultOverlay/Card)
 	$ResourceBar.add_theme_stylebox_override("panel", StyleBoxEmpty.new())
 	$ResourceBar.set_meta("production_chrome_kind", "gameplay_resource_cluster")
 	ProductionChrome.apply_compact_panel($ResourceBar/Resources/CoinChip, "gameplay_coin_resource")
