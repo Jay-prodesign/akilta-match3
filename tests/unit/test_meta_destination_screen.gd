@@ -60,6 +60,16 @@ func _run() -> void:
 			screen.daily_practice_requested.connect(func(level_number: int): daily["level"] = level_number)
 			(screen.get_node("FeatureLayout/DailyPracticeCard/DailyContent/DailyPracticeAction") as Button).emit_signal("pressed")
 			_expect(int(daily["level"]) == 2, "events secondary action must preserve daily practice level")
+		if feature == "shop":
+			var shop_offer := screen.get_node_or_null("FeatureLayout/FeatureHero/HeroRow/ShopFeaturedOfferArt") as TextureRect
+			_expect(shop_offer != null and shop_offer.texture != null and shop_offer.texture.get_width() >= 512 and shop_offer.texture.get_height() >= 512, "shop sealed featured offer must retain production-resolution first-party Curio art")
+			for shop_card in ["Card1", "Card2", "Card3"]:
+				var shop_art := screen.get_node_or_null("FeatureLayout/CardScroll/Cards/%s/Row/Art" % shop_card) as TextureRect
+				_expect(shop_art != null and shop_art.texture != null and shop_art.texture.get_width() >= 512 and shop_art.texture.get_height() >= 512, "shop %s must retain production-resolution first-party Curio art" % shop_card)
+			var shop_action := screen.get_node_or_null("FeatureLayout/FeatureHero/HeroRow/HeroCopy/ShopDisabledAction") as Button
+			_expect(shop_action != null and shop_action.disabled, "shop preview action must remain disabled while commerce is sealed")
+			_expect((screen.get_node("FeatureLayout/NoPurchasesNotice") as Label).text.find("NO PURCHASES OR PAYMENTS") >= 0, "shop preview must state that purchases and payments are disabled")
+			_expect((screen.get_node("FeatureLayout/ShopCurrencyTruth") as Label).text == "EARNED IN PLAY · NOT PURCHASABLE", "shop balances must remain explicitly non-purchasable")
 		if feature == "profile":
 			var profile_hero := screen.get_node("FeatureLayout/FeatureHero/HeroRow/HeroArt") as TextureRect
 			_expect(profile_hero != null and String(contract.get("hero_asset_path", "")).ends_with("black_cat.webp"), "profile hero must use the Keeper familiar rather than a generic Curio")

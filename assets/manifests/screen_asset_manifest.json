@@ -1143,7 +1143,7 @@
       ],
       "reuse": "shop_review_disabled_truthful_existing_curio_art",
       "priority": "P1",
-      "production_status": "runtime_connected_owned_content_art_review_disabled",
+      "production_status": "runtime_connected_owned_content_art_verified_review_disabled",
       "current_path": "assets/curios/ch01_curio_moth_reliquary.png",
       "architecture_owned": true,
       "contract_owners": [
@@ -1163,8 +1163,9 @@
         "featured_review_disabled": "assets/curios/ch01_curio_moth_reliquary.png",
         "available": "reserved_until_real_catalog_and_commerce_exist"
       },
-      "technical_policy": "existing_first_party_content_art_only__review_disabled_never_implies_purchase_availability",
-      "provenance": "AKILTA first-party Moth Reliquary art is reused only in the canonical S11 featured_offer.offer_art slot as a sealed internal-review preview. The unavailable offer grid remains structural UI and carries no unowned content artwork. Nothing here represents a purchasable SKU, price, entitlement, catalog availability or payment state."
+      "technical_policy": "verified_first_party_512x512_curio_art_reuse__review_disabled_never_implies_purchase_availability__godot_4_7_2_render_verified",
+      "provenance": "S11 sealed Shop preview reuses verified first-party 512x512 Curio art for the featured offer and authored card family. Reuse is representational only: no purchasable SKU, price, entitlement, catalog availability, payment state or real-money commerce is implied.",
+      "current_runtime_dimensions": "512x512_raster_family_verified"
     },
     {
       "asset_id": "prestart_bg_curio_boutique",
@@ -2871,6 +2872,8 @@
     "golden_loop_vfx_evidence_head": "65246eec7e6a3ce15b3b4162e3aaa377558bc536",
     "golden_loop_vfx_note": "S05 match-clear, S06 reward reveal and S07 House awaken own explicit canonical runtime VFX slots; normal/reduced-motion lifecycles and real 540x960 transition frames verified.",
     "events_production_art_family": "RUNTIME_AND_RENDER_VERIFIED",
-    "events_production_art_note": "S10 world art reuses the verified 1080x1500 chapter raster; event hero/card art reuses verified 512x512 first-party Curio assets without fabricating live-event reward truth."
+    "events_production_art_note": "S10 world art reuses the verified 1080x1500 chapter raster; event hero/card art reuses verified 512x512 first-party Curio assets without fabricating live-event reward truth.",
+    "shop_sealed_preview_art_family": "RUNTIME_AND_RENDER_VERIFIED",
+    "shop_sealed_preview_art_note": "S11 featured offer and sealed cabinet cards reuse verified 512x512 first-party Curio art; commerce remains disabled and no purchase, price, entitlement or payment availability is claimed."
   }
 }
