@@ -104,7 +104,7 @@
         "disabled"
       ],
       "type": "functional_icon",
-      "dimensions": "128x128_svg",
+      "dimensions": "128x128_webp_runtime_verified",
       "aspect_ratio": "1:1",
       "transparent": true,
       "variants": [
@@ -112,8 +112,11 @@
       ],
       "reuse": "global",
       "priority": "P0",
-      "production_status": "candidate",
-      "current_path": "assets/ui/nav_house.svg"
+      "production_status": "runtime_connected_production_raster_verified",
+      "current_path": "assets/ui/nav_house.webp",
+      "source_silhouette_path": "assets/ui/nav_house.svg",
+      "technical_policy": "webp_production_runtime__owned_svg_exact_identity_fallback",
+      "provenance": "AKILTA first-party global functional icon raster family derived deterministically from the owned canonical silhouette, with warm antique-gold/lilac material depth and transparent WebP runtime output. Runtime keeps exact semantic identity and SVG fallback only."
     },
     {
       "asset_id": "gbl_nav_curios",
@@ -129,7 +132,7 @@
         "disabled"
       ],
       "type": "functional_icon",
-      "dimensions": "128x128_svg",
+      "dimensions": "128x128_webp_runtime_verified",
       "aspect_ratio": "1:1",
       "transparent": true,
       "variants": [
@@ -137,8 +140,11 @@
       ],
       "reuse": "global",
       "priority": "P0",
-      "production_status": "candidate",
-      "current_path": "assets/ui/nav_curios.svg"
+      "production_status": "runtime_connected_production_raster_verified",
+      "current_path": "assets/ui/nav_curios.webp",
+      "source_silhouette_path": "assets/ui/nav_curios.svg",
+      "technical_policy": "webp_production_runtime__owned_svg_exact_identity_fallback",
+      "provenance": "AKILTA first-party global functional icon raster family derived deterministically from the owned canonical silhouette, with warm antique-gold/lilac material depth and transparent WebP runtime output. Runtime keeps exact semantic identity and SVG fallback only."
     },
     {
       "asset_id": "gbl_nav_map",
@@ -154,7 +160,7 @@
         "disabled"
       ],
       "type": "functional_icon",
-      "dimensions": "128x128_svg",
+      "dimensions": "128x128_webp_runtime_verified",
       "aspect_ratio": "1:1",
       "transparent": true,
       "variants": [
@@ -162,8 +168,11 @@
       ],
       "reuse": "global",
       "priority": "P0",
-      "production_status": "candidate",
-      "current_path": "assets/ui/nav_map.svg"
+      "production_status": "runtime_connected_production_raster_verified",
+      "current_path": "assets/ui/nav_map.webp",
+      "source_silhouette_path": "assets/ui/nav_map.svg",
+      "technical_policy": "webp_production_runtime__owned_svg_exact_identity_fallback",
+      "provenance": "AKILTA first-party global functional icon raster family derived deterministically from the owned canonical silhouette, with warm antique-gold/lilac material depth and transparent WebP runtime output. Runtime keeps exact semantic identity and SVG fallback only."
     },
     {
       "asset_id": "gbl_nav_events",
@@ -179,7 +188,7 @@
         "disabled"
       ],
       "type": "functional_icon",
-      "dimensions": "128x128_svg",
+      "dimensions": "128x128_webp_runtime_verified",
       "aspect_ratio": "1:1",
       "transparent": true,
       "variants": [
@@ -187,8 +196,11 @@
       ],
       "reuse": "global",
       "priority": "P0",
-      "production_status": "candidate",
-      "current_path": "assets/ui/nav_events.svg"
+      "production_status": "runtime_connected_production_raster_verified",
+      "current_path": "assets/ui/nav_events.webp",
+      "source_silhouette_path": "assets/ui/nav_events.svg",
+      "technical_policy": "webp_production_runtime__owned_svg_exact_identity_fallback",
+      "provenance": "AKILTA first-party global functional icon raster family derived deterministically from the owned canonical silhouette, with warm antique-gold/lilac material depth and transparent WebP runtime output. Runtime keeps exact semantic identity and SVG fallback only."
     },
     {
       "asset_id": "gbl_nav_shop",
@@ -204,7 +216,7 @@
         "disabled"
       ],
       "type": "functional_icon",
-      "dimensions": "128x128_svg",
+      "dimensions": "128x128_webp_runtime_verified",
       "aspect_ratio": "1:1",
       "transparent": true,
       "variants": [
@@ -212,8 +224,11 @@
       ],
       "reuse": "global",
       "priority": "P0",
-      "production_status": "candidate",
-      "current_path": "assets/ui/nav_shop.svg"
+      "production_status": "runtime_connected_production_raster_verified",
+      "current_path": "assets/ui/nav_shop.webp",
+      "source_silhouette_path": "assets/ui/nav_shop.svg",
+      "technical_policy": "webp_production_runtime__owned_svg_exact_identity_fallback",
+      "provenance": "AKILTA first-party global functional icon raster family derived deterministically from the owned canonical silhouette, with warm antique-gold/lilac material depth and transparent WebP runtime output. Runtime keeps exact semantic identity and SVG fallback only."
     },
     {
       "asset_id": "gbl_currency_coin",
@@ -226,14 +241,17 @@
         "normal"
       ],
       "type": "functional_icon",
-      "dimensions": "128x128_svg",
+      "dimensions": "128x128_webp_runtime_verified",
       "aspect_ratio": "1:1",
       "transparent": true,
       "variants": [],
       "reuse": "global",
       "priority": "P0",
-      "production_status": "candidate",
-      "current_path": "assets/ui/ui_coin.svg"
+      "production_status": "runtime_connected_production_raster_verified",
+      "current_path": "assets/ui/ui_coin.webp",
+      "source_silhouette_path": "assets/ui/ui_coin.svg",
+      "technical_policy": "webp_production_runtime__owned_svg_exact_identity_fallback",
+      "provenance": "AKILTA first-party global functional icon raster family derived deterministically from the owned canonical silhouette, with warm antique-gold/lilac material depth and transparent WebP runtime output. Runtime keeps exact semantic identity and SVG fallback only."
     },
     {
       "asset_id": "gbl_currency_gem",
@@ -246,14 +264,17 @@
         "normal"
       ],
       "type": "functional_icon",
-      "dimensions": "128x128_svg",
+      "dimensions": "128x128_webp_runtime_verified",
       "aspect_ratio": "1:1",
       "transparent": true,
       "variants": [],
       "reuse": "global",
       "priority": "P0",
-      "production_status": "candidate",
-      "current_path": "assets/ui/ui_gem.svg"
+      "production_status": "runtime_connected_production_raster_verified",
+      "current_path": "assets/ui/ui_gem.webp",
+      "source_silhouette_path": "assets/ui/ui_gem.svg",
+      "technical_policy": "webp_production_runtime__owned_svg_exact_identity_fallback",
+      "provenance": "AKILTA first-party global functional icon raster family derived deterministically from the owned canonical silhouette, with warm antique-gold/lilac material depth and transparent WebP runtime output. Runtime keeps exact semantic identity and SVG fallback only."
     },
     {
       "asset_id": "hub_bg_grandhall",
@@ -2682,6 +2703,61 @@
         }
       ],
       "provenance": "AKILTA first-party quiet utility action 9-slice with compact 20px slice corners sized for the locked header/pause action height range."
+    },
+    {
+      "asset_id": "gbl_profile_icon",
+      "screen": [
+        "global"
+      ],
+      "block": "global_header",
+      "slot": "profile_icon",
+      "state": [
+        "normal",
+        "pressed",
+        "focus"
+      ],
+      "type": "functional_icon",
+      "dimensions": "128x128_webp_runtime_verified",
+      "aspect_ratio": "1:1",
+      "transparent": true,
+      "variants": [
+        "state_tint_runtime"
+      ],
+      "reuse": "global",
+      "priority": "P0",
+      "production_status": "runtime_connected_production_raster_verified",
+      "current_path": "assets/ui/ui_profile.webp",
+      "source_silhouette_path": "assets/ui/ui_profile.svg",
+      "technical_policy": "webp_production_runtime__owned_svg_exact_identity_fallback",
+      "provenance": "AKILTA first-party Keeper profile utility icon rasterized deterministically from the owned canonical silhouette with the global antique-gold/lilac material treatment."
+    },
+    {
+      "asset_id": "gbl_settings_icon",
+      "screen": [
+        "S05",
+        "O02"
+      ],
+      "block": "utility_action",
+      "slot": "settings_icon",
+      "state": [
+        "normal",
+        "pressed",
+        "focus"
+      ],
+      "type": "functional_icon",
+      "dimensions": "128x128_webp_runtime_verified",
+      "aspect_ratio": "1:1",
+      "transparent": true,
+      "variants": [
+        "state_tint_runtime"
+      ],
+      "reuse": "global",
+      "priority": "P0",
+      "production_status": "runtime_connected_production_raster_verified",
+      "current_path": "assets/ui/ui_settings.webp",
+      "source_silhouette_path": "assets/ui/ui_settings.svg",
+      "technical_policy": "webp_production_runtime__owned_svg_exact_identity_fallback",
+      "provenance": "AKILTA first-party settings utility icon rasterized deterministically from the owned canonical silhouette with the global antique-gold/lilac material treatment."
     }
   ],
   "vertical_slice_art_policy": {
@@ -2779,6 +2855,8 @@
     "global_interactive_chrome": "RUNTIME_AND_RENDER_VERIFIED",
     "global_interactive_chrome_evidence_head": "d66f1659367474ee6c21f7a2beef281a477ac7a6",
     "golden_loop_action_chrome": "RUNTIME_AND_RENDER_VERIFIED",
-    "golden_loop_action_chrome_evidence_head": "81f19420280e2164af0abbe42571ae06a29961c8"
+    "golden_loop_action_chrome_evidence_head": "81f19420280e2164af0abbe42571ae06a29961c8",
+    "global_functional_icon_family": "RUNTIME_AND_RENDER_VERIFIED",
+    "global_functional_icon_family_note": "Five global destinations plus coin, gem, Keeper profile and settings utility resolve to deterministic 128x128 WebP runtime assets; SVG remains exact-identity fallback only."
   }
 }

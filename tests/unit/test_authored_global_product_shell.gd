@@ -3,6 +3,7 @@ extends SceneTree
 const ProductNavigation = preload("res://src/ui/shared/product_navigation.gd")
 const TopResourceBar = preload("res://src/ui/shared/top_resource_bar.gd")
 const ProgressScript = preload("res://src/progression/player_progress.gd")
+const PieceAssetLoader = preload("res://src/match3/presentation/piece_asset_loader.gd")
 
 var failures: Array[String] = []
 var nav_action := ""
@@ -47,6 +48,23 @@ func _run() -> void:
 	_expect(bool(nav_contract.get("asset_backed_interactive_chrome", false)), "ProductNavigation destination states must use asset-backed production chrome")
 	var chrome_contract := preload("res://src/ui/theme/production_chrome.gd").contract()
 	_expect(bool(chrome_contract.get("global_shell_family_verified", false)), "Global top/bottom shell chrome family must resolve through authored texture-backed 9-slice styles")
+	var global_icon_sources := [
+		"res://assets/ui/nav_house.svg",
+		"res://assets/ui/nav_curios.svg",
+		"res://assets/ui/nav_map.svg",
+		"res://assets/ui/nav_events.svg",
+		"res://assets/ui/nav_shop.svg",
+		"res://assets/ui/ui_coin.svg",
+		"res://assets/ui/ui_gem.svg",
+		"res://assets/ui/ui_profile.svg",
+		"res://assets/ui/ui_settings.svg",
+	]
+	for source_path in global_icon_sources:
+		var icon_texture := PieceAssetLoader.ornament(source_path)
+		var resolved_path := PieceAssetLoader.resolved_path(source_path)
+		_expect(icon_texture != null, "Global functional icon must load: %s" % source_path)
+		_expect(resolved_path.ends_with(".webp"), "Global functional icon must resolve to authored raster WebP before SVG fallback: %s -> %s" % [source_path, resolved_path])
+		_expect(icon_texture != null and icon_texture.get_width() == 128 and icon_texture.get_height() == 128, "Global functional icon must keep the locked 128x128 raster master: %s" % source_path)
 	_expect(not bool(nav_contract.get("runtime_ui_factory", true)), "ProductNavigation must not create persistent shell nodes at runtime")
 
 	var house := nav.get_node_or_null("Scroll/Items/NavHouse") as Button
