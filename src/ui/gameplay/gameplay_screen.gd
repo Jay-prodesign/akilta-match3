@@ -1097,7 +1097,7 @@ func gameplay_presentation_contract() -> Dictionary:
 		and PieceAssetLoader.ornament(String(NORTH_STAR_BOOSTER_ART_PATHS["hand"])) != null
 		and PieceAssetLoader.ornament(String(NORTH_STAR_BOOSTER_ART_PATHS["magic"])) != null
 	)
-	var gothic_board_material: bool = String(board_contract.get("frame_revision", "")) == "gothic_corner_v2"
+	var gothic_board_material: bool = String(board_contract.get("frame_revision", "")) == "gothic_corner_v3" and float(board_contract.get("corner_preservation_margin", 0.0)) >= 72.0
 	var objective_spacing_locked: bool = (
 		objective_label.size.x >= get_viewport().get_visible_rect().size.x * 0.36
 		and objective_label.global_position.x >= objective_icon.global_position.x + objective_icon.size.x + 6.0
@@ -1120,6 +1120,13 @@ func gameplay_presentation_contract() -> Dictionary:
 		String($Layout/HUDPlate.get_meta("production_chrome_asset", "")) == ProductionChrome.GAMEPLAY_HUD_FRAME_PATH
 		and String($Layout/HUDPlate.get_meta("production_chrome_kind", "")) == "gameplay_objective_frame"
 		and ($Layout/HUDPlate as PanelContainer).get_theme_stylebox("panel") is StyleBoxTexture
+	)
+	var hint_style := hint_label.get_theme_stylebox("normal")
+	var integrated_hint_surface: bool = (
+		hint_style is StyleBoxFlat
+		and (hint_style as StyleBoxFlat).bg_color.a <= 0.22
+		and (hint_style as StyleBoxFlat).border_color.a <= 0.14
+		and (hint_style as StyleBoxFlat).shadow_color.a <= 0.14
 	)
 	return {
 		"authored_hud_plate": get_node_or_null("Layout/HUDPlate/HUD") != null,
@@ -1149,6 +1156,7 @@ func gameplay_presentation_contract() -> Dictionary:
 		"north_star_header_hierarchy": hierarchy_locked,
 		"quiet_gameplay_shell_family": $ResourceBar.get_theme_stylebox("panel") is StyleBoxEmpty and String(pause_button.get_meta("production_chrome_asset", "")) == ProductionChrome.QUIET_PANEL_PATH,
 		"north_star_gameplay_hud_frame": north_star_gameplay_hud_frame,
+		"integrated_hint_surface": integrated_hint_surface,
 		"integrated_hud_surface": integrated_hud_surface,
 		"final_hint_readability": hint_readable and hint_label.size_flags_horizontal == Control.SIZE_SHRINK_CENTER and hint_label.custom_minimum_size.x >= 680.0 and hint_label.custom_minimum_size.x <= 740.0,
 		"final_booster_readability": booster_family_locked and shuffle_label.get_theme_font_size("font_size") >= 26,
@@ -1164,7 +1172,8 @@ func gameplay_presentation_contract() -> Dictionary:
 		"visual_parity_gate_v10": hierarchy_locked and integrated_hud_surface and hint_readable and booster_family_locked and composition_locked and board_locked and utilities_separated and canonical_booster_art and gothic_board_material,
 		"visual_parity_gate_v11": hierarchy_locked and integrated_hud_surface and hint_readable and booster_family_locked and composition_locked and board_locked and utilities_separated and canonical_booster_art and gothic_board_material and objective_spacing_locked and compact_header_locked,
 		"visual_parity_gate_v12": hierarchy_locked and integrated_hud_surface and hint_readable and booster_family_locked and composition_locked and board_locked and utilities_separated and canonical_booster_art and gothic_board_material and objective_spacing_locked and compact_header_locked and compact_geometry_locked and north_star_gameplay_hud_frame,
-		"visual_parity_version": 12,
+		"visual_parity_gate_v13": hierarchy_locked and integrated_hud_surface and integrated_hint_surface and hint_readable and booster_family_locked and composition_locked and board_locked and utilities_separated and canonical_booster_art and gothic_board_material and objective_spacing_locked and compact_header_locked and compact_geometry_locked and north_star_gameplay_hud_frame,
+		"visual_parity_version": 13,
 		"resource_bar_height": ($ResourceBar as PanelContainer).offset_bottom - ($ResourceBar as PanelContainer).offset_top,
 		"hud_plate_height": ($Layout/HUDPlate as PanelContainer).custom_minimum_size.y,
 		"booster_tray_height": _booster_tray.offset_bottom - _booster_tray.offset_top,
