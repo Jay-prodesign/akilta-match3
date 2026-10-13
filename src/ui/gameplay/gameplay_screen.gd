@@ -55,11 +55,13 @@ const AUTO_HINT_DELAY_SECONDS := 9.0
 const GUIDED_HINT_DELAY_SECONDS := 4.0
 const BOOSTER_ART_PATHS := {
 	"hint": KEEPER_ART_PATH,
-	"shuffle": "res://assets/specials/gbl_special_global_idle_v01.webp",
-	"hand": "res://assets/specials/gbl_special_smart_idle_v01.webp",
-	"magic": "res://assets/specials/gbl_special_area_idle_v01.webp",
 	"plus_moves": "res://assets/pieces/potion.webp",
 	"retry": "res://assets/pieces/skull.webp"
+}
+const NORTH_STAR_BOOSTER_ART_PATHS := {
+	"shuffle": "res://assets/specials/gbl_special_global_idle_v01.webp",
+	"hand": "res://assets/specials/gbl_special_smart_idle_v01.webp",
+	"magic": "res://assets/specials/gbl_special_area_idle_v01.webp"
 }
 const OBJECTIVE_ART_PATHS := {
 	"moon": "res://assets/pieces/moon_sigil.webp",
@@ -183,9 +185,9 @@ func _ready() -> void:
 	_result_gem_icon.texture = PieceAssetLoader.ornament("res://assets/ui/ui_gem.svg")
 	_result_keeper_cat.texture = PieceAssetLoader.ornament(KEEPER_ART_PATH)
 	_hint_boost_button.icon = PieceAssetLoader.ornament(String(BOOSTER_ART_PATHS["hint"]))
-	_sealed_boost_a.icon = PieceAssetLoader.ornament(String(BOOSTER_ART_PATHS["shuffle"]))
-	_sealed_boost_b.icon = PieceAssetLoader.ornament(String(BOOSTER_ART_PATHS["hand"]))
-	_sealed_boost_c.icon = PieceAssetLoader.ornament(String(BOOSTER_ART_PATHS["magic"]))
+	_sealed_boost_a.icon = PieceAssetLoader.ornament(String(NORTH_STAR_BOOSTER_ART_PATHS["shuffle"]))
+	_sealed_boost_b.icon = PieceAssetLoader.ornament(String(NORTH_STAR_BOOSTER_ART_PATHS["hand"]))
+	_sealed_boost_c.icon = PieceAssetLoader.ornament(String(NORTH_STAR_BOOSTER_ART_PATHS["magic"]))
 	_settings_shortcut.icon = PieceAssetLoader.ornament("res://assets/ui/ui_settings.svg")
 	_hint_boost_button.pressed.connect(_use_hint_boost)
 	_settings_shortcut.pressed.connect(func(): settings_requested.emit())
