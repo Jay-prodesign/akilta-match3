@@ -54,12 +54,12 @@ static func primary_panel() -> StyleBoxTexture:
 
 static func top_shell() -> StyleBoxTexture:
 	if _top_shell == null:
-		_top_shell = _style(8.0, 52.0)
+		_top_shell = _style(8.0, 52.0, QUIET_PANEL_PATH)
 	return _top_shell
 
 static func bottom_shell() -> StyleBoxTexture:
 	if _bottom_shell == null:
-		_bottom_shell = _style(8.0, 52.0)
+		_bottom_shell = _style(8.0, 52.0, QUIET_PANEL_PATH)
 	return _bottom_shell
 
 static func secondary_panel() -> StyleBoxTexture:
@@ -231,7 +231,7 @@ static func apply_shell(panel: Control, kind: String) -> bool:
 	if style == null:
 		return false
 	panel.add_theme_stylebox_override("panel", style)
-	panel.set_meta("production_chrome_asset", PRIMARY_PANEL_PATH)
+	panel.set_meta("production_chrome_asset", QUIET_PANEL_PATH)
 	panel.set_meta("production_chrome_kind", kind)
 	return true
 
@@ -254,6 +254,7 @@ static func contract() -> Dictionary:
 		"top_shell_asset_backed": top_shell() != null and top_shell().texture != null,
 		"bottom_shell_asset_backed": bottom_shell() != null and bottom_shell().texture != null,
 		"global_shell_family_verified": top_shell() != null and top_shell().texture != null and bottom_shell() != null and bottom_shell().texture != null,
+		"quiet_global_shell_family": top_shell() != null and bottom_shell() != null and PieceAssetLoader.resolved_path(QUIET_PANEL_PATH) != "",
 		"gameplay_shell_asset_backed": gameplay_shell() != null and gameplay_shell().texture != null,
 		"gameplay_booster_tray_asset_backed": gameplay_booster_tray() != null and gameplay_booster_tray().texture != null,
 		"secondary_panel_asset_backed": secondary_panel() != null and secondary_panel().texture != null,
