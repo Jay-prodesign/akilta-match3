@@ -936,7 +936,7 @@
       ],
       "reuse": "global",
       "priority": "P0",
-      "production_status": "runtime_connected_match_clear_vfx",
+      "production_status": "runtime_connected_production_vfx_existing_render_proof",
       "architecture_owned": true,
       "contract_owners": [
         {
@@ -974,7 +974,7 @@
       ],
       "reuse": "global",
       "priority": "P0",
-      "production_status": "runtime_connected_reward_reveal_vfx",
+      "production_status": "runtime_connected_production_vfx_existing_render_proof",
       "architecture_owned": true,
       "contract_owners": [
         {
@@ -1014,7 +1014,7 @@
       ],
       "reuse": "House",
       "priority": "P0",
-      "production_status": "runtime_connected_house_restoration_vfx",
+      "production_status": "runtime_connected_production_vfx_verification_required",
       "architecture_owned": true,
       "contract_owners": [
         {
@@ -2864,6 +2864,7 @@
     "chapter_world_raster_family": "RUNTIME_AND_RENDER_VERIFIED",
     "chapter_world_raster_note": "S03 1080x1500 route world is production-resolution runtime art; S02 Chapters and S08 Reliquary reuse it intentionally and truthfully.",
     "prestart_level1_hero_raster": "RUNTIME_AND_RENDER_VERIFIED",
-    "prestart_level1_hero_note": "S04 Level 1 ritual hero uses the checked-in 1024x768 authored WebP at the locked cover crop. Shared Levels 2–3 transport preview remains blocked on its retained production master handoff."
+    "prestart_level1_hero_note": "S04 Level 1 ritual hero uses the checked-in 1024x768 authored WebP at the locked cover crop. Shared Levels 2–3 transport preview remains blocked on its retained production master handoff.",
+    "golden_loop_vfx": "IN_PROGRESS_EXACT_HEAD_RENDER_REQUIRED"
   }
 }
