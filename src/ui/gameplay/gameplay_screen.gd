@@ -157,7 +157,7 @@ func _ready() -> void:
 	ProductionChrome.apply_gameplay_shell($ResourceBar, "resources")
 	ProductionChrome.apply_gameplay_shell($Layout/HUDPlate, "objective")
 	ProductionChrome.apply_gameplay_shell($BoosterTray, "boosters")
-	var board_frame := $Layout/BoardFrame as PanelContainer
+	var board_frame := $Layout/BoardView/OrnateFrame as Panel
 	if board_frame != null:
 		board_frame.add_theme_stylebox_override("panel", StyleBoxEmpty.new())
 		board_frame.set_meta("production_board_frame_owner", "BoardView")
@@ -1031,6 +1031,8 @@ func gameplay_presentation_contract() -> Dictionary:
 		"truthful_sealed_slots": _sealed_boost_a != null and _sealed_boost_a.disabled and _sealed_boost_b != null and _sealed_boost_b.disabled and _sealed_boost_c != null and _sealed_boost_c.disabled,
 		"authored_target_moves_hierarchy": objective_icon != null and objective_icon.texture != null and objective_label != null and objective_label.get_theme_stylebox("normal") != null and moves_label != null and moves_label.get_theme_stylebox("normal") != null,
 		"authored_board_frame": get_node_or_null("Layout/BoardView/OrnateFrame") != null,
+		"asset_backed_gameplay_chrome": ($ResourceBar as PanelContainer).get_theme_stylebox("panel") is StyleBoxTexture and ($Layout/HUDPlate as PanelContainer).get_theme_stylebox("panel") is StyleBoxTexture and _booster_tray != null and _booster_tray.get_theme_stylebox("panel") is StyleBoxTexture,
+		"board_frame_asset_owner": String(($Layout/BoardView/OrnateFrame as Panel).get_meta("production_board_frame_owner", "")) == "BoardView",
 		"north_star_gameplay_geometry": ($ResourceBar as PanelContainer).offset_bottom - ($ResourceBar as PanelContainer).offset_top >= 76.0 and ($Layout/HUDPlate as PanelContainer).custom_minimum_size.y >= 108.0 and _booster_tray != null and (_booster_tray.offset_bottom - _booster_tray.offset_top) >= 132.0 and _hint_boost_button.custom_minimum_size.y >= 88.0 and pause_button.custom_minimum_size.y >= 88.0,
 		"resource_bar_height": ($ResourceBar as PanelContainer).offset_bottom - ($ResourceBar as PanelContainer).offset_top,
 		"hud_plate_height": ($Layout/HUDPlate as PanelContainer).custom_minimum_size.y,
