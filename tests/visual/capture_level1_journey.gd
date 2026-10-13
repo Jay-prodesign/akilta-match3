@@ -72,6 +72,7 @@ func _capture() -> void:
 		"north_star_compact_gameplay_header",
 		"north_star_compact_gameplay_geometry",
 		"north_star_gameplay_hud_frame",
+		"north_star_header_depth",
 		"integrated_hint_surface",
 		"canonical_booster_art",
 		"gothic_board_material",
@@ -85,7 +86,7 @@ func _capture() -> void:
 		"north_star_booster_family",
 		"utility_separated_from_boosters",
 		"hint_booster_clearance",
-		"visual_parity_gate_v14",
+		"visual_parity_gate_v15",
 	]:
 		if not bool(gameplay_contract.get(parity_key, false)):
 			return _fail(app, "S05 North Star render gate failed: %s" % parity_key)
@@ -108,9 +109,15 @@ func _capture() -> void:
 		return _fail(app, "S05 North Star render gate missing level/HUD/board/hint/tray")
 	if gameplay_resource_bar.visible:
 		return _fail(app, "S05 meta currency/level row regressed into gameplay")
+	var hud_height_ratio: float = gameplay_hud.size.y / gameplay_viewport.y
+	var board_start_ratio: float = gameplay_board.global_position.y / gameplay_viewport.y
 	var board_height_ratio: float = gameplay_board.size.y / gameplay_viewport.y
 	var board_width_ratio: float = gameplay_board.size.x / gameplay_viewport.x
 	var tray_width_ratio: float = gameplay_tray.size.x / gameplay_viewport.x
+	if hud_height_ratio < 0.09 or hud_height_ratio > 0.11:
+		return _fail(app, "S05 gameplay HUD depth drifted: %.3f" % hud_height_ratio)
+	if board_start_ratio < 0.18 or board_start_ratio > 0.22:
+		return _fail(app, "S05 board starts too high/low versus North Star: %.3f" % board_start_ratio)
 	if board_height_ratio < 0.56 or board_height_ratio > 0.61:
 		return _fail(app, "S05 board height ratio drifted: %.3f" % board_height_ratio)
 	if board_width_ratio < 0.90:
