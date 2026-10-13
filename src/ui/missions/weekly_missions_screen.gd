@@ -5,6 +5,7 @@ signal return_house_requested
 
 const ScreenArt = preload("res://src/ui/shared/screen_art_registry.gd")
 const PieceAssetLoader = preload("res://src/match3/presentation/piece_asset_loader.gd")
+const ProductionChrome = preload("res://src/ui/theme/production_chrome.gd")
 
 const WEEKLY_ART_PATH := "res://assets/curios/ch01_curio_moon_cameo_awakened_v01.webp"
 
@@ -19,6 +20,7 @@ const WEEKLY_ART_PATH := "res://assets/curios/ch01_curio_moon_cameo_awakened_v01
 @onready var return_house: Button = $MissionLayout/ReturnToHouse
 
 func _ready() -> void:
+	ProductionChrome.apply_secondary(empty_state, "weekly_altar")
 	return_events.pressed.connect(func(): return_events_requested.emit())
 	return_house.pressed.connect(func(): return_house_requested.emit())
 
@@ -49,6 +51,7 @@ func screen_contract() -> Dictionary:
 		"code_built_panels": false,
 		"north_star_title_hierarchy": ($MissionLayout/MissionTitle as Label).get_theme_font_size("font_size") >= 52,
 		"north_star_altar_stack": ($MissionLayout/MissionEmptyState/EmptyContent as VBoxContainer) != null and reward_art.custom_minimum_size.y <= 260.0,
+		"asset_backed_altar_chrome": empty_state != null and empty_state.get_theme_stylebox("panel") is StyleBoxTexture and String(empty_state.get_meta("production_chrome_kind", "")) == "secondary_weekly_altar",
 		"primary_cta_rounding": return_events.get_theme_stylebox("normal") != null,
 
 	}

@@ -8,6 +8,7 @@ static var _primary_panel: StyleBoxTexture
 static var _top_shell: StyleBoxTexture
 static var _bottom_shell: StyleBoxTexture
 static var _gameplay_shell: StyleBoxTexture
+static var _secondary_panel: StyleBoxTexture
 
 static func _style(content_margin: float, texture_margin: float = 64.0) -> StyleBoxTexture:
 	var texture := PieceAssetLoader.ornament(PRIMARY_PANEL_PATH)
@@ -45,6 +46,22 @@ static func bottom_shell() -> StyleBoxTexture:
 	if _bottom_shell == null:
 		_bottom_shell = _style(8.0, 52.0)
 	return _bottom_shell
+
+static func secondary_panel() -> StyleBoxTexture:
+	if _secondary_panel == null:
+		_secondary_panel = _style(16.0, 56.0)
+	return _secondary_panel
+
+static func apply_secondary(panel: Control, role: String) -> bool:
+	if panel == null:
+		return false
+	var style := secondary_panel()
+	if style == null:
+		return false
+	panel.add_theme_stylebox_override("panel", style)
+	panel.set_meta("production_chrome_asset", PRIMARY_PANEL_PATH)
+	panel.set_meta("production_chrome_kind", "secondary_" + role)
+	return true
 
 static func gameplay_shell() -> StyleBoxTexture:
 	if _gameplay_shell == null:
@@ -93,4 +110,6 @@ static func contract() -> Dictionary:
 		"bottom_shell_asset_backed": bottom_shell() != null and bottom_shell().texture != null,
 		"global_shell_family_verified": top_shell() != null and top_shell().texture != null and bottom_shell() != null and bottom_shell().texture != null,
 		"gameplay_shell_asset_backed": gameplay_shell() != null and gameplay_shell().texture != null,
+		"secondary_panel_asset_backed": secondary_panel() != null and secondary_panel().texture != null,
+		"secondary_hero_family_verified": secondary_panel() != null and secondary_panel().texture != null,
 	}
