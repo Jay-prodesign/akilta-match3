@@ -8,6 +8,7 @@ const PieceAssetLoader = preload("res://src/match3/presentation/piece_asset_load
 const ProductionChrome = preload("res://src/ui/theme/production_chrome.gd")
 
 const WEEKLY_ART_PATH := "res://assets/curios/ch01_curio_moon_cameo_sealed_v01.webp"
+const STATUS_SEAL_PATH := "res://assets/ui/gameplay/booster_sealed_badge_v01.svg"
 
 @onready var world_art: TextureRect = $MissionWorldArt
 @onready var mission_timer: Label = $MissionLayout/MissionTimer
@@ -16,10 +17,13 @@ const WEEKLY_ART_PATH := "res://assets/curios/ch01_curio_moon_cameo_sealed_v01.w
 @onready var availability: Label = $MissionLayout/MissionEmptyState/EmptyContent/AltarCopy/MissionAvailability
 @onready var truth: Label = $MissionLayout/MissionEmptyState/EmptyContent/AltarCopy/MissionEmptyStateTruth
 @onready var feed_status: PanelContainer = $MissionLayout/MissionStatusStack/FeedStatus
+@onready var feed_icon: TextureRect = $MissionLayout/MissionStatusStack/FeedStatus/Content/SealIcon
 @onready var feed_state: Label = $MissionLayout/MissionStatusStack/FeedStatus/Content/State
 @onready var progress_status: PanelContainer = $MissionLayout/MissionStatusStack/ProgressStatus
+@onready var progress_icon: TextureRect = $MissionLayout/MissionStatusStack/ProgressStatus/Content/SealIcon
 @onready var progress_state: Label = $MissionLayout/MissionStatusStack/ProgressStatus/Content/State
 @onready var reward_status: PanelContainer = $MissionLayout/MissionStatusStack/RewardStatus
+@onready var reward_icon: TextureRect = $MissionLayout/MissionStatusStack/RewardStatus/Content/SealIcon
 @onready var reward_state: Label = $MissionLayout/MissionStatusStack/RewardStatus/Content/State
 @onready var stage_spacer: Control = $MissionLayout/WorldStageSpacer
 @onready var opening_record: Label = $MissionLayout/MissionOpeningRecord
@@ -31,6 +35,11 @@ func _ready() -> void:
 	ProductionChrome.apply_compact_panel(feed_status, "weekly_feed_status")
 	ProductionChrome.apply_compact_panel(progress_status, "weekly_progress_status")
 	ProductionChrome.apply_compact_panel(reward_status, "weekly_reward_status")
+	var status_seal := PieceAssetLoader.ornament(STATUS_SEAL_PATH)
+	for icon in [feed_icon, progress_icon, reward_icon]:
+		if icon != null:
+			icon.texture = status_seal
+			icon.set_meta("asset_path", STATUS_SEAL_PATH)
 	ProductionChrome.apply_action_button(return_events, "primary", "weekly_events_return")
 	ProductionChrome.apply_action_button(return_house, "utility", "weekly_house_return")
 	var record_style := ProductionChrome.compact_panel()
@@ -66,6 +75,7 @@ func screen_contract() -> Dictionary:
 	var status_rows := [feed_status, progress_status, reward_status]
 	var status_stack_dense := status_rows.all(func(row): return row != null and row.custom_minimum_size.y >= 110.0 and row.get_theme_stylebox("panel") is StyleBoxTexture)
 	var truthful_status_copy := feed_state.text == "NOT CONNECTED" and progress_state.text == "NOT TRACKED OFFLINE" and reward_state.text == "NOTHING TO CLAIM"
+	var status_icons_loaded := [feed_icon, progress_icon, reward_icon].all(func(icon): return icon != null and icon.texture != null and String(icon.get_meta("asset_path", "")) == STATUS_SEAL_PATH)
 	var intentional_stage := stage_spacer != null and stage_spacer.size_flags_vertical != Control.SIZE_EXPAND_FILL and stage_spacer.custom_minimum_size.y <= 40.0 and ($MissionLayout as VBoxContainer).offset_bottom <= -150.0
 	var footer_record := opening_record.get_theme_stylebox("normal") is StyleBoxTexture and String(opening_record.get_meta("production_chrome_kind", "")) == "compact_weekly_record" and String(opening_record.get_meta("stage_role", "")) == "anchored_footer_status"
 	var world_visible := ($WorldShade as ColorRect).color.a <= 0.20 and ($HeaderShade as ColorRect).color.a <= 0.38
@@ -82,6 +92,7 @@ func screen_contract() -> Dictionary:
 		"asset_backed_altar_chrome": empty_state != null and empty_state.get_theme_stylebox("panel") is StyleBoxTexture and String(empty_state.get_meta("production_chrome_kind", "")) == "secondary_weekly_altar",
 		"asset_backed_status_rows": status_stack_dense,
 		"truthful_status_rows": truthful_status_copy,
+		"sealed_status_icons": status_icons_loaded,
 		"header_readability_scrim": ($HeaderShade as ColorRect) != null and ($HeaderShade as ColorRect).color.a >= 0.34,
 		"sealed_offline_art": String(reward_art.get_meta("asset_path", "")).contains("_sealed_"),
 		"production_return_actions": return_actions,
@@ -91,6 +102,6 @@ func screen_contract() -> Dictionary:
 		"intentional_world_stage": intentional_stage,
 		"asset_backed_opening_record": footer_record,
 		"world_art_not_overdimmed": world_visible,
-		"visual_parity_gate_v2": altar_compact and status_stack_dense and truthful_status_copy and intentional_stage and footer_record and world_visible and return_actions,
-		"visual_parity_gate_v3": altar_compact and status_stack_dense and truthful_status_copy and intentional_stage and footer_record and world_visible and return_actions,
+		"visual_parity_gate_v2": altar_compact and status_stack_dense and truthful_status_copy and status_icons_loaded and intentional_stage and footer_record and world_visible and return_actions,
+		"visual_parity_gate_v3": altar_compact and status_stack_dense and truthful_status_copy and status_icons_loaded and intentional_stage and footer_record and world_visible and return_actions,
 	}
