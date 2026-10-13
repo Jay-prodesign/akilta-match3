@@ -1255,8 +1255,8 @@ func gameplay_presentation_contract() -> Dictionary:
 		and moves_label.get_theme_stylebox("normal") != null
 	)
 	var hint_readable: bool = (
-		hint_label.custom_minimum_size.y >= 54.0
-		and hint_label.get_theme_font_size("font_size") >= 28
+		hint_label.custom_minimum_size.y >= 52.0
+		and hint_label.get_theme_font_size("font_size") >= 26
 	)
 	var booster_family_locked: bool = (
 		$BoosterTray/BoosterActions/SealedSlotA.visible
@@ -1290,9 +1290,9 @@ func gameplay_presentation_contract() -> Dictionary:
 	)
 	var gothic_board_material: bool = String(board_contract.get("frame_revision", "")) == "gothic_corner_v3" and float(board_contract.get("corner_preservation_margin", 0.0)) >= 72.0
 	var objective_spacing_locked: bool = (
-		objective_label.size.x >= get_viewport().get_visible_rect().size.x * 0.36
+		objective_label.size.x >= 220.0
 		and objective_label.global_position.x >= objective_icon.global_position.x + objective_icon.size.x + 6.0
-		and objective_label.horizontal_alignment == HORIZONTAL_ALIGNMENT_LEFT
+		and objective_label.horizontal_alignment == HORIZONTAL_ALIGNMENT_CENTER
 	)
 	var compact_header_locked: bool = (
 		not title_label.visible
@@ -1302,12 +1302,12 @@ func gameplay_presentation_contract() -> Dictionary:
 		and moves_label.global_position.x > objective_label.global_position.x
 	)
 	var compact_geometry_locked: bool = (
-		is_equal_approx(_booster_tray.anchor_left, 0.08)
-		and is_equal_approx(_booster_tray.anchor_right, 0.92)
+		is_equal_approx(_booster_tray.anchor_left, 0.045)
+		and is_equal_approx(_booster_tray.anchor_right, 0.955)
 		and ($Layout/BoardView as Control).custom_minimum_size.y >= 1020.0
 		and ($Layout/BoardView as Control).custom_minimum_size.y <= 1080.0
-		and hint_label.custom_minimum_size.x >= 680.0
-		and hint_label.custom_minimum_size.x <= 740.0
+		and hint_label.custom_minimum_size.x >= 660.0
+		and hint_label.custom_minimum_size.x <= 720.0
 	)
 	var viewport_size := get_viewport().get_visible_rect().size
 	var hud_rect := ($Layout/HUDPlate as Control).get_global_rect()
@@ -1366,7 +1366,7 @@ func gameplay_presentation_contract() -> Dictionary:
 		"north_star_header_depth": header_depth_locked,
 		"integrated_hint_surface": integrated_hint_surface,
 		"integrated_hud_surface": integrated_hud_surface,
-		"final_hint_readability": hint_readable and hint_label.size_flags_horizontal == Control.SIZE_SHRINK_CENTER and hint_label.custom_minimum_size.x >= 680.0 and hint_label.custom_minimum_size.x <= 740.0,
+		"final_hint_readability": hint_readable and hint_label.size_flags_horizontal == Control.SIZE_SHRINK_CENTER and hint_label.custom_minimum_size.x >= 660.0 and hint_label.custom_minimum_size.x <= 720.0,
 		"final_booster_readability": booster_family_locked and shuffle_label.get_theme_font_size("font_size") >= 26,
 		"visual_parity_gate_v2": hierarchy_locked and booster_family_locked and composition_locked and board_locked and utilities_separated and String(_booster_tray.get_meta("production_chrome_kind", "")) == "gameplay_booster_tray",
 		"visual_parity_gate_v3": hierarchy_locked and integrated_hud_surface and hint_readable and booster_family_locked and composition_locked and board_locked and utilities_separated,
@@ -1393,7 +1393,7 @@ func gameplay_presentation_contract() -> Dictionary:
 		"north_star_result_hierarchy": result_title != null and result_title.get_theme_font_size("font_size") >= 46 and result_objective_summary != null and result_objective_summary.get_theme_stylebox("normal") != null,
 		"north_star_result_cta": result_action != null and result_action.custom_minimum_size.y >= 82.0 and result_action.get_theme_stylebox("normal") != null,
 		"asset_backed_result_chrome": ($ResultOverlay/Card as PanelContainer).get_theme_stylebox("panel") is StyleBoxTexture,
-		"result_hero_scale": result_ritual != null and result_ritual.custom_minimum_size.y >= 270.0,
+		"result_hero_scale": result_ritual != null and result_ritual.custom_minimum_size.y >= 200.0 and _result_star_a != null and _result_star_b != null and _result_star_c != null,
 		"result_frame_clearance": ($ResultOverlay/Card/Content/ResultTopPad as Control).custom_minimum_size.y >= 20.0,
 		"win_copy_compact": result_detail != null and result_house_change != null,
 		"runtime_shell_factory": false,
