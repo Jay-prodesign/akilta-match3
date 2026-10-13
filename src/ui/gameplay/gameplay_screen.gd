@@ -692,7 +692,7 @@ func _apply_moves_urgency() -> void:
 	var moves := maxi(0, int(board_state.moves_remaining))
 	if moves <= LAST_MOVE_THRESHOLD:
 		_moves_urgency_state = "critical"
-		moves_label.text = "1\nLAST MOVE" if moves == 1 else "0\nMOVES"
+		moves_label.text = "LAST MOVE" if moves == 1 else "NO MOVES"
 		moves_label.add_theme_color_override("font_color", Color("#FFFFFF") if _high_contrast else Color("#FF9B8E"))
 		moves_label.add_theme_font_size_override("font_size", 36)
 		moves_label.add_theme_constant_override("outline_size", 5 if _high_contrast else 4)
