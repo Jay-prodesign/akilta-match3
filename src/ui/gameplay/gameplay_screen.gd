@@ -117,7 +117,8 @@ const LAST_MOVE_THRESHOLD := 1
 @onready var result_ritual: Control = $ResultOverlay/Card/Content/RewardRitual
 @onready var result_recovery_action: Button = $ResultOverlay/Card/Content/RecoveryAction
 @onready var result_action: Button = $ResultOverlay/Card/Content/Action
-@onready var _level_badge_label: Label = $ResourceBar/Resources/LevelBadge
+# Compact gameplay resource header keeps level identity inside its authored status plate.
+@onready var _level_badge_label: Label = $ResourceBar/Resources/LevelBadgePlate/LevelBadge
 @onready var _booster_tray: PanelContainer = $BoosterTray
 @onready var _hint_boost_button: Button = $BoosterTray/BoosterActions/HintSlot/HintBoost
 @onready var _sealed_boost_a: Button = $BoosterTray/BoosterActions/SealedSlotA/SealedBoostA
@@ -155,6 +156,9 @@ func _ready() -> void:
 	ProductionChrome.apply_primary($PauseOverlay/Card)
 	ProductionChrome.apply_primary($ResultOverlay/Card)
 	ProductionChrome.apply_gameplay_shell($ResourceBar, "resources")
+	ProductionChrome.apply_compact_panel($ResourceBar/Resources/CoinChip, "gameplay_coin_resource")
+	ProductionChrome.apply_compact_panel($ResourceBar/Resources/GemChip, "gameplay_gem_resource")
+	ProductionChrome.apply_compact_panel($ResourceBar/Resources/LevelBadgePlate, "gameplay_level_badge")
 	ProductionChrome.apply_gameplay_shell($Layout/HUDPlate, "objective")
 	ProductionChrome.apply_gameplay_shell($BoosterTray, "boosters")
 	ProductionChrome.apply_action_button(pause_button, "utility", "gameplay_pause")
@@ -1038,6 +1042,9 @@ func gameplay_presentation_contract() -> Dictionary:
 		"board_frame_asset_owner": String(($Layout/BoardView/OrnateFrame as Panel).get_meta("production_board_frame_owner", "")) == "BoardView",
 		"north_star_gameplay_geometry": ($ResourceBar as PanelContainer).offset_bottom - ($ResourceBar as PanelContainer).offset_top >= 76.0 and ($Layout/HUDPlate as PanelContainer).custom_minimum_size.y >= 108.0 and _booster_tray != null and (_booster_tray.offset_bottom - _booster_tray.offset_top) >= 132.0 and _hint_boost_button.custom_minimum_size.y >= 88.0 and pause_button.custom_minimum_size.y >= 88.0,
 		"gameplay_header_clearance": ($Layout as VBoxContainer).offset_top - ($ResourceBar as PanelContainer).offset_bottom >= 56.0,
+		"compact_resource_chips": ($ResourceBar/Resources/CoinChip as PanelContainer).size.x <= 300.0 and ($ResourceBar/Resources/GemChip as PanelContainer).size.x <= 300.0 and ($ResourceBar/Resources/LevelBadgePlate as PanelContainer).size.x <= 200.0,
+		"asset_backed_resource_chips": [$ResourceBar/Resources/CoinChip, $ResourceBar/Resources/GemChip, $ResourceBar/Resources/LevelBadgePlate].all(func(panel): return panel is PanelContainer and (panel as PanelContainer).get_theme_stylebox("panel") is StyleBoxTexture),
+		"level_badge_separated": ($ResourceBar/Resources/ResourceSpacer as Control).size_flags_horizontal == Control.SIZE_EXPAND_FILL,
 		"hint_booster_clearance": _booster_tray != null and hint_label != null and _booster_tray.global_position.y >= hint_label.global_position.y + hint_label.size.y + 12.0,
 		"resource_bar_height": ($ResourceBar as PanelContainer).offset_bottom - ($ResourceBar as PanelContainer).offset_top,
 		"hud_plate_height": ($Layout/HUDPlate as PanelContainer).custom_minimum_size.y,

@@ -300,12 +300,12 @@ theme_override_styles/panel = SubResource("ResourceBarStyle")
 [node name="Resources" type="HBoxContainer" parent="ResourceBar"]
 layout_mode = 2
 theme_override_constants/separation = 8
-alignment = 1
+alignment = 0
 
 [node name="CoinChip" type="PanelContainer" parent="ResourceBar/Resources"]
-custom_minimum_size = Vector2(0, 50)
+custom_minimum_size = Vector2(280, 64)
 layout_mode = 2
-size_flags_horizontal = 3
+size_flags_horizontal = 0
 theme_override_styles/panel = SubResource("ResourceChipStyle")
 
 [node name="Content" type="HBoxContainer" parent="ResourceBar/Resources/CoinChip"]
@@ -327,9 +327,9 @@ theme_override_font_sizes/font_size = 20
 text = "0"
 
 [node name="GemChip" type="PanelContainer" parent="ResourceBar/Resources"]
-custom_minimum_size = Vector2(0, 72)
+custom_minimum_size = Vector2(280, 64)
 layout_mode = 2
-size_flags_horizontal = 3
+size_flags_horizontal = 0
 theme_override_styles/panel = SubResource("ResourceChipStyle")
 
 [node name="Content" type="HBoxContainer" parent="ResourceBar/Resources/GemChip"]
@@ -350,8 +350,18 @@ theme_override_colors/font_color = Color(0.96, 0.9, 0.83, 1)
 theme_override_font_sizes/font_size = 20
 text = "0"
 
-[node name="LevelBadge" type="Label" parent="ResourceBar/Resources"]
-custom_minimum_size = Vector2(124, 0)
+[node name="ResourceSpacer" type="Control" parent="ResourceBar/Resources"]
+layout_mode = 2
+size_flags_horizontal = 3
+mouse_filter = 2
+
+[node name="LevelBadgePlate" type="PanelContainer" parent="ResourceBar/Resources"]
+custom_minimum_size = Vector2(184, 64)
+layout_mode = 2
+size_flags_horizontal = 0
+theme_override_styles/panel = SubResource("ResourceChipStyle")
+
+[node name="LevelBadge" type="Label" parent="ResourceBar/Resources/LevelBadgePlate"]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.831, 0.678, 0.439, 1)
 theme_override_font_sizes/font_size = 20
