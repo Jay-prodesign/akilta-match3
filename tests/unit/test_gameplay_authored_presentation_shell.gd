@@ -29,9 +29,10 @@ func _run() -> void:
 	_expect(int(contract.get("visible_booster_count", 0)) == 3, "Exactly three gameplay boosters must be visible")
 	_expect(float(contract.get("resource_bar_height", 0.0)) == 80.0, "Resource strip height drifted")
 	_expect(float(contract.get("hud_plate_height", 0.0)) >= 184.0 and float(contract.get("hud_plate_height", 0.0)) <= 200.0, "Target/moves HUD depth drifted from North Star composition")
-	_expect(float(contract.get("booster_tray_height", 0.0)) >= 216.0, "Booster tray is too shallow")
+	_expect(float(contract.get("booster_tray_height", 0.0)) >= 200.0 and float(contract.get("booster_tray_height", 0.0)) <= 212.0, "Booster tray depth drifted")
 
-	var eyebrow := screen.get_node_or_null("Layout/Eyebrow") as Label
+	var level_plaque := screen.get_node_or_null("Layout/LevelPlaque") as PanelContainer
+	var eyebrow := screen.get_node_or_null("Layout/LevelPlaque/Eyebrow") as Label
 	var title := screen.get_node_or_null("Layout/Title") as Label
 	var objective := screen.get_node_or_null("Layout/HUDPlate/HUD/Objective") as Label
 	var moves := screen.get_node_or_null("Layout/HUDPlate/HUD/Moves") as Label
@@ -50,7 +51,7 @@ func _run() -> void:
 	var magic_label := screen.get_node_or_null("BoosterTray/BoosterActions/SealedSlotC/Label") as Label
 
 	_expect(title != null and not title.visible, "Room title must not compete with the compact Level identity")
-	_expect(eyebrow != null and eyebrow.text.begins_with("LEVEL ") and not eyebrow.text.contains("·") and eyebrow.get_theme_font_size("font_size") >= 30, "Compact Level identity must anchor the gameplay header")
+	_expect(level_plaque != null and level_plaque.custom_minimum_size.x >= 580.0 and level_plaque.get_theme_stylebox("panel") is StyleBoxTexture and eyebrow != null and eyebrow.text.begins_with("LEVEL ") and not eyebrow.text.contains("·") and eyebrow.get_theme_font_size("font_size") >= 40, "Authored Level plaque must anchor the gameplay header")
 	_expect(objective != null and objective.text.contains("SIGILS"), "Objective must remain explicit")
 	_expect(objective_icon != null and objective_icon.texture != null and objective_icon.custom_minimum_size.x >= 80.0, "Objective art must remain visually legible")
 	_expect(moves != null and moves.custom_minimum_size.x >= 136.0 and moves.get_theme_font_size("font_size") >= 38 and moves.get_theme_font_size("font_size") <= 42, "Moves must remain a dominant counter")
@@ -59,7 +60,8 @@ func _run() -> void:
 	_expect(pause != null and objective_icon != null and pause.global_position.x < objective_icon.global_position.x, "Pause must sit at the quiet left edge of the gameplay HUD")
 	_expect(pause != null and pause.icon != null and pause.text == "" and pause.get_theme_stylebox("normal") is StyleBoxFlat and String(pause.get_meta("production_chrome_kind", "")) == "gameplay_pause_icon", "Pause must render as the clear authored icon rather than a clipped text glyph")
 	_expect(board != null and board.custom_minimum_size.y >= 1020.0 and board.custom_minimum_size.y <= 1080.0, "Board must remain dominant without crowding the North Star header and booster bands")
-	_expect(hint_band != null and tray != null and tray.global_position.y >= hint_band.global_position.y + hint_band.size.y + 32.0, "Hint and booster tray collide")
+	_expect(hint_band != null and not hint_band.visible, "Initial teaching must stay board-led instead of inserting a persistent hint band")
+	_expect(tray != null and board != null and tray.global_position.y >= board.global_position.y + board.size.y - 4.0, "Booster tray must not cover the board")
 	_expect(tray != null and is_equal_approx(tray.anchor_left, 0.045) and is_equal_approx(tray.anchor_right, 0.955), "Booster tray width drifted from the final gameplay family")
 	_expect(keeper_slot != null and not keeper_slot.visible and settings_slot != null and not settings_slot.visible, "Utilities leaked into booster family")
 	_expect(shuffle != null and shuffle.disabled and shuffle.icon != null and shuffle.custom_minimum_size.y >= 108.0, "Shuffle booster truth/scale failed")
