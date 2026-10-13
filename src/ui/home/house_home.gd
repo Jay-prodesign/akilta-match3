@@ -165,6 +165,7 @@ func north_star_home_contract() -> Dictionary:
 		"world_underlays_home_ui": room_view != null and room_view.get_parent() == self and $Layout/WorldSpacer != null,
 		"direct_level_cta": play_button != null and (play_button.text.begins_with("PLAY LEVEL") or play_button.text.begins_with("EXPLORE")),
 		"home_visual_parity_gate": play_button != null and play_button.custom_minimum_size.x >= 720.0 and play_button.custom_minimum_size.x <= 800.0 and headline != null and headline.custom_minimum_size.x <= 840.0 and _first_ritual_panel != null and _first_ritual_panel.custom_minimum_size.x <= 920.0 and _resource_bar != null and String(_resource_bar.get_meta("production_chrome_asset", "")) == ProductionChrome.QUIET_PANEL_PATH and nav != null and String(nav.get_meta("production_chrome_asset", "")) == ProductionChrome.QUIET_PANEL_PATH,
+		"home_visual_parity_version": 1,
 	}
 
 func _on_play_pressed() -> void:
