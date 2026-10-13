@@ -41,10 +41,10 @@ border_width_top = 2
 border_width_right = 2
 border_width_bottom = 2
 border_color = Color(0.835, 0.678, 0.439, 1)
-corner_radius_top_left = 18
-corner_radius_top_right = 18
-corner_radius_bottom_right = 18
-corner_radius_bottom_left = 18
+corner_radius_top_left = 26
+corner_radius_top_right = 26
+corner_radius_bottom_right = 26
+corner_radius_bottom_left = 26
 
 [sub_resource type="StyleBoxFlat" id="CardHigh"]
 bg_color = Color(0.031, 0.039, 0.071, 1)

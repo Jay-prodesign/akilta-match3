@@ -94,10 +94,10 @@ border_width_top = 1
 border_width_right = 1
 border_width_bottom = 1
 border_color = Color(0.749, 0.647, 0.847, 0.28)
-corner_radius_top_left = 10
-corner_radius_top_right = 10
-corner_radius_bottom_right = 10
-corner_radius_bottom_left = 10
+corner_radius_top_left = 22
+corner_radius_top_right = 22
+corner_radius_bottom_right = 22
+corner_radius_bottom_left = 22
 
 [sub_resource type="StyleBoxFlat" id="Banner"]
 bg_color = Color(0.065, 0.043, 0.08, 0.88)
