@@ -25,6 +25,7 @@ func _run() -> void:
 	await process_frame
 
 	var progress = ProgressScript.new()
+	progress.lives = 4
 	progress.coins = 12345
 	progress.gems = 67
 
@@ -52,15 +53,17 @@ func _run() -> void:
 
 	var bar_contract: Dictionary = TopResourceBar.authored_contract(bar)
 	_expect(bool(bar_contract.get("authored_scene", false)), "TopResourceBar must instantiate an authored scene")
-	_expect(bool(bar_contract.get("resource_slots_present", false)), "TopResourceBar coin/gem slots missing")
+	_expect(bool(bar_contract.get("resource_slots_present", false)), "TopResourceBar life/coin/gem slots missing")
 	_expect(bool(bar_contract.get("icons_loaded", false)), "TopResourceBar authored icons must load")
 	_expect(bool(bar_contract.get("profile_touch_target_ok", false)), "Keeper profile control must retain the 88 logical px mobile touch target")
 	_expect(bool(bar_contract.get("north_star_resource_zone", false)), "TopResourceBar must occupy the canonical 96–112 logical px resource zone")
 	_expect(float(bar_contract.get("resource_zone_height", 0.0)) == 104.0, "TopResourceBar authored baseline height must be 104 logical px")
 	_expect(not bool(bar_contract.get("runtime_ui_factory", true)), "TopResourceBar must not create persistent shell nodes at runtime")
 
+	var life := bar.find_child("LifeResource", true, false) as Label
 	var coin := bar.find_child("CoinResource", true, false) as Label
 	var gem := bar.find_child("GemResource", true, false) as Label
+	_expect(life != null and life.text == "4", "TopResourceBar must bind durable lives truth")
 	_expect(coin != null and coin.text == "12,345", "TopResourceBar must bind durable coin truth")
 	_expect(gem != null and gem.text == "67", "TopResourceBar must bind durable gem truth")
 	var profile := bar.get_node_or_null("Resources/KeeperProfile") as Button
@@ -70,10 +73,11 @@ func _run() -> void:
 		await process_frame
 	_expect(profile_pressed, "Keeper profile authored shell must preserve handler semantics")
 
+	progress.lives = 3
 	progress.coins = 222
 	progress.gems = 9
 	TopResourceBar.refresh(bar, progress)
-	_expect(coin.text == "222" and gem.text == "9", "TopResourceBar refresh must update existing authored slots")
+	_expect(life.text == "3" and coin.text == "222" and gem.text == "9", "TopResourceBar refresh must update all authored resource slots")
 
 	screen.queue_free()
 	await process_frame
