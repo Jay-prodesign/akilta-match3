@@ -13,6 +13,7 @@ signal continue_requested
 
 func _ready() -> void:
 	ProductionChrome.apply_primary($CeremonyCard)
+	ProductionChrome.apply_action_button(continue_button, "primary", "restoration_continue")
 	continue_button.pressed.connect(func(): continue_requested.emit())
 
 func configure(curio_name: String, restoration_copy: String, motif_texture: Texture2D, curio_texture: Texture2D) -> bool:

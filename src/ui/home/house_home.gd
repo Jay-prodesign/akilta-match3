@@ -17,6 +17,7 @@ const PieceAssetLoader = preload("res://src/match3/presentation/piece_asset_load
 const HouseCurioInspectScene = preload("res://src/ui/home/house_curio_inspect.tscn")
 const KeeperRoleScene = preload("res://src/ui/home/keeper_role_panel.tscn")
 const RestorationOverlayScene = preload("res://src/ui/home/restoration_overlay.tscn")
+const ProductionChrome = preload("res://src/ui/theme/production_chrome.gd")
 
 @onready var room_view = $RoomView
 @onready var headline: Label = $Layout/Headline
@@ -48,6 +49,7 @@ var _keeper_overlay: Control
 const KEEPER_ART_PATH := "res://assets/pieces/black_cat.webp"
 
 func _ready() -> void:
+	ProductionChrome.apply_action_button(play_button, "primary", "house_next_level_or_map")
 	play_button.pressed.connect(_on_play_pressed)
 	collection_button.pressed.connect(func(): collection_requested.emit())
 	settings_button.pressed.connect(func(): settings_requested.emit())

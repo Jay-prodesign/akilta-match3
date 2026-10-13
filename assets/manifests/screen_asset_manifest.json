@@ -2503,6 +2503,185 @@
       "runtime_style_script": "src/ui/theme/production_chrome.gd",
       "technical_policy": "runtime_decoded_svg_to_imagetexture_9slice__global_profile_action__godot_4_7_2_render_verified",
       "provenance": "Derived quiet structural 9-slice from the approved authored ritual-frame family; removes the ceremonial center medallions from repeated compact controls while preserving the same border/material language."
+    },
+    {
+      "asset_id": "gbl_primary_cta_frame",
+      "screen": [
+        "S01",
+        "S04",
+        "S06",
+        "S07",
+        "O01",
+        "O03"
+      ],
+      "type": "structural_ui",
+      "dimensions": "512x512_9slice_runtime",
+      "aspect_ratio": "scalable",
+      "transparent": true,
+      "variants": [
+        "normal",
+        "hover",
+        "pressed",
+        "disabled"
+      ],
+      "reuse": "golden_loop_primary_action_family",
+      "priority": "P0",
+      "production_status": "runtime_connected_authored_9slice_render_required",
+      "current_path": "assets/ui/chrome/gbl_ui_action_primary_9s_v01.svg",
+      "runtime_style_script": "src/ui/theme/production_chrome.gd",
+      "technical_policy": "runtime_decoded_svg_to_imagetexture_9slice__primary_cta__render_verification_required",
+      "contract_owners": [
+        {
+          "screen": "S01",
+          "region": "next_action",
+          "block": "primary_cta",
+          "slot": "next_level_or_map",
+          "states": [
+            "enabled",
+            "disabled",
+            "complete"
+          ]
+        },
+        {
+          "screen": "S04",
+          "region": "actions",
+          "block": "primary_cta",
+          "slot": "play",
+          "states": [
+            "enabled",
+            "pressed",
+            "disabled"
+          ]
+        },
+        {
+          "screen": "S06",
+          "region": "result",
+          "block": "result_panel",
+          "slot": "continue",
+          "states": [
+            "enabled",
+            "pressed"
+          ]
+        },
+        {
+          "screen": "S07",
+          "region": "ceremony",
+          "block": "change_summary",
+          "slot": "continue",
+          "states": [
+            "enabled",
+            "pressed"
+          ]
+        },
+        {
+          "overlay": "O01",
+          "block": "pause_panel",
+          "slot": "resume",
+          "states": [
+            "enabled"
+          ]
+        },
+        {
+          "overlay": "O03",
+          "block": "fail_panel",
+          "slot": "recovery_plus_three",
+          "states": [
+            "enabled",
+            "used"
+          ]
+        },
+        {
+          "overlay": "O03",
+          "block": "fail_panel",
+          "slot": "retry",
+          "states": [
+            "enabled"
+          ]
+        }
+      ],
+      "provenance": "AKILTA first-party primary action 9-slice derived from the approved gothic chrome family at locked CTA geometry."
+    },
+    {
+      "asset_id": "gbl_utility_cta_frame",
+      "screen": [
+        "S03",
+        "S04",
+        "S05",
+        "O01"
+      ],
+      "type": "structural_ui",
+      "dimensions": "512x512_9slice_runtime_reuse",
+      "aspect_ratio": "scalable",
+      "transparent": true,
+      "variants": [
+        "normal",
+        "hover",
+        "pressed",
+        "disabled"
+      ],
+      "reuse": "declared_reuse_of_gbl_primary_panel_frame_quiet_variant",
+      "priority": "P0",
+      "production_status": "runtime_connected_authored_9slice_render_required",
+      "current_path": "assets/ui/chrome/gbl_ui_ritual_panel_9s_quiet_v01.svg",
+      "runtime_style_script": "src/ui/theme/production_chrome.gd",
+      "technical_policy": "runtime_decoded_svg_to_imagetexture_9slice__utility_cta__render_verification_required",
+      "contract_owners": [
+        {
+          "screen": "S03",
+          "region": "header",
+          "block": "chapter_header",
+          "slot": "back",
+          "states": [
+            "normal",
+            "pressed"
+          ]
+        },
+        {
+          "screen": "S04",
+          "region": "context",
+          "block": "context_header",
+          "slot": "back",
+          "states": [
+            "normal",
+            "pressed"
+          ]
+        },
+        {
+          "screen": "S05",
+          "region": "hud",
+          "block": "gameplay_header",
+          "slot": "pause",
+          "states": [
+            "normal",
+            "pressed"
+          ]
+        },
+        {
+          "overlay": "O01",
+          "block": "pause_panel",
+          "slot": "retry",
+          "states": [
+            "enabled"
+          ]
+        },
+        {
+          "overlay": "O01",
+          "block": "pause_panel",
+          "slot": "settings",
+          "states": [
+            "enabled"
+          ]
+        },
+        {
+          "overlay": "O01",
+          "block": "pause_panel",
+          "slot": "exit",
+          "states": [
+            "enabled"
+          ]
+        }
+      ],
+      "provenance": "AKILTA first-party quiet action 9-slice reused only for contract-owned utility actions at locked geometry."
     }
   ],
   "vertical_slice_art_policy": {
@@ -2598,6 +2777,7 @@
     "gameplay_chrome": "RUNTIME_AND_RENDER_VERIFIED",
     "secondary_hero_chrome": "RUNTIME_AND_RENDER_VERIFIED",
     "global_interactive_chrome": "RUNTIME_AND_RENDER_VERIFIED",
-    "global_interactive_chrome_evidence_head": "d66f1659367474ee6c21f7a2beef281a477ac7a6"
+    "global_interactive_chrome_evidence_head": "d66f1659367474ee6c21f7a2beef281a477ac7a6",
+    "golden_loop_action_chrome": "IN_PROGRESS_RENDER_REQUIRED"
   }
 }
