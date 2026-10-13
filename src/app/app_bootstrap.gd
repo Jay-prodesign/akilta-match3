@@ -21,6 +21,7 @@ const AnalyticsScript = preload("res://src/analytics/product_analytics.gd")
 const Typography = preload("res://src/ui/theme/typography.gd")
 const CurioMaterials = preload("res://src/ui/theme/curio_materials.gd")
 const ProductNavigation = preload("res://src/ui/shared/product_navigation.gd")
+const TopResourceBar = preload("res://src/ui/shared/top_resource_bar.gd")
 const MobileSafeArea = preload("res://src/ui/shared/mobile_safe_area.gd")
 
 @export var environment: String = "development"
@@ -271,6 +272,7 @@ func show_weekly_missions() -> bool:
 	var completed_count := mini(int(progress.completed_levels.size()) if progress != null else 0, INTERNAL_REVIEW_LEVEL_COUNT)
 	var screen: Node = WeeklyMissionsScene.instantiate()
 	_show_screen(screen)
+	TopResourceBar.attach(screen as Control, progress, Callable(self, "_on_shell_profile_requested"), NodePath("MissionLayout"))
 	if not bool(screen.configure({
 		"completed_count": completed_count,
 		"opening_cap": INTERNAL_REVIEW_LEVEL_COUNT,
@@ -634,7 +636,11 @@ func _show_screen(screen: Node) -> void:
 
 func _install_product_navigation(screen: Node, active_section: String, content_path: NodePath = NodePath("Layout")) -> void:
 	if screen is Control:
+		TopResourceBar.attach(screen as Control, progress, Callable(self, "_on_shell_profile_requested"), content_path)
 		ProductNavigation.attach(screen as Control, active_section, Callable(self, "_on_shell_navigation_requested"), content_path)
+
+func _on_shell_profile_requested() -> void:
+	_on_shell_navigation_requested("profile")
 
 func _dismiss_feature_preview() -> void:
 	if navigation == null:

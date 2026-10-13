@@ -210,30 +210,6 @@
       "current_path": "assets/ui/nav_shop.svg"
     },
     {
-      "asset_id": "gbl_currency_life",
-      "screen": [
-        "global"
-      ],
-      "block": "global_header",
-      "slot": "life_icon",
-      "state": [
-        "normal",
-        "low",
-        "full"
-      ],
-      "type": "functional_icon",
-      "dimensions": "128x128_svg",
-      "aspect_ratio": "1:1",
-      "transparent": true,
-      "variants": [
-        "runtime_value"
-      ],
-      "reuse": "global",
-      "priority": "P0",
-      "production_status": "candidate",
-      "current_path": "assets/ui/ui_heart.svg"
-    },
-    {
       "asset_id": "gbl_currency_coin",
       "screen": [
         "global"
@@ -2276,8 +2252,8 @@
   "bulk_art_authorized": false,
   "production_gate": {
     "golden_loop": "S01>S04>S05>S06>S07>S01",
-    "status": "SLOT_GEOMETRY_RECONCILIATION_ACTIVE",
-    "rule": "Existing connected assets may remain for runtime proof, but no new production art or broad polish is authorized until canonical slot geometry and full-screen composition are render-verified."
+    "status": "CANONICAL_SLOT_GEOMETRY_RENDER_VERIFIED",
+    "rule": "Canonical screen/overlay slot geometry and product-wide composition are real-Godot-render verified. Proceed only with slot-owned asset audit, replacement or production; no unowned decorative bulk art."
   },
   "architecture_source": {
     "authority": "North Star Product Board interpreted through canonical product architecture",
@@ -2294,7 +2270,7 @@
     ]
   },
   "asset_production_gate": {
-    "status": "BLOCKED_PENDING_CANONICAL_SLOT_GEOMETRY_AND_VISUAL_AUDIT",
+    "status": "OPEN_CANONICAL_SLOT_OWNED_ASSET_PASS",
     "golden_loop": [
       "S01",
       "S03",
@@ -2304,8 +2280,8 @@
       "S07",
       "S01"
     ],
-    "rule": "Complete screen/state reconciliation, explicit slot geometry, global component geometry and real Godot render audit before producing or polishing additional assets.",
-    "existing_non_golden_candidates": "frozen_do_not_polish"
+    "rule": "An asset may enter production only when its canonical Screen/Overlay -> Block -> Slot -> State owner and geometry contract exist. Audit current asset fitness first, then replace or produce by coherent screen family and re-render.",
+    "existing_non_golden_candidates": "audit_before_promotion_or_replacement"
   },
   "golden_loop_asset_slots": {
     "status": "ONLY_CONTRACT_OWNED_P0_SLOTS_ALLOWED",
@@ -2316,5 +2292,8 @@
       "S05 -> world -> gameplay_environment -> background -> chapter01"
     ],
     "bulk_art_authorized": false
+  },
+  "product_truth": {
+    "life_economy": "NO_GLOBAL_LIFE_ASSET_BOUND"
   }
 }
