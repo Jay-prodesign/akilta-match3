@@ -7,7 +7,7 @@ const QUIET_PANEL_PATH := "res://assets/ui/chrome/gbl_ui_ritual_panel_9s_quiet_v
 const PRIMARY_ACTION_PATH := "res://assets/ui/chrome/gbl_ui_action_primary_9s_v01.svg"
 const UTILITY_ACTION_PATH := "res://assets/ui/chrome/gbl_ui_action_utility_9s_v01.svg"
 const GAMEPLAY_FRAME_PATH := "res://assets/board/gbl_board_ritual_frame_9s_base_v01.png"
-const GAMEPLAY_HUD_FRAME_PATH := "res://assets/board/gbl_board_ritual_frame_9s_gothic_v02.svg"
+const GAMEPLAY_HUD_FRAME_PATH := "res://assets/board/gbl_board_ritual_frame_9s_gothic_v03.svg"
 
 static var _primary_panel: StyleBoxTexture
 static var _top_shell: StyleBoxTexture
@@ -201,7 +201,7 @@ static func gameplay_shell() -> StyleBoxTexture:
 
 static func gameplay_hud_frame() -> StyleBoxTexture:
 	if _gameplay_hud_frame == null:
-		_gameplay_hud_frame = _style(10.0, 40.0, GAMEPLAY_HUD_FRAME_PATH)
+		_gameplay_hud_frame = _style(9.0, 92.0, GAMEPLAY_HUD_FRAME_PATH)
 	return _gameplay_hud_frame
 
 static func apply_gameplay_shell(panel: Control, kind: String) -> bool:
