@@ -57,6 +57,7 @@ func screen_contract() -> Dictionary:
 		"header_readability_scrim": ($HeaderShade as ColorRect) != null and ($HeaderShade as ColorRect).color.a >= 0.4,
 		"sealed_offline_art": String(reward_art.get_meta("asset_path", "")).contains("_sealed_"),
 		"production_return_actions": return_events.get_theme_stylebox("normal") is StyleBoxTexture and return_house.get_theme_stylebox("normal") is StyleBoxTexture and String(return_events.get_meta("production_chrome_kind", "")) == "action_primary_weekly_events_return" and String(return_house.get_meta("production_chrome_kind", "")) == "action_utility_weekly_house_return",
+		"compact_offline_copy": availability != null and not availability.visible,
 		"primary_cta_rounding": return_events.get_theme_stylebox("normal") != null,
 
 	}

@@ -25,6 +25,7 @@ func _run() -> void:
 	_expect(bool(contract.get("asset_backed_altar_chrome", false)), "Weekly Rituals altar must use asset-backed production chrome")
 	_expect(bool(contract.get("header_readability_scrim", false)), "Weekly Rituals must retain a dedicated header readability scrim over world art")
 	_expect(bool(contract.get("production_return_actions", false)), "Weekly Rituals returns must use the verified production action chrome family")
+	_expect(bool(contract.get("compact_offline_copy", false)), "Weekly Rituals offline state must hide redundant live-feed copy from the visual stack")
 
 	var timer := screen.get_node_or_null("MissionLayout/MissionTimer") as Label
 	var empty := screen.get_node_or_null("MissionLayout/MissionEmptyState") as PanelContainer
@@ -35,7 +36,7 @@ func _run() -> void:
 	_expect(timer != null and timer.text.contains("OFFLINE"), "Weekly Rituals must disclose unavailable reset timing")
 	_expect(empty != null and empty.custom_minimum_size.y >= 500.0 and empty.custom_minimum_size.y <= 520.0, "Weekly altar must keep a bounded hero stage without becoming an empty full-height slab")
 	_expect(truth != null and truth.text.contains("NOTHING TO CLAIM"), "Weekly Rituals must not fabricate claimable rewards")
-	_expect(availability != null and availability.text.contains("ONLY WHEN A MISSION FEED IS CONNECTED"), "Weekly Rituals must explain live-feed dependency")
+	_expect(availability != null and availability.text.contains("ONLY WHEN A MISSION FEED IS CONNECTED") and not availability.visible, "Weekly Rituals must retain live-feed truth without duplicating it visually")
 	_expect(art != null and art.texture != null and art.custom_minimum_size.x >= 320.0 and String(art.get_meta("asset_path", "")).contains("_sealed_"), "Weekly altar must retain a hero-scale sealed raster Curio")
 	_expect(record != null and record.text.contains("3 / 3 DISPLAYS AWAKENED"), "Weekly Rituals must reflect opening cabinet record")
 

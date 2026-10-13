@@ -141,7 +141,7 @@ stretch_mode = 5
 [node name="AltarCopy" type="VBoxContainer" parent="MissionLayout/MissionEmptyState/EmptyContent"]
 layout_mode = 2
 size_flags_horizontal = 3
-theme_override_constants/separation = 14
+theme_override_constants/separation = 11
 alignment = 1
 
 [node name="Headline" type="Label" parent="MissionLayout/MissionEmptyState/EmptyContent/AltarCopy"]
@@ -159,12 +159,13 @@ layout_mode = 2
 theme_override_colors/font_color = Color(0.95, 0.89, 0.92, 1)
 theme_override_colors/font_outline_color = Color(0.02, 0.014, 0.028, 0.94)
 theme_override_constants/outline_size = 2
-theme_override_font_sizes/font_size = 24
+theme_override_font_sizes/font_size = 23
 text = "No live mission feed is connected. Timers, progress and rewards are not fabricated."
 horizontal_alignment = 1
 autowrap_mode = 2
 
 [node name="MissionAvailability" type="Label" parent="MissionLayout/MissionEmptyState/EmptyContent/AltarCopy"]
+visible = false
 layout_mode = 2
 theme_override_colors/font_color = Color(0.86, 0.77, 0.93, 1)
 theme_override_colors/font_outline_color = Color(0.02, 0.014, 0.028, 0.94)
@@ -179,7 +180,7 @@ layout_mode = 2
 theme_override_colors/font_color = Color(0.95, 0.80, 0.50, 1)
 theme_override_colors/font_outline_color = Color(0.02, 0.014, 0.028, 0.94)
 theme_override_constants/outline_size = 2
-theme_override_font_sizes/font_size = 24
+theme_override_font_sizes/font_size = 23
 text = "OFFLINE · NOTHING TO CLAIM"
 horizontal_alignment = 1
 autowrap_mode = 2
