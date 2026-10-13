@@ -6,6 +6,7 @@ signal interaction_feedback_requested(kind: String)
 
 const PieceAssetLoader = preload("res://src/match3/presentation/piece_asset_loader.gd")
 const ScreenArt = preload("res://src/ui/shared/screen_art_registry.gd")
+const ProductionChrome = preload("res://src/ui/theme/production_chrome.gd")
 
 @export var card_normal_style: StyleBoxFlat
 @export var card_high_style: StyleBoxFlat
@@ -70,6 +71,7 @@ func _on_toggle(key: String, value) -> void:
 	interaction_feedback_requested.emit("ui")
 	_set_setting(key, value)
 	_refresh_toggle_copy()
+	_style_settings_overlay()
 
 func _on_close_pressed() -> void:
 	interaction_feedback_requested.emit("ui")
@@ -124,13 +126,21 @@ func _refresh_toggle_copy() -> void:
 func _style_settings_overlay() -> void:
 	var card := get_node_or_null("Card") as PanelContainer
 	if card != null:
-		card.add_theme_stylebox_override("panel", card_high_style if _high_contrast else card_normal_style)
+		if _high_contrast:
+			card.add_theme_stylebox_override("panel", card_high_style)
+			card.set_meta("production_chrome_kind", "settings_high_contrast")
+		else:
+			ProductionChrome.apply_secondary(card, "settings")
 	for toggle in [master_toggle, music_toggle, sfx_toggle, haptics_toggle, reduced_toggle, contrast_toggle]:
 		_style_toggle(toggle)
-	close_button.add_theme_stylebox_override("normal", close_high_style if _high_contrast else close_normal_style)
-	close_button.add_theme_stylebox_override("hover", close_hover_style)
-	close_button.add_theme_stylebox_override("pressed", close_pressed_style)
-	close_button.add_theme_stylebox_override("focus", close_hover_style)
+	if _high_contrast:
+		close_button.add_theme_stylebox_override("normal", close_high_style)
+		close_button.add_theme_stylebox_override("hover", close_hover_style)
+		close_button.add_theme_stylebox_override("pressed", close_pressed_style)
+		close_button.add_theme_stylebox_override("focus", close_hover_style)
+		close_button.set_meta("production_chrome_kind", "settings_high_contrast_return")
+	else:
+		ProductionChrome.apply_action_button(close_button, "primary", "settings_return")
 	close_button.add_theme_color_override("font_color", Color("#FFF7E8"))
 	close_button.add_theme_color_override("font_hover_color", Color("#FFFFFF"))
 	close_button.add_theme_font_size_override("font_size", 22)
@@ -138,10 +148,14 @@ func _style_settings_overlay() -> void:
 func _style_toggle(toggle: CheckButton) -> void:
 	if toggle == null:
 		return
-	toggle.add_theme_stylebox_override("normal", toggle_high_style if _high_contrast else toggle_normal_style)
-	toggle.add_theme_stylebox_override("hover", toggle_high_hover_style if _high_contrast else toggle_hover_style)
-	toggle.add_theme_stylebox_override("pressed", toggle_high_pressed_style if _high_contrast else toggle_pressed_style)
-	toggle.add_theme_stylebox_override("focus", toggle_high_hover_style if _high_contrast else toggle_hover_style)
+	if _high_contrast:
+		toggle.add_theme_stylebox_override("normal", toggle_high_style)
+		toggle.add_theme_stylebox_override("hover", toggle_high_hover_style)
+		toggle.add_theme_stylebox_override("pressed", toggle_high_pressed_style)
+		toggle.add_theme_stylebox_override("focus", toggle_high_hover_style)
+		toggle.set_meta("production_chrome_kind", "settings_high_contrast_toggle")
+	else:
+		ProductionChrome.apply_interactive_button(toggle, toggle.button_pressed, "settings_toggle")
 	toggle.add_theme_color_override("font_color", Color("#FFFFFF") if _high_contrast else Color("#E8DCE4"))
 	toggle.add_theme_color_override("font_hover_color", Color("#FFFFFF"))
 	toggle.add_theme_font_size_override("font_size", 21)
@@ -158,5 +172,8 @@ func settings_authored_contract() -> Dictionary:
 		"north_star_toggle_height": [master_toggle, music_toggle, sfx_toggle, haptics_toggle, reduced_toggle, contrast_toggle].all(func(control): return control.custom_minimum_size.y >= 88.0),
 		"intro_subordinate": ($Card/Content/Intro as Label) != null and not ($Card/Content/Intro as Label).visible,
 		"runtime_style_factory": false,
+		"production_card_chrome": ($Card as PanelContainer).get_theme_stylebox("panel") is StyleBoxTexture and String(($Card as PanelContainer).get_meta("production_chrome_kind", "")) == "secondary_settings",
+		"production_toggle_chrome": [master_toggle, music_toggle, sfx_toggle, haptics_toggle, reduced_toggle, contrast_toggle].all(func(control): return control.get_theme_stylebox("normal") is StyleBoxTexture and String(control.get_meta("production_chrome_kind", "")) == "interactive_settings_toggle"),
+		"production_return_chrome": close_button.get_theme_stylebox("normal") is StyleBoxTexture and String(close_button.get_meta("production_chrome_kind", "")) == "action_primary_settings_return",
 	}
 

@@ -24,6 +24,9 @@ func _run() -> void:
 	_expect(bool(contract.get("north_star_toggle_height", false)), "Settings controls must read as deliberate mobile rows rather than tiny switches")
 	_expect(bool(contract.get("intro_subordinate", false)), "Settings explanatory prose must not compete with controls")
 	_expect(not bool(contract.get("runtime_style_factory", true)), "Settings must not create StyleBox presentation resources at runtime")
+	_expect(bool(contract.get("production_card_chrome", false)), "Settings card must use the verified secondary production chrome in normal mode")
+	_expect(bool(contract.get("production_toggle_chrome", false)), "Settings toggle rows must use the verified quiet interactive production chrome in normal mode")
+	_expect(bool(contract.get("production_return_chrome", false)), "Settings return CTA must use the verified primary action production chrome in normal mode")
 
 	var card := screen.get_node_or_null("Card") as PanelContainer
 	var sigil := screen.get_node_or_null("Card/Content/HouseSigil") as TextureRect
@@ -33,7 +36,7 @@ func _run() -> void:
 	_expect(sigil != null and sigil.texture != null and sigil.custom_minimum_size.y >= 72.0, "Settings authored raster sigil slot missing")
 	_expect(world_art != null and world_art.texture != null, "Settings authored world backdrop slot missing")
 	_expect(close != null and close.custom_minimum_size.y >= 88.0, "Settings close CTA must retain mobile touch target")
-	_expect(card.get_theme_stylebox("panel") == screen.card_normal_style, "Default Settings card must use authored normal style resource")
+	_expect(card.get_theme_stylebox("panel") is StyleBoxTexture, "Default Settings card must use asset-backed production chrome")
 
 	screen.apply_presentation_settings({"high_contrast": true})
 	await process_frame
@@ -46,7 +49,8 @@ func _run() -> void:
 
 	screen.apply_presentation_settings({"high_contrast": false})
 	await process_frame
-	_expect(card.get_theme_stylebox("panel") == screen.card_normal_style, "Settings must return to authored normal card resource")
+	_expect(card.get_theme_stylebox("panel") is StyleBoxTexture, "Settings must return to asset-backed production chrome")
+	_expect(close.get_theme_stylebox("normal") is StyleBoxTexture, "Settings return CTA must restore asset-backed primary action chrome")
 
 	screen.queue_free()
 	await process_frame
