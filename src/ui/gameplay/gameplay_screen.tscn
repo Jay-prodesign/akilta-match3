@@ -723,7 +723,7 @@ text = "The cabinet waits exactly as you left it."
 horizontal_alignment = 1
 
 [node name="Resume" type="Button" parent="PauseOverlay/Card/Content"]
-custom_minimum_size = Vector2(0, 70)
+custom_minimum_size = Vector2(0, 96)
 layout_mode = 2
 theme_override_colors/font_color = Color(0.0627, 0.051, 0.0706, 1)
 theme_override_font_sizes/font_size = 22
@@ -733,7 +733,7 @@ theme_override_styles/pressed = SubResource("ActionPressed")
 text = "RESUME"
 
 [node name="Retry" type="Button" parent="PauseOverlay/Card/Content"]
-custom_minimum_size = Vector2(0, 64)
+custom_minimum_size = Vector2(0, 88)
 layout_mode = 2
 theme_override_colors/font_color = Color(0.945, 0.91, 0.866, 1)
 theme_override_font_sizes/font_size = 20
@@ -743,7 +743,7 @@ theme_override_styles/pressed = SubResource("PauseUtility")
 text = "RESTART LEVEL"
 
 [node name="Settings" type="Button" parent="PauseOverlay/Card/Content"]
-custom_minimum_size = Vector2(0, 60)
+custom_minimum_size = Vector2(0, 88)
 layout_mode = 2
 theme_override_colors/font_color = Color(0.945, 0.91, 0.866, 1)
 theme_override_font_sizes/font_size = 19
@@ -753,7 +753,7 @@ theme_override_styles/pressed = SubResource("PauseUtility")
 text = "AUDIO & ACCESSIBILITY"
 
 [node name="Exit" type="Button" parent="PauseOverlay/Card/Content"]
-custom_minimum_size = Vector2(0, 64)
+custom_minimum_size = Vector2(0, 88)
 layout_mode = 2
 theme_override_colors/font_color = Color(0.851, 0.804, 0.835, 1)
 theme_override_font_sizes/font_size = 20
@@ -950,7 +950,7 @@ autowrap_mode = 2
 
 [node name="RecoveryAction" type="Button" parent="ResultOverlay/Card/Content"]
 visible = false
-custom_minimum_size = Vector2(0, 80)
+custom_minimum_size = Vector2(0, 96)
 layout_mode = 2
 theme_override_colors/font_color = Color(0.988, 0.933, 0.831, 1)
 theme_override_font_sizes/font_size = 23
@@ -960,7 +960,7 @@ theme_override_styles/pressed = SubResource("ActionPressed")
 text = "CONTINUE · +3 MOVES · FREE"
 
 [node name="Action" type="Button" parent="ResultOverlay/Card/Content"]
-custom_minimum_size = Vector2(0, 84)
+custom_minimum_size = Vector2(0, 104)
 layout_mode = 2
 theme_override_colors/font_color = Color(0.988, 0.933, 0.831, 1)
 theme_override_colors/font_hover_color = Color(1, 0.97, 0.88, 1)

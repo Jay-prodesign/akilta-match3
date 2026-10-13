@@ -222,7 +222,7 @@ text = "A recovered Curio takes its place in the House."
 autowrap_mode = 2
 
 [node name="Continue" type="Button" parent="CeremonyCard/CeremonyContent/CeremonyRow/Copy"]
-custom_minimum_size = Vector2(0, 64)
+custom_minimum_size = Vector2(0, 96)
 layout_mode = 2
 theme_override_colors/font_color = Color(1, 0.941, 0.847, 1)
 theme_override_font_sizes/font_size = 21

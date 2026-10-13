@@ -236,12 +236,13 @@ layout_mode = 2
 mouse_filter = 2
 
 [node name="InspectAction" type="Button" parent="Layout/Cards/MoonCard/DetailActionLayer"]
+custom_minimum_size = Vector2(0, 88)
 layout_mode = 1
 anchors_preset = 0
 anchor_left = 0.18
-anchor_top = 0.80
+anchor_top = 0.78
 anchor_right = 0.82
-anchor_bottom = 0.95
+anchor_bottom = 0.96
 grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 0
@@ -322,11 +323,12 @@ layout_mode = 2
 mouse_filter = 2
 
 [node name="InspectAction" type="Button" parent="Layout/Cards/Slot2/DetailActionLayer"]
+custom_minimum_size = Vector2(0, 88)
 layout_mode = 1
 anchor_left = 0.18
-anchor_top = 0.80
+anchor_top = 0.78
 anchor_right = 0.82
-anchor_bottom = 0.95
+anchor_bottom = 0.96
 grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 0
@@ -407,11 +409,12 @@ layout_mode = 2
 mouse_filter = 2
 
 [node name="InspectAction" type="Button" parent="Layout/Cards/Slot3/DetailActionLayer"]
+custom_minimum_size = Vector2(0, 88)
 layout_mode = 1
 anchor_left = 0.18
-anchor_top = 0.80
+anchor_top = 0.78
 anchor_right = 0.82
-anchor_bottom = 0.95
+anchor_bottom = 0.96
 grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 0
@@ -435,7 +438,7 @@ horizontal_alignment = 1
 vertical_alignment = 1
 
 [node name="Back" type="Button" parent="Layout"]
-custom_minimum_size = Vector2(0, 68)
+custom_minimum_size = Vector2(0, 88)
 layout_mode = 2
 theme_override_colors/font_color = Color(1, 0.941, 0.847, 1)
 theme_override_font_sizes/font_size = 21
