@@ -219,12 +219,20 @@ func _run() -> void:
 			var mission_art: TextureRect = mission_screen.get_node_or_null("MissionLayout/MissionEmptyState/EmptyContent/MissionRewardArt") as TextureRect if mission_screen != null else null
 			var mission_availability: Label = mission_screen.get_node_or_null("MissionLayout/MissionEmptyState/EmptyContent/AltarCopy/MissionAvailability") as Label if mission_screen != null else null
 			var mission_truth: Label = mission_screen.get_node_or_null("MissionLayout/MissionEmptyState/EmptyContent/AltarCopy/MissionEmptyStateTruth") as Label if mission_screen != null else null
+			var mission_feed_state: Label = mission_screen.get_node_or_null("MissionLayout/MissionStatusStack/FeedStatus/Content/State") as Label if mission_screen != null else null
+			var mission_progress_state: Label = mission_screen.get_node_or_null("MissionLayout/MissionStatusStack/ProgressStatus/Content/State") as Label if mission_screen != null else null
+			var mission_reward_state: Label = mission_screen.get_node_or_null("MissionLayout/MissionStatusStack/RewardStatus/Content/State") as Label if mission_screen != null else null
+			var mission_house_return: Button = mission_screen.get_node_or_null("MissionLayout/ReturnToHouse") as Button if mission_screen != null else null
 			_expect(mission_timer != null and mission_timer.text.contains("OFFLINE"), "S09 must disclose unavailable live reset timing")
 			_expect(mission_truth != null and mission_truth.text.contains("NOTHING TO CLAIM"), "S09 must not fabricate claimable weekly rewards")
 			_expect(mission_empty != null and String(mission_empty.get_meta("offline_contract", "")) == "truthful_empty_state", "S09 must identify the truthful offline empty-state contract")
-			_expect(mission_empty != null and mission_empty.custom_minimum_size.y >= 500.0, "S09 offline altar must reserve a bounded hero stage without becoming an empty full-height slab")
+			_expect(mission_empty != null and mission_empty.custom_minimum_size.y >= 390.0 and mission_empty.custom_minimum_size.y <= 440.0, "S09 offline altar must stay compact enough to support truthful mission-style status rows")
 			_expect(mission_art != null and mission_art.texture != null and String(mission_art.get_meta("asset_path", "")).ends_with(".webp"), "S09 offline altar must use production raster Curio artwork")
 			_expect(mission_availability != null and mission_availability.text.contains("ONLY WHEN A MISSION FEED IS CONNECTED"), "S09 must explain when live rituals can appear without fabricating a schedule")
+			_expect(mission_feed_state != null and mission_feed_state.text == "NOT CONNECTED", "S09 live ritual row must stay truthful")
+			_expect(mission_progress_state != null and mission_progress_state.text == "NOT TRACKED OFFLINE", "S09 must not fabricate offline mission progress")
+			_expect(mission_reward_state != null and mission_reward_state.text == "NOTHING TO CLAIM", "S09 must not fabricate weekly rewards")
+			_expect(mission_house_return != null and not mission_house_return.visible, "S09 redundant House return must stay behind shared product navigation")
 			if mission_screen != null:
 				mission_screen.get_node("MissionLayout/ReturnToEvents").emit_signal("pressed")
 				await process_frame
@@ -272,11 +280,13 @@ func _run() -> void:
 	var review_map = app.current_screen()
 	_expect(review_map.get_level_button(2) != null and not review_map.get_level_button(2).disabled, "winning Level 1 must unlock Level 2 in the authorized internal review")
 	_expect(review_map.get_level_button(3) != null and not review_map.get_level_button(3).disabled, "Level 3 remains progression-gated but inspectable until Level 2 is won")
-	_expect(review_map.get_level_button(4) != null and not review_map.get_level_button(4).disabled, "Level 4 remains sealed but inspectable outside internal review")
 	var review_route = review_map.get_node("Layout/RoutePanel/Scroll/RouteView")
+	var review_future_seal: Button = review_route.get_future_seal_button() if review_route.has_method("get_future_seal_button") else null
+	_expect(review_map.get_level_button(4) != null and not review_map.get_level_button(4).visible, "Level 4 compatibility node must stay hidden behind the future-cabinet seal")
+	_expect(review_future_seal != null and review_future_seal.visible and not review_future_seal.disabled, "future journey must remain inspectable through one truthful upper-cabinets seal")
 	_expect(String(review_route.get_level_state(3)) == "locked", "inspectable Level 3 must remain progression-locked")
-	_expect(String(review_route.get_level_state(4)) == "locked", "inspectable Level 4 must remain future-content locked")
-	review_map.get_level_button(4).emit_signal("pressed")
+	_expect(String(review_route.get_level_state(4)) == "locked", "hidden Level 4 compatibility state must remain future-content locked")
+	review_future_seal.emit_signal("pressed")
 	await process_frame
 	await process_frame
 	var sealed_review: Dictionary = review_map.sealed_explanation_contract()
