@@ -404,7 +404,7 @@ text = "Moonlit Cabinet"
 horizontal_alignment = 1
 
 [node name="HUDPlate" type="PanelContainer" parent="Layout"]
-custom_minimum_size = Vector2(0, 128)
+custom_minimum_size = Vector2(0, 192)
 layout_mode = 2
 theme_override_styles/panel = SubResource("GameplayHUDPlate")
 
@@ -418,14 +418,15 @@ custom_minimum_size = Vector2(6, 0)
 layout_mode = 2
 
 [node name="ObjectiveIcon" type="TextureRect" parent="Layout/HUDPlate/HUD"]
-custom_minimum_size = Vector2(82, 82)
+custom_minimum_size = Vector2(104, 104)
 layout_mode = 2
+size_flags_vertical = 4
 mouse_filter = 2
 expand_mode = 1
 stretch_mode = 5
 
 [node name="Objective" type="Label" parent="Layout/HUDPlate/HUD"]
-custom_minimum_size = Vector2(0, 96)
+custom_minimum_size = Vector2(0, 144)
 layout_mode = 2
 size_flags_horizontal = 3
 theme_override_colors/font_color = Color(1, 0.94, 0.82, 1)
@@ -437,7 +438,7 @@ horizontal_alignment = 0
 vertical_alignment = 1
 
 [node name="Moves" type="Label" parent="Layout/HUDPlate/HUD"]
-custom_minimum_size = Vector2(140, 96)
+custom_minimum_size = Vector2(150, 144)
 layout_mode = 2
 theme_override_colors/font_color = Color(0.94, 0.80, 0.52, 1)
 theme_override_colors/font_outline_color = Color(0.03, 0.02, 0.04, 0.94)
@@ -451,6 +452,7 @@ vertical_alignment = 1
 [node name="Pause" type="Button" parent="Layout/HUDPlate/HUD"]
 custom_minimum_size = Vector2(84, 84)
 layout_mode = 2
+size_flags_vertical = 4
 theme_override_colors/font_color = Color(0.945, 0.91, 0.866, 1)
 theme_override_font_sizes/font_size = 28
 theme_override_styles/normal = SubResource("PauseUtility")
