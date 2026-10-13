@@ -125,6 +125,7 @@ func _load_moon_texture(path: String) -> Texture2D:
 		_moon_textures[path] = texture
 	return texture
 
+# Exact-head visual gate: the cabinet-stage contract below is intentionally runtime-observable so the rendered Reliquary composition can be verified alongside functional truth.
 func curio_asset_contract() -> Dictionary:
 	var paths := {
 		"moon_sealed": MOON_SEALED_PATH,
