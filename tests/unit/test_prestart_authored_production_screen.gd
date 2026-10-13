@@ -1,6 +1,7 @@
 extends SceneTree
 
 const PrestartScene = preload("res://src/ui/prestart/level_prestart.tscn")
+const ScreenArt = preload("res://src/ui/shared/screen_art_registry.gd")
 
 var failures: Array[String] = []
 
@@ -15,6 +16,12 @@ func _run() -> void:
 
 	_expect(screen.configure_level(1, false), "Level 1 prestart must configure")
 	await process_frame
+	var level1_art := ScreenArt.texture("prestart_ch01_level01_art")
+	_expect(ScreenArt.path("prestart_ch01_level01_art").ends_with(".webp"), "Level 1 ritual hero must resolve from authored raster WebP")
+	_expect(level1_art != null and level1_art.get_width() >= 1024 and level1_art.get_height() >= 768, "Level 1 ritual hero must meet the locked 1024x768 source contract")
+	var level_art_node := screen.get_node_or_null("Layout/Card/Content/RitualArt/LevelArtwork") as TextureRect
+	_expect(level_art_node != null and level_art_node.texture != null, "Level 1 ritual hero slot must render the production raster")
+	_expect(level_art_node != null and level_art_node.stretch_mode == TextureRect.STRETCH_KEEP_ASPECT_COVERED, "Level 1 ritual hero must preserve the locked cover crop instead of stretching")
 	var contract: Dictionary = screen.aid_asset_contract()
 	_expect(bool(contract.get("authored_world_backdrop", false)), "Prestart world backdrop must be authored and loaded")
 	_expect(bool(contract.get("authored_level_artwork", false)), "Prestart level artwork must be authored and loaded")

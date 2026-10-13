@@ -431,11 +431,11 @@
       ],
       "reuse": "Level1_prestart",
       "priority": "P0",
-      "production_status": "candidate_runtime_connected_raster",
+      "production_status": "runtime_connected_production_raster_verified",
       "current_path": "assets/world/ch01_curio_boutique/prestart_level01_cabinet.webp",
       "deprecated_candidate_path": "assets/world/ch01_curio_boutique/ch01_prestart_moonlit_cabinet_v01.svg",
-      "technical_policy": "raster_only_no_svg_fallback",
-      "current_runtime_dimensions": "420x747_source_cropped_by_runtime",
+      "technical_policy": "authored_webp_raster_runtime__1024x768_source__cover_crop__godot_4_7_2_render_verified",
+      "current_runtime_dimensions": "1024x768_webp_runtime_verified__locked_cover_crop",
       "source_resolution": "1024x768",
       "contract_owner": "S04 -> primary_panel -> ritual_panel -> level_art -> first_attempt",
       "architecture_owned": true,
@@ -450,7 +450,8 @@
             "replay"
           ]
         }
-      ]
+      ],
+      "provenance": "AKILTA first-party Level 1 Moonlit Cabinet ritual hero. Checked-in 1024x768 authored WebP meets the canonical source contract and is render-verified in the locked prestart hero crop."
     },
     {
       "asset_id": "piece_moon",
@@ -2861,6 +2862,8 @@
     "global_functional_icon_family": "RUNTIME_AND_RENDER_VERIFIED",
     "global_functional_icon_family_note": "Five global destinations plus coin, gem, Keeper profile and settings utility resolve to deterministic 128x128 WebP runtime assets; SVG remains exact-identity fallback only.",
     "chapter_world_raster_family": "RUNTIME_AND_RENDER_VERIFIED",
-    "chapter_world_raster_note": "S03 1080x1500 route world is production-resolution runtime art; S02 Chapters and S08 Reliquary reuse it intentionally and truthfully."
+    "chapter_world_raster_note": "S03 1080x1500 route world is production-resolution runtime art; S02 Chapters and S08 Reliquary reuse it intentionally and truthfully.",
+    "prestart_level1_hero_raster": "RUNTIME_AND_RENDER_VERIFIED",
+    "prestart_level1_hero_note": "S04 Level 1 ritual hero uses the checked-in 1024x768 authored WebP at the locked cover crop. Shared Levels 2–3 transport preview remains blocked on its retained production master handoff."
   }
 }
