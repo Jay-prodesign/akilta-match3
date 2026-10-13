@@ -65,6 +65,9 @@ func _run() -> void:
 	var reduced_overlay_contract: Dictionary = reduced.get_node("RestorationOverlay").restoration_contract()
 	_expect(bool(reduced_overlay_contract.get("house_first_composition", false)), "Restoration must keep the recovered Curio bounded so the House remains the visual hero")
 	_expect(bool(reduced_overlay_contract.get("before_after_state_rail", false)), "Restoration must expose a truthful dormant-to-awakened state comparison")
+	_expect(bool(reduced_overlay_contract.get("before_after_visual_pair", false)), "Restoration must render a real dormant-to-awakened visual pair")
+	_expect(bool(reduced_overlay_contract.get("world_visible_during_restoration", false)), "Restoration must keep the House world visible behind the ceremony")
+	_expect(bool(reduced_overlay_contract.get("visual_parity_gate_v2", false)), "Restoration North Star visual parity gate v2 failed")
 	reduced.queue_free()
 	await _frames(2)
 
@@ -105,6 +108,8 @@ func _run() -> void:
 	_expect(animated_hero != null and animated_hero.texture != null, "Animated restoration must retain the recovered Curio production motif")
 	var animated_overlay_contract: Dictionary = animated.get_node("RestorationOverlay").restoration_contract()
 	_expect(bool(animated_overlay_contract.get("house_first_composition", false)), "Animated restoration must preserve the bounded House-first Curio composition")
+	_expect(bool(animated_overlay_contract.get("before_after_visual_pair", false)), "Animated restoration must retain the dormant-to-awakened visual pair")
+	_expect(bool(animated_overlay_contract.get("visual_parity_gate_v2", false)), "Animated restoration visual parity gate v2 failed")
 	var animated_continue := animated.get_node_or_null("RestorationOverlay/CeremonyCard/CeremonyContent/CeremonyRow/Copy/Continue") as Button
 	_expect(animated_continue != null, "Animated restoration continue CTA missing")
 	if animated_continue != null:

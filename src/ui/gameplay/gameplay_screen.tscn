@@ -849,7 +849,7 @@ theme_override_constants/separation = 9
 alignment = 1
 
 [node name="ResultTopPad" type="Control" parent="ResultOverlay/Card/Content"]
-custom_minimum_size = Vector2(0, 16)
+custom_minimum_size = Vector2(0, 22)
 layout_mode = 2
 mouse_filter = 2
 
