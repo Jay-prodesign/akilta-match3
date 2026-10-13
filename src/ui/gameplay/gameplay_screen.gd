@@ -1117,9 +1117,23 @@ func gameplay_presentation_contract() -> Dictionary:
 	var compact_geometry_locked: bool = (
 		is_equal_approx(_booster_tray.anchor_left, 0.08)
 		and is_equal_approx(_booster_tray.anchor_right, 0.92)
-		and ($Layout/BoardView as Control).custom_minimum_size.y >= 1120.0
+		and ($Layout/BoardView as Control).custom_minimum_size.y >= 1020.0
+		and ($Layout/BoardView as Control).custom_minimum_size.y <= 1080.0
 		and hint_label.custom_minimum_size.x >= 680.0
 		and hint_label.custom_minimum_size.x <= 740.0
+	)
+	var viewport_size := get_viewport().get_visible_rect().size
+	var hud_rect := ($Layout/HUDPlate as Control).get_global_rect()
+	var board_rect := ($Layout/BoardView as Control).get_global_rect()
+	var header_depth_locked: bool = (
+		($Layout/HUDPlate as PanelContainer).custom_minimum_size.y >= 184.0
+		and ($Layout/HUDPlate as PanelContainer).custom_minimum_size.y <= 200.0
+		and hud_rect.size.y / viewport_size.y >= 0.09
+		and hud_rect.size.y / viewport_size.y <= 0.11
+		and board_rect.position.y / viewport_size.y >= 0.18
+		and board_rect.position.y / viewport_size.y <= 0.22
+		and board_rect.size.y / viewport_size.y >= 0.52
+		and board_rect.size.y / viewport_size.y <= 0.56
 	)
 	var north_star_gameplay_hud_frame: bool = (
 		String($Layout/HUDPlate.get_meta("production_chrome_asset", "")) == ProductionChrome.GAMEPLAY_HUD_FRAME_PATH
@@ -1148,7 +1162,7 @@ func gameplay_presentation_contract() -> Dictionary:
 		"asset_backed_gameplay_chrome": ($Layout/HUDPlate as PanelContainer).get_theme_stylebox("panel") is StyleBoxTexture and _booster_tray.get_theme_stylebox("panel") is StyleBoxTexture and [$ResourceBar/Resources/CoinChip, $ResourceBar/Resources/GemChip, $ResourceBar/Resources/LevelBadgePlate].all(func(panel): return panel.get_theme_stylebox("panel") is StyleBoxTexture),
 		"board_frame_asset_owner": String(($Layout/BoardView/OrnateFrame as Panel).get_meta("production_board_frame_owner", "")) == "BoardView",
 		"north_star_gameplay_geometry": hierarchy_locked and booster_family_locked and composition_locked and board_locked,
-		"gameplay_header_clearance": not $ResourceBar.visible and ($Layout as VBoxContainer).offset_top >= 32.0 and ($Layout as VBoxContainer).offset_top <= 48.0,
+		"gameplay_header_clearance": not $ResourceBar.visible and ($Layout as VBoxContainer).offset_top >= 92.0 and ($Layout as VBoxContainer).offset_top <= 108.0,
 		"compact_resource_chips": ($ResourceBar/Resources/CoinChip as PanelContainer).size.x <= 300.0 and ($ResourceBar/Resources/GemChip as PanelContainer).size.x <= 300.0 and ($ResourceBar/Resources/LevelBadgePlate as PanelContainer).size.x <= 200.0,
 		"asset_backed_resource_chips": [$ResourceBar/Resources/CoinChip, $ResourceBar/Resources/GemChip, $ResourceBar/Resources/LevelBadgePlate].all(func(panel): return panel is PanelContainer and (panel as PanelContainer).get_theme_stylebox("panel") is StyleBoxTexture),
 		"level_badge_separated": ($ResourceBar/Resources/ResourceSpacer as Control).size_flags_horizontal == Control.SIZE_EXPAND_FILL,
@@ -1162,6 +1176,7 @@ func gameplay_presentation_contract() -> Dictionary:
 		"quiet_gameplay_shell_family": $ResourceBar.get_theme_stylebox("panel") is StyleBoxEmpty,
 		"clear_pause_control": pause_button.icon != null and pause_button.text == "" and String(pause_button.get_meta("production_chrome_asset", "")) == GAMEPLAY_PAUSE_ICON_PATH and pause_button.get_theme_stylebox("normal") is StyleBoxFlat,
 		"north_star_gameplay_hud_frame": north_star_gameplay_hud_frame,
+		"north_star_header_depth": header_depth_locked,
 		"integrated_hint_surface": integrated_hint_surface,
 		"integrated_hud_surface": integrated_hud_surface,
 		"final_hint_readability": hint_readable and hint_label.size_flags_horizontal == Control.SIZE_SHRINK_CENTER and hint_label.custom_minimum_size.x >= 680.0 and hint_label.custom_minimum_size.x <= 740.0,
@@ -1180,7 +1195,8 @@ func gameplay_presentation_contract() -> Dictionary:
 		"visual_parity_gate_v12": hierarchy_locked and integrated_hud_surface and hint_readable and booster_family_locked and composition_locked and board_locked and utilities_separated and canonical_booster_art and gothic_board_material and objective_spacing_locked and compact_header_locked and compact_geometry_locked and north_star_gameplay_hud_frame,
 		"visual_parity_gate_v13": hierarchy_locked and integrated_hud_surface and integrated_hint_surface and hint_readable and booster_family_locked and composition_locked and board_locked and utilities_separated and canonical_booster_art and gothic_board_material and objective_spacing_locked and compact_header_locked and compact_geometry_locked and north_star_gameplay_hud_frame,
 		"visual_parity_gate_v14": hierarchy_locked and integrated_hud_surface and integrated_hint_surface and hint_readable and booster_family_locked and composition_locked and board_locked and utilities_separated and canonical_booster_art and gothic_board_material and objective_spacing_locked and compact_header_locked and compact_geometry_locked and north_star_gameplay_hud_frame and pause_button.icon != null and pause_button.text == "" and String(pause_button.get_meta("production_chrome_asset", "")) == GAMEPLAY_PAUSE_ICON_PATH and pause_button.get_theme_stylebox("normal") is StyleBoxFlat,
-		"visual_parity_version": 14,
+		"visual_parity_gate_v15": hierarchy_locked and integrated_hud_surface and integrated_hint_surface and hint_readable and booster_family_locked and composition_locked and board_locked and utilities_separated and canonical_booster_art and gothic_board_material and objective_spacing_locked and compact_header_locked and compact_geometry_locked and north_star_gameplay_hud_frame and header_depth_locked and pause_button.icon != null and pause_button.text == "" and String(pause_button.get_meta("production_chrome_asset", "")) == GAMEPLAY_PAUSE_ICON_PATH and pause_button.get_theme_stylebox("normal") is StyleBoxFlat,
+		"visual_parity_version": 15,
 		"resource_bar_height": ($ResourceBar as PanelContainer).offset_bottom - ($ResourceBar as PanelContainer).offset_top,
 		"hud_plate_height": ($Layout/HUDPlate as PanelContainer).custom_minimum_size.y,
 		"booster_tray_height": _booster_tray.offset_bottom - _booster_tray.offset_top,
