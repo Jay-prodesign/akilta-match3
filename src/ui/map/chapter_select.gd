@@ -155,21 +155,19 @@ func _refresh_progress_state() -> void:
 func _layout_chapter_hotspots(grid: Control, buttons: Array[Button]) -> void:
 	if grid == null or grid.size.x <= 0.0 or grid.size.y <= 0.0:
 		return
-	var compact := grid.size.x < 680.0
-	var count := buttons.size()
-	for i in range(count):
-		var button := buttons[i]
+	# The North Star chapter chooser is a portrait list, not a dashboard grid.
+	# Keep all six wing identities in one scan path even on high-resolution phones.
+	var spacing := 10.0
+	var current_height := clampf(grid.size.y * 0.235, 150.0, 238.0)
+	var locked_height := maxf(72.0, (grid.size.y - current_height - spacing * 5.0) / 5.0)
+	var y := 0.0
+	for button in buttons:
 		var current := String(button.get_meta("chapter_id", "")) == "curio_boutique"
-		if compact:
-			var spacing := 8.0
-			var card_height := maxf(58.0, (grid.size.y - spacing * float(count - 1)) / float(count))
-			button.position = Vector2(0, float(i) * (card_height + spacing))
-			button.size = Vector2(grid.size.x, card_height)
-			button.add_theme_font_size_override("font_size", 17 if current else 16)
-		else:
-			button.position = Vector2(grid.size.x * float(button.get_meta("map_x")), grid.size.y * float(button.get_meta("map_y")))
-			button.size = Vector2(grid.size.x * float(button.get_meta("map_w")), grid.size.y * float(button.get_meta("map_h")))
-			button.add_theme_font_size_override("font_size", 29 if current else 24)
+		var height := current_height if current else locked_height
+		button.position = Vector2(0.0, y)
+		button.size = Vector2(grid.size.x, height)
+		button.add_theme_font_size_override("font_size", 27 if current else 20)
+		y += height + spacing
 
 func chapter_visual_contract() -> Dictionary:
 	return {
@@ -185,6 +183,8 @@ func chapter_visual_contract() -> Dictionary:
 		"compact_header_back": _back != null and _back.custom_minimum_size.x <= 72.0,
 		"summary_plate": _chapter_summary != null and _chapter_summary.get_theme_stylebox("normal") != null,
 		"chapter_descriptors_present": _witch_atelier.text.contains("POTIONS & EXPERIMENTS") and _dark_vanity.text.contains("MIRRORS & SECRETS") and _archive.text.contains("LOST KNOWLEDGE") and _moon_conservatory.text.contains("CELESTIAL BOTANICALS") and _cemetery_garden.text.contains("RESTING BEAUTIES"),
+		"north_star_vertical_wing_list": _grid != null and _current.size.x >= _grid.size.x * 0.95 and _witch_atelier.size.x >= _grid.size.x * 0.95 and _current.position.y < _witch_atelier.position.y and _witch_atelier.position.y < _dark_vanity.position.y and _dark_vanity.position.y < _archive.position.y and _archive.position.y < _moon_conservatory.position.y and _moon_conservatory.position.y < _cemetery_garden.position.y,
+		"current_wing_art_subordinate": _current_art != null and _current_art.anchor_right <= 0.31,
 	}
 
 func _apply_current_style(button: Button, state: String) -> void:
