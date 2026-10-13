@@ -320,19 +320,19 @@ func _apply_level_art_profile(profile: String) -> void:
 	match profile:
 		"sealed_display":
 			world_backdrop.modulate = Color.WHITE
-			eyebrow_label.add_theme_color_override("font_color", Color("#ead5aa"))
+			eyebrow_label.add_theme_color_override("font_color", Color("#f7e6b8"))
 			title_label.add_theme_color_override("font_color", Color("#f1e6d2"))
 			objective_label.add_theme_color_override("font_color", Color("#a8c6d2"))
 			moves_label.add_theme_color_override("font_color", Color("#d8c8a1"))
 		"thornlight_arrangement":
 			world_backdrop.modulate = Color.WHITE
-			eyebrow_label.add_theme_color_override("font_color", Color("#ead5aa"))
+			eyebrow_label.add_theme_color_override("font_color", Color("#f7e6b8"))
 			title_label.add_theme_color_override("font_color", Color("#f5e6e2"))
 			objective_label.add_theme_color_override("font_color", Color("#c7a0df"))
 			moves_label.add_theme_color_override("font_color", Color("#e6bd83"))
 		_:
 			world_backdrop.modulate = Color.WHITE
-			eyebrow_label.add_theme_color_override("font_color", Color("#ead5aa"))
+			eyebrow_label.add_theme_color_override("font_color", Color("#f7e6b8"))
 			title_label.add_theme_color_override("font_color", Color("#f1e8dc"))
 			objective_label.add_theme_color_override("font_color", Color("#f0dec2"))
 			moves_label.add_theme_color_override("font_color", Color("#d9b56a"))
@@ -567,20 +567,20 @@ func _style_impact_hint(mode: String) -> void:
 	if hint_label == null:
 		return
 	var color := Color("#F4E5D3")
-	var size_px := 26
+	var size_px := 28
 	match mode:
 		"blocker":
 			color = Color("#F0CE8A")
-			size_px = 27
+			size_px = 29
 		"special":
 			color = Color("#E8C987")
-			size_px = 27
+			size_px = 29
 		"combo":
 			color = Color("#E7C8FF")
-			size_px = 28
+			size_px = 30
 		"cascade":
 			color = Color("#DDB7F5")
-			size_px = 27
+			size_px = 29
 		"invalid":
 			color = Color("#D8C5D2")
 		_:
@@ -1069,7 +1069,7 @@ func gameplay_presentation_contract() -> Dictionary:
 	)
 	var hint_readable: bool = (
 		hint_label.custom_minimum_size.y >= 54.0
-		and hint_label.get_theme_font_size("font_size") >= 26
+		and hint_label.get_theme_font_size("font_size") >= 28
 	)
 	var booster_family_locked: bool = (
 		$BoosterTray/BoosterActions/SealedSlotA.visible
