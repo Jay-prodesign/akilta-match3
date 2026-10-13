@@ -220,7 +220,7 @@ autowrap_mode = 2
 
 [node name="ShopDisabledAction" type="Button" parent="FeatureLayout/FeatureHero/HeroRow/HeroCopy"]
 visible = false
-custom_minimum_size = Vector2(0, 52)
+custom_minimum_size = Vector2(0, 88)
 layout_mode = 2
 disabled = true
 theme_override_colors/font_color = Color(0.93, 0.86, 0.91, 1)
@@ -236,7 +236,7 @@ layout_mode = 2
 theme_override_constants/separation = 10
 
 [node name="Primary" type="Button" parent="FeatureLayout/Actions"]
-custom_minimum_size = Vector2(0, 62)
+custom_minimum_size = Vector2(0, 96)
 layout_mode = 2
 size_flags_horizontal = 3
 theme_override_colors/font_color = Color(1, 0.941, 0.847, 1)
@@ -247,7 +247,7 @@ theme_override_styles/pressed = SubResource("Primary")
 text = "PRIMARY"
 
 [node name="Secondary" type="Button" parent="FeatureLayout/Actions"]
-custom_minimum_size = Vector2(0, 62)
+custom_minimum_size = Vector2(0, 88)
 layout_mode = 2
 size_flags_horizontal = 3
 theme_override_colors/font_color = Color(0.93, 0.86, 0.91, 1)
@@ -292,7 +292,7 @@ horizontal_alignment = 1
 autowrap_mode = 2
 
 [node name="DailyPracticeAction" type="Button" parent="FeatureLayout/DailyPracticeCard/DailyContent"]
-custom_minimum_size = Vector2(0, 50)
+custom_minimum_size = Vector2(0, 88)
 layout_mode = 2
 disabled = true
 theme_override_colors/font_color = Color(1, 0.941, 0.847, 1)
@@ -306,7 +306,7 @@ text = "RESTORE A DISPLAY TO UNLOCK"
 
 [node name="WeeklyMissionsAction" type="Button" parent="FeatureLayout"]
 visible = false
-custom_minimum_size = Vector2(0, 68)
+custom_minimum_size = Vector2(0, 96)
 layout_mode = 2
 theme_override_colors/font_color = Color(1, 0.941, 0.847, 1)
 theme_override_font_sizes/font_size = 22
@@ -317,7 +317,7 @@ text = "OPEN WEEKLY RITUALS"
 
 [node name="ProfileSettings" type="Button" parent="FeatureLayout"]
 visible = false
-custom_minimum_size = Vector2(0, 68)
+custom_minimum_size = Vector2(0, 96)
 layout_mode = 2
 theme_override_colors/font_color = Color(1, 0.941, 0.847, 1)
 theme_override_font_sizes/font_size = 22
@@ -555,7 +555,7 @@ vertical_alignment = 1
 autowrap_mode = 2
 
 [node name="BackToHouse" type="Button" parent="FeatureLayout"]
-custom_minimum_size = Vector2(0, 64)
+custom_minimum_size = Vector2(0, 88)
 layout_mode = 2
 theme_override_colors/font_color = Color(0.96, 0.9, 0.84, 1)
 theme_override_font_sizes/font_size = 22
