@@ -58,7 +58,7 @@ func _run() -> void:
 	_expect(objective != null and objective_icon != null and objective.global_position.x >= objective_icon.global_position.x + objective_icon.size.x + 6.0, "Objective icon and copy must retain readable clearance")
 	_expect(pause != null and objective_icon != null and pause.global_position.x < objective_icon.global_position.x, "Pause must sit at the quiet left edge of the gameplay HUD")
 	_expect(pause != null and pause.icon != null and pause.text == "" and pause.get_theme_stylebox("normal") is StyleBoxFlat and String(pause.get_meta("production_chrome_kind", "")) == "gameplay_pause_icon", "Pause must render as the clear authored icon rather than a clipped text glyph")
-	_expect(board != null and board.custom_minimum_size.y >= 1120.0, "Board must remain the dominant gameplay object")
+	_expect(board != null and board.custom_minimum_size.y >= 1020.0 and board.custom_minimum_size.y <= 1080.0, "Board must remain dominant without crowding the North Star header and booster bands")
 	_expect(hint_band != null and tray != null and tray.global_position.y >= hint_band.global_position.y + hint_band.size.y + 32.0, "Hint and booster tray collide")
 	_expect(tray != null and is_equal_approx(tray.anchor_left, 0.08) and is_equal_approx(tray.anchor_right, 0.92), "Booster tray width drifted from the final gameplay family")
 	_expect(keeper_slot != null and not keeper_slot.visible and settings_slot != null and not settings_slot.visible, "Utilities leaked into booster family")
