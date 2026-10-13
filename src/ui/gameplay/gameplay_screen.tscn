@@ -198,20 +198,18 @@ shadow_color = Color(0, 0, 0, 0.72)
 shadow_size = 16
 
 [sub_resource type="StyleBoxFlat" id="BoosterSealedStyle"]
-bg_color = Color(0.09, 0.045, 0.11, 0.94)
+bg_color = Color(0.07, 0.043, 0.086, 0.88)
 border_width_left = 2
 border_width_top = 2
 border_width_right = 2
 border_width_bottom = 2
-border_color = Color(0.84, 0.68, 0.44, 0.62)
-corner_radius_top_left = 44
-corner_radius_top_right = 44
-corner_radius_bottom_right = 44
-corner_radius_bottom_left = 44
-shadow_color = Color(0, 0, 0, 0.42)
+border_color = Color(0.835, 0.678, 0.439, 0.62)
+corner_radius_top_left = 62
+corner_radius_top_right = 62
+corner_radius_bottom_right = 62
+corner_radius_bottom_left = 62
+shadow_color = Color(0.08, 0.02, 0.10, 0.58)
 shadow_size = 8
-
-
 [sub_resource type="StyleBoxFlat" id="ResultObjectivePlate"]
 bg_color = Color(0.035, 0.025, 0.05, 0.92)
 border_width_left = 1
@@ -413,7 +411,7 @@ theme_override_constants/separation = 8
 
 
 [node name="LeftInset" type="Control" parent="Layout/HUDPlate/HUD"]
-custom_minimum_size = Vector2(18, 0)
+custom_minimum_size = Vector2(6, 0)
 layout_mode = 2
 
 [node name="ObjectiveIcon" type="TextureRect" parent="Layout/HUDPlate/HUD"]
@@ -431,12 +429,12 @@ theme_override_colors/font_color = Color(1, 0.94, 0.82, 1)
 theme_override_colors/font_outline_color = Color(0.03, 0.02, 0.04, 0.92)
 theme_override_constants/outline_size = 5
 theme_override_font_sizes/font_size = 32
-text = "TARGET\nMOON SIGILS · 0 / 6"
+text = "TARGET\nMOON SIGILS  0 / 6"
 horizontal_alignment = 0
 vertical_alignment = 1
 
 [node name="Moves" type="Label" parent="Layout/HUDPlate/HUD"]
-custom_minimum_size = Vector2(188, 132)
+custom_minimum_size = Vector2(180, 132)
 layout_mode = 2
 theme_override_colors/font_color = Color(0.94, 0.80, 0.52, 1)
 theme_override_colors/font_outline_color = Color(0.03, 0.02, 0.04, 0.94)
@@ -448,7 +446,7 @@ horizontal_alignment = 1
 vertical_alignment = 1
 
 [node name="Pause" type="Button" parent="Layout/HUDPlate/HUD"]
-custom_minimum_size = Vector2(82, 82)
+custom_minimum_size = Vector2(76, 76)
 layout_mode = 2
 theme_override_colors/font_color = Color(0.945, 0.91, 0.866, 1)
 theme_override_font_sizes/font_size = 30

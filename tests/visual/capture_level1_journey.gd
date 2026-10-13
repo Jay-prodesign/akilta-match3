@@ -68,7 +68,10 @@ func _capture() -> void:
 	var gameplay = app.current_screen()
 	var gameplay_contract: Dictionary = gameplay.gameplay_presentation_contract() if gameplay != null and gameplay.has_method("gameplay_presentation_contract") else {}
 	for parity_key in [
-		"visual_parity_gate_v5",
+		"visual_parity_gate_v11",
+		"objective_spacing_locked",
+		"canonical_booster_art",
+		"gothic_board_material",
 		"quiet_gameplay_shell_family",
 		"integrated_hud_surface",
 		"final_hint_readability",
@@ -120,6 +123,11 @@ func _capture() -> void:
 		return _fail(app, "S05 hint readability regressed")
 	if not hud_rect.grow(-4.0).encloses(objective_icon_rect):
 		return _fail(app, "S05 objective icon escapes the authored HUD frame")
+	var objective_rect: Rect2 = gameplay_objective.get_global_rect()
+	if objective_rect.size.x < gameplay_viewport.x * 0.50:
+		return _fail(app, "S05 objective copy width collapsed: %.3f" % (objective_rect.size.x / gameplay_viewport.x))
+	if objective_rect.position.x < objective_icon_rect.end.x + 6.0:
+		return _fail(app, "S05 objective icon-to-copy clearance collapsed")
 	if hud_rect.end.y > board_rect.position.y + 2.0:
 		return _fail(app, "S05 objective HUD collides with board")
 	if board_rect.end.y > hint_rect.position.y + 2.0:

@@ -59,9 +59,9 @@ const BOOSTER_ART_PATHS := {
 	"retry": "res://assets/pieces/skull.webp"
 }
 const NORTH_STAR_BOOSTER_ART_PATHS := {
-	"shuffle": "res://assets/specials/gbl_special_global_idle_v01.webp",
-	"hand": "res://assets/specials/gbl_special_smart_idle_v01.webp",
-	"magic": "res://assets/specials/gbl_special_area_idle_v01.webp"
+	"shuffle": "res://assets/ui/gameplay/booster_shuffle_gothic_v01.svg",
+	"hand": "res://assets/ui/gameplay/booster_hand_gothic_v01.svg",
+	"magic": "res://assets/ui/gameplay/booster_magic_gothic_v01.svg"
 }
 const OBJECTIVE_ART_PATHS := {
 	"moon": "res://assets/pieces/moon_sigil.webp",
@@ -615,13 +615,13 @@ func _refresh_hud() -> void:
 		]
 	if String(board_state.objective_type) == "collect_family":
 		var family_label: String = String(board_state.objective_family).capitalize()
-		objective_label.text = "TARGET\n%s SIGILS · %d / %d" % [
+		objective_label.text = "TARGET\n%s SIGILS  %d / %d" % [
 			family_label.to_upper(),
 			int(board_state.objective_progress),
 			int(board_state.objective_target)
 		]
 	elif String(board_state.objective_type) == "clear_blockers":
-		objective_label.text = "TARGET\nWAX SEAL LAYERS · %d / %d" % [_objective_progress_value(), _objective_target_value()]
+		objective_label.text = "TARGET\nWAX SEAL LAYERS  %d / %d" % [_objective_progress_value(), _objective_target_value()]
 	else:
 		objective_label.text = "TARGET\nAWAKEN THE COLLECTION"
 
@@ -664,10 +664,10 @@ func _present_objective_progress() -> void:
 	var target := _objective_target_value()
 	var complete := progress >= target
 	if String(board_state.objective_type) == "clear_blockers":
-		objective_label.text = "TARGET\nWAX SEAL LAYERS · %d / %d\n%s" % [progress, target, "OBJECTIVE COMPLETE" if complete else "+%d THIS MOVE" % _last_objective_delta]
+		objective_label.text = "TARGET\nWAX SEAL LAYERS  %d / %d\n%s" % [progress, target, "OBJECTIVE COMPLETE" if complete else "+%d THIS MOVE" % _last_objective_delta]
 	else:
 		var family := String(board_state.objective_family).to_upper()
-		objective_label.text = "TARGET\n%s SIGILS · %d / %d\n%s" % [family, progress, target, "OBJECTIVE COMPLETE" if complete else "+%d THIS MOVE" % _last_objective_delta]
+		objective_label.text = "TARGET\n%s SIGILS  %d / %d\n%s" % [family, progress, target, "OBJECTIVE COMPLETE" if complete else "+%d THIS MOVE" % _last_objective_delta]
 	objective_label.set_meta("objective_feedback_state", "complete" if complete else "progress")
 	objective_label.add_theme_color_override("font_color", Color("#FFFFFF") if _high_contrast else (Color("#F0CE8A") if complete else Color("#E4CDEB")))
 	if _objective_pulse_tween != null and _objective_pulse_tween.is_valid():
@@ -1082,6 +1082,19 @@ func gameplay_presentation_contract() -> Dictionary:
 		and float(board_contract.get("frame_padding", 0.0)) >= 24.0
 		and bool(board_contract.get("normalized_piece_scale", false))
 	)
+	var canonical_booster_art: bool = (
+		String(NORTH_STAR_BOOSTER_ART_PATHS["shuffle"]).contains("/ui/gameplay/booster_shuffle_")
+		and String(NORTH_STAR_BOOSTER_ART_PATHS["hand"]).contains("/ui/gameplay/booster_hand_")
+		and String(NORTH_STAR_BOOSTER_ART_PATHS["magic"]).contains("/ui/gameplay/booster_magic_")
+		and PieceAssetLoader.ornament(String(NORTH_STAR_BOOSTER_ART_PATHS["shuffle"])) != null
+		and PieceAssetLoader.ornament(String(NORTH_STAR_BOOSTER_ART_PATHS["hand"])) != null
+		and PieceAssetLoader.ornament(String(NORTH_STAR_BOOSTER_ART_PATHS["magic"])) != null
+	)
+	var gothic_board_material: bool = String(board_contract.get("frame_revision", "")) == "gothic_corner_v2"
+	var objective_spacing_locked: bool = (
+		objective_label.size.x >= get_viewport().get_visible_rect().size.x * 0.50
+		and objective_label.global_position.x >= objective_icon.global_position.x + objective_icon.size.x + 6.0
+	)
 	return {
 		"authored_hud_plate": get_node_or_null("Layout/HUDPlate/HUD") != null,
 		"authored_resource_bar": _level_badge_label != null and _resource_coin_label != null and _resource_gem_label != null,
@@ -1116,7 +1129,12 @@ func gameplay_presentation_contract() -> Dictionary:
 		"visual_parity_gate_v3": hierarchy_locked and integrated_hud_surface and hint_readable and booster_family_locked and composition_locked and board_locked and utilities_separated,
 		"visual_parity_gate_v4": hierarchy_locked and integrated_hud_surface and hint_readable and booster_family_locked and composition_locked and board_locked and utilities_separated and [$ResourceBar, $Layout/HUDPlate].all(func(panel): return String(panel.get_meta("production_chrome_asset", "")) == ProductionChrome.QUIET_PANEL_PATH) and String(_booster_tray.get_meta("production_chrome_kind", "")) == "gameplay_booster_tray",
 		"visual_parity_gate_v5": hierarchy_locked and integrated_hud_surface and hint_readable and booster_family_locked and composition_locked and board_locked and utilities_separated and objective_label.text.begins_with("TARGET\n"),
-		"visual_parity_version": 9,
+		"canonical_booster_art": canonical_booster_art,
+		"gothic_board_material": gothic_board_material,
+		"objective_spacing_locked": objective_spacing_locked,
+		"visual_parity_gate_v10": hierarchy_locked and integrated_hud_surface and hint_readable and booster_family_locked and composition_locked and board_locked and utilities_separated and canonical_booster_art and gothic_board_material and objective_label.text.begins_with("TARGET\n"),
+		"visual_parity_gate_v11": hierarchy_locked and integrated_hud_surface and hint_readable and booster_family_locked and composition_locked and board_locked and utilities_separated and canonical_booster_art and gothic_board_material and objective_spacing_locked and objective_label.text.begins_with("TARGET\n"),
+		"visual_parity_version": 11,
 		"resource_bar_height": ($ResourceBar as PanelContainer).offset_bottom - ($ResourceBar as PanelContainer).offset_top,
 		"hud_plate_height": ($Layout/HUDPlate as PanelContainer).custom_minimum_size.y,
 		"booster_tray_height": _booster_tray.offset_bottom - _booster_tray.offset_top,
