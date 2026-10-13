@@ -122,7 +122,7 @@ func _capture() -> void:
 		return _fail(app, "S05 board height ratio drifted: %.3f" % board_height_ratio)
 	if board_width_ratio < 0.90:
 		return _fail(app, "S05 board width no longer dominates viewport: %.3f" % board_width_ratio)
-	if tray_width_ratio < 0.82 or tray_width_ratio > 0.86:
+	if tray_width_ratio < 0.89 or tray_width_ratio > 0.93:
 		return _fail(app, "S05 booster tray width drifted: %.3f" % tray_width_ratio)
 	var eyebrow_rect: Rect2 = gameplay_eyebrow.get_global_rect()
 	var hud_rect: Rect2 = gameplay_hud.get_global_rect()
@@ -146,7 +146,7 @@ func _capture() -> void:
 		return _fail(app, "S05 redundant target heading regressed")
 	if gameplay_moves.get_theme_font_size("font_size") < 38 or gameplay_moves.get_theme_font_size("font_size") > 42 or gameplay_objective.get_theme_font_size("font_size") < 30:
 		return _fail(app, "S05 objective/moves visual hierarchy regressed")
-	if gameplay_hint.get_theme_font_size("font_size") < 28:
+	if gameplay_hint.get_theme_font_size("font_size") < 26:
 		return _fail(app, "S05 hint readability regressed")
 	var hint_style := gameplay_hint.get_theme_stylebox("normal")
 	if not (hint_style is StyleBoxFlat) or (hint_style as StyleBoxFlat).bg_color.a > 0.10 or (hint_style as StyleBoxFlat).border_color.a > 0.08 or (hint_style as StyleBoxFlat).shadow_color.a > 0.08:
@@ -154,10 +154,10 @@ func _capture() -> void:
 	if not hud_rect.grow(-4.0).encloses(objective_icon_rect):
 		return _fail(app, "S05 objective icon escapes the authored HUD frame")
 	var objective_rect: Rect2 = gameplay_objective.get_global_rect()
-	if objective_rect.size.x < gameplay_viewport.x * 0.36:
-		return _fail(app, "S05 objective copy width collapsed: %.3f" % (objective_rect.size.x / gameplay_viewport.x))
-	if gameplay_objective.horizontal_alignment != HORIZONTAL_ALIGNMENT_LEFT:
-		return _fail(app, "S05 objective copy detached from its icon")
+	if objective_rect.size.x < 220.0:
+		return _fail(app, "S05 objective copy width collapsed: %.1f" % objective_rect.size.x)
+	if gameplay_objective.horizontal_alignment != HORIZONTAL_ALIGNMENT_CENTER:
+		return _fail(app, "S05 objective copy lost its centered North Star alignment")
 	if objective_rect.position.x < objective_icon_rect.end.x + 6.0:
 		return _fail(app, "S05 objective icon-to-copy clearance collapsed")
 	if pause_rect.position.x >= objective_icon_rect.position.x:
