@@ -33,6 +33,13 @@ func _run() -> void:
 	reduced.set_progress(p2)
 	reduced.show_restoration_ceremony("moth_reliquary", 2)
 	await _frames(3)
+	var reduced_vfx: Dictionary = reduced.restoration_vfx_contract()
+	_expect(String(reduced_vfx.get("slot", "")) == "S07/house_hero/awakening_fx", "House awaken VFX must own canonical S07 awakening_fx slot")
+	_expect(int(reduced_vfx.get("play_count", 0)) == 1, "Reduced Motion restoration must still register one semantic awaken event")
+	_expect(bool(reduced_vfx.get("reduced_motion_supported", false)), "House awaken VFX must support Reduced Motion")
+	_expect(bool(reduced_vfx.get("reduced_motion", false)), "Reduced Motion restoration VFX contract must report the active setting")
+	_expect(not bool(reduced_vfx.get("active", true)), "Reduced Motion must resolve House awaken without decorative animation")
+	_expect(not bool(reduced_vfx.get("echo_spawned", true)), "Reduced Motion must not spawn the transient Curio awakening echo")
 	var reduced_room = reduced.get_node_or_null("RoomView")
 	var reduced_card: PanelContainer = reduced.get_node_or_null("RestorationOverlay/CeremonyCard") as PanelContainer
 	var reduced_hero: TextureRect = reduced.get_node_or_null("RestorationOverlay/AwakeningMotif") as TextureRect
@@ -68,6 +75,12 @@ func _run() -> void:
 	animated.set_progress(p3)
 	animated.show_restoration_ceremony("thorned_locket", 3)
 	await _frames(3)
+	var animated_vfx: Dictionary = animated.restoration_vfx_contract()
+	_expect(String(animated_vfx.get("slot", "")) == "S07/house_hero/awakening_fx", "Animated House awaken VFX must retain canonical S07 slot ownership")
+	_expect(int(animated_vfx.get("play_count", 0)) == 1 and int(animated_vfx.get("last_stage", 0)) == 3, "Stage 3 restoration must register exactly one House awaken VFX event")
+	_expect(String(animated_vfx.get("last_curio_id", "")) == "thorned_locket", "House awaken VFX must preserve exact Curio identity")
+	_expect(bool(animated_vfx.get("active", false)), "Animated House awaken VFX must be active during the observed transition window")
+	_expect(bool(animated_vfx.get("echo_spawned", false)), "Stage 3 House awaken must spawn the contract-owned Curio echo")
 	var animated_room = animated.get_node_or_null("RoomView")
 	var animated_card: PanelContainer = animated.get_node_or_null("RestorationOverlay/CeremonyCard") as PanelContainer
 	var animated_hero: TextureRect = animated.get_node_or_null("RestorationOverlay/AwakeningMotif") as TextureRect

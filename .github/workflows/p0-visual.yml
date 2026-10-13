@@ -17,6 +17,7 @@ on:
       - "tests/unit/test_mobile_safe_area.gd"
       - "tests/visual/capture_level1_journey.gd"
       - "tests/visual/capture_golden_feedback_vfx.gd"
+      - "tests/visual/capture_house_awaken_vfx.gd"
       - "tests/visual/capture_gameplay_urgency.gd"
       - "tests/visual/capture_gameplay_impact_hierarchy.gd"
       - "tests/visual/capture_gameplay_objective_terminal.gd"
@@ -130,6 +131,20 @@ jobs:
           grep -Fq "CAPTURE_PASS: Golden Loop feedback VFX" <<<"$output"
           test -s artifacts/feedback-01-match-clear.png
           test -s artifacts/feedback-02-reward-reveal.png
+
+      - name: Render S07 House awaken VFX
+        shell: bash
+        run: |
+          set -uo pipefail
+          set +e
+          output=$(LIBGL_ALWAYS_SOFTWARE=1 xvfb-run -a ./godot --audio-driver Dummy --path . -s res://tests/visual/capture_house_awaken_vfx.gd 2>&1)
+          status=$?
+          set -e
+          printf '%s\n' "$output"
+          if [ "$status" -ne 0 ]; then exit "$status"; fi
+          if grep -Eq "SCRIPT ERROR:|(^| )ERROR:|CAPTURE_FAIL:" <<<"$output"; then exit 1; fi
+          grep -Fq "CAPTURE_PASS: S07 House awaken VFX" <<<"$output"
+          test -s artifacts/restoration-awaken-vfx.png
 
       - name: Render gameplay low-move urgency
         shell: bash
@@ -303,6 +318,7 @@ jobs:
             artifacts/splash-03-update-required.png
             artifacts/feedback-01-match-clear.png
             artifacts/feedback-02-reward-reveal.png
+            artifacts/restoration-awaken-vfx.png
             artifacts/gameplay-low-moves-warning.png
             artifacts/gameplay-last-move-high-contrast.png
             artifacts/gameplay-blocker-clear-impact.png

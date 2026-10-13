@@ -936,7 +936,7 @@
       ],
       "reuse": "global",
       "priority": "P0",
-      "production_status": "runtime_connected_match_clear_vfx",
+      "production_status": "runtime_connected_production_vfx_verified",
       "architecture_owned": true,
       "contract_owners": [
         {
@@ -952,8 +952,8 @@
           ]
         }
       ],
-      "technical_policy": "runtime_fragment_rays_rings_and_motes_over_exact_piece_art__trace_timed__reduced_motion_skips_animation",
-      "provenance": "AKILTA first-party runtime feedback over the canonical S05 piece family. Clear bursts are trace-timed at the actual resolved cells and do not replace piece identity; Reduced Motion resolves the same gameplay truth without decorative animation."
+      "technical_policy": "runtime_fragment_rays_rings_and_motes_over_exact_piece_art__trace_timed__reduced_motion_skips_animation__godot_4_7_2_render_verified",
+      "provenance": "AKILTA first-party S05 match-clear runtime VFX, canonical board_fx slot, exact piece art preserved, reduced-motion semantic resolution verified. Real 540x960 clear-window render inspected."
     },
     {
       "asset_id": "vfx_reward_reveal",
@@ -974,7 +974,7 @@
       ],
       "reuse": "global",
       "priority": "P0",
-      "production_status": "runtime_connected_reward_reveal_vfx",
+      "production_status": "runtime_connected_production_vfx_verified",
       "architecture_owned": true,
       "contract_owners": [
         {
@@ -988,8 +988,8 @@
           ]
         }
       ],
-      "technical_policy": "runtime_gold_lilac_relic_reveal_over_exact_reward_curio__first_time_win_only__reduced_motion_static_resolution",
-      "provenance": "AKILTA first-party S06 runtime reveal layered behind the exact reward Curio. First-time wins receive a short gold/lilac ritual burst; replay and Reduced Motion states preserve reward truth without decorative reveal motion."
+      "technical_policy": "runtime_gold_lilac_relic_reveal_over_exact_reward_curio__first_time_win_only__reduced_motion_static_resolution__godot_4_7_2_render_verified",
+      "provenance": "AKILTA first-party S06 reward reveal runtime VFX, canonical reward_fx slot, first-time reward truth and reduced-motion behavior verified. Real 540x960 reveal render inspected."
     },
     {
       "asset_id": "vfx_house_awaken",
@@ -1014,7 +1014,7 @@
       ],
       "reuse": "House",
       "priority": "P0",
-      "production_status": "runtime_connected_house_restoration_vfx",
+      "production_status": "runtime_connected_production_vfx_verified",
       "architecture_owned": true,
       "contract_owners": [
         {
@@ -1028,8 +1028,8 @@
           ]
         }
       ],
-      "technical_policy": "runtime_transform_and_alpha_feedback_over_contract_owned_restored_curio_art__reduced_motion_resolves_immediately",
-      "provenance": "S07 awakening feedback is runtime VFX over the exact restored Curio identity. Stage 1 animates the canonical Moon Cameo world node; stages 2–3 animate a temporary echo of the same raster-first Curio artwork at its House cabinet niche. Reduced Motion skips scaling/tween feedback and resolves directly to the restored world state."
+      "technical_policy": "runtime_transform_alpha_and_curio_echo_over_contract_owned_restored_art__exact_identity_preserved__reduced_motion_immediate__godot_4_7_2_render_verified",
+      "provenance": "AKILTA first-party S07 House awaken runtime VFX, canonical awakening_fx slot, exact restored Curio identity preserved, reduced-motion no-echo behavior verified. Real 540x960 transition-frame render inspected."
     },
     {
       "asset_id": "chapter_world_house",
@@ -2864,6 +2864,9 @@
     "chapter_world_raster_family": "RUNTIME_AND_RENDER_VERIFIED",
     "chapter_world_raster_note": "S03 1080x1500 route world is production-resolution runtime art; S02 Chapters and S08 Reliquary reuse it intentionally and truthfully.",
     "prestart_level1_hero_raster": "RUNTIME_AND_RENDER_VERIFIED",
-    "prestart_level1_hero_note": "S04 Level 1 ritual hero uses the checked-in 1024x768 authored WebP at the locked cover crop. Shared Levels 2–3 transport preview remains blocked on its retained production master handoff."
+    "prestart_level1_hero_note": "S04 Level 1 ritual hero uses the checked-in 1024x768 authored WebP at the locked cover crop. Shared Levels 2–3 transport preview remains blocked on its retained production master handoff.",
+    "golden_loop_vfx": "RUNTIME_AND_RENDER_VERIFIED",
+    "golden_loop_vfx_evidence_head": "65246eec7e6a3ce15b3b4162e3aaa377558bc536",
+    "golden_loop_vfx_note": "S05 match-clear, S06 reward reveal and S07 House awaken own explicit canonical runtime VFX slots; normal/reduced-motion lifecycles and real 540x960 transition frames verified."
   }
 }

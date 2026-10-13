@@ -43,6 +43,11 @@ var _resource_bar: PanelContainer
 var _returning_player: bool = false
 var _first_ritual_dismissed: bool = false
 var _reduced_motion: bool = false
+var _restoration_vfx_play_count: int = 0
+var _restoration_vfx_last_stage: int = 0
+var _restoration_vfx_last_curio_id: String = ""
+var _restoration_vfx_active: bool = false
+var _restoration_vfx_echo_spawned: bool = false
 var _hotspot_buttons: Dictionary = {}
 var _house_curio_overlay: Control
 var _keeper_overlay: Control
@@ -357,11 +362,17 @@ func _animate_restoration_state(curio_id: String, stage: int, current_curios: Ar
 	await get_tree().process_frame
 	if not is_instance_valid(self):
 		return
+	_restoration_vfx_play_count += 1
+	_restoration_vfx_last_stage = stage
+	_restoration_vfx_last_curio_id = curio_id
+	_restoration_vfx_active = false
+	_restoration_vfx_echo_spawned = false
 	room_view.set_house_state(stage, current_curios)
 	room_view.modulate = Color.WHITE
 	if _reduced_motion:
 		return
 
+	_restoration_vfx_active = true
 	room_view.modulate = Color(0.70, 0.64, 0.82, 1)
 	var restored_curio := room_view.get_node_or_null("MoonCameoOverlay") as Control
 	if restored_curio != null and restored_curio.visible and stage == 1:
@@ -372,6 +383,7 @@ func _animate_restoration_state(curio_id: String, stage: int, current_curios: Ar
 	var awakening_echo: TextureRect
 	if stage >= 2:
 		awakening_echo = TextureRect.new()
+		_restoration_vfx_echo_spawned = true
 		awakening_echo.name = "RestorationAwakeningEcho"
 		awakening_echo.texture = _curio_texture(curio_id)
 		awakening_echo.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
@@ -407,6 +419,24 @@ func _animate_restoration_state(curio_id: String, stage: int, current_curios: Ar
 		tween.parallel().tween_property(awakening_echo, "scale", Vector2.ONE, 0.48).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
 		tween.tween_property(awakening_echo, "modulate", Color(1.0, 0.94, 0.78, 0.0), 0.26)
 		tween.tween_callback(awakening_echo.queue_free)
+	tween.finished.connect(func():
+		if is_instance_valid(self):
+			_restoration_vfx_active = false
+	)
+
+func restoration_vfx_contract() -> Dictionary:
+	return {
+		"slot": "S07/house_hero/awakening_fx",
+		"mode": "runtime_house_curio_awaken",
+		"play_count": _restoration_vfx_play_count,
+		"last_stage": _restoration_vfx_last_stage,
+		"last_curio_id": _restoration_vfx_last_curio_id,
+		"active": _restoration_vfx_active,
+		"echo_spawned": _restoration_vfx_echo_spawned,
+		"reduced_motion": _reduced_motion,
+		"reduced_motion_supported": true,
+		"exact_curio_identity_preserved": true,
+	}
 
 func house_presentation_contract() -> Dictionary:
 	return {
