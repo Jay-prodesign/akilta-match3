@@ -169,7 +169,7 @@ theme_override_constants/separation = 12
 alignment = 1
 
 [node name="MoonCard" type="PanelContainer" parent="Layout/Cards"]
-custom_minimum_size = Vector2(0, 610)
+custom_minimum_size = Vector2(0, 490)
 layout_mode = 2
 size_flags_horizontal = 3
 theme_override_styles/panel = SubResource("Display")
@@ -180,7 +180,7 @@ theme_override_constants/separation = 20
 alignment = 1
 
 [node name="RitualArt" type="TextureRect" parent="Layout/Cards/MoonCard/Content"]
-custom_minimum_size = Vector2(230, 310)
+custom_minimum_size = Vector2(0, 240)
 layout_mode = 2
 expand_mode = 1
 stretch_mode = 5
@@ -251,7 +251,7 @@ theme_override_styles/pressed = SubResource("Action")
 text = "DETAILS"
 
 [node name="Slot2" type="PanelContainer" parent="Layout/Cards"]
-custom_minimum_size = Vector2(0, 610)
+custom_minimum_size = Vector2(0, 490)
 layout_mode = 2
 size_flags_horizontal = 3
 theme_override_styles/panel = SubResource("DisplayCool")
@@ -262,7 +262,7 @@ theme_override_constants/separation = 20
 alignment = 1
 
 [node name="Number" type="Label" parent="Layout/Cards/Slot2/Content"]
-custom_minimum_size = Vector2(230, 310)
+custom_minimum_size = Vector2(0, 240)
 size_flags_horizontal = 4
 size_flags_vertical = 4
 layout_mode = 2
@@ -335,7 +335,7 @@ theme_override_styles/pressed = SubResource("Action")
 text = "DETAILS"
 
 [node name="Slot3" type="PanelContainer" parent="Layout/Cards"]
-custom_minimum_size = Vector2(0, 610)
+custom_minimum_size = Vector2(0, 490)
 layout_mode = 2
 size_flags_horizontal = 3
 theme_override_styles/panel = SubResource("DisplayCool")
@@ -346,7 +346,7 @@ theme_override_constants/separation = 20
 alignment = 1
 
 [node name="Number" type="Label" parent="Layout/Cards/Slot3/Content"]
-custom_minimum_size = Vector2(230, 310)
+custom_minimum_size = Vector2(0, 240)
 size_flags_horizontal = 4
 size_flags_vertical = 4
 layout_mode = 2
