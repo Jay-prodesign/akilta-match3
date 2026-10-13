@@ -81,8 +81,7 @@ static func authored_contract(panel: PanelContainer) -> Dictionary:
 			continue
 		var icon := button.get_node_or_null("Content/Icon") as TextureRect
 		icons_loaded = icons_loaded and icon != null and icon.texture != null
-		touch_targets_ok = touch_targets_ok and button.custom_minimum_size.y >= 56.0
-		var icon := button.get_node_or_null("Content/Icon") as TextureRect
+		touch_targets_ok = touch_targets_ok and button.custom_minimum_size.y >= 88.0
 		var caption := button.get_node_or_null("Content/Label") as Label
 		north_star_nav_zone = north_star_nav_zone and button.custom_minimum_size.y >= 112.0 and button.custom_minimum_size.y <= 124.0 and icon != null and icon.custom_minimum_size.x >= 44.0 and caption != null and caption.get_theme_font_size("font_size") >= 20
 	return {
