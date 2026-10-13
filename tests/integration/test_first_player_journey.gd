@@ -48,13 +48,17 @@ func _run() -> void:
 		await process_frame
 		var keeper_name: Label = house.get_node_or_null("KeeperRoleOverlay/Card/Content/Name") as Label
 		var keeper_role: Label = house.get_node_or_null("KeeperRoleOverlay/Card/Content/Role") as Label
+		var keeper_no_cost: Label = house.get_node_or_null("KeeperRoleOverlay/Card/Content/TruthRow/NoCost/Label") as Label
+		var keeper_board_safe: Label = house.get_node_or_null("KeeperRoleOverlay/Card/Content/TruthRow/BoardSafe/Label") as Label
+		var keeper_moves_safe: Label = house.get_node_or_null("KeeperRoleOverlay/Card/Content/TruthRow/MovesSafe/Label") as Label
 		_expect(keeper_name != null and keeper_name.text == "THE KEEPER", "House familiar card must name the Keeper")
-		_expect(keeper_role != null and keeper_role.text.contains("NO COST") and keeper_role.text.contains("NO BOARD CHANGES"), "House familiar card must state the truthful utility boundary")
+		_expect(keeper_role != null and keeper_role.text == "PUZZLE GUIDE" and keeper_no_cost != null and keeper_no_cost.text == "NO COST" and keeper_board_safe != null and keeper_board_safe.text == "BOARD SAFE" and keeper_moves_safe != null and keeper_moves_safe.text == "NO +MOVES", "House familiar card must state the truthful utility boundary")
 		var keeper_close: Button = house.get_node_or_null("KeeperRoleOverlay/Card/Content/Close") as Button
 		_expect(keeper_close != null, "House familiar card must expose a return action")
 		if keeper_close != null:
 			keeper_close.emit_signal("pressed")
-			await process_frame
+			for _frame in range(12):
+				await process_frame
 	var settings_button: Button = house.get_node("Layout/ActionDock/Actions/SettingsButton")
 	settings_button.emit_signal("pressed")
 	await process_frame

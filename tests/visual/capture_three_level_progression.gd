@@ -48,11 +48,14 @@ func _capture() -> void:
 	if keeper_hotspot == null or keeper_hotspot.disabled:
 		return _fail(app, "completed House Keeper hotspot missing")
 	keeper_hotspot.emit_signal("pressed")
-	await _frames(2)
+	await _frames(18)
 	var keeper_name: Label = completed_house.get_node_or_null("KeeperRoleOverlay/Card/Content/Name") as Label
 	var keeper_role: Label = completed_house.get_node_or_null("KeeperRoleOverlay/Card/Content/Role") as Label
+	var keeper_no_cost: Label = completed_house.get_node_or_null("KeeperRoleOverlay/Card/Content/TruthRow/NoCost/Label") as Label
+	var keeper_board_safe: Label = completed_house.get_node_or_null("KeeperRoleOverlay/Card/Content/TruthRow/BoardSafe/Label") as Label
+	var keeper_moves_safe: Label = completed_house.get_node_or_null("KeeperRoleOverlay/Card/Content/TruthRow/MovesSafe/Label") as Label
 	var keeper_body: Label = completed_house.get_node_or_null("KeeperRoleOverlay/Card/Content/Body") as Label
-	if keeper_name == null or keeper_name.text != "THE KEEPER" or keeper_role == null or not keeper_role.text.contains("NO COST") or keeper_body == null or not keeper_body.text.contains("ASK KEEPER"):
+	if keeper_name == null or keeper_name.text != "THE KEEPER" or keeper_role == null or keeper_role.text != "PUZZLE GUIDE" or keeper_no_cost == null or keeper_no_cost.text != "NO COST" or keeper_board_safe == null or keeper_board_safe.text != "BOARD SAFE" or keeper_moves_safe == null or keeper_moves_safe.text != "NO +MOVES" or keeper_body == null or not keeper_body.text.contains("ASK KEEPER"):
 		return _fail(app, "House Keeper card must expose truthful familiar role")
 	if not await _save(app, "progression-house-keeper-role.png"):
 		return
@@ -60,7 +63,7 @@ func _capture() -> void:
 	if keeper_close == null:
 		return _fail(app, "House Keeper card close missing")
 	keeper_close.emit_signal("pressed")
-	await _frames(2)
+	await _frames(14)
 
 	var thorn_hotspot: Button = completed_house.get_node_or_null("RoomView/CurioHotspots/ThornHotspot") as Button
 	if thorn_hotspot == null or thorn_hotspot.disabled:

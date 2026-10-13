@@ -290,7 +290,7 @@ func _open_keeper_card() -> void:
 	var overlay := KeeperRoleScene.instantiate()
 	add_child(overlay)
 	_keeper_overlay = overlay
-	if not bool(overlay.configure(texture)):
+	if not bool(overlay.configure(texture, _reduced_motion)):
 		overlay.queue_free()
 		_keeper_overlay = null
 		return
