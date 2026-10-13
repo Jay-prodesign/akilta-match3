@@ -107,7 +107,20 @@
       "reuse": "global",
       "priority": "P0",
       "production_status": "candidate",
-      "current_path": "assets/ui/nav_house.svg"
+      "current_path": "assets/ui/nav_house.svg",
+      "architecture_owned": true,
+      "contract_owners": [
+        {
+          "screen": "S01",
+          "region": "navigation",
+          "block": "bottom_navigation",
+          "slot": "house",
+          "states": [
+            "selected"
+          ]
+        }
+      ],
+      "shared_shell_reuse": true
     },
     {
       "asset_id": "gbl_nav_curios",
@@ -132,7 +145,21 @@
       "reuse": "global",
       "priority": "P0",
       "production_status": "candidate",
-      "current_path": "assets/ui/nav_curios.svg"
+      "current_path": "assets/ui/nav_curios.svg",
+      "architecture_owned": true,
+      "contract_owners": [
+        {
+          "screen": "S01",
+          "region": "navigation",
+          "block": "bottom_navigation",
+          "slot": "curios",
+          "states": [
+            "normal",
+            "pressed"
+          ]
+        }
+      ],
+      "shared_shell_reuse": true
     },
     {
       "asset_id": "gbl_nav_map",
@@ -157,7 +184,21 @@
       "reuse": "global",
       "priority": "P0",
       "production_status": "candidate",
-      "current_path": "assets/ui/nav_map.svg"
+      "current_path": "assets/ui/nav_map.svg",
+      "architecture_owned": true,
+      "contract_owners": [
+        {
+          "screen": "S01",
+          "region": "navigation",
+          "block": "bottom_navigation",
+          "slot": "map",
+          "states": [
+            "normal",
+            "pressed"
+          ]
+        }
+      ],
+      "shared_shell_reuse": true
     },
     {
       "asset_id": "gbl_nav_events",
@@ -182,7 +223,22 @@
       "reuse": "global",
       "priority": "P0",
       "production_status": "candidate",
-      "current_path": "assets/ui/nav_events.svg"
+      "current_path": "assets/ui/nav_events.svg",
+      "architecture_owned": true,
+      "contract_owners": [
+        {
+          "screen": "S01",
+          "region": "navigation",
+          "block": "bottom_navigation",
+          "slot": "events",
+          "states": [
+            "normal",
+            "pressed",
+            "disabled"
+          ]
+        }
+      ],
+      "shared_shell_reuse": true
     },
     {
       "asset_id": "gbl_nav_shop",
@@ -207,7 +263,22 @@
       "reuse": "global",
       "priority": "P0",
       "production_status": "candidate",
-      "current_path": "assets/ui/nav_shop.svg"
+      "current_path": "assets/ui/nav_shop.svg",
+      "architecture_owned": true,
+      "contract_owners": [
+        {
+          "screen": "S01",
+          "region": "navigation",
+          "block": "bottom_navigation",
+          "slot": "shop",
+          "states": [
+            "normal",
+            "pressed",
+            "disabled"
+          ]
+        }
+      ],
+      "shared_shell_reuse": true
     },
     {
       "asset_id": "gbl_currency_coin",
@@ -227,7 +298,20 @@
       "reuse": "global",
       "priority": "P0",
       "production_status": "candidate",
-      "current_path": "assets/ui/ui_coin.svg"
+      "current_path": "assets/ui/ui_coin.svg",
+      "architecture_owned": true,
+      "contract_owners": [
+        {
+          "screen": "S01",
+          "region": "header",
+          "block": "global_header",
+          "slot": "coins",
+          "states": [
+            "normal"
+          ]
+        }
+      ],
+      "shared_shell_reuse": true
     },
     {
       "asset_id": "gbl_currency_gem",
@@ -247,7 +331,57 @@
       "reuse": "global",
       "priority": "P0",
       "production_status": "candidate",
-      "current_path": "assets/ui/ui_gem.svg"
+      "current_path": "assets/ui/ui_gem.svg",
+      "architecture_owned": true,
+      "contract_owners": [
+        {
+          "screen": "S01",
+          "region": "header",
+          "block": "global_header",
+          "slot": "gems",
+          "states": [
+            "normal"
+          ]
+        }
+      ],
+      "shared_shell_reuse": true
+    },
+    {
+      "asset_id": "gbl_profile_keeper",
+      "screen": [
+        "global"
+      ],
+      "block": "global_header",
+      "slot": "profile_settings",
+      "state": [
+        "normal",
+        "pressed"
+      ],
+      "type": "functional_icon",
+      "dimensions": "128x128_svg",
+      "aspect_ratio": "1:1",
+      "transparent": true,
+      "variants": [
+        "state_tint_runtime"
+      ],
+      "reuse": "global",
+      "priority": "P0",
+      "production_status": "candidate",
+      "current_path": "assets/ui/ui_profile.svg",
+      "architecture_owned": true,
+      "contract_owners": [
+        {
+          "screen": "S01",
+          "region": "header",
+          "block": "global_header",
+          "slot": "profile_settings",
+          "states": [
+            "normal",
+            "pressed"
+          ]
+        }
+      ],
+      "shared_shell_reuse": true
     },
     {
       "asset_id": "hub_bg_grandhall",
@@ -2249,11 +2383,11 @@
   },
   "architecture_contract": "content/product/screen_state_architecture.json",
   "north_star_role": "product_architecture_source",
-  "bulk_art_authorized": false,
+  "bulk_art_authorized": true,
   "production_gate": {
     "golden_loop": "S01>S04>S05>S06>S07>S01",
-    "status": "SLOT_GEOMETRY_RECONCILIATION_ACTIVE",
-    "rule": "Existing connected assets may remain for runtime proof, but no new production art or broad polish is authorized until canonical slot geometry and full-screen composition are render-verified."
+    "status": "SLOT_GEOMETRY_VERIFIED_ASSET_PRODUCTION_ACTIVE",
+    "rule": "Canonical screen/state reconciliation, explicit slot geometry, global component proportions, touch targets and real Godot render audit are verified on main. New art is authorized only for an existing canonical Screen -> Region -> Block -> Slot -> State owner."
   },
   "architecture_source": {
     "authority": "North Star Product Board interpreted through canonical product architecture",
@@ -2270,7 +2404,7 @@
     ]
   },
   "asset_production_gate": {
-    "status": "BLOCKED_PENDING_CANONICAL_SLOT_GEOMETRY_AND_VISUAL_AUDIT",
+    "status": "AUTHORIZED_CONTRACT_OWNED_PRODUCTION",
     "golden_loop": [
       "S01",
       "S03",
@@ -2280,8 +2414,8 @@
       "S07",
       "S01"
     ],
-    "rule": "Complete screen/state reconciliation, explicit slot geometry, global component geometry and real Godot render audit before producing or polishing additional assets.",
-    "existing_non_golden_candidates": "frozen_do_not_polish"
+    "rule": "Read canonical slot geometry first. Functional SVG may remain only when native-scale visual review passes; final world/hero/content art must be raster. Produce in coherent screen families and re-render before promotion.",
+    "existing_non_golden_candidates": "audit_replace_or_promote_by_runtime_visual_evidence"
   },
   "golden_loop_asset_slots": {
     "status": "ONLY_CONTRACT_OWNED_P0_SLOTS_ALLOWED",
@@ -2295,5 +2429,77 @@
   },
   "product_truth": {
     "life_economy": "NO_GLOBAL_LIFE_ASSET_BOUND"
+  },
+  "asset_gap_audit": {
+    "status": "ACTIVE_AFTER_GEOMETRY_LOCK",
+    "audited_against_main": "1bb22b967b0426e2cf6742240f95a3c51eab65ac",
+    "rules": {
+      "functional_svg": "allowed_only_for_functional_icons_when_readable_at_native_scale",
+      "world_art": "raster_only",
+      "hero_and_content_art": "raster_only",
+      "structural_chrome": "reusable_9slice_or_authored_component_not_screen_specific_code_decoration",
+      "runtime_vfx": "runtime_generated_allowed_when_visually_verified_and_reduced_motion_safe",
+      "bulk": "authorized_only_for_contract_owned_slots_with_locked_geometry"
+    },
+    "structural_chrome_to_finalize": [
+      "gbl_shell_top_resource_frame",
+      "gbl_shell_bottom_nav_frame",
+      "gbl_primary_panel_frame"
+    ],
+    "functional_icons_to_visual_review": [
+      "gbl_nav_house",
+      "gbl_nav_curios",
+      "gbl_nav_map",
+      "gbl_nav_events",
+      "gbl_nav_shop",
+      "gbl_currency_coin",
+      "gbl_currency_gem",
+      "gbl_profile_keeper"
+    ],
+    "unrelated_content_reuse_to_replace": [
+      "missions_event_art",
+      "shop_offer_art"
+    ],
+    "screen_background_reuse_to_review": [
+      "splash_bg_curio_boutique",
+      "reliquary_bg_curio_boutique",
+      "events_bg_curio_house",
+      "shop_bg_curio_house",
+      "profile_bg_curio_house",
+      "settings_bg_curio_house"
+    ],
+    "verified_runtime_families_to_retain": [
+      "hub_black_cat_character",
+      "piece_moon",
+      "piece_rose",
+      "piece_moth",
+      "piece_key",
+      "piece_ivy",
+      "piece_cat",
+      "piece_candle",
+      "piece_skull",
+      "gameplay_board_frame",
+      "booster_hint",
+      "booster_plus_moves",
+      "reward_moon_cameo",
+      "reward_moth_reliquary",
+      "reward_thorned_locket",
+      "blocker_wax_seal",
+      "special_tokens",
+      "special_line_h",
+      "special_line_v",
+      "special_area",
+      "special_smart",
+      "special_global",
+      "vfx_match_clear",
+      "vfx_reward_reveal",
+      "vfx_house_awaken"
+    ],
+    "retired_or_superseded": [
+      "chapter_world_house"
+    ],
+    "future_gated_assets": [
+      "life_or_energy_resource_icon_until_real_consumption_refill_recovery_system_exists"
+    ]
   }
 }
