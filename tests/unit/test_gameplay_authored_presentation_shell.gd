@@ -69,7 +69,7 @@ func _run() -> void:
 	_expect(hand_label != null and hand_label.text == "HAND", "Hand identity drifted")
 	_expect(magic_label != null and magic_label.text == "MAGIC", "Magic identity drifted")
 	_expect(objective != null and not objective.has_theme_stylebox_override("normal") and objective.text.contains("\n") and not objective.text.begins_with("TARGET\n"), "Objective must read as a compact authored HUD objective rather than a detached text panel")
-	_expect(hint_band != null and hint_band.custom_minimum_size.y >= 54.0 and hint_band.get_theme_font_size("font_size") >= 26, "Hint callout must remain readable at 540x960")
+	_expect(hint_band != null and hint_band.custom_minimum_size.y >= 54.0 and hint_band.get_theme_font_size("font_size") >= 28, "Hint callout must remain readable at 540x960")
 	_expect(hint_band != null and hint_band.size_flags_horizontal == Control.SIZE_SHRINK_CENTER and hint_band.custom_minimum_size.x >= 680.0 and hint_band.custom_minimum_size.x <= 740.0, "Hint must remain a restrained centered gameplay callout")
 	var hint_style := hint_band.get_theme_stylebox("normal") if hint_band != null else null
 	_expect(hint_style is StyleBoxFlat and (hint_style as StyleBoxFlat).bg_color.a <= 0.10 and (hint_style as StyleBoxFlat).border_color.a <= 0.08 and (hint_style as StyleBoxFlat).shadow_color.a <= 0.08, "Hint must integrate into the world instead of reading as a detached UI strip")
