@@ -1033,23 +1033,23 @@ func gameplay_presentation_contract() -> Dictionary:
 	var hand_label := $BoosterTray/BoosterActions/SealedSlotB/Label as Label
 	var magic_label := $BoosterTray/BoosterActions/SealedSlotC/Label as Label
 	var board_contract: Dictionary = board_view.frame_contract() if board_view != null and board_view.has_method("frame_contract") else {}
-	var canonical_booster_names := (
+	var canonical_booster_names: bool = (
 		shuffle_label.text == "SHUFFLE"
 		and hand_label.text == "HAND"
 		and magic_label.text == "MAGIC"
 	)
-	var utilities_separated := (
+	var utilities_separated: bool = (
 		not $BoosterTray/BoosterActions/HintSlot.visible
 		and not $BoosterTray/BoosterActions/SettingsSlot.visible
 	)
-	var hierarchy_locked := (
+	var hierarchy_locked: bool = (
 		title_label.get_theme_font_size("font_size") >= 36
 		and objective_icon.custom_minimum_size.x >= 64.0
 		and objective_label.get_theme_font_size("font_size") >= 26
 		and moves_label.get_theme_font_size("font_size") >= 36
 		and ($Layout/HUDPlate as PanelContainer).custom_minimum_size.y >= 136.0
 	)
-	var booster_family_locked := (
+	var booster_family_locked: bool = (
 		$BoosterTray/BoosterActions/SealedSlotA.visible
 		and $BoosterTray/BoosterActions/SealedSlotB.visible
 		and $BoosterTray/BoosterActions/SealedSlotC.visible
@@ -1058,14 +1058,14 @@ func gameplay_presentation_contract() -> Dictionary:
 			func(button): return button.disabled and button.custom_minimum_size.y >= 112.0 and button.icon != null
 		)
 	)
-	var composition_locked := (
+	var composition_locked: bool = (
 		_booster_tray != null
 		and is_equal_approx(_booster_tray.anchor_top, 0.795)
 		and (_booster_tray.offset_bottom - _booster_tray.offset_top) >= 200.0
 		and hint_label != null
 		and _booster_tray.global_position.y >= hint_label.global_position.y + hint_label.size.y + 20.0
 	)
-	var board_locked := (
+	var board_locked: bool = (
 		bool(board_contract.get("asset_loaded", false))
 		and bool(board_contract.get("nine_slice_frame", false))
 		and float(board_contract.get("frame_padding", 0.0)) >= 24.0
