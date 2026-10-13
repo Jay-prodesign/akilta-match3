@@ -31,6 +31,8 @@ var level_number: int = 1
 
 func _ready() -> void:
 	ProductionChrome.apply_primary($Layout/Card)
+	ProductionChrome.apply_action_button(start_button, "primary", "prestart_play")
+	ProductionChrome.apply_action_button(back_button, "utility", "prestart_back")
 	world_backdrop.texture = ScreenArt.texture("prestart_bg_curio_boutique")
 	level_artwork.texture = ScreenArt.texture("prestart_ch01_level01_art")
 	keeper_aid_art.texture = PieceAssetLoader.ornament(String(AID_ART_PATHS["hint"]))

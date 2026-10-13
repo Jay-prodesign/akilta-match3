@@ -5,6 +5,7 @@ signal back_requested
 signal level_requested(level_number: int)
 
 const LockedExplanation = preload("res://src/ui/shared/locked_explanation.gd")
+const ProductionChrome = preload("res://src/ui/theme/production_chrome.gd")
 
 @export var canonical_level_cap: int = 1
 @export var visible_route_levels: int = 10
@@ -18,6 +19,7 @@ const LockedExplanation = preload("res://src/ui/shared/locked_explanation.gd")
 var progress
 
 func _ready() -> void:
+	ProductionChrome.apply_action_button(back_button, "utility", "chapter_back")
 	back_button.pressed.connect(func(): back_requested.emit())
 	route_view.level_requested.connect(func(level_number: int): level_requested.emit(level_number))
 	if route_view.has_signal("sealed_level_requested"):
