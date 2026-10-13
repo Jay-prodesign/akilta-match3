@@ -7,6 +7,7 @@ const PRIMARY_PANEL_PATH := "res://assets/ui/chrome/gbl_ui_ritual_panel_9s_base_
 static var _primary_panel: StyleBoxTexture
 static var _top_shell: StyleBoxTexture
 static var _bottom_shell: StyleBoxTexture
+static var _gameplay_shell: StyleBoxTexture
 
 static func _style(content_margin: float, texture_margin: float = 64.0) -> StyleBoxTexture:
 	var texture := PieceAssetLoader.ornament(PRIMARY_PANEL_PATH)
@@ -45,6 +46,22 @@ static func bottom_shell() -> StyleBoxTexture:
 		_bottom_shell = _style(8.0, 52.0)
 	return _bottom_shell
 
+static func gameplay_shell() -> StyleBoxTexture:
+	if _gameplay_shell == null:
+		_gameplay_shell = _style(6.0, 48.0)
+	return _gameplay_shell
+
+static func apply_gameplay_shell(panel: Control, kind: String) -> bool:
+	if panel == null:
+		return false
+	var style := gameplay_shell()
+	if style == null:
+		return false
+	panel.add_theme_stylebox_override("panel", style)
+	panel.set_meta("production_chrome_asset", PRIMARY_PANEL_PATH)
+	panel.set_meta("production_chrome_kind", "gameplay_" + kind)
+	return true
+
 static func apply_shell(panel: Control, kind: String) -> bool:
 	if panel == null:
 		return false
@@ -75,4 +92,5 @@ static func contract() -> Dictionary:
 		"top_shell_asset_backed": top_shell() != null and top_shell().texture != null,
 		"bottom_shell_asset_backed": bottom_shell() != null and bottom_shell().texture != null,
 		"global_shell_family_verified": top_shell() != null and top_shell().texture != null and bottom_shell() != null and bottom_shell().texture != null,
+		"gameplay_shell_asset_backed": gameplay_shell() != null and gameplay_shell().texture != null,
 	}
