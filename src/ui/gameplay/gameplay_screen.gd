@@ -180,7 +180,7 @@ func _ready() -> void:
 	ProductionChrome.apply_compact_panel($ResourceBar/Resources/GemChip, "gameplay_gem_resource")
 	ProductionChrome.apply_compact_panel($ResourceBar/Resources/LevelBadgePlate, "gameplay_level_badge")
 	ProductionChrome.apply_gameplay_shell($Layout/HUDPlate, "objective")
-	ProductionChrome.apply_gameplay_level_plaque(eyebrow_label)
+	ProductionChrome.apply_gameplay_level_plaque($Layout/Eyebrow/PlaqueFrame)
 	ProductionChrome.apply_gameplay_booster_tray($BoosterTray)
 	var gameplay_hud := $Layout/HUDPlate/HUD as HBoxContainer
 	if gameplay_hud != null:
