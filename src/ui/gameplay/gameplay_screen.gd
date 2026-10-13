@@ -1162,7 +1162,7 @@ func gameplay_presentation_contract() -> Dictionary:
 		"asset_backed_gameplay_chrome": ($Layout/HUDPlate as PanelContainer).get_theme_stylebox("panel") is StyleBoxTexture and _booster_tray.get_theme_stylebox("panel") is StyleBoxTexture and [$ResourceBar/Resources/CoinChip, $ResourceBar/Resources/GemChip, $ResourceBar/Resources/LevelBadgePlate].all(func(panel): return panel.get_theme_stylebox("panel") is StyleBoxTexture),
 		"board_frame_asset_owner": String(($Layout/BoardView/OrnateFrame as Panel).get_meta("production_board_frame_owner", "")) == "BoardView",
 		"north_star_gameplay_geometry": hierarchy_locked and booster_family_locked and composition_locked and board_locked,
-		"gameplay_header_clearance": not $ResourceBar.visible and ($Layout as VBoxContainer).offset_top >= 32.0 and ($Layout as VBoxContainer).offset_top <= 48.0,
+		"gameplay_header_clearance": not $ResourceBar.visible and ($Layout as VBoxContainer).offset_top >= 92.0 and ($Layout as VBoxContainer).offset_top <= 108.0,
 		"compact_resource_chips": ($ResourceBar/Resources/CoinChip as PanelContainer).size.x <= 300.0 and ($ResourceBar/Resources/GemChip as PanelContainer).size.x <= 300.0 and ($ResourceBar/Resources/LevelBadgePlate as PanelContainer).size.x <= 200.0,
 		"asset_backed_resource_chips": [$ResourceBar/Resources/CoinChip, $ResourceBar/Resources/GemChip, $ResourceBar/Resources/LevelBadgePlate].all(func(panel): return panel is PanelContainer and (panel as PanelContainer).get_theme_stylebox("panel") is StyleBoxTexture),
 		"level_badge_separated": ($ResourceBar/Resources/ResourceSpacer as Control).size_flags_horizontal == Control.SIZE_EXPAND_FILL,
