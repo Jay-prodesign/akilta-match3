@@ -625,7 +625,7 @@ theme_override_constants/separation = 4
 alignment = 1
 
 [node name="SealedBoostA" type="Button" parent="BoosterTray/BoosterActions/SealedSlotA"]
-custom_minimum_size = Vector2(132, 132)
+custom_minimum_size = Vector2(112, 112)
 layout_mode = 2
 size_flags_horizontal = 4
 disabled = true
@@ -820,17 +820,17 @@ anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-offset_left = -340.0
-offset_top = -390.0
-offset_right = 340.0
-offset_bottom = 390.0
+offset_left = -325.0
+offset_top = -365.0
+offset_right = 325.0
+offset_bottom = 365.0
 grow_horizontal = 2
 grow_vertical = 2
 theme_override_styles/panel = SubResource("StylePanel")
 
 [node name="Content" type="VBoxContainer" parent="PauseOverlay/Card"]
 layout_mode = 2
-theme_override_constants/separation = 16
+theme_override_constants/separation = 14
 alignment = 1
 
 [node name="Eyebrow" type="Label" parent="PauseOverlay/Card/Content"]
@@ -869,7 +869,7 @@ text = "The cabinet waits exactly as you left it."
 horizontal_alignment = 1
 
 [node name="Resume" type="Button" parent="PauseOverlay/Card/Content"]
-custom_minimum_size = Vector2(520, 92)
+custom_minimum_size = Vector2(500, 88)
 layout_mode = 2
 size_flags_horizontal = 4
 theme_override_colors/font_color = Color(1, 0.95, 0.84, 1)
@@ -884,7 +884,7 @@ theme_override_styles/pressed = SubResource("ActionPressed")
 text = "RESUME"
 
 [node name="Retry" type="Button" parent="PauseOverlay/Card/Content"]
-custom_minimum_size = Vector2(500, 74)
+custom_minimum_size = Vector2(480, 70)
 layout_mode = 2
 size_flags_horizontal = 4
 theme_override_colors/font_color = Color(0.98, 0.91, 0.78, 1)
@@ -897,7 +897,7 @@ theme_override_styles/pressed = SubResource("PauseUtility")
 text = "RESTART LEVEL"
 
 [node name="Settings" type="Button" parent="PauseOverlay/Card/Content"]
-custom_minimum_size = Vector2(500, 74)
+custom_minimum_size = Vector2(480, 70)
 layout_mode = 2
 size_flags_horizontal = 4
 theme_override_colors/font_color = Color(0.98, 0.91, 0.78, 1)
@@ -910,7 +910,7 @@ theme_override_styles/pressed = SubResource("PauseUtility")
 text = "AUDIO & ACCESSIBILITY"
 
 [node name="Exit" type="Button" parent="PauseOverlay/Card/Content"]
-custom_minimum_size = Vector2(500, 74)
+custom_minimum_size = Vector2(480, 70)
 layout_mode = 2
 size_flags_horizontal = 4
 theme_override_colors/font_color = Color(0.851, 0.804, 0.835, 1)
@@ -946,10 +946,10 @@ anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-offset_left = -390.0
-offset_top = -405.0
-offset_right = 390.0
-offset_bottom = 405.0
+offset_left = -360.0
+offset_top = -395.0
+offset_right = 360.0
+offset_bottom = 395.0
 grow_horizontal = 2
 grow_vertical = 2
 theme_override_styles/panel = SubResource("StylePanel")
@@ -960,7 +960,7 @@ theme_override_constants/separation = 10
 alignment = 1
 
 [node name="ResultTopPad" type="Control" parent="ResultOverlay/Card/Content"]
-custom_minimum_size = Vector2(0, 24)
+custom_minimum_size = Vector2(0, 16)
 layout_mode = 2
 mouse_filter = 2
 
@@ -1032,7 +1032,7 @@ vertical_alignment = 1
 autowrap_mode = 2
 
 [node name="RewardRitual" type="Control" parent="ResultOverlay/Card/Content"]
-custom_minimum_size = Vector2(0, 210)
+custom_minimum_size = Vector2(0, 188)
 layout_mode = 2
 mouse_filter = 2
 script = ExtResource("9_cameo")
@@ -1108,7 +1108,7 @@ horizontal_alignment = 1
 autowrap_mode = 2
 
 [node name="ResultProclamation" type="HBoxContainer" parent="ResultOverlay/Card/Content"]
-custom_minimum_size = Vector2(520, 132)
+custom_minimum_size = Vector2(500, 116)
 size_flags_horizontal = 4
 layout_mode = 2
 theme_override_constants/separation = 10
@@ -1122,7 +1122,7 @@ expand_mode = 1
 stretch_mode = 5
 
 [node name="Copy" type="VBoxContainer" parent="ResultOverlay/Card/Content/ResultProclamation"]
-custom_minimum_size = Vector2(330, 0)
+custom_minimum_size = Vector2(320, 0)
 layout_mode = 2
 size_flags_horizontal = 0
 alignment = 1
@@ -1142,7 +1142,7 @@ autowrap_mode = 2
 
 [node name="RecoveryAction" type="Button" parent="ResultOverlay/Card/Content"]
 visible = false
-custom_minimum_size = Vector2(520, 92)
+custom_minimum_size = Vector2(500, 88)
 layout_mode = 2
 size_flags_horizontal = 4
 theme_override_colors/font_color = Color(0.988, 0.933, 0.831, 1)
@@ -1153,7 +1153,7 @@ theme_override_styles/pressed = SubResource("ActionPressed")
 text = "CONTINUE · +3 MOVES · FREE"
 
 [node name="Action" type="Button" parent="ResultOverlay/Card/Content"]
-custom_minimum_size = Vector2(520, 100)
+custom_minimum_size = Vector2(500, 94)
 layout_mode = 2
 size_flags_horizontal = 4
 theme_override_colors/font_color = Color(0.988, 0.933, 0.831, 1)
