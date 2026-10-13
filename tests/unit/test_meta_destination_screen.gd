@@ -44,7 +44,10 @@ func _run() -> void:
 		_expect(bool(contract.get("asset_backed_utility_actions", false)), "%s utility actions must use shared production chrome" % feature)
 		_expect(bool(contract.get("world_art_not_overdimmed", false)), "%s must keep authored world art visible rather than hiding it behind UI shade" % feature)
 		_expect(bool(contract.get("controlled_chrome_density", false)), "%s must keep status chrome subordinate to hero art" % feature)
+		_expect(bool(contract.get("redundant_house_return_suppressed", false)), "%s must rely on shared product navigation instead of a duplicate House button" % feature)
+		_expect(bool(contract.get("truth_footer_suppressed", false)), "%s must keep diagnostic truth copy out of the player-facing footer" % feature)
 		_expect(bool(contract.get("visual_parity_gate_v2", false)), "%s must satisfy the final-direction secondary-screen visual parity gate" % feature)
+		_expect(bool(contract.get("visual_parity_gate_v3", false)), "%s must satisfy the navigation/readability secondary-screen parity gate" % feature)
 		_expect(bool(contract.get("header_readability_scrim", false)), "%s must retain a dedicated top readability scrim over authored world art" % feature)
 		_expect(bool(contract.get("secondary_header_compact", false)), "%s must avoid redundant progress/commerce lines above the hero" % feature)
 		_expect(screen.get_node_or_null("FeatureLayout/FeatureHero/HeroRow/HeroArt") != null, "%s must keep a scene-owned hero art slot" % feature)
@@ -86,6 +89,7 @@ func _run() -> void:
 			var profile_hero := screen.get_node("FeatureLayout/FeatureHero/HeroRow/HeroArt") as TextureRect
 			_expect(profile_hero != null and String(contract.get("hero_asset_path", "")).ends_with("black_cat.webp"), "profile hero must use the Keeper familiar rather than a generic Curio")
 			_expect(bool(contract.get("profile_save_health_compact", false)), "profile save-health truth must stay compact instead of dominating the screen")
+			_expect(bool(contract.get("profile_status_focus", false)), "profile save health must prioritize readable local/cloud statuses over paragraph copy")
 			var settings := {"hit": false}
 			screen.settings_requested.connect(func(): settings["hit"] = true)
 			(screen.get_node("FeatureLayout/ProfileSettings") as Button).emit_signal("pressed")
