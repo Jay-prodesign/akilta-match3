@@ -20,10 +20,10 @@ func _run() -> void:
 		"gameplay_header_clearance", "compact_resource_chips", "asset_backed_resource_chips",
 		"level_badge_separated", "hint_booster_clearance", "booster_label_readability",
 		"north_star_booster_family", "utility_separated_from_boosters", "north_star_board_object",
-		"north_star_header_hierarchy", "booster_frame_family", "quiet_gameplay_shell_family", "integrated_hud_surface",
+		"north_star_header_hierarchy", "booster_frame_family", "quiet_gameplay_shell_family", "integrated_hint_surface", "integrated_hud_surface",
 		"final_hint_readability", "final_booster_readability", "canonical_booster_art", "gothic_board_material", "objective_spacing_locked",
 		"north_star_compact_gameplay_header", "north_star_compact_gameplay_geometry", "north_star_gameplay_hud_frame",
-		"visual_parity_gate_v2", "visual_parity_gate_v3", "visual_parity_gate_v4", "visual_parity_gate_v5", "visual_parity_gate_v10", "visual_parity_gate_v11", "visual_parity_gate_v12",
+		"visual_parity_gate_v2", "visual_parity_gate_v3", "visual_parity_gate_v4", "visual_parity_gate_v5", "visual_parity_gate_v10", "visual_parity_gate_v11", "visual_parity_gate_v12", "visual_parity_gate_v13",
 	]:
 		_expect(bool(contract.get(key, false)), "Gameplay North Star parity contract failed: %s" % key)
 	_expect(int(contract.get("visible_booster_count", 0)) == 3, "Exactly three gameplay boosters must be visible")
@@ -70,6 +70,8 @@ func _run() -> void:
 	_expect(objective != null and not objective.has_theme_stylebox_override("normal") and objective.text.contains("\n") and not objective.text.begins_with("TARGET\n"), "Objective must read as a compact authored HUD objective rather than a detached text panel")
 	_expect(hint_band != null and hint_band.custom_minimum_size.y >= 54.0 and hint_band.get_theme_font_size("font_size") >= 24, "Hint callout must remain readable at 540x960")
 	_expect(hint_band != null and hint_band.size_flags_horizontal == Control.SIZE_SHRINK_CENTER and hint_band.custom_minimum_size.x >= 680.0 and hint_band.custom_minimum_size.x <= 740.0, "Hint must remain a restrained centered gameplay callout")
+	var hint_style := hint_band.get_theme_stylebox("normal") if hint_band != null else null
+	_expect(hint_style is StyleBoxFlat and (hint_style as StyleBoxFlat).bg_color.a <= 0.22 and (hint_style as StyleBoxFlat).border_color.a <= 0.14, "Hint must integrate into the world instead of reading as a detached UI strip")
 	var resource_bar := screen.get_node_or_null("ResourceBar") as PanelContainer
 	_expect(resource_bar != null and not resource_bar.visible, "Gameplay must not expose meta currency/level chrome above the final target-and-moves HUD")
 
