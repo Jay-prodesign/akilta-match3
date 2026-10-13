@@ -25,7 +25,7 @@ An asset request without that ownership chain is invalid.
 
 Meta header owns resource values and utility access.
 Bottom nav owns House / Curios / Map / Events / Shop.
-Gameplay owns its compact HUD and pause only.
+Gameplay owns its compact objective + moves HUD and pause only. The final gameplay surface suppresses the meta lives/coins/gems header; its visible lower tool row is the Shuffle / Hand / Magic booster family, not meta navigation.
 Panels/buttons are reusable structural UI; environment art never contains live text or counters.
 
 ## Downstream screens

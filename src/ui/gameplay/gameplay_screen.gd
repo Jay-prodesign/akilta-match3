@@ -314,19 +314,19 @@ func _apply_level_art_profile(profile: String) -> void:
 			world_backdrop.modulate = Color.WHITE
 			eyebrow_label.add_theme_color_override("font_color", Color("#9fb7d0"))
 			title_label.add_theme_color_override("font_color", Color("#f1e6d2"))
-			objective_label.add_theme_color_override("font_color", Color("#a8c6d2"))
+			objective_label.add_theme_color_override("font_color", Color("#dbeef4"))
 			moves_label.add_theme_color_override("font_color", Color("#d8c8a1"))
 		"thornlight_arrangement":
 			world_backdrop.modulate = Color.WHITE
 			eyebrow_label.add_theme_color_override("font_color", Color("#d9a0b8"))
 			title_label.add_theme_color_override("font_color", Color("#f5e6e2"))
-			objective_label.add_theme_color_override("font_color", Color("#c7a0df"))
+			objective_label.add_theme_color_override("font_color", Color("#ead3f2"))
 			moves_label.add_theme_color_override("font_color", Color("#e6bd83"))
 		_:
 			world_backdrop.modulate = Color.WHITE
 			eyebrow_label.add_theme_color_override("font_color", Color("#b7a5b8"))
 			title_label.add_theme_color_override("font_color", Color("#f1e8dc"))
-			objective_label.add_theme_color_override("font_color", Color("#bca1cf"))
+			objective_label.add_theme_color_override("font_color", Color("#eadcf1"))
 			moves_label.add_theme_color_override("font_color", Color("#d9b56a"))
 
 func _configure_teaching_move(level_data: Dictionary) -> void:
@@ -1095,12 +1095,14 @@ func gameplay_presentation_contract() -> Dictionary:
 		objective_label.size.x >= get_viewport().get_visible_rect().size.x * 0.50
 		and objective_label.global_position.x >= objective_icon.global_position.x + objective_icon.size.x + 6.0
 	)
+	var meta_resource_strip_suppressed: bool = not ($ResourceBar as PanelContainer).visible
+	var objective_contrast_locked: bool = objective_label.get_theme_color("font_color").get_luminance() >= 0.68
 	return {
 		"authored_hud_plate": get_node_or_null("Layout/HUDPlate/HUD") != null,
 		"authored_resource_bar": _level_badge_label != null and _resource_coin_label != null and _resource_gem_label != null,
 		"authored_keeper_tray": _booster_tray != null,
 		"authored_booster_menu": booster_family_locked,
-		"north_star_resource_strip": ($ResourceBar as PanelContainer).offset_bottom - ($ResourceBar as PanelContainer).offset_top == 80.0,
+		"north_star_resource_strip": meta_resource_strip_suppressed,
 		"north_star_objective_strip": hierarchy_locked,
 		"north_star_booster_tray": booster_family_locked and composition_locked,
 		"deterministic_gameplay_geometry": true,
@@ -1110,7 +1112,7 @@ func gameplay_presentation_contract() -> Dictionary:
 		"asset_backed_gameplay_chrome": ($ResourceBar as PanelContainer).get_theme_stylebox("panel") is StyleBoxTexture and ($Layout/HUDPlate as PanelContainer).get_theme_stylebox("panel") is StyleBoxTexture and _booster_tray.get_theme_stylebox("panel") is StyleBoxTexture,
 		"board_frame_asset_owner": String(($Layout/BoardView/OrnateFrame as Panel).get_meta("production_board_frame_owner", "")) == "BoardView",
 		"north_star_gameplay_geometry": hierarchy_locked and booster_family_locked and composition_locked and board_locked,
-		"gameplay_header_clearance": ($Layout as VBoxContainer).offset_top - ($ResourceBar as PanelContainer).offset_bottom >= 50.0,
+		"gameplay_header_clearance": ($Layout as VBoxContainer).offset_top >= 96.0,
 		"compact_resource_chips": ($ResourceBar/Resources/CoinChip as PanelContainer).size.x <= 300.0 and ($ResourceBar/Resources/GemChip as PanelContainer).size.x <= 300.0 and ($ResourceBar/Resources/LevelBadgePlate as PanelContainer).size.x <= 200.0,
 		"asset_backed_resource_chips": [$ResourceBar/Resources/CoinChip, $ResourceBar/Resources/GemChip, $ResourceBar/Resources/LevelBadgePlate].all(func(panel): return panel is PanelContainer and (panel as PanelContainer).get_theme_stylebox("panel") is StyleBoxTexture),
 		"level_badge_separated": ($ResourceBar/Resources/ResourceSpacer as Control).size_flags_horizontal == Control.SIZE_EXPAND_FILL,
@@ -1132,9 +1134,12 @@ func gameplay_presentation_contract() -> Dictionary:
 		"canonical_booster_art": canonical_booster_art,
 		"gothic_board_material": gothic_board_material,
 		"objective_spacing_locked": objective_spacing_locked,
+		"meta_resource_strip_suppressed": meta_resource_strip_suppressed,
+		"objective_contrast_locked": objective_contrast_locked,
 		"visual_parity_gate_v10": hierarchy_locked and integrated_hud_surface and hint_readable and booster_family_locked and composition_locked and board_locked and utilities_separated and canonical_booster_art and gothic_board_material and objective_label.text.begins_with("TARGET\n"),
 		"visual_parity_gate_v11": hierarchy_locked and integrated_hud_surface and hint_readable and booster_family_locked and composition_locked and board_locked and utilities_separated and canonical_booster_art and gothic_board_material and objective_spacing_locked and objective_label.text.begins_with("TARGET\n"),
-		"visual_parity_version": 11,
+		"visual_parity_gate_v12": hierarchy_locked and integrated_hud_surface and hint_readable and booster_family_locked and composition_locked and board_locked and utilities_separated and canonical_booster_art and gothic_board_material and objective_spacing_locked and meta_resource_strip_suppressed and objective_contrast_locked and objective_label.text.begins_with("TARGET\n"),
+		"visual_parity_version": 12,
 		"resource_bar_height": ($ResourceBar as PanelContainer).offset_bottom - ($ResourceBar as PanelContainer).offset_top,
 		"hud_plate_height": ($Layout/HUDPlate as PanelContainer).custom_minimum_size.y,
 		"booster_tray_height": _booster_tray.offset_bottom - _booster_tray.offset_top,

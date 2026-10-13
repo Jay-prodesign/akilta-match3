@@ -68,7 +68,9 @@ func _capture() -> void:
 	var gameplay = app.current_screen()
 	var gameplay_contract: Dictionary = gameplay.gameplay_presentation_contract() if gameplay != null and gameplay.has_method("gameplay_presentation_contract") else {}
 	for parity_key in [
-		"visual_parity_gate_v11",
+		"visual_parity_gate_v12",
+		"meta_resource_strip_suppressed",
+		"objective_contrast_locked",
 		"objective_spacing_locked",
 		"canonical_booster_art",
 		"gothic_board_material",
@@ -85,6 +87,7 @@ func _capture() -> void:
 		if not bool(gameplay_contract.get(parity_key, false)):
 			return _fail(app, "S05 North Star render gate failed: %s" % parity_key)
 	var gameplay_viewport: Vector2 = gameplay.get_viewport().get_visible_rect().size
+	var gameplay_resource_bar := gameplay.get_node_or_null("ResourceBar") as Control
 	var gameplay_title := gameplay.get_node_or_null("Layout/Title") as Label
 	var gameplay_hud := gameplay.get_node_or_null("Layout/HUDPlate") as Control
 	var gameplay_objective_icon := gameplay.get_node_or_null("Layout/HUDPlate/HUD/ObjectiveIcon") as Control
@@ -96,8 +99,10 @@ func _capture() -> void:
 	var shuffle_label := gameplay.get_node_or_null("BoosterTray/BoosterActions/SealedSlotA/Label") as Control
 	var hand_label := gameplay.get_node_or_null("BoosterTray/BoosterActions/SealedSlotB/Label") as Control
 	var magic_label := gameplay.get_node_or_null("BoosterTray/BoosterActions/SealedSlotC/Label") as Control
-	if gameplay_title == null or gameplay_hud == null or gameplay_objective_icon == null or gameplay_objective == null or gameplay_moves == null or gameplay_board == null or gameplay_hint == null or gameplay_tray == null:
-		return _fail(app, "S05 North Star render gate missing title/HUD/board/hint/tray")
+	if gameplay_resource_bar == null or gameplay_title == null or gameplay_hud == null or gameplay_objective_icon == null or gameplay_objective == null or gameplay_moves == null or gameplay_board == null or gameplay_hint == null or gameplay_tray == null:
+		return _fail(app, "S05 North Star render gate missing resource/title/HUD/board/hint/tray")
+	if gameplay_resource_bar.visible:
+		return _fail(app, "S05 final gameplay must not expose the meta coin/gem/level resource strip")
 	var board_height_ratio: float = gameplay_board.size.y / gameplay_viewport.y
 	var board_width_ratio: float = gameplay_board.size.x / gameplay_viewport.x
 	var tray_width_ratio: float = gameplay_tray.size.x / gameplay_viewport.x
@@ -109,6 +114,8 @@ func _capture() -> void:
 		return _fail(app, "S05 booster tray width drifted: %.3f" % tray_width_ratio)
 	var title_rect: Rect2 = gameplay_title.get_global_rect()
 	var hud_rect: Rect2 = gameplay_hud.get_global_rect()
+	if title_rect.position.y > gameplay_viewport.y * 0.12:
+		return _fail(app, "S05 final title sits too low after suppressing the meta header")
 	var objective_icon_rect: Rect2 = gameplay_objective_icon.get_global_rect()
 	var board_rect: Rect2 = gameplay_board.get_global_rect()
 	var hint_rect: Rect2 = gameplay_hint.get_global_rect()
@@ -119,6 +126,8 @@ func _capture() -> void:
 		return _fail(app, "S05 target regressed into a detached inner panel")
 	if gameplay_title.get_theme_font_size("font_size") < 50 or gameplay_moves.get_theme_font_size("font_size") < 44:
 		return _fail(app, "S05 title/moves visual hierarchy regressed")
+	if gameplay_objective.get_theme_color("font_color").get_luminance() < 0.68:
+		return _fail(app, "S05 objective contrast regressed")
 	if gameplay_hint.get_theme_font_size("font_size") < 24:
 		return _fail(app, "S05 hint readability regressed")
 	if not hud_rect.grow(-4.0).encloses(objective_icon_rect):
