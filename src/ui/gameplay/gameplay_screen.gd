@@ -160,7 +160,8 @@ func _current_auto_hint_delay() -> float:
 func _ready() -> void:
 	ProductionChrome.apply_primary($PauseOverlay/Card)
 	ProductionChrome.apply_primary($ResultOverlay/Card)
-	ProductionChrome.apply_gameplay_shell($ResourceBar, "resources")
+	$ResourceBar.add_theme_stylebox_override("panel", StyleBoxEmpty.new())
+	$ResourceBar.set_meta("production_chrome_kind", "gameplay_resource_cluster")
 	ProductionChrome.apply_compact_panel($ResourceBar/Resources/CoinChip, "gameplay_coin_resource")
 	ProductionChrome.apply_compact_panel($ResourceBar/Resources/GemChip, "gameplay_gem_resource")
 	ProductionChrome.apply_compact_panel($ResourceBar/Resources/LevelBadgePlate, "gameplay_level_badge")
@@ -326,7 +327,7 @@ func _apply_level_art_profile(profile: String) -> void:
 			world_backdrop.modulate = Color.WHITE
 			eyebrow_label.add_theme_color_override("font_color", Color("#b7a5b8"))
 			title_label.add_theme_color_override("font_color", Color("#f1e8dc"))
-			objective_label.add_theme_color_override("font_color", Color("#bca1cf"))
+			objective_label.add_theme_color_override("font_color", Color("#f0dec2"))
 			moves_label.add_theme_color_override("font_color", Color("#d9b56a"))
 
 func _configure_teaching_move(level_data: Dictionary) -> void:
@@ -1100,17 +1101,17 @@ func gameplay_presentation_contract() -> Dictionary:
 		"authored_resource_bar": _level_badge_label != null and _resource_coin_label != null and _resource_gem_label != null,
 		"authored_keeper_tray": _booster_tray != null,
 		"authored_booster_menu": booster_family_locked,
-		"north_star_resource_strip": ($ResourceBar as PanelContainer).offset_bottom - ($ResourceBar as PanelContainer).offset_top == 80.0,
+		"north_star_resource_strip": not $ResourceBar.visible,
 		"north_star_objective_strip": hierarchy_locked,
 		"north_star_booster_tray": booster_family_locked and composition_locked,
 		"deterministic_gameplay_geometry": true,
 		"truthful_sealed_slots": _sealed_boost_a.disabled and _sealed_boost_b.disabled and _sealed_boost_c.disabled,
 		"authored_target_moves_hierarchy": objective_icon.texture != null and integrated_hud_surface,
 		"authored_board_frame": board_locked,
-		"asset_backed_gameplay_chrome": ($ResourceBar as PanelContainer).get_theme_stylebox("panel") is StyleBoxTexture and ($Layout/HUDPlate as PanelContainer).get_theme_stylebox("panel") is StyleBoxTexture and _booster_tray.get_theme_stylebox("panel") is StyleBoxTexture,
+		"asset_backed_gameplay_chrome": ($Layout/HUDPlate as PanelContainer).get_theme_stylebox("panel") is StyleBoxTexture and _booster_tray.get_theme_stylebox("panel") is StyleBoxTexture and [$ResourceBar/Resources/CoinChip, $ResourceBar/Resources/GemChip, $ResourceBar/Resources/LevelBadgePlate].all(func(panel): return panel.get_theme_stylebox("panel") is StyleBoxTexture),
 		"board_frame_asset_owner": String(($Layout/BoardView/OrnateFrame as Panel).get_meta("production_board_frame_owner", "")) == "BoardView",
 		"north_star_gameplay_geometry": hierarchy_locked and booster_family_locked and composition_locked and board_locked,
-		"gameplay_header_clearance": ($Layout as VBoxContainer).offset_top - ($ResourceBar as PanelContainer).offset_bottom >= 50.0,
+		"gameplay_header_clearance": not $ResourceBar.visible and ($Layout as VBoxContainer).offset_top >= 64.0,
 		"compact_resource_chips": ($ResourceBar/Resources/CoinChip as PanelContainer).size.x <= 300.0 and ($ResourceBar/Resources/GemChip as PanelContainer).size.x <= 300.0 and ($ResourceBar/Resources/LevelBadgePlate as PanelContainer).size.x <= 200.0,
 		"asset_backed_resource_chips": [$ResourceBar/Resources/CoinChip, $ResourceBar/Resources/GemChip, $ResourceBar/Resources/LevelBadgePlate].all(func(panel): return panel is PanelContainer and (panel as PanelContainer).get_theme_stylebox("panel") is StyleBoxTexture),
 		"level_badge_separated": ($ResourceBar/Resources/ResourceSpacer as Control).size_flags_horizontal == Control.SIZE_EXPAND_FILL,
@@ -1121,13 +1122,13 @@ func gameplay_presentation_contract() -> Dictionary:
 		"utility_separated_from_boosters": utilities_separated,
 		"north_star_board_object": board_locked,
 		"north_star_header_hierarchy": hierarchy_locked,
-		"quiet_gameplay_shell_family": [$ResourceBar, $Layout/HUDPlate].all(func(panel): return String(panel.get_meta("production_chrome_asset", "")) == ProductionChrome.QUIET_PANEL_PATH),
+		"quiet_gameplay_shell_family": String($Layout/HUDPlate.get_meta("production_chrome_asset", "")) == ProductionChrome.QUIET_PANEL_PATH and $ResourceBar.get_theme_stylebox("panel") is StyleBoxEmpty,
 		"integrated_hud_surface": integrated_hud_surface,
-		"final_hint_readability": hint_readable,
+		"final_hint_readability": hint_readable and hint_label.size_flags_horizontal == Control.SIZE_SHRINK_CENTER and hint_label.custom_minimum_size.x >= 780.0 and hint_label.custom_minimum_size.x <= 860.0,
 		"final_booster_readability": booster_family_locked and shuffle_label.get_theme_font_size("font_size") >= 26,
 		"visual_parity_gate_v2": hierarchy_locked and booster_family_locked and composition_locked and board_locked and utilities_separated and String(_booster_tray.get_meta("production_chrome_kind", "")) == "gameplay_booster_tray",
 		"visual_parity_gate_v3": hierarchy_locked and integrated_hud_surface and hint_readable and booster_family_locked and composition_locked and board_locked and utilities_separated,
-		"visual_parity_gate_v4": hierarchy_locked and integrated_hud_surface and hint_readable and booster_family_locked and composition_locked and board_locked and utilities_separated and [$ResourceBar, $Layout/HUDPlate].all(func(panel): return String(panel.get_meta("production_chrome_asset", "")) == ProductionChrome.QUIET_PANEL_PATH) and String(_booster_tray.get_meta("production_chrome_kind", "")) == "gameplay_booster_tray",
+		"visual_parity_gate_v4": hierarchy_locked and integrated_hud_surface and hint_readable and booster_family_locked and composition_locked and board_locked and utilities_separated and String($Layout/HUDPlate.get_meta("production_chrome_asset", "")) == ProductionChrome.QUIET_PANEL_PATH and $ResourceBar.get_theme_stylebox("panel") is StyleBoxEmpty and String(_booster_tray.get_meta("production_chrome_kind", "")) == "gameplay_booster_tray",
 		"visual_parity_gate_v5": hierarchy_locked and integrated_hud_surface and hint_readable and booster_family_locked and composition_locked and board_locked and utilities_separated and objective_label.text.begins_with("TARGET\n"),
 		"canonical_booster_art": canonical_booster_art,
 		"gothic_board_material": gothic_board_material,

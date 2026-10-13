@@ -64,6 +64,9 @@ func _run() -> void:
 	_expect(magic_label != null and magic_label.text == "MAGIC", "Magic identity drifted")
 	_expect(objective != null and not objective.has_theme_stylebox_override("normal") and objective.text.begins_with("TARGET\n"), "Objective must read as part of one authored HUD surface rather than a detached inner panel")
 	_expect(hint_band != null and hint_band.custom_minimum_size.y >= 60.0 and hint_band.get_theme_font_size("font_size") >= 24, "Hint band must remain readable at 540x960")
+	_expect(hint_band != null and hint_band.size_flags_horizontal == Control.SIZE_SHRINK_CENTER and hint_band.custom_minimum_size.x >= 780.0 and hint_band.custom_minimum_size.x <= 860.0, "Hint must remain a centered gameplay callout instead of a full-width debug strip")
+	var resource_bar := screen.get_node_or_null("ResourceBar") as PanelContainer
+	_expect(resource_bar != null and not resource_bar.visible, "Gameplay must not expose meta currency/level chrome above the final target-and-moves HUD")
 
 	screen.set_player_resources(4, 1234, 7)
 	await process_frame
