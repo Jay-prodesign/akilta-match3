@@ -114,6 +114,7 @@ const LAST_MOVE_THRESHOLD := 1
 @onready var awakening_copy: Label = $Layout/Awakening/Content/ProgressCopy
 @onready var result_overlay: Control = $ResultOverlay
 @onready var result_title: Label = $ResultOverlay/Card/Content/Title
+@onready var result_celebration: Label = $ResultOverlay/Card/Content/CelebrationSigils
 @onready var result_detail: Label = $ResultOverlay/Card/Content/Detail
 @onready var result_objective_summary: Label = $ResultOverlay/Card/Content/ObjectiveSummary
 @onready var result_eyebrow: Label = $ResultOverlay/Card/Content/Eyebrow
@@ -1121,6 +1122,17 @@ func gameplay_presentation_contract() -> Dictionary:
 		and String($Layout/HUDPlate.get_meta("production_chrome_kind", "")) == "gameplay_objective_frame"
 		and ($Layout/HUDPlate as PanelContainer).get_theme_stylebox("panel") is StyleBoxTexture
 	)
+	var postgame_reward_parity: bool = (
+		result_celebration != null
+		and result_celebration.text.count("✦") == 3
+		and result_celebration.get_theme_font_size("font_size") >= 36
+		and _result_keeper_cat != null
+		and _result_keeper_cat.custom_minimum_size.x >= 96.0
+		and _result_reward_values != null
+		and _result_reward_values.custom_minimum_size.y >= 60.0
+		and result_action != null
+		and result_action.custom_minimum_size.y >= 92.0
+	)
 	return {
 		"authored_hud_plate": get_node_or_null("Layout/HUDPlate/HUD") != null,
 		"authored_resource_bar": _level_badge_label != null and _resource_coin_label != null and _resource_gem_label != null,
@@ -1171,10 +1183,11 @@ func gameplay_presentation_contract() -> Dictionary:
 		"visible_booster_count": 3,
 		"authored_result_values": _result_reward_values != null,
 		"authored_result_proclamation": _result_proclamation != null and _result_keeper_cat != null,
-		"north_star_result_hierarchy": result_title != null and result_title.get_theme_font_size("font_size") >= 46 and result_objective_summary != null and result_objective_summary.get_theme_stylebox("normal") != null,
-		"north_star_result_cta": result_action != null and result_action.custom_minimum_size.y >= 82.0 and result_action.get_theme_stylebox("normal") != null,
+		"north_star_result_hierarchy": result_title != null and result_title.get_theme_font_size("font_size") >= 54 and result_objective_summary != null and result_objective_summary.get_theme_stylebox("normal") != null,
+		"north_star_result_cta": result_action != null and result_action.custom_minimum_size.y >= 92.0 and result_action.get_theme_stylebox("normal") != null,
 		"asset_backed_result_chrome": ($ResultOverlay/Card as PanelContainer).get_theme_stylebox("panel") is StyleBoxTexture,
-		"result_hero_scale": result_ritual != null and result_ritual.custom_minimum_size.y >= 270.0,
+		"result_hero_scale": result_ritual != null and result_ritual.custom_minimum_size.y >= 240.0,
+		"postgame_reward_parity": postgame_reward_parity,
 		"result_frame_clearance": ($ResultOverlay/Card/Content/ResultTopPad as Control).custom_minimum_size.y >= 20.0,
 		"win_copy_compact": result_detail != null and result_house_change != null,
 		"runtime_shell_factory": false,

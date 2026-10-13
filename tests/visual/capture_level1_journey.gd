@@ -180,6 +180,20 @@ func _capture() -> void:
 		return _fail(app, "S06 reward/result must become visible")
 	if String(app.current_route_name()) != "win_rewards":
 		return _fail(app, "terminal win must own S06 WIN_REWARDS route")
+	var reward_contract: Dictionary = gameplay.gameplay_presentation_contract()
+	if not bool(reward_contract.get("postgame_reward_parity", false)):
+		return _fail(app, "S06 post-game reward parity contract failed")
+	var result_title := gameplay.get_node_or_null("ResultOverlay/Card/Content/Title") as Label
+	var result_celebration := gameplay.get_node_or_null("ResultOverlay/Card/Content/CelebrationSigils") as Label
+	var result_rewards := gameplay.get_node_or_null("ResultOverlay/Card/Content/ResultRewardValues") as Control
+	var result_keeper := gameplay.get_node_or_null("ResultOverlay/Card/Content/ResultProclamation/KeeperCat") as Control
+	var result_action := gameplay.get_node_or_null("ResultOverlay/Card/Content/Action") as Control
+	if result_title == null or result_celebration == null or result_rewards == null or result_keeper == null or result_action == null:
+		return _fail(app, "S06 reward visual hierarchy nodes missing")
+	if result_title.get_theme_font_size("font_size") < 54 or result_celebration.get_theme_font_size("font_size") < 36:
+		return _fail(app, "S06 win celebration hierarchy collapsed")
+	if result_rewards.custom_minimum_size.y < 60.0 or result_keeper.custom_minimum_size.x < 96.0 or result_action.custom_minimum_size.y < 92.0:
+		return _fail(app, "S06 reward/Keeper/CTA scale regressed")
 	if not await _save(app, "golden-05-win-reward.png"):
 		return
 
@@ -195,6 +209,17 @@ func _capture() -> void:
 	var restoration_continue: Button = restoration_house.get_node_or_null("RestorationOverlay/CeremonyCard/CeremonyContent/CeremonyRow/Copy/Continue") as Button if restoration_house != null else null
 	if restoration_overlay == null or not restoration_overlay.visible or restoration_continue == null:
 		return _fail(app, "S07 same-camera restoration ceremony missing")
+	var restoration_contract: Dictionary = restoration_overlay.restoration_contract() if restoration_overlay.has_method("restoration_contract") else {}
+	for restoration_key in ["before_after_visual_pair", "world_visible_during_restoration", "restoration_hero_hierarchy", "visual_parity_gate_v2"]:
+		if not bool(restoration_contract.get(restoration_key, false)):
+			return _fail(app, "S07 restoration parity contract failed: %s" % restoration_key)
+	var dormant_preview := restoration_house.get_node_or_null("RestorationOverlay/DormantDisplayFrame") as Control
+	var awakened_preview := restoration_house.get_node_or_null("RestorationOverlay/RecoveredDisplayFrame") as Control
+	var transform_arrow := restoration_house.get_node_or_null("RestorationOverlay/TransformationArrow") as Label
+	if dormant_preview == null or awakened_preview == null or transform_arrow == null or dormant_preview.get_global_rect().end.x >= awakened_preview.get_global_rect().position.x:
+		return _fail(app, "S07 dormant-to-awakened visual pair collapsed")
+	if transform_arrow.text != "→" or restoration_continue.custom_minimum_size.y < 90.0:
+		return _fail(app, "S07 transformation/CTA hierarchy regressed")
 	if not await _save(app, "golden-06-restoration.png"):
 		return
 

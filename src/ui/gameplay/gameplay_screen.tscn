@@ -835,21 +835,21 @@ anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-offset_left = -390.0
-offset_top = -390.0
-offset_right = 390.0
-offset_bottom = 390.0
+offset_left = -400.0
+offset_top = -450.0
+offset_right = 400.0
+offset_bottom = 450.0
 grow_horizontal = 2
 grow_vertical = 2
 theme_override_styles/panel = SubResource("StylePanel")
 
 [node name="Content" type="VBoxContainer" parent="ResultOverlay/Card"]
 layout_mode = 2
-theme_override_constants/separation = 10
+theme_override_constants/separation = 9
 alignment = 1
 
 [node name="ResultTopPad" type="Control" parent="ResultOverlay/Card/Content"]
-custom_minimum_size = Vector2(0, 24)
+custom_minimum_size = Vector2(0, 16)
 layout_mode = 2
 mouse_filter = 2
 
@@ -867,8 +867,19 @@ layout_mode = 2
 theme_override_colors/font_color = Color(0.975, 0.91, 0.79, 1)
 theme_override_colors/font_outline_color = Color(0.02, 0.015, 0.025, 0.95)
 theme_override_constants/outline_size = 5
-theme_override_font_sizes/font_size = 52
+theme_override_font_sizes/font_size = 56
 text = "THE CABINET STIRS"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="CelebrationSigils" type="Label" parent="ResultOverlay/Card/Content"]
+custom_minimum_size = Vector2(0, 46)
+layout_mode = 2
+theme_override_colors/font_color = Color(0.941, 0.808, 0.541, 1)
+theme_override_colors/font_outline_color = Color(0.03, 0.02, 0.04, 0.92)
+theme_override_constants/outline_size = 3
+theme_override_font_sizes/font_size = 38
+text = "✦   ✦   ✦"
 horizontal_alignment = 1
 vertical_alignment = 1
 
@@ -883,9 +894,9 @@ vertical_alignment = 1
 autowrap_mode = 2
 
 [node name="ObjectiveSummary" type="Label" parent="ResultOverlay/Card/Content"]
-custom_minimum_size = Vector2(0, 52)
+custom_minimum_size = Vector2(0, 56)
 layout_mode = 2
-theme_override_colors/font_color = Color(0.851, 0.71, 0.416, 1)
+theme_override_colors/font_color = Color(0.902, 0.776, 0.522, 1)
 theme_override_font_sizes/font_size = 21
 theme_override_styles/normal = SubResource("ResultObjectivePlate")
 text = "OBJECTIVE COMPLETE"
@@ -894,7 +905,7 @@ vertical_alignment = 1
 autowrap_mode = 2
 
 [node name="RewardRitual" type="Control" parent="ResultOverlay/Card/Content"]
-custom_minimum_size = Vector2(0, 270)
+custom_minimum_size = Vector2(0, 250)
 layout_mode = 2
 mouse_filter = 2
 script = ExtResource("9_cameo")
@@ -906,18 +917,18 @@ layout_mode = 2
 theme_override_colors/font_color = Color(0.851, 0.71, 0.416, 1)
 theme_override_colors/font_outline_color = Color(0.02, 0.015, 0.025, 0.9)
 theme_override_constants/outline_size = 3
-theme_override_font_sizes/font_size = 29
+theme_override_font_sizes/font_size = 31
 text = "MOON CAMEO · AWAKENED"
 horizontal_alignment = 1
 
 [node name="ResultRewardValues" type="HBoxContainer" parent="ResultOverlay/Card/Content"]
-custom_minimum_size = Vector2(0, 56)
+custom_minimum_size = Vector2(0, 64)
 layout_mode = 2
-theme_override_constants/separation = 10
+theme_override_constants/separation = 12
 alignment = 1
 
 [node name="CoinReward" type="PanelContainer" parent="ResultOverlay/Card/Content/ResultRewardValues"]
-custom_minimum_size = Vector2(150, 54)
+custom_minimum_size = Vector2(176, 62)
 layout_mode = 2
 theme_override_styles/panel = SubResource("RewardChipStyle")
 
@@ -927,7 +938,7 @@ theme_override_constants/separation = 4
 alignment = 1
 
 [node name="Icon" type="TextureRect" parent="ResultOverlay/Card/Content/ResultRewardValues/CoinReward/Content"]
-custom_minimum_size = Vector2(32, 32)
+custom_minimum_size = Vector2(36, 36)
 layout_mode = 2
 expand_mode = 1
 stretch_mode = 5
@@ -935,11 +946,11 @@ stretch_mode = 5
 [node name="Value" type="Label" parent="ResultOverlay/Card/Content/ResultRewardValues/CoinReward/Content"]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.957, 0.851, 0.584, 1)
-theme_override_font_sizes/font_size = 20
+theme_override_font_sizes/font_size = 22
 text = "+120"
 
 [node name="GemReward" type="PanelContainer" parent="ResultOverlay/Card/Content/ResultRewardValues"]
-custom_minimum_size = Vector2(150, 54)
+custom_minimum_size = Vector2(176, 62)
 layout_mode = 2
 theme_override_styles/panel = SubResource("RewardChipStyle")
 
@@ -949,7 +960,7 @@ theme_override_constants/separation = 4
 alignment = 1
 
 [node name="Icon" type="TextureRect" parent="ResultOverlay/Card/Content/ResultRewardValues/GemReward/Content"]
-custom_minimum_size = Vector2(32, 32)
+custom_minimum_size = Vector2(36, 36)
 layout_mode = 2
 expand_mode = 1
 stretch_mode = 5
@@ -957,7 +968,7 @@ stretch_mode = 5
 [node name="Value" type="Label" parent="ResultOverlay/Card/Content/ResultRewardValues/GemReward/Content"]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.957, 0.851, 0.584, 1)
-theme_override_font_sizes/font_size = 20
+theme_override_font_sizes/font_size = 22
 text = "+1"
 
 [node name="HouseChange" type="Label" parent="ResultOverlay/Card/Content"]
@@ -970,13 +981,13 @@ horizontal_alignment = 1
 autowrap_mode = 2
 
 [node name="ResultProclamation" type="HBoxContainer" parent="ResultOverlay/Card/Content"]
-custom_minimum_size = Vector2(0, 72)
+custom_minimum_size = Vector2(0, 104)
 layout_mode = 2
-theme_override_constants/separation = 10
+theme_override_constants/separation = 14
 alignment = 1
 
 [node name="KeeperCat" type="TextureRect" parent="ResultOverlay/Card/Content/ResultProclamation"]
-custom_minimum_size = Vector2(64, 64)
+custom_minimum_size = Vector2(100, 100)
 layout_mode = 2
 mouse_filter = 2
 expand_mode = 1
@@ -990,13 +1001,13 @@ alignment = 1
 [node name="Kicker" type="Label" parent="ResultOverlay/Card/Content/ResultProclamation/Copy"]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.831, 0.678, 0.439, 1)
-theme_override_font_sizes/font_size = 18
+theme_override_font_sizes/font_size = 20
 text = "THE HOUSE REMEMBERS"
 
 [node name="ResultProclamationCopy" type="Label" parent="ResultOverlay/Card/Content/ResultProclamation/Copy"]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.96, 0.9, 0.83, 1)
-theme_override_font_sizes/font_size = 17
+theme_override_font_sizes/font_size = 19
 text = "A Curio has returned to its place."
 autowrap_mode = 2
 
@@ -1012,7 +1023,7 @@ theme_override_styles/pressed = SubResource("ActionPressed")
 text = "CONTINUE · +3 MOVES · FREE"
 
 [node name="Action" type="Button" parent="ResultOverlay/Card/Content"]
-custom_minimum_size = Vector2(0, 104)
+custom_minimum_size = Vector2(0, 96)
 layout_mode = 2
 theme_override_colors/font_color = Color(0.988, 0.933, 0.831, 1)
 theme_override_colors/font_hover_color = Color(1, 0.97, 0.88, 1)

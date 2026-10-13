@@ -108,7 +108,7 @@ layout_mode = 2
 theme_override_colors/font_color = Color(1, 0.941, 0.847, 1)
 theme_override_colors/font_outline_color = Color(0.02, 0.01, 0.03, 0.96)
 theme_override_constants/outline_size = 5
-theme_override_font_sizes/font_size = 42
+theme_override_font_sizes/font_size = 46
 text = "CURIO"
 horizontal_alignment = 1
 
@@ -120,12 +120,52 @@ text = "THE HOUSE REMEMBERS"
 horizontal_alignment = 1
 
 
+[node name="DormantDisplayFrame" type="Panel" parent="."]
+layout_mode = 1
+anchor_left = 0.17
+anchor_top = 0.275
+anchor_right = 0.45
+anchor_bottom = 0.52
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+theme_override_styles/panel = SubResource("MotifFrame")
+
+[node name="DormantMotif" type="TextureRect" parent="."]
+layout_mode = 1
+anchor_left = 0.21
+anchor_top = 0.315
+anchor_right = 0.41
+anchor_bottom = 0.485
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+expand_mode = 1
+stretch_mode = 5
+modulate = Color(0.34, 0.28, 0.38, 0.62)
+
+[node name="TransformationArrow" type="Label" parent="."]
+layout_mode = 1
+anchor_left = 0.455
+anchor_top = 0.365
+anchor_right = 0.545
+anchor_bottom = 0.445
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_colors/font_color = Color(0.941, 0.808, 0.541, 1)
+theme_override_colors/font_outline_color = Color(0.02, 0.01, 0.03, 0.96)
+theme_override_constants/outline_size = 3
+theme_override_font_sizes/font_size = 38
+text = "→"
+horizontal_alignment = 1
+vertical_alignment = 1
+
 [node name="RecoveredDisplayFrame" type="Panel" parent="."]
 layout_mode = 1
-anchor_left = 0.34
-anchor_top = 0.265
-anchor_right = 0.66
-anchor_bottom = 0.535
+anchor_left = 0.55
+anchor_top = 0.275
+anchor_right = 0.83
+anchor_bottom = 0.52
 grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
@@ -133,10 +173,10 @@ theme_override_styles/panel = SubResource("MotifFrame")
 
 [node name="AwakeningMotif" type="TextureRect" parent="."]
 layout_mode = 1
-anchor_left = 0.385
-anchor_top = 0.305
-anchor_right = 0.615
-anchor_bottom = 0.495
+anchor_left = 0.59
+anchor_top = 0.315
+anchor_right = 0.79
+anchor_bottom = 0.485
 grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
@@ -147,10 +187,10 @@ modulate = Color(1, 0.96, 0.88, 1)
 
 [node name="StateRail" type="PanelContainer" parent="."]
 layout_mode = 1
-anchor_left = 0.18
-anchor_top = 0.56
-anchor_right = 0.82
-anchor_bottom = 0.64
+anchor_left = 0.17
+anchor_top = 0.535
+anchor_right = 0.83
+anchor_bottom = 0.615
 grow_horizontal = 2
 grow_vertical = 2
 theme_override_styles/panel = SubResource("StateRail")
@@ -164,7 +204,7 @@ alignment = 1
 layout_mode = 2
 size_flags_horizontal = 3
 theme_override_colors/font_color = Color(0.72, 0.66, 0.73, 1)
-theme_override_font_sizes/font_size = 17
+theme_override_font_sizes/font_size = 18
 text = "BEFORE · DORMANT"
 horizontal_alignment = 1
 vertical_alignment = 1
@@ -172,7 +212,7 @@ vertical_alignment = 1
 [node name="Arrow" type="Label" parent="StateRail/States"]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.878, 0.714, 0.455, 1)
-theme_override_font_sizes/font_size = 24
+theme_override_font_sizes/font_size = 28
 text = "→"
 horizontal_alignment = 1
 vertical_alignment = 1
@@ -181,17 +221,17 @@ vertical_alignment = 1
 layout_mode = 2
 size_flags_horizontal = 3
 theme_override_colors/font_color = Color(0.965, 0.878, 0.66, 1)
-theme_override_font_sizes/font_size = 17
+theme_override_font_sizes/font_size = 18
 text = "AFTER · AWAKENED"
 horizontal_alignment = 1
 vertical_alignment = 1
 
 [node name="CeremonyCard" type="PanelContainer" parent="."]
 layout_mode = 1
-anchor_left = 0.06
-anchor_top = 0.68
-anchor_right = 0.94
-anchor_bottom = 0.81
+anchor_left = 0.08
+anchor_top = 0.655
+anchor_right = 0.92
+anchor_bottom = 0.82
 grow_horizontal = 2
 grow_vertical = 2
 theme_override_styles/panel = SubResource("Card")
@@ -210,7 +250,7 @@ layout_mode = 2
 theme_override_constants/separation = 12
 
 [node name="RestoredCurioArt" type="TextureRect" parent="CeremonyCard/CeremonyContent/CeremonyRow"]
-custom_minimum_size = Vector2(82, 82)
+custom_minimum_size = Vector2(92, 92)
 layout_mode = 2
 expand_mode = 1
 stretch_mode = 5
@@ -223,12 +263,12 @@ theme_override_constants/separation = 6
 [node name="Body" type="Label" parent="CeremonyCard/CeremonyContent/CeremonyRow/Copy"]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.9, 0.84, 0.88, 1)
-theme_override_font_sizes/font_size = 21
+theme_override_font_sizes/font_size = 22
 text = "A recovered Curio takes its place in the House."
 autowrap_mode = 2
 
 [node name="Continue" type="Button" parent="CeremonyCard/CeremonyContent/CeremonyRow/Copy"]
-custom_minimum_size = Vector2(0, 88)
+custom_minimum_size = Vector2(0, 94)
 layout_mode = 2
 theme_override_colors/font_color = Color(1, 0.941, 0.847, 1)
 theme_override_font_sizes/font_size = 21

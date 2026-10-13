@@ -82,8 +82,13 @@ func _run() -> void:
 
 	var result_action := screen.get_node_or_null("ResultOverlay/Card/Content/Action") as Button
 	var result_objective := screen.get_node_or_null("ResultOverlay/Card/Content/ObjectiveSummary") as Label
-	_expect(result_action != null and result_action.custom_minimum_size.y >= 82.0, "Result CTA scale regressed")
+	var result_celebration := screen.get_node_or_null("ResultOverlay/Card/Content/CelebrationSigils") as Label
+	var result_keeper := screen.get_node_or_null("ResultOverlay/Card/Content/ResultProclamation/KeeperCat") as TextureRect
+	_expect(bool(contract.get("postgame_reward_parity", false)), "Post-game reward hierarchy parity regressed")
+	_expect(result_action != null and result_action.custom_minimum_size.y >= 92.0, "Result CTA scale regressed")
 	_expect(result_objective != null and result_objective.get_theme_stylebox("normal") != null, "Result objective plate regressed")
+	_expect(result_celebration != null and result_celebration.get_theme_font_size("font_size") >= 36 and result_celebration.text.count("✦") == 3, "Result celebration hierarchy regressed")
+	_expect(result_keeper != null and result_keeper.custom_minimum_size.x >= 96.0, "Keeper must remain a visible post-game witness")
 	screen.queue_free()
 	await process_frame
 	_finish()
