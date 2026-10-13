@@ -20,6 +20,7 @@ const RewardRevealFx = preload("res://src/ui/shared/reward_reveal_fx.gd")
 const MoveResolver = preload("res://src/match3/domain/move_resolver.gd")
 const HapticsController = preload("res://src/feedback/haptics_controller.gd")
 const ProductionChrome = preload("res://src/ui/theme/production_chrome.gd")
+const Typography = preload("res://src/ui/theme/typography.gd")
 
 @export var default_level_path := "res://content/levels/ch01/level_001.json"
 @export var default_seed := 1001
@@ -59,6 +60,9 @@ const BOOSTER_ART_PATHS := {
 	"retry": "res://assets/pieces/skull.webp"
 }
 const GAMEPLAY_PAUSE_ICON_PATH := "res://assets/ui/gameplay/pause_gothic_v01.svg"
+const SEALED_BADGE_PATH := "res://assets/ui/gameplay/booster_sealed_badge_v01.svg"
+const REWARD_STAR_PATH := "res://assets/ui/gameplay/reward_star_gothic_v01.svg"
+const OBJECTIVE_FOCUS_FRAME_PATH := "res://assets/ui/gameplay/objective_focus_frame_v01.svg"
 const NORTH_STAR_BOOSTER_ART_PATHS := {
 	"shuffle": "res://assets/ui/gameplay/booster_shuffle_gothic_v01.svg",
 	"hand": "res://assets/ui/gameplay/booster_hand_gothic_v01.svg",
@@ -90,18 +94,26 @@ var _last_cascade_depth: int = 1
 var _last_objective_progress: int = 0
 var _last_objective_delta: int = 0
 var _objective_pulse_tween: Tween
+var _objective_name_tween: Tween
 var _result_transition_kind: String = ""
 var _result_transition_active: bool = false
 var _result_transition_tween: Tween
+var _pause_transition_tween: Tween
+var _gameplay_intro_tween: Tween
+var _result_star_tween: Tween
+var _pause_closing := false
 const LOW_MOVE_WARNING_THRESHOLD := 3
 const LAST_MOVE_THRESHOLD := 1
 
 @onready var world_backdrop: TextureRect = $WorldBackdrop
-@onready var eyebrow_label: Label = $Layout/Eyebrow
+@onready var level_plaque: PanelContainer = $Layout/LevelPlaque
+@onready var eyebrow_label: Label = $Layout/LevelPlaque/Eyebrow
 @onready var title_label: Label = $Layout/Title
 @onready var board_view = $Layout/BoardView
-@onready var objective_icon: TextureRect = $Layout/HUDPlate/HUD/ObjectiveIcon
-@onready var objective_label: Label = $Layout/HUDPlate/HUD/Objective
+@onready var objective_name_label: Label = $Layout/HUDPlate/HUD/ObjectiveSlot/ObjectiveName
+@onready var objective_icon: TextureRect = $Layout/HUDPlate/HUD/ObjectiveSlot/ObjectiveIcon
+@onready var objective_focus_frame: TextureRect = $Layout/HUDPlate/HUD/ObjectiveSlot/ObjectiveIcon/FocusFrame
+@onready var objective_label: Label = $Layout/HUDPlate/HUD/ObjectiveSlot/Objective
 @onready var moves_label: Label = $Layout/HUDPlate/HUD/Moves
 @onready var pause_button: Button = $Layout/HUDPlate/HUD/Pause
 @onready var pause_overlay: Control = $PauseOverlay
@@ -109,6 +121,12 @@ const LAST_MOVE_THRESHOLD := 1
 @onready var pause_retry: Button = $PauseOverlay/Card/Content/Retry
 @onready var pause_settings: Button = $PauseOverlay/Card/Content/Settings
 @onready var pause_exit: Button = $PauseOverlay/Card/Content/Exit
+@onready var pause_frame_art: TextureRect = $PauseOverlay/Card/FrameArt
+@onready var pause_resume_frame: TextureRect = $PauseOverlay/Card/Content/Resume/FrameArt
+@onready var pause_retry_frame: TextureRect = $PauseOverlay/Card/Content/Retry/FrameArt
+@onready var pause_settings_frame: TextureRect = $PauseOverlay/Card/Content/Settings/FrameArt
+@onready var pause_exit_frame: TextureRect = $PauseOverlay/Card/Content/Exit/FrameArt
+@onready var pause_sigil: TextureRect = $PauseOverlay/Card/Content/PauseSigil
 @onready var hint_label: Label = $Layout/Hint
 @onready var awakening_title: Label = $Layout/Awakening/Content/Label
 @onready var awakening_view: Control = $Layout/Awakening/Content/ProgressView
@@ -123,6 +141,8 @@ const LAST_MOVE_THRESHOLD := 1
 @onready var result_ritual: Control = $ResultOverlay/Card/Content/RewardRitual
 @onready var result_recovery_action: Button = $ResultOverlay/Card/Content/RecoveryAction
 @onready var result_action: Button = $ResultOverlay/Card/Content/Action
+@onready var result_recovery_frame: TextureRect = $ResultOverlay/Card/Content/RecoveryAction/FrameArt
+@onready var result_action_frame: TextureRect = $ResultOverlay/Card/Content/Action/FrameArt
 # Compact gameplay resource header keeps level identity inside its authored status plate.
 @onready var _level_badge_label: Label = $ResourceBar/Resources/LevelBadgePlate/LevelBadge
 @onready var _booster_tray: PanelContainer = $BoosterTray
@@ -130,6 +150,9 @@ const LAST_MOVE_THRESHOLD := 1
 @onready var _sealed_boost_a: Button = $BoosterTray/BoosterActions/SealedSlotA/SealedBoostA
 @onready var _sealed_boost_b: Button = $BoosterTray/BoosterActions/SealedSlotB/SealedBoostB
 @onready var _sealed_boost_c: Button = $BoosterTray/BoosterActions/SealedSlotC/SealedBoostC
+@onready var _sealed_badge_a: TextureRect = $BoosterTray/BoosterActions/SealedSlotA/SealedBoostA/SealBadge
+@onready var _sealed_badge_b: TextureRect = $BoosterTray/BoosterActions/SealedSlotB/SealedBoostB/SealBadge
+@onready var _sealed_badge_c: TextureRect = $BoosterTray/BoosterActions/SealedSlotC/SealedBoostC/SealBadge
 @onready var _settings_shortcut: Button = $BoosterTray/BoosterActions/SettingsSlot/SettingsShortcut
 @onready var _resource_coin_label: Label = $ResourceBar/Resources/CoinChip/Content/CoinResource
 @onready var _resource_gem_label: Label = $ResourceBar/Resources/GemChip/Content/GemResource
@@ -140,6 +163,9 @@ const LAST_MOVE_THRESHOLD := 1
 @onready var _result_gem_icon: TextureRect = $ResultOverlay/Card/Content/ResultRewardValues/GemReward/Content/Icon
 @onready var _result_proclamation: Label = $ResultOverlay/Card/Content/ResultProclamation/Copy/ResultProclamationCopy
 @onready var _result_keeper_cat: TextureRect = $ResultOverlay/Card/Content/ResultProclamation/KeeperCat
+@onready var _result_star_a: TextureRect = $ResultOverlay/Card/Content/StarRow/StarA
+@onready var _result_star_b: TextureRect = $ResultOverlay/Card/Content/StarRow/StarB
+@onready var _result_star_c: TextureRect = $ResultOverlay/Card/Content/StarRow/StarC
 
 func _process(delta: float) -> void:
 	if board_state == null or result_overlay.visible or pause_overlay.visible or _pending_terminal_result != "":
@@ -159,27 +185,45 @@ func _current_auto_hint_delay() -> float:
 	return GUIDED_HINT_DELAY_SECONDS if _consecutive_failures >= 3 else AUTO_HINT_DELAY_SECONDS
 
 func _ready() -> void:
-	ProductionChrome.apply_primary($PauseOverlay/Card)
-	ProductionChrome.apply_primary($ResultOverlay/Card)
+	ProductionChrome.apply_gameplay_pause_modal($PauseOverlay/Card)
+	ProductionChrome.apply_gameplay_reward_modal($ResultOverlay/Card)
+	var gameplay_display_font := Typography.display_font()
+	if gameplay_display_font != null:
+		eyebrow_label.add_theme_font_override("font", gameplay_display_font)
 	$ResourceBar.add_theme_stylebox_override("panel", StyleBoxEmpty.new())
 	$ResourceBar.set_meta("production_chrome_kind", "gameplay_resource_cluster")
 	ProductionChrome.apply_compact_panel($ResourceBar/Resources/CoinChip, "gameplay_coin_resource")
 	ProductionChrome.apply_compact_panel($ResourceBar/Resources/GemChip, "gameplay_gem_resource")
 	ProductionChrome.apply_compact_panel($ResourceBar/Resources/LevelBadgePlate, "gameplay_level_badge")
 	ProductionChrome.apply_gameplay_shell($Layout/HUDPlate, "objective")
+	ProductionChrome.apply_gameplay_level_plaque(level_plaque)
 	ProductionChrome.apply_gameplay_booster_tray($BoosterTray)
 	var gameplay_hud := $Layout/HUDPlate/HUD as HBoxContainer
 	if gameplay_hud != null:
 		gameplay_hud.move_child(pause_button, 1)
+	objective_focus_frame.texture = PieceAssetLoader.ornament(OBJECTIVE_FOCUS_FRAME_PATH)
 	pause_button.icon = PieceAssetLoader.ornament(GAMEPLAY_PAUSE_ICON_PATH)
+	pause_sigil.texture = PieceAssetLoader.ornament(String(OBJECTIVE_ART_PATHS["moon"]))
+	# Keep modal actions text-led: the ornamental bevel owns their silhouette.
+	# Leading icons collided with the authored endcaps at target resolution.
+	for pause_action in [pause_resume, pause_retry, pause_settings, pause_exit]:
+		pause_action.icon = null
+		pause_action.expand_icon = false
 	pause_button.set_meta("production_chrome_kind", "gameplay_pause_icon")
 	pause_button.set_meta("production_chrome_asset", GAMEPLAY_PAUSE_ICON_PATH)
-	ProductionChrome.apply_action_button(pause_resume, "primary", "pause_resume")
-	ProductionChrome.apply_action_button(pause_retry, "utility", "pause_retry")
-	ProductionChrome.apply_action_button(pause_settings, "utility", "pause_settings")
-	ProductionChrome.apply_action_button(pause_exit, "utility", "pause_exit")
-	ProductionChrome.apply_action_button(result_recovery_action, "primary", "fail_recovery_plus_three")
-	ProductionChrome.apply_action_button(result_action, "primary", "result_continue_or_retry")
+	ProductionChrome.apply_gameplay_action_button(pause_resume, "primary", "pause_resume")
+	ProductionChrome.apply_gameplay_action_button(pause_retry, "utility", "pause_retry")
+	ProductionChrome.apply_gameplay_action_button(pause_settings, "utility", "pause_settings")
+	ProductionChrome.apply_gameplay_action_button(pause_exit, "utility", "pause_exit")
+	ProductionChrome.apply_gameplay_action_button(result_recovery_action, "primary", "fail_recovery_plus_three")
+	ProductionChrome.apply_gameplay_action_button(result_action, "primary", "result_continue_or_retry")
+	pause_frame_art.texture = PieceAssetLoader.ornament(ProductionChrome.GAMEPLAY_PAUSE_FRAME_PATH)
+	_install_direct_action_frame(pause_resume, pause_resume_frame, ProductionChrome.GAMEPLAY_PRIMARY_ACTION_OVERLAY_PATH)
+	_install_direct_action_frame(pause_retry, pause_retry_frame, ProductionChrome.GAMEPLAY_UTILITY_ACTION_OVERLAY_PATH)
+	_install_direct_action_frame(pause_settings, pause_settings_frame, ProductionChrome.GAMEPLAY_UTILITY_ACTION_OVERLAY_PATH)
+	_install_direct_action_frame(pause_exit, pause_exit_frame, ProductionChrome.GAMEPLAY_UTILITY_ACTION_OVERLAY_PATH)
+	_install_direct_action_frame(result_recovery_action, result_recovery_frame, ProductionChrome.GAMEPLAY_PRIMARY_ACTION_OVERLAY_PATH)
+	_install_direct_action_frame(result_action, result_action_frame, ProductionChrome.GAMEPLAY_PRIMARY_ACTION_OVERLAY_PATH)
 	var board_frame := $Layout/BoardView/OrnateFrame as Panel
 	if board_frame != null:
 		board_frame.add_theme_stylebox_override("panel", StyleBoxEmpty.new())
@@ -195,6 +239,14 @@ func _ready() -> void:
 	_sealed_boost_a.icon = PieceAssetLoader.ornament(String(NORTH_STAR_BOOSTER_ART_PATHS["shuffle"]))
 	_sealed_boost_b.icon = PieceAssetLoader.ornament(String(NORTH_STAR_BOOSTER_ART_PATHS["hand"]))
 	_sealed_boost_c.icon = PieceAssetLoader.ornament(String(NORTH_STAR_BOOSTER_ART_PATHS["magic"]))
+	var sealed_badge_texture := PieceAssetLoader.ornament(SEALED_BADGE_PATH)
+	_sealed_badge_a.texture = sealed_badge_texture
+	_sealed_badge_b.texture = sealed_badge_texture
+	_sealed_badge_c.texture = sealed_badge_texture
+	var reward_star_texture := PieceAssetLoader.ornament(REWARD_STAR_PATH)
+	_result_star_a.texture = reward_star_texture
+	_result_star_b.texture = reward_star_texture
+	_result_star_c.texture = reward_star_texture
 	_settings_shortcut.icon = PieceAssetLoader.ornament("res://assets/ui/ui_settings.svg")
 	_hint_boost_button.pressed.connect(_use_hint_boost)
 	_settings_shortcut.pressed.connect(func(): settings_requested.emit())
@@ -215,10 +267,159 @@ func _ready() -> void:
 	pause_retry.pressed.connect(_on_pause_retry)
 	pause_settings.pressed.connect(func(): settings_requested.emit())
 	pause_exit.pressed.connect(_on_pause_exit)
+	_wire_tactile_button(pause_button, "pause")
+	_wire_tactile_button(pause_resume, "resume")
+	_wire_tactile_button(pause_retry, "restart")
+	_wire_tactile_button(pause_settings, "settings")
+	_wire_tactile_button(pause_exit, "exit")
+	_wire_tactile_button(result_recovery_action, "recovery")
+	_wire_tactile_button(result_action, "continue")
 	pause_overlay.visible = false
 	result_overlay.visible = false
 	if FileAccess.file_exists(default_level_path):
 		load_level_path(default_level_path, default_seed)
+	call_deferred("_play_gameplay_intro")
+
+func _install_direct_action_frame(button: Button, frame_art: TextureRect, asset_path: String) -> void:
+	if button == null or frame_art == null:
+		return
+	frame_art.texture = PieceAssetLoader.ornament(asset_path)
+	if frame_art.texture == null:
+		return
+	button.set_meta("direct_action_frame", asset_path)
+
+func _wire_tactile_button(button: Button, feedback_kind: String) -> void:
+	if button == null:
+		return
+	button.button_down.connect(func(): _press_tactile_button(button, feedback_kind))
+	button.button_up.connect(func(): _release_tactile_button(button))
+	button.mouse_exited.connect(func(): _release_tactile_button(button))
+
+func _press_tactile_button(button: Button, feedback_kind: String) -> void:
+	if button == null or button.disabled:
+		return
+	button.pivot_offset = button.size * 0.5
+	haptics.request_ui()
+	feedback_requested.emit("ui_" + feedback_kind)
+	button.modulate = Color(1.05, 1.02, 1.07, 1.0)
+	var tween := create_tween()
+	tween.set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
+	tween.tween_property(button, "scale", Vector2(0.945, 0.945), 0.065)
+
+func _release_tactile_button(button: Button) -> void:
+	if button == null:
+		return
+	button.pivot_offset = button.size * 0.5
+	var tween := create_tween()
+	tween.set_parallel(true)
+	tween.tween_property(button, "scale", Vector2.ONE, 0.14).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
+	tween.tween_property(button, "modulate", Color.WHITE, 0.12).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
+
+func _play_gameplay_intro() -> void:
+	if _reduced_motion:
+		return
+	if _gameplay_intro_tween != null and _gameplay_intro_tween.is_valid():
+		_gameplay_intro_tween.kill()
+	var reveal_nodes: Array[Control] = [level_plaque, $Layout/HUDPlate, board_view, _booster_tray]
+	_gameplay_intro_tween = create_tween()
+	_gameplay_intro_tween.set_parallel(true)
+	for index in range(reveal_nodes.size()):
+		var node := reveal_nodes[index]
+		if node == null:
+			continue
+		node.pivot_offset = node.size * 0.5
+		node.modulate = Color(1, 1, 1, 0)
+		node.scale = Vector2(0.97, 0.97) if node == board_view else Vector2(0.985, 0.985)
+		var delay := float(index) * 0.045
+		_gameplay_intro_tween.tween_property(node, "modulate", Color.WHITE, 0.20).set_delay(delay)
+		_gameplay_intro_tween.tween_property(node, "scale", Vector2.ONE, 0.28).set_delay(delay).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
+
+func _play_pause_open() -> void:
+	if _pause_transition_tween != null and _pause_transition_tween.is_valid():
+		_pause_transition_tween.kill()
+	var card := pause_overlay.get_node_or_null("Card") as Control
+	var dim := pause_overlay.get_node_or_null("Dim") as CanvasItem
+	if card == null:
+		return
+	card.pivot_offset = card.size * 0.5
+	var rest_position := card.position
+	card.set_meta("pause_rest_position", rest_position)
+	if _reduced_motion:
+		card.scale = Vector2.ONE
+		card.modulate = Color.WHITE
+		if dim != null:
+			dim.modulate = Color.WHITE
+		return
+	card.position = rest_position + Vector2(0, 34)
+	card.scale = Vector2(0.91, 0.91)
+	card.modulate = Color(1, 1, 1, 0)
+	if dim != null:
+		dim.modulate = Color(1, 1, 1, 0)
+	for star in [_result_star_a, _result_star_b, _result_star_c]:
+		if star != null:
+			star.pivot_offset = star.size * 0.5
+			star.scale = Vector2(0.42, 0.42)
+			star.modulate = Color(1.25, 1.12, 0.78, 0)
+	var content := card.get_node_or_null("Content") as Control
+	var reveal_items: Array[CanvasItem] = []
+	if content != null:
+		for child in content.get_children():
+			if child is CanvasItem:
+				(child as CanvasItem).modulate = Color(1, 1, 1, 0)
+				reveal_items.append(child as CanvasItem)
+	_pause_transition_tween = create_tween()
+	_pause_transition_tween.set_parallel(true)
+	if dim != null:
+		_pause_transition_tween.tween_property(dim, "modulate", Color.WHITE, 0.22).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
+	_pause_transition_tween.tween_property(card, "position", rest_position, 0.30).set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_OUT)
+	_pause_transition_tween.tween_property(card, "scale", Vector2.ONE, 0.34).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
+	_pause_transition_tween.tween_property(card, "modulate", Color.WHITE, 0.20)
+	for index in range(reveal_items.size()):
+		_pause_transition_tween.tween_property(reveal_items[index], "modulate", Color.WHITE, 0.15).set_delay(0.08 + float(index) * 0.035)
+
+func _begin_pause_close(after: Callable) -> void:
+	if _pause_closing:
+		return
+	_pause_closing = true
+	pause_overlay.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	if _pause_transition_tween != null and _pause_transition_tween.is_valid():
+		_pause_transition_tween.kill()
+	var card := pause_overlay.get_node_or_null("Card") as Control
+	var dim := pause_overlay.get_node_or_null("Dim") as CanvasItem
+	if card == null or _reduced_motion:
+		_finish_pause_close(after)
+		return
+	var rest_position: Vector2 = card.get_meta("pause_rest_position", card.position)
+	_pause_transition_tween = create_tween()
+	_pause_transition_tween.set_parallel(true)
+	_pause_transition_tween.tween_property(card, "position", rest_position + Vector2(0, 24), 0.16).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_IN)
+	_pause_transition_tween.tween_property(card, "scale", Vector2(0.96, 0.96), 0.16).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_IN)
+	_pause_transition_tween.tween_property(card, "modulate", Color(1, 1, 1, 0), 0.14)
+	if dim != null:
+		_pause_transition_tween.tween_property(dim, "modulate", Color(1, 1, 1, 0), 0.16)
+	_pause_transition_tween.finished.connect(func(): _finish_pause_close(after))
+
+func _finish_pause_close(after: Callable) -> void:
+	pause_overlay.visible = false
+	pause_overlay.mouse_filter = Control.MOUSE_FILTER_STOP
+	_pause_closing = false
+	var card := pause_overlay.get_node_or_null("Card") as Control
+	var dim := pause_overlay.get_node_or_null("Dim") as CanvasItem
+	if card != null:
+		card.scale = Vector2.ONE
+		card.modulate = Color.WHITE
+		card.position = card.get_meta("pause_rest_position", card.position)
+		var content := card.get_node_or_null("Content") as Control
+		if content != null:
+			for child in content.get_children():
+				if child is CanvasItem:
+					(child as CanvasItem).modulate = Color.WHITE
+	if dim != null:
+		dim.modulate = Color.WHITE
+	if _booster_tray != null:
+		_booster_tray.visible = true
+	if after.is_valid():
+		after.call()
 
 func set_player_resources(lives: int, coins: int, gems: int) -> void:
 	_player_lives = clampi(lives, 0, 5)
@@ -289,6 +490,7 @@ func load_level_path(path: String, seed_value: int = 1001) -> bool:
 		board_view.set_visual_profile(art_profile)
 	board_view.set_board(board_state)
 	_configure_teaching_move(parsed)
+	hint_label.visible = false
 	_pending_win = false
 	_pending_terminal_result = ""
 	_pending_hud_refresh = false
@@ -358,36 +560,36 @@ func show_pause() -> bool:
 		return false
 	if board_view.has_method("is_motion_active") and bool(board_view.is_motion_active()):
 		return false
+	_pause_closing = false
 	pause_overlay.visible = true
+	pause_overlay.mouse_filter = Control.MOUSE_FILTER_STOP
 	if _booster_tray != null:
 		_booster_tray.visible = false
+	pause_resume.grab_focus()
+	_play_pause_open()
 	return true
 
 func resume_level() -> bool:
 	if not pause_overlay.visible:
 		return false
-	pause_overlay.visible = false
 	_idle_hint_seconds = 0.0
-	if _booster_tray != null:
-		_booster_tray.visible = true
+	_begin_pause_close(Callable())
 	return true
 
 func _on_pause_retry() -> void:
 	if not pause_overlay.visible:
 		return
-	pause_overlay.visible = false
-	retry_current_level()
+	_begin_pause_close(Callable(self, "retry_current_level"))
 
 func _on_pause_exit() -> void:
 	if not pause_overlay.visible:
 		return
-	pause_overlay.visible = false
-	level_exit_requested.emit()
+	_begin_pause_close(func(): level_exit_requested.emit())
 
 func attempt_swap(from: Vector2i, to: Vector2i):
 	_idle_hint_seconds = 0.0
 	_last_objective_delta = 0
-	if board_state == null or result_overlay.visible or pause_overlay.visible:
+	if board_state == null or result_overlay.visible or (pause_overlay.visible and not _pause_closing):
 		return null
 	if board_view.has_method("is_motion_active") and bool(board_view.is_motion_active()):
 		return null
@@ -566,6 +768,7 @@ func _trace_cascade_depth(trace) -> int:
 func _style_impact_hint(mode: String) -> void:
 	if hint_label == null:
 		return
+	hint_label.visible = true
 	var color := Color("#F4E5D3")
 	var size_px := 28
 	match mode:
@@ -589,10 +792,15 @@ func _style_impact_hint(mode: String) -> void:
 	hint_label.add_theme_font_size_override("font_size", size_px)
 
 func _refresh_hud() -> void:
+	if objective_name_label != null:
+		if _objective_name_tween != null and _objective_name_tween.is_valid():
+			_objective_name_tween.kill()
+		objective_name_label.modulate = Color(1, 1, 1, 0)
 	if objective_icon != null:
 		objective_icon.texture = PieceAssetLoader.ornament(_objective_art_path())
 	if board_state == null:
-		objective_label.text = "AWAKEN\nTHE COLLECTION"
+		objective_name_label.text = "OBJECTIVE"
+		objective_label.text = "— / —"
 		moves_label.text = "—"
 		return
 	_apply_moves_urgency()
@@ -623,15 +831,19 @@ func _refresh_hud() -> void:
 		]
 	if String(board_state.objective_type) == "collect_family":
 		var family_label: String = String(board_state.objective_family).capitalize()
-		objective_label.text = "%s SIGILS\n%d / %d" % [
-			family_label.to_upper(),
+		objective_name_label.text = "%s SIGILS" % family_label.to_upper()
+		objective_label.text = "%d / %d" % [
 			int(board_state.objective_progress),
 			int(board_state.objective_target)
 		]
+		objective_icon.tooltip_text = "%s · collect %d" % [objective_name_label.text.capitalize(), int(board_state.objective_target)]
 	elif String(board_state.objective_type) == "clear_blockers":
-		objective_label.text = "WAX SEAL LAYERS\n%d / %d" % [_objective_progress_value(), _objective_target_value()]
+		objective_name_label.text = "WAX SEAL LAYERS"
+		objective_label.text = "%d / %d" % [_objective_progress_value(), _objective_target_value()]
+		objective_icon.tooltip_text = "Wax seal layers · clear %d" % _objective_target_value()
 	else:
-		objective_label.text = "AWAKEN\nTHE COLLECTION"
+		objective_name_label.text = "OBJECTIVE"
+		objective_label.text = "— / —"
 
 func _objective_art_path() -> String:
 	if board_state != null and String(board_state.objective_type) == "clear_blockers":
@@ -671,13 +883,20 @@ func _present_objective_progress() -> void:
 	var progress := _objective_progress_value()
 	var target := _objective_target_value()
 	var complete := progress >= target
+	objective_label.text = "%d / %d" % [progress, target]
 	if String(board_state.objective_type) == "clear_blockers":
-		objective_label.text = "WAX SEAL LAYERS\n%d / %d · %s" % [progress, target, "OBJECTIVE COMPLETE" if complete else "+%d THIS MOVE" % _last_objective_delta]
+		objective_name_label.text = "OBJECTIVE COMPLETE" if complete else "+%d THIS MOVE" % _last_objective_delta
 	else:
-		var family := String(board_state.objective_family).to_upper()
-		objective_label.text = "%s SIGILS\n%d / %d · %s" % [family, progress, target, "OBJECTIVE COMPLETE" if complete else "+%d THIS MOVE" % _last_objective_delta]
+		objective_name_label.text = "OBJECTIVE COMPLETE" if complete else "+%d THIS MOVE" % _last_objective_delta
 	objective_label.set_meta("objective_feedback_state", "complete" if complete else "progress")
 	objective_label.add_theme_color_override("font_color", Color("#FFFFFF") if _high_contrast else (Color("#F0CE8A") if complete else Color("#E4CDEB")))
+	objective_name_label.modulate = Color.WHITE
+	if _objective_name_tween != null and _objective_name_tween.is_valid():
+		_objective_name_tween.kill()
+	if not _reduced_motion and not complete:
+		_objective_name_tween = create_tween()
+		_objective_name_tween.tween_interval(0.85)
+		_objective_name_tween.tween_property(objective_name_label, "modulate", Color(1, 1, 1, 0), 0.24).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
 	if _objective_pulse_tween != null and _objective_pulse_tween.is_valid():
 		_objective_pulse_tween.kill()
 	objective_label.scale = Vector2.ONE
@@ -734,7 +953,7 @@ func gameplay_feel_contract() -> Dictionary:
 		"objective_progress": _last_objective_progress,
 		"objective_delta": _last_objective_delta,
 		"objective_target": _objective_target_value(),
-		"objective_copy": objective_label.text if objective_label != null else "",
+		"objective_copy": ("%s · %s" % [objective_name_label.text, objective_label.text]) if objective_label != null and objective_name_label != null else "",
 	}
 
 func _show_result_if_terminal(result: String) -> void:
@@ -882,8 +1101,8 @@ func _style_terminal_result(kind: String) -> void:
 	if card == null:
 		return
 	var won := kind == "won"
-	ProductionChrome.apply_primary(card)
-	card.set_meta("production_result_chrome", "verified_primary")
+	ProductionChrome.apply_gameplay_reward_modal(card)
+	card.set_meta("production_result_chrome", "verified_gameplay_reward")
 	var dim := result_overlay.get_node_or_null("Dim") as ColorRect
 	if dim != null:
 		dim.color = Color(0.0314, 0.0235, 0.0353, 0.70 if won else 0.84)
@@ -896,7 +1115,7 @@ func terminal_result_polish_contract() -> Dictionary:
 		"transition": terminal_transition_contract(),
 		"retry_copy": hint_label.text if hint_label != null else "",
 		"distinct_result_material": true,
-		"asset_backed_result_chrome": result_overlay != null and (result_overlay.get_node_or_null("Card") as PanelContainer).get_theme_stylebox("panel") is StyleBoxTexture and String((result_overlay.get_node_or_null("Card") as PanelContainer).get_meta("production_result_chrome", "")) == "verified_primary",
+		"asset_backed_result_chrome": result_overlay != null and (result_overlay.get_node_or_null("Card") as PanelContainer).get_theme_stylebox("panel") is StyleBoxTexture and String((result_overlay.get_node_or_null("Card") as PanelContainer).get_meta("production_result_chrome", "")) == "verified_gameplay_reward",
 		"runtime_result_style_factory": false,
 		"result_dim_alpha": (result_overlay.get_node_or_null("Dim") as ColorRect).color.a if result_overlay != null and result_overlay.get_node_or_null("Dim") != null else 1.0,
 		"failure_gap": _failure_gap_copy() if result_overlay != null and result_overlay.visible and String(terminal_transition_contract().get("kind", "")) == "failed" else "",
@@ -915,6 +1134,8 @@ func _present_result_overlay(kind: String) -> void:
 		_result_transition_active = false
 		return
 	card.pivot_offset = card.size * 0.5
+	var rest_position := card.position
+	card.set_meta("result_rest_position", rest_position)
 	card.scale = Vector2.ONE
 	card.modulate = Color.WHITE
 	if dim != null:
@@ -923,17 +1144,33 @@ func _present_result_overlay(kind: String) -> void:
 		_result_transition_active = false
 		return
 	_result_transition_active = true
-	card.scale = Vector2(0.985, 0.985)
-	card.modulate = Color(1, 1, 1, 0.94)
+	card.position = rest_position + Vector2(0, 42)
+	card.scale = Vector2(0.86, 0.86)
+	card.modulate = Color(1, 1, 1, 0)
 	if dim != null:
-		dim.modulate = Color(1, 1, 1, 0.92)
+		dim.modulate = Color(1, 1, 1, 0)
+	var content := card.get_node_or_null("Content") as Control
+	var reveal_items: Array[CanvasItem] = []
+	if content != null:
+		for child in content.get_children():
+			if child is CanvasItem:
+				(child as CanvasItem).modulate = Color(1, 1, 1, 0)
+				reveal_items.append(child as CanvasItem)
 	_result_transition_tween = create_tween()
 	_result_transition_tween.set_parallel(true)
-	_result_transition_tween.set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
-	_result_transition_tween.tween_property(card, "scale", Vector2.ONE, 0.18)
-	_result_transition_tween.tween_property(card, "modulate", Color.WHITE, 0.18)
 	if dim != null:
-		_result_transition_tween.tween_property(dim, "modulate", Color.WHITE, 0.18)
+		_result_transition_tween.tween_property(dim, "modulate", Color.WHITE, 0.24).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
+	_result_transition_tween.tween_property(card, "position", rest_position, 0.36).set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_OUT)
+	_result_transition_tween.tween_property(card, "scale", Vector2.ONE, 0.42).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
+	_result_transition_tween.tween_property(card, "modulate", Color.WHITE, 0.22)
+	for index in range(reveal_items.size()):
+		_result_transition_tween.tween_property(reveal_items[index], "modulate", Color.WHITE, 0.17).set_delay(0.07 + float(index) * 0.032)
+	for index in range(3):
+		var star: TextureRect = [_result_star_a, _result_star_b, _result_star_c][index]
+		if star == null:
+			continue
+		_result_transition_tween.tween_property(star, "modulate", Color.WHITE, 0.20).set_delay(0.16 + float(index) * 0.10)
+		_result_transition_tween.tween_property(star, "scale", Vector2.ONE, 0.34).set_delay(0.16 + float(index) * 0.10).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
 	_result_transition_tween.finished.connect(func(): _result_transition_active = false)
 
 func _reset_terminal_transition() -> void:
@@ -947,6 +1184,12 @@ func _reset_terminal_transition() -> void:
 		if card != null:
 			card.scale = Vector2.ONE
 			card.modulate = Color.WHITE
+			card.position = card.get_meta("result_rest_position", card.position)
+			var content := card.get_node_or_null("Content") as Control
+			if content != null:
+				for child in content.get_children():
+					if child is CanvasItem:
+						(child as CanvasItem).modulate = Color.WHITE
 		if dim != null:
 			dim.modulate = Color.WHITE
 
@@ -1044,13 +1287,16 @@ func gameplay_presentation_contract() -> Dictionary:
 	var magic_label := $BoosterTray/BoosterActions/SealedSlotC/Label as Label
 	var board_contract: Dictionary = board_view.frame_contract() if board_view != null and board_view.has_method("frame_contract") else {}
 	var canonical_booster_names: bool = (
-		shuffle_label.text == "SHUFFLE"
-		and hand_label.text == "HAND"
-		and magic_label.text == "MAGIC"
+		_sealed_boost_a.text == "SHUFFLE"
+		and _sealed_boost_b.text == "HAND"
+		and _sealed_boost_c.text == "MAGIC"
 	)
+	var settings_slot := $BoosterTray/BoosterActions/SettingsSlot as VBoxContainer
 	var utilities_separated: bool = (
 		not $BoosterTray/BoosterActions/HintSlot.visible
-		and not $BoosterTray/BoosterActions/SettingsSlot.visible
+		and settings_slot.visible
+		and settings_slot.custom_minimum_size.x < ($BoosterTray/BoosterActions/SealedSlotA as VBoxContainer).custom_minimum_size.x
+		and _settings_shortcut.custom_minimum_size.x <= 80.0
 	)
 	var hierarchy_locked: bool = (
 		not title_label.visible
@@ -1063,13 +1309,14 @@ func gameplay_presentation_contract() -> Dictionary:
 	)
 	var integrated_hud_surface: bool = (
 		not objective_label.has_theme_stylebox_override("normal")
-		and objective_label.text.contains("\n")
-		and not objective_label.text.begins_with("TARGET\n")
+		and objective_label.text.contains("/")
+		and objective_name_label != null
+		and objective_name_label.text != ""
 		and moves_label.get_theme_stylebox("normal") != null
 	)
 	var hint_readable: bool = (
-		hint_label.custom_minimum_size.y >= 54.0
-		and hint_label.get_theme_font_size("font_size") >= 28
+		hint_label.custom_minimum_size.y >= 52.0
+		and hint_label.get_theme_font_size("font_size") >= 26
 	)
 	var booster_family_locked: bool = (
 		$BoosterTray/BoosterActions/SealedSlotA.visible
@@ -1082,10 +1329,11 @@ func gameplay_presentation_contract() -> Dictionary:
 	)
 	var composition_locked: bool = (
 		_booster_tray != null
-		and is_equal_approx(_booster_tray.anchor_top, 0.8)
-		and (_booster_tray.offset_bottom - _booster_tray.offset_top) >= 216.0
+		and is_equal_approx(_booster_tray.anchor_top, 0.775)
+		and (_booster_tray.offset_bottom - _booster_tray.offset_top) >= 210.0
+		and (_booster_tray.offset_bottom - _booster_tray.offset_top) <= 230.0
 		and hint_label != null
-		and _booster_tray.global_position.y >= hint_label.global_position.y + hint_label.size.y + 32.0
+		and (not hint_label.visible or _booster_tray.global_position.y >= hint_label.global_position.y + hint_label.size.y + 10.0)
 	)
 	var board_locked: bool = (
 		bool(board_contract.get("asset_loaded", false))
@@ -1102,25 +1350,30 @@ func gameplay_presentation_contract() -> Dictionary:
 		and PieceAssetLoader.ornament(String(NORTH_STAR_BOOSTER_ART_PATHS["magic"])) != null
 	)
 	var gothic_board_material: bool = String(board_contract.get("frame_revision", "")) == "gothic_corner_v3" and float(board_contract.get("corner_preservation_margin", 0.0)) >= 72.0
+	var objective_slot := $Layout/HUDPlate/HUD/ObjectiveSlot as VBoxContainer
 	var objective_spacing_locked: bool = (
-		objective_label.size.x >= get_viewport().get_visible_rect().size.x * 0.36
-		and objective_label.global_position.x >= objective_icon.global_position.x + objective_icon.size.x + 6.0
-		and objective_label.horizontal_alignment == HORIZONTAL_ALIGNMENT_LEFT
+		objective_slot != null
+		and objective_slot.custom_minimum_size.x >= 160.0
+		and objective_icon.custom_minimum_size.y >= 88.0
+		and objective_label.horizontal_alignment == HORIZONTAL_ALIGNMENT_CENTER
+		and objective_label.global_position.y >= objective_icon.global_position.y + objective_icon.size.y - 8.0
 	)
 	var compact_header_locked: bool = (
 		not title_label.visible
+		and level_plaque != null
+		and level_plaque.custom_minimum_size.x >= 580.0
 		and eyebrow_label.text.begins_with("LEVEL ")
+		and eyebrow_label.get_theme_font_size("font_size") >= 40
 		and not eyebrow_label.text.contains("·")
 		and pause_button.global_position.x < objective_icon.global_position.x
 		and moves_label.global_position.x > objective_label.global_position.x
 	)
 	var compact_geometry_locked: bool = (
-		is_equal_approx(_booster_tray.anchor_left, 0.08)
-		and is_equal_approx(_booster_tray.anchor_right, 0.92)
+		is_equal_approx(_booster_tray.anchor_left, 0.045)
+		and is_equal_approx(_booster_tray.anchor_right, 0.955)
+		and is_equal_approx(_booster_tray.anchor_top, 0.775)
 		and ($Layout/BoardView as Control).custom_minimum_size.y >= 1020.0
 		and ($Layout/BoardView as Control).custom_minimum_size.y <= 1080.0
-		and hint_label.custom_minimum_size.x >= 680.0
-		and hint_label.custom_minimum_size.x <= 740.0
 	)
 	var viewport_size := get_viewport().get_visible_rect().size
 	var hud_rect := ($Layout/HUDPlate as Control).get_global_rect()
@@ -1167,7 +1420,7 @@ func gameplay_presentation_contract() -> Dictionary:
 		"asset_backed_resource_chips": [$ResourceBar/Resources/CoinChip, $ResourceBar/Resources/GemChip, $ResourceBar/Resources/LevelBadgePlate].all(func(panel): return panel is PanelContainer and (panel as PanelContainer).get_theme_stylebox("panel") is StyleBoxTexture),
 		"level_badge_separated": ($ResourceBar/Resources/ResourceSpacer as Control).size_flags_horizontal == Control.SIZE_EXPAND_FILL,
 		"hint_booster_clearance": composition_locked,
-		"booster_label_readability": shuffle_label.custom_minimum_size.y >= 40.0 and hand_label.custom_minimum_size.y >= 40.0 and magic_label.custom_minimum_size.y >= 40.0 and shuffle_label.get_theme_font_size("font_size") >= 26,
+		"booster_label_readability": canonical_booster_names and _sealed_boost_a.tooltip_text != "" and _sealed_boost_b.tooltip_text != "" and _sealed_boost_c.tooltip_text != "",
 		"north_star_booster_family": canonical_booster_names,
 		"booster_frame_family": String(_booster_tray.get_meta("production_chrome_kind", "")) == "gameplay_booster_tray",
 		"utility_separated_from_boosters": utilities_separated,
@@ -1179,8 +1432,8 @@ func gameplay_presentation_contract() -> Dictionary:
 		"north_star_header_depth": header_depth_locked,
 		"integrated_hint_surface": integrated_hint_surface,
 		"integrated_hud_surface": integrated_hud_surface,
-		"final_hint_readability": hint_readable and hint_label.size_flags_horizontal == Control.SIZE_SHRINK_CENTER and hint_label.custom_minimum_size.x >= 680.0 and hint_label.custom_minimum_size.x <= 740.0,
-		"final_booster_readability": booster_family_locked and shuffle_label.get_theme_font_size("font_size") >= 26,
+		"final_hint_readability": hint_readable and hint_label.size_flags_horizontal == Control.SIZE_SHRINK_CENTER,
+		"final_booster_readability": booster_family_locked and canonical_booster_names,
 		"visual_parity_gate_v2": hierarchy_locked and booster_family_locked and composition_locked and board_locked and utilities_separated and String(_booster_tray.get_meta("production_chrome_kind", "")) == "gameplay_booster_tray",
 		"visual_parity_gate_v3": hierarchy_locked and integrated_hud_surface and hint_readable and booster_family_locked and composition_locked and board_locked and utilities_separated,
 		"visual_parity_gate_v4": hierarchy_locked and integrated_hud_surface and hint_readable and booster_family_locked and composition_locked and board_locked and utilities_separated and north_star_gameplay_hud_frame and $ResourceBar.get_theme_stylebox("panel") is StyleBoxEmpty and String(_booster_tray.get_meta("production_chrome_kind", "")) == "gameplay_booster_tray",
@@ -1206,8 +1459,9 @@ func gameplay_presentation_contract() -> Dictionary:
 		"north_star_result_hierarchy": result_title != null and result_title.get_theme_font_size("font_size") >= 46 and result_objective_summary != null and result_objective_summary.get_theme_stylebox("normal") != null,
 		"north_star_result_cta": result_action != null and result_action.custom_minimum_size.y >= 82.0 and result_action.get_theme_stylebox("normal") != null,
 		"asset_backed_result_chrome": ($ResultOverlay/Card as PanelContainer).get_theme_stylebox("panel") is StyleBoxTexture,
-		"result_hero_scale": result_ritual != null and result_ritual.custom_minimum_size.y >= 270.0,
-		"result_frame_clearance": ($ResultOverlay/Card/Content/ResultTopPad as Control).custom_minimum_size.y >= 20.0,
+		"result_hero_scale": result_ritual != null and result_ritual.custom_minimum_size.y >= 180.0 and _result_star_a != null and _result_star_b != null and _result_star_c != null,
+		"result_frame_clearance": ($ResultOverlay/Card/Content/ResultTopPad as Control).custom_minimum_size.y >= 12.0,
+		"gameplay_reward_chrome": String(($ResultOverlay/Card as PanelContainer).get_meta("production_chrome_kind", "")) == "gameplay_reward_modal",
 		"win_copy_compact": result_detail != null and result_house_change != null,
 		"runtime_shell_factory": false,
 		"transient_vfx_runtime_allowed": true,
@@ -1256,6 +1510,7 @@ func _use_hint_boost() -> void:
 	var move: Dictionary = MoveFinder.first_legal_move(board_state)
 	if move.is_empty():
 		hint_label.text = "THE KEEPER SEES NO PATH · THE HOUSE IS RESHAPING THE SIGILS"
+		_style_impact_hint("normal")
 		return
 	_present_keeper_hint(move, true, false)
 
@@ -1271,6 +1526,7 @@ func _present_keeper_hint(move: Dictionary, manual: bool, guided: bool) -> void:
 		hint_label.text = "KEEPER HINT · FOLLOW THE MARKED PAIR"
 	else:
 		hint_label.text = "THE KEEPER NOTICES A PATH · FOLLOW THE MOONLIT PAIR"
+	_style_impact_hint("normal")
 	feedback_requested.emit("match")
 
 func keeper_familiar_contract() -> Dictionary:

@@ -870,7 +870,7 @@ func _motion_piece_in_flight(pos: Vector2i) -> bool:
 func _draw_cell(rect: Rect2, pos: Vector2i) -> void:
 	var radius := rect.size.x * 0.18
 	draw_style_box(_cell_box(radius), rect)
-	var inset := rect.grow(-rect.size.x * 0.045)
+	var inset := rect.grow(-rect.size.x * 0.02)
 	if _tracking and pos == _pressed_cell and not _motion_active:
 		inset = _piece_rect(_cell_center(pos), 1.04)
 	var family: String = String(board_state.get_cell(pos))
@@ -900,8 +900,8 @@ func _cell_box(radius: float) -> StyleBoxFlat:
 	elif _visual_profile == "thornlight_arrangement":
 		fill = Color("#160D14", 0.60)
 	box.bg_color = fill
-	box.border_color = Color(GOLD, 0.22) if _high_contrast else Color(0, 0, 0, 0)
-	box.set_border_width_all(1 if _high_contrast else 0)
+	box.border_color = Color(GOLD, 0.28) if _high_contrast else Color("#76517D", 0.16)
+	box.set_border_width_all(1)
 	box.set_corner_radius_all(int(maxf(5.0, radius * 0.28)))
 	box.shadow_color = Color(0, 0, 0, 0.24)
 	box.shadow_size = 2
@@ -912,20 +912,23 @@ func _draw_piece(rect: Rect2, family: String, descriptor: Dictionary) -> void:
 		return
 	var texture := PieceAssetLoader.texture_for_profile(_visual_profile, family)
 	if texture != null:
-		var render_scale := 0.96
+		var render_scale := 1.08
 		match family:
 			"skull":
-				render_scale = 0.86
+				render_scale = 1.00
 			"key":
-				render_scale = 0.90
+				render_scale = 1.04
 			"candle":
-				render_scale = 0.92
+				render_scale = 1.05
 			"cat":
-				render_scale = 0.93
+				render_scale = 1.05
 			"moth":
-				render_scale = 0.95
+				render_scale = 1.07
 			_:
-				render_scale = 0.96
+				render_scale = 1.08
+		var glow := Color(descriptor.get("color", GOLD))
+		glow.a = 0.10 if not _high_contrast else 0.16
+		draw_circle(rect.get_center(), minf(rect.size.x, rect.size.y) * 0.40, glow)
 		var asset_size := rect.size * render_scale
 		var asset_rect := Rect2(rect.get_center() - asset_size * 0.5, asset_size)
 		draw_texture_rect(texture, asset_rect, false)

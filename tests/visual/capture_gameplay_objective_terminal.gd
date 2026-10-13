@@ -29,9 +29,11 @@ func _capture() -> void:
 		return _fail(screen, "Level 3 terminal move failed")
 	if board_view.is_motion_active():
 		await board_view.trace_motion_finished
-	await create_timer(0.30).timeout
-	await _frames(2)
+	var settle_deadline := Time.get_ticks_msec() + 1600
 	var transition: Dictionary = screen.terminal_transition_contract()
+	while bool(transition.get("active", true)) and Time.get_ticks_msec() < settle_deadline:
+		await process_frame
+		transition = screen.terminal_transition_contract()
 	if String(transition.get("kind", "")) != "won" or bool(transition.get("active", true)):
 		return _fail(screen, "win transition did not settle")
 	if not await _save(screen, "gameplay-win-terminal-settled.png"):
