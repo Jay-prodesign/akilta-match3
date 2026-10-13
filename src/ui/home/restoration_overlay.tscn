@@ -1,8 +1,7 @@
-[gd_scene load_steps=7 format=3]
+[gd_scene load_steps=6 format=3]
 
 [ext_resource type="Script" path="res://src/ui/home/restoration_overlay.gd" id="1_restoration"]
 
-[ext_resource type="StyleBox" path="res://src/ui/theme/primary_panel_frame.tres" id="2_prod_frame"]
 
 [sub_resource type="StyleBoxFlat" id="Card"]
 bg_color = Color(0.035, 0.024, 0.045, 0.92)
@@ -195,7 +194,7 @@ anchor_right = 0.94
 anchor_bottom = 0.81
 grow_horizontal = 2
 grow_vertical = 2
-theme_override_styles/panel = ExtResource("2_prod_frame")
+theme_override_styles/panel = SubResource("Card")
 
 [node name="CeremonyContent" type="VBoxContainer" parent="CeremonyCard"]
 layout_mode = 2

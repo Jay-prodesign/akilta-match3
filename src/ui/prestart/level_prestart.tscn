@@ -1,9 +1,8 @@
-[gd_scene load_steps=12 format=3]
+[gd_scene load_steps=11 format=3]
 
 [ext_resource type="Script" path="res://src/ui/prestart/level_prestart.gd" id="1_pre"]
 [ext_resource type="Script" path="res://src/ui/shared/moon_cameo_ritual_view.gd" id="2_cameo"]
 
-[ext_resource type="StyleBox" path="res://src/ui/theme/primary_panel_frame.tres" id="3_prod_frame"]
 
 [sub_resource type="StyleBoxFlat" id="Card"]
 bg_color = Color(0.020, 0.014, 0.030, 0.975)
@@ -161,7 +160,7 @@ custom_minimum_size = Vector2(900, 0)
 layout_mode = 2
 size_flags_horizontal = 4
 size_flags_vertical = 0
-theme_override_styles/panel = ExtResource("3_prod_frame")
+theme_override_styles/panel = SubResource("Card")
 
 [node name="Content" type="VBoxContainer" parent="Layout/Card"]
 layout_mode = 2
