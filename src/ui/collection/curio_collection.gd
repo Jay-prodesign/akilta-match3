@@ -19,6 +19,7 @@ var _moon_textures: Dictionary = {}
 
 @onready var backdrop: TextureRect = $ReliquaryMoonlitBackdrop
 @onready var count_label: Label = $Layout/Count
+@onready var cabinet_footer: Label = $Layout/CabinetFooter
 @onready var moon_card: PanelContainer = $Layout/Cards/MoonCard
 @onready var moon_art: TextureRect = $Layout/Cards/MoonCard/Content/RitualArt
 @onready var moon_state: Label = $Layout/Cards/MoonCard/Content/Copy/State
@@ -61,6 +62,7 @@ func _refresh() -> void:
 		return
 	var curios: Array = progress.curios if progress != null else []
 	count_label.text = "FIRST CABINET SET · %d / 3 AWAKENED" % curios.size()
+	cabinet_footer.text = "OPENING CABINET COMPLETE · 3 / 3 CURIOS RECOVERED" if curios.size() >= 3 else "OPENING CABINET · %d / 3 CURIOS RECOVERED" % curios.size()
 
 	var has_moon := curios.has("moon_cameo")
 	moon_state.text = "AWAKENED · RELIC 01" if has_moon else "DORMANT · RELIC 01"
@@ -146,7 +148,8 @@ func curio_asset_contract() -> Dictionary:
 		"north_star_title_hierarchy": ($Layout/Title as Label).get_theme_font_size("font_size") >= 50,
 		"north_star_count_plate": count_label != null and count_label.get_theme_stylebox("normal") != null and count_label.custom_minimum_size.y >= 50.0,
 		"hero_curio_scale": moon_art != null and moon_art.custom_minimum_size.y >= 210.0,
-		"compact_collection_cards": ($Layout/Cards as HBoxContainer).custom_minimum_size.y <= 440.0 and ($Layout/Cards as HBoxContainer).size_flags_vertical != Control.SIZE_EXPAND_FILL and moon_card.custom_minimum_size.y <= 440.0 and slot2_card.custom_minimum_size.y <= 440.0 and slot3_card.custom_minimum_size.y <= 440.0,
+		"collection_occupies_cabinet_stage": ($Layout/Cards as HBoxContainer).custom_minimum_size.y >= 600.0 and ($Layout/Cards as HBoxContainer).size_flags_vertical == Control.SIZE_EXPAND_FILL and moon_card.custom_minimum_size.y >= 600.0 and slot2_card.custom_minimum_size.y >= 600.0 and slot3_card.custom_minimum_size.y >= 600.0,
+		"cabinet_footer": cabinet_footer != null and cabinet_footer.get_theme_stylebox("normal") != null,
 		"north_star_collection_grid": ($Layout/Cards as HBoxContainer) != null and moon_card.size_flags_horizontal == Control.SIZE_EXPAND_FILL and slot2_card.size_flags_horizontal == Control.SIZE_EXPAND_FILL and slot3_card.size_flags_horizontal == Control.SIZE_EXPAND_FILL,
 		"collection_copy_subordinate": not moon_detail.visible and not moon_origin.visible and not slot2_hint.visible and not slot2_origin.visible and not slot3_hint.visible and not slot3_origin.visible,
 		"intro_subordinate": ($Layout/Intro as Label) != null and not ($Layout/Intro as Label).visible,
