@@ -54,7 +54,7 @@ const KEEPER_ART_PATH := "res://assets/pieces/black_cat.webp"
 const AUTO_HINT_DELAY_SECONDS := 9.0
 const GUIDED_HINT_DELAY_SECONDS := 4.0
 const BOOSTER_ART_PATHS := {
-	"hint": "res://assets/ui/gameplay/booster_hint_swirl_gothic_v01.svg",
+	"hint": "res://assets/ui/gameplay/booster_hint_swirl_gothic_v01.webp",
 	"plus_moves": "res://assets/pieces/potion.webp",
 	"retry": "res://assets/pieces/skull.webp"
 }
