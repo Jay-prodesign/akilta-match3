@@ -45,7 +45,7 @@ func _capture() -> void:
 	var board_view = gameplay.get_node_or_null("Layout/BoardView")
 	if board_view != null and board_view.is_motion_active():
 		await board_view.trace_motion_finished
-	await _frames(2)
+	await _wait_result_settled(gameplay)
 	if not gameplay.result_overlay.visible:
 		return _fail(app, "failure overlay missing")
 	var booster_tray: PanelContainer = gameplay.get_node_or_null("BoosterTray") as PanelContainer
@@ -139,6 +139,14 @@ func _find_failing_move(level_data: Dictionary) -> Dictionary:
 				if trace.accepted and String(trace.result) == "failed":
 					return {"from": from, "to": to}
 	return {}
+
+func _wait_result_settled(gameplay, max_frames := 72) -> void:
+	for _i in range(max_frames):
+		if gameplay != null and gameplay.result_overlay.visible:
+			var transition: Dictionary = gameplay.terminal_transition_contract() if gameplay.has_method("terminal_transition_contract") else {}
+			if not bool(transition.get("active", false)):
+				return
+		await process_frame
 
 func _frames(count: int) -> void:
 	for _i in range(count):
