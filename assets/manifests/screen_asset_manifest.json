@@ -210,30 +210,6 @@
       "current_path": "assets/ui/nav_shop.svg"
     },
     {
-      "asset_id": "gbl_currency_life",
-      "screen": [
-        "global"
-      ],
-      "block": "global_header",
-      "slot": "life_icon",
-      "state": [
-        "normal",
-        "low",
-        "full"
-      ],
-      "type": "functional_icon",
-      "dimensions": "128x128_svg",
-      "aspect_ratio": "1:1",
-      "transparent": true,
-      "variants": [
-        "runtime_value"
-      ],
-      "reuse": "global",
-      "priority": "P0",
-      "production_status": "candidate",
-      "current_path": "assets/ui/ui_heart.svg"
-    },
-    {
       "asset_id": "gbl_currency_coin",
       "screen": [
         "global"
@@ -2316,5 +2292,8 @@
       "S05 -> world -> gameplay_environment -> background -> chapter01"
     ],
     "bulk_art_authorized": false
+  },
+  "product_truth": {
+    "life_economy": "NO_GLOBAL_LIFE_ASSET_BOUND"
   }
 }
