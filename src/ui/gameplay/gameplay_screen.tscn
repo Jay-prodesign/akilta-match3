@@ -1,8 +1,7 @@
-[gd_scene load_steps=23 format=3]
+[gd_scene load_steps=22 format=3]
 
 [ext_resource type="Script" path="res://src/ui/gameplay/gameplay_screen.gd" id="1_game"]
 [ext_resource type="Script" path="res://src/match3/presentation/board_view.gd" id="2_board"]
-[ext_resource type="FontFile" path="res://assets/fonts/CormorantGaramond-Variable.ttf" id="8_display"]
 
 [ext_resource type="Script" path="res://src/ui/shared/moon_cameo_ritual_view.gd" id="9_cameo"]
 [ext_resource type="Script" path="res://src/ui/gameplay/awakening_progress_view.gd" id="10_progress"]
@@ -392,7 +391,6 @@ theme_override_colors/font_outline_color = Color(0.03, 0.012, 0.04, 1)
 theme_override_colors/font_shadow_color = Color(0, 0, 0, 0.9)
 theme_override_constants/shadow_offset_y = 2
 theme_override_constants/outline_size = 3
-theme_override_fonts/font = ExtResource("8_display")
 theme_override_font_sizes/font_size = 58
 text = "LEVEL 1"
 horizontal_alignment = 1
