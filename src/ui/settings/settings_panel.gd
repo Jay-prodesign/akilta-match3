@@ -31,6 +31,7 @@ const ProductionChrome = preload("res://src/ui/theme/production_chrome.gd")
 @onready var close_button: Button = $Card/Content/Close
 @onready var saved_note: Label = $Card/Content/SavedNote
 @onready var house_sigil: TextureRect = $Card/Content/HouseSigil
+@onready var footer_rose: TextureRect = $Card/Content/FooterRose
 @onready var world_art: TextureRect = $WorldArt
 
 var settings
@@ -41,6 +42,7 @@ var _entrance_tween: Tween
 func _ready() -> void:
 	world_art.texture = ScreenArt.texture("settings_bg_curio_house")
 	house_sigil.texture = PieceAssetLoader.ornament("res://assets/pieces/moon_sigil.webp")
+	footer_rose.texture = PieceAssetLoader.ornament("res://assets/pieces/thorn_rose.webp")
 	_style_settings_overlay()
 	_wire_tactile_controls()
 	_play_entrance()
@@ -224,7 +226,8 @@ func settings_authored_contract() -> Dictionary:
 		"production_return_chrome": close_button.get_theme_stylebox("normal") is StyleBoxTexture and String(close_button.get_meta("production_chrome_kind", "")) == "action_primary_settings_return",
 		"settings_ritual_list": ritual_list,
 		"house_sigil_hero_scale": sigil_stage,
+		"footer_rose_ornament": footer_rose != null and footer_rose.texture != null and footer_rose.custom_minimum_size.y >= 100.0,
 		"world_art_not_overdimmed": world_visible,
 		"tall_destination_surface": destination_surface,
-		"visual_parity_gate_v3": title_hierarchy and touch_targets and ritual_list and sigil_stage and world_visible and destination_surface,
+		"visual_parity_gate_v3": title_hierarchy and touch_targets and ritual_list and sigil_stage and footer_rose != null and footer_rose.texture != null and world_visible and destination_surface,
 	}
