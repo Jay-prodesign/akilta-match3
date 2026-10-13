@@ -384,12 +384,12 @@ grow_vertical = 2
 theme_override_constants/separation = 8
 
 [node name="Eyebrow" type="Label" parent="Layout"]
-custom_minimum_size = Vector2(0, 40)
+custom_minimum_size = Vector2(0, 44)
 layout_mode = 2
 theme_override_colors/font_color = Color(0.98, 0.90, 0.72, 1)
 theme_override_colors/font_outline_color = Color(0.02, 0.015, 0.025, 0.98)
-theme_override_constants/outline_size = 6
-theme_override_font_sizes/font_size = 32
+theme_override_constants/outline_size = 7
+theme_override_font_sizes/font_size = 36
 text = "LEVEL 1"
 horizontal_alignment = 1
 
@@ -487,13 +487,15 @@ mouse_filter = 2
 theme_override_styles/panel = SubResource("BoardFrameStyle")
 
 [node name="Hint" type="Label" parent="Layout"]
-custom_minimum_size = Vector2(720, 56)
+custom_minimum_size = Vector2(720, 62)
 layout_mode = 2
 size_flags_horizontal = 4
 theme_override_colors/font_color = Color(0.965, 0.89, 0.72, 1)
 theme_override_colors/font_outline_color = Color(0.02, 0.015, 0.025, 0.98)
-theme_override_constants/outline_size = 6
-theme_override_font_sizes/font_size = 28
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 0.85)
+theme_override_constants/shadow_offset_y = 3
+theme_override_constants/outline_size = 7
+theme_override_font_sizes/font_size = 30
 theme_override_styles/normal = SubResource("HintBand")
 text = "Slide the moon sigil right. Wake the cabinet in one luminous move."
 horizontal_alignment = 1
@@ -538,14 +540,14 @@ anchor_top = 0.8
 anchor_right = 0.92
 anchor_bottom = 0.8
 offset_top = 0.0
-offset_bottom = 220.0
+offset_bottom = 228.0
 grow_horizontal = 2
 z_index = 18
 theme_override_styles/panel = SubResource("BoosterTrayStyle")
 
 [node name="BoosterActions" type="HBoxContainer" parent="BoosterTray"]
 layout_mode = 2
-theme_override_constants/separation = 24
+theme_override_constants/separation = 30
 alignment = 1
 
 [node name="HintSlot" type="VBoxContainer" parent="BoosterTray/BoosterActions"]
@@ -582,14 +584,14 @@ horizontal_alignment = 1
 vertical_alignment = 1
 
 [node name="SealedSlotA" type="VBoxContainer" parent="BoosterTray/BoosterActions"]
-custom_minimum_size = Vector2(150, 168)
+custom_minimum_size = Vector2(154, 174)
 layout_mode = 2
 size_flags_vertical = 4
 theme_override_constants/separation = 4
 alignment = 1
 
 [node name="SealedBoostA" type="Button" parent="BoosterTray/BoosterActions/SealedSlotA"]
-custom_minimum_size = Vector2(110, 110)
+custom_minimum_size = Vector2(116, 116)
 layout_mode = 2
 size_flags_horizontal = 4
 disabled = true
@@ -600,7 +602,7 @@ theme_override_font_sizes/font_size = 1
 theme_override_styles/disabled = SubResource("BoosterSealedStyle")
 text = "SHUFFLE"
 expand_icon = true
-theme_override_constants/icon_max_width = 86
+theme_override_constants/icon_max_width = 92
 tooltip_text = "Shuffle booster · sealed until its gameplay entitlement is implemented"
 
 [node name="Label" type="Label" parent="BoosterTray/BoosterActions/SealedSlotA"]
@@ -609,20 +611,20 @@ layout_mode = 2
 theme_override_colors/font_color = Color(0.965, 0.87, 0.69, 1)
 theme_override_colors/font_outline_color = Color(0.02, 0.014, 0.028, 0.98)
 theme_override_constants/outline_size = 5
-theme_override_font_sizes/font_size = 26
+theme_override_font_sizes/font_size = 28
 text = "SHUFFLE"
 horizontal_alignment = 1
 vertical_alignment = 1
 
 [node name="SealedSlotB" type="VBoxContainer" parent="BoosterTray/BoosterActions"]
-custom_minimum_size = Vector2(150, 168)
+custom_minimum_size = Vector2(154, 174)
 layout_mode = 2
 size_flags_vertical = 4
 theme_override_constants/separation = 4
 alignment = 1
 
 [node name="SealedBoostB" type="Button" parent="BoosterTray/BoosterActions/SealedSlotB"]
-custom_minimum_size = Vector2(110, 110)
+custom_minimum_size = Vector2(116, 116)
 layout_mode = 2
 size_flags_horizontal = 4
 disabled = true
@@ -633,7 +635,7 @@ theme_override_font_sizes/font_size = 1
 theme_override_styles/disabled = SubResource("BoosterSealedStyle")
 text = "HAND"
 expand_icon = true
-theme_override_constants/icon_max_width = 86
+theme_override_constants/icon_max_width = 92
 tooltip_text = "Hand booster · sealed until its gameplay entitlement is implemented"
 
 [node name="Label" type="Label" parent="BoosterTray/BoosterActions/SealedSlotB"]
@@ -642,20 +644,20 @@ layout_mode = 2
 theme_override_colors/font_color = Color(0.965, 0.87, 0.69, 1)
 theme_override_colors/font_outline_color = Color(0.02, 0.014, 0.028, 0.98)
 theme_override_constants/outline_size = 5
-theme_override_font_sizes/font_size = 26
+theme_override_font_sizes/font_size = 28
 text = "HAND"
 horizontal_alignment = 1
 vertical_alignment = 1
 
 [node name="SealedSlotC" type="VBoxContainer" parent="BoosterTray/BoosterActions"]
-custom_minimum_size = Vector2(150, 168)
+custom_minimum_size = Vector2(154, 174)
 layout_mode = 2
 size_flags_vertical = 4
 theme_override_constants/separation = 4
 alignment = 1
 
 [node name="SealedBoostC" type="Button" parent="BoosterTray/BoosterActions/SealedSlotC"]
-custom_minimum_size = Vector2(110, 110)
+custom_minimum_size = Vector2(116, 116)
 layout_mode = 2
 size_flags_horizontal = 4
 disabled = true
@@ -666,7 +668,7 @@ theme_override_font_sizes/font_size = 1
 theme_override_styles/disabled = SubResource("BoosterSealedStyle")
 text = "MAGIC"
 expand_icon = true
-theme_override_constants/icon_max_width = 86
+theme_override_constants/icon_max_width = 92
 tooltip_text = "Magic booster · sealed until its gameplay entitlement is implemented"
 
 [node name="Label" type="Label" parent="BoosterTray/BoosterActions/SealedSlotC"]
@@ -675,7 +677,7 @@ layout_mode = 2
 theme_override_colors/font_color = Color(0.965, 0.87, 0.69, 1)
 theme_override_colors/font_outline_color = Color(0.02, 0.014, 0.028, 0.98)
 theme_override_constants/outline_size = 5
-theme_override_font_sizes/font_size = 26
+theme_override_font_sizes/font_size = 28
 text = "MAGIC"
 horizontal_alignment = 1
 vertical_alignment = 1
@@ -739,75 +741,83 @@ anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-offset_left = -350.0
-offset_top = -330.0
-offset_right = 350.0
-offset_bottom = 330.0
+offset_left = -336.0
+offset_top = -306.0
+offset_right = 336.0
+offset_bottom = 306.0
 grow_horizontal = 2
 grow_vertical = 2
 theme_override_styles/panel = SubResource("StylePanel")
 
 [node name="Content" type="VBoxContainer" parent="PauseOverlay/Card"]
 layout_mode = 2
-theme_override_constants/separation = 22
+theme_override_constants/separation = 18
 alignment = 1
 
 [node name="Eyebrow" type="Label" parent="PauseOverlay/Card/Content"]
 layout_mode = 2
-theme_override_colors/font_color = Color(0.663, 0.6, 0.659, 1)
-theme_override_font_sizes/font_size = 18
+theme_override_colors/font_color = Color(0.835, 0.678, 0.439, 1)
+theme_override_colors/font_outline_color = Color(0.02, 0.015, 0.025, 0.92)
+theme_override_constants/outline_size = 3
+theme_override_font_sizes/font_size = 20
 text = "CURIO BOUTIQUE"
 horizontal_alignment = 1
 
 [node name="Title" type="Label" parent="PauseOverlay/Card/Content"]
 layout_mode = 2
-theme_override_colors/font_color = Color(0.945, 0.91, 0.866, 1)
-theme_override_font_sizes/font_size = 40
-text = "Level Paused"
+theme_override_colors/font_color = Color(0.975, 0.91, 0.79, 1)
+theme_override_colors/font_outline_color = Color(0.02, 0.015, 0.025, 0.96)
+theme_override_constants/outline_size = 5
+theme_override_font_sizes/font_size = 44
+text = "LEVEL PAUSED"
 horizontal_alignment = 1
 
 [node name="Detail" type="Label" parent="PauseOverlay/Card/Content"]
 layout_mode = 2
-theme_override_colors/font_color = Color(0.851, 0.804, 0.835, 1)
-theme_override_font_sizes/font_size = 20
+theme_override_colors/font_color = Color(0.91, 0.84, 0.88, 1)
+theme_override_colors/font_outline_color = Color(0.02, 0.015, 0.025, 0.90)
+theme_override_constants/outline_size = 3
+theme_override_font_sizes/font_size = 22
 text = "The cabinet waits exactly as you left it."
 horizontal_alignment = 1
 
 [node name="Resume" type="Button" parent="PauseOverlay/Card/Content"]
-custom_minimum_size = Vector2(0, 96)
+custom_minimum_size = Vector2(0, 90)
 layout_mode = 2
 theme_override_colors/font_color = Color(0.0627, 0.051, 0.0706, 1)
-theme_override_font_sizes/font_size = 22
+theme_override_colors/font_hover_color = Color(1, 0.96, 0.86, 1)
+theme_override_colors/font_pressed_color = Color(1, 0.96, 0.86, 1)
+theme_override_font_sizes/font_size = 24
 theme_override_styles/normal = SubResource("ActionNormal")
 theme_override_styles/hover = SubResource("ActionHover")
 theme_override_styles/pressed = SubResource("ActionPressed")
 text = "RESUME"
 
 [node name="Retry" type="Button" parent="PauseOverlay/Card/Content"]
-custom_minimum_size = Vector2(0, 88)
+custom_minimum_size = Vector2(0, 78)
 layout_mode = 2
 theme_override_colors/font_color = Color(0.945, 0.91, 0.866, 1)
-theme_override_font_sizes/font_size = 20
+theme_override_font_sizes/font_size = 21
 theme_override_styles/normal = SubResource("PauseUtility")
 theme_override_styles/hover = SubResource("PauseUtility")
 theme_override_styles/pressed = SubResource("PauseUtility")
 text = "RESTART LEVEL"
 
 [node name="Settings" type="Button" parent="PauseOverlay/Card/Content"]
-custom_minimum_size = Vector2(0, 88)
+custom_minimum_size = Vector2(0, 78)
 layout_mode = 2
 theme_override_colors/font_color = Color(0.945, 0.91, 0.866, 1)
-theme_override_font_sizes/font_size = 19
+theme_override_font_sizes/font_size = 21
 theme_override_styles/normal = SubResource("PauseUtility")
 theme_override_styles/hover = SubResource("PauseUtility")
 theme_override_styles/pressed = SubResource("PauseUtility")
 text = "AUDIO & ACCESSIBILITY"
 
 [node name="Exit" type="Button" parent="PauseOverlay/Card/Content"]
-custom_minimum_size = Vector2(0, 88)
+custom_minimum_size = Vector2(0, 78)
 layout_mode = 2
 theme_override_colors/font_color = Color(0.851, 0.804, 0.835, 1)
-theme_override_font_sizes/font_size = 20
+theme_override_font_sizes/font_size = 21
 theme_override_styles/normal = SubResource("PauseUtility")
 theme_override_styles/hover = SubResource("PauseUtility")
 theme_override_styles/pressed = SubResource("PauseUtility")
