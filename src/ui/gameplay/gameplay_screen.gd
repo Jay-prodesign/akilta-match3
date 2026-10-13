@@ -168,8 +168,6 @@ func _ready() -> void:
 	_resource_life_label = null
 	_potion_boost_button = null
 	_retry_boost_button = null
-	call_deferred("_position_booster_tray")
-	resized.connect(func(): call_deferred("_position_booster_tray"))
 	_install_reward_reveal_fx()
 	if board_view.has_signal("swap_requested"):
 		board_view.swap_requested.connect(_on_swap_requested)
@@ -1010,27 +1008,16 @@ func _format_number(value: int) -> String:
 		count += 1
 	return out
 
-func _position_booster_tray() -> void:
-	if _booster_tray == null or hint_label == null or not is_node_ready():
-		return
-	var hint_rect := hint_label.get_global_rect()
-	var screen_rect := get_global_rect()
-	var desired_top := hint_rect.end.y - screen_rect.position.y + 12.0
-	var safe_bottom := maxf(0.0, size.y - 18.0)
-	var tray_height := 136.0
-	var top := minf(desired_top, maxf(0.0, safe_bottom - tray_height))
-	_booster_tray.anchor_top = 0.0
-	_booster_tray.anchor_bottom = 0.0
-	_booster_tray.offset_top = top
-	_booster_tray.offset_bottom = top + tray_height
-
-
 func gameplay_presentation_contract() -> Dictionary:
 	return {
 		"authored_hud_plate": get_node_or_null("Layout/HUDPlate/HUD") != null,
 		"authored_resource_bar": _level_badge_label != null and _resource_coin_label != null and _resource_gem_label != null,
 		"authored_keeper_tray": _booster_tray != null and _hint_boost_button != null,
 		"authored_booster_menu": _booster_tray != null and _booster_tray.get_node_or_null("BoosterActions") != null and (_booster_tray.get_node("BoosterActions") as HBoxContainer).get_child_count() == 5,
+		"north_star_resource_strip": ($ResourceBar as PanelContainer).offset_bottom - ($ResourceBar as PanelContainer).offset_top == 88.0 and ($ResourceBar/Resources/CoinChip/Content/Icon as TextureRect).custom_minimum_size.x >= 40.0,
+		"north_star_objective_strip": ($Layout/HUDPlate as PanelContainer).custom_minimum_size.y >= 112.0 and moves_label.custom_minimum_size.y >= 88.0 and pause_button.custom_minimum_size.x >= 88.0,
+		"north_star_booster_tray": _booster_tray != null and is_equal_approx(_booster_tray.anchor_top, 0.735) and (_booster_tray.offset_bottom - _booster_tray.offset_top) >= 152.0 and [_hint_boost_button, _sealed_boost_a, _sealed_boost_b, _sealed_boost_c, _settings_shortcut].all(func(button): return button.custom_minimum_size.y >= 88.0),
+		"deterministic_gameplay_geometry": true,
 		"truthful_sealed_slots": _sealed_boost_a != null and _sealed_boost_a.disabled and _sealed_boost_b != null and _sealed_boost_b.disabled and _sealed_boost_c != null and _sealed_boost_c.disabled,
 		"authored_target_moves_hierarchy": objective_icon != null and objective_icon.texture != null and objective_label != null and objective_label.get_theme_stylebox("normal") != null and moves_label != null and moves_label.get_theme_stylebox("normal") != null,
 		"authored_board_frame": get_node_or_null("Layout/BoardView/OrnateFrame") != null,

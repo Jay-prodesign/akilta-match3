@@ -298,10 +298,11 @@ theme_override_styles/panel = SubResource("ResourceBarStyle")
 
 [node name="Resources" type="HBoxContainer" parent="ResourceBar"]
 layout_mode = 2
-theme_override_constants/separation = 5
+theme_override_constants/separation = 8
 alignment = 1
 
 [node name="CoinChip" type="PanelContainer" parent="ResourceBar/Resources"]
+custom_minimum_size = Vector2(0, 72)
 layout_mode = 2
 size_flags_horizontal = 3
 theme_override_styles/panel = SubResource("ResourceChipStyle")
@@ -325,6 +326,7 @@ theme_override_font_sizes/font_size = 20
 text = "0"
 
 [node name="GemChip" type="PanelContainer" parent="ResourceBar/Resources"]
+custom_minimum_size = Vector2(0, 72)
 layout_mode = 2
 size_flags_horizontal = 3
 theme_override_styles/panel = SubResource("ResourceChipStyle")
@@ -367,7 +369,7 @@ offset_right = -24.0
 offset_bottom = -112.0
 grow_horizontal = 2
 grow_vertical = 2
-theme_override_constants/separation = 8
+theme_override_constants/separation = 10
 
 [node name="Eyebrow" type="Label" parent="Layout"]
 layout_mode = 2
@@ -410,7 +412,7 @@ size_flags_horizontal = 3
 theme_override_colors/font_color = Color(0.749, 0.647, 0.847, 1)
 theme_override_colors/font_outline_color = Color(0.03, 0.02, 0.04, 0.9)
 theme_override_constants/outline_size = 3
-theme_override_font_sizes/font_size = 22
+theme_override_font_sizes/font_size = 24
 theme_override_styles/normal = SubResource("ObjectiveBlockStyle")
 text = "TARGET · MOON SIGILS   0 / 6"
 vertical_alignment = 1
@@ -462,7 +464,7 @@ mouse_filter = 2
 theme_override_styles/panel = SubResource("BoardFrameStyle")
 
 [node name="Hint" type="Label" parent="Layout"]
-custom_minimum_size = Vector2(0, 56)
+custom_minimum_size = Vector2(0, 64)
 layout_mode = 2
 theme_override_colors/font_color = Color(0.945, 0.91, 0.866, 1)
 theme_override_colors/font_outline_color = Color(0.02, 0.015, 0.025, 0.98)
@@ -507,19 +509,19 @@ horizontal_alignment = 1
 
 [node name="BoosterTray" type="PanelContainer" parent="."]
 layout_mode = 1
-anchor_left = 0.055
-anchor_top = 0.0
-anchor_right = 0.945
-anchor_bottom = 0.0
-offset_top = 748.0
-offset_bottom = 860.0
+anchor_left = 0.04
+anchor_top = 0.735
+anchor_right = 0.96
+anchor_bottom = 0.735
+offset_top = 0.0
+offset_bottom = 160.0
 grow_horizontal = 2
 z_index = 18
 theme_override_styles/panel = SubResource("BoosterTrayStyle")
 
 [node name="BoosterActions" type="HBoxContainer" parent="BoosterTray"]
 layout_mode = 2
-theme_override_constants/separation = 12
+theme_override_constants/separation = 16
 alignment = 1
 
 [node name="HintSlot" type="VBoxContainer" parent="BoosterTray/BoosterActions"]
@@ -545,7 +547,7 @@ tooltip_text = "Ask the Keeper for a legal move"
 [node name="Label" type="Label" parent="BoosterTray/BoosterActions/HintSlot"]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.945, 0.91, 0.866, 1)
-theme_override_font_sizes/font_size = 17
+theme_override_font_sizes/font_size = 20
 text = "ASK KEEPER"
 horizontal_alignment = 1
 
@@ -650,13 +652,13 @@ theme_override_styles/hover = SubResource("BoosterButtonStyle")
 theme_override_styles/pressed = SubResource("BoosterButtonStyle")
 text = "SETTINGS"
 expand_icon = true
-theme_override_constants/icon_max_width = 48
+theme_override_constants/icon_max_width = 60
 tooltip_text = "Audio and accessibility settings"
 
 [node name="Label" type="Label" parent="BoosterTray/BoosterActions/SettingsSlot"]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.945, 0.91, 0.866, 1)
-theme_override_font_sizes/font_size = 17
+theme_override_font_sizes/font_size = 20
 text = "SETTINGS"
 horizontal_alignment = 1
 
@@ -936,7 +938,7 @@ alignment = 1
 [node name="Kicker" type="Label" parent="ResultOverlay/Card/Content/ResultProclamation/Copy"]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.831, 0.678, 0.439, 1)
-theme_override_font_sizes/font_size = 17
+theme_override_font_sizes/font_size = 20
 text = "THE HOUSE REMEMBERS"
 
 [node name="ResultProclamationCopy" type="Label" parent="ResultOverlay/Card/Content/ResultProclamation/Copy"]

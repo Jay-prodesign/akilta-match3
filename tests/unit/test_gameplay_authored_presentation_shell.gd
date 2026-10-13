@@ -19,6 +19,10 @@ func _run() -> void:
 	_expect(bool(contract.get("authored_resource_bar", false)), "Gameplay resource bar must be authored")
 	_expect(bool(contract.get("authored_keeper_tray", false)), "ASK KEEPER tray must be authored")
 	_expect(bool(contract.get("authored_booster_menu", false)), "Gameplay must expose the five-slot North Star lower utility/booster bar")
+	_expect(bool(contract.get("north_star_resource_strip", false)), "Gameplay top resource strip must use the locked 88 logical px geometry")
+	_expect(bool(contract.get("north_star_objective_strip", false)), "Gameplay target/moves strip must retain the locked North Star hierarchy")
+	_expect(bool(contract.get("north_star_booster_tray", false)), "Gameplay lower booster tray must use the locked 160 logical px family with 88 px touch targets")
+	_expect(bool(contract.get("deterministic_gameplay_geometry", false)), "Gameplay tray geometry must be authored rather than positioned by runtime magic")
 	_expect(bool(contract.get("truthful_sealed_slots", false)), "Unavailable boosters must remain visibly sealed rather than pretending to be usable")
 	_expect(bool(contract.get("authored_target_moves_hierarchy", false)), "Gameplay target and moves hierarchy must use authored production plates")
 	_expect(bool(contract.get("authored_board_frame", false)), "Gameplay board must sit inside an authored ornamental frame")
@@ -43,7 +47,13 @@ func _run() -> void:
 	_expect(objective != null and moves != null, "Authored HUD objective/moves slots missing")
 	_expect(objective_icon != null and objective_icon.texture != null, "Authored objective plate must expose production objective art")
 	_expect(objective != null and objective.text.begins_with("TARGET ·"), "Objective copy must read as a clear top target block")
-	_expect(moves != null and moves.custom_minimum_size.x >= 200.0, "Moves must retain a distinct right-side counter block")
+	_expect(moves != null and moves.custom_minimum_size.x >= 240.0 and moves.custom_minimum_size.y >= 88.0, "Moves must retain a distinct right-side counter block")
+	var resource_bar := screen.get_node_or_null("ResourceBar") as PanelContainer
+	var hud_plate := screen.get_node_or_null("Layout/HUDPlate") as PanelContainer
+	var booster_tray := screen.get_node_or_null("BoosterTray") as PanelContainer
+	_expect(resource_bar != null and resource_bar.offset_bottom - resource_bar.offset_top == 88.0, "Gameplay resource strip height drifted")
+	_expect(hud_plate != null and hud_plate.custom_minimum_size.y == 116.0, "Gameplay objective strip height drifted")
+	_expect(booster_tray != null and booster_tray.offset_bottom - booster_tray.offset_top == 160.0 and is_equal_approx(booster_tray.anchor_top, 0.735), "Gameplay booster tray geometry drifted")
 	_expect(keeper != null and keeper.custom_minimum_size.y >= 88.0 and keeper.icon != null, "ASK KEEPER must retain a mobile touch target and production familiar art")
 	_expect(sealed_a != null and sealed_a.disabled and sealed_a.icon != null, "First future booster slot must be visibly sealed with production art")
 	_expect(sealed_b != null and sealed_b.disabled and sealed_b.icon != null, "Second future booster slot must be visibly sealed with production art")
