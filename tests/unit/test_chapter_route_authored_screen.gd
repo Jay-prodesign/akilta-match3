@@ -48,7 +48,6 @@ func _run() -> void:
 	_expect(bool(contract.get("authored_level_slots", false)), "S03 must author all visible route level and label slots")
 	_expect(bool(contract.get("authored_frontier_slots", false)), "S03 frontier focus and label slots must be authored")
 	_expect(bool(contract.get("frontier_raster_loaded", false)), "S03 frontier marker must use production raster art")
-	_expect(bool(contract.get("frontier_raster_focus_scale", false)), "S03 current ritual must use the authored raster sigil as a large integrated focus halo")
 	_expect(bool(contract.get("raster_relics_loaded", false)), "S03 opening relic identity art must use production raster assets")
 	_expect(bool(contract.get("opening_label_readability", false)), "S03 opening ritual captions must retain readable authored plates")
 	_expect(bool(contract.get("frontier_label_readability", false)), "S03 CURRENT RITUAL label must retain readable authored plate")

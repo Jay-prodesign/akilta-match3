@@ -106,7 +106,6 @@ func route_authored_contract() -> Dictionary:
 		"authored_level_slots": _level_buttons.size() == visible_route_levels and _level_labels.size() == visible_route_levels,
 		"authored_frontier_slots": _frontier_focus != null and _frontier_label != null,
 		"frontier_raster_loaded": FRONTIER_ART_PATH.ends_with(".webp") and _frontier_focus != null and _frontier_focus.texture != null,
-		"frontier_raster_focus_scale": _frontier_focus != null and _frontier_focus.size.x >= 190.0 and _frontier_focus.size.y >= 190.0,
 		"raster_relics_loaded": raster_relics_loaded,
 		"opening_label_readability": opening_labels_readable,
 		"frontier_label_readability": _frontier_label != null and _frontier_label.get_theme_font_size("font_size") >= 20 and frontier_plate is StyleBoxFlat,
@@ -172,10 +171,10 @@ func _update_frontier_focus() -> void:
 		return
 	var center: Vector2 = _centers[_frontier_level]
 	var diameter := 160.0 if _frontier_level == 1 else 148.0
-	_frontier_focus.size = Vector2(196.0, 196.0)
-	_frontier_focus.position = center - _frontier_focus.size * 0.5
-	_frontier_focus.modulate = Color(1.0, 0.94, 0.78, 0.58)
+	var icon_center := center + Vector2(diameter * 0.48, -diameter * 0.48)
+	_frontier_focus.position = icon_center - _frontier_focus.size * 0.5
 	_frontier_label.position = Vector2(center.x - _frontier_label.size.x * 0.5, center.y - diameter * 0.5 - 52.0)
+	move_child(_frontier_focus, get_child_count() - 1)
 	move_child(_frontier_label, get_child_count() - 1)
 
 func _tooltip_for(level_number: int) -> String:
