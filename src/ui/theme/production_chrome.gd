@@ -239,20 +239,20 @@ static func apply_gameplay_booster_tray(panel: Control) -> bool:
 
 static func gameplay_level_plaque() -> StyleBoxTexture:
 	if _gameplay_level_plaque == null:
-		_gameplay_level_plaque = _style(8.0, 54.0, GAMEPLAY_LEVEL_PLAQUE_PATH)
+		_gameplay_level_plaque = _style(8.0, 26.0, GAMEPLAY_LEVEL_PLAQUE_PATH)
 		if _gameplay_level_plaque != null:
 			_gameplay_level_plaque.modulate_color = Color(1.0, 0.97, 0.90, 1.0)
 	return _gameplay_level_plaque
 
-static func apply_gameplay_level_plaque(label: Label) -> bool:
-	if label == null:
+static func apply_gameplay_level_plaque(panel: Control) -> bool:
+	if panel == null:
 		return false
 	var style := gameplay_level_plaque()
 	if style == null:
 		return false
-	label.add_theme_stylebox_override("normal", style)
-	label.set_meta("production_chrome_asset", GAMEPLAY_LEVEL_PLAQUE_PATH)
-	label.set_meta("production_chrome_kind", "gameplay_level_plaque")
+	panel.add_theme_stylebox_override("panel", style)
+	panel.set_meta("production_chrome_asset", GAMEPLAY_LEVEL_PLAQUE_PATH)
+	panel.set_meta("production_chrome_kind", "gameplay_level_plaque")
 	return true
 
 static func gameplay_pause_frame() -> StyleBoxTexture:
