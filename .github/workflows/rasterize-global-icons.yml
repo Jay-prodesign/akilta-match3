@@ -33,7 +33,7 @@ jobs:
 
           SOURCES = [
               "nav_house", "nav_curios", "nav_map", "nav_events",
-              "nav_shop", "ui_coin", "ui_gem", "ui_profile",
+              "nav_shop", "ui_coin", "ui_gem", "ui_profile", "ui_settings",
           ]
 
           def shifted(mask, dx, dy):
@@ -85,7 +85,7 @@ jobs:
           set -euo pipefail
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add assets/ui/nav_house.webp assets/ui/nav_curios.webp assets/ui/nav_map.webp assets/ui/nav_events.webp assets/ui/nav_shop.webp assets/ui/ui_coin.webp assets/ui/ui_gem.webp assets/ui/ui_profile.webp
+          git add assets/ui/nav_house.webp assets/ui/nav_curios.webp assets/ui/nav_map.webp assets/ui/nav_events.webp assets/ui/nav_shop.webp assets/ui/ui_coin.webp assets/ui/ui_gem.webp assets/ui/ui_profile.webp assets/ui/ui_settings.webp
           if git diff --cached --quiet; then
             echo "Raster family already current."
             exit 0
