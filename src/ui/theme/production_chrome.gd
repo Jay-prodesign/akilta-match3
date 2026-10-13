@@ -111,4 +111,5 @@ static func contract() -> Dictionary:
 		"global_shell_family_verified": top_shell() != null and top_shell().texture != null and bottom_shell() != null and bottom_shell().texture != null,
 		"gameplay_shell_asset_backed": gameplay_shell() != null and gameplay_shell().texture != null,
 		"secondary_panel_asset_backed": secondary_panel() != null and secondary_panel().texture != null,
+		"secondary_hero_family_verified": secondary_panel() != null and secondary_panel().texture != null,
 	}

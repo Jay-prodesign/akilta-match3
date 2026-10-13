@@ -2366,10 +2366,10 @@
       ],
       "reuse": "declared_reuse_of_gbl_primary_panel_frame",
       "priority": "P1",
-      "production_status": "runtime_connected_authored_9slice_candidate",
+      "production_status": "runtime_connected_authored_9slice_verified",
       "current_path": "assets/ui/chrome/gbl_ui_ritual_panel_9s_base_v01.svg",
       "runtime_style_script": "src/ui/theme/production_chrome.gd",
-      "technical_policy": "runtime_decoded_svg_to_imagetexture_9slice__secondary_hero_only__render_verification_required",
+      "technical_policy": "runtime_decoded_svg_to_imagetexture_9slice__secondary_hero_only__godot_4_7_2_render_verified",
       "contract_owners": [
         {
           "screen": "S10",
@@ -2510,6 +2510,6 @@
   "asset_gap_pass": {
     "global_shell_chrome": "RUNTIME_AND_RENDER_VERIFIED",
     "gameplay_chrome": "IN_PROGRESS_RENDER_REQUIRED",
-    "secondary_hero_chrome": "IN_PROGRESS_RENDER_REQUIRED"
+    "secondary_hero_chrome": "RUNTIME_AND_RENDER_VERIFIED"
   }
 }
