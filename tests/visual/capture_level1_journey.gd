@@ -68,7 +68,11 @@ func _capture() -> void:
 	var gameplay = app.current_screen()
 	var gameplay_contract: Dictionary = gameplay.gameplay_presentation_contract() if gameplay != null and gameplay.has_method("gameplay_presentation_contract") else {}
 	for parity_key in [
-		"visual_parity_gate_v2",
+		"visual_parity_gate_v5",
+		"quiet_gameplay_shell_family",
+		"integrated_hud_surface",
+		"final_hint_readability",
+		"final_booster_readability",
 		"north_star_header_hierarchy",
 		"north_star_board_object",
 		"north_star_booster_family",
@@ -81,13 +85,15 @@ func _capture() -> void:
 	var gameplay_title := gameplay.get_node_or_null("Layout/Title") as Label
 	var gameplay_hud := gameplay.get_node_or_null("Layout/HUDPlate") as Control
 	var gameplay_objective_icon := gameplay.get_node_or_null("Layout/HUDPlate/HUD/ObjectiveIcon") as Control
+	var gameplay_objective := gameplay.get_node_or_null("Layout/HUDPlate/HUD/Objective") as Label
+	var gameplay_moves := gameplay.get_node_or_null("Layout/HUDPlate/HUD/Moves") as Label
 	var gameplay_board := gameplay.get_node_or_null("Layout/BoardView") as Control
 	var gameplay_hint := gameplay.get_node_or_null("Layout/Hint") as Control
 	var gameplay_tray := gameplay.get_node_or_null("BoosterTray") as Control
 	var shuffle_label := gameplay.get_node_or_null("BoosterTray/BoosterActions/SealedSlotA/Label") as Control
 	var hand_label := gameplay.get_node_or_null("BoosterTray/BoosterActions/SealedSlotB/Label") as Control
 	var magic_label := gameplay.get_node_or_null("BoosterTray/BoosterActions/SealedSlotC/Label") as Control
-	if gameplay_title == null or gameplay_hud == null or gameplay_objective_icon == null or gameplay_board == null or gameplay_hint == null or gameplay_tray == null:
+	if gameplay_title == null or gameplay_hud == null or gameplay_objective_icon == null or gameplay_objective == null or gameplay_moves == null or gameplay_board == null or gameplay_hint == null or gameplay_tray == null:
 		return _fail(app, "S05 North Star render gate missing title/HUD/board/hint/tray")
 	var board_height_ratio: float = gameplay_board.size.y / gameplay_viewport.y
 	var board_width_ratio: float = gameplay_board.size.x / gameplay_viewport.x
@@ -106,6 +112,12 @@ func _capture() -> void:
 	var tray_rect: Rect2 = gameplay_tray.get_global_rect()
 	if title_rect.end.y + 4.0 > hud_rect.position.y:
 		return _fail(app, "S05 title and objective HUD overlap")
+	if gameplay_objective.has_theme_stylebox_override("normal"):
+		return _fail(app, "S05 target regressed into a detached inner panel")
+	if gameplay_title.get_theme_font_size("font_size") < 50 or gameplay_moves.get_theme_font_size("font_size") < 44:
+		return _fail(app, "S05 title/moves visual hierarchy regressed")
+	if gameplay_hint.get_theme_font_size("font_size") < 24:
+		return _fail(app, "S05 hint readability regressed")
 	if not hud_rect.grow(-4.0).encloses(objective_icon_rect):
 		return _fail(app, "S05 objective icon escapes the authored HUD frame")
 	if hud_rect.end.y > board_rect.position.y + 2.0:
