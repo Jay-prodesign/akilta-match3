@@ -407,6 +407,19 @@ jobs:
           if grep -Eq "SCRIPT ERROR:|(^| )ERROR:|TEST_FAIL:" <<<"$output"; then exit 1; fi
           grep -Fq "TEST_PASS: authored prestart production screen" <<<"$output"
 
+      - name: Run production chrome asset contract
+        shell: bash
+        run: |
+          set -uo pipefail
+          set +e
+          output=$(timeout 35s ./godot --headless --path . -s res://tests/unit/test_production_chrome_asset.gd 2>&1)
+          status=$?
+          set -e
+          printf '%s\n' "$output"
+          if [ "$status" -ne 0 ]; then exit "$status"; fi
+          if grep -Eq "SCRIPT ERROR:|(^| )ERROR:|TEST_FAIL:" <<<"$output"; then exit 1; fi
+          grep -Fq "TEST_PASS: production chrome asset-backed panels" <<<"$output"
+
       - name: Run authored gameplay presentation shell contract
         shell: bash
         run: |

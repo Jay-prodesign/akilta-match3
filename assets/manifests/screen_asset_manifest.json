@@ -379,8 +379,10 @@
       ],
       "reuse": "global",
       "priority": "P0",
-      "production_status": "frozen_component_candidate_not_direct_slot_asset",
-      "current_path": "assets/ui/chrome/gbl_ui_ritual_panel_9s_base_v01.svg"
+      "production_status": "runtime_connected_authored_9slice_candidate",
+      "current_path": "assets/ui/chrome/gbl_ui_ritual_panel_9s_base_v01.svg",
+      "runtime_style_path": "src/ui/theme/primary_panel_frame.tres",
+      "technical_policy": "authored_9slice_texture_runtime__shared_ceremonial_panel__render_verification_required"
     },
     {
       "asset_id": "prestart_ch01_level01_art",
@@ -2252,8 +2254,8 @@
   "bulk_art_authorized": false,
   "production_gate": {
     "golden_loop": "S01>S04>S05>S06>S07>S01",
-    "status": "SLOT_GEOMETRY_RECONCILIATION_ACTIVE",
-    "rule": "Existing connected assets may remain for runtime proof, but no new production art or broad polish is authorized until canonical slot geometry and full-screen composition are render-verified."
+    "status": "ASSET_PRODUCTION_ACTIVE",
+    "rule": "Geometry is locked. Replace candidate/fallback/code-drawn visual language by highest player-impact slot family, then render/inspect before promotion."
   },
   "architecture_source": {
     "authority": "North Star Product Board interpreted through canonical product architecture",
@@ -2270,7 +2272,7 @@
     ]
   },
   "asset_production_gate": {
-    "status": "BLOCKED_PENDING_CANONICAL_SLOT_GEOMETRY_AND_VISUAL_AUDIT",
+    "status": "AUTHORIZED_SLOT_LOCKED_PRODUCTION",
     "golden_loop": [
       "S01",
       "S03",
@@ -2280,7 +2282,7 @@
       "S07",
       "S01"
     ],
-    "rule": "Complete screen/state reconciliation, explicit slot geometry, global component geometry and real Godot render audit before producing or polishing additional assets.",
+    "rule": "Canonical screen/overlay slot geometry and real Godot composition audit are complete. Produce only contract-owned assets at locked geometry; every new runtime asset still requires real render verification.",
     "existing_non_golden_candidates": "frozen_do_not_polish"
   },
   "golden_loop_asset_slots": {

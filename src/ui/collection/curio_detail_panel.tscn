@@ -1,6 +1,8 @@
-[gd_scene load_steps=4 format=3]
+[gd_scene load_steps=5 format=3]
 
 [ext_resource type="Script" path="res://src/ui/collection/curio_detail_panel.gd" id="1_detail"]
+
+[ext_resource type="StyleBox" path="res://src/ui/theme/primary_panel_frame.tres" id="2_prod_frame"]
 
 [sub_resource type="StyleBoxFlat" id="DetailCard"]
 bg_color = Color(0.035, 0.024, 0.045, 0.94)
@@ -62,7 +64,7 @@ anchor_right = 0.93
 anchor_bottom = 0.72
 grow_horizontal = 2
 grow_vertical = 2
-theme_override_styles/panel = SubResource("DetailCard")
+theme_override_styles/panel = ExtResource("2_prod_frame")
 
 [node name="Content" type="VBoxContainer" parent="CurioDetailCard"]
 layout_mode = 2

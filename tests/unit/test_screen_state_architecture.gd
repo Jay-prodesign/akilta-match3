@@ -137,7 +137,7 @@ func _run() -> void:
 	_expect(not manifest.is_empty(), "screen asset manifest must parse")
 	if not manifest.is_empty():
 		var gate: Dictionary = manifest.get("asset_production_gate", {})
-		_expect(String(gate.get("status", "")) == "BLOCKED_PENDING_CANONICAL_SLOT_GEOMETRY_AND_VISUAL_AUDIT", "asset production must stay blocked until slot geometry and visual audit are complete")
+		_expect(String(gate.get("status", "")) == "AUTHORIZED_SLOT_LOCKED_PRODUCTION", "asset production must be authorized only after slot geometry and visual audit are complete")
 		_expect(Array(gate.get("golden_loop", [])) == GOLDEN, "asset gate must preserve the canonical Golden Loop lineage")
 		for raw_asset in manifest.get("assets", []):
 			if not raw_asset is Dictionary:
