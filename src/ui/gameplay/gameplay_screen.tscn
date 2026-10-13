@@ -383,27 +383,20 @@ grow_horizontal = 2
 grow_vertical = 2
 theme_override_constants/separation = 8
 
-[node name="Eyebrow" type="Label" parent="Layout"]
-custom_minimum_size = Vector2(340, 72)
+[node name="LevelPlaque" type="PanelContainer" parent="Layout"]
+custom_minimum_size = Vector2(600, 96)
 layout_mode = 2
 size_flags_horizontal = 4
+
+[node name="Eyebrow" type="Label" parent="Layout/LevelPlaque"]
+layout_mode = 2
 theme_override_colors/font_color = Color(1, 0.91, 0.69, 1)
 theme_override_colors/font_outline_color = Color(0.015, 0.01, 0.022, 0.99)
 theme_override_constants/outline_size = 5
-theme_override_font_sizes/font_size = 31
+theme_override_font_sizes/font_size = 42
 text = "LEVEL 1"
 horizontal_alignment = 1
 vertical_alignment = 1
-
-[node name="PlaqueFrame" type="Panel" parent="Layout/Eyebrow"]
-show_behind_parent = true
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-mouse_filter = 2
 
 [node name="Title" type="Label" parent="Layout"]
 visible = false
@@ -507,6 +500,7 @@ mouse_filter = 2
 theme_override_styles/panel = SubResource("BoardFrameStyle")
 
 [node name="Hint" type="Label" parent="Layout"]
+visible = false
 custom_minimum_size = Vector2(700, 58)
 layout_mode = 2
 size_flags_horizontal = 4
@@ -556,11 +550,11 @@ horizontal_alignment = 1
 [node name="BoosterTray" type="PanelContainer" parent="."]
 layout_mode = 1
 anchor_left = 0.045
-anchor_top = 0.8
+anchor_top = 0.755
 anchor_right = 0.955
-anchor_bottom = 0.8
+anchor_bottom = 0.755
 offset_top = 0.0
-offset_bottom = 228.0
+offset_bottom = 206.0
 grow_horizontal = 2
 z_index = 18
 theme_override_styles/panel = SubResource("BoosterTrayStyle")
