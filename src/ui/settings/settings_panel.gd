@@ -22,12 +22,12 @@ const ProductionChrome = preload("res://src/ui/theme/production_chrome.gd")
 @export var close_high_style: StyleBoxFlat
 
 
-@onready var master_toggle: CheckButton = $Card/Content/Master
-@onready var music_toggle: CheckButton = $Card/Content/Music
-@onready var sfx_toggle: CheckButton = $Card/Content/SFX
-@onready var haptics_toggle: CheckButton = $Card/Content/Haptics
-@onready var reduced_toggle: CheckButton = $Card/Content/Reduced
-@onready var contrast_toggle: CheckButton = $Card/Content/Contrast
+@onready var master_toggle: CheckButton = $Card/Content/AudioRow/Master
+@onready var music_toggle: CheckButton = $Card/Content/AudioRow/Music
+@onready var sfx_toggle: CheckButton = $Card/Content/AudioRow/SFX
+@onready var haptics_toggle: CheckButton = $Card/Content/ExperienceRow/Haptics
+@onready var reduced_toggle: CheckButton = $Card/Content/ExperienceRow/Reduced
+@onready var contrast_toggle: CheckButton = $Card/Content/ExperienceRow/Contrast
 @onready var close_button: Button = $Card/Content/Close
 @onready var saved_note: Label = $Card/Content/SavedNote
 @onready var house_sigil: TextureRect = $Card/Content/HouseSigil
@@ -161,6 +161,17 @@ func _style_toggle(toggle: CheckButton) -> void:
 	toggle.add_theme_font_size_override("font_size", 21)
 
 func settings_authored_contract() -> Dictionary:
+	var card := $Card as PanelContainer
+	var audio_row := $Card/Content/AudioRow as HBoxContainer
+	var experience_row := $Card/Content/ExperienceRow as HBoxContainer
+	var compact_surface := card.anchor_left >= 0.075 and card.anchor_right <= 0.925 and (card.anchor_bottom - card.anchor_top) <= 0.52
+	var grid_layout := audio_row.get_child_count() == 3 and experience_row.get_child_count() == 3 and [master_toggle, music_toggle, sfx_toggle, haptics_toggle, reduced_toggle, contrast_toggle].all(
+		func(control): return control.size_flags_horizontal == Control.SIZE_EXPAND_FILL
+	)
+	var sigil_stage := house_sigil != null and house_sigil.texture != null and house_sigil.custom_minimum_size.y >= 120.0
+	var world_visible := ($WorldShade as ColorRect).color.a <= 0.20 and ($Dim as ColorRect).color.a <= 0.12
+	var title_hierarchy := ($Card/Content/Title as Label).get_theme_font_size("font_size") >= 50
+	var touch_targets := [master_toggle, music_toggle, sfx_toggle, haptics_toggle, reduced_toggle, contrast_toggle, close_button].all(func(control): return control.custom_minimum_size.y >= 88.0)
 	return {
 		"authored_house_sigil": house_sigil != null and house_sigil.texture != null,
 		"authored_world_backdrop": world_art != null and world_art.texture != null,
@@ -168,12 +179,16 @@ func settings_authored_contract() -> Dictionary:
 		"sigil_raster_runtime": true,
 		"authored_style_resources": card_normal_style != null and card_high_style != null and toggle_normal_style != null and toggle_high_style != null and close_normal_style != null and close_high_style != null,
 		"runtime_ui_factory": false,
-		"north_star_title_hierarchy": ($Card/Content/Title as Label).get_theme_font_size("font_size") >= 46,
-		"north_star_toggle_height": [master_toggle, music_toggle, sfx_toggle, haptics_toggle, reduced_toggle, contrast_toggle].all(func(control): return control.custom_minimum_size.y >= 88.0),
+		"north_star_title_hierarchy": title_hierarchy,
+		"north_star_toggle_height": touch_targets,
 		"intro_subordinate": ($Card/Content/Intro as Label) != null and not ($Card/Content/Intro as Label).visible,
 		"runtime_style_factory": false,
-		"production_card_chrome": ($Card as PanelContainer).get_theme_stylebox("panel") is StyleBoxTexture and String(($Card as PanelContainer).get_meta("production_chrome_kind", "")) == "secondary_settings",
+		"production_card_chrome": card.get_theme_stylebox("panel") is StyleBoxTexture and String(card.get_meta("production_chrome_kind", "")) == "secondary_settings",
 		"production_toggle_chrome": [master_toggle, music_toggle, sfx_toggle, haptics_toggle, reduced_toggle, contrast_toggle].all(func(control): return control.get_theme_stylebox("normal") is StyleBoxTexture and String(control.get_meta("production_chrome_kind", "")) == "interactive_settings_toggle"),
 		"production_return_chrome": close_button.get_theme_stylebox("normal") is StyleBoxTexture and String(close_button.get_meta("production_chrome_kind", "")) == "action_primary_settings_return",
+		"settings_grid_layout": grid_layout,
+		"house_sigil_hero_scale": sigil_stage,
+		"world_art_not_overdimmed": world_visible,
+		"compact_control_surface": compact_surface,
+		"visual_parity_gate_v2": title_hierarchy and touch_targets and grid_layout and sigil_stage and world_visible and compact_surface,
 	}
-

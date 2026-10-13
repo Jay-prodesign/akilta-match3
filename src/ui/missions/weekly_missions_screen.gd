@@ -15,6 +15,7 @@ const WEEKLY_ART_PATH := "res://assets/curios/ch01_curio_moon_cameo_sealed_v01.w
 @onready var reward_art: TextureRect = $MissionLayout/MissionEmptyState/EmptyContent/MissionRewardArt
 @onready var availability: Label = $MissionLayout/MissionEmptyState/EmptyContent/AltarCopy/MissionAvailability
 @onready var truth: Label = $MissionLayout/MissionEmptyState/EmptyContent/AltarCopy/MissionEmptyStateTruth
+@onready var stage_spacer: Control = $MissionLayout/WorldStageSpacer
 @onready var opening_record: Label = $MissionLayout/MissionOpeningRecord
 @onready var return_events: Button = $MissionLayout/ReturnToEvents
 @onready var return_house: Button = $MissionLayout/ReturnToHouse
@@ -23,6 +24,11 @@ func _ready() -> void:
 	ProductionChrome.apply_secondary(empty_state, "weekly_altar")
 	ProductionChrome.apply_action_button(return_events, "primary", "weekly_events_return")
 	ProductionChrome.apply_action_button(return_house, "utility", "weekly_house_return")
+	var record_style := ProductionChrome.compact_panel()
+	if record_style != null:
+		opening_record.add_theme_stylebox_override("normal", record_style)
+		opening_record.set_meta("production_chrome_kind", "compact_weekly_record")
+		opening_record.set_meta("stage_role", "anchored_footer_status")
 	return_events.pressed.connect(func(): return_events_requested.emit())
 	return_house.pressed.connect(func(): return_house_requested.emit())
 
@@ -44,6 +50,11 @@ func configure(state: Dictionary) -> bool:
 	return true
 
 func screen_contract() -> Dictionary:
+	var altar_dominant := empty_state.custom_minimum_size.y >= 600.0 and reward_art.custom_minimum_size.x >= 360.0 and reward_art.custom_minimum_size.y >= 290.0
+	var intentional_stage := stage_spacer != null and stage_spacer.size_flags_vertical == Control.SIZE_EXPAND_FILL and stage_spacer.custom_minimum_size.y >= 100.0 and ($MissionLayout as VBoxContainer).offset_bottom <= -150.0
+	var footer_record := opening_record.get_theme_stylebox("normal") is StyleBoxTexture and String(opening_record.get_meta("production_chrome_kind", "")) == "compact_weekly_record" and String(opening_record.get_meta("stage_role", "")) == "anchored_footer_status"
+	var world_visible := ($WorldShade as ColorRect).color.a <= 0.20 and ($HeaderShade as ColorRect).color.a <= 0.38
+	var return_actions := return_events.get_theme_stylebox("normal") is StyleBoxTexture and return_house.get_theme_stylebox("normal") is StyleBoxTexture and String(return_events.get_meta("production_chrome_kind", "")) == "action_primary_weekly_events_return" and String(return_house.get_meta("production_chrome_kind", "")) == "action_utility_weekly_house_return"
 	return {
 		"route": "missions",
 		"world_art_loaded": world_art != null and world_art.texture != null,
@@ -52,12 +63,15 @@ func screen_contract() -> Dictionary:
 		"reward_asset_path": String(reward_art.get_meta("asset_path", "")),
 		"code_built_panels": false,
 		"north_star_title_hierarchy": ($MissionLayout/MissionTitle as Label).get_theme_font_size("font_size") >= 52,
-		"north_star_altar_stack": ($MissionLayout/MissionEmptyState/EmptyContent as VBoxContainer) != null and reward_art.custom_minimum_size.y <= 260.0,
+		"north_star_altar_stack": altar_dominant,
 		"asset_backed_altar_chrome": empty_state != null and empty_state.get_theme_stylebox("panel") is StyleBoxTexture and String(empty_state.get_meta("production_chrome_kind", "")) == "secondary_weekly_altar",
-		"header_readability_scrim": ($HeaderShade as ColorRect) != null and ($HeaderShade as ColorRect).color.a >= 0.4,
+		"header_readability_scrim": ($HeaderShade as ColorRect) != null and ($HeaderShade as ColorRect).color.a >= 0.34,
 		"sealed_offline_art": String(reward_art.get_meta("asset_path", "")).contains("_sealed_"),
-		"production_return_actions": return_events.get_theme_stylebox("normal") is StyleBoxTexture and return_house.get_theme_stylebox("normal") is StyleBoxTexture and String(return_events.get_meta("production_chrome_kind", "")) == "action_primary_weekly_events_return" and String(return_house.get_meta("production_chrome_kind", "")) == "action_utility_weekly_house_return",
+		"production_return_actions": return_actions,
 		"compact_offline_copy": availability != null and not availability.visible,
 		"primary_cta_rounding": return_events.get_theme_stylebox("normal") != null,
-
+		"intentional_world_stage": intentional_stage,
+		"asset_backed_opening_record": footer_record,
+		"world_art_not_overdimmed": world_visible,
+		"visual_parity_gate_v2": altar_dominant and intentional_stage and footer_record and world_visible and return_actions,
 	}
