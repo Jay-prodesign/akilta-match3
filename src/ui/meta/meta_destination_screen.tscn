@@ -89,7 +89,7 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
-color = Color(0.018, 0.012, 0.026, 0.38)
+color = Color(0.018, 0.012, 0.026, 0.30)
 
 [node name="HeaderShade" type="ColorRect" parent="."]
 layout_mode = 1
@@ -98,7 +98,7 @@ anchor_right = 1.0
 offset_bottom = 330.0
 grow_horizontal = 2
 mouse_filter = 2
-color = Color(0.016, 0.011, 0.025, 0.44)
+color = Color(0.016, 0.011, 0.025, 0.36)
 
 [node name="FeatureLayout" type="VBoxContainer" parent="."]
 layout_mode = 1
@@ -178,23 +178,23 @@ text = "EARNED IN PLAY · NOT PURCHASABLE"
 horizontal_alignment = 1
 
 [node name="FeatureHero" type="PanelContainer" parent="FeatureLayout"]
-custom_minimum_size = Vector2(0, 324)
+custom_minimum_size = Vector2(0, 420)
 layout_mode = 2
 theme_override_styles/panel = SubResource("Hero")
 
 [node name="HeroRow" type="HBoxContainer" parent="FeatureLayout/FeatureHero"]
 layout_mode = 2
-theme_override_constants/separation = 20
+theme_override_constants/separation = 26
 
 [node name="HeroArt" type="TextureRect" parent="FeatureLayout/FeatureHero/HeroRow"]
-custom_minimum_size = Vector2(300, 280)
+custom_minimum_size = Vector2(360, 360)
 layout_mode = 2
 expand_mode = 1
 stretch_mode = 5
 
 [node name="ShopFeaturedOfferArt" type="TextureRect" parent="FeatureLayout/FeatureHero/HeroRow"]
 visible = false
-custom_minimum_size = Vector2(300, 280)
+custom_minimum_size = Vector2(360, 360)
 layout_mode = 2
 expand_mode = 1
 stretch_mode = 5
@@ -208,7 +208,7 @@ alignment = 1
 [node name="FeatureHeroKicker" type="Label" parent="FeatureLayout/FeatureHero/HeroRow/HeroCopy"]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.831, 0.678, 0.439, 1)
-theme_override_font_sizes/font_size = 20
+theme_override_font_sizes/font_size = 22
 text = "STATE"
 
 [node name="FeatureHeroTitle" type="Label" parent="FeatureLayout/FeatureHero/HeroRow/HeroCopy"]
@@ -216,7 +216,7 @@ layout_mode = 2
 theme_override_colors/font_color = Color(1, 0.941, 0.847, 1)
 theme_override_colors/font_outline_color = Color(0.02, 0.014, 0.028, 0.9)
 theme_override_constants/outline_size = 3
-theme_override_font_sizes/font_size = 38
+theme_override_font_sizes/font_size = 44
 text = "HERO TITLE"
 autowrap_mode = 2
 
@@ -346,7 +346,7 @@ size_flags_horizontal = 3
 theme_override_constants/separation = 12
 
 [node name="Card1" type="PanelContainer" parent="FeatureLayout/CardScroll/Cards"]
-custom_minimum_size = Vector2(0, 198)
+custom_minimum_size = Vector2(0, 236)
 layout_mode = 2
 theme_override_styles/panel = SubResource("Card")
 
@@ -355,7 +355,7 @@ layout_mode = 2
 theme_override_constants/separation = 18
 
 [node name="Art" type="TextureRect" parent="FeatureLayout/CardScroll/Cards/Card1/Row"]
-custom_minimum_size = Vector2(185, 168)
+custom_minimum_size = Vector2(224, 204)
 layout_mode = 2
 expand_mode = 1
 stretch_mode = 5
@@ -376,7 +376,7 @@ layout_mode = 2
 theme_override_colors/font_color = Color(0.96, 0.9, 0.84, 1)
 theme_override_colors/font_outline_color = Color(0.02, 0.014, 0.028, 0.96)
 theme_override_constants/outline_size = 2
-theme_override_font_sizes/font_size = 31
+theme_override_font_sizes/font_size = 34
 text = "TITLE"
 
 [node name="Body" type="Label" parent="FeatureLayout/CardScroll/Cards/Card1/Row/Copy"]
@@ -399,7 +399,7 @@ text = "STATUS"
 autowrap_mode = 2
 
 [node name="Card2" type="PanelContainer" parent="FeatureLayout/CardScroll/Cards"]
-custom_minimum_size = Vector2(0, 198)
+custom_minimum_size = Vector2(0, 236)
 layout_mode = 2
 theme_override_styles/panel = SubResource("Card")
 
@@ -408,7 +408,7 @@ layout_mode = 2
 theme_override_constants/separation = 18
 
 [node name="Art" type="TextureRect" parent="FeatureLayout/CardScroll/Cards/Card2/Row"]
-custom_minimum_size = Vector2(185, 168)
+custom_minimum_size = Vector2(224, 204)
 layout_mode = 2
 expand_mode = 1
 stretch_mode = 5
@@ -429,7 +429,7 @@ layout_mode = 2
 theme_override_colors/font_color = Color(0.96, 0.9, 0.84, 1)
 theme_override_colors/font_outline_color = Color(0.02, 0.014, 0.028, 0.96)
 theme_override_constants/outline_size = 2
-theme_override_font_sizes/font_size = 31
+theme_override_font_sizes/font_size = 34
 text = "TITLE"
 
 [node name="Body" type="Label" parent="FeatureLayout/CardScroll/Cards/Card2/Row/Copy"]
@@ -452,7 +452,7 @@ text = "STATUS"
 autowrap_mode = 2
 
 [node name="Card3" type="PanelContainer" parent="FeatureLayout/CardScroll/Cards"]
-custom_minimum_size = Vector2(0, 198)
+custom_minimum_size = Vector2(0, 236)
 layout_mode = 2
 theme_override_styles/panel = SubResource("Card")
 
@@ -461,7 +461,7 @@ layout_mode = 2
 theme_override_constants/separation = 18
 
 [node name="Art" type="TextureRect" parent="FeatureLayout/CardScroll/Cards/Card3/Row"]
-custom_minimum_size = Vector2(185, 168)
+custom_minimum_size = Vector2(224, 204)
 layout_mode = 2
 expand_mode = 1
 stretch_mode = 5
@@ -482,7 +482,7 @@ layout_mode = 2
 theme_override_colors/font_color = Color(0.96, 0.9, 0.84, 1)
 theme_override_colors/font_outline_color = Color(0.02, 0.014, 0.028, 0.96)
 theme_override_constants/outline_size = 2
-theme_override_font_sizes/font_size = 31
+theme_override_font_sizes/font_size = 34
 text = "TITLE"
 
 [node name="Body" type="Label" parent="FeatureLayout/CardScroll/Cards/Card3/Row/Copy"]
@@ -552,12 +552,12 @@ horizontal_alignment = 1
 autowrap_mode = 2
 
 [node name="TruthStrip" type="Label" parent="FeatureLayout"]
-custom_minimum_size = Vector2(0, 44)
+custom_minimum_size = Vector2(0, 40)
 layout_mode = 2
 theme_override_colors/font_color = Color(0.831, 0.678, 0.439, 1)
 theme_override_colors/font_outline_color = Color(0.02, 0.014, 0.028, 0.9)
 theme_override_constants/outline_size = 3
-theme_override_font_sizes/font_size = 18
+theme_override_font_sizes/font_size = 16
 text = "TRUTH"
 horizontal_alignment = 1
 vertical_alignment = 1

@@ -42,6 +42,11 @@ var _hero_asset_path: String = ""
 
 func _ready() -> void:
 	ProductionChrome.apply_secondary($FeatureLayout/FeatureHero, "meta_hero")
+	ProductionChrome.apply_action_button(weekly_action, "primary", "events_weekly")
+	ProductionChrome.apply_action_button(profile_settings, "primary", "profile_settings")
+	ProductionChrome.apply_action_button(daily_action, "utility", "events_daily_practice")
+	ProductionChrome.apply_action_button(shop_disabled_action, "utility", "shop_sealed")
+	ProductionChrome.apply_action_button(back_button, "utility", "meta_return_house")
 	weekly_action.pressed.connect(func(): weekly_requested.emit())
 	daily_action.pressed.connect(_on_daily_pressed)
 	profile_settings.pressed.connect(func(): settings_requested.emit())
@@ -181,6 +186,29 @@ func _on_daily_pressed() -> void:
 
 func screen_contract() -> Dictionary:
 	var hero_loaded := shop_offer_art.texture != null if _feature_key == "shop" else hero_art.texture != null
+	var active_hero_art: TextureRect = shop_offer_art if _feature_key == "shop" else hero_art
+	var hero_panel := $FeatureLayout/FeatureHero as PanelContainer
+	var card_nodes := [
+		$FeatureLayout/CardScroll/Cards/Card1,
+		$FeatureLayout/CardScroll/Cards/Card2,
+		$FeatureLayout/CardScroll/Cards/Card3,
+	]
+	var card_art_nodes := [
+		$FeatureLayout/CardScroll/Cards/Card1/Row/Art,
+		$FeatureLayout/CardScroll/Cards/Card2/Row/Art,
+		$FeatureLayout/CardScroll/Cards/Card3/Row/Art,
+	]
+	var card_bodies := [
+		$FeatureLayout/CardScroll/Cards/Card1/Row/Copy/Body,
+		$FeatureLayout/CardScroll/Cards/Card2/Row/Copy/Body,
+		$FeatureLayout/CardScroll/Cards/Card3/Row/Copy/Body,
+	]
+	var art_dominant_cards := card_nodes.all(func(card): return (card as PanelContainer).custom_minimum_size.y >= 230.0) and card_art_nodes.all(
+		func(art): return (art as TextureRect).custom_minimum_size.x >= 220.0 and (art as TextureRect).custom_minimum_size.y >= 195.0
+	)
+	var compact_copy := card_bodies.all(func(body): return not (body as Label).visible)
+	var hero_dominant := hero_panel.custom_minimum_size.y >= 400.0 and active_hero_art.custom_minimum_size.x >= 340.0 and active_hero_art.custom_minimum_size.y >= 340.0
+	var controlled_chrome := compact_copy and ($FeatureLayout/TruthStrip as Label).custom_minimum_size.y <= 40.0 and ($HeaderShade as ColorRect).color.a <= 0.38
 	return {
 		"feature": _feature_key,
 		"world_art_loaded": world_art != null and world_art.texture != null,
@@ -188,14 +216,18 @@ func screen_contract() -> Dictionary:
 		"static_card_slots": 3,
 		"code_built_panels": false,
 		"north_star_title_hierarchy": title != null and title.get_theme_font_size("font_size") >= 52,
-		"north_star_hero_scale": ($FeatureLayout/FeatureHero as PanelContainer).custom_minimum_size.y >= 320.0 and ((shop_offer_art.custom_minimum_size.x if _feature_key == "shop" else hero_art.custom_minimum_size.x) >= 290.0),
-		"asset_backed_hero_chrome": ($FeatureLayout/FeatureHero as PanelContainer).get_theme_stylebox("panel") is StyleBoxTexture and String(($FeatureLayout/FeatureHero as PanelContainer).get_meta("production_chrome_kind", "")) == "secondary_meta_hero",
+		"north_star_hero_scale": hero_dominant,
+		"asset_backed_hero_chrome": hero_panel.get_theme_stylebox("panel") is StyleBoxTexture and String(hero_panel.get_meta("production_chrome_kind", "")) == "secondary_meta_hero",
 		"hero_asset_path": _hero_asset_path,
 		"raster_feature_art": _hero_asset_path.to_lower().ends_with(".webp") or _hero_asset_path.to_lower().ends_with(".png"),
-		"rounded_primary_actions": weekly_action.get_theme_stylebox("normal") != null and profile_settings.get_theme_stylebox("normal") != null,
-		"card_copy_compact": not ($FeatureLayout/CardScroll/Cards/Card1/Row/Copy/Body as Label).visible and not ($FeatureLayout/CardScroll/Cards/Card2/Row/Copy/Body as Label).visible and not ($FeatureLayout/CardScroll/Cards/Card3/Row/Copy/Body as Label).visible,
-		"header_readability_scrim": ($HeaderShade as ColorRect) != null and ($HeaderShade as ColorRect).color.a >= 0.4,
+		"rounded_primary_actions": weekly_action.get_theme_stylebox("normal") is StyleBoxTexture and profile_settings.get_theme_stylebox("normal") is StyleBoxTexture,
+		"asset_backed_utility_actions": daily_action.get_theme_stylebox("normal") is StyleBoxTexture and back_button.get_theme_stylebox("normal") is StyleBoxTexture and shop_disabled_action.get_theme_stylebox("disabled") is StyleBoxTexture,
+		"card_copy_compact": compact_copy,
+		"art_dominant_cards": art_dominant_cards,
+		"header_readability_scrim": ($HeaderShade as ColorRect) != null and ($HeaderShade as ColorRect).color.a >= 0.34,
 		"secondary_header_compact": (_feature_key != "events" or not chapter_progress.visible) and (_feature_key != "shop" or not shop_notice.visible),
 		"profile_save_health_compact": _feature_key != "profile" or (save_health_card != null and save_health_card.custom_minimum_size.y <= 170.0),
-
+		"world_art_not_overdimmed": ($WorldShade as ColorRect).color.a <= 0.32,
+		"controlled_chrome_density": controlled_chrome,
+		"visual_parity_gate_v2": hero_dominant and art_dominant_cards and controlled_chrome and hero_loaded,
 	}

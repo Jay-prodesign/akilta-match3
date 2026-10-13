@@ -32,10 +32,19 @@ func _run() -> void:
 		_expect(not bool(contract.get("code_built_panels", true)), "%s must not return to bootstrap-built panel UI" % feature)
 		_expect(bool(contract.get("north_star_title_hierarchy", false)), "%s must retain a strong North Star page title" % feature)
 		_expect(bool(contract.get("north_star_hero_scale", false)), "%s must retain a hero-scale authored feature card" % feature)
+		var hero_panel := screen.get_node_or_null("FeatureLayout/FeatureHero") as PanelContainer
+		var active_hero_art := screen.get_node_or_null("FeatureLayout/FeatureHero/HeroRow/ShopFeaturedOfferArt") as TextureRect if feature == "shop" else screen.get_node_or_null("FeatureLayout/FeatureHero/HeroRow/HeroArt") as TextureRect
+		_expect(hero_panel != null and hero_panel.custom_minimum_size.y >= 400.0, "%s hero must occupy a true visual stage" % feature)
+		_expect(active_hero_art != null and active_hero_art.custom_minimum_size.x >= 340.0 and active_hero_art.custom_minimum_size.y >= 340.0, "%s hero art must dominate its feature card" % feature)
 		_expect(bool(contract.get("asset_backed_hero_chrome", false)), "%s hero card must use asset-backed production chrome" % feature)
 		_expect(bool(preload("res://src/ui/theme/production_chrome.gd").contract().get("secondary_hero_family_verified", false)), "%s hero chrome family must resolve through the verified shared asset" % feature)
 		_expect(bool(contract.get("raster_feature_art", false)), "%s hero art must use production raster assets" % feature)
 		_expect(bool(contract.get("card_copy_compact", false)), "%s cards must prioritize art/title/status instead of paragraph copy" % feature)
+		_expect(bool(contract.get("art_dominant_cards", false)), "%s cards must reserve production-scale visual area instead of collapsing into form rows" % feature)
+		_expect(bool(contract.get("asset_backed_utility_actions", false)), "%s utility actions must use shared production chrome" % feature)
+		_expect(bool(contract.get("world_art_not_overdimmed", false)), "%s must keep authored world art visible rather than hiding it behind UI shade" % feature)
+		_expect(bool(contract.get("controlled_chrome_density", false)), "%s must keep status chrome subordinate to hero art" % feature)
+		_expect(bool(contract.get("visual_parity_gate_v2", false)), "%s must satisfy the final-direction secondary-screen visual parity gate" % feature)
 		_expect(bool(contract.get("header_readability_scrim", false)), "%s must retain a dedicated top readability scrim over authored world art" % feature)
 		_expect(bool(contract.get("secondary_header_compact", false)), "%s must avoid redundant progress/commerce lines above the hero" % feature)
 		_expect(screen.get_node_or_null("FeatureLayout/FeatureHero/HeroRow/HeroArt") != null, "%s must keep a scene-owned hero art slot" % feature)
@@ -44,6 +53,7 @@ func _run() -> void:
 		for card_name in ["Card1", "Card2", "Card3"]:
 			var art := screen.get_node_or_null("FeatureLayout/CardScroll/Cards/%s/Row/Art" % card_name) as TextureRect
 			_expect(art != null and art.texture != null, "%s %s must render object art" % [feature, card_name])
+			_expect(art != null and art.custom_minimum_size.x >= 220.0 and art.custom_minimum_size.y >= 195.0, "%s %s art must not collapse into a thumbnail row" % [feature, card_name])
 			if art != null and art.texture != null:
 				_expect(String(art.get_meta("asset_path", "")).ends_with(".webp") or String(art.get_meta("asset_path", "")).ends_with(".png"), "%s %s must use raster object art" % [feature, card_name])
 		if feature == "events":
