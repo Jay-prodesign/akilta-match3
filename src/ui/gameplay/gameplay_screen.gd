@@ -93,6 +93,9 @@ var _objective_pulse_tween: Tween
 var _result_transition_kind: String = ""
 var _result_transition_active: bool = false
 var _result_transition_tween: Tween
+var _pause_transition_tween: Tween
+var _gameplay_intro_tween: Tween
+var _pause_closing := false
 const LOW_MOVE_WARNING_THRESHOLD := 3
 const LAST_MOVE_THRESHOLD := 1
 
@@ -159,7 +162,7 @@ func _current_auto_hint_delay() -> float:
 	return GUIDED_HINT_DELAY_SECONDS if _consecutive_failures >= 3 else AUTO_HINT_DELAY_SECONDS
 
 func _ready() -> void:
-	ProductionChrome.apply_primary($PauseOverlay/Card)
+	ProductionChrome.apply_gameplay_pause_modal($PauseOverlay/Card)
 	ProductionChrome.apply_primary($ResultOverlay/Card)
 	$ResourceBar.add_theme_stylebox_override("panel", StyleBoxEmpty.new())
 	$ResourceBar.set_meta("production_chrome_kind", "gameplay_resource_cluster")
@@ -215,10 +218,146 @@ func _ready() -> void:
 	pause_retry.pressed.connect(_on_pause_retry)
 	pause_settings.pressed.connect(func(): settings_requested.emit())
 	pause_exit.pressed.connect(_on_pause_exit)
+	_wire_tactile_button(pause_button, "pause")
+	_wire_tactile_button(pause_resume, "resume")
+	_wire_tactile_button(pause_retry, "restart")
+	_wire_tactile_button(pause_settings, "settings")
+	_wire_tactile_button(pause_exit, "exit")
+	_wire_tactile_button(result_recovery_action, "recovery")
+	_wire_tactile_button(result_action, "continue")
 	pause_overlay.visible = false
 	result_overlay.visible = false
 	if FileAccess.file_exists(default_level_path):
 		load_level_path(default_level_path, default_seed)
+	call_deferred("_play_gameplay_intro")
+
+func _wire_tactile_button(button: Button, feedback_kind: String) -> void:
+	if button == null:
+		return
+	button.button_down.connect(func(): _press_tactile_button(button, feedback_kind))
+	button.button_up.connect(func(): _release_tactile_button(button))
+	button.mouse_exited.connect(func(): _release_tactile_button(button))
+
+func _press_tactile_button(button: Button, feedback_kind: String) -> void:
+	if button == null or button.disabled:
+		return
+	button.pivot_offset = button.size * 0.5
+	haptics.request_ui()
+	feedback_requested.emit("ui_" + feedback_kind)
+	button.modulate = Color(1.05, 1.02, 1.07, 1.0)
+	var tween := create_tween()
+	tween.set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
+	tween.tween_property(button, "scale", Vector2(0.945, 0.945), 0.065)
+
+func _release_tactile_button(button: Button) -> void:
+	if button == null:
+		return
+	button.pivot_offset = button.size * 0.5
+	var tween := create_tween()
+	tween.set_parallel(true)
+	tween.tween_property(button, "scale", Vector2.ONE, 0.14).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
+	tween.tween_property(button, "modulate", Color.WHITE, 0.12).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
+
+func _play_gameplay_intro() -> void:
+	if _reduced_motion:
+		return
+	if _gameplay_intro_tween != null and _gameplay_intro_tween.is_valid():
+		_gameplay_intro_tween.kill()
+	var reveal_nodes: Array[Control] = [eyebrow_label, $Layout/HUDPlate, board_view, hint_label, _booster_tray]
+	_gameplay_intro_tween = create_tween()
+	_gameplay_intro_tween.set_parallel(true)
+	for index in range(reveal_nodes.size()):
+		var node := reveal_nodes[index]
+		if node == null:
+			continue
+		node.pivot_offset = node.size * 0.5
+		node.modulate = Color(1, 1, 1, 0)
+		node.scale = Vector2(0.97, 0.97) if node == board_view else Vector2(0.985, 0.985)
+		var delay := float(index) * 0.045
+		_gameplay_intro_tween.tween_property(node, "modulate", Color.WHITE, 0.20).set_delay(delay)
+		_gameplay_intro_tween.tween_property(node, "scale", Vector2.ONE, 0.28).set_delay(delay).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
+
+func _play_pause_open() -> void:
+	if _pause_transition_tween != null and _pause_transition_tween.is_valid():
+		_pause_transition_tween.kill()
+	var card := pause_overlay.get_node_or_null("Card") as Control
+	var dim := pause_overlay.get_node_or_null("Dim") as CanvasItem
+	if card == null:
+		return
+	card.pivot_offset = card.size * 0.5
+	var rest_position := card.position
+	card.set_meta("pause_rest_position", rest_position)
+	if _reduced_motion:
+		card.scale = Vector2.ONE
+		card.modulate = Color.WHITE
+		if dim != null:
+			dim.modulate = Color.WHITE
+		return
+	card.position = rest_position + Vector2(0, 34)
+	card.scale = Vector2(0.91, 0.91)
+	card.modulate = Color(1, 1, 1, 0)
+	if dim != null:
+		dim.modulate = Color(1, 1, 1, 0)
+	var content := card.get_node_or_null("Content") as Control
+	var reveal_items: Array[CanvasItem] = []
+	if content != null:
+		for child in content.get_children():
+			if child is CanvasItem:
+				(child as CanvasItem).modulate = Color(1, 1, 1, 0)
+				reveal_items.append(child as CanvasItem)
+	_pause_transition_tween = create_tween()
+	_pause_transition_tween.set_parallel(true)
+	if dim != null:
+		_pause_transition_tween.tween_property(dim, "modulate", Color.WHITE, 0.22).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
+	_pause_transition_tween.tween_property(card, "position", rest_position, 0.30).set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_OUT)
+	_pause_transition_tween.tween_property(card, "scale", Vector2.ONE, 0.34).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
+	_pause_transition_tween.tween_property(card, "modulate", Color.WHITE, 0.20)
+	for index in range(reveal_items.size()):
+		_pause_transition_tween.tween_property(reveal_items[index], "modulate", Color.WHITE, 0.15).set_delay(0.08 + float(index) * 0.035)
+
+func _begin_pause_close(after: Callable) -> void:
+	if _pause_closing:
+		return
+	_pause_closing = true
+	pause_overlay.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	if _pause_transition_tween != null and _pause_transition_tween.is_valid():
+		_pause_transition_tween.kill()
+	var card := pause_overlay.get_node_or_null("Card") as Control
+	var dim := pause_overlay.get_node_or_null("Dim") as CanvasItem
+	if card == null or _reduced_motion:
+		_finish_pause_close(after)
+		return
+	var rest_position: Vector2 = card.get_meta("pause_rest_position", card.position)
+	_pause_transition_tween = create_tween()
+	_pause_transition_tween.set_parallel(true)
+	_pause_transition_tween.tween_property(card, "position", rest_position + Vector2(0, 24), 0.16).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_IN)
+	_pause_transition_tween.tween_property(card, "scale", Vector2(0.96, 0.96), 0.16).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_IN)
+	_pause_transition_tween.tween_property(card, "modulate", Color(1, 1, 1, 0), 0.14)
+	if dim != null:
+		_pause_transition_tween.tween_property(dim, "modulate", Color(1, 1, 1, 0), 0.16)
+	_pause_transition_tween.finished.connect(func(): _finish_pause_close(after))
+
+func _finish_pause_close(after: Callable) -> void:
+	pause_overlay.visible = false
+	pause_overlay.mouse_filter = Control.MOUSE_FILTER_STOP
+	_pause_closing = false
+	var card := pause_overlay.get_node_or_null("Card") as Control
+	var dim := pause_overlay.get_node_or_null("Dim") as CanvasItem
+	if card != null:
+		card.scale = Vector2.ONE
+		card.modulate = Color.WHITE
+		card.position = card.get_meta("pause_rest_position", card.position)
+		var content := card.get_node_or_null("Content") as Control
+		if content != null:
+			for child in content.get_children():
+				if child is CanvasItem:
+					(child as CanvasItem).modulate = Color.WHITE
+	if dim != null:
+		dim.modulate = Color.WHITE
+	if _booster_tray != null:
+		_booster_tray.visible = true
+	if after.is_valid():
+		after.call()
 
 func set_player_resources(lives: int, coins: int, gems: int) -> void:
 	_player_lives = clampi(lives, 0, 5)
@@ -358,36 +497,35 @@ func show_pause() -> bool:
 		return false
 	if board_view.has_method("is_motion_active") and bool(board_view.is_motion_active()):
 		return false
+	_pause_closing = false
 	pause_overlay.visible = true
+	pause_overlay.mouse_filter = Control.MOUSE_FILTER_STOP
 	if _booster_tray != null:
 		_booster_tray.visible = false
+	_play_pause_open()
 	return true
 
 func resume_level() -> bool:
 	if not pause_overlay.visible:
 		return false
-	pause_overlay.visible = false
 	_idle_hint_seconds = 0.0
-	if _booster_tray != null:
-		_booster_tray.visible = true
+	_begin_pause_close(Callable())
 	return true
 
 func _on_pause_retry() -> void:
 	if not pause_overlay.visible:
 		return
-	pause_overlay.visible = false
-	retry_current_level()
+	_begin_pause_close(Callable(self, "retry_current_level"))
 
 func _on_pause_exit() -> void:
 	if not pause_overlay.visible:
 		return
-	pause_overlay.visible = false
-	level_exit_requested.emit()
+	_begin_pause_close(func(): level_exit_requested.emit())
 
 func attempt_swap(from: Vector2i, to: Vector2i):
 	_idle_hint_seconds = 0.0
 	_last_objective_delta = 0
-	if board_state == null or result_overlay.visible or pause_overlay.visible:
+	if board_state == null or result_overlay.visible or (pause_overlay.visible and not _pause_closing):
 		return null
 	if board_view.has_method("is_motion_active") and bool(board_view.is_motion_active()):
 		return null
@@ -915,6 +1053,8 @@ func _present_result_overlay(kind: String) -> void:
 		_result_transition_active = false
 		return
 	card.pivot_offset = card.size * 0.5
+	var rest_position := card.position
+	card.set_meta("result_rest_position", rest_position)
 	card.scale = Vector2.ONE
 	card.modulate = Color.WHITE
 	if dim != null:
@@ -923,17 +1063,27 @@ func _present_result_overlay(kind: String) -> void:
 		_result_transition_active = false
 		return
 	_result_transition_active = true
-	card.scale = Vector2(0.985, 0.985)
-	card.modulate = Color(1, 1, 1, 0.94)
+	card.position = rest_position + Vector2(0, 42)
+	card.scale = Vector2(0.86, 0.86)
+	card.modulate = Color(1, 1, 1, 0)
 	if dim != null:
-		dim.modulate = Color(1, 1, 1, 0.92)
+		dim.modulate = Color(1, 1, 1, 0)
+	var content := card.get_node_or_null("Content") as Control
+	var reveal_items: Array[CanvasItem] = []
+	if content != null:
+		for child in content.get_children():
+			if child is CanvasItem:
+				(child as CanvasItem).modulate = Color(1, 1, 1, 0)
+				reveal_items.append(child as CanvasItem)
 	_result_transition_tween = create_tween()
 	_result_transition_tween.set_parallel(true)
-	_result_transition_tween.set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
-	_result_transition_tween.tween_property(card, "scale", Vector2.ONE, 0.18)
-	_result_transition_tween.tween_property(card, "modulate", Color.WHITE, 0.18)
 	if dim != null:
-		_result_transition_tween.tween_property(dim, "modulate", Color.WHITE, 0.18)
+		_result_transition_tween.tween_property(dim, "modulate", Color.WHITE, 0.24).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
+	_result_transition_tween.tween_property(card, "position", rest_position, 0.36).set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_OUT)
+	_result_transition_tween.tween_property(card, "scale", Vector2.ONE, 0.42).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
+	_result_transition_tween.tween_property(card, "modulate", Color.WHITE, 0.22)
+	for index in range(reveal_items.size()):
+		_result_transition_tween.tween_property(reveal_items[index], "modulate", Color.WHITE, 0.17).set_delay(0.07 + float(index) * 0.032)
 	_result_transition_tween.finished.connect(func(): _result_transition_active = false)
 
 func _reset_terminal_transition() -> void:
@@ -947,6 +1097,12 @@ func _reset_terminal_transition() -> void:
 		if card != null:
 			card.scale = Vector2.ONE
 			card.modulate = Color.WHITE
+			card.position = card.get_meta("result_rest_position", card.position)
+			var content := card.get_node_or_null("Content") as Control
+			if content != null:
+				for child in content.get_children():
+					if child is CanvasItem:
+						(child as CanvasItem).modulate = Color.WHITE
 		if dim != null:
 			dim.modulate = Color.WHITE
 
