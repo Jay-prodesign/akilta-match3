@@ -62,7 +62,7 @@ func _capture() -> void:
 	if start == null or start.disabled:
 		return _fail(app, "S04 Play action missing")
 	start.emit_signal("pressed")
-	await _frames(4)
+	await _frames(30)
 	if String(app.current_route_name()) != "gameplay":
 		return _fail(app, "S04 must enter S05 Gameplay")
 	var gameplay = app.current_screen()
@@ -178,12 +178,12 @@ func _capture() -> void:
 
 	if not gameplay.show_pause():
 		return _fail(app, "S05 pause state must open")
-	await _frames(2)
+	await _frames(28)
 	if not await _save(app, "golden-04b-pause.png"):
 		return
 	if not gameplay.resume_level():
 		return _fail(app, "S05 pause state must resume")
-	await _frames(2)
+	await _frames(18)
 
 	var trace = gameplay.attempt_swap(Vector2i(1, 4), Vector2i(2, 4))
 	if trace == null or not bool(trace.accepted) or String(trace.result) != "won":
@@ -191,7 +191,7 @@ func _capture() -> void:
 	var board_view = gameplay.get_node_or_null("Layout/BoardView")
 	if board_view != null and board_view.has_method("is_motion_active") and bool(board_view.is_motion_active()):
 		await board_view.trace_motion_finished
-	await _frames(2)
+	await _frames(32)
 	if not gameplay.result_overlay.visible:
 		return _fail(app, "S06 reward/result must become visible")
 	if String(app.current_route_name()) != "win_rewards":
