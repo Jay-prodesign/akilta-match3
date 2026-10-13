@@ -2218,7 +2218,31 @@
                     "available",
                     "pressed"
                   ],
-                  "geometry_ref": "booster_slot"
+                  "geometry_ref": "booster_slot",
+                  "geometry": {
+                    "profile": "booster_action",
+                    "min_size": [
+                      88,
+                      88
+                    ],
+                    "preferred_size": [
+                      128,
+                      142
+                    ],
+                    "placement": "booster_tray_flow",
+                    "aspect_policy": "1:1_art_plus_label",
+                    "fit": "contain",
+                    "safe_area": "content",
+                    "source_min_size": [
+                      256,
+                      256
+                    ],
+                    "touch_target": [
+                      88,
+                      88
+                    ],
+                    "z_policy": "gameplay_asset"
+                  }
                 },
                 {
                   "id": "sealed_booster_a",
@@ -2226,7 +2250,31 @@
                   "states": [
                     "sealed"
                   ],
-                  "geometry_ref": "booster_slot"
+                  "geometry_ref": "booster_slot",
+                  "geometry": {
+                    "profile": "booster_action",
+                    "min_size": [
+                      88,
+                      88
+                    ],
+                    "preferred_size": [
+                      128,
+                      142
+                    ],
+                    "placement": "booster_tray_flow",
+                    "aspect_policy": "1:1_art_plus_label",
+                    "fit": "contain",
+                    "safe_area": "content",
+                    "source_min_size": [
+                      256,
+                      256
+                    ],
+                    "touch_target": [
+                      88,
+                      88
+                    ],
+                    "z_policy": "gameplay_asset"
+                  }
                 },
                 {
                   "id": "sealed_booster_b",
@@ -2234,7 +2282,31 @@
                   "states": [
                     "sealed"
                   ],
-                  "geometry_ref": "booster_slot"
+                  "geometry_ref": "booster_slot",
+                  "geometry": {
+                    "profile": "booster_action",
+                    "min_size": [
+                      88,
+                      88
+                    ],
+                    "preferred_size": [
+                      128,
+                      142
+                    ],
+                    "placement": "booster_tray_flow",
+                    "aspect_policy": "1:1_art_plus_label",
+                    "fit": "contain",
+                    "safe_area": "content",
+                    "source_min_size": [
+                      256,
+                      256
+                    ],
+                    "touch_target": [
+                      88,
+                      88
+                    ],
+                    "z_policy": "gameplay_asset"
+                  }
                 },
                 {
                   "id": "sealed_booster_c",
@@ -2242,7 +2314,31 @@
                   "states": [
                     "sealed"
                   ],
-                  "geometry_ref": "booster_slot"
+                  "geometry_ref": "booster_slot",
+                  "geometry": {
+                    "profile": "booster_action",
+                    "min_size": [
+                      88,
+                      88
+                    ],
+                    "preferred_size": [
+                      128,
+                      142
+                    ],
+                    "placement": "booster_tray_flow",
+                    "aspect_policy": "1:1_art_plus_label",
+                    "fit": "contain",
+                    "safe_area": "content",
+                    "source_min_size": [
+                      256,
+                      256
+                    ],
+                    "touch_target": [
+                      88,
+                      88
+                    ],
+                    "z_policy": "gameplay_asset"
+                  }
                 },
                 {
                   "id": "settings",
@@ -2251,7 +2347,31 @@
                     "normal",
                     "pressed"
                   ],
-                  "geometry_ref": "secondary_cta"
+                  "geometry_ref": "secondary_cta",
+                  "geometry": {
+                    "profile": "booster_action",
+                    "min_size": [
+                      88,
+                      88
+                    ],
+                    "preferred_size": [
+                      128,
+                      142
+                    ],
+                    "placement": "booster_tray_flow",
+                    "aspect_policy": "1:1_art_plus_label",
+                    "fit": "contain",
+                    "safe_area": "content",
+                    "source_min_size": [
+                      256,
+                      256
+                    ],
+                    "touch_target": [
+                      88,
+                      88
+                    ],
+                    "z_policy": "functional_icon"
+                  }
                 }
               ]
             }
@@ -4330,7 +4450,27 @@
                 "open",
                 "changed"
               ],
-              "geometry_ref": "fullscreen_cover"
+              "geometry_ref": "fullscreen_cover",
+              "geometry": {
+                "profile": "full_bleed",
+                "min_size": [
+                  1080,
+                  1920
+                ],
+                "preferred_size": [
+                  1080,
+                  1920
+                ],
+                "placement": "viewport_fill",
+                "aspect_policy": "9:16",
+                "fit": "cover",
+                "safe_area": "bleed",
+                "source_min_size": [
+                  2160,
+                  3840
+                ],
+                "z_policy": "background_art"
+              }
             },
             {
               "id": "house_sigil",
@@ -4339,7 +4479,27 @@
                 "open",
                 "changed"
               ],
-              "geometry_ref": "compact_hero_art"
+              "geometry_ref": "compact_hero_art",
+              "geometry": {
+                "profile": "state_art",
+                "min_size": [
+                  128,
+                  128
+                ],
+                "preferred_size": [
+                  180,
+                  180
+                ],
+                "placement": "owner_anchor",
+                "aspect_policy": "1:1",
+                "fit": "contain",
+                "safe_area": "content",
+                "source_min_size": [
+                  384,
+                  384
+                ],
+                "z_policy": "content_artwork"
+              }
             },
             {
               "id": "master_audio",
@@ -4348,7 +4508,27 @@
                 "on",
                 "off"
               ],
-              "geometry_ref": "settings_toggle"
+              "geometry_ref": "settings_toggle",
+              "geometry": {
+                "profile": "settings_control",
+                "min_size": [
+                  760,
+                  88
+                ],
+                "preferred_size": [
+                  860,
+                  92
+                ],
+                "placement": "container_flow",
+                "aspect_policy": "flexible",
+                "fit": "n/a",
+                "safe_area": "content",
+                "touch_target": [
+                  88,
+                  88
+                ],
+                "z_policy": "structural_ui"
+              }
             },
             {
               "id": "music",
@@ -4357,7 +4537,27 @@
                 "on",
                 "off"
               ],
-              "geometry_ref": "settings_toggle"
+              "geometry_ref": "settings_toggle",
+              "geometry": {
+                "profile": "settings_control",
+                "min_size": [
+                  760,
+                  88
+                ],
+                "preferred_size": [
+                  860,
+                  92
+                ],
+                "placement": "container_flow",
+                "aspect_policy": "flexible",
+                "fit": "n/a",
+                "safe_area": "content",
+                "touch_target": [
+                  88,
+                  88
+                ],
+                "z_policy": "structural_ui"
+              }
             },
             {
               "id": "sfx",
@@ -4366,7 +4566,27 @@
                 "on",
                 "off"
               ],
-              "geometry_ref": "settings_toggle"
+              "geometry_ref": "settings_toggle",
+              "geometry": {
+                "profile": "settings_control",
+                "min_size": [
+                  760,
+                  88
+                ],
+                "preferred_size": [
+                  860,
+                  92
+                ],
+                "placement": "container_flow",
+                "aspect_policy": "flexible",
+                "fit": "n/a",
+                "safe_area": "content",
+                "touch_target": [
+                  88,
+                  88
+                ],
+                "z_policy": "structural_ui"
+              }
             },
             {
               "id": "haptics",
@@ -4375,7 +4595,27 @@
                 "on",
                 "off"
               ],
-              "geometry_ref": "settings_toggle"
+              "geometry_ref": "settings_toggle",
+              "geometry": {
+                "profile": "settings_control",
+                "min_size": [
+                  760,
+                  88
+                ],
+                "preferred_size": [
+                  860,
+                  92
+                ],
+                "placement": "container_flow",
+                "aspect_policy": "flexible",
+                "fit": "n/a",
+                "safe_area": "content",
+                "touch_target": [
+                  88,
+                  88
+                ],
+                "z_policy": "structural_ui"
+              }
             },
             {
               "id": "reduced_motion",
@@ -4384,7 +4624,27 @@
                 "on",
                 "off"
               ],
-              "geometry_ref": "settings_toggle"
+              "geometry_ref": "settings_toggle",
+              "geometry": {
+                "profile": "settings_control",
+                "min_size": [
+                  760,
+                  88
+                ],
+                "preferred_size": [
+                  860,
+                  92
+                ],
+                "placement": "container_flow",
+                "aspect_policy": "flexible",
+                "fit": "n/a",
+                "safe_area": "content",
+                "touch_target": [
+                  88,
+                  88
+                ],
+                "z_policy": "structural_ui"
+              }
             },
             {
               "id": "high_contrast",
@@ -4393,7 +4653,27 @@
                 "on",
                 "off"
               ],
-              "geometry_ref": "settings_toggle"
+              "geometry_ref": "settings_toggle",
+              "geometry": {
+                "profile": "settings_control",
+                "min_size": [
+                  760,
+                  88
+                ],
+                "preferred_size": [
+                  860,
+                  92
+                ],
+                "placement": "container_flow",
+                "aspect_policy": "flexible",
+                "fit": "n/a",
+                "safe_area": "content",
+                "touch_target": [
+                  88,
+                  88
+                ],
+                "z_policy": "structural_ui"
+              }
             },
             {
               "id": "close",
@@ -4401,7 +4681,27 @@
               "states": [
                 "enabled"
               ],
-              "geometry_ref": "utility_cta"
+              "geometry_ref": "utility_cta",
+              "geometry": {
+                "profile": "secondary_cta",
+                "min_size": [
+                  320,
+                  88
+                ],
+                "preferred_size": [
+                  760,
+                  96
+                ],
+                "placement": "container_flow",
+                "aspect_policy": "flexible",
+                "fit": "n/a",
+                "safe_area": "content",
+                "touch_target": [
+                  88,
+                  88
+                ],
+                "z_policy": "structural_ui"
+              }
             }
           ]
         }
@@ -5097,30 +5397,48 @@
     "rule": "No new production art is authorized until every canonical screen/overlay slot has explicit geometry and the implemented geometry passes real Godot render inspection."
   },
   "geometry_system": {
+    "design_viewport": {
+      "width": 1080,
+      "height": 1920,
+      "orientation": "portrait",
+      "units": "logical_px"
+    },
     "viewport": {
       "width": 1080,
       "height": 1920,
       "units": "logical_px"
     },
+    "minimum_touch_target": [
+      88,
+      88
+    ],
+    "touch_target_min": 88,
     "safe_horizontal": {
       "min": 32,
       "max": 48,
       "baseline": 36
     },
+    "top_resource_zone_range": [
+      96,
+      112
+    ],
     "top_resource_zone": {
       "x": 36,
       "y": 8,
       "width": 1008,
       "height": 104
     },
+    "bottom_navigation_zone_range": [
+      128,
+      144
+    ],
     "bottom_navigation_zone": {
       "x": 10,
       "y": 1776,
       "width": 1060,
       "height": 136
     },
-    "touch_target_min": 88,
-    "rule": "Every canonical slot resolves through geometry_ref to a production geometry preset. Slot geometry precedes asset production; backgrounds use cover, identity/content art uses contain unless the preset explicitly states otherwise."
+    "rule": "Every canonical slot must carry explicit geometry and resolve through geometry_ref before asset production. Background art covers its owner; identity/content art preserves aspect and uses contain unless explicitly overridden."
   },
   "geometry_profiles": {
     "full_bleed": {
