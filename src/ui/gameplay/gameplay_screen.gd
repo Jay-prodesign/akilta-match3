@@ -117,6 +117,7 @@ const LAST_MOVE_THRESHOLD := 1
 @onready var result_ritual: Control = $ResultOverlay/Card/Content/RewardRitual
 @onready var result_recovery_action: Button = $ResultOverlay/Card/Content/RecoveryAction
 @onready var result_action: Button = $ResultOverlay/Card/Content/Action
+# Compact gameplay resource header keeps level identity inside its authored status plate.
 @onready var _level_badge_label: Label = $ResourceBar/Resources/LevelBadgePlate/LevelBadge
 @onready var _booster_tray: PanelContainer = $BoosterTray
 @onready var _hint_boost_button: Button = $BoosterTray/BoosterActions/HintSlot/HintBoost
