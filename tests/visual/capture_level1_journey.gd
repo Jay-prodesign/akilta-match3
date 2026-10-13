@@ -68,8 +68,10 @@ func _capture() -> void:
 	var gameplay = app.current_screen()
 	var gameplay_contract: Dictionary = gameplay.gameplay_presentation_contract() if gameplay != null and gameplay.has_method("gameplay_presentation_contract") else {}
 	for parity_key in [
-		"visual_parity_gate_v11",
 		"objective_spacing_locked",
+		"north_star_compact_gameplay_header",
+		"north_star_compact_gameplay_geometry",
+		"north_star_gameplay_hud_frame",
 		"canonical_booster_art",
 		"gothic_board_material",
 		"quiet_gameplay_shell_family",
@@ -81,64 +83,76 @@ func _capture() -> void:
 		"north_star_booster_family",
 		"utility_separated_from_boosters",
 		"hint_booster_clearance",
+		"visual_parity_gate_v12",
 	]:
 		if not bool(gameplay_contract.get(parity_key, false)):
 			return _fail(app, "S05 North Star render gate failed: %s" % parity_key)
 	var gameplay_viewport: Vector2 = gameplay.get_viewport().get_visible_rect().size
 	var gameplay_resource_bar := gameplay.get_node_or_null("ResourceBar") as PanelContainer
+	var gameplay_eyebrow := gameplay.get_node_or_null("Layout/Eyebrow") as Label
 	var gameplay_title := gameplay.get_node_or_null("Layout/Title") as Label
 	var gameplay_hud := gameplay.get_node_or_null("Layout/HUDPlate") as Control
 	var gameplay_objective_icon := gameplay.get_node_or_null("Layout/HUDPlate/HUD/ObjectiveIcon") as Control
 	var gameplay_objective := gameplay.get_node_or_null("Layout/HUDPlate/HUD/Objective") as Label
 	var gameplay_moves := gameplay.get_node_or_null("Layout/HUDPlate/HUD/Moves") as Label
+	var gameplay_pause := gameplay.get_node_or_null("Layout/HUDPlate/HUD/Pause") as Button
 	var gameplay_board := gameplay.get_node_or_null("Layout/BoardView") as Control
 	var gameplay_hint := gameplay.get_node_or_null("Layout/Hint") as Control
 	var gameplay_tray := gameplay.get_node_or_null("BoosterTray") as Control
 	var shuffle_label := gameplay.get_node_or_null("BoosterTray/BoosterActions/SealedSlotA/Label") as Control
 	var hand_label := gameplay.get_node_or_null("BoosterTray/BoosterActions/SealedSlotB/Label") as Control
 	var magic_label := gameplay.get_node_or_null("BoosterTray/BoosterActions/SealedSlotC/Label") as Control
-	if gameplay_resource_bar == null or gameplay_title == null or gameplay_hud == null or gameplay_objective_icon == null or gameplay_objective == null or gameplay_moves == null or gameplay_board == null or gameplay_hint == null or gameplay_tray == null:
-		return _fail(app, "S05 North Star render gate missing resource/title/HUD/board/hint/tray")
+	if gameplay_resource_bar == null or gameplay_eyebrow == null or gameplay_title == null or gameplay_hud == null or gameplay_objective_icon == null or gameplay_objective == null or gameplay_moves == null or gameplay_pause == null or gameplay_board == null or gameplay_hint == null or gameplay_tray == null:
+		return _fail(app, "S05 North Star render gate missing level/HUD/board/hint/tray")
 	if gameplay_resource_bar.visible:
 		return _fail(app, "S05 meta currency/level row regressed into gameplay")
 	var board_height_ratio: float = gameplay_board.size.y / gameplay_viewport.y
 	var board_width_ratio: float = gameplay_board.size.x / gameplay_viewport.x
 	var tray_width_ratio: float = gameplay_tray.size.x / gameplay_viewport.x
-	if board_height_ratio < 0.49 or board_height_ratio > 0.55:
+	if board_height_ratio < 0.56 or board_height_ratio > 0.61:
 		return _fail(app, "S05 board height ratio drifted: %.3f" % board_height_ratio)
 	if board_width_ratio < 0.90:
 		return _fail(app, "S05 board width no longer dominates viewport: %.3f" % board_width_ratio)
-	if tray_width_ratio < 0.72 or tray_width_ratio > 0.80:
+	if tray_width_ratio < 0.82 or tray_width_ratio > 0.86:
 		return _fail(app, "S05 booster tray width drifted: %.3f" % tray_width_ratio)
-	var title_rect: Rect2 = gameplay_title.get_global_rect()
+	var eyebrow_rect: Rect2 = gameplay_eyebrow.get_global_rect()
 	var hud_rect: Rect2 = gameplay_hud.get_global_rect()
 	var objective_icon_rect: Rect2 = gameplay_objective_icon.get_global_rect()
+	var pause_rect: Rect2 = gameplay_pause.get_global_rect()
 	var board_rect: Rect2 = gameplay_board.get_global_rect()
 	var hint_rect: Rect2 = gameplay_hint.get_global_rect()
 	var tray_rect: Rect2 = gameplay_tray.get_global_rect()
 	var hint_width_ratio: float = hint_rect.size.x / gameplay_viewport.x
-	if hint_width_ratio < 0.70 or hint_width_ratio > 0.82:
+	if hint_width_ratio < 0.62 or hint_width_ratio > 0.70:
 		return _fail(app, "S05 hint callout width drifted: %.3f" % hint_width_ratio)
-	if title_rect.end.y + 4.0 > hud_rect.position.y:
-		return _fail(app, "S05 title and objective HUD overlap")
+	if gameplay_title.visible:
+		return _fail(app, "S05 room title regressed into the compact gameplay header")
+	if not gameplay_eyebrow.text.begins_with("LEVEL ") or gameplay_eyebrow.text.contains("·") or gameplay_eyebrow.get_theme_font_size("font_size") < 26:
+		return _fail(app, "S05 compact Level identity regressed")
+	if eyebrow_rect.end.y + 4.0 > hud_rect.position.y:
+		return _fail(app, "S05 Level identity and objective HUD overlap")
 	if gameplay_objective.has_theme_stylebox_override("normal"):
-		return _fail(app, "S05 target regressed into a detached inner panel")
-	if gameplay_title.get_theme_font_size("font_size") < 50 or gameplay_moves.get_theme_font_size("font_size") < 44:
-		return _fail(app, "S05 title/moves visual hierarchy regressed")
+		return _fail(app, "S05 objective regressed into a detached inner panel")
+	if gameplay_objective.text.begins_with("TARGET\n"):
+		return _fail(app, "S05 redundant target heading regressed")
+	if gameplay_moves.get_theme_font_size("font_size") < 40 or gameplay_objective.get_theme_font_size("font_size") < 26:
+		return _fail(app, "S05 objective/moves visual hierarchy regressed")
 	if gameplay_hint.get_theme_font_size("font_size") < 24:
 		return _fail(app, "S05 hint readability regressed")
 	if not hud_rect.grow(-4.0).encloses(objective_icon_rect):
 		return _fail(app, "S05 objective icon escapes the authored HUD frame")
 	var objective_rect: Rect2 = gameplay_objective.get_global_rect()
-	if objective_rect.size.x < gameplay_viewport.x * 0.50:
+	if objective_rect.size.x < gameplay_viewport.x * 0.36:
 		return _fail(app, "S05 objective copy width collapsed: %.3f" % (objective_rect.size.x / gameplay_viewport.x))
 	if objective_rect.position.x < objective_icon_rect.end.x + 6.0:
 		return _fail(app, "S05 objective icon-to-copy clearance collapsed")
+	if pause_rect.position.x >= objective_icon_rect.position.x:
+		return _fail(app, "S05 pause control must remain at the quiet left edge of the HUD")
 	if hud_rect.end.y > board_rect.position.y + 2.0:
 		return _fail(app, "S05 objective HUD collides with board")
 	if board_rect.end.y > hint_rect.position.y + 2.0:
 		return _fail(app, "S05 board collides with authored hint band")
-	if hint_rect.end.y + 20.0 > tray_rect.position.y:
+	if hint_rect.end.y + 32.0 > tray_rect.position.y:
 		return _fail(app, "S05 hint-to-booster breathing room collapsed")
 	for booster_label in [shuffle_label, hand_label, magic_label]:
 		if booster_label == null or not tray_rect.grow(-8.0).encloses(booster_label.get_global_rect()):

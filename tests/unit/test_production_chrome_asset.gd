@@ -21,6 +21,7 @@ func _run() -> void:
 	_expect(float(contract.get("nine_slice_margin", 0.0)) >= 56.0, "shared production chrome must retain safe 9-slice corners")
 	_expect(bool(contract.get("global_interactive_family_ready", false)), "global interactive chrome variants must resolve from the authored 9-slice source")
 	_expect(bool(contract.get("action_family_ready", false)), "Golden Loop action chrome must resolve primary and utility authored 9-slice variants")
+	_expect(bool(contract.get("gameplay_hud_frame_asset_backed", false)), "gameplay objective HUD must resolve the authored gothic frame")
 	_expect(String(contract.get("primary_action_runtime_path", "")).ends_with(".svg"), "primary action chrome must resolve through the authored action asset")
 	await _expect_panel(PRESTART, "Layout/Card")
 	await _expect_panel(GAMEPLAY, "PauseOverlay/Card")
@@ -32,7 +33,7 @@ func _run() -> void:
 	await _expect_action(CHAPTER_MAP, "Layout/Back", "utility")
 	await _expect_action(PRESTART, "Layout/Card/Content/Start", "primary")
 	await _expect_action(PRESTART, "Layout/Back", "utility")
-	await _expect_action(GAMEPLAY, "Layout/HUDPlate/HUD/Pause", "utility")
+	await _expect_interactive(GAMEPLAY, "Layout/HUDPlate/HUD/Pause", "gameplay_pause")
 	await _expect_action(GAMEPLAY, "PauseOverlay/Card/Content/Resume", "primary")
 	await _expect_action(GAMEPLAY, "PauseOverlay/Card/Content/Retry", "utility")
 	await _expect_action(GAMEPLAY, "PauseOverlay/Card/Content/Settings", "utility")
@@ -64,6 +65,20 @@ func _expect_action(scene: PackedScene, path: String, hierarchy: String) -> void
 	_expect(button != null and button.get_theme_stylebox("pressed") is StyleBoxTexture, "action pressed state must be asset-backed: %s" % path)
 	_expect(button != null and button.get_theme_stylebox("disabled") is StyleBoxTexture, "action disabled state must be asset-backed: %s" % path)
 	_expect(button != null and String(button.get_meta("production_chrome_kind", "")).begins_with("action_" + hierarchy + "_"), "action hierarchy provenance mismatch: %s" % path)
+	instance.queue_free()
+	await process_frame
+
+func _expect_interactive(scene: PackedScene, path: String, role: String) -> void:
+	var instance := scene.instantiate()
+	root.add_child(instance)
+	await process_frame
+	var button := instance.get_node_or_null(path) as Button
+	_expect(button != null, "production interactive control missing: %s" % path)
+	_expect(button != null and button.get_theme_stylebox("normal") is StyleBoxTexture, "interactive normal state must be asset-backed: %s" % path)
+	_expect(button != null and button.get_theme_stylebox("hover") is StyleBoxTexture, "interactive hover state must be asset-backed: %s" % path)
+	_expect(button != null and button.get_theme_stylebox("pressed") is StyleBoxTexture, "interactive pressed state must be asset-backed: %s" % path)
+	_expect(button != null and button.get_theme_stylebox("disabled") is StyleBoxTexture, "interactive disabled state must be asset-backed: %s" % path)
+	_expect(button != null and String(button.get_meta("production_chrome_kind", "")) == "interactive_" + role, "interactive provenance mismatch: %s" % path)
 	instance.queue_free()
 	await process_frame
 

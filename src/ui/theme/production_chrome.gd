@@ -7,11 +7,13 @@ const QUIET_PANEL_PATH := "res://assets/ui/chrome/gbl_ui_ritual_panel_9s_quiet_v
 const PRIMARY_ACTION_PATH := "res://assets/ui/chrome/gbl_ui_action_primary_9s_v01.svg"
 const UTILITY_ACTION_PATH := "res://assets/ui/chrome/gbl_ui_action_utility_9s_v01.svg"
 const GAMEPLAY_FRAME_PATH := "res://assets/board/gbl_board_ritual_frame_9s_base_v01.png"
+const GAMEPLAY_HUD_FRAME_PATH := "res://assets/board/gbl_board_ritual_frame_9s_gothic_v02.svg"
 
 static var _primary_panel: StyleBoxTexture
 static var _top_shell: StyleBoxTexture
 static var _bottom_shell: StyleBoxTexture
 static var _gameplay_shell: StyleBoxTexture
+static var _gameplay_hud_frame: StyleBoxTexture
 static var _secondary_panel: StyleBoxTexture
 static var _gameplay_booster_tray: StyleBoxTexture
 static var _compact_panel: StyleBoxTexture
@@ -197,15 +199,21 @@ static func gameplay_shell() -> StyleBoxTexture:
 		_gameplay_shell = _style(8.0, 52.0, QUIET_PANEL_PATH)
 	return _gameplay_shell
 
+static func gameplay_hud_frame() -> StyleBoxTexture:
+	if _gameplay_hud_frame == null:
+		_gameplay_hud_frame = _style(10.0, 40.0, GAMEPLAY_HUD_FRAME_PATH)
+	return _gameplay_hud_frame
+
 static func apply_gameplay_shell(panel: Control, kind: String) -> bool:
 	if panel == null:
 		return false
-	var style := gameplay_shell()
+	var objective_frame := kind == "objective"
+	var style := gameplay_hud_frame() if objective_frame else gameplay_shell()
 	if style == null:
 		return false
 	panel.add_theme_stylebox_override("panel", style)
-	panel.set_meta("production_chrome_asset", QUIET_PANEL_PATH)
-	panel.set_meta("production_chrome_kind", "gameplay_" + kind)
+	panel.set_meta("production_chrome_asset", GAMEPLAY_HUD_FRAME_PATH if objective_frame else QUIET_PANEL_PATH)
+	panel.set_meta("production_chrome_kind", "gameplay_objective_frame" if objective_frame else "gameplay_" + kind)
 	return true
 
 static func gameplay_booster_tray() -> StyleBoxTexture:
@@ -255,6 +263,7 @@ static func contract() -> Dictionary:
 		"bottom_shell_asset_backed": bottom_shell() != null and bottom_shell().texture != null,
 		"global_shell_family_verified": top_shell() != null and top_shell().texture != null and bottom_shell() != null and bottom_shell().texture != null,
 		"gameplay_shell_asset_backed": gameplay_shell() != null and gameplay_shell().texture != null,
+		"gameplay_hud_frame_asset_backed": gameplay_hud_frame() != null and gameplay_hud_frame().texture != null,
 		"gameplay_booster_tray_asset_backed": gameplay_booster_tray() != null and gameplay_booster_tray().texture != null,
 		"secondary_panel_asset_backed": secondary_panel() != null and secondary_panel().texture != null,
 		"secondary_hero_family_verified": secondary_panel() != null and secondary_panel().texture != null,
