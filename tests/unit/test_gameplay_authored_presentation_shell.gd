@@ -23,7 +23,7 @@ func _run() -> void:
 	_expect(bool(contract.get("north_star_objective_strip", false)), "Gameplay target/moves strip must retain the locked North Star hierarchy")
 	_expect(bool(contract.get("north_star_booster_tray", false)), "Gameplay lower booster tray must use the locked 160 logical px family with 88 px touch targets")
 	_expect(bool(contract.get("hint_booster_clearance", false)), "Gameplay hint band must remain fully visible above the booster tray")
-	_expect(bool(contract.get("booster_label_readability", false)), "Gameplay booster labels must retain a dedicated readable band above the ornamental tray edge")
+	_expect(bool(contract.get("booster_label_readability", false)), "Gameplay booster labels must retain a dedicated readable band inside the ornamental tray edge")
 	_expect(bool(contract.get("deterministic_gameplay_geometry", false)), "Gameplay tray geometry must be authored rather than positioned by runtime magic")
 	_expect(bool(contract.get("truthful_sealed_slots", false)), "Unavailable boosters must remain visibly sealed rather than pretending to be usable")
 	_expect(bool(contract.get("authored_target_moves_hierarchy", false)), "Gameplay target and moves hierarchy must use authored production plates")
@@ -58,6 +58,7 @@ func _run() -> void:
 	var keeper_label := screen.get_node_or_null("BoosterTray/BoosterActions/HintSlot/Label") as Label
 	var settings_label := screen.get_node_or_null("BoosterTray/BoosterActions/SettingsSlot/Label") as Label
 	var sealed_label := screen.get_node_or_null("BoosterTray/BoosterActions/SealedSlotA/Label") as Label
+	var keeper_slot := screen.get_node_or_null("BoosterTray/BoosterActions/HintSlot") as VBoxContainer
 	_expect(objective != null and moves != null, "Authored HUD objective/moves slots missing")
 	_expect(objective_icon != null and objective_icon.texture != null, "Authored objective plate must expose production objective art")
 	_expect(objective != null and objective.text.begins_with("TARGET ·"), "Objective copy must read as a clear top target block")
@@ -89,6 +90,7 @@ func _run() -> void:
 	_expect(keeper_label != null and keeper_label.custom_minimum_size.y >= 32.0 and keeper_label.get_theme_font_size("font_size") >= 22, "ASK KEEPER label must stay readable above the tray border")
 	_expect(settings_label != null and settings_label.custom_minimum_size.y >= 32.0 and settings_label.get_theme_font_size("font_size") >= 22, "Settings label must stay readable above the tray border")
 	_expect(sealed_label != null and sealed_label.custom_minimum_size.y >= 32.0 and sealed_label.get_theme_font_size("font_size") >= 18, "Sealed booster state must remain legible rather than disappearing into the tray border")
+	_expect(keeper_slot != null and keeper_slot.size_flags_vertical == Control.SIZE_SHRINK_CENTER, "Booster slot stacks must shrink-center inside the tray instead of stretching labels through the ornamental border")
 
 	screen.settings_requested.connect(func(): settings_requested = true)
 	if settings != null:
