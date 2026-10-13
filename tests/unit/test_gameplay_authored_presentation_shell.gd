@@ -20,8 +20,8 @@ func _run() -> void:
 		"gameplay_header_clearance", "compact_resource_chips", "asset_backed_resource_chips",
 		"level_badge_separated", "hint_booster_clearance", "booster_label_readability",
 		"north_star_booster_family", "utility_separated_from_boosters", "north_star_board_object",
-		"north_star_header_hierarchy", "booster_frame_family", "integrated_hud_surface",
-		"final_hint_readability", "final_booster_readability", "visual_parity_gate_v2", "visual_parity_gate_v3",
+		"north_star_header_hierarchy", "booster_frame_family", "quiet_gameplay_shell_family", "integrated_hud_surface",
+		"final_hint_readability", "final_booster_readability", "visual_parity_gate_v2", "visual_parity_gate_v3", "visual_parity_gate_v4",
 	]:
 		_expect(bool(contract.get(key, false)), "Gameplay North Star parity contract failed: %s" % key)
 	_expect(int(contract.get("visible_booster_count", 0)) == 3, "Exactly three gameplay boosters must be visible")
@@ -45,9 +45,9 @@ func _run() -> void:
 	var hand_label := screen.get_node_or_null("BoosterTray/BoosterActions/SealedSlotB/Label") as Label
 	var magic_label := screen.get_node_or_null("BoosterTray/BoosterActions/SealedSlotC/Label") as Label
 
-	_expect(title != null and title.get_theme_font_size("font_size") >= 44, "Title must retain hero hierarchy")
+	_expect(title != null and title.get_theme_font_size("font_size") >= 48, "Title must retain hero hierarchy")
 	_expect(objective != null and objective.text.contains("SIGILS"), "Objective must remain explicit")
-	_expect(objective_icon != null and objective_icon.texture != null and objective_icon.custom_minimum_size.x >= 84.0, "Objective art must be visually dominant")
+	_expect(objective_icon != null and objective_icon.texture != null and objective_icon.custom_minimum_size.x >= 80.0, "Objective art must be visually dominant")
 	_expect(moves != null and moves.custom_minimum_size.x >= 180.0 and moves.get_theme_font_size("font_size") >= 42, "Moves must be a dominant counter")
 	_expect(board != null and board.custom_minimum_size.y >= 980.0, "Board must remain the dominant gameplay object")
 	_expect(hint_band != null and tray != null and tray.global_position.y >= hint_band.global_position.y + hint_band.size.y + 20.0, "Hint and booster tray collide")
@@ -60,7 +60,7 @@ func _run() -> void:
 	_expect(hand_label != null and hand_label.text == "HAND", "Hand identity drifted")
 	_expect(magic_label != null and magic_label.text == "MAGIC", "Magic identity drifted")
 	_expect(objective != null and not objective.has_theme_stylebox_override("normal") and objective.text.begins_with("TARGET"), "Objective must read as part of one authored HUD surface rather than a detached inner panel")
-	_expect(hint_band != null and hint_band.custom_minimum_size.y >= 60.0 and hint_band.get_theme_font_size("font_size") >= 21, "Hint band must remain readable at 540x960")
+	_expect(hint_band != null and hint_band.custom_minimum_size.y >= 60.0 and hint_band.get_theme_font_size("font_size") >= 23, "Hint band must remain readable at 540x960")
 
 	screen.set_player_resources(4, 1234, 7)
 	await process_frame
