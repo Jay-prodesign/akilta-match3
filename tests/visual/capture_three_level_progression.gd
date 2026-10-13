@@ -69,7 +69,7 @@ func _capture() -> void:
 	if thorn_hotspot == null or thorn_hotspot.disabled:
 		return _fail(app, "completed House must expose the restored Thorned Locket hotspot")
 	thorn_hotspot.emit_signal("pressed")
-	await _frames(2)
+	await _frames(18)
 	var house_thorn_name: Label = completed_house.get_node_or_null("HouseCurioInspect/Card/Content/Name") as Label
 	var house_thorn_effect: Label = completed_house.get_node_or_null("HouseCurioInspect/Card/Content/HouseEffect") as Label
 	if house_thorn_name == null or house_thorn_name.text != "THORNED LOCKET" or house_thorn_effect == null or not house_thorn_effect.text.contains("opening cabinet set"):
@@ -80,7 +80,7 @@ func _capture() -> void:
 	if house_thorn_close == null:
 		return _fail(app, "House Thorned Locket detail close missing")
 	house_thorn_close.emit_signal("pressed")
-	await _frames(2)
+	await _frames(14)
 
 	if not app.show_collection():
 		return _fail(app, "completed House -> Reliquary failed")
