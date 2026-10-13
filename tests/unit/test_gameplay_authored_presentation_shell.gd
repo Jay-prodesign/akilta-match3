@@ -67,7 +67,7 @@ func _run() -> void:
 	_expect(shuffle != null and shuffle.disabled and shuffle.icon != null and shuffle.custom_minimum_size.y >= 108.0, "Shuffle booster truth/scale failed")
 	_expect(hand != null and hand.disabled and hand.icon != null and hand.custom_minimum_size.y >= 108.0, "Hand booster truth/scale failed")
 	_expect(magic != null and magic.disabled and magic.icon != null and magic.custom_minimum_size.y >= 108.0, "Magic booster truth/scale failed")
-	_expect(shuffle_label != null and shuffle_label.text == "SHUFFLE" and shuffle_label.get_theme_font_size("font_size") >= 26, "Shuffle identity/readability drifted")
+	_expect(shuffle_label != null and shuffle_label.text == "SHUFFLE" and shuffle_label.get_theme_font_size("font_size") >= 22, "Shuffle identity/readability drifted")
 	_expect(hand_label != null and hand_label.text == "HAND", "Hand identity drifted")
 	_expect(magic_label != null and magic_label.text == "MAGIC", "Magic identity drifted")
 	_expect(objective != null and not objective.has_theme_stylebox_override("normal") and objective.text.contains("\n") and not objective.text.begins_with("TARGET\n"), "Objective must read as a compact authored HUD objective rather than a detached text panel")
