@@ -62,7 +62,7 @@ func screen_contract() -> Dictionary:
 		"sealed_offline_art": String(reward_art.get_meta("asset_path", "")).contains("_sealed_"),
 		"production_return_actions": return_events.get_theme_stylebox("normal") is StyleBoxTexture and return_house.get_theme_stylebox("normal") is StyleBoxTexture and String(return_events.get_meta("production_chrome_kind", "")) == "action_primary_weekly_events_return" and String(return_house.get_meta("production_chrome_kind", "")) == "action_utility_weekly_house_return",
 		"compact_offline_copy": availability != null and not availability.visible,
-		"intentional_world_stage": ($MissionLayout/StageSpacer as Control) != null and ($MissionLayout/StageSpacer as Control).size_flags_vertical == Control.SIZE_EXPAND_FILL and ($MissionLayout as VBoxContainer).offset_bottom <= -120.0,
+		"intentional_world_stage": ($MissionLayout/StageSpacer as Control) != null and ($MissionLayout/StageSpacer as Control).size_flags_vertical == Control.SIZE_EXPAND_FILL and ($MissionLayout as VBoxContainer).offset_bottom <= -150.0,
 		"asset_backed_opening_record": opening_record != null and opening_record.get_theme_stylebox("normal") is StyleBoxTexture and String(opening_record.get_meta("production_chrome_kind", "")) == "compact_weekly_record",
 		"primary_cta_rounding": return_events.get_theme_stylebox("normal") != null,
 

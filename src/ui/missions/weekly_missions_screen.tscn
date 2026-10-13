@@ -90,7 +90,7 @@ anchor_bottom = 1.0
 offset_left = 34.0
 offset_top = 34.0
 offset_right = -34.0
-offset_bottom = -126.0
+offset_bottom = -160.0
 grow_horizontal = 2
 grow_vertical = 2
 theme_override_constants/separation = 12
@@ -191,7 +191,7 @@ size_flags_vertical = 3
 mouse_filter = 2
 
 [node name="MissionOpeningRecord" type="Label" parent="MissionLayout"]
-custom_minimum_size = Vector2(0, 62)
+custom_minimum_size = Vector2(0, 72)
 layout_mode = 2
 theme_override_colors/font_color = Color(0.82, 0.72, 0.90, 1)
 theme_override_colors/font_outline_color = Color(0.02, 0.014, 0.028, 0.92)
@@ -199,6 +199,7 @@ theme_override_constants/outline_size = 2
 theme_override_font_sizes/font_size = 22
 text = "OPENING CABINET RECORD · 0 / 3 DISPLAYS AWAKENED"
 horizontal_alignment = 1
+vertical_alignment = 1
 autowrap_mode = 2
 
 [node name="ReturnToEvents" type="Button" parent="MissionLayout"]
