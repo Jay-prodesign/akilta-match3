@@ -73,6 +73,7 @@ func _draw() -> void:
 
 	var margin: float = size.x * 0.035
 	var room_top: float = size.y * 0.025
+	# During the ceremony navigation is hidden, so the authored House world deliberately consumes its normal bottom inset.
 	var room_bottom: float = size.y if _restoration_full_height else size.y * 0.955
 	var room := Rect2(
 		Vector2(margin, room_top),
