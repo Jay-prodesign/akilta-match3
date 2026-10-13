@@ -8,12 +8,15 @@ const PRIMARY_ACTION_PATH := "res://assets/ui/chrome/gbl_ui_action_primary_9s_v0
 const UTILITY_ACTION_PATH := "res://assets/ui/chrome/gbl_ui_action_utility_9s_v01.svg"
 const GAMEPLAY_FRAME_PATH := "res://assets/board/gbl_board_ritual_frame_9s_base_v01.png"
 const GAMEPLAY_HUD_FRAME_PATH := "res://assets/ui/gameplay/hud_objective_frame_v01.svg"
+const GAMEPLAY_PAUSE_FRAME_PATH := "res://assets/ui/gameplay/pause_modal_frame_v01.svg"
+const GAMEPLAY_BOOSTER_TRAY_PATH := "res://assets/ui/gameplay/booster_tray_frame_v02.svg"
 
 static var _primary_panel: StyleBoxTexture
 static var _top_shell: StyleBoxTexture
 static var _bottom_shell: StyleBoxTexture
 static var _gameplay_shell: StyleBoxTexture
 static var _gameplay_hud_frame: StyleBoxTexture
+static var _gameplay_pause_frame: StyleBoxTexture
 static var _secondary_panel: StyleBoxTexture
 static var _gameplay_booster_tray: StyleBoxTexture
 static var _compact_panel: StyleBoxTexture
@@ -218,7 +221,7 @@ static func apply_gameplay_shell(panel: Control, kind: String) -> bool:
 
 static func gameplay_booster_tray() -> StyleBoxTexture:
 	if _gameplay_booster_tray == null:
-		_gameplay_booster_tray = _style(12.0, 36.0, GAMEPLAY_FRAME_PATH)
+		_gameplay_booster_tray = _style(14.0, 58.0, GAMEPLAY_BOOSTER_TRAY_PATH)
 	return _gameplay_booster_tray
 
 static func apply_gameplay_booster_tray(panel: Control) -> bool:
@@ -228,8 +231,24 @@ static func apply_gameplay_booster_tray(panel: Control) -> bool:
 	if style == null:
 		return false
 	panel.add_theme_stylebox_override("panel", style)
-	panel.set_meta("production_chrome_asset", GAMEPLAY_FRAME_PATH)
+	panel.set_meta("production_chrome_asset", GAMEPLAY_BOOSTER_TRAY_PATH)
 	panel.set_meta("production_chrome_kind", "gameplay_booster_tray")
+	return true
+
+static func gameplay_pause_frame() -> StyleBoxTexture:
+	if _gameplay_pause_frame == null:
+		_gameplay_pause_frame = _style(30.0, 78.0, GAMEPLAY_PAUSE_FRAME_PATH)
+	return _gameplay_pause_frame
+
+static func apply_gameplay_pause_modal(panel: Control) -> bool:
+	if panel == null:
+		return false
+	var style := gameplay_pause_frame()
+	if style == null:
+		return false
+	panel.add_theme_stylebox_override("panel", style)
+	panel.set_meta("production_chrome_asset", GAMEPLAY_PAUSE_FRAME_PATH)
+	panel.set_meta("production_chrome_kind", "gameplay_pause_modal")
 	return true
 
 static func apply_shell(panel: Control, kind: String) -> bool:
