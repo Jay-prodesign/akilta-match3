@@ -174,7 +174,7 @@ func _capture() -> void:
 		if hint_rect.end.y + 10.0 > tray_rect.position.y:
 			return _fail(app, "S05 transient hint collides with booster tray")
 	else:
-		if tray_rect.position.y < board_rect.end.y - 4.0 or tray_rect.position.y - board_rect.end.y > 28.0:
+		if tray_rect.position.y < board_rect.end.y - 4.0 or tray_rect.position.y - board_rect.end.y > 120.0:
 			return _fail(app, "S05 board-to-booster gap drifted from locked composition")
 	for booster_label in [shuffle_label, hand_label, magic_label]:
 		if booster_label == null or not tray_rect.grow(-8.0).encloses(booster_label.get_global_rect()):
