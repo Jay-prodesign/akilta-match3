@@ -111,6 +111,7 @@ static func authored_contract(panel: PanelContainer) -> Dictionary:
 		"north_star_resource_zone": (panel.offset_bottom - panel.offset_top) >= 96.0 and (panel.offset_bottom - panel.offset_top) <= 112.0 and coin_icon != null and coin_icon.custom_minimum_size.x >= 40.0 and gem_icon != null and gem_icon.custom_minimum_size.x >= 40.0,
 		"resource_zone_height": panel.offset_bottom - panel.offset_top,
 		"asset_backed_shell": panel.get_theme_stylebox("panel") is StyleBoxTexture and String(panel.get_meta("production_chrome_kind", "")) == "top",
+		"quiet_shell": String(panel.get_meta("production_chrome_asset", "")) == ProductionChrome.QUIET_PANEL_PATH,
 		"asset_backed_resource_chips": asset_backed_resource_chips,
 		"asset_backed_profile_action": asset_backed_profile_action and String(profile.get_meta("production_chrome_kind", "")) == "interactive_keeper_profile",
 		"runtime_ui_factory": false,
