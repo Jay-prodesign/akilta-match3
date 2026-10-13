@@ -118,6 +118,11 @@ const LAST_MOVE_THRESHOLD := 1
 @onready var pause_retry: Button = $PauseOverlay/Card/Content/Retry
 @onready var pause_settings: Button = $PauseOverlay/Card/Content/Settings
 @onready var pause_exit: Button = $PauseOverlay/Card/Content/Exit
+@onready var pause_frame_art: TextureRect = $PauseOverlay/Card/FrameArt
+@onready var pause_resume_frame: TextureRect = $PauseOverlay/Card/Content/Resume/FrameArt
+@onready var pause_retry_frame: TextureRect = $PauseOverlay/Card/Content/Retry/FrameArt
+@onready var pause_settings_frame: TextureRect = $PauseOverlay/Card/Content/Settings/FrameArt
+@onready var pause_exit_frame: TextureRect = $PauseOverlay/Card/Content/Exit/FrameArt
 @onready var pause_sigil: TextureRect = $PauseOverlay/Card/Content/PauseSigil
 @onready var hint_label: Label = $Layout/Hint
 @onready var awakening_title: Label = $Layout/Awakening/Content/Label
@@ -133,6 +138,8 @@ const LAST_MOVE_THRESHOLD := 1
 @onready var result_ritual: Control = $ResultOverlay/Card/Content/RewardRitual
 @onready var result_recovery_action: Button = $ResultOverlay/Card/Content/RecoveryAction
 @onready var result_action: Button = $ResultOverlay/Card/Content/Action
+@onready var result_recovery_frame: TextureRect = $ResultOverlay/Card/Content/RecoveryAction/FrameArt
+@onready var result_action_frame: TextureRect = $ResultOverlay/Card/Content/Action/FrameArt
 # Compact gameplay resource header keeps level identity inside its authored status plate.
 @onready var _level_badge_label: Label = $ResourceBar/Resources/LevelBadgePlate/LevelBadge
 @onready var _booster_tray: PanelContainer = $BoosterTray
@@ -205,6 +212,13 @@ func _ready() -> void:
 	ProductionChrome.apply_gameplay_action_button(pause_exit, "utility", "pause_exit")
 	ProductionChrome.apply_gameplay_action_button(result_recovery_action, "primary", "fail_recovery_plus_three")
 	ProductionChrome.apply_gameplay_action_button(result_action, "primary", "result_continue_or_retry")
+	pause_frame_art.texture = PieceAssetLoader.ornament(ProductionChrome.GAMEPLAY_PAUSE_FRAME_PATH)
+	_install_direct_action_frame(pause_resume, pause_resume_frame, ProductionChrome.GAMEPLAY_PRIMARY_ACTION_PATH)
+	_install_direct_action_frame(pause_retry, pause_retry_frame, ProductionChrome.GAMEPLAY_UTILITY_ACTION_PATH)
+	_install_direct_action_frame(pause_settings, pause_settings_frame, ProductionChrome.GAMEPLAY_UTILITY_ACTION_PATH)
+	_install_direct_action_frame(pause_exit, pause_exit_frame, ProductionChrome.GAMEPLAY_UTILITY_ACTION_PATH)
+	_install_direct_action_frame(result_recovery_action, result_recovery_frame, ProductionChrome.GAMEPLAY_PRIMARY_ACTION_PATH)
+	_install_direct_action_frame(result_action, result_action_frame, ProductionChrome.GAMEPLAY_PRIMARY_ACTION_PATH)
 	var board_frame := $Layout/BoardView/OrnateFrame as Panel
 	if board_frame != null:
 		board_frame.add_theme_stylebox_override("panel", StyleBoxEmpty.new())
@@ -260,6 +274,17 @@ func _ready() -> void:
 	if FileAccess.file_exists(default_level_path):
 		load_level_path(default_level_path, default_seed)
 	call_deferred("_play_gameplay_intro")
+
+func _install_direct_action_frame(button: Button, frame_art: TextureRect, asset_path: String) -> void:
+	if button == null or frame_art == null:
+		return
+	frame_art.texture = PieceAssetLoader.ornament(asset_path)
+	if frame_art.texture == null:
+		return
+	var empty := StyleBoxEmpty.new()
+	for state_name in ["normal", "hover", "pressed", "focus", "disabled"]:
+		button.add_theme_stylebox_override(state_name, empty)
+	button.set_meta("direct_action_frame", asset_path)
 
 func _wire_tactile_button(button: Button, feedback_kind: String) -> void:
 	if button == null:
