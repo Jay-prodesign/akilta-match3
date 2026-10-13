@@ -4,6 +4,7 @@ extends RefCounted
 const PieceAssetLoader = preload("res://src/match3/presentation/piece_asset_loader.gd")
 const MobileSafeArea = preload("res://src/ui/shared/mobile_safe_area.gd")
 const ResourceBarScene = preload("res://src/ui/shared/top_resource_bar.tscn")
+const ProductionChrome = preload("res://src/ui/theme/production_chrome.gd")
 # Exact-head visual gate: shared meta content must begin below this authored 104px resource shell.
 
 static func attach(screen: Control, progress, profile_handler: Callable = Callable(), content_path: NodePath = NodePath("Layout")) -> PanelContainer:
@@ -29,6 +30,7 @@ static func attach(screen: Control, progress, profile_handler: Callable = Callab
 	panel.offset_top = 8.0 + safe_insets.y
 	panel.offset_bottom = 112.0 + safe_insets.y
 	screen.add_child(panel)
+	ProductionChrome.apply_shell(panel, "top")
 
 	var coin_icon := panel.get_node_or_null("Resources/CoinResourceChip/Content/Icon") as TextureRect
 	var gem_icon := panel.get_node_or_null("Resources/GemResourceChip/Content/Icon") as TextureRect
@@ -99,6 +101,7 @@ static func authored_contract(panel: PanelContainer) -> Dictionary:
 		"profile_touch_target_ok": profile != null and profile.custom_minimum_size.x >= 88.0 and profile.custom_minimum_size.y >= 88.0,
 		"north_star_resource_zone": (panel.offset_bottom - panel.offset_top) >= 96.0 and (panel.offset_bottom - panel.offset_top) <= 112.0 and coin_icon != null and coin_icon.custom_minimum_size.x >= 40.0 and gem_icon != null and gem_icon.custom_minimum_size.x >= 40.0,
 		"resource_zone_height": panel.offset_bottom - panel.offset_top,
+		"asset_backed_shell": panel.get_theme_stylebox("panel") is StyleBoxTexture and String(panel.get_meta("production_chrome_kind", "")) == "top",
 		"runtime_ui_factory": false,
 	}
 

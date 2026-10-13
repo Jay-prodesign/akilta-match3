@@ -4,6 +4,7 @@ extends RefCounted
 const PieceAssetLoader = preload("res://src/match3/presentation/piece_asset_loader.gd")
 const MobileSafeArea = preload("res://src/ui/shared/mobile_safe_area.gd")
 const NavigationScene = preload("res://src/ui/shared/product_navigation.tscn")
+const ProductionChrome = preload("res://src/ui/theme/production_chrome.gd")
 
 const ITEMS := [
 	{"label": "HOUSE", "id": "house", "node": "NavHouse", "icon": "res://assets/ui/nav_house.svg"},
@@ -36,6 +37,7 @@ static func attach(screen: Control, active_section: String, handler: Callable, c
 	panel.offset_top = -144.0 - safe_insets.w
 	panel.offset_bottom = -8.0 - safe_insets.w
 	screen.add_child(panel)
+	ProductionChrome.apply_shell(panel, "bottom")
 
 	for item in ITEMS:
 		var action := String(item["id"])
@@ -91,5 +93,6 @@ static func authored_contract(panel: PanelContainer) -> Dictionary:
 		"touch_targets_ok": touch_targets_ok,
 		"north_star_nav_zone": north_star_nav_zone and (panel.offset_bottom - panel.offset_top) >= 128.0 and (panel.offset_bottom - panel.offset_top) <= 144.0,
 		"nav_zone_height": panel.offset_bottom - panel.offset_top,
+		"asset_backed_shell": panel.get_theme_stylebox("panel") is StyleBoxTexture and String(panel.get_meta("production_chrome_kind", "")) == "bottom",
 		"runtime_ui_factory": false,
 	}
