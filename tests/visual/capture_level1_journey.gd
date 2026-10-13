@@ -71,6 +71,7 @@ func _capture() -> void:
 		"objective_spacing_locked",
 		"north_star_compact_gameplay_header",
 		"north_star_compact_gameplay_geometry",
+		"north_star_gameplay_hud_frame",
 		"canonical_booster_art",
 		"gothic_board_material",
 		"quiet_gameplay_shell_family",

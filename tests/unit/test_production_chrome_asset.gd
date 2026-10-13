@@ -21,6 +21,7 @@ func _run() -> void:
 	_expect(float(contract.get("nine_slice_margin", 0.0)) >= 56.0, "shared production chrome must retain safe 9-slice corners")
 	_expect(bool(contract.get("global_interactive_family_ready", false)), "global interactive chrome variants must resolve from the authored 9-slice source")
 	_expect(bool(contract.get("action_family_ready", false)), "Golden Loop action chrome must resolve primary and utility authored 9-slice variants")
+	_expect(bool(contract.get("gameplay_hud_frame_asset_backed", false)), "gameplay objective HUD must resolve the authored gothic frame")
 	_expect(String(contract.get("primary_action_runtime_path", "")).ends_with(".svg"), "primary action chrome must resolve through the authored action asset")
 	await _expect_panel(PRESTART, "Layout/Card")
 	await _expect_panel(GAMEPLAY, "PauseOverlay/Card")
