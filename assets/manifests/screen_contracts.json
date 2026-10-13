@@ -86,7 +86,8 @@
                       2160,
                       3840
                     ]
-                  }
+                  },
+                  "geometry_ref": "fullscreen_cover"
                 },
                 {
                   "id": "brand_mark",
@@ -110,7 +111,8 @@
                     "fit": "n/a",
                     "safe_area": "content",
                     "z_policy": "structural_ui"
-                  }
+                  },
+                  "geometry_ref": "hero_art"
                 }
               ]
             }
@@ -143,7 +145,8 @@
                     "fit": "n/a",
                     "safe_area": "content",
                     "z_policy": "structural_ui"
-                  }
+                  },
+                  "geometry_ref": "status_plate"
                 },
                 {
                   "id": "enter_cta",
@@ -170,7 +173,8 @@
                       88,
                       88
                     ]
-                  }
+                  },
+                  "geometry_ref": "intrinsic_copy"
                 },
                 {
                   "id": "recovery_message",
@@ -193,7 +197,8 @@
                     "fit": "n/a",
                     "safe_area": "content",
                     "z_policy": "structural_ui"
-                  }
+                  },
+                  "geometry_ref": "intrinsic_copy"
                 }
               ]
             }
@@ -270,7 +275,8 @@
                       88,
                       88
                     ]
-                  }
+                  },
+                  "geometry_ref": "resource_chip"
                 },
                 {
                   "id": "coins",
@@ -301,7 +307,8 @@
                       88,
                       88
                     ]
-                  }
+                  },
+                  "geometry_ref": "resource_chip"
                 },
                 {
                   "id": "gems",
@@ -332,7 +339,8 @@
                       88,
                       88
                     ]
-                  }
+                  },
+                  "geometry_ref": "resource_chip"
                 },
                 {
                   "id": "profile_settings",
@@ -364,7 +372,8 @@
                       88,
                       88
                     ]
-                  }
+                  },
+                  "geometry_ref": "profile_button"
                 }
               ]
             }
@@ -404,7 +413,8 @@
                       2160,
                       3840
                     ]
-                  }
+                  },
+                  "geometry_ref": "fullscreen_cover"
                 },
                 {
                   "id": "character_world_layer",
@@ -433,7 +443,8 @@
                       840,
                       1240
                     ]
-                  }
+                  },
+                  "geometry_ref": "hero_art"
                 },
                 {
                   "id": "restoration_slots",
@@ -461,7 +472,8 @@
                       720,
                       720
                     ]
-                  }
+                  },
+                  "geometry_ref": "card_art"
                 },
                 {
                   "id": "ambient_world_fx",
@@ -485,7 +497,8 @@
                     "fit": "owner_bounds",
                     "safe_area": "owner",
                     "z_policy": "runtime_vfx"
-                  }
+                  },
+                  "geometry_ref": "board_fx"
                 }
               ]
             }
@@ -519,7 +532,8 @@
                     "fit": "n/a",
                     "safe_area": "content",
                     "z_policy": "structural_ui"
-                  }
+                  },
+                  "geometry_ref": "status_plate"
                 },
                 {
                   "id": "curio_progress",
@@ -543,7 +557,8 @@
                     "fit": "n/a",
                     "safe_area": "content",
                     "z_policy": "structural_ui"
-                  }
+                  },
+                  "geometry_ref": "status_plate"
                 }
               ]
             },
@@ -577,7 +592,8 @@
                       88,
                       88
                     ]
-                  }
+                  },
+                  "geometry_ref": "primary_cta"
                 }
               ]
             }
@@ -618,7 +634,8 @@
                       88,
                       88
                     ]
-                  }
+                  },
+                  "geometry_ref": "bottom_nav_item"
                 },
                 {
                   "id": "curios",
@@ -650,7 +667,8 @@
                       88,
                       88
                     ]
-                  }
+                  },
+                  "geometry_ref": "bottom_nav_item"
                 },
                 {
                   "id": "map",
@@ -682,7 +700,8 @@
                       88,
                       88
                     ]
-                  }
+                  },
+                  "geometry_ref": "bottom_nav_item"
                 },
                 {
                   "id": "events",
@@ -715,7 +734,8 @@
                       88,
                       88
                     ]
-                  }
+                  },
+                  "geometry_ref": "bottom_nav_item"
                 },
                 {
                   "id": "shop",
@@ -748,7 +768,8 @@
                       88,
                       88
                     ]
-                  }
+                  },
+                  "geometry_ref": "bottom_nav_item"
                 }
               ]
             }
@@ -806,7 +827,8 @@
                     "fit": "n/a",
                     "safe_area": "top",
                     "z_policy": "structural_ui"
-                  }
+                  },
+                  "geometry_ref": "resource_chip"
                 },
                 {
                   "id": "back",
@@ -838,7 +860,8 @@
                       88,
                       88
                     ]
-                  }
+                  },
+                  "geometry_ref": "resource_chip"
                 }
               ]
             }
@@ -875,7 +898,8 @@
                       2160,
                       3840
                     ]
-                  }
+                  },
+                  "geometry_ref": "fullscreen_cover"
                 },
                 {
                   "id": "chapter_hotspots",
@@ -901,7 +925,8 @@
                     "fit": "contain",
                     "safe_area": "content",
                     "z_policy": "structural_ui"
-                  }
+                  },
+                  "geometry_ref": "level_node"
                 },
                 {
                   "id": "lock_reason",
@@ -924,7 +949,8 @@
                     "fit": "n/a",
                     "safe_area": "content",
                     "z_policy": "structural_ui"
-                  }
+                  },
+                  "geometry_ref": "overlay_copy"
                 }
               ]
             }
@@ -965,7 +991,8 @@
                       88,
                       88
                     ]
-                  }
+                  },
+                  "geometry_ref": "bottom_nav_item"
                 },
                 {
                   "id": "other_tabs",
@@ -993,7 +1020,8 @@
                       88,
                       88
                     ]
-                  }
+                  },
+                  "geometry_ref": "bottom_nav_item"
                 }
               ]
             }
@@ -1057,7 +1085,8 @@
                     "fit": "n/a",
                     "safe_area": "content",
                     "z_policy": "structural_ui"
-                  }
+                  },
+                  "geometry_ref": "screen_title"
                 },
                 {
                   "id": "progress",
@@ -1083,7 +1112,8 @@
                     "fit": "n/a",
                     "safe_area": "content",
                     "z_policy": "structural_ui"
-                  }
+                  },
+                  "geometry_ref": "status_plate"
                 },
                 {
                   "id": "back",
@@ -1115,7 +1145,8 @@
                       88,
                       88
                     ]
-                  }
+                  },
+                  "geometry_ref": "header_back"
                 }
               ]
             }
@@ -1152,7 +1183,8 @@
                       2160,
                       3840
                     ]
-                  }
+                  },
+                  "geometry_ref": "fullscreen_cover"
                 },
                 {
                   "id": "route_path",
@@ -1175,7 +1207,8 @@
                     "fit": "contain",
                     "safe_area": "content",
                     "z_policy": "structural_ui"
-                  }
+                  },
+                  "geometry_ref": "route_path"
                 },
                 {
                   "id": "level_nodes",
@@ -1201,7 +1234,8 @@
                     "fit": "contain",
                     "safe_area": "content",
                     "z_policy": "structural_ui"
-                  }
+                  },
+                  "geometry_ref": "level_node"
                 },
                 {
                   "id": "frontier_focus",
@@ -1228,7 +1262,8 @@
                       384,
                       384
                     ]
-                  }
+                  },
+                  "geometry_ref": "intrinsic_copy"
                 }
               ]
             }
@@ -1269,7 +1304,8 @@
                       88,
                       88
                     ]
-                  }
+                  },
+                  "geometry_ref": "bottom_nav_item"
                 },
                 {
                   "id": "other_tabs",
@@ -1297,7 +1333,8 @@
                       88,
                       88
                     ]
-                  }
+                  },
+                  "geometry_ref": "bottom_nav_item"
                 }
               ]
             }
@@ -1365,7 +1402,8 @@
                       88,
                       88
                     ]
-                  }
+                  },
+                  "geometry_ref": "header_back"
                 },
                 {
                   "id": "level_identity",
@@ -1389,7 +1427,8 @@
                     "fit": "n/a",
                     "safe_area": "top",
                     "z_policy": "structural_ui"
-                  }
+                  },
+                  "geometry_ref": "intrinsic_copy"
                 }
               ]
             }
@@ -1427,7 +1466,8 @@
                       960,
                       720
                     ]
-                  }
+                  },
+                  "geometry_ref": "compact_hero_art"
                 },
                 {
                   "id": "objective",
@@ -1450,7 +1490,8 @@
                     "fit": "n/a",
                     "safe_area": "top",
                     "z_policy": "structural_ui"
-                  }
+                  },
+                  "geometry_ref": "intrinsic_copy"
                 },
                 {
                   "id": "move_budget",
@@ -1473,7 +1514,8 @@
                     "fit": "n/a",
                     "safe_area": "top",
                     "z_policy": "structural_ui"
-                  }
+                  },
+                  "geometry_ref": "status_plate"
                 },
                 {
                   "id": "reward_curio",
@@ -1501,7 +1543,8 @@
                       720,
                       720
                     ]
-                  }
+                  },
+                  "geometry_ref": "reward_art"
                 },
                 {
                   "id": "house_consequence",
@@ -1525,7 +1568,8 @@
                     "fit": "n/a",
                     "safe_area": "content",
                     "z_policy": "structural_ui"
-                  }
+                  },
+                  "geometry_ref": "overlay_copy"
                 }
               ]
             }
@@ -1567,7 +1611,8 @@
                       88,
                       88
                     ]
-                  }
+                  },
+                  "geometry_ref": "intrinsic_copy"
                 },
                 {
                   "id": "plus_moves",
@@ -1599,7 +1644,8 @@
                       88,
                       88
                     ]
-                  }
+                  },
+                  "geometry_ref": "intrinsic_copy"
                 }
               ]
             },
@@ -1633,7 +1679,8 @@
                       88,
                       88
                     ]
-                  }
+                  },
+                  "geometry_ref": "primary_cta"
                 }
               ]
             }
@@ -1671,7 +1718,8 @@
                       2160,
                       3840
                     ]
-                  }
+                  },
+                  "geometry_ref": "fullscreen_cover"
                 }
               ]
             }
@@ -1743,7 +1791,8 @@
                     "fit": "n/a",
                     "safe_area": "top",
                     "z_policy": "structural_ui"
-                  }
+                  },
+                  "geometry_ref": "intrinsic_copy"
                 },
                 {
                   "id": "gems",
@@ -1766,7 +1815,8 @@
                     "fit": "n/a",
                     "safe_area": "top",
                     "z_policy": "structural_ui"
-                  }
+                  },
+                  "geometry_ref": "intrinsic_copy"
                 },
                 {
                   "id": "level_badge",
@@ -1789,7 +1839,8 @@
                     "fit": "n/a",
                     "safe_area": "top",
                     "z_policy": "structural_ui"
-                  }
+                  },
+                  "geometry_ref": "intrinsic_copy"
                 }
               ]
             },
@@ -1817,7 +1868,8 @@
                     "fit": "n/a",
                     "safe_area": "content",
                     "z_policy": "structural_ui"
-                  }
+                  },
+                  "geometry_ref": "intrinsic_copy"
                 },
                 {
                   "id": "objective_remaining",
@@ -1841,7 +1893,8 @@
                     "fit": "n/a",
                     "safe_area": "top",
                     "z_policy": "structural_ui"
-                  }
+                  },
+                  "geometry_ref": "status_plate"
                 },
                 {
                   "id": "moves",
@@ -1865,7 +1918,8 @@
                     "fit": "n/a",
                     "safe_area": "top",
                     "z_policy": "structural_ui"
-                  }
+                  },
+                  "geometry_ref": "gameplay_moves"
                 },
                 {
                   "id": "pause",
@@ -1897,7 +1951,8 @@
                       88,
                       88
                     ]
-                  }
+                  },
+                  "geometry_ref": "gameplay_pause"
                 }
               ]
             }
@@ -1931,7 +1986,8 @@
                     "fit": "contain",
                     "safe_area": "content",
                     "z_policy": "structural_ui"
-                  }
+                  },
+                  "geometry_ref": "board_field"
                 },
                 {
                   "id": "base_pieces",
@@ -1961,7 +2017,8 @@
                       256,
                       256
                     ]
-                  }
+                  },
+                  "geometry_ref": "board_piece"
                 },
                 {
                   "id": "specials",
@@ -1990,7 +2047,8 @@
                       256,
                       256
                     ]
-                  }
+                  },
+                  "geometry_ref": "board_piece"
                 },
                 {
                   "id": "blockers",
@@ -2019,7 +2077,8 @@
                       256,
                       256
                     ]
-                  }
+                  },
+                  "geometry_ref": "board_piece"
                 },
                 {
                   "id": "board_fx",
@@ -2045,7 +2104,8 @@
                     "fit": "owner_bounds",
                     "safe_area": "owner",
                     "z_policy": "runtime_vfx"
-                  }
+                  },
+                  "geometry_ref": "board_fx"
                 }
               ]
             }
@@ -2081,7 +2141,8 @@
                     "fit": "n/a",
                     "safe_area": "content",
                     "z_policy": "structural_ui"
-                  }
+                  },
+                  "geometry_ref": "intrinsic_copy"
                 }
               ]
             },
@@ -2111,7 +2172,8 @@
                     "fit": "n/a",
                     "safe_area": "content",
                     "z_policy": "structural_ui"
-                  }
+                  },
+                  "geometry_ref": "status_plate"
                 },
                 {
                   "id": "progress_copy",
@@ -2136,7 +2198,8 @@
                     "fit": "n/a",
                     "safe_area": "content",
                     "z_policy": "structural_ui"
-                  }
+                  },
+                  "geometry_ref": "intrinsic_copy"
                 }
               ]
             }
@@ -2153,96 +2216,42 @@
                   "layer": "gameplay_asset",
                   "states": [
                     "available",
-                    "disabled",
                     "pressed"
                   ],
-                  "geometry": {
-                    "profile": "booster_action",
-                    "min_size": [
-                      88,
-                      88
-                    ],
-                    "preferred_size": [
-                      128,
-                      142
-                    ],
-                    "placement": "booster_tray_flow",
-                    "aspect_policy": "1:1_art_plus_label",
-                    "fit": "contain",
-                    "safe_area": "content",
-                    "z_policy": "gameplay_asset",
-                    "source_min_size": [
-                      256,
-                      256
-                    ],
-                    "touch_target": [
-                      88,
-                      88
-                    ]
-                  }
+                  "geometry_ref": "booster_slot"
                 },
                 {
-                  "id": "sealed_future_boosters",
+                  "id": "sealed_booster_a",
                   "layer": "gameplay_asset",
                   "states": [
                     "sealed"
                   ],
-                  "geometry": {
-                    "profile": "booster_action",
-                    "min_size": [
-                      88,
-                      88
-                    ],
-                    "preferred_size": [
-                      128,
-                      142
-                    ],
-                    "placement": "booster_tray_flow",
-                    "aspect_policy": "1:1_art_plus_label",
-                    "fit": "contain",
-                    "safe_area": "content",
-                    "z_policy": "gameplay_asset",
-                    "source_min_size": [
-                      256,
-                      256
-                    ],
-                    "touch_target": [
-                      88,
-                      88
-                    ]
-                  }
+                  "geometry_ref": "booster_slot"
                 },
                 {
-                  "id": "settings_shortcut",
+                  "id": "sealed_booster_b",
+                  "layer": "gameplay_asset",
+                  "states": [
+                    "sealed"
+                  ],
+                  "geometry_ref": "booster_slot"
+                },
+                {
+                  "id": "sealed_booster_c",
+                  "layer": "gameplay_asset",
+                  "states": [
+                    "sealed"
+                  ],
+                  "geometry_ref": "booster_slot"
+                },
+                {
+                  "id": "settings",
                   "layer": "functional_icon",
                   "states": [
                     "normal",
                     "pressed"
                   ],
-                  "geometry": {
-                    "profile": "utility_touch",
-                    "min_size": [
-                      88,
-                      88
-                    ],
-                    "preferred_size": [
-                      96,
-                      96
-                    ],
-                    "placement": "owner_anchor",
-                    "aspect_policy": "1:1",
-                    "fit": "contain",
-                    "safe_area": "content",
-                    "z_policy": "functional_icon",
-                    "source_min_size": [
-                      192,
-                      192
-                    ],
-                    "touch_target": [
-                      88,
-                      88
-                    ]
-                  }
+                  "geometry_ref": "secondary_cta"
                 }
               ]
             }
@@ -2281,7 +2290,8 @@
                       2160,
                       3840
                     ]
-                  }
+                  },
+                  "geometry_ref": "fullscreen_cover"
                 }
               ]
             }
@@ -2345,7 +2355,8 @@
                       384,
                       384
                     ]
-                  }
+                  },
+                  "geometry_ref": "fullscreen_cover"
                 }
               ]
             }
@@ -2379,7 +2390,8 @@
                     "fit": "n/a",
                     "safe_area": "content",
                     "z_policy": "structural_ui"
-                  }
+                  },
+                  "geometry_ref": "screen_title"
                 },
                 {
                   "id": "reward_curio",
@@ -2409,7 +2421,8 @@
                       720,
                       720
                     ]
-                  }
+                  },
+                  "geometry_ref": "reward_art"
                 },
                 {
                   "id": "reward_values",
@@ -2433,7 +2446,8 @@
                     "fit": "n/a",
                     "safe_area": "content",
                     "z_policy": "structural_ui"
-                  }
+                  },
+                  "geometry_ref": "overlay_copy"
                 },
                 {
                   "id": "house_consequence",
@@ -2457,7 +2471,8 @@
                     "fit": "n/a",
                     "safe_area": "content",
                     "z_policy": "structural_ui"
-                  }
+                  },
+                  "geometry_ref": "overlay_copy"
                 },
                 {
                   "id": "continue",
@@ -2485,7 +2500,8 @@
                       88,
                       88
                     ]
-                  }
+                  },
+                  "geometry_ref": "primary_cta"
                 },
                 {
                   "id": "reward_fx",
@@ -2509,7 +2525,8 @@
                     "fit": "owner_bounds",
                     "safe_area": "owner",
                     "z_policy": "runtime_vfx"
-                  }
+                  },
+                  "geometry_ref": "board_fx"
                 }
               ]
             }
@@ -2572,7 +2589,8 @@
                       2160,
                       3840
                     ]
-                  }
+                  },
+                  "geometry_ref": "fullscreen_cover"
                 },
                 {
                   "id": "restored_curio_slot",
@@ -2601,7 +2619,8 @@
                       720,
                       720
                     ]
-                  }
+                  },
+                  "geometry_ref": "reward_art"
                 },
                 {
                   "id": "character_world_layer",
@@ -2629,7 +2648,8 @@
                       840,
                       1240
                     ]
-                  }
+                  },
+                  "geometry_ref": "hero_art"
                 },
                 {
                   "id": "awakening_fx",
@@ -2653,7 +2673,8 @@
                     "fit": "owner_bounds",
                     "safe_area": "owner",
                     "z_policy": "runtime_vfx"
-                  }
+                  },
+                  "geometry_ref": "board_fx"
                 }
               ]
             }
@@ -2691,7 +2712,8 @@
                       720,
                       720
                     ]
-                  }
+                  },
+                  "geometry_ref": "card_art"
                 },
                 {
                   "id": "change_copy",
@@ -2714,7 +2736,8 @@
                     "fit": "n/a",
                     "safe_area": "content",
                     "z_policy": "structural_ui"
-                  }
+                  },
+                  "geometry_ref": "overlay_copy"
                 },
                 {
                   "id": "continue",
@@ -2742,7 +2765,8 @@
                       88,
                       88
                     ]
-                  }
+                  },
+                  "geometry_ref": "primary_cta"
                 }
               ]
             }
@@ -2808,7 +2832,8 @@
                       2160,
                       3840
                     ]
-                  }
+                  },
+                  "geometry_ref": "fullscreen_cover"
                 }
               ]
             }
@@ -2841,7 +2866,8 @@
                     "fit": "n/a",
                     "safe_area": "content",
                     "z_policy": "structural_ui"
-                  }
+                  },
+                  "geometry_ref": "screen_title"
                 },
                 {
                   "id": "count",
@@ -2866,7 +2892,8 @@
                     "fit": "n/a",
                     "safe_area": "content",
                     "z_policy": "structural_ui"
-                  }
+                  },
+                  "geometry_ref": "status_plate"
                 }
               ]
             }
@@ -2904,7 +2931,8 @@
                       720,
                       720
                     ]
-                  }
+                  },
+                  "geometry_ref": "repeated_card"
                 },
                 {
                   "id": "empty_state",
@@ -2927,7 +2955,8 @@
                     "fit": "contain",
                     "safe_area": "content",
                     "z_policy": "structural_ui"
-                  }
+                  },
+                  "geometry_ref": "overlay_copy"
                 }
               ]
             }
@@ -2968,7 +2997,8 @@
                       88,
                       88
                     ]
-                  }
+                  },
+                  "geometry_ref": "bottom_nav_item"
                 },
                 {
                   "id": "other_tabs",
@@ -2996,7 +3026,8 @@
                       88,
                       88
                     ]
-                  }
+                  },
+                  "geometry_ref": "bottom_nav_item"
                 }
               ]
             }
@@ -3057,7 +3088,8 @@
                     "fit": "n/a",
                     "safe_area": "content",
                     "z_policy": "structural_ui"
-                  }
+                  },
+                  "geometry_ref": "screen_title"
                 },
                 {
                   "id": "timer",
@@ -3081,7 +3113,8 @@
                     "fit": "n/a",
                     "safe_area": "content",
                     "z_policy": "structural_ui"
-                  }
+                  },
+                  "geometry_ref": "status_plate"
                 }
               ]
             }
@@ -3116,7 +3149,8 @@
                     "fit": "contain",
                     "safe_area": "content",
                     "z_policy": "structural_ui"
-                  }
+                  },
+                  "geometry_ref": "repeated_card"
                 },
                 {
                   "id": "reward",
@@ -3145,7 +3179,8 @@
                       960,
                       720
                     ]
-                  }
+                  },
+                  "geometry_ref": "compact_hero_art"
                 },
                 {
                   "id": "empty_state",
@@ -3169,7 +3204,8 @@
                     "fit": "contain",
                     "safe_area": "content",
                     "z_policy": "structural_ui"
-                  }
+                  },
+                  "geometry_ref": "overlay_copy"
                 }
               ]
             }
@@ -3239,7 +3275,8 @@
                       2160,
                       3840
                     ]
-                  }
+                  },
+                  "geometry_ref": "fullscreen_cover"
                 }
               ]
             }
@@ -3272,7 +3309,8 @@
                     "fit": "n/a",
                     "safe_area": "content",
                     "z_policy": "structural_ui"
-                  }
+                  },
+                  "geometry_ref": "screen_title"
                 },
                 {
                   "id": "status",
@@ -3297,7 +3335,8 @@
                     "fit": "n/a",
                     "safe_area": "content",
                     "z_policy": "structural_ui"
-                  }
+                  },
+                  "geometry_ref": "status_plate"
                 }
               ]
             }
@@ -3337,7 +3376,8 @@
                       960,
                       720
                     ]
-                  }
+                  },
+                  "geometry_ref": "hero_art"
                 },
                 {
                   "id": "timer",
@@ -3361,7 +3401,8 @@
                     "fit": "n/a",
                     "safe_area": "content",
                     "z_policy": "structural_ui"
-                  }
+                  },
+                  "geometry_ref": "status_plate"
                 },
                 {
                   "id": "reward_metadata",
@@ -3385,7 +3426,8 @@
                     "fit": "n/a",
                     "safe_area": "content",
                     "z_policy": "structural_ui"
-                  }
+                  },
+                  "geometry_ref": "overlay_copy"
                 },
                 {
                   "id": "cta",
@@ -3413,7 +3455,8 @@
                       88,
                       88
                     ]
-                  }
+                  },
+                  "geometry_ref": "primary_cta"
                 },
                 {
                   "id": "empty_state",
@@ -3436,7 +3479,8 @@
                     "fit": "contain",
                     "safe_area": "content",
                     "z_policy": "structural_ui"
-                  }
+                  },
+                  "geometry_ref": "overlay_copy"
                 }
               ]
             }
@@ -3477,7 +3521,8 @@
                       88,
                       88
                     ]
-                  }
+                  },
+                  "geometry_ref": "bottom_nav_item"
                 },
                 {
                   "id": "other_tabs",
@@ -3505,7 +3550,8 @@
                       88,
                       88
                     ]
-                  }
+                  },
+                  "geometry_ref": "bottom_nav_item"
                 }
               ]
             }
@@ -3575,7 +3621,8 @@
                       2160,
                       3840
                     ]
-                  }
+                  },
+                  "geometry_ref": "fullscreen_cover"
                 }
               ]
             }
@@ -3608,7 +3655,8 @@
                     "fit": "n/a",
                     "safe_area": "content",
                     "z_policy": "structural_ui"
-                  }
+                  },
+                  "geometry_ref": "screen_title"
                 },
                 {
                   "id": "currency_summary",
@@ -3631,7 +3679,8 @@
                     "fit": "n/a",
                     "safe_area": "top",
                     "z_policy": "structural_ui"
-                  }
+                  },
+                  "geometry_ref": "status_plate"
                 }
               ]
             }
@@ -3670,7 +3719,8 @@
                       960,
                       720
                     ]
-                  }
+                  },
+                  "geometry_ref": "hero_art"
                 },
                 {
                   "id": "price_or_disabled_truth",
@@ -3694,7 +3744,8 @@
                     "fit": "n/a",
                     "safe_area": "content",
                     "z_policy": "structural_ui"
-                  }
+                  },
+                  "geometry_ref": "overlay_copy"
                 },
                 {
                   "id": "cta",
@@ -3723,7 +3774,8 @@
                       88,
                       88
                     ]
-                  }
+                  },
+                  "geometry_ref": "primary_cta"
                 }
               ]
             },
@@ -3753,7 +3805,8 @@
                     "fit": "contain",
                     "safe_area": "content",
                     "z_policy": "structural_ui"
-                  }
+                  },
+                  "geometry_ref": "repeated_card"
                 }
               ]
             }
@@ -3794,7 +3847,8 @@
                       88,
                       88
                     ]
-                  }
+                  },
+                  "geometry_ref": "bottom_nav_item"
                 },
                 {
                   "id": "other_tabs",
@@ -3822,7 +3876,8 @@
                       88,
                       88
                     ]
-                  }
+                  },
+                  "geometry_ref": "bottom_nav_item"
                 }
               ]
             }
@@ -3831,8 +3886,8 @@
       ]
     },
     "S12": {
-      "name": "Profile",
-      "purpose": "Show Keeper identity, opening-chapter progress, Curio/House progress and truthful local-save health, with Settings as a separate suspended-origin surface.",
+      "name": "Keeper / Profile",
+      "purpose": "Show Keeper identity, House progress, Curio progress and truthful device-local save status.",
       "entry": [
         "S01_header",
         "meta_header"
@@ -3841,14 +3896,11 @@
         "origin_screen"
       ],
       "states": [
-        "profile_summary",
-        "opening_progress",
-        "save_health"
+        "profile_summary"
       ],
       "systems": [
         "player_progress",
-        "save",
-        "settings_entry"
+        "save_health"
       ],
       "shell": "meta",
       "regions": [
@@ -3862,9 +3914,7 @@
                   "id": "environment",
                   "layer": "background_art",
                   "states": [
-                    "profile_summary",
-                    "opening_progress",
-                    "save_health"
+                    "profile_summary"
                   ],
                   "geometry": {
                     "profile": "full_bleed",
@@ -3885,7 +3935,8 @@
                       2160,
                       3840
                     ]
-                  }
+                  },
+                  "geometry_ref": "fullscreen_cover"
                 }
               ]
             }
@@ -3918,7 +3969,8 @@
                     "fit": "n/a",
                     "safe_area": "content",
                     "z_policy": "structural_ui"
-                  }
+                  },
+                  "geometry_ref": "overlay_copy"
                 },
                 {
                   "id": "level_progress",
@@ -3941,7 +3993,8 @@
                     "fit": "n/a",
                     "safe_area": "content",
                     "z_policy": "structural_ui"
-                  }
+                  },
+                  "geometry_ref": "status_plate"
                 },
                 {
                   "id": "curio_progress",
@@ -3964,7 +4017,8 @@
                     "fit": "n/a",
                     "safe_area": "content",
                     "z_policy": "structural_ui"
-                  }
+                  },
+                  "geometry_ref": "status_plate"
                 },
                 {
                   "id": "house_progress",
@@ -3987,7 +4041,8 @@
                     "fit": "n/a",
                     "safe_area": "content",
                     "z_policy": "structural_ui"
-                  }
+                  },
+                  "geometry_ref": "status_plate"
                 },
                 {
                   "id": "save_health",
@@ -4012,7 +4067,8 @@
                     "fit": "contain",
                     "safe_area": "content",
                     "z_policy": "structural_ui"
-                  }
+                  },
+                  "geometry_ref": "intrinsic_copy"
                 }
               ]
             }
@@ -4049,7 +4105,8 @@
                       88,
                       88
                     ]
-                  }
+                  },
+                  "geometry_ref": "intrinsic_copy"
                 },
                 {
                   "id": "back_to_house",
@@ -4076,7 +4133,8 @@
                       88,
                       88
                     ]
-                  }
+                  },
+                  "geometry_ref": "intrinsic_copy"
                 }
               ]
             }
@@ -4119,7 +4177,8 @@
                 "fit": "n/a",
                 "safe_area": "content",
                 "z_policy": "structural_ui"
-              }
+              },
+              "geometry_ref": "screen_title"
             },
             {
               "id": "detail",
@@ -4142,7 +4201,8 @@
                 "fit": "n/a",
                 "safe_area": "content",
                 "z_policy": "structural_ui"
-              }
+              },
+              "geometry_ref": "intrinsic_copy"
             },
             {
               "id": "resume",
@@ -4165,7 +4225,8 @@
                 "fit": "n/a",
                 "safe_area": "content",
                 "z_policy": "structural_ui"
-              }
+              },
+              "geometry_ref": "intrinsic_copy"
             },
             {
               "id": "retry",
@@ -4192,7 +4253,8 @@
                   88,
                   88
                 ]
-              }
+              },
+              "geometry_ref": "utility_cta"
             },
             {
               "id": "settings",
@@ -4215,7 +4277,8 @@
                 "fit": "n/a",
                 "safe_area": "content",
                 "z_policy": "structural_ui"
-              }
+              },
+              "geometry_ref": "utility_cta"
             },
             {
               "id": "exit",
@@ -4238,7 +4301,8 @@
                 "fit": "n/a",
                 "safe_area": "content",
                 "z_policy": "structural_ui"
-              }
+              },
+              "geometry_ref": "utility_cta"
             }
           ]
         }
@@ -4257,7 +4321,7 @@
       ],
       "blocks": [
         {
-          "id": "settings_world",
+          "id": "settings_panel",
           "slots": [
             {
               "id": "environment",
@@ -4266,26 +4330,7 @@
                 "open",
                 "changed"
               ],
-              "geometry": {
-                "profile": "full_bleed",
-                "min_size": [
-                  1080,
-                  1920
-                ],
-                "preferred_size": [
-                  1080,
-                  1920
-                ],
-                "placement": "viewport_fill",
-                "aspect_policy": "9:16",
-                "fit": "cover",
-                "safe_area": "bleed",
-                "z_policy": "background_art",
-                "source_min_size": [
-                  2160,
-                  3840
-                ]
-              }
+              "geometry_ref": "fullscreen_cover"
             },
             {
               "id": "house_sigil",
@@ -4294,54 +4339,7 @@
                 "open",
                 "changed"
               ],
-              "geometry": {
-                "profile": "hero_art",
-                "min_size": [
-                  300,
-                  240
-                ],
-                "preferred_size": [
-                  480,
-                  360
-                ],
-                "placement": "container_flow",
-                "aspect_policy": "preserve",
-                "fit": "contain",
-                "safe_area": "content",
-                "z_policy": "content_artwork",
-                "source_min_size": [
-                  960,
-                  720
-                ]
-              }
-            }
-          ]
-        },
-        {
-          "id": "settings_panel",
-          "slots": [
-            {
-              "id": "title",
-              "layer": "structural_ui",
-              "states": [
-                "visible"
-              ],
-              "geometry": {
-                "profile": "title",
-                "min_size": [
-                  520,
-                  64
-                ],
-                "preferred_size": [
-                  880,
-                  80
-                ],
-                "placement": "container_flow",
-                "aspect_policy": "flexible",
-                "fit": "n/a",
-                "safe_area": "content",
-                "z_policy": "structural_ui"
-              }
+              "geometry_ref": "compact_hero_art"
             },
             {
               "id": "master_audio",
@@ -4350,26 +4348,7 @@
                 "on",
                 "off"
               ],
-              "geometry": {
-                "profile": "settings_control",
-                "min_size": [
-                  760,
-                  88
-                ],
-                "preferred_size": [
-                  860,
-                  92
-                ],
-                "placement": "container_flow",
-                "aspect_policy": "flexible",
-                "fit": "n/a",
-                "safe_area": "content",
-                "z_policy": "structural_ui",
-                "touch_target": [
-                  88,
-                  88
-                ]
-              }
+              "geometry_ref": "settings_toggle"
             },
             {
               "id": "music",
@@ -4378,26 +4357,7 @@
                 "on",
                 "off"
               ],
-              "geometry": {
-                "profile": "settings_control",
-                "min_size": [
-                  760,
-                  88
-                ],
-                "preferred_size": [
-                  860,
-                  92
-                ],
-                "placement": "container_flow",
-                "aspect_policy": "flexible",
-                "fit": "n/a",
-                "safe_area": "content",
-                "z_policy": "structural_ui",
-                "touch_target": [
-                  88,
-                  88
-                ]
-              }
+              "geometry_ref": "settings_toggle"
             },
             {
               "id": "sfx",
@@ -4406,26 +4366,7 @@
                 "on",
                 "off"
               ],
-              "geometry": {
-                "profile": "settings_control",
-                "min_size": [
-                  760,
-                  88
-                ],
-                "preferred_size": [
-                  860,
-                  92
-                ],
-                "placement": "container_flow",
-                "aspect_policy": "flexible",
-                "fit": "n/a",
-                "safe_area": "content",
-                "z_policy": "structural_ui",
-                "touch_target": [
-                  88,
-                  88
-                ]
-              }
+              "geometry_ref": "settings_toggle"
             },
             {
               "id": "haptics",
@@ -4434,26 +4375,7 @@
                 "on",
                 "off"
               ],
-              "geometry": {
-                "profile": "settings_control",
-                "min_size": [
-                  760,
-                  88
-                ],
-                "preferred_size": [
-                  860,
-                  92
-                ],
-                "placement": "container_flow",
-                "aspect_policy": "flexible",
-                "fit": "n/a",
-                "safe_area": "content",
-                "z_policy": "structural_ui",
-                "touch_target": [
-                  88,
-                  88
-                ]
-              }
+              "geometry_ref": "settings_toggle"
             },
             {
               "id": "reduced_motion",
@@ -4462,26 +4384,7 @@
                 "on",
                 "off"
               ],
-              "geometry": {
-                "profile": "settings_control",
-                "min_size": [
-                  760,
-                  88
-                ],
-                "preferred_size": [
-                  860,
-                  92
-                ],
-                "placement": "container_flow",
-                "aspect_policy": "flexible",
-                "fit": "n/a",
-                "safe_area": "content",
-                "z_policy": "structural_ui",
-                "touch_target": [
-                  88,
-                  88
-                ]
-              }
+              "geometry_ref": "settings_toggle"
             },
             {
               "id": "high_contrast",
@@ -4490,26 +4393,7 @@
                 "on",
                 "off"
               ],
-              "geometry": {
-                "profile": "settings_control",
-                "min_size": [
-                  760,
-                  88
-                ],
-                "preferred_size": [
-                  860,
-                  92
-                ],
-                "placement": "container_flow",
-                "aspect_policy": "flexible",
-                "fit": "n/a",
-                "safe_area": "content",
-                "z_policy": "structural_ui",
-                "touch_target": [
-                  88,
-                  88
-                ]
-              }
+              "geometry_ref": "settings_toggle"
             },
             {
               "id": "close",
@@ -4517,30 +4401,7 @@
               "states": [
                 "enabled"
               ],
-              "geometry": {
-                "profile": "utility_touch",
-                "min_size": [
-                  88,
-                  88
-                ],
-                "preferred_size": [
-                  96,
-                  96
-                ],
-                "placement": "owner_anchor",
-                "aspect_policy": "1:1",
-                "fit": "contain",
-                "safe_area": "content",
-                "z_policy": "structural_ui",
-                "source_min_size": [
-                  192,
-                  192
-                ],
-                "touch_target": [
-                  88,
-                  88
-                ]
-              }
+              "geometry_ref": "utility_cta"
             }
           ]
         }
@@ -4581,7 +4442,8 @@
                 "fit": "n/a",
                 "safe_area": "content",
                 "z_policy": "structural_ui"
-              }
+              },
+              "geometry_ref": "screen_title"
             },
             {
               "id": "objective_summary",
@@ -4604,7 +4466,8 @@
                 "fit": "n/a",
                 "safe_area": "content",
                 "z_policy": "structural_ui"
-              }
+              },
+              "geometry_ref": "intrinsic_copy"
             },
             {
               "id": "reason",
@@ -4627,7 +4490,8 @@
                 "fit": "n/a",
                 "safe_area": "content",
                 "z_policy": "structural_ui"
-              }
+              },
+              "geometry_ref": "overlay_copy"
             },
             {
               "id": "sealed_curio",
@@ -4654,7 +4518,8 @@
                   960,
                   720
                 ]
-              }
+              },
+              "geometry_ref": "card_art"
             },
             {
               "id": "keeper_proclamation",
@@ -4677,7 +4542,8 @@
                 "fit": "contain",
                 "safe_area": "content",
                 "z_policy": "structural_ui"
-              }
+              },
+              "geometry_ref": "intrinsic_copy"
             },
             {
               "id": "recovery_plus_three",
@@ -4705,7 +4571,8 @@
                   88,
                   88
                 ]
-              }
+              },
+              "geometry_ref": "intrinsic_copy"
             },
             {
               "id": "retry",
@@ -4732,7 +4599,8 @@
                   88,
                   88
                 ]
-              }
+              },
+              "geometry_ref": "utility_cta"
             }
           ]
         }
@@ -4777,7 +4645,8 @@
                   960,
                   720
                 ]
-              }
+              },
+              "geometry_ref": "hero_art"
             },
             {
               "id": "name",
@@ -4800,7 +4669,8 @@
                 "fit": "n/a",
                 "safe_area": "content",
                 "z_policy": "structural_ui"
-              }
+              },
+              "geometry_ref": "screen_title"
             },
             {
               "id": "origin",
@@ -4823,7 +4693,8 @@
                 "fit": "n/a",
                 "safe_area": "content",
                 "z_policy": "structural_ui"
-              }
+              },
+              "geometry_ref": "overlay_copy"
             },
             {
               "id": "lore",
@@ -4846,7 +4717,8 @@
                 "fit": "n/a",
                 "safe_area": "content",
                 "z_policy": "structural_ui"
-              }
+              },
+              "geometry_ref": "overlay_copy"
             },
             {
               "id": "close",
@@ -4877,7 +4749,8 @@
                   88,
                   88
                 ]
-              }
+              },
+              "geometry_ref": "utility_cta"
             }
           ]
         }
@@ -4919,7 +4792,8 @@
                 "fit": "n/a",
                 "safe_area": "content",
                 "z_policy": "structural_ui"
-              }
+              },
+              "geometry_ref": "overlay_copy"
             },
             {
               "id": "requirement",
@@ -4942,7 +4816,8 @@
                 "fit": "n/a",
                 "safe_area": "content",
                 "z_policy": "structural_ui"
-              }
+              },
+              "geometry_ref": "overlay_copy"
             },
             {
               "id": "close",
@@ -4973,7 +4848,8 @@
                   88,
                   88
                 ]
-              }
+              },
+              "geometry_ref": "utility_cta"
             }
           ]
         }
@@ -5014,7 +4890,8 @@
                 "fit": "n/a",
                 "safe_area": "content",
                 "z_policy": "structural_ui"
-              }
+              },
+              "geometry_ref": "overlay_copy"
             },
             {
               "id": "confirm",
@@ -5041,7 +4918,8 @@
                   88,
                   88
                 ]
-              }
+              },
+              "geometry_ref": "primary_cta"
             },
             {
               "id": "cancel",
@@ -5068,7 +4946,8 @@
                   88,
                   88
                 ]
-              }
+              },
+              "geometry_ref": "utility_cta"
             }
           ]
         }
@@ -5109,7 +4988,8 @@
                 "fit": "n/a",
                 "safe_area": "content",
                 "z_policy": "structural_ui"
-              }
+              },
+              "geometry_ref": "overlay_copy"
             },
             {
               "id": "retry",
@@ -5136,7 +5016,8 @@
                   88,
                   88
                 ]
-              }
+              },
+              "geometry_ref": "utility_cta"
             },
             {
               "id": "safe_exit",
@@ -5163,7 +5044,8 @@
                   88,
                   88
                 ]
-              }
+              },
+              "geometry_ref": "utility_cta"
             }
           ]
         }
@@ -5215,34 +5097,30 @@
     "rule": "No new production art is authorized until every canonical screen/overlay slot has explicit geometry and the implemented geometry passes real Godot render inspection."
   },
   "geometry_system": {
-    "status": "CANONICAL_TARGET_ACTIVE",
-    "design_viewport": {
+    "viewport": {
       "width": 1080,
       "height": 1920,
-      "orientation": "portrait"
+      "units": "logical_px"
     },
-    "verification_viewport": {
-      "width": 540,
-      "height": 960,
-      "scale": 0.5
+    "safe_horizontal": {
+      "min": 32,
+      "max": 48,
+      "baseline": 36
     },
-    "safe_horizontal_range": [
-      32,
-      48
-    ],
-    "top_resource_zone_range": [
-      96,
-      112
-    ],
-    "bottom_navigation_zone_range": [
-      128,
-      144
-    ],
-    "minimum_touch_target": [
-      88,
-      88
-    ],
-    "rule": "Every live slot owns an explicit 1080x1920 logical geometry contract before any new production asset is generated or polished. Container-flow slots use bounded target boxes; full-bleed art owns the viewport; runtime VFX follows its semantic owner."
+    "top_resource_zone": {
+      "x": 36,
+      "y": 8,
+      "width": 1008,
+      "height": 104
+    },
+    "bottom_navigation_zone": {
+      "x": 10,
+      "y": 1776,
+      "width": 1060,
+      "height": 136
+    },
+    "touch_target_min": 88,
+    "rule": "Every canonical slot resolves through geometry_ref to a production geometry preset. Slot geometry precedes asset production; backgrounds use cover, identity/content art uses contain unless the preset explicitly states otherwise."
   },
   "geometry_profiles": {
     "full_bleed": {
@@ -5702,6 +5580,303 @@
         384,
         384
       ]
+    }
+  },
+  "geometry_presets": {
+    "fullscreen_cover": {
+      "mode": "fixed_bounds",
+      "bounds": [
+        0,
+        0,
+        1080,
+        1920
+      ],
+      "fit": "cover",
+      "source_min": [
+        1080,
+        1920
+      ],
+      "responsive": "preserve_cover_crop"
+    },
+    "world_layer": {
+      "mode": "owner_relative",
+      "bounds": [
+        36,
+        112,
+        1008,
+        1656
+      ],
+      "fit": "contain",
+      "source_min": [
+        720,
+        720
+      ],
+      "responsive": "preserve_owner_anchor"
+    },
+    "resource_chip": {
+      "mode": "shared_zone_item",
+      "zone": "top_resource_zone",
+      "min_size": [
+        0,
+        88
+      ],
+      "fit": "contain",
+      "touch_min": 88
+    },
+    "profile_button": {
+      "mode": "fixed_size",
+      "size": [
+        88,
+        88
+      ],
+      "fit": "contain",
+      "touch_min": 88
+    },
+    "bottom_nav_item": {
+      "mode": "shared_zone_item",
+      "zone": "bottom_navigation_zone",
+      "min_size": [
+        0,
+        120
+      ],
+      "icon_box": [
+        46,
+        46
+      ],
+      "touch_min": 88
+    },
+    "screen_title": {
+      "mode": "safe_width_intrinsic",
+      "max_width": 1008,
+      "min_height": 64,
+      "fit": "intrinsic"
+    },
+    "header_back": {
+      "mode": "fixed_size",
+      "size": [
+        88,
+        88
+      ],
+      "fit": "contain",
+      "touch_min": 88
+    },
+    "status_plate": {
+      "mode": "safe_width_intrinsic",
+      "max_width": 1008,
+      "min_height": 56,
+      "fit": "intrinsic"
+    },
+    "primary_cta": {
+      "mode": "fixed_size",
+      "size": [
+        820,
+        88
+      ],
+      "fit": "stretch_ui",
+      "touch_min": 88
+    },
+    "secondary_cta": {
+      "mode": "safe_width_intrinsic",
+      "max_width": 1008,
+      "min_height": 72,
+      "fit": "stretch_ui",
+      "touch_min": 72
+    },
+    "utility_cta": {
+      "mode": "intrinsic",
+      "min_size": [
+        88,
+        88
+      ],
+      "fit": "stretch_ui",
+      "touch_min": 88
+    },
+    "panel_fill": {
+      "mode": "owner_relative",
+      "fit": "stretch_ui"
+    },
+    "hero_art": {
+      "mode": "fixed_box",
+      "size": [
+        360,
+        360
+      ],
+      "fit": "contain",
+      "source_min": [
+        720,
+        720
+      ]
+    },
+    "compact_hero_art": {
+      "mode": "fixed_box",
+      "size": [
+        300,
+        300
+      ],
+      "fit": "contain",
+      "source_min": [
+        600,
+        600
+      ]
+    },
+    "card_art": {
+      "mode": "fixed_box",
+      "size": [
+        240,
+        240
+      ],
+      "fit": "contain",
+      "source_min": [
+        480,
+        480
+      ]
+    },
+    "repeated_card": {
+      "mode": "repeated_container",
+      "min_size": [
+        0,
+        198
+      ],
+      "fit": "stretch_ui"
+    },
+    "route_path": {
+      "mode": "owner_relative",
+      "fit": "contain",
+      "source_min": [
+        900,
+        1400
+      ]
+    },
+    "level_node": {
+      "mode": "repeated_anchor",
+      "min_size": [
+        104,
+        104
+      ],
+      "fit": "contain",
+      "touch_min": 88
+    },
+    "gameplay_resource": {
+      "mode": "gameplay_header_item",
+      "min_height": 80,
+      "fit": "contain"
+    },
+    "gameplay_objective": {
+      "mode": "gameplay_hud_item",
+      "min_height": 88,
+      "fit": "stretch_ui"
+    },
+    "gameplay_moves": {
+      "mode": "gameplay_hud_item",
+      "min_size": [
+        250,
+        88
+      ],
+      "fit": "stretch_ui"
+    },
+    "gameplay_pause": {
+      "mode": "fixed_size",
+      "size": [
+        88,
+        88
+      ],
+      "fit": "contain",
+      "touch_min": 88
+    },
+    "board_field": {
+      "mode": "fixed_box",
+      "size": [
+        1032,
+        1040
+      ],
+      "fit": "stretch_ui"
+    },
+    "board_piece": {
+      "mode": "board_cell",
+      "grid": [
+        8,
+        8
+      ],
+      "cell_approx": [
+        129,
+        130
+      ],
+      "fit": "contain",
+      "source_min": [
+        256,
+        256
+      ]
+    },
+    "board_fx": {
+      "mode": "owner_relative",
+      "fit": "contain"
+    },
+    "booster_slot": {
+      "mode": "fixed_box",
+      "size": [
+        118,
+        128
+      ],
+      "action_box": [
+        88,
+        88
+      ],
+      "fit": "contain",
+      "touch_min": 88
+    },
+    "result_panel": {
+      "mode": "centered_panel",
+      "size": [
+        780,
+        780
+      ],
+      "fit": "stretch_ui"
+    },
+    "reward_art": {
+      "mode": "fixed_box",
+      "size": [
+        360,
+        360
+      ],
+      "fit": "contain",
+      "source_min": [
+        720,
+        720
+      ]
+    },
+    "overlay_panel": {
+      "mode": "centered_safe_panel",
+      "max_size": [
+        960,
+        1500
+      ],
+      "fit": "stretch_ui"
+    },
+    "overlay_copy": {
+      "mode": "owner_width_intrinsic",
+      "min_height": 40,
+      "fit": "intrinsic"
+    },
+    "settings_toggle": {
+      "mode": "safe_width_intrinsic",
+      "max_width": 1008,
+      "min_height": 88,
+      "fit": "stretch_ui",
+      "touch_min": 88
+    },
+    "icon_button": {
+      "mode": "fixed_size",
+      "size": [
+        88,
+        88
+      ],
+      "fit": "contain",
+      "touch_min": 88
+    },
+    "intrinsic_copy": {
+      "mode": "owner_width_intrinsic",
+      "min_height": 32,
+      "fit": "intrinsic"
     }
   }
 }

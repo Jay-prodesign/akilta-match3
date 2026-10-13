@@ -39,6 +39,13 @@ func _run() -> void:
 	var geometry_profiles: Dictionary = data.get("geometry_profiles", {})
 	_expect(not geometry_profiles.is_empty(), "canonical geometry profiles missing")
 
+	var geometry_presets: Dictionary = data.get("geometry_presets", {})
+	var geometry_system: Dictionary = data.get("geometry_system", {})
+	_expect(int(geometry_system.get("viewport", {}).get("width", 0)) == 1080 and int(geometry_system.get("viewport", {}).get("height", 0)) == 1920, "canonical geometry must use the 1080x1920 portrait baseline")
+	_expect(float(geometry_system.get("top_resource_zone", {}).get("height", 0.0)) >= 96.0 and float(geometry_system.get("top_resource_zone", {}).get("height", 0.0)) <= 112.0, "top resource geometry must stay inside the locked shell range")
+	_expect(float(geometry_system.get("bottom_navigation_zone", {}).get("height", 0.0)) >= 128.0 and float(geometry_system.get("bottom_navigation_zone", {}).get("height", 0.0)) <= 144.0, "bottom navigation geometry must stay inside the locked shell range")
+	_expect(not geometry_presets.is_empty(), "canonical geometry presets missing")
+
 	var screens: Dictionary = data.get("screens", {})
 	for expected in EXPECTED_SCREENS:
 		_expect(screens.has(expected), "missing canonical screen %s" % expected)
@@ -70,11 +77,32 @@ func _run() -> void:
 					_expect(slot.has("layer"), "%s layer missing" % owner)
 					if slot.has("layer"):
 						_expect(ALLOWED_LAYERS.has(String(slot.get("layer",""))), "%s invalid layer" % owner)
+					var geometry_ref := String(slot.get("geometry_ref", ""))
+					_expect(geometry_ref != "", "%s geometry_ref missing" % owner)
+					_expect(geometry_presets.has(geometry_ref), "%s points to missing geometry preset %s" % [owner, geometry_ref])
 					_validate_geometry(slot, owner, geometry_profiles)
 
 	var overlays: Dictionary = data.get("overlays", {})
 	for expected in EXPECTED_OVERLAYS:
 		_expect(overlays.has(expected), "missing canonical overlay %s" % expected)
+	for oid in overlays:
+		var overlay: Dictionary = overlays[oid]
+		for raw_block in overlay.get("blocks", []):
+			if not raw_block is Dictionary:
+				_fail("%s block must be dictionary" % oid)
+				continue
+			var block: Dictionary = raw_block
+			for raw_slot in block.get("slots", []):
+				if not raw_slot is Dictionary:
+					_fail("%s/%s slot must be dictionary" % [oid, String(block.get("id",""))])
+					continue
+				var slot: Dictionary = raw_slot
+				var owner := "%s -> %s -> %s" % [oid, String(block.get("id","")), String(slot.get("id",""))]
+				_expect(String(slot.get("id","")).strip_edges() != "", "%s slot id missing" % owner)
+				_expect(ALLOWED_LAYERS.has(String(slot.get("layer",""))), "%s invalid or missing layer" % owner)
+				var geometry_ref := String(slot.get("geometry_ref", ""))
+				_expect(geometry_ref != "", "%s geometry_ref missing" % owner)
+				_expect(geometry_presets.has(geometry_ref), "%s points to missing geometry preset %s" % [owner, geometry_ref])
 	for oid in overlays:
 		var overlay: Dictionary = overlays[oid]
 		_expect(not Array(overlay.get("states", [])).is_empty(), "%s missing overlay states" % oid)
@@ -122,8 +150,8 @@ func _run() -> void:
 					_fail("%s has invalid contract owner" % String(asset.get("asset_id", "<asset>")))
 					continue
 				var owner: Dictionary = raw_owner
-				var slot := _find_slot(screens, owner)
-				var chain := "%s -> %s -> %s -> %s" % [String(owner.get("screen","")), String(owner.get("region","")), String(owner.get("block","")), String(owner.get("slot",""))]
+				var slot := _find_contract_slot(screens, overlays, owner)
+				var chain := ("%s -> %s -> %s -> %s" % [String(owner.get("screen","")), String(owner.get("region","")), String(owner.get("block","")), String(owner.get("slot",""))]) if owner.has("screen") else ("%s -> %s -> %s" % [String(owner.get("overlay","")), String(owner.get("block","")), String(owner.get("slot",""))])
 				_expect(not slot.is_empty(), "%s points to missing canonical slot %s" % [String(asset.get("asset_id","<asset>")), chain])
 				if not slot.is_empty():
 					var allowed: Array = slot.get("states", [])
@@ -162,7 +190,19 @@ func _read_json(path: String) -> Dictionary:
 	file.close()
 	return parsed if parsed is Dictionary else {}
 
-func _find_slot(screens: Dictionary, owner: Dictionary) -> Dictionary:
+func _find_contract_slot(screens: Dictionary, overlays: Dictionary, owner: Dictionary) -> Dictionary:
+	if owner.has("overlay"):
+		var overlay: Dictionary = overlays.get(String(owner.get("overlay", "")), {})
+		for raw_block in overlay.get("blocks", []):
+			if not raw_block is Dictionary:
+				continue
+			var block: Dictionary = raw_block
+			if String(block.get("id", "")) != String(owner.get("block", "")):
+				continue
+			for raw_slot in block.get("slots", []):
+				if raw_slot is Dictionary and String(raw_slot.get("id", "")) == String(owner.get("slot", "")):
+					return raw_slot
+		return {}
 	var screen: Dictionary = screens.get(String(owner.get("screen", "")), {})
 	for raw_region in screen.get("regions", []):
 		if not raw_region is Dictionary:
