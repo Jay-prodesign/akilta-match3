@@ -25,7 +25,7 @@ An asset request without that ownership chain is invalid.
 
 Meta header owns resource values and utility access.
 Bottom nav owns House / Curios / Map / Events / Shop.
-Gameplay owns its compact HUD and pause only.
+Gameplay owns its compact HUD and pause only. Gameplay suppresses the meta resource row; its lower North Star tool tray uses five visible circular controls: real Hint, three truthfully sealed boosters (Shuffle / Hand / Magic), and real Settings.
 Panels/buttons are reusable structural UI; environment art never contains live text or counters.
 
 ## Downstream screens

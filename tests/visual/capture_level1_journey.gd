@@ -68,7 +68,9 @@ func _capture() -> void:
 	var gameplay = app.current_screen()
 	var gameplay_contract: Dictionary = gameplay.gameplay_presentation_contract() if gameplay != null and gameplay.has_method("gameplay_presentation_contract") else {}
 	for parity_key in [
-		"visual_parity_gate_v11",
+		"visual_parity_gate_v12",
+		"five_control_north_star_tray",
+		"level_header_locked",
 		"objective_spacing_locked",
 		"canonical_booster_art",
 		"gothic_board_material",
@@ -86,6 +88,7 @@ func _capture() -> void:
 			return _fail(app, "S05 North Star render gate failed: %s" % parity_key)
 	var gameplay_viewport: Vector2 = gameplay.get_viewport().get_visible_rect().size
 	var gameplay_resource_bar := gameplay.get_node_or_null("ResourceBar") as PanelContainer
+	var gameplay_eyebrow := gameplay.get_node_or_null("Layout/Eyebrow") as Label
 	var gameplay_title := gameplay.get_node_or_null("Layout/Title") as Label
 	var gameplay_hud := gameplay.get_node_or_null("Layout/HUDPlate") as Control
 	var gameplay_objective_icon := gameplay.get_node_or_null("Layout/HUDPlate/HUD/ObjectiveIcon") as Control
@@ -97,7 +100,11 @@ func _capture() -> void:
 	var shuffle_label := gameplay.get_node_or_null("BoosterTray/BoosterActions/SealedSlotA/Label") as Control
 	var hand_label := gameplay.get_node_or_null("BoosterTray/BoosterActions/SealedSlotB/Label") as Control
 	var magic_label := gameplay.get_node_or_null("BoosterTray/BoosterActions/SealedSlotC/Label") as Control
-	if gameplay_resource_bar == null or gameplay_title == null or gameplay_hud == null or gameplay_objective_icon == null or gameplay_objective == null or gameplay_moves == null or gameplay_board == null or gameplay_hint == null or gameplay_tray == null:
+	var hint_slot := gameplay.get_node_or_null("BoosterTray/BoosterActions/HintSlot") as Control
+	var settings_slot := gameplay.get_node_or_null("BoosterTray/BoosterActions/SettingsSlot") as Control
+	var hint_label_slot := gameplay.get_node_or_null("BoosterTray/BoosterActions/HintSlot/Label") as Control
+	var settings_label_slot := gameplay.get_node_or_null("BoosterTray/BoosterActions/SettingsSlot/Label") as Control
+	if gameplay_resource_bar == null or gameplay_eyebrow == null or gameplay_title == null or gameplay_hud == null or gameplay_objective_icon == null or gameplay_objective == null or gameplay_moves == null or gameplay_board == null or gameplay_hint == null or gameplay_tray == null or hint_slot == null or settings_slot == null:
 		return _fail(app, "S05 North Star render gate missing resource/title/HUD/board/hint/tray")
 	if gameplay_resource_bar.visible:
 		return _fail(app, "S05 meta currency/level row regressed into gameplay")
@@ -125,6 +132,10 @@ func _capture() -> void:
 		return _fail(app, "S05 target regressed into a detached inner panel")
 	if gameplay_title.get_theme_font_size("font_size") < 50 or gameplay_moves.get_theme_font_size("font_size") < 44:
 		return _fail(app, "S05 title/moves visual hierarchy regressed")
+	if not gameplay_title.text.begins_with("LEVEL ") or gameplay_eyebrow.text.length() == 0 or gameplay_eyebrow.get_theme_font_size("font_size") < 20:
+		return _fail(app, "S05 compact level identity regressed")
+	if not hint_slot.visible or not settings_slot.visible:
+		return _fail(app, "S05 five-control tray lost Hint or Settings")
 	if gameplay_hint.get_theme_font_size("font_size") < 24:
 		return _fail(app, "S05 hint readability regressed")
 	if not hud_rect.grow(-4.0).encloses(objective_icon_rect):
@@ -140,7 +151,7 @@ func _capture() -> void:
 		return _fail(app, "S05 board collides with authored hint band")
 	if hint_rect.end.y + 20.0 > tray_rect.position.y:
 		return _fail(app, "S05 hint-to-booster breathing room collapsed")
-	for booster_label in [shuffle_label, hand_label, magic_label]:
+	for booster_label in [hint_label_slot, shuffle_label, hand_label, magic_label, settings_label_slot]:
 		if booster_label == null or not tray_rect.grow(-8.0).encloses(booster_label.get_global_rect()):
 			return _fail(app, "S05 booster label escapes production tray frame")
 	if not await _save(app, "golden-04-gameplay.png"):

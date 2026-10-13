@@ -54,7 +54,7 @@ const KEEPER_ART_PATH := "res://assets/pieces/black_cat.webp"
 const AUTO_HINT_DELAY_SECONDS := 9.0
 const GUIDED_HINT_DELAY_SECONDS := 4.0
 const BOOSTER_ART_PATHS := {
-	"hint": KEEPER_ART_PATH,
+	"hint": "res://assets/ui/gameplay/booster_hint_swirl_gothic_v01.svg",
 	"plus_moves": "res://assets/pieces/potion.webp",
 	"retry": "res://assets/pieces/skull.webp"
 }
@@ -271,8 +271,10 @@ func load_level_path(path: String, seed_value: int = 1001) -> bool:
 	_last_objective_delta = 0
 	_reset_terminal_transition()
 	_style_impact_hint("normal")
-	eyebrow_label.text = String(parsed.get("eyebrow", "CURIO BOUTIQUE"))
-	title_label.text = String(parsed.get("title", "Hidden Display"))
+	var level_title := String(parsed.get("title", "Hidden Display"))
+	eyebrow_label.text = level_title.to_upper()
+	eyebrow_label.set_meta("narrative_eyebrow", String(parsed.get("eyebrow", "CURIO BOUTIQUE")))
+	title_label.text = "LEVEL %d" % _current_level_number()
 	hint_label.text = String(parsed.get("hint", "Swipe a sigil."))
 	var art_profile := String(parsed.get("visual_profile", "curio_boutique_opening"))
 	_apply_level_art_profile(art_profile)
@@ -299,33 +301,37 @@ func load_level_path(path: String, seed_value: int = 1001) -> bool:
 	_refresh_hud()
 	return true
 
-func _update_level_badge() -> void:
-	if _level_badge_label == null:
-		return
+func _current_level_number() -> int:
 	var parts: PackedStringArray = current_level_id.split("_")
-	var level_number := 1
-	if not parts.is_empty():
-		level_number = maxi(1, int(parts[parts.size() - 1]))
-	_level_badge_label.text = "LEVEL %d" % level_number
+	if parts.is_empty():
+		return 1
+	return maxi(1, int(parts[parts.size() - 1]))
+
+func _update_level_badge() -> void:
+	var level_number := _current_level_number()
+	if _level_badge_label != null:
+		_level_badge_label.text = "LEVEL %d" % level_number
+	if title_label != null:
+		title_label.text = "LEVEL %d" % level_number
 
 func _apply_level_art_profile(profile: String) -> void:
 	# The board symbols, room tint, and heading accents move together by chapter beat.
 	match profile:
 		"sealed_display":
 			world_backdrop.modulate = Color.WHITE
-			eyebrow_label.add_theme_color_override("font_color", Color("#9fb7d0"))
+			eyebrow_label.add_theme_color_override("font_color", Color("#d7e8ef"))
 			title_label.add_theme_color_override("font_color", Color("#f1e6d2"))
 			objective_label.add_theme_color_override("font_color", Color("#a8c6d2"))
 			moves_label.add_theme_color_override("font_color", Color("#d8c8a1"))
 		"thornlight_arrangement":
 			world_backdrop.modulate = Color.WHITE
-			eyebrow_label.add_theme_color_override("font_color", Color("#d9a0b8"))
+			eyebrow_label.add_theme_color_override("font_color", Color("#f0c8d8"))
 			title_label.add_theme_color_override("font_color", Color("#f5e6e2"))
 			objective_label.add_theme_color_override("font_color", Color("#c7a0df"))
 			moves_label.add_theme_color_override("font_color", Color("#e6bd83"))
 		_:
 			world_backdrop.modulate = Color.WHITE
-			eyebrow_label.add_theme_color_override("font_color", Color("#b7a5b8"))
+			eyebrow_label.add_theme_color_override("font_color", Color("#ead8c9"))
 			title_label.add_theme_color_override("font_color", Color("#f1e8dc"))
 			objective_label.add_theme_color_override("font_color", Color("#f0dec2"))
 			moves_label.add_theme_color_override("font_color", Color("#d9b56a"))
@@ -1035,15 +1041,21 @@ func gameplay_presentation_contract() -> Dictionary:
 	var shuffle_label := $BoosterTray/BoosterActions/SealedSlotA/Label as Label
 	var hand_label := $BoosterTray/BoosterActions/SealedSlotB/Label as Label
 	var magic_label := $BoosterTray/BoosterActions/SealedSlotC/Label as Label
+	var hint_label_slot := $BoosterTray/BoosterActions/HintSlot/Label as Label
+	var settings_label_slot := $BoosterTray/BoosterActions/SettingsSlot/Label as Label
 	var board_contract: Dictionary = board_view.frame_contract() if board_view != null and board_view.has_method("frame_contract") else {}
 	var canonical_booster_names: bool = (
 		shuffle_label.text == "SHUFFLE"
 		and hand_label.text == "HAND"
 		and magic_label.text == "MAGIC"
+		and hint_label_slot.text == "HINT"
+		and settings_label_slot.text == "SETTINGS"
 	)
 	var utilities_separated: bool = (
-		not $BoosterTray/BoosterActions/HintSlot.visible
-		and not $BoosterTray/BoosterActions/SettingsSlot.visible
+		$BoosterTray/BoosterActions/HintSlot.visible
+		and $BoosterTray/BoosterActions/SettingsSlot.visible
+		and not _hint_boost_button.disabled
+		and not _settings_shortcut.disabled
 	)
 	var hierarchy_locked: bool = (
 		title_label.get_theme_font_size("font_size") >= 50
@@ -1062,18 +1074,24 @@ func gameplay_presentation_contract() -> Dictionary:
 		and hint_label.get_theme_font_size("font_size") >= 24
 	)
 	var booster_family_locked: bool = (
-		$BoosterTray/BoosterActions/SealedSlotA.visible
+		$BoosterTray/BoosterActions/HintSlot.visible
+		and $BoosterTray/BoosterActions/SealedSlotA.visible
 		and $BoosterTray/BoosterActions/SealedSlotB.visible
 		and $BoosterTray/BoosterActions/SealedSlotC.visible
+		and $BoosterTray/BoosterActions/SettingsSlot.visible
 		and canonical_booster_names
 		and [_sealed_boost_a, _sealed_boost_b, _sealed_boost_c].all(
-			func(button): return button.disabled and button.custom_minimum_size.y >= 120.0 and button.icon != null
+			func(button): return button.disabled and button.custom_minimum_size.y >= 100.0 and button.icon != null
 		)
+		and _hint_boost_button.custom_minimum_size.y >= 100.0
+		and _hint_boost_button.icon != null
+		and _settings_shortcut.custom_minimum_size.y >= 100.0
+		and _settings_shortcut.icon != null
 	)
 	var composition_locked: bool = (
 		_booster_tray != null
 		and is_equal_approx(_booster_tray.anchor_top, 0.795)
-		and (_booster_tray.offset_bottom - _booster_tray.offset_top) >= 224.0
+		and (_booster_tray.offset_bottom - _booster_tray.offset_top) >= 188.0
 		and hint_label != null
 		and _booster_tray.global_position.y >= hint_label.global_position.y + hint_label.size.y + 20.0
 	)
@@ -1090,11 +1108,24 @@ func gameplay_presentation_contract() -> Dictionary:
 		and PieceAssetLoader.ornament(String(NORTH_STAR_BOOSTER_ART_PATHS["shuffle"])) != null
 		and PieceAssetLoader.ornament(String(NORTH_STAR_BOOSTER_ART_PATHS["hand"])) != null
 		and PieceAssetLoader.ornament(String(NORTH_STAR_BOOSTER_ART_PATHS["magic"])) != null
+		and String(BOOSTER_ART_PATHS["hint"]).contains("/ui/gameplay/booster_hint_swirl_")
+		and PieceAssetLoader.ornament(String(BOOSTER_ART_PATHS["hint"])) != null
+		and PieceAssetLoader.ornament("res://assets/ui/ui_settings.svg") != null
 	)
 	var gothic_board_material: bool = String(board_contract.get("frame_revision", "")) == "gothic_corner_v2"
 	var objective_spacing_locked: bool = (
 		objective_label.size.x >= get_viewport().get_visible_rect().size.x * 0.50
 		and objective_label.global_position.x >= objective_icon.global_position.x + objective_icon.size.x + 6.0
+	)
+	var five_control_tray: bool = (
+		($BoosterTray/BoosterActions as HBoxContainer).get_child_count() == 5
+		and [$BoosterTray/BoosterActions/HintSlot, $BoosterTray/BoosterActions/SealedSlotA, $BoosterTray/BoosterActions/SealedSlotB, $BoosterTray/BoosterActions/SealedSlotC, $BoosterTray/BoosterActions/SettingsSlot].all(func(slot): return slot.visible)
+	)
+	var level_header_locked: bool = (
+		title_label.text.begins_with("LEVEL ")
+		and eyebrow_label.text.length() > 0
+		and eyebrow_label.get_theme_font_size("font_size") >= 20
+		and eyebrow_label.get_theme_color("font_color").get_luminance() >= 0.62
 	)
 	return {
 		"authored_hud_plate": get_node_or_null("Layout/HUDPlate/HUD") != null,
@@ -1116,7 +1147,7 @@ func gameplay_presentation_contract() -> Dictionary:
 		"asset_backed_resource_chips": [$ResourceBar/Resources/CoinChip, $ResourceBar/Resources/GemChip, $ResourceBar/Resources/LevelBadgePlate].all(func(panel): return panel is PanelContainer and (panel as PanelContainer).get_theme_stylebox("panel") is StyleBoxTexture),
 		"level_badge_separated": ($ResourceBar/Resources/ResourceSpacer as Control).size_flags_horizontal == Control.SIZE_EXPAND_FILL,
 		"hint_booster_clearance": composition_locked,
-		"booster_label_readability": shuffle_label.custom_minimum_size.y >= 42.0 and hand_label.custom_minimum_size.y >= 42.0 and magic_label.custom_minimum_size.y >= 42.0 and shuffle_label.get_theme_font_size("font_size") >= 26,
+		"booster_label_readability": [hint_label_slot, shuffle_label, hand_label, magic_label, settings_label_slot].all(func(label): return label.custom_minimum_size.y >= 32.0 and label.get_theme_font_size("font_size") >= 18),
 		"north_star_booster_family": canonical_booster_names,
 		"booster_frame_family": String(_booster_tray.get_meta("production_chrome_kind", "")) == "gameplay_booster_tray",
 		"utility_separated_from_boosters": utilities_separated,
@@ -1125,7 +1156,9 @@ func gameplay_presentation_contract() -> Dictionary:
 		"quiet_gameplay_shell_family": String($Layout/HUDPlate.get_meta("production_chrome_asset", "")) == ProductionChrome.QUIET_PANEL_PATH and $ResourceBar.get_theme_stylebox("panel") is StyleBoxEmpty,
 		"integrated_hud_surface": integrated_hud_surface,
 		"final_hint_readability": hint_readable and hint_label.size_flags_horizontal == Control.SIZE_SHRINK_CENTER and hint_label.custom_minimum_size.x >= 780.0 and hint_label.custom_minimum_size.x <= 860.0,
-		"final_booster_readability": booster_family_locked and shuffle_label.get_theme_font_size("font_size") >= 26,
+		"final_booster_readability": booster_family_locked and five_control_tray and shuffle_label.get_theme_font_size("font_size") >= 18,
+		"five_control_north_star_tray": five_control_tray,
+		"level_header_locked": level_header_locked,
 		"visual_parity_gate_v2": hierarchy_locked and booster_family_locked and composition_locked and board_locked and utilities_separated and String(_booster_tray.get_meta("production_chrome_kind", "")) == "gameplay_booster_tray",
 		"visual_parity_gate_v3": hierarchy_locked and integrated_hud_surface and hint_readable and booster_family_locked and composition_locked and board_locked and utilities_separated,
 		"visual_parity_gate_v4": hierarchy_locked and integrated_hud_surface and hint_readable and booster_family_locked and composition_locked and board_locked and utilities_separated and String($Layout/HUDPlate.get_meta("production_chrome_asset", "")) == ProductionChrome.QUIET_PANEL_PATH and $ResourceBar.get_theme_stylebox("panel") is StyleBoxEmpty and String(_booster_tray.get_meta("production_chrome_kind", "")) == "gameplay_booster_tray",
@@ -1135,11 +1168,12 @@ func gameplay_presentation_contract() -> Dictionary:
 		"objective_spacing_locked": objective_spacing_locked,
 		"visual_parity_gate_v10": hierarchy_locked and integrated_hud_surface and hint_readable and booster_family_locked and composition_locked and board_locked and utilities_separated and canonical_booster_art and gothic_board_material and objective_label.text.begins_with("TARGET\n"),
 		"visual_parity_gate_v11": hierarchy_locked and integrated_hud_surface and hint_readable and booster_family_locked and composition_locked and board_locked and utilities_separated and canonical_booster_art and gothic_board_material and objective_spacing_locked and objective_label.text.begins_with("TARGET\n"),
-		"visual_parity_version": 11,
+		"visual_parity_gate_v12": hierarchy_locked and integrated_hud_surface and hint_readable and booster_family_locked and composition_locked and board_locked and utilities_separated and canonical_booster_art and gothic_board_material and objective_spacing_locked and five_control_tray and level_header_locked and objective_label.text.begins_with("TARGET\n"),
+		"visual_parity_version": 12,
 		"resource_bar_height": ($ResourceBar as PanelContainer).offset_bottom - ($ResourceBar as PanelContainer).offset_top,
 		"hud_plate_height": ($Layout/HUDPlate as PanelContainer).custom_minimum_size.y,
 		"booster_tray_height": _booster_tray.offset_bottom - _booster_tray.offset_top,
-		"visible_booster_count": 3,
+		"visible_booster_count": 5,
 		"authored_result_values": _result_reward_values != null,
 		"authored_result_proclamation": _result_proclamation != null and _result_keeper_cat != null,
 		"north_star_result_hierarchy": result_title != null and result_title.get_theme_font_size("font_size") >= 46 and result_objective_summary != null and result_objective_summary.get_theme_stylebox("normal") != null,
