@@ -208,7 +208,7 @@ func screen_contract() -> Dictionary:
 	)
 	var compact_copy := card_bodies.all(func(body): return not (body as Label).visible)
 	var hero_dominant := hero_panel.custom_minimum_size.y >= 400.0 and active_hero_art.custom_minimum_size.x >= 340.0 and active_hero_art.custom_minimum_size.y >= 340.0
-	var controlled_chrome := compact_copy and ($TruthStrip as Label).custom_minimum_size.y <= 40.0 and ($HeaderShade as ColorRect).color.a <= 0.38
+	var controlled_chrome := compact_copy and ($FeatureLayout/TruthStrip as Label).custom_minimum_size.y <= 40.0 and ($HeaderShade as ColorRect).color.a <= 0.38
 	return {
 		"feature": _feature_key,
 		"world_art_loaded": world_art != null and world_art.texture != null,
