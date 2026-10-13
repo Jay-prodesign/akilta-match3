@@ -567,20 +567,20 @@ func _style_impact_hint(mode: String) -> void:
 	if hint_label == null:
 		return
 	var color := Color("#F4E5D3")
-	var size_px := 25
+	var size_px := 26
 	match mode:
 		"blocker":
 			color = Color("#F0CE8A")
-			size_px = 26
+			size_px = 27
 		"special":
 			color = Color("#E8C987")
-			size_px = 26
+			size_px = 27
 		"combo":
 			color = Color("#E7C8FF")
-			size_px = 27
+			size_px = 28
 		"cascade":
 			color = Color("#DDB7F5")
-			size_px = 26
+			size_px = 27
 		"invalid":
 			color = Color("#D8C5D2")
 		_:
