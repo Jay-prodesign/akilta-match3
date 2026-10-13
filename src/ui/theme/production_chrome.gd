@@ -10,6 +10,7 @@ const GAMEPLAY_FRAME_PATH := "res://assets/board/gbl_board_ritual_frame_9s_base_
 const GAMEPLAY_HUD_FRAME_PATH := "res://assets/ui/gameplay/hud_objective_frame_v01.svg"
 const GAMEPLAY_PAUSE_FRAME_PATH := "res://assets/ui/gameplay/pause_modal_frame_v01.svg"
 const GAMEPLAY_BOOSTER_TRAY_PATH := "res://assets/ui/gameplay/booster_tray_frame_v02.svg"
+const GAMEPLAY_LEVEL_PLAQUE_PATH := "res://assets/ui/gameplay/level_plaque_v01.svg"
 
 static var _primary_panel: StyleBoxTexture
 static var _top_shell: StyleBoxTexture
@@ -19,6 +20,7 @@ static var _gameplay_hud_frame: StyleBoxTexture
 static var _gameplay_pause_frame: StyleBoxTexture
 static var _secondary_panel: StyleBoxTexture
 static var _gameplay_booster_tray: StyleBoxTexture
+static var _gameplay_level_plaque: StyleBoxTexture
 static var _compact_panel: StyleBoxTexture
 static var _interactive_normal: StyleBoxTexture
 static var _interactive_focus: StyleBoxTexture
@@ -233,6 +235,24 @@ static func apply_gameplay_booster_tray(panel: Control) -> bool:
 	panel.add_theme_stylebox_override("panel", style)
 	panel.set_meta("production_chrome_asset", GAMEPLAY_BOOSTER_TRAY_PATH)
 	panel.set_meta("production_chrome_kind", "gameplay_booster_tray")
+	return true
+
+static func gameplay_level_plaque() -> StyleBoxTexture:
+	if _gameplay_level_plaque == null:
+		_gameplay_level_plaque = _style(8.0, 54.0, GAMEPLAY_LEVEL_PLAQUE_PATH)
+		if _gameplay_level_plaque != null:
+			_gameplay_level_plaque.modulate_color = Color(1.0, 0.97, 0.90, 1.0)
+	return _gameplay_level_plaque
+
+static func apply_gameplay_level_plaque(label: Label) -> bool:
+	if label == null:
+		return false
+	var style := gameplay_level_plaque()
+	if style == null:
+		return false
+	label.add_theme_stylebox_override("normal", style)
+	label.set_meta("production_chrome_asset", GAMEPLAY_LEVEL_PLAQUE_PATH)
+	label.set_meta("production_chrome_kind", "gameplay_level_plaque")
 	return true
 
 static func gameplay_pause_frame() -> StyleBoxTexture:
