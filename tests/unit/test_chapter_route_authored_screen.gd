@@ -51,13 +51,20 @@ func _run() -> void:
 	_expect(bool(contract.get("raster_relics_loaded", false)), "S03 opening relic identity art must use production raster assets")
 	_expect(bool(contract.get("opening_label_readability", false)), "S03 opening ritual captions must retain readable authored plates")
 	_expect(bool(contract.get("frontier_label_readability", false)), "S03 CURRENT RITUAL label must retain readable authored plate")
+	_expect(bool(contract.get("future_seal_authored", false)), "S03 future journey must use one authored sealed upper-cabinets card")
+	_expect(bool(contract.get("future_levels_visually_suppressed", false)), "S03 future compatibility slots must stay out of the player-facing route")
 	_expect(not bool(contract.get("runtime_node_factory", true)), "S03 must not rebuild route nodes at runtime")
 
-	for level_number in range(1, 11):
+	for level_number in range(1, 4):
 		var button := route.get_level_button(level_number) as Button
-		_expect(button != null, "Authored route button missing for level %d" % level_number)
+		_expect(button != null, "Authored opening route button missing for level %d" % level_number)
 		if button != null:
-			_expect(button.size.x >= 52.0 and button.size.y >= 52.0, "Route level %d must retain a mobile touch target" % level_number)
+			_expect(button.visible and button.size.x >= 52.0 and button.size.y >= 52.0, "Opening route level %d must retain a visible mobile touch target" % level_number)
+	for level_number in range(4, 11):
+		var future_button := route.get_level_button(level_number) as Button
+		_expect(future_button != null and not future_button.visible, "Future route compatibility node %d must remain visually suppressed" % level_number)
+	var future_seal := route.get_future_seal_button() as Button
+	_expect(future_seal != null and future_seal.visible and future_seal.size.x >= 280.0 and future_seal.size.y >= 120.0, "Future upper-cabinets seal must be a clear mobile interaction")
 
 	_expect(route.get_frontier_level() == 1, "Fresh route frontier must point to Level 1")
 	var frontier_focus := route.get_node_or_null("FrontierFocus") as TextureRect
