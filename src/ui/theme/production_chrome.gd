@@ -9,6 +9,7 @@ const UTILITY_ACTION_PATH := "res://assets/ui/chrome/gbl_ui_action_utility_9s_v0
 const GAMEPLAY_FRAME_PATH := "res://assets/board/gbl_board_ritual_frame_9s_base_v01.png"
 const GAMEPLAY_HUD_FRAME_PATH := "res://assets/ui/gameplay/hud_objective_frame_v01.svg"
 const GAMEPLAY_PAUSE_FRAME_PATH := "res://assets/ui/gameplay/pause_modal_frame_v01.svg"
+const GAMEPLAY_REWARD_FRAME_PATH := "res://assets/ui/gameplay/reward_modal_frame_v01.svg"
 const GAMEPLAY_BOOSTER_TRAY_PATH := "res://assets/ui/gameplay/booster_tray_frame_v02.svg"
 const GAMEPLAY_LEVEL_PLAQUE_PATH := "res://assets/ui/gameplay/level_plaque_v01.svg"
 const GAMEPLAY_PRIMARY_ACTION_PATH := "res://assets/ui/gameplay/action_primary_bevel_v01.svg"
@@ -20,6 +21,7 @@ static var _bottom_shell: StyleBoxTexture
 static var _gameplay_shell: StyleBoxTexture
 static var _gameplay_hud_frame: StyleBoxTexture
 static var _gameplay_pause_frame: StyleBoxTexture
+static var _gameplay_reward_frame: StyleBoxTexture
 static var _secondary_panel: StyleBoxTexture
 static var _gameplay_booster_tray: StyleBoxTexture
 static var _gameplay_level_plaque: StyleBoxTexture
@@ -263,24 +265,24 @@ static func apply_gameplay_level_plaque(panel: Control) -> bool:
 
 static func gameplay_primary_action() -> StyleBoxTexture:
 	if _gameplay_primary_action == null:
-		_gameplay_primary_action = _style(8.0, 34.0, GAMEPLAY_PRIMARY_ACTION_PATH)
+		_gameplay_primary_action = _style(10.0, 58.0, GAMEPLAY_PRIMARY_ACTION_PATH)
 	return _gameplay_primary_action
 
 static func gameplay_primary_action_pressed() -> StyleBoxTexture:
 	if _gameplay_primary_action_pressed == null:
-		_gameplay_primary_action_pressed = _style(8.0, 34.0, GAMEPLAY_PRIMARY_ACTION_PATH)
+		_gameplay_primary_action_pressed = _style(10.0, 58.0, GAMEPLAY_PRIMARY_ACTION_PATH)
 		if _gameplay_primary_action_pressed != null:
 			_gameplay_primary_action_pressed.modulate_color = Color(0.80, 0.72, 0.86, 0.96)
 	return _gameplay_primary_action_pressed
 
 static func gameplay_utility_action() -> StyleBoxTexture:
 	if _gameplay_utility_action == null:
-		_gameplay_utility_action = _style(7.0, 32.0, GAMEPLAY_UTILITY_ACTION_PATH)
+		_gameplay_utility_action = _style(8.0, 56.0, GAMEPLAY_UTILITY_ACTION_PATH)
 	return _gameplay_utility_action
 
 static func gameplay_utility_action_pressed() -> StyleBoxTexture:
 	if _gameplay_utility_action_pressed == null:
-		_gameplay_utility_action_pressed = _style(7.0, 32.0, GAMEPLAY_UTILITY_ACTION_PATH)
+		_gameplay_utility_action_pressed = _style(8.0, 56.0, GAMEPLAY_UTILITY_ACTION_PATH)
 		if _gameplay_utility_action_pressed != null:
 			_gameplay_utility_action_pressed.modulate_color = Color(0.76, 0.70, 0.82, 0.94)
 	return _gameplay_utility_action_pressed
@@ -302,9 +304,25 @@ static func apply_gameplay_action_button(button: Button, hierarchy: String, role
 	button.set_meta("production_chrome_kind", "action_" + hierarchy + "_gameplay_" + role)
 	return true
 
+static func gameplay_reward_frame() -> StyleBoxTexture:
+	if _gameplay_reward_frame == null:
+		_gameplay_reward_frame = _style(34.0, 110.0, GAMEPLAY_REWARD_FRAME_PATH)
+	return _gameplay_reward_frame
+
+static func apply_gameplay_reward_modal(panel: Control) -> bool:
+	if panel == null:
+		return false
+	var style := gameplay_reward_frame()
+	if style == null:
+		return false
+	panel.add_theme_stylebox_override("panel", style)
+	panel.set_meta("production_chrome_asset", GAMEPLAY_REWARD_FRAME_PATH)
+	panel.set_meta("production_chrome_kind", "gameplay_reward_modal")
+	return true
+
 static func gameplay_pause_frame() -> StyleBoxTexture:
 	if _gameplay_pause_frame == null:
-		_gameplay_pause_frame = _style(30.0, 78.0, GAMEPLAY_PAUSE_FRAME_PATH)
+		_gameplay_pause_frame = _style(30.0, 108.0, GAMEPLAY_PAUSE_FRAME_PATH)
 	return _gameplay_pause_frame
 
 static func apply_gameplay_pause_modal(panel: Control) -> bool:
