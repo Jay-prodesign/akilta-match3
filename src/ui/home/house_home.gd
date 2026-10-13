@@ -332,6 +332,8 @@ func show_restoration_ceremony(curio_id: String, stage: int) -> void:
 		product_nav.visible = false
 	_restoration_room_bottom_offset = room_view.offset_bottom
 	room_view.offset_bottom = 0.0
+	if room_view.has_method("set_restoration_full_height"):
+		room_view.set_restoration_full_height(true)
 	play_button.visible = false
 	curio_label.get_parent().visible = false
 	headline.visible = false
@@ -355,6 +357,8 @@ func show_restoration_ceremony(curio_id: String, stage: int) -> void:
 		headline.visible = true
 		detail.visible = true
 		room_view.offset_bottom = _restoration_room_bottom_offset
+		if room_view.has_method("set_restoration_full_height"):
+			room_view.set_restoration_full_height(false)
 		if product_nav != null:
 			product_nav.visible = true
 		_refresh()
@@ -440,7 +444,7 @@ func restoration_vfx_contract() -> Dictionary:
 		"reduced_motion": _reduced_motion,
 		"reduced_motion_supported": true,
 		"exact_curio_identity_preserved": true,
-		"world_fills_hidden_nav_slot": get_node_or_null("RestorationOverlay") == null or room_view.offset_bottom >= -0.5,
+		"world_fills_hidden_nav_slot": get_node_or_null("RestorationOverlay") == null or (room_view.offset_bottom >= -0.5 and bool(room_view.living_house_contract().get("restoration_full_height", false))),
 	}
 
 func house_presentation_contract() -> Dictionary:

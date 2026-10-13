@@ -56,6 +56,7 @@ func _run() -> void:
 		_expect(float(living.get("stage_veil_alpha", 1.0)) < float(dormant_living.get("stage_veil_alpha", 0.0)), "restoration must progressively reveal the authored House")
 		_expect(not bool(living.get("breathing_active", true)), "Reduced Motion must keep Living House lighting static")
 		_expect(int(living.get("restored_curio_count", 0)) == 2, "stage 2 Living House must reflect two persistent Curios")
+		_expect(bool(living.get("restoration_full_height", false)), "Restoration ceremony must extend the authored House world through its normal bottom inset")
 	_expect(reduced_card != null and reduced_card.size.y <= reduced.size.y * 0.13, "Restoration ceremony summary must stay compact over the House world")
 	_expect(reduced_card != null and reduced_card.get_node_or_null("CeremonyContent/TopPad") != null, "Restoration ceremony must reserve a top inset inside production chrome")
 	var reduced_continue := reduced.get_node_or_null("RestorationOverlay/CeremonyCard/CeremonyContent/CeremonyRow/Copy/Continue") as Button
@@ -64,6 +65,12 @@ func _run() -> void:
 	var reduced_overlay_contract: Dictionary = reduced.get_node("RestorationOverlay").restoration_contract()
 	_expect(bool(reduced_overlay_contract.get("house_first_composition", false)), "Restoration must keep the recovered Curio bounded so the House remains the visual hero")
 	_expect(bool(reduced_overlay_contract.get("before_after_state_rail", false)), "Restoration must expose a truthful dormant-to-awakened state comparison")
+	var reduced_continue := reduced.get_node("RestorationOverlay/CeremonyCard/CeremonyContent/CeremonyRow/Copy/Continue") as Button
+	reduced_continue.emit_signal("pressed")
+	await _frames(2)
+	_expect(reduced.get_node_or_null("RestorationOverlay") == null, "Restoration Continue must close the ceremony overlay")
+	_expect(reduced_room.offset_bottom <= -91.0, "Restoration Continue must restore the House bottom-nav reservation")
+	_expect(not bool(reduced_room.living_house_contract().get("restoration_full_height", true)), "Restoration Continue must restore the normal House world inset")
 	reduced.queue_free()
 	await _frames(2)
 

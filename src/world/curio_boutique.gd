@@ -39,6 +39,7 @@ var house_stage: int = 0
 var curios: Array[String] = []
 var _reduced_motion: bool = false
 var _ambient_phase: float = 0.0
+var _restoration_full_height: bool = false
 
 func _process(delta: float) -> void:
 	if _reduced_motion or house_stage <= 0:
@@ -50,6 +51,10 @@ func apply_presentation_settings(state: Dictionary) -> void:
 	_reduced_motion = bool(state.get("reduced_motion", false))
 	if _reduced_motion:
 		_ambient_phase = 0.0
+	queue_redraw()
+
+func set_restoration_full_height(value: bool) -> void:
+	_restoration_full_height = value
 	queue_redraw()
 
 func set_house_state(stage: int, owned_curios: Array[String]) -> void:
@@ -67,9 +72,11 @@ func _draw() -> void:
 		return
 
 	var margin: float = size.x * 0.035
+	var room_top: float = size.y * 0.025
+	var room_bottom: float = size.y if _restoration_full_height else size.y * 0.955
 	var room := Rect2(
-		Vector2(margin, size.y * 0.025),
-		Vector2(size.x - margin * 2.0, size.y * 0.93)
+		Vector2(margin, room_top),
+		Vector2(size.x - margin * 2.0, room_bottom - room_top)
 	)
 	draw_rect(room, VELVET, true)
 	if _backdrop != null:
@@ -165,6 +172,7 @@ func living_house_contract() -> Dictionary:
 		"runtime_world_art": "authored_raster_plus_state_vfx",
 		"restored_curio_count": restored,
 		"procedural_environment_fallback": false,
+		"restoration_full_height": _restoration_full_height,
 	}
 
 func restoration_contract() -> Dictionary:
