@@ -26,6 +26,8 @@ func _run() -> void:
 	_expect(bool(contract.get("header_readability_scrim", false)), "Weekly Rituals must retain a dedicated header readability scrim over world art")
 	_expect(bool(contract.get("production_return_actions", false)), "Weekly Rituals returns must use the verified production action chrome family")
 	_expect(bool(contract.get("compact_offline_copy", false)), "Weekly Rituals offline state must hide redundant live-feed copy from the visual stack")
+	_expect(bool(contract.get("intentional_world_stage", false)), "Weekly Rituals must use the lower event world as intentional breathing room instead of leaving accidental dead space")
+	_expect(bool(contract.get("asset_backed_opening_record", false)), "Weekly Rituals opening record must use verified compact production chrome")
 
 	var timer := screen.get_node_or_null("MissionLayout/MissionTimer") as Label
 	var empty := screen.get_node_or_null("MissionLayout/MissionEmptyState") as PanelContainer
@@ -39,6 +41,11 @@ func _run() -> void:
 	_expect(availability != null and availability.text.contains("ONLY WHEN A MISSION FEED IS CONNECTED") and not availability.visible, "Weekly Rituals must retain live-feed truth without duplicating it visually")
 	_expect(art != null and art.texture != null and art.custom_minimum_size.x >= 320.0 and String(art.get_meta("asset_path", "")).contains("_sealed_"), "Weekly altar must retain a hero-scale sealed raster Curio")
 	_expect(record != null and record.text.contains("3 / 3 DISPLAYS AWAKENED"), "Weekly Rituals must reflect opening cabinet record")
+	_expect(record != null and record.custom_minimum_size.y >= 60.0 and record.get_theme_stylebox("normal") is StyleBoxTexture, "Weekly Rituals opening record must read as a compact anchored status plate")
+	var stage_spacer := screen.get_node_or_null("MissionLayout/StageSpacer") as Control
+	var events_return := screen.get_node_or_null("MissionLayout/ReturnToEvents") as Button
+	_expect(stage_spacer != null and stage_spacer.size_flags_vertical == Control.SIZE_EXPAND_FILL, "Weekly Rituals must own an authored world-stage spacer")
+	_expect(events_return != null and events_return.global_position.y > empty.global_position.y + empty.size.y + 120.0, "Weekly Rituals return actions must anchor below the intentional world stage")
 
 	var event_signal := {"hit": false}
 	screen.return_events_requested.connect(func(): event_signal["hit"] = true)

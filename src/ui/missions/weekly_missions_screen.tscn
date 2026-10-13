@@ -71,7 +71,7 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
-color = Color(0.018, 0.012, 0.026, 0.26)
+color = Color(0.018, 0.012, 0.026, 0.20)
 
 [node name="HeaderShade" type="ColorRect" parent="."]
 layout_mode = 1
@@ -90,7 +90,7 @@ anchor_bottom = 1.0
 offset_left = 34.0
 offset_top = 34.0
 offset_right = -34.0
-offset_bottom = -26.0
+offset_bottom = -126.0
 grow_horizontal = 2
 grow_vertical = 2
 theme_override_constants/separation = 12
@@ -185,7 +185,13 @@ text = "OFFLINE · NOTHING TO CLAIM"
 horizontal_alignment = 1
 autowrap_mode = 2
 
+[node name="StageSpacer" type="Control" parent="MissionLayout"]
+layout_mode = 2
+size_flags_vertical = 3
+mouse_filter = 2
+
 [node name="MissionOpeningRecord" type="Label" parent="MissionLayout"]
+custom_minimum_size = Vector2(0, 62)
 layout_mode = 2
 theme_override_colors/font_color = Color(0.82, 0.72, 0.90, 1)
 theme_override_colors/font_outline_color = Color(0.02, 0.014, 0.028, 0.92)
