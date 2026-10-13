@@ -58,6 +58,7 @@ const BOOSTER_ART_PATHS := {
 	"plus_moves": "res://assets/pieces/potion.webp",
 	"retry": "res://assets/pieces/skull.webp"
 }
+const GAMEPLAY_PAUSE_ICON_PATH := "res://assets/ui/gameplay/pause_gothic_v01.svg"
 const NORTH_STAR_BOOSTER_ART_PATHS := {
 	"shuffle": "res://assets/ui/gameplay/booster_shuffle_gothic_v01.svg",
 	"hand": "res://assets/ui/gameplay/booster_hand_gothic_v01.svg",
@@ -170,7 +171,9 @@ func _ready() -> void:
 	var gameplay_hud := $Layout/HUDPlate/HUD as HBoxContainer
 	if gameplay_hud != null:
 		gameplay_hud.move_child(pause_button, 1)
-	ProductionChrome.apply_interactive_button(pause_button, false, "gameplay_pause")
+	pause_button.icon = PieceAssetLoader.ornament(GAMEPLAY_PAUSE_ICON_PATH)
+	pause_button.set_meta("production_chrome_kind", "gameplay_pause_icon")
+	pause_button.set_meta("production_chrome_asset", GAMEPLAY_PAUSE_ICON_PATH)
 	ProductionChrome.apply_action_button(pause_resume, "primary", "pause_resume")
 	ProductionChrome.apply_action_button(pause_retry, "utility", "pause_retry")
 	ProductionChrome.apply_action_button(pause_settings, "utility", "pause_settings")
@@ -1156,7 +1159,8 @@ func gameplay_presentation_contract() -> Dictionary:
 		"utility_separated_from_boosters": utilities_separated,
 		"north_star_board_object": board_locked,
 		"north_star_header_hierarchy": hierarchy_locked,
-		"quiet_gameplay_shell_family": $ResourceBar.get_theme_stylebox("panel") is StyleBoxEmpty and String(pause_button.get_meta("production_chrome_asset", "")) == ProductionChrome.QUIET_PANEL_PATH,
+		"quiet_gameplay_shell_family": $ResourceBar.get_theme_stylebox("panel") is StyleBoxEmpty,
+		"clear_pause_control": pause_button.icon != null and pause_button.text == "" and String(pause_button.get_meta("production_chrome_asset", "")) == GAMEPLAY_PAUSE_ICON_PATH and pause_button.get_theme_stylebox("normal") is StyleBoxFlat,
 		"north_star_gameplay_hud_frame": north_star_gameplay_hud_frame,
 		"integrated_hint_surface": integrated_hint_surface,
 		"integrated_hud_surface": integrated_hud_surface,
@@ -1175,7 +1179,7 @@ func gameplay_presentation_contract() -> Dictionary:
 		"visual_parity_gate_v11": hierarchy_locked and integrated_hud_surface and hint_readable and booster_family_locked and composition_locked and board_locked and utilities_separated and canonical_booster_art and gothic_board_material and objective_spacing_locked and compact_header_locked,
 		"visual_parity_gate_v12": hierarchy_locked and integrated_hud_surface and hint_readable and booster_family_locked and composition_locked and board_locked and utilities_separated and canonical_booster_art and gothic_board_material and objective_spacing_locked and compact_header_locked and compact_geometry_locked and north_star_gameplay_hud_frame,
 		"visual_parity_gate_v13": hierarchy_locked and integrated_hud_surface and integrated_hint_surface and hint_readable and booster_family_locked and composition_locked and board_locked and utilities_separated and canonical_booster_art and gothic_board_material and objective_spacing_locked and compact_header_locked and compact_geometry_locked and north_star_gameplay_hud_frame,
-		"visual_parity_gate_v14": hierarchy_locked and integrated_hud_surface and integrated_hint_surface and hint_readable and booster_family_locked and composition_locked and board_locked and utilities_separated and canonical_booster_art and gothic_board_material and objective_spacing_locked and compact_header_locked and compact_geometry_locked and north_star_gameplay_hud_frame,
+		"visual_parity_gate_v14": hierarchy_locked and integrated_hud_surface and integrated_hint_surface and hint_readable and booster_family_locked and composition_locked and board_locked and utilities_separated and canonical_booster_art and gothic_board_material and objective_spacing_locked and compact_header_locked and compact_geometry_locked and north_star_gameplay_hud_frame and pause_button.icon != null and pause_button.text == "" and String(pause_button.get_meta("production_chrome_asset", "")) == GAMEPLAY_PAUSE_ICON_PATH and pause_button.get_theme_stylebox("normal") is StyleBoxFlat,
 		"visual_parity_version": 14,
 		"resource_bar_height": ($ResourceBar as PanelContainer).offset_bottom - ($ResourceBar as PanelContainer).offset_top,
 		"hud_plate_height": ($Layout/HUDPlate as PanelContainer).custom_minimum_size.y,
