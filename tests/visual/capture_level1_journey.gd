@@ -76,6 +76,7 @@ func _capture() -> void:
 		"canonical_booster_art",
 		"gothic_board_material",
 		"quiet_gameplay_shell_family",
+		"clear_pause_control",
 		"integrated_hud_surface",
 		"final_hint_readability",
 		"final_booster_readability",
@@ -154,6 +155,8 @@ func _capture() -> void:
 		return _fail(app, "S05 objective icon-to-copy clearance collapsed")
 	if pause_rect.position.x >= objective_icon_rect.position.x:
 		return _fail(app, "S05 pause control must remain at the quiet left edge of the HUD")
+	if gameplay_pause.icon == null or gameplay_pause.text != "" or not (gameplay_pause.get_theme_stylebox("normal") is StyleBoxFlat) or String(gameplay_pause.get_meta("production_chrome_kind", "")) != "gameplay_pause_icon":
+		return _fail(app, "S05 pause control regressed into clipped text or mismatched chrome")
 	if hud_rect.end.y > board_rect.position.y + 2.0:
 		return _fail(app, "S05 objective HUD collides with board")
 	if board_rect.end.y > hint_rect.position.y + 2.0:
