@@ -92,6 +92,7 @@ var _last_cascade_depth: int = 1
 var _last_objective_progress: int = 0
 var _last_objective_delta: int = 0
 var _objective_pulse_tween: Tween
+var _objective_name_tween: Tween
 var _result_transition_kind: String = ""
 var _result_transition_active: bool = false
 var _result_transition_tween: Tween
@@ -763,6 +764,10 @@ func _style_impact_hint(mode: String) -> void:
 	hint_label.add_theme_font_size_override("font_size", size_px)
 
 func _refresh_hud() -> void:
+	if objective_name_label != null:
+		if _objective_name_tween != null and _objective_name_tween.is_valid():
+			_objective_name_tween.kill()
+		objective_name_label.modulate = Color(1, 1, 1, 0)
 	if objective_icon != null:
 		objective_icon.texture = PieceAssetLoader.ornament(_objective_art_path())
 	if board_state == null:
@@ -857,6 +862,13 @@ func _present_objective_progress() -> void:
 		objective_name_label.text = "OBJECTIVE COMPLETE" if complete else "+%d THIS MOVE" % _last_objective_delta
 	objective_label.set_meta("objective_feedback_state", "complete" if complete else "progress")
 	objective_label.add_theme_color_override("font_color", Color("#FFFFFF") if _high_contrast else (Color("#F0CE8A") if complete else Color("#E4CDEB")))
+	objective_name_label.modulate = Color.WHITE
+	if _objective_name_tween != null and _objective_name_tween.is_valid():
+		_objective_name_tween.kill()
+	if not _reduced_motion and not complete:
+		_objective_name_tween = create_tween()
+		_objective_name_tween.tween_interval(0.85)
+		_objective_name_tween.tween_property(objective_name_label, "modulate", Color(1, 1, 1, 0), 0.24).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
 	if _objective_pulse_tween != null and _objective_pulse_tween.is_valid():
 		_objective_pulse_tween.kill()
 	objective_label.scale = Vector2.ONE
