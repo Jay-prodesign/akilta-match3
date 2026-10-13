@@ -11,22 +11,22 @@ func _capture() -> void:
 	await _frames(2)
 
 	screen.set_boot_state("loading")
-	await _frames(1)
+	await create_timer(0.62).timeout
 	if not await _save(screen, "splash-00-loading.png"):
 		return
 
 	screen.set_boot_state("ready")
-	await _frames(1)
+	await create_timer(0.34).timeout
 	if not await _save(screen, "splash-01-ready.png"):
 		return
 
 	screen.set_boot_state("recoverable_error", "The local House record was unreadable. A safe new record was prepared; the damaged file was not treated as progress.", true)
-	await _frames(1)
+	await create_timer(0.34).timeout
 	if not await _save(screen, "splash-02-recovered.png"):
 		return
 
 	screen.set_boot_state("recoverable_error", "This House record was created by a newer build. Update the game before entering so that record is not overwritten.", false)
-	await _frames(1)
+	await create_timer(0.34).timeout
 	if not await _save(screen, "splash-03-update-required.png"):
 		return
 

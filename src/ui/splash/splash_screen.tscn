@@ -1,4 +1,4 @@
-[gd_scene load_steps=6 format=3]
+[gd_scene load_steps=8 format=3]
 
 [ext_resource type="Script" path="res://src/ui/splash/splash_screen.gd" id="1_splash"]
 
@@ -22,7 +22,7 @@ border_width_left = 2
 border_width_top = 2
 border_width_right = 2
 border_width_bottom = 2
-border_color = Color(0.835, 0.678, 0.439, 1)
+border_color = Color(0.953, 0.82, 0.55, 1)
 corner_radius_top_left = 28
 corner_radius_top_right = 28
 corner_radius_bottom_right = 28
@@ -43,20 +43,44 @@ corner_radius_bottom_right = 28
 corner_radius_bottom_left = 28
 
 [sub_resource type="StyleBoxFlat" id="BootPanel"]
-bg_color = Color(0.051, 0.035, 0.071, 0.82)
+bg_color = Color(0.028, 0.019, 0.041, 0.9)
 border_width_left = 1
 border_width_top = 1
 border_width_right = 1
 border_width_bottom = 1
-border_color = Color(0.608, 0.435, 0.651, 0.58)
-corner_radius_top_left = 28
-corner_radius_top_right = 28
-corner_radius_bottom_right = 28
-corner_radius_bottom_left = 28
-content_margin_left = 18.0
-content_margin_top = 12.0
-content_margin_right = 18.0
-content_margin_bottom = 12.0
+border_color = Color(0.831, 0.678, 0.439, 0.48)
+corner_radius_top_left = 24
+corner_radius_top_right = 24
+corner_radius_bottom_right = 24
+corner_radius_bottom_left = 24
+content_margin_left = 22.0
+content_margin_top = 14.0
+content_margin_right = 22.0
+content_margin_bottom = 14.0
+
+[sub_resource type="StyleBoxFlat" id="BootTrack"]
+bg_color = Color(0.025, 0.018, 0.035, 0.92)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.831, 0.678, 0.439, 0.46)
+corner_radius_top_left = 9
+corner_radius_top_right = 9
+corner_radius_bottom_right = 9
+corner_radius_bottom_left = 9
+
+[sub_resource type="StyleBoxFlat" id="BootFill"]
+bg_color = Color(0.545, 0.257, 0.604, 1)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.969, 0.824, 0.561, 0.95)
+corner_radius_top_left = 8
+corner_radius_top_right = 8
+corner_radius_bottom_right = 8
+corner_radius_bottom_left = 8
 
 [node name="SplashScreen" type="Control"]
 layout_mode = 3
@@ -85,42 +109,81 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-color = Color(0.018, 0.012, 0.026, 0.44)
+mouse_filter = 2
+color = Color(0.012, 0.009, 0.02, 0.22)
+
+[node name="TopVeil" type="ColorRect" parent="."]
+layout_mode = 1
+anchors_preset = 10
+anchor_right = 1.0
+offset_bottom = 300.0
+grow_horizontal = 2
+mouse_filter = 2
+color = Color(0.012, 0.009, 0.02, 0.38)
+
+[node name="BottomVeil" type="ColorRect" parent="."]
+layout_mode = 1
+anchors_preset = 12
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_top = -420.0
+grow_horizontal = 2
+grow_vertical = 0
+mouse_filter = 2
+color = Color(0.012, 0.009, 0.02, 0.48)
 
 [node name="Layout" type="VBoxContainer" parent="."]
 layout_mode = 1
 anchors_preset = 15
-anchor_left = 0.08
-anchor_top = 0.16
-anchor_right = 0.92
-anchor_bottom = 0.84
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 46.0
+offset_top = 58.0
+offset_right = -46.0
+offset_bottom = -54.0
 grow_horizontal = 2
 grow_vertical = 2
-theme_override_constants/separation = 13
+theme_override_constants/separation = 10
 alignment = 1
 
+[node name="TopSpacer" type="Control" parent="Layout"]
+custom_minimum_size = Vector2(0, 34)
+layout_mode = 2
+size_flags_vertical = 3
+mouse_filter = 2
+
+[node name="BrandSeal" type="TextureRect" parent="Layout"]
+custom_minimum_size = Vector2(132, 132)
+layout_mode = 2
+size_flags_horizontal = 4
+mouse_filter = 2
+expand_mode = 1
+stretch_mode = 5
+
 [node name="MoonMark" type="Label" parent="Layout"]
+visible = false
 layout_mode = 2
 theme_override_colors/font_color = Color(0.835, 0.678, 0.439, 1)
-theme_override_font_sizes/font_size = 88
+theme_override_font_sizes/font_size = 84
 text = "☾"
 horizontal_alignment = 1
 
 [node name="Brand" type="Label" parent="Layout"]
 layout_mode = 2
-theme_override_colors/font_color = Color(0.985, 0.94, 0.86, 1)
-theme_override_colors/font_outline_color = Color(0.015, 0.01, 0.022, 0.98)
-theme_override_constants/outline_size = 7
-theme_override_font_sizes/font_size = 68
+theme_override_colors/font_color = Color(0.992, 0.936, 0.82, 1)
+theme_override_colors/font_outline_color = Color(0.012, 0.009, 0.02, 0.98)
+theme_override_constants/outline_size = 6
+theme_override_font_sizes/font_size = 70
 text = "CAT & COVEN"
 horizontal_alignment = 1
 
 [node name="Subtitle" type="Label" parent="Layout"]
 layout_mode = 2
-theme_override_colors/font_color = Color(0.92, 0.78, 0.52, 1)
-theme_override_colors/font_outline_color = Color(0.015, 0.01, 0.022, 0.96)
-theme_override_constants/outline_size = 5
-theme_override_font_sizes/font_size = 28
+theme_override_colors/font_color = Color(0.929, 0.797, 0.545, 1)
+theme_override_colors/font_outline_color = Color(0.012, 0.009, 0.02, 0.96)
+theme_override_constants/outline_size = 3
+theme_override_font_sizes/font_size = 24
 text = "THE HOUSE OF CURIOS"
 horizontal_alignment = 1
 
@@ -128,15 +191,19 @@ horizontal_alignment = 1
 visible = false
 layout_mode = 2
 theme_override_colors/font_color = Color(0.94, 0.88, 0.86, 1)
-theme_override_colors/font_outline_color = Color(0.015, 0.01, 0.022, 0.98)
-theme_override_constants/outline_size = 5
-theme_override_font_sizes/font_size = 22
-text = "The House remembers what you restore.\nWake the first relic."
+theme_override_font_sizes/font_size = 20
+text = "The House remembers what you restore."
 horizontal_alignment = 1
 autowrap_mode = 2
 
+[node name="WorldSpacer" type="Control" parent="Layout"]
+custom_minimum_size = Vector2(0, 150)
+layout_mode = 2
+size_flags_vertical = 3
+mouse_filter = 2
+
 [node name="BootState" type="PanelContainer" parent="Layout"]
-custom_minimum_size = Vector2(0, 82)
+custom_minimum_size = Vector2(0, 116)
 layout_mode = 2
 theme_override_styles/panel = SubResource("BootPanel")
 
@@ -147,21 +214,29 @@ alignment = 1
 
 [node name="Progress" type="Label" parent="Layout/BootState/StateContent"]
 layout_mode = 2
-theme_override_colors/font_color = Color(0.835, 0.678, 0.439, 1)
+theme_override_colors/font_color = Color(0.949, 0.816, 0.545, 1)
 theme_override_colors/font_outline_color = Color(0.015, 0.01, 0.022, 0.96)
-theme_override_constants/outline_size = 4
+theme_override_constants/outline_size = 2
 theme_override_font_sizes/font_size = 20
 text = "WAKING THE HOUSE…"
 horizontal_alignment = 1
 
+[node name="LoadTrack" type="ProgressBar" parent="Layout/BootState/StateContent"]
+custom_minimum_size = Vector2(0, 18)
+layout_mode = 2
+show_percentage = false
+value = 32.0
+theme_override_styles/background = SubResource("BootTrack")
+theme_override_styles/fill = SubResource("BootFill")
+
 [node name="RecoveryMessage" type="Label" parent="Layout/BootState/StateContent"]
 visible = false
+custom_minimum_size = Vector2(0, 94)
 layout_mode = 2
 theme_override_colors/font_color = Color(0.94, 0.88, 0.86, 1)
 theme_override_colors/font_outline_color = Color(0.015, 0.01, 0.022, 0.96)
-theme_override_constants/outline_size = 3
-custom_minimum_size = Vector2(0, 48)
-theme_override_font_sizes/font_size = 19
+theme_override_constants/outline_size = 2
+theme_override_font_sizes/font_size = 20
 text = "A local save issue was recovered."
 horizontal_alignment = 1
 autowrap_mode = 2
@@ -169,12 +244,30 @@ autowrap_mode = 2
 [node name="Enter" type="Button" parent="Layout"]
 custom_minimum_size = Vector2(0, 104)
 layout_mode = 2
-theme_override_colors/font_color = Color(0.957, 0.898, 0.788, 1)
-theme_override_colors/font_hover_color = Color(1, 0.945, 0.851, 1)
-theme_override_colors/font_disabled_color = Color(0.906, 0.824, 0.737, 1)
+theme_override_colors/font_color = Color(0.988, 0.933, 0.831, 1)
+theme_override_colors/font_hover_color = Color(1, 0.965, 0.875, 1)
+theme_override_colors/font_disabled_color = Color(0.74, 0.67, 0.7, 1)
+theme_override_colors/font_outline_color = Color(0.012, 0.009, 0.02, 0.94)
+theme_override_constants/outline_size = 2
 theme_override_font_sizes/font_size = 29
 theme_override_styles/normal = SubResource("EnterNormal")
 theme_override_styles/hover = SubResource("EnterHover")
 theme_override_styles/pressed = SubResource("EnterHover")
 theme_override_styles/disabled = SubResource("EnterDisabled")
 text = "ENTER THE HOUSE"
+
+[node name="Tagline" type="Label" parent="Layout"]
+custom_minimum_size = Vector2(0, 34)
+layout_mode = 2
+theme_override_colors/font_color = Color(0.839, 0.776, 0.795, 1)
+theme_override_colors/font_outline_color = Color(0.012, 0.009, 0.02, 0.92)
+theme_override_constants/outline_size = 2
+theme_override_font_sizes/font_size = 17
+text = "EVERY OBJECT HAS A STORY."
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="BottomSpacer" type="Control" parent="Layout"]
+custom_minimum_size = Vector2(0, 18)
+layout_mode = 2
+mouse_filter = 2

@@ -17,6 +17,8 @@ func _capture() -> void:
 
 	if String(app.current_route_name()) != "boot":
 		return _fail(app, "cold start must begin on S00 BOOT")
+	# Capture the settled branded entry state instead of the first entrance-motion frames.
+	await create_timer(0.62).timeout
 	if not await _save(app, "golden-00-splash.png"):
 		return
 

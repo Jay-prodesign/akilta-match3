@@ -48,8 +48,12 @@ func _verify_clean_ready() -> void:
 	if splash != null and splash.has_method("splash_authored_contract"):
 		var authored: Dictionary = splash.splash_authored_contract()
 		_expect(bool(authored.get("authored_world_art", false)), "S00 world art must be authored and loaded")
+		_expect(bool(authored.get("shared_moonlit_castle_baseline", false)), "S00 must use the verified moonlit-castle raster baseline until a dedicated splash master exists")
+		_expect(bool(authored.get("authored_brand_seal", false)), "S00 Cat & Coven crest must be authored and loaded")
 		_expect(bool(authored.get("authored_boot_panel", false)), "S00 boot-state panel must be authored")
 		_expect(bool(authored.get("authored_enter_cta", false)), "S00 Enter CTA must be authored with mobile touch target")
+		_expect(bool(authored.get("north_star_entry_stack", false)), "S00 must retain crest → brand → boot gate → Enter hierarchy")
+		_expect(bool(authored.get("stable_loading_geometry", false)), "S00 loading state must preserve entry geometry without layout jumping")
 		_expect(not bool(authored.get("runtime_ui_factory", true)), "S00 must not rebuild presentation UI at runtime")
 	var enter: Button = splash.get_node_or_null("Layout/Enter") as Button
 	_expect(enter != null and (not enter.visible or enter.disabled), "S00 loading must not expose an active Enter action")
