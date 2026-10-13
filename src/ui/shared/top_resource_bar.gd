@@ -5,13 +5,17 @@ const PieceAssetLoader = preload("res://src/match3/presentation/piece_asset_load
 const MobileSafeArea = preload("res://src/ui/shared/mobile_safe_area.gd")
 const ResourceBarScene = preload("res://src/ui/shared/top_resource_bar.tscn")
 
-static func attach(screen: Control, progress, profile_handler: Callable = Callable()) -> PanelContainer:
+static func attach(screen: Control, progress, profile_handler: Callable = Callable(), content_path: NodePath = NodePath("Layout")) -> PanelContainer:
 	if screen == null:
 		return null
 	var existing := screen.get_node_or_null("ResourceBar") as PanelContainer
 	if existing != null:
+		_reserve_content(screen, content_path)
+		_bind_profile(existing, profile_handler)
 		refresh(existing, progress)
 		return existing
+
+	_reserve_content(screen, content_path)
 
 	var panel := ResourceBarScene.instantiate() as PanelContainer
 	if panel == null:
@@ -25,11 +29,8 @@ static func attach(screen: Control, progress, profile_handler: Callable = Callab
 	panel.offset_bottom = 112.0 + safe_insets.y
 	screen.add_child(panel)
 
-	var life_icon := panel.get_node_or_null("Resources/LifeResourceChip/Content/Icon") as TextureRect
 	var coin_icon := panel.get_node_or_null("Resources/CoinResourceChip/Content/Icon") as TextureRect
 	var gem_icon := panel.get_node_or_null("Resources/GemResourceChip/Content/Icon") as TextureRect
-	if life_icon != null:
-		life_icon.texture = PieceAssetLoader.ornament("res://assets/ui/ui_heart.svg")
 	if coin_icon != null:
 		coin_icon.texture = PieceAssetLoader.ornament("res://assets/ui/ui_coin.svg")
 	if gem_icon != null:
@@ -37,31 +38,40 @@ static func attach(screen: Control, progress, profile_handler: Callable = Callab
 	var profile := panel.get_node_or_null("Resources/KeeperProfile") as Button
 	if profile != null:
 		profile.icon = PieceAssetLoader.ornament("res://assets/ui/ui_profile.svg")
-	if profile != null:
-		if profile_handler.is_valid():
-			profile.visible = true
-			profile.pressed.connect(profile_handler)
-		else:
-			profile.visible = false
+	_bind_profile(panel, profile_handler)
 
 	refresh(panel, progress)
 	return panel
 
+static func _reserve_content(screen: Control, content_path: NodePath) -> void:
+	if screen == null:
+		return
+	var content := screen.get_node_or_null(content_path) as Control
+	if content == null:
+		return
+	content.set_meta("top_resource_inset_applied", true)
+	MobileSafeArea.apply_content(screen, content_path)
+
+static func _bind_profile(panel: PanelContainer, profile_handler: Callable) -> void:
+	if panel == null:
+		return
+	var profile := panel.get_node_or_null("Resources/KeeperProfile") as Button
+	if profile == null:
+		return
+	profile.visible = profile_handler.is_valid()
+	if profile_handler.is_valid() and not profile.pressed.is_connected(profile_handler):
+		profile.pressed.connect(profile_handler)
+
 static func refresh(panel: PanelContainer, progress) -> void:
 	if panel == null:
 		return
-	var lives := 0
 	var coins := 0
 	var gems := 0
 	if progress != null:
-		lives = maxi(0, int(progress.lives))
 		coins = maxi(0, int(progress.coins))
 		gems = maxi(0, int(progress.gems))
-	var life := panel.find_child("LifeResource", true, false) as Label
 	var coin := panel.find_child("CoinResource", true, false) as Label
 	var gem := panel.find_child("GemResource", true, false) as Label
-	if life != null:
-		life.text = _format_number(lives)
 	if coin != null:
 		coin.text = _format_number(coins)
 	if gem != null:
@@ -76,19 +86,17 @@ static func authored_contract(panel: PanelContainer) -> Dictionary:
 			"profile_touch_target_ok": false,
 			"runtime_ui_factory": false,
 		}
-	var life := panel.find_child("LifeResource", true, false) as Label
 	var coin := panel.find_child("CoinResource", true, false) as Label
 	var gem := panel.find_child("GemResource", true, false) as Label
-	var life_icon := panel.get_node_or_null("Resources/LifeResourceChip/Content/Icon") as TextureRect
 	var coin_icon := panel.get_node_or_null("Resources/CoinResourceChip/Content/Icon") as TextureRect
 	var gem_icon := panel.get_node_or_null("Resources/GemResourceChip/Content/Icon") as TextureRect
 	var profile := panel.get_node_or_null("Resources/KeeperProfile") as Button
 	return {
 		"authored_scene": true,
-		"resource_slots_present": life != null and coin != null and gem != null,
-		"icons_loaded": life_icon != null and life_icon.texture != null and coin_icon != null and coin_icon.texture != null and gem_icon != null and gem_icon.texture != null and profile != null and profile.icon != null,
+		"resource_slots_present": coin != null and gem != null,
+		"icons_loaded": coin_icon != null and coin_icon.texture != null and gem_icon != null and gem_icon.texture != null and profile != null and profile.icon != null,
 		"profile_touch_target_ok": profile != null and profile.custom_minimum_size.x >= 88.0 and profile.custom_minimum_size.y >= 88.0,
-		"north_star_resource_zone": (panel.offset_bottom - panel.offset_top) >= 96.0 and (panel.offset_bottom - panel.offset_top) <= 112.0 and life_icon != null and life_icon.custom_minimum_size.x >= 40.0 and coin_icon != null and coin_icon.custom_minimum_size.x >= 40.0 and gem_icon != null and gem_icon.custom_minimum_size.x >= 40.0,
+		"north_star_resource_zone": (panel.offset_bottom - panel.offset_top) >= 96.0 and (panel.offset_bottom - panel.offset_top) <= 112.0 and coin_icon != null and coin_icon.custom_minimum_size.x >= 40.0 and gem_icon != null and gem_icon.custom_minimum_size.x >= 40.0,
 		"resource_zone_height": panel.offset_bottom - panel.offset_top,
 		"runtime_ui_factory": false,
 	}
