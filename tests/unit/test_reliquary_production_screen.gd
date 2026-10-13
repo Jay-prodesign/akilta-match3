@@ -27,8 +27,10 @@ func _run() -> void:
 	_expect(bool(contract.get("authored_detail_scene", false)), "Curio detail must be an authored scene")
 	_expect(bool(contract.get("north_star_title_hierarchy", false)), "Reliquary must retain a strong North Star page title")
 	_expect(bool(contract.get("north_star_count_plate", false)), "Reliquary progress must sit on an authored readable plate")
-	_expect(bool(contract.get("hero_curio_scale", false)), "Reliquary Moon Cameo must remain a hero-scale Curio")
-	_expect(bool(contract.get("north_star_collection_grid", false)), "Reliquary must present the opening Curios as a visual collection grid")
+	_expect(bool(contract.get("curio_art_readable", false)), "Reliquary Curio art must remain readable inside compact cabinet niches")
+	_expect(bool(contract.get("north_star_collection_grid", false)), "Reliquary must present the opening Curios as a truthful 2x2 cabinet grid")
+	_expect(bool(contract.get("truthful_set_summary", false)), "Reliquary fourth grid cell must summarize the real three-Curio set rather than inventing another collectible")
+	_expect(bool(contract.get("compact_curio_tiles", false)), "Reliquary Curios must read as compact cabinet niches rather than tall product cards")
 	_expect(bool(contract.get("collection_copy_subordinate", false)), "Reliquary must keep long lore/origin copy behind Details instead of crowding the collection")
 	_expect(bool(contract.get("collection_occupies_cabinet_stage", false)), "Reliquary opening set must stay as a bounded cabinet display instead of stretching into empty towers")
 	_expect(bool(contract.get("back_anchored_to_stage_bottom", false)), "Reliquary must use the world stage as breathing room and anchor Back near the navigation edge")
@@ -43,10 +45,15 @@ func _run() -> void:
 	var moth_art := screen.get_node_or_null("Layout/Cards/Slot2/Content/Number/RewardArt") as TextureRect
 	var locket_art := screen.get_node_or_null("Layout/Cards/Slot3/Content/Number/RewardArt") as TextureRect
 	var footer := screen.get_node_or_null("Layout/CabinetFooter") as Label
-	_expect(moon_art != null and moon_art.texture != null and moon_art.custom_minimum_size.y >= 260.0, "Moon Cameo must render as a hero-scale authored display")
+	_expect(moon_art != null and moon_art.texture != null and moon_art.custom_minimum_size.y >= 96.0 and moon_art.custom_minimum_size.y <= 120.0, "Moon Cameo art must remain readable inside the compact cabinet niche")
 	_expect(moth_art != null and moth_art.texture != null, "Moth Reliquary authored display art missing")
 	_expect(locket_art != null and locket_art.texture != null, "Thorned Locket authored display art missing")
 	_expect(footer != null and footer.text.contains("3 / 3 CURIOS RECOVERED"), "Reliquary footer must reflect completed opening collection truth")
+	var grid := screen.get_node_or_null("Layout/Cards") as GridContainer
+	var summary := screen.get_node_or_null("Layout/Cards/SetSummary") as PanelContainer
+	var summary_progress := screen.get_node_or_null("Layout/Cards/SetSummary/Content/Progress") as Label
+	_expect(grid != null and grid.columns == 2 and grid.get_child_count() == 4, "Reliquary must render three real Curios plus one truthful set-summary cell")
+	_expect(summary != null and summary_progress != null and summary_progress.text == "3 / 3 AWAKENED", "Completed Reliquary summary must mirror exact collection truth")
 
 	for path in [
 		"Layout/Cards/MoonCard/DetailActionLayer/InspectAction",
