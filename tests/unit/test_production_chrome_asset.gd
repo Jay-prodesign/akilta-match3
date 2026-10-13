@@ -17,6 +17,7 @@ func _run() -> void:
 	_expect(bool(contract.get("asset_backed", false)), "shared production chrome texture must decode at runtime")
 	_expect(String(contract.get("runtime_path", "")).ends_with(".svg"), "shared production chrome must resolve from the authored frame source through the runtime image decoder")
 	_expect(float(contract.get("nine_slice_margin", 0.0)) >= 56.0, "shared production chrome must retain safe 9-slice corners")
+	_expect(bool(contract.get("global_interactive_family_ready", false)), "global interactive chrome variants must resolve from the authored 9-slice source")
 	await _expect_panel(PRESTART, "Layout/Card")
 	await _expect_panel(GAMEPLAY, "PauseOverlay/Card")
 	await _expect_panel(GAMEPLAY, "ResultOverlay/Card")
