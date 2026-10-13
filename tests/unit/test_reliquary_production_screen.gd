@@ -46,7 +46,7 @@ func _run() -> void:
 	var locket_art := screen.get_node_or_null("Layout/Cards/Slot3/Content/Number/RewardArt") as TextureRect
 	var footer := screen.get_node_or_null("Layout/CabinetFooter") as Label
 	var back := screen.get_node_or_null("Layout/Back") as Button
-	_expect(moon_art != null and moon_art.texture != null and moon_art.custom_minimum_size.y >= 280.0, "Moon Cameo must remain artwork-dominant inside its cabinet niche")
+	_expect(moon_art != null and moon_art.texture != null and moon_art.custom_minimum_size.y >= 380.0, "Moon Cameo must remain artwork-dominant inside its cabinet niche")
 	_expect(moth_art != null and moth_art.texture != null, "Moth Reliquary authored display art missing")
 	_expect(locket_art != null and locket_art.texture != null, "Thorned Locket authored display art missing")
 	_expect(footer != null and not footer.visible and back != null and not back.visible, "Redundant footer/back chrome must stay out of the collection stage")
