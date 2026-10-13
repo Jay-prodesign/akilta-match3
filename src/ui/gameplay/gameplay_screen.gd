@@ -1014,7 +1014,7 @@ func gameplay_presentation_contract() -> Dictionary:
 		"authored_resource_bar": _level_badge_label != null and _resource_coin_label != null and _resource_gem_label != null,
 		"authored_keeper_tray": _booster_tray != null and _hint_boost_button != null,
 		"authored_booster_menu": _booster_tray != null and _booster_tray.get_node_or_null("BoosterActions") != null and (_booster_tray.get_node("BoosterActions") as HBoxContainer).get_child_count() == 5,
-		"north_star_resource_strip": ($ResourceBar as PanelContainer).offset_bottom - ($ResourceBar as PanelContainer).offset_top == 88.0 and ($ResourceBar/Resources/CoinChip/Content/Icon as TextureRect).custom_minimum_size.x >= 40.0,
+		"north_star_resource_strip": ($ResourceBar as PanelContainer).offset_bottom - ($ResourceBar as PanelContainer).offset_top == 80.0 and ($ResourceBar/Resources/CoinChip/Content/Icon as TextureRect).custom_minimum_size.x >= 40.0,
 		"north_star_objective_strip": ($Layout/HUDPlate as PanelContainer).custom_minimum_size.y >= 112.0 and moves_label.custom_minimum_size.y >= 88.0 and pause_button.custom_minimum_size.x >= 88.0,
 		"north_star_booster_tray": _booster_tray != null and is_equal_approx(_booster_tray.anchor_top, 0.735) and (_booster_tray.offset_bottom - _booster_tray.offset_top) >= 152.0 and [_hint_boost_button, _sealed_boost_a, _sealed_boost_b, _sealed_boost_c, _settings_shortcut].all(func(button): return button.custom_minimum_size.y >= 88.0),
 		"deterministic_gameplay_geometry": true,
