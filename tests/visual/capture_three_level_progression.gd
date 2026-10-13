@@ -162,6 +162,8 @@ func _capture() -> void:
 	var daily_truth: Label = app.current_screen().get_node_or_null("FeatureLayout/DailyPracticeCard/DailyContent/DailyPracticeTruth") as Label
 	if daily_action == null or daily_action.disabled or daily_truth == null or not daily_truth.text.contains("NO BONUS REWARD"):
 		return _fail(app, "completed Events must expose truthful Daily House Ritual practice")
+	if not _verify_meta_visual_parity(app, app.current_screen(), "events"):
+		return
 	if not await _save(app, "progression-final-events.png"):
 		return
 	daily_action.emit_signal("pressed")
@@ -235,6 +237,8 @@ func _capture() -> void:
 		return _fail(app, "Shop hero must remain an admitted unavailable state")
 	if shop_art == null or shop_art.texture == null or shop_disabled_action == null or not shop_disabled_action.disabled:
 		return _fail(app, "Shop featured offer must provide art with a disabled commerce CTA")
+	if not _verify_meta_visual_parity(app, app.current_screen(), "shop"):
+		return
 	if not await _save(app, "progression-final-shop.png"):
 		return
 	app.current_screen().get_node("FeatureLayout/BackToHouse").emit_signal("pressed")
@@ -270,6 +274,8 @@ func _capture() -> void:
 		return _fail(app, "completed Profile local save health missing")
 	if profile_cloud == null or profile_cloud.text != "CLOUD SYNC · NOT CONNECTED":
 		return _fail(app, "completed Profile cloud-sync truth missing")
+	if not _verify_meta_visual_parity(app, profile, "profile"):
+		return
 	if not await _save(app, "progression-final-profile.png"):
 		return
 	var profile_settings_button: Button = profile.get_node_or_null("FeatureLayout/ProfileSettings") as Button
@@ -372,6 +378,42 @@ func _capture() -> void:
 	await process_frame
 	_cleanup()
 	quit(0)
+
+func _verify_meta_visual_parity(app: Node, screen: Node, feature: String) -> bool:
+	if screen == null or not screen.has_method("screen_contract"):
+		_fail(app, "%s visual parity screen contract missing" % feature)
+		return false
+	var contract: Dictionary = screen.screen_contract()
+	for key in [
+		"visual_parity_gate_v2",
+		"north_star_hero_scale",
+		"art_dominant_cards",
+		"controlled_chrome_density",
+		"world_art_not_overdimmed",
+	]:
+		if not bool(contract.get(key, false)):
+			_fail(app, "%s visual parity gate failed: %s" % [feature, key])
+			return false
+	var viewport_size := screen.get_viewport().get_visible_rect().size
+	var hero := screen.get_node_or_null("FeatureLayout/FeatureHero") as Control
+	var hero_art := screen.get_node_or_null("FeatureLayout/FeatureHero/HeroRow/ShopFeaturedOfferArt") as Control if feature == "shop" else screen.get_node_or_null("FeatureLayout/FeatureHero/HeroRow/HeroArt") as Control
+	var card_art := screen.get_node_or_null("FeatureLayout/CardScroll/Cards/Card1/Row/Art") as Control
+	if hero == null or hero_art == null or card_art == null:
+		_fail(app, "%s visual parity geometry slots missing" % feature)
+		return false
+	var hero_ratio := hero.custom_minimum_size.y / viewport_size.y
+	var hero_art_ratio := hero_art.custom_minimum_size.x / viewport_size.x
+	var card_art_ratio := card_art.custom_minimum_size.x / viewport_size.x
+	if hero_ratio < 0.20:
+		_fail(app, "%s hero stage too small: %.3f" % [feature, hero_ratio])
+		return false
+	if hero_art_ratio < 0.31:
+		_fail(app, "%s hero art too small: %.3f" % [feature, hero_art_ratio])
+		return false
+	if card_art_ratio < 0.20:
+		_fail(app, "%s card art too small: %.3f" % [feature, card_art_ratio])
+		return false
+	return true
 
 func _play_level(app: Node, level_number: int) -> bool:
 	if not app.show_chapters():
