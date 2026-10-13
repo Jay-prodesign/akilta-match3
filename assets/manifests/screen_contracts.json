@@ -2216,6 +2216,7 @@
                   "layer": "gameplay_asset",
                   "states": [
                     "available",
+                    "disabled",
                     "pressed"
                   ],
                   "geometry_ref": "booster_slot",

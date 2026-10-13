@@ -33,9 +33,12 @@ func _run() -> void:
 
 	var geometry_system: Dictionary = data.get("geometry_system", {})
 	_expect(int((geometry_system.get("design_viewport", {}) as Dictionary).get("width", 0)) == 1080 and int((geometry_system.get("design_viewport", {}) as Dictionary).get("height", 0)) == 1920, "canonical geometry must target the 1080x1920 portrait design viewport")
-	_expect(Array(geometry_system.get("minimum_touch_target", [])) == [88,88], "canonical geometry must preserve an 88x88 logical minimum touch target")
-	_expect(Array(geometry_system.get("top_resource_zone_range", [])) == [96,112], "canonical top resource zone range drifted")
-	_expect(Array(geometry_system.get("bottom_navigation_zone_range", [])) == [128,144], "canonical bottom navigation zone range drifted")
+	var min_touch: Array = geometry_system.get("minimum_touch_target", [])
+	var top_zone_range: Array = geometry_system.get("top_resource_zone_range", [])
+	var bottom_zone_range: Array = geometry_system.get("bottom_navigation_zone_range", [])
+	_expect(min_touch.size() == 2 and int(min_touch[0]) == 88 and int(min_touch[1]) == 88, "canonical geometry must preserve an 88x88 logical minimum touch target")
+	_expect(top_zone_range.size() == 2 and int(top_zone_range[0]) == 96 and int(top_zone_range[1]) == 112, "canonical top resource zone range drifted")
+	_expect(bottom_zone_range.size() == 2 and int(bottom_zone_range[0]) == 128 and int(bottom_zone_range[1]) == 144, "canonical bottom navigation zone range drifted")
 	var geometry_profiles: Dictionary = data.get("geometry_profiles", {})
 	_expect(not geometry_profiles.is_empty(), "canonical geometry profiles missing")
 
