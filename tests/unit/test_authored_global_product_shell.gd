@@ -37,7 +37,8 @@ func _run() -> void:
 	_expect(bool(nav_contract.get("all_slots_present", false)), "ProductNavigation must expose all five authored destinations")
 	_expect(bool(nav_contract.get("icons_loaded", false)), "ProductNavigation authored icons must load")
 	_expect(bool(nav_contract.get("touch_targets_ok", false)), "ProductNavigation destinations must retain mobile touch targets")
-	_expect(bool(nav_contract.get("compact_house_bar", false)), "ProductNavigation must retain the compact North Star house-bar proportion")
+	_expect(bool(nav_contract.get("north_star_nav_zone", false)), "ProductNavigation must occupy the canonical 128–144 logical px North Star navigation zone")
+	_expect(float(nav_contract.get("nav_zone_height", 0.0)) == 136.0, "ProductNavigation authored baseline height must be 136 logical px")
 	_expect(not bool(nav_contract.get("runtime_ui_factory", true)), "ProductNavigation must not create persistent shell nodes at runtime")
 
 	var house := nav.get_node_or_null("Scroll/Items/NavHouse") as Button
@@ -53,7 +54,9 @@ func _run() -> void:
 	_expect(bool(bar_contract.get("authored_scene", false)), "TopResourceBar must instantiate an authored scene")
 	_expect(bool(bar_contract.get("resource_slots_present", false)), "TopResourceBar coin/gem slots missing")
 	_expect(bool(bar_contract.get("icons_loaded", false)), "TopResourceBar authored icons must load")
-	_expect(bool(bar_contract.get("profile_touch_target_ok", false)), "Keeper profile control must retain mobile touch target")
+	_expect(bool(bar_contract.get("profile_touch_target_ok", false)), "Keeper profile control must retain the 88 logical px mobile touch target")
+	_expect(bool(bar_contract.get("north_star_resource_zone", false)), "TopResourceBar must occupy the canonical 96–112 logical px resource zone")
+	_expect(float(bar_contract.get("resource_zone_height", 0.0)) == 104.0, "TopResourceBar authored baseline height must be 104 logical px")
 	_expect(not bool(bar_contract.get("runtime_ui_factory", true)), "TopResourceBar must not create persistent shell nodes at runtime")
 
 	var coin := bar.find_child("CoinResource", true, false) as Label

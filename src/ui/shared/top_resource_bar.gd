@@ -19,10 +19,10 @@ static func attach(screen: Control, progress, profile_handler: Callable = Callab
 		return null
 
 	var safe_insets := MobileSafeArea.current_insets(screen)
-	panel.offset_left = safe_insets.x
-	panel.offset_right = -safe_insets.z
-	panel.offset_top = 6.0 + safe_insets.y
-	panel.offset_bottom = 64.0 + safe_insets.y
+	panel.offset_left = 36.0 + safe_insets.x
+	panel.offset_right = -36.0 - safe_insets.z
+	panel.offset_top = 8.0 + safe_insets.y
+	panel.offset_bottom = 112.0 + safe_insets.y
 	screen.add_child(panel)
 
 	var coin_icon := panel.get_node_or_null("Resources/CoinResourceChip/Content/Icon") as TextureRect
@@ -77,7 +77,9 @@ static func authored_contract(panel: PanelContainer) -> Dictionary:
 		"authored_scene": true,
 		"resource_slots_present": coin != null and gem != null,
 		"icons_loaded": coin_icon != null and coin_icon.texture != null and gem_icon != null and gem_icon.texture != null and profile != null and profile.icon != null,
-		"profile_touch_target_ok": profile != null and profile.custom_minimum_size.x >= 56.0 and profile.custom_minimum_size.y >= 48.0,
+		"profile_touch_target_ok": profile != null and profile.custom_minimum_size.x >= 88.0 and profile.custom_minimum_size.y >= 88.0,
+		"north_star_resource_zone": (panel.offset_bottom - panel.offset_top) >= 96.0 and (panel.offset_bottom - panel.offset_top) <= 112.0 and coin_icon != null and coin_icon.custom_minimum_size.x >= 40.0 and gem_icon != null and gem_icon.custom_minimum_size.x >= 40.0,
+		"resource_zone_height": panel.offset_bottom - panel.offset_top,
 		"runtime_ui_factory": false,
 	}
 

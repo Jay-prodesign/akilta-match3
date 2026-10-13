@@ -8,14 +8,14 @@ border_width_top = 1
 border_width_right = 1
 border_width_bottom = 1
 border_color = Color(0.878, 0.714, 0.455, 0.82)
-corner_radius_top_left = 15
-corner_radius_top_right = 15
-corner_radius_bottom_right = 15
-corner_radius_bottom_left = 15
-content_margin_left = 6.0
-content_margin_top = 4.0
-content_margin_right = 6.0
-content_margin_bottom = 4.0
+corner_radius_top_left = 20
+corner_radius_top_right = 20
+corner_radius_bottom_right = 20
+corner_radius_bottom_left = 20
+content_margin_left = 8.0
+content_margin_top = 8.0
+content_margin_right = 8.0
+content_margin_bottom = 8.0
 shadow_color = Color(0, 0, 0, 0.46)
 shadow_size = 8
 
@@ -61,21 +61,24 @@ corner_radius_bottom_left = 10
 
 [node name="ResourceBar" type="PanelContainer"]
 layout_mode = 3
-anchor_left = 0.02
-anchor_right = 0.98
-offset_top = 6.0
-offset_bottom = 64.0
+anchor_left = 0.0
+anchor_right = 1.0
+offset_left = 36.0
+offset_top = 8.0
+offset_right = -36.0
+offset_bottom = 112.0
 grow_horizontal = 2
 z_index = 60
 theme_override_styles/panel = SubResource("Shell")
 
 [node name="Resources" type="HBoxContainer" parent="."]
 layout_mode = 2
-theme_override_constants/separation = 3
+theme_override_constants/separation = 8
 alignment = 1
 
 
 [node name="CoinResourceChip" type="PanelContainer" parent="Resources"]
+custom_minimum_size = Vector2(0, 88)
 layout_mode = 2
 size_flags_horizontal = 3
 theme_override_styles/panel = SubResource("Chip")
@@ -86,7 +89,7 @@ theme_override_constants/separation = 3
 alignment = 1
 
 [node name="Icon" type="TextureRect" parent="Resources/CoinResourceChip/Content"]
-custom_minimum_size = Vector2(30, 30)
+custom_minimum_size = Vector2(42, 42)
 layout_mode = 2
 mouse_filter = 2
 expand_mode = 1
@@ -95,10 +98,11 @@ stretch_mode = 5
 [node name="CoinResource" type="Label" parent="Resources/CoinResourceChip/Content"]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.969, 0.914, 0.839, 1)
-theme_override_font_sizes/font_size = 17
+theme_override_font_sizes/font_size = 22
 text = "0"
 
 [node name="GemResourceChip" type="PanelContainer" parent="Resources"]
+custom_minimum_size = Vector2(0, 88)
 layout_mode = 2
 size_flags_horizontal = 3
 theme_override_styles/panel = SubResource("Chip")
@@ -109,7 +113,7 @@ theme_override_constants/separation = 3
 alignment = 1
 
 [node name="Icon" type="TextureRect" parent="Resources/GemResourceChip/Content"]
-custom_minimum_size = Vector2(30, 30)
+custom_minimum_size = Vector2(42, 42)
 layout_mode = 2
 mouse_filter = 2
 expand_mode = 1
@@ -118,14 +122,14 @@ stretch_mode = 5
 [node name="GemResource" type="Label" parent="Resources/GemResourceChip/Content"]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.969, 0.914, 0.839, 1)
-theme_override_font_sizes/font_size = 17
+theme_override_font_sizes/font_size = 22
 text = "0"
 
 [node name="KeeperProfile" type="Button" parent="Resources"]
-custom_minimum_size = Vector2(56, 48)
+custom_minimum_size = Vector2(88, 88)
 layout_mode = 2
 focus_mode = 1
-theme_override_constants/icon_max_width = 34
+theme_override_constants/icon_max_width = 48
 theme_override_styles/normal = SubResource("Profile")
 theme_override_styles/hover = SubResource("ProfileFocus")
 theme_override_styles/pressed = SubResource("ProfileFocus")
