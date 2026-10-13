@@ -22,12 +22,12 @@ const ProductionChrome = preload("res://src/ui/theme/production_chrome.gd")
 @export var close_high_style: StyleBoxFlat
 
 
-@onready var master_toggle: CheckButton = $Card/Content/AudioRow/Master
-@onready var music_toggle: CheckButton = $Card/Content/AudioRow/Music
-@onready var sfx_toggle: CheckButton = $Card/Content/AudioRow/SFX
-@onready var haptics_toggle: CheckButton = $Card/Content/ExperienceRow/Haptics
-@onready var reduced_toggle: CheckButton = $Card/Content/ExperienceRow/Reduced
-@onready var contrast_toggle: CheckButton = $Card/Content/ExperienceRow/Contrast
+@onready var master_toggle: Button = $Card/Content/AudioRow/Master
+@onready var music_toggle: Button = $Card/Content/AudioRow/Music
+@onready var sfx_toggle: Button = $Card/Content/AudioRow/SFX
+@onready var haptics_toggle: Button = $Card/Content/ExperienceRow/Haptics
+@onready var reduced_toggle: Button = $Card/Content/ExperienceRow/Reduced
+@onready var contrast_toggle: Button = $Card/Content/ExperienceRow/Contrast
 @onready var close_button: Button = $Card/Content/Close
 @onready var saved_note: Label = $Card/Content/SavedNote
 @onready var house_sigil: TextureRect = $Card/Content/HouseSigil
@@ -36,11 +36,14 @@ const ProductionChrome = preload("res://src/ui/theme/production_chrome.gd")
 var settings
 var _binding_controls := false
 var _high_contrast := false
+var _entrance_tween: Tween
 
 func _ready() -> void:
 	world_art.texture = ScreenArt.texture("settings_bg_curio_house")
 	house_sigil.texture = PieceAssetLoader.ornament("res://assets/pieces/moon_sigil.webp")
 	_style_settings_overlay()
+	_wire_tactile_controls()
+	_play_entrance()
 	close_button.pressed.connect(_on_close_pressed)
 	master_toggle.toggled.connect(func(on): _on_toggle("master_muted", not on))
 	music_toggle.toggled.connect(func(on): _on_toggle("music_muted", not on))
@@ -116,12 +119,12 @@ func state_contract() -> Dictionary:
 func _refresh_toggle_copy() -> void:
 	if not is_node_ready():
 		return
-	master_toggle.text = "Master audio · %s" % ("ON" if master_toggle.button_pressed else "OFF")
-	music_toggle.text = "Music · %s" % ("ON" if music_toggle.button_pressed else "OFF")
-	sfx_toggle.text = "Ritual sounds · %s" % ("ON" if sfx_toggle.button_pressed else "OFF")
-	haptics_toggle.text = "Haptics · %s" % ("ON" if haptics_toggle.button_pressed else "OFF")
-	reduced_toggle.text = "Reduced motion · %s" % ("ON" if reduced_toggle.button_pressed else "OFF")
-	contrast_toggle.text = "High contrast · %s" % ("ON" if contrast_toggle.button_pressed else "OFF")
+	master_toggle.text = "MASTER AUDIO  ·  %s" % ("ON" if master_toggle.button_pressed else "OFF")
+	music_toggle.text = "MUSIC  ·  %s" % ("ON" if music_toggle.button_pressed else "OFF")
+	sfx_toggle.text = "RITUAL SOUNDS  ·  %s" % ("ON" if sfx_toggle.button_pressed else "OFF")
+	haptics_toggle.text = "HAPTICS  ·  %s" % ("ON" if haptics_toggle.button_pressed else "OFF")
+	reduced_toggle.text = "REDUCED MOTION  ·  %s" % ("ON" if reduced_toggle.button_pressed else "OFF")
+	contrast_toggle.text = "HIGH CONTRAST  ·  %s" % ("ON" if contrast_toggle.button_pressed else "OFF")
 
 func _style_settings_overlay() -> void:
 	var card := get_node_or_null("Card") as PanelContainer
@@ -130,7 +133,8 @@ func _style_settings_overlay() -> void:
 			card.add_theme_stylebox_override("panel", card_high_style)
 			card.set_meta("production_chrome_kind", "settings_high_contrast")
 		else:
-			ProductionChrome.apply_secondary(card, "settings")
+			ProductionChrome.apply_primary(card)
+		card.set_meta("production_chrome_kind", "settings_ritual_card")
 	for toggle in [master_toggle, music_toggle, sfx_toggle, haptics_toggle, reduced_toggle, contrast_toggle]:
 		_style_toggle(toggle)
 	if _high_contrast:
@@ -145,7 +149,7 @@ func _style_settings_overlay() -> void:
 	close_button.add_theme_color_override("font_hover_color", Color("#FFFFFF"))
 	close_button.add_theme_font_size_override("font_size", 22)
 
-func _style_toggle(toggle: CheckButton) -> void:
+func _style_toggle(toggle: Button) -> void:
 	if toggle == null:
 		return
 	if _high_contrast:
@@ -160,15 +164,47 @@ func _style_toggle(toggle: CheckButton) -> void:
 	toggle.add_theme_color_override("font_hover_color", Color("#FFFFFF"))
 	toggle.add_theme_font_size_override("font_size", 21)
 
+func _wire_tactile_controls() -> void:
+	for control in [master_toggle, music_toggle, sfx_toggle, haptics_toggle, reduced_toggle, contrast_toggle, close_button]:
+		if control == null:
+			continue
+		control.pivot_offset = control.size * 0.5
+		control.button_down.connect(func(): _animate_control_scale(control, Vector2(0.975, 0.975), 0.06))
+		control.button_up.connect(func(): _animate_control_scale(control, Vector2.ONE, 0.10))
+
+func _animate_control_scale(control: Control, target: Vector2, duration: float) -> void:
+	if control == null:
+		return
+	if _high_contrast:
+		control.scale = target
+		return
+	var tween := create_tween()
+	tween.set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
+	tween.tween_property(control, "scale", target, duration)
+
+func _play_entrance() -> void:
+	var card := $Card as PanelContainer
+	if card == null:
+		return
+	card.pivot_offset = card.size * 0.5
+	card.scale = Vector2(0.97, 0.97)
+	card.modulate = Color(1, 1, 1, 0)
+	if _entrance_tween != null and _entrance_tween.is_valid():
+		_entrance_tween.kill()
+	_entrance_tween = create_tween()
+	_entrance_tween.set_parallel(true)
+	_entrance_tween.tween_property(card, "scale", Vector2.ONE, 0.22).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
+	_entrance_tween.tween_property(card, "modulate", Color.WHITE, 0.16).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
+
 func settings_authored_contract() -> Dictionary:
 	var card := $Card as PanelContainer
-	var audio_row := $Card/Content/AudioRow as HBoxContainer
-	var experience_row := $Card/Content/ExperienceRow as HBoxContainer
-	var compact_surface := card.anchor_left >= 0.075 and card.anchor_right <= 0.925 and (card.anchor_bottom - card.anchor_top) <= 0.41
-	var grid_layout := audio_row.get_child_count() == 3 and experience_row.get_child_count() == 3 and [master_toggle, music_toggle, sfx_toggle, haptics_toggle, reduced_toggle, contrast_toggle].all(
-		func(control): return control.size_flags_horizontal == Control.SIZE_EXPAND_FILL
+	var audio_row := $Card/Content/AudioRow as VBoxContainer
+	var experience_row := $Card/Content/ExperienceRow as VBoxContainer
+	var destination_surface := card.anchor_left >= 0.075 and card.anchor_right <= 0.925 and (card.anchor_bottom - card.anchor_top) >= 0.70 and (card.anchor_bottom - card.anchor_top) <= 0.77
+	var ritual_list := audio_row.get_child_count() == 3 and experience_row.get_child_count() == 3 and [master_toggle, music_toggle, sfx_toggle, haptics_toggle, reduced_toggle, contrast_toggle].all(
+		func(control): return control.size_flags_horizontal == Control.SIZE_EXPAND_FILL and control.toggle_mode and control.custom_minimum_size.y >= 88.0
 	)
-	var sigil_stage := house_sigil != null and house_sigil.texture != null and house_sigil.custom_minimum_size.y >= 120.0
+	var sigil_stage := house_sigil != null and house_sigil.texture != null and house_sigil.custom_minimum_size.y >= 150.0
 	var world_visible := ($WorldShade as ColorRect).color.a <= 0.20 and ($Dim as ColorRect).color.a <= 0.12
 	var title_hierarchy := ($Card/Content/Title as Label).get_theme_font_size("font_size") >= 50
 	var touch_targets := [master_toggle, music_toggle, sfx_toggle, haptics_toggle, reduced_toggle, contrast_toggle, close_button].all(func(control): return control.custom_minimum_size.y >= 88.0)
@@ -183,12 +219,12 @@ func settings_authored_contract() -> Dictionary:
 		"north_star_toggle_height": touch_targets,
 		"intro_subordinate": ($Card/Content/Intro as Label) != null and not ($Card/Content/Intro as Label).visible,
 		"runtime_style_factory": false,
-		"production_card_chrome": card.get_theme_stylebox("panel") is StyleBoxTexture and String(card.get_meta("production_chrome_kind", "")) == "secondary_settings",
+		"production_card_chrome": card.get_theme_stylebox("panel") is StyleBoxTexture and String(card.get_meta("production_chrome_kind", "")) == "settings_ritual_card",
 		"production_toggle_chrome": [master_toggle, music_toggle, sfx_toggle, haptics_toggle, reduced_toggle, contrast_toggle].all(func(control): return control.get_theme_stylebox("normal") is StyleBoxTexture and String(control.get_meta("production_chrome_kind", "")) == "interactive_settings_toggle"),
 		"production_return_chrome": close_button.get_theme_stylebox("normal") is StyleBoxTexture and String(close_button.get_meta("production_chrome_kind", "")) == "action_primary_settings_return",
-		"settings_grid_layout": grid_layout,
+		"settings_ritual_list": ritual_list,
 		"house_sigil_hero_scale": sigil_stage,
 		"world_art_not_overdimmed": world_visible,
-		"compact_control_surface": compact_surface,
-		"visual_parity_gate_v2": title_hierarchy and touch_targets and grid_layout and sigil_stage and world_visible and compact_surface,
+		"tall_destination_surface": destination_surface,
+		"visual_parity_gate_v3": title_hierarchy and touch_targets and ritual_list and sigil_stage and world_visible and destination_surface,
 	}
