@@ -77,6 +77,8 @@ func configure(feature_key: String, state: Dictionary) -> bool:
 	hero_art.visible = _feature_key != "shop"
 	profile_settings.visible = _feature_key == "profile"
 	save_health_card.visible = _feature_key == "profile"
+	truth_strip.visible = false
+	back_button.visible = false
 	hero_body.visible = false
 
 	local_save_status.text = String(state.get("save_status", "LOCAL SAVE · DEVICE-LOCAL"))
@@ -102,8 +104,7 @@ func configure(feature_key: String, state: Dictionary) -> bool:
 			truth_strip.text = "LIVE EVENT REWARDS ARE NOT FABRICATED · DAILY PRACTICE IS DEVICE-LOCAL"
 			cards = [
 				{"art":"res://assets/curios/ch01_curio_moon_cameo_awakened_v01.webp", "kicker":"RITUAL I", "title":"MOONLIGHT MARKET", "body":"The opening cabinet set is restored. The House is ready for a future moonlit event." if opening_complete else "Awaken the three opening displays to restore the Curio House.", "status":"OPENING CHAPTER COMPLETE · FUTURE MARKET EVENT REMAINS SEALED" if opening_complete else "CHAPTER PROGRESS TRACKED · MARKET EVENT NOT YET ACTIVE"},
-				{"art":"res://assets/curios/ch01_curio_moth_reliquary.png", "kicker":"RITUAL II", "title":"THE LOST RELICS", "body":"A sealed reliquary marks a future cabinet journey.", "status":"UPPER CABINETS SEALED · FUTURE JOURNEY" if opening_complete else "LOCKED · COMPLETE THE OPENING CHAPTER"},
-				{"art":"res://assets/curios/ch01_curio_thorned_locket.png", "kicker":"RITUAL III", "title":"WEEKLY RITUALS", "body":"Weekly ritual challenges will live here when a live mission feed exists.", "status":"FUTURE FEATURE · NO CLAIMABLE REWARDS"}
+				{"art":"res://assets/curios/ch01_curio_moth_reliquary.png", "kicker":"RITUAL II", "title":"THE LOST RELICS", "body":"A sealed reliquary marks a future cabinet journey.", "status":"UPPER CABINETS SEALED · FUTURE JOURNEY" if opening_complete else "LOCKED · COMPLETE THE OPENING CHAPTER"}
 			]
 		"shop":
 			background_id = "shop_bg_curio_house"
@@ -208,7 +209,15 @@ func screen_contract() -> Dictionary:
 	)
 	var compact_copy := card_bodies.all(func(body): return not (body as Label).visible)
 	var hero_dominant := hero_panel.custom_minimum_size.y >= 400.0 and active_hero_art.custom_minimum_size.x >= 340.0 and active_hero_art.custom_minimum_size.y >= 340.0
-	var controlled_chrome := compact_copy and ($FeatureLayout/TruthStrip as Label).custom_minimum_size.y <= 40.0 and ($HeaderShade as ColorRect).color.a <= 0.38
+	var controlled_chrome := compact_copy and not truth_strip.visible and not back_button.visible and ($HeaderShade as ColorRect).color.a <= 0.38
+	var profile_status_focus := _feature_key != "profile" or (
+		save_health_card != null
+		and save_health_card.visible
+		and not local_save_detail.visible
+		and not cloud_sync_detail.visible
+		and local_save_status.get_theme_font_size("font_size") >= 24
+		and cloud_sync_status.get_theme_font_size("font_size") >= 20
+	)
 	return {
 		"feature": _feature_key,
 		"world_art_loaded": world_art != null and world_art.texture != null,
@@ -227,7 +236,11 @@ func screen_contract() -> Dictionary:
 		"header_readability_scrim": ($HeaderShade as ColorRect) != null and ($HeaderShade as ColorRect).color.a >= 0.34,
 		"secondary_header_compact": (_feature_key != "events" or not chapter_progress.visible) and (_feature_key != "shop" or not shop_notice.visible),
 		"profile_save_health_compact": _feature_key != "profile" or (save_health_card != null and save_health_card.custom_minimum_size.y <= 170.0),
+		"profile_status_focus": profile_status_focus,
+		"redundant_house_return_suppressed": not back_button.visible,
+		"truth_footer_suppressed": not truth_strip.visible,
 		"world_art_not_overdimmed": ($WorldShade as ColorRect).color.a <= 0.32,
 		"controlled_chrome_density": controlled_chrome,
 		"visual_parity_gate_v2": hero_dominant and art_dominant_cards and controlled_chrome and hero_loaded,
+		"visual_parity_gate_v3": hero_dominant and art_dominant_cards and controlled_chrome and hero_loaded and profile_status_focus,
 	}
