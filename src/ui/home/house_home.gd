@@ -327,7 +327,7 @@ func show_restoration_ceremony(curio_id: String, stage: int) -> void:
 		return
 
 	var product_nav := get_node_or_null("ProductNavigation") as Control
-	var room_view_bottom_before_ceremony := room_view.offset_bottom
+	var room_view_bottom_before_ceremony: float = float(room_view.offset_bottom)
 	room_view.offset_bottom = 0.0
 	if product_nav != null:
 		product_nav.visible = false
