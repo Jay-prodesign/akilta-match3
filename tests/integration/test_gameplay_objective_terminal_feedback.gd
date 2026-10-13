@@ -55,6 +55,10 @@ func _verify_win_transition() -> void:
 	_expect(String(feel.get("objective_copy", "")).contains("OBJECTIVE COMPLETE"), "winning objective must have explicit completion copy")
 	_expect(String(transition.get("kind", "")) == "won" and bool(transition.get("overlay_visible", false)), "win must enter terminal overlay through transition contract")
 	_expect(String(transition.get("mode", "")) == "subtle_card_settle", "win transition must use production settle mode")
+	var polish: Dictionary = screen.terminal_result_polish_contract()
+	_expect(bool(polish.get("asset_backed_result_chrome", false)), "win result must retain verified asset-backed production chrome")
+	_expect(not bool(polish.get("runtime_result_style_factory", true)), "terminal result must not create flat StyleBox material at runtime")
+	_expect(float(polish.get("result_dim_alpha", 1.0)) <= 0.72, "win result must keep enough authored board/world context visible behind the reveal")
 	screen.queue_free()
 	await process_frame
 
