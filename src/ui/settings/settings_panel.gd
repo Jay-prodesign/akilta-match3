@@ -164,7 +164,7 @@ func settings_authored_contract() -> Dictionary:
 	var card := $Card as PanelContainer
 	var audio_row := $Card/Content/AudioRow as HBoxContainer
 	var experience_row := $Card/Content/ExperienceRow as HBoxContainer
-	var compact_surface := card.anchor_left >= 0.075 and card.anchor_right <= 0.925 and (card.anchor_bottom - card.anchor_top) <= 0.52
+	var compact_surface := card.anchor_left >= 0.075 and card.anchor_right <= 0.925 and (card.anchor_bottom - card.anchor_top) <= 0.41
 	var grid_layout := audio_row.get_child_count() == 3 and experience_row.get_child_count() == 3 and [master_toggle, music_toggle, sfx_toggle, haptics_toggle, reduced_toggle, contrast_toggle].all(
 		func(control): return control.size_flags_horizontal == Control.SIZE_EXPAND_FILL
 	)

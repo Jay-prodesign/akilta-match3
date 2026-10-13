@@ -325,7 +325,7 @@ func _capture() -> void:
 	var settings_sigil := settings_panel.get_node_or_null("Card/Content/HouseSigil") as Control
 	if settings_card == null or settings_sigil == null:
 		return _fail(app, "Settings visual parity geometry missing")
-	if settings_card.size.x / settings_viewport.x > 0.86 or settings_card.size.y / settings_viewport.y > 0.53:
+	if settings_card.size.x / settings_viewport.x > 0.86 or settings_card.size.y / settings_viewport.y > 0.42:
 		return _fail(app, "Settings card expanded back into a full-screen form")
 	if settings_sigil.custom_minimum_size.y < 120.0:
 		return _fail(app, "Settings House sigil visual anchor collapsed")
