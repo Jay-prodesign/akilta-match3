@@ -61,6 +61,7 @@ const BOOSTER_ART_PATHS := {
 const GAMEPLAY_PAUSE_ICON_PATH := "res://assets/ui/gameplay/pause_gothic_v01.svg"
 const SEALED_BADGE_PATH := "res://assets/ui/gameplay/booster_sealed_badge_v01.svg"
 const REWARD_STAR_PATH := "res://assets/ui/gameplay/reward_star_gothic_v01.svg"
+const OBJECTIVE_FOCUS_FRAME_PATH := "res://assets/ui/gameplay/objective_focus_frame_v01.svg"
 const NORTH_STAR_BOOSTER_ART_PATHS := {
 	"shuffle": "res://assets/ui/gameplay/booster_shuffle_gothic_v01.svg",
 	"hand": "res://assets/ui/gameplay/booster_hand_gothic_v01.svg",
@@ -110,6 +111,7 @@ const LAST_MOVE_THRESHOLD := 1
 @onready var board_view = $Layout/BoardView
 @onready var objective_name_label: Label = $Layout/HUDPlate/HUD/ObjectiveSlot/ObjectiveName
 @onready var objective_icon: TextureRect = $Layout/HUDPlate/HUD/ObjectiveSlot/ObjectiveIcon
+@onready var objective_focus_frame: TextureRect = $Layout/HUDPlate/HUD/ObjectiveSlot/ObjectiveIcon/FocusFrame
 @onready var objective_label: Label = $Layout/HUDPlate/HUD/ObjectiveSlot/Objective
 @onready var moves_label: Label = $Layout/HUDPlate/HUD/Moves
 @onready var pause_button: Button = $Layout/HUDPlate/HUD/Pause
@@ -195,6 +197,7 @@ func _ready() -> void:
 	var gameplay_hud := $Layout/HUDPlate/HUD as HBoxContainer
 	if gameplay_hud != null:
 		gameplay_hud.move_child(pause_button, 1)
+	objective_focus_frame.texture = PieceAssetLoader.ornament(OBJECTIVE_FOCUS_FRAME_PATH)
 	pause_button.icon = PieceAssetLoader.ornament(GAMEPLAY_PAUSE_ICON_PATH)
 	pause_sigil.texture = PieceAssetLoader.ornament(String(OBJECTIVE_ART_PATHS["moon"]))
 	# Keep modal actions text-led: the ornamental bevel owns their silhouette.
