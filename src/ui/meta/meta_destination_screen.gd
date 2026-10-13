@@ -7,6 +7,7 @@ signal daily_practice_requested(level_number: int)
 
 const ScreenArt = preload("res://src/ui/shared/screen_art_registry.gd")
 const PieceAssetLoader = preload("res://src/match3/presentation/piece_asset_loader.gd")
+const ProductionChrome = preload("res://src/ui/theme/production_chrome.gd")
 
 var _feature_key: String = ""
 var _daily_level: int = 0
@@ -40,6 +41,7 @@ var _hero_asset_path: String = ""
 @onready var back_button: Button = $FeatureLayout/BackToHouse
 
 func _ready() -> void:
+	ProductionChrome.apply_secondary($FeatureLayout/FeatureHero, "meta_hero")
 	weekly_action.pressed.connect(func(): weekly_requested.emit())
 	daily_action.pressed.connect(_on_daily_pressed)
 	profile_settings.pressed.connect(func(): settings_requested.emit())
@@ -187,6 +189,7 @@ func screen_contract() -> Dictionary:
 		"code_built_panels": false,
 		"north_star_title_hierarchy": title != null and title.get_theme_font_size("font_size") >= 52,
 		"north_star_hero_scale": ($FeatureLayout/FeatureHero as PanelContainer).custom_minimum_size.y >= 320.0 and ((shop_offer_art.custom_minimum_size.x if _feature_key == "shop" else hero_art.custom_minimum_size.x) >= 290.0),
+		"asset_backed_hero_chrome": ($FeatureLayout/FeatureHero as PanelContainer).get_theme_stylebox("panel") is StyleBoxTexture and String(($FeatureLayout/FeatureHero as PanelContainer).get_meta("production_chrome_kind", "")) == "secondary_meta_hero",
 		"hero_asset_path": _hero_asset_path,
 		"raster_feature_art": _hero_asset_path.to_lower().ends_with(".webp") or _hero_asset_path.to_lower().ends_with(".png"),
 		"rounded_primary_actions": weekly_action.get_theme_stylebox("normal") != null and profile_settings.get_theme_stylebox("normal") != null,
