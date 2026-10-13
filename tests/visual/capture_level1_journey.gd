@@ -250,8 +250,10 @@ func _capture() -> void:
 	for parity_key in [
 		"north_star_collection_grid",
 		"truthful_set_summary",
-		"compact_curio_tiles",
+		"cabinet_niche_scale",
 		"collection_occupies_cabinet_stage",
+		"redundant_navigation_suppressed",
+		"redundant_status_suppressed",
 		"asset_backed_display_chrome",
 	]:
 		if not bool(collection_contract.get(parity_key, false)):
@@ -270,16 +272,16 @@ func _capture() -> void:
 	var grid_width_ratio := grid_rect.size.x / collection_viewport.x
 	if cabinet_grid.columns != 2 or cabinet_grid.get_child_count() != 4:
 		return _fail(app, "S08 cabinet must remain a truthful 2x2 composition")
-	if grid_height_ratio < 0.20 or grid_height_ratio > 0.25:
+	if grid_height_ratio < 0.50 or grid_height_ratio > 0.58:
 		return _fail(app, "S08 cabinet density drifted: %.3f" % grid_height_ratio)
 	if grid_width_ratio < 0.90:
 		return _fail(app, "S08 cabinet no longer owns the collection stage: %.3f" % grid_width_ratio)
-	if moon_card.size.y / collection_viewport.y > 0.24 or set_summary.size.y / collection_viewport.y > 0.24:
-		return _fail(app, "S08 cabinet cells regressed into tall product-card towers")
+	if moon_card.size.y / collection_viewport.y < 0.24 or moon_card.size.y / collection_viewport.y > 0.29 or set_summary.size.y / collection_viewport.y < 0.24 or set_summary.size.y / collection_viewport.y > 0.29:
+		return _fail(app, "S08 cabinet cells drifted from artwork-dominant niche proportions")
 	if summary_progress.text != "1 / 3 AWAKENED":
 		return _fail(app, "S08 set-summary cell must mirror exact first-Curio progress")
-	if collection_back.global_position.y - cabinet_footer.get_global_rect().end.y > collection_viewport.y * 0.13:
-		return _fail(app, "S08 excessive empty stage returned between cabinet and Back")
+	if collection_back.visible or cabinet_footer.visible:
+		return _fail(app, "S08 redundant footer/back chrome returned over product navigation")
 	if not await _save(app, "golden-08-curio-verification.png"):
 		return
 
