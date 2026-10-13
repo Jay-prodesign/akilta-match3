@@ -29,6 +29,7 @@ func _run() -> void:
 	_expect(bool(contract.get("asset_backed_gameplay_chrome", false)), "Gameplay resource/HUD/booster surfaces must use authored asset-backed chrome")
 	_expect(bool(contract.get("board_frame_asset_owner", false)), "Gameplay board frame must be owned by the raster-backed BoardView rather than a second code-drawn panel border")
 	_expect(bool(contract.get("north_star_gameplay_geometry", false)), "Gameplay resource bar, target/moves HUD and lower tray must retain canonical North Star proportions")
+	_expect(bool(contract.get("gameplay_header_clearance", false)), "Gameplay level/title stack must clear the resource bar at real mobile scale")
 	_expect(float(contract.get("resource_bar_height", 0.0)) >= 76.0, "Gameplay resource strip must not collapse into a tiny utility row")
 	_expect(float(contract.get("hud_plate_height", 0.0)) >= 108.0, "Gameplay target/moves plate must keep its authored vertical hierarchy")
 	_expect(float(contract.get("booster_tray_height", 0.0)) >= 132.0, "Gameplay lower tray must keep the canonical booster-zone height")
@@ -57,6 +58,8 @@ func _run() -> void:
 	var hud_plate := screen.get_node_or_null("Layout/HUDPlate") as PanelContainer
 	var booster_tray := screen.get_node_or_null("BoosterTray") as PanelContainer
 	_expect(resource_bar != null and resource_bar.offset_bottom - resource_bar.offset_top == 80.0, "Gameplay resource strip height drifted")
+	var gameplay_layout := screen.get_node_or_null("Layout") as VBoxContainer
+	_expect(gameplay_layout != null and gameplay_layout.offset_top - resource_bar.offset_bottom >= 56.0, "Gameplay title stack must preserve mobile header clearance")
 	_expect(hud_plate != null and hud_plate.custom_minimum_size.y == 112.0, "Gameplay objective strip height drifted")
 	_expect(booster_tray != null and booster_tray.offset_bottom - booster_tray.offset_top == 160.0 and is_equal_approx(booster_tray.anchor_top, 0.735), "Gameplay booster tray geometry drifted")
 	_expect(resource_bar != null and resource_bar.get_theme_stylebox("panel") is StyleBoxTexture, "Gameplay resource strip must use production chrome")

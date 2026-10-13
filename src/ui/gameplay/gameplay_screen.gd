@@ -1037,6 +1037,7 @@ func gameplay_presentation_contract() -> Dictionary:
 		"asset_backed_gameplay_chrome": ($ResourceBar as PanelContainer).get_theme_stylebox("panel") is StyleBoxTexture and ($Layout/HUDPlate as PanelContainer).get_theme_stylebox("panel") is StyleBoxTexture and _booster_tray != null and _booster_tray.get_theme_stylebox("panel") is StyleBoxTexture,
 		"board_frame_asset_owner": String(($Layout/BoardView/OrnateFrame as Panel).get_meta("production_board_frame_owner", "")) == "BoardView",
 		"north_star_gameplay_geometry": ($ResourceBar as PanelContainer).offset_bottom - ($ResourceBar as PanelContainer).offset_top >= 76.0 and ($Layout/HUDPlate as PanelContainer).custom_minimum_size.y >= 108.0 and _booster_tray != null and (_booster_tray.offset_bottom - _booster_tray.offset_top) >= 132.0 and _hint_boost_button.custom_minimum_size.y >= 88.0 and pause_button.custom_minimum_size.y >= 88.0,
+		"gameplay_header_clearance": ($Layout as VBoxContainer).offset_top - ($ResourceBar as PanelContainer).offset_bottom >= 56.0,
 		"resource_bar_height": ($ResourceBar as PanelContainer).offset_bottom - ($ResourceBar as PanelContainer).offset_top,
 		"hud_plate_height": ($Layout/HUDPlate as PanelContainer).custom_minimum_size.y,
 		"booster_tray_height": (_booster_tray.offset_bottom - _booster_tray.offset_top) if _booster_tray != null else 0.0,
