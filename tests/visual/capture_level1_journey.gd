@@ -77,14 +77,14 @@ func _capture() -> void:
 	]:
 		if not bool(gameplay_contract.get(parity_key, false)):
 			return _fail(app, "S05 North Star render gate failed: %s" % parity_key)
-	var gameplay_viewport := gameplay.get_viewport().get_visible_rect().size
+	var gameplay_viewport: Vector2 = gameplay.get_viewport().get_visible_rect().size
 	var gameplay_board := gameplay.get_node_or_null("Layout/BoardView") as Control
 	var gameplay_tray := gameplay.get_node_or_null("BoosterTray") as Control
 	if gameplay_board == null or gameplay_tray == null:
 		return _fail(app, "S05 North Star render gate missing board/tray")
-	var board_height_ratio := gameplay_board.size.y / gameplay_viewport.y
-	var board_width_ratio := gameplay_board.size.x / gameplay_viewport.x
-	var tray_width_ratio := gameplay_tray.size.x / gameplay_viewport.x
+	var board_height_ratio: float = gameplay_board.size.y / gameplay_viewport.y
+	var board_width_ratio: float = gameplay_board.size.x / gameplay_viewport.x
+	var tray_width_ratio: float = gameplay_tray.size.x / gameplay_viewport.x
 	if board_height_ratio < 0.49 or board_height_ratio > 0.55:
 		return _fail(app, "S05 board height ratio drifted: %.3f" % board_height_ratio)
 	if board_width_ratio < 0.90:
