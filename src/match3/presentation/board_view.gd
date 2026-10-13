@@ -7,7 +7,8 @@ signal motion_feedback_requested(kind: String, cascade: int, clock: float)
 
 const PieceVisuals = preload("res://src/match3/presentation/piece_visuals.gd")
 const PieceAssetLoader = preload("res://src/match3/presentation/piece_asset_loader.gd")
-const BOARD_FRAME_PATH := "res://assets/board/gbl_board_ritual_frame_9s_base_v01.png"
+const BOARD_FRAME_PATH := "res://assets/board/gbl_board_ritual_frame_9s_gothic_v02.svg"
+const BOARD_FRAME_REVISION := "gothic_corner_v2"
 const SPECIAL_ASSET_PATHS := {
 	"line_h": "res://assets/specials/gbl_special_line_h_idle_v01.webp",
 	"line_v": "res://assets/specials/gbl_special_line_v_idle_v01.webp",
@@ -153,6 +154,7 @@ func frame_contract() -> Dictionary:
 		"frame_padding": board_frame_padding,
 		"normalized_piece_scale": true,
 		"runtime_path": BOARD_FRAME_PATH,
+		"frame_revision": BOARD_FRAME_REVISION,
 	}
 
 func motion_contract() -> Dictionary:

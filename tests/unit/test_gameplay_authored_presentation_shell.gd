@@ -21,7 +21,8 @@ func _run() -> void:
 		"level_badge_separated", "hint_booster_clearance", "booster_label_readability",
 		"north_star_booster_family", "utility_separated_from_boosters", "north_star_board_object",
 		"north_star_header_hierarchy", "booster_frame_family", "quiet_gameplay_shell_family", "integrated_hud_surface",
-		"final_hint_readability", "final_booster_readability", "visual_parity_gate_v2", "visual_parity_gate_v3", "visual_parity_gate_v4", "visual_parity_gate_v5",
+		"final_hint_readability", "final_booster_readability", "canonical_booster_art", "gothic_board_material",
+		"visual_parity_gate_v2", "visual_parity_gate_v3", "visual_parity_gate_v4", "visual_parity_gate_v5", "visual_parity_gate_v10",
 	]:
 		_expect(bool(contract.get(key, false)), "Gameplay North Star parity contract failed: %s" % key)
 	_expect(int(contract.get("visible_booster_count", 0)) == 3, "Exactly three gameplay boosters must be visible")

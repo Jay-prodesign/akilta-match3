@@ -68,7 +68,9 @@ func _capture() -> void:
 	var gameplay = app.current_screen()
 	var gameplay_contract: Dictionary = gameplay.gameplay_presentation_contract() if gameplay != null and gameplay.has_method("gameplay_presentation_contract") else {}
 	for parity_key in [
-		"visual_parity_gate_v5",
+		"visual_parity_gate_v10",
+		"canonical_booster_art",
+		"gothic_board_material",
 		"quiet_gameplay_shell_family",
 		"integrated_hud_surface",
 		"final_hint_readability",

@@ -59,9 +59,9 @@ const BOOSTER_ART_PATHS := {
 	"retry": "res://assets/pieces/skull.webp"
 }
 const NORTH_STAR_BOOSTER_ART_PATHS := {
-	"shuffle": "res://assets/specials/gbl_special_global_idle_v01.webp",
-	"hand": "res://assets/specials/gbl_special_smart_idle_v01.webp",
-	"magic": "res://assets/specials/gbl_special_area_idle_v01.webp"
+	"shuffle": "res://assets/ui/gameplay/booster_shuffle_gothic_v01.svg",
+	"hand": "res://assets/ui/gameplay/booster_hand_gothic_v01.svg",
+	"magic": "res://assets/ui/gameplay/booster_magic_gothic_v01.svg"
 }
 const OBJECTIVE_ART_PATHS := {
 	"moon": "res://assets/pieces/moon_sigil.webp",
@@ -1082,6 +1082,15 @@ func gameplay_presentation_contract() -> Dictionary:
 		and float(board_contract.get("frame_padding", 0.0)) >= 24.0
 		and bool(board_contract.get("normalized_piece_scale", false))
 	)
+	var canonical_booster_art: bool = (
+		String(NORTH_STAR_BOOSTER_ART_PATHS["shuffle"]).contains("/ui/gameplay/booster_shuffle_")
+		and String(NORTH_STAR_BOOSTER_ART_PATHS["hand"]).contains("/ui/gameplay/booster_hand_")
+		and String(NORTH_STAR_BOOSTER_ART_PATHS["magic"]).contains("/ui/gameplay/booster_magic_")
+		and PieceAssetLoader.ornament(String(NORTH_STAR_BOOSTER_ART_PATHS["shuffle"])) != null
+		and PieceAssetLoader.ornament(String(NORTH_STAR_BOOSTER_ART_PATHS["hand"])) != null
+		and PieceAssetLoader.ornament(String(NORTH_STAR_BOOSTER_ART_PATHS["magic"])) != null
+	)
+	var gothic_board_material: bool = String(board_contract.get("frame_revision", "")) == "gothic_corner_v2"
 	return {
 		"authored_hud_plate": get_node_or_null("Layout/HUDPlate/HUD") != null,
 		"authored_resource_bar": _level_badge_label != null and _resource_coin_label != null and _resource_gem_label != null,
@@ -1116,7 +1125,10 @@ func gameplay_presentation_contract() -> Dictionary:
 		"visual_parity_gate_v3": hierarchy_locked and integrated_hud_surface and hint_readable and booster_family_locked and composition_locked and board_locked and utilities_separated,
 		"visual_parity_gate_v4": hierarchy_locked and integrated_hud_surface and hint_readable and booster_family_locked and composition_locked and board_locked and utilities_separated and [$ResourceBar, $Layout/HUDPlate].all(func(panel): return String(panel.get_meta("production_chrome_asset", "")) == ProductionChrome.QUIET_PANEL_PATH) and String(_booster_tray.get_meta("production_chrome_kind", "")) == "gameplay_booster_tray",
 		"visual_parity_gate_v5": hierarchy_locked and integrated_hud_surface and hint_readable and booster_family_locked and composition_locked and board_locked and utilities_separated and objective_label.text.begins_with("TARGET\n"),
-		"visual_parity_version": 9,
+		"canonical_booster_art": canonical_booster_art,
+		"gothic_board_material": gothic_board_material,
+		"visual_parity_gate_v10": hierarchy_locked and integrated_hud_surface and hint_readable and booster_family_locked and composition_locked and board_locked and utilities_separated and canonical_booster_art and gothic_board_material and objective_label.text.begins_with("TARGET\n"),
+		"visual_parity_version": 10,
 		"resource_bar_height": ($ResourceBar as PanelContainer).offset_bottom - ($ResourceBar as PanelContainer).offset_top,
 		"hud_plate_height": ($Layout/HUDPlate as PanelContainer).custom_minimum_size.y,
 		"booster_tray_height": _booster_tray.offset_bottom - _booster_tray.offset_top,
