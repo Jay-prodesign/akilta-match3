@@ -189,6 +189,13 @@ func _ready() -> void:
 		gameplay_hud.move_child(pause_button, 1)
 	pause_button.icon = PieceAssetLoader.ornament(GAMEPLAY_PAUSE_ICON_PATH)
 	pause_sigil.texture = PieceAssetLoader.ornament(String(OBJECTIVE_ART_PATHS["moon"]))
+	pause_resume.icon = PieceAssetLoader.ornament(String(OBJECTIVE_ART_PATHS["moon"]))
+	pause_retry.icon = PieceAssetLoader.ornament(String(NORTH_STAR_BOOSTER_ART_PATHS["shuffle"]))
+	pause_settings.icon = PieceAssetLoader.ornament("res://assets/ui/ui_settings.svg")
+	pause_exit.icon = PieceAssetLoader.ornament("res://assets/ui/nav_house.webp")
+	for pause_action in [pause_resume, pause_retry, pause_settings, pause_exit]:
+		pause_action.expand_icon = true
+		pause_action.icon_alignment = HORIZONTAL_ALIGNMENT_LEFT
 	pause_button.set_meta("production_chrome_kind", "gameplay_pause_icon")
 	pause_button.set_meta("production_chrome_asset", GAMEPLAY_PAUSE_ICON_PATH)
 	ProductionChrome.apply_gameplay_action_button(pause_resume, "primary", "pause_resume")
