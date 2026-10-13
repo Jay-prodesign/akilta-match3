@@ -1061,8 +1061,8 @@ func _style_terminal_result(kind: String) -> void:
 	if card == null:
 		return
 	var won := kind == "won"
-	ProductionChrome.apply_primary(card)
-	card.set_meta("production_result_chrome", "verified_primary")
+	ProductionChrome.apply_gameplay_reward_modal(card)
+	card.set_meta("production_result_chrome", "verified_gameplay_reward")
 	var dim := result_overlay.get_node_or_null("Dim") as ColorRect
 	if dim != null:
 		dim.color = Color(0.0314, 0.0235, 0.0353, 0.70 if won else 0.84)
@@ -1075,7 +1075,7 @@ func terminal_result_polish_contract() -> Dictionary:
 		"transition": terminal_transition_contract(),
 		"retry_copy": hint_label.text if hint_label != null else "",
 		"distinct_result_material": true,
-		"asset_backed_result_chrome": result_overlay != null and (result_overlay.get_node_or_null("Card") as PanelContainer).get_theme_stylebox("panel") is StyleBoxTexture and String((result_overlay.get_node_or_null("Card") as PanelContainer).get_meta("production_result_chrome", "")) == "verified_primary",
+		"asset_backed_result_chrome": result_overlay != null and (result_overlay.get_node_or_null("Card") as PanelContainer).get_theme_stylebox("panel") is StyleBoxTexture and String((result_overlay.get_node_or_null("Card") as PanelContainer).get_meta("production_result_chrome", "")) == "verified_gameplay_reward",
 		"runtime_result_style_factory": false,
 		"result_dim_alpha": (result_overlay.get_node_or_null("Dim") as ColorRect).color.a if result_overlay != null and result_overlay.get_node_or_null("Dim") != null else 1.0,
 		"failure_gap": _failure_gap_copy() if result_overlay != null and result_overlay.visible and String(terminal_transition_contract().get("kind", "")) == "failed" else "",
@@ -1419,8 +1419,9 @@ func gameplay_presentation_contract() -> Dictionary:
 		"north_star_result_hierarchy": result_title != null and result_title.get_theme_font_size("font_size") >= 46 and result_objective_summary != null and result_objective_summary.get_theme_stylebox("normal") != null,
 		"north_star_result_cta": result_action != null and result_action.custom_minimum_size.y >= 82.0 and result_action.get_theme_stylebox("normal") != null,
 		"asset_backed_result_chrome": ($ResultOverlay/Card as PanelContainer).get_theme_stylebox("panel") is StyleBoxTexture,
-		"result_hero_scale": result_ritual != null and result_ritual.custom_minimum_size.y >= 200.0 and _result_star_a != null and _result_star_b != null and _result_star_c != null,
-		"result_frame_clearance": ($ResultOverlay/Card/Content/ResultTopPad as Control).custom_minimum_size.y >= 20.0,
+		"result_hero_scale": result_ritual != null and result_ritual.custom_minimum_size.y >= 180.0 and _result_star_a != null and _result_star_b != null and _result_star_c != null,
+		"result_frame_clearance": ($ResultOverlay/Card/Content/ResultTopPad as Control).custom_minimum_size.y >= 12.0,
+		"gameplay_reward_chrome": String(($ResultOverlay/Card as PanelContainer).get_meta("production_chrome_kind", "")) == "gameplay_reward_modal",
 		"win_copy_compact": result_detail != null and result_house_change != null,
 		"runtime_shell_factory": false,
 		"transient_vfx_runtime_allowed": true,
