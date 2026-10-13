@@ -8,6 +8,7 @@ const PieceAssetLoader = preload("res://src/match3/presentation/piece_asset_load
 const ScreenArt = preload("res://src/ui/shared/screen_art_registry.gd")
 const TopResourceBar = preload("res://src/ui/shared/top_resource_bar.gd")
 const LockedExplanation = preload("res://src/ui/shared/locked_explanation.gd")
+const ProductionChrome = preload("res://src/ui/theme/production_chrome.gd")
 
 const OPENING_LEVEL_COUNT := 3
 const CURRENT_WING_ART_PATH := "res://assets/world/ch01_curio_boutique/prestart_curio_boutique_shared.webp"
@@ -32,6 +33,7 @@ var _buttons: Dictionary = {}
 @onready var _back: Button = $Layout/ChapterHeader/HeaderBack
 @onready var _current: Button = $Layout/ChapterGrid/CurioBoutiqueButton
 @onready var _current_art: TextureRect = $Layout/ChapterGrid/CurioBoutiqueButton/CurrentWingArtwork
+@onready var _current_copy: Label = $Layout/ChapterGrid/CurioBoutiqueButton/CurrentWingCopy
 @onready var _witch_atelier: Button = $Layout/ChapterGrid/Chapter_witch_atelier
 @onready var _dark_vanity: Button = $Layout/ChapterGrid/Chapter_dark_vanity
 @onready var _archive: Button = $Layout/ChapterGrid/Chapter_archive
@@ -56,6 +58,8 @@ func _ready() -> void:
 		"cemetery_garden": _cemetery_garden,
 	}
 
+	ProductionChrome.apply_action_button(_back, "utility", "chapter_back")
+	ProductionChrome.apply_interactive_button(_current, true, "chapter_current")
 	_back.pressed.connect(func(): back_requested.emit())
 	_current.pressed.connect(func(): chapter_requested.emit("curio_boutique"))
 
@@ -72,6 +76,7 @@ func _ready() -> void:
 		button.set_meta("map_h", float(wing["h"]))
 		button.set_meta("chapter_state", "first_wing_open" if id == "curio_boutique" else "future_wings_locked")
 		if id != "curio_boutique":
+			ProductionChrome.apply_interactive_button(button, false, "chapter_locked")
 			button.tooltip_text = "%s · inspect why this future chapter remains sealed" % String(wing["name"]).capitalize()
 			button.pressed.connect(_show_sealed_wing.bind(id, String(wing["name"])))
 		hotspot_buttons.append(button)
@@ -126,18 +131,18 @@ func _refresh_progress_state() -> void:
 	var state := "first_wing_open"
 	if opening_complete:
 		state = "current_complete"
-		_current.text = "CURIO BOUTIQUE\nRARE FINDS · RESTORED 3 / 3\nREVISIT RITUALS"
+		_current_copy.text = "CURIO BOUTIQUE\nRARE FINDS · RESTORED 3 / 3\nREVISIT RITUALS"
 		_current.tooltip_text = "Curio Boutique · first cabinet set restored · Levels 1–3 replayable"
 		_chapter_summary.text = "CURIO BOUTIQUE RESTORED · REVISIT RITUALS"
 		_lock_reason.text = "FIVE WINGS SEALED · FUTURE CHAPTERS"
 	elif completed > 0:
 		state = "current_partial"
-		_current.text = "CURIO BOUTIQUE\nRARE FINDS · %d / %d AWAKENED\nCONTINUE RESTORATION" % [completed, OPENING_LEVEL_COUNT]
+		_current_copy.text = "CURIO BOUTIQUE\nRARE FINDS · %d / %d AWAKENED\nCONTINUE RESTORATION" % [completed, OPENING_LEVEL_COUNT]
 		_current.tooltip_text = "Curio Boutique · %d / %d opening displays awakened" % [completed, OPENING_LEVEL_COUNT]
 		_chapter_summary.text = "CURIO BOUTIQUE · %d / %d DISPLAYS AWAKENED" % [completed, OPENING_LEVEL_COUNT]
 		_lock_reason.text = "RESTORE THE CURRENT WING · FUTURE WINGS STAY SEALED"
 	else:
-		_current.text = "CURIO BOUTIQUE\nRARE FINDS · 0 / 3 AWAKENED\nBEGIN RESTORATION"
+		_current_copy.text = "CURIO BOUTIQUE\nRARE FINDS · 0 / 3 AWAKENED\nBEGIN RESTORATION"
 		_current.tooltip_text = "Curio Boutique · opening rituals · Levels 1–3"
 		_chapter_summary.text = "CURIO BOUTIQUE · FIRST OPEN WING"
 		_lock_reason.text = "FUTURE WINGS ARE SEALED UNTIL LATER CHAPTERS"
@@ -185,26 +190,15 @@ func chapter_visual_contract() -> Dictionary:
 		"chapter_descriptors_present": _witch_atelier.text.contains("POTIONS & EXPERIMENTS") and _dark_vanity.text.contains("MIRRORS & SECRETS") and _archive.text.contains("LOST KNOWLEDGE") and _moon_conservatory.text.contains("CELESTIAL BOTANICALS") and _cemetery_garden.text.contains("RESTING BEAUTIES"),
 		"north_star_vertical_wing_list": _grid != null and _current.size.x >= _grid.size.x * 0.95 and _witch_atelier.size.x >= _grid.size.x * 0.95 and _current.position.y < _witch_atelier.position.y and _witch_atelier.position.y < _dark_vanity.position.y and _dark_vanity.position.y < _archive.position.y and _archive.position.y < _moon_conservatory.position.y and _moon_conservatory.position.y < _cemetery_garden.position.y,
 		"current_wing_art_subordinate": _current_art != null and _current_art.anchor_right <= 0.31,
+		"asset_backed_wing_rows": [_current, _witch_atelier, _dark_vanity, _archive, _moon_conservatory, _cemetery_garden].all(func(button): return button.get_theme_stylebox("normal") is StyleBoxTexture),
+		"asset_backed_header_back": _back != null and _back.get_theme_stylebox("normal") is StyleBoxTexture and String(_back.get_meta("production_chrome_kind", "")) == "action_utility_chapter_back",
+		"current_copy_clears_thumbnail": _current != null and _current.text == "" and _current_copy != null and _current_copy.anchor_left >= 0.30 and _current_copy.anchor_right <= 0.97 and _current_copy.get_theme_font_size("font_size") <= 24,
+		"current_copy_scene_owned": _current_copy != null and _current_copy.get_parent() == _current and _current_copy.mouse_filter == Control.MOUSE_FILTER_IGNORE,
+		"runtime_style_factory": false,
 	}
 
 func _apply_current_style(button: Button, state: String) -> void:
 	button.disabled = false
 	button.add_theme_color_override("font_color", Color("#FFF7E9"))
-	var source := button.get_theme_stylebox("normal")
-	var box := source.duplicate() as StyleBoxFlat if source is StyleBoxFlat else StyleBoxFlat.new()
-	if state == "current_partial":
-		box.bg_color = Color("#30203A", 0.86)
-		box.border_color = Color("#F2D49A", 0.98)
-	elif state == "current_complete":
-		box.bg_color = Color("#182027", 0.82)
-		box.border_color = Color("#E4C67F", 0.98)
-	else:
-		box.bg_color = Color("#25172C", 0.84)
-		box.border_color = Color("#F2D49A", 0.98)
-	button.add_theme_stylebox_override("normal", box)
-	var hover := box.duplicate() as StyleBoxFlat
-	hover.bg_color = box.bg_color.lightened(0.08)
-	hover.border_color = Color("#FFF0B8")
-	button.add_theme_stylebox_override("hover", hover)
-	button.add_theme_stylebox_override("pressed", hover)
-	button.add_theme_stylebox_override("focus", hover)
+	ProductionChrome.apply_interactive_button(button, true, "chapter_current")
+	button.set_meta("chapter_visual_state", state)

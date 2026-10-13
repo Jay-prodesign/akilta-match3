@@ -333,8 +333,9 @@ func _capture() -> void:
 	await _frames(2)
 	var completed_chapters = app.current_screen()
 	var completed_boutique: Button = completed_chapters.get_node_or_null("Layout/ChapterGrid/CurioBoutiqueButton") as Button
+	var completed_copy: Label = completed_chapters.get_node_or_null("Layout/ChapterGrid/CurioBoutiqueButton/CurrentWingCopy") as Label
 	var completed_summary: Label = completed_chapters.get_node_or_null("Layout/ChapterSummary") as Label
-	if completed_boutique == null or not completed_boutique.text.contains("RARE FINDS · RESTORED 3 / 3") or not completed_boutique.text.contains("REVISIT RITUALS"):
+	if completed_boutique == null or completed_copy == null or not completed_copy.text.contains("RARE FINDS · RESTORED 3 / 3") or not completed_copy.text.contains("REVISIT RITUALS"):
 		return _fail(app, "completed Chapter Select must identify the restored 3/3 Curio Boutique")
 	if completed_summary == null or not completed_summary.text.begins_with("CURIO BOUTIQUE RESTORED"):
 		return _fail(app, "completed Chapter Select must describe the restored opening wing")
@@ -379,16 +380,17 @@ func _play_level(app: Node, level_number: int) -> bool:
 	await _frames(2)
 	var chapters = app.current_screen()
 	var boutique := chapters.get_node_or_null("Layout/ChapterGrid/CurioBoutiqueButton") as Button if chapters != null else null
+	var boutique_copy := chapters.get_node_or_null("Layout/ChapterGrid/CurioBoutiqueButton/CurrentWingCopy") as Label if chapters != null else null
 	var chapter_summary: Label = chapters.get_node_or_null("Layout/ChapterSummary") as Label if chapters != null else null
 	var completed_before := level_number - 1
-	if boutique == null or boutique.disabled:
+	if boutique == null or boutique_copy == null or boutique.disabled:
 		_fail(app, "Curio Boutique entry missing before Level %d" % level_number)
 		return false
 	if completed_before == 0:
-		if not boutique.text.contains("RARE FINDS · 0 / 3 AWAKENED") or not boutique.text.contains("BEGIN RESTORATION"):
+		if not boutique_copy.text.contains("RARE FINDS · 0 / 3 AWAKENED") or not boutique_copy.text.contains("BEGIN RESTORATION"):
 			_fail(app, "Chapter Select must begin at 0 / 3 before Level 1")
 			return false
-	elif not boutique.text.contains("RARE FINDS · %d / 3 AWAKENED" % completed_before) or not boutique.text.contains("CONTINUE RESTORATION"):
+	elif not boutique_copy.text.contains("RARE FINDS · %d / 3 AWAKENED" % completed_before) or not boutique_copy.text.contains("CONTINUE RESTORATION"):
 		_fail(app, "Chapter Select must reflect %d / 3 progress before Level %d" % [completed_before, level_number])
 		return false
 	if chapter_summary == null:

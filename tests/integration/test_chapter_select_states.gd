@@ -22,7 +22,8 @@ func _run() -> void:
 	await process_frame
 	_expect(screen.chapter_state("curio_boutique") == "first_wing_open", "fresh S02 must expose first_wing_open")
 	var current: Button = screen.get_chapter_button("curio_boutique")
-	_expect(current != null and current.text.contains("RARE FINDS") and current.text.contains("0 / 3 AWAKENED") and current.text.contains("BEGIN RESTORATION"), "fresh current wing copy")
+	var current_copy := screen.get_node_or_null("Layout/ChapterGrid/CurioBoutiqueButton/CurrentWingCopy") as Label
+	_expect(current != null and current_copy != null and current_copy.text.contains("RARE FINDS") and current_copy.text.contains("0 / 3 AWAKENED") and current_copy.text.contains("BEGIN RESTORATION"), "fresh current wing copy")
 	_expect(screen.has_method("chapter_visual_contract"), "S02 must expose its current-wing visual contract")
 	if screen.has_method("chapter_visual_contract"):
 		var visual_contract: Dictionary = screen.chapter_visual_contract()
@@ -39,6 +40,11 @@ func _run() -> void:
 		_expect(bool(visual_contract.get("chapter_descriptors_present", false)), "S02 sealed wings must preserve their North Star chapter identities without fabricated art")
 		_expect(bool(visual_contract.get("north_star_vertical_wing_list", false)), "S02 must present the six House wings as a single North Star portrait list")
 		_expect(bool(visual_contract.get("current_wing_art_subordinate", false)), "S02 current wing artwork must remain a compact list thumbnail rather than consume the card")
+		_expect(bool(visual_contract.get("asset_backed_wing_rows", false)), "S02 current and sealed wing rows must use verified asset-backed interactive chrome")
+		_expect(bool(visual_contract.get("asset_backed_header_back", false)), "S02 back control must use verified utility action chrome")
+		_expect(bool(visual_contract.get("current_copy_clears_thumbnail", false)), "S02 current wing copy must clear the authored thumbnail instead of overlapping it")
+		_expect(bool(visual_contract.get("current_copy_scene_owned", false)), "S02 current wing copy must remain a scene-owned, non-intercepting child of the chapter hit target")
+		_expect(not bool(visual_contract.get("runtime_style_factory", true)), "S02 must not create StyleBox presentation resources at runtime")
 	_expect(screen.get_node_or_null("ResourceBar") != null, "S02 global resources header missing")
 	_expect(screen.get_node_or_null("Layout/ChapterHeader/HeaderBack") != null, "S02 header back missing")
 	var current_wing_art: TextureRect = current.get_node_or_null("CurrentWingArtwork") as TextureRect if current != null else null
@@ -78,7 +84,7 @@ func _run() -> void:
 	screen.set_progress(partial)
 	await process_frame
 	_expect(screen.chapter_state("curio_boutique") == "current_partial", "2/3 S02 must expose current_partial")
-	_expect(current.text.contains("RARE FINDS") and current.text.contains("2 / 3 AWAKENED") and current.text.contains("CONTINUE RESTORATION"), "partial current-wing CTA truth")
+	_expect(current_copy.text.contains("RARE FINDS") and current_copy.text.contains("2 / 3 AWAKENED") and current_copy.text.contains("CONTINUE RESTORATION"), "partial current-wing CTA truth")
 	var resource_coin: Label = screen.get_node_or_null("ResourceBar/Resources/CoinResourceChip/HBoxContainer/CoinResource") as Label
 	if resource_coin == null:
 		resource_coin = screen.find_child("CoinResource", true, false) as Label
@@ -91,7 +97,7 @@ func _run() -> void:
 	screen.set_progress(complete)
 	await process_frame
 	_expect(screen.chapter_state("curio_boutique") == "current_complete", "3/3 S02 must expose current_complete")
-	_expect(current.text.contains("RARE FINDS") and current.text.contains("RESTORED 3 / 3") and current.text.contains("REVISIT RITUALS"), "complete current-wing replay truth")
+	_expect(current_copy.text.contains("RARE FINDS") and current_copy.text.contains("RESTORED 3 / 3") and current_copy.text.contains("REVISIT RITUALS"), "complete current-wing replay truth")
 	var lock_reason: Label = screen.get_node_or_null("Layout/LockReason")
 	_expect(lock_reason != null and lock_reason.text.contains("FIVE WINGS SEALED"), "completed S02 must keep future-wing lock reason truthful")
 
