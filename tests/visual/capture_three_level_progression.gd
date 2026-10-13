@@ -205,17 +205,26 @@ func _capture() -> void:
 	if mission_art == null or mission_art.texture == null:
 		return _fail(app, "Weekly Missions empty state must retain authored content artwork")
 	var weekly_contract: Dictionary = app.current_screen().screen_contract() if app.current_screen().has_method("screen_contract") else {}
-	if not bool(weekly_contract.get("visual_parity_gate_v2", false)):
+	if not bool(weekly_contract.get("visual_parity_gate_v2", false)) or not bool(weekly_contract.get("visual_parity_gate_v3", false)):
 		return _fail(app, "Weekly Missions final-direction visual parity gate failed")
 	var weekly_viewport: Vector2 = app.current_screen().get_viewport().get_visible_rect().size
 	var weekly_altar := app.current_screen().get_node_or_null("MissionLayout/MissionEmptyState") as Control
 	var weekly_spacer := app.current_screen().get_node_or_null("MissionLayout/WorldStageSpacer") as Control
-	if weekly_altar == null or weekly_spacer == null:
+	var weekly_feed := app.current_screen().get_node_or_null("MissionLayout/MissionStatusStack/FeedStatus") as Control
+	var weekly_progress := app.current_screen().get_node_or_null("MissionLayout/MissionStatusStack/ProgressStatus") as Control
+	var weekly_rewards := app.current_screen().get_node_or_null("MissionLayout/MissionStatusStack/RewardStatus") as Control
+	var weekly_house_return := app.current_screen().get_node_or_null("MissionLayout/ReturnToHouse") as Button
+	if weekly_altar == null or weekly_spacer == null or weekly_feed == null or weekly_progress == null or weekly_rewards == null or weekly_house_return == null:
 		return _fail(app, "Weekly Missions visual parity geometry missing")
-	if weekly_altar.custom_minimum_size.y / weekly_viewport.y < 0.30:
-		return _fail(app, "Weekly Missions altar no longer owns a hero-scale stage")
-	if weekly_spacer.custom_minimum_size.y < 100.0:
-		return _fail(app, "Weekly Missions world breathing room collapsed")
+	var weekly_altar_ratio := weekly_altar.custom_minimum_size.y / weekly_viewport.y
+	if weekly_altar_ratio < 0.19 or weekly_altar_ratio > 0.24:
+		return _fail(app, "Weekly Missions compact altar hierarchy drifted: %.3f" % weekly_altar_ratio)
+	if weekly_feed.custom_minimum_size.y < 110.0 or weekly_progress.custom_minimum_size.y < 110.0 or weekly_rewards.custom_minimum_size.y < 110.0:
+		return _fail(app, "Weekly Missions truthful status rows collapsed")
+	if weekly_spacer.size_flags_vertical == Control.SIZE_EXPAND_FILL or weekly_spacer.custom_minimum_size.y > 40.0:
+		return _fail(app, "Weekly Missions large empty world corridor returned")
+	if weekly_house_return.visible:
+		return _fail(app, "Weekly Missions redundant House button returned over product navigation")
 	if not await _save(app, "progression-final-weekly-missions.png"):
 		return
 	app.current_screen().get_node("MissionLayout/ReturnToEvents").emit_signal("pressed")
@@ -383,9 +392,10 @@ func _capture() -> void:
 			return _fail(app, "completed map must keep Level %d replayable and awakened" % level_number)
 	var level4: Button = completed_map.get_level_button(4)
 	var completed_route = completed_map.get_node_or_null("Layout/RoutePanel/Scroll/RouteView")
-	if level4 == null or level4.disabled or completed_route == null or String(completed_route.get_level_state(4)) != "locked":
-		return _fail(app, "completed opening map must keep Level 4 sealed and inspectable")
-	level4.emit_signal("pressed")
+	var future_seal: Button = completed_route.get_future_seal_button() if completed_route != null and completed_route.has_method("get_future_seal_button") else null
+	if level4 == null or level4.visible or completed_route == null or String(completed_route.get_level_state(4)) != "locked" or future_seal == null or not future_seal.visible or future_seal.disabled:
+		return _fail(app, "completed opening map must keep future content behind one truthful upper-cabinets seal")
+	future_seal.emit_signal("pressed")
 	await _frames(2)
 	var sealed_contract: Dictionary = completed_map.sealed_explanation_contract()
 	if String(sealed_contract.get("sealed_kind", "")) != "future_content" or not bool(sealed_contract.get("no_fake_unlock", false)):
@@ -472,8 +482,10 @@ func _play_level(app: Node, level_number: int) -> bool:
 	if route_view == null:
 		_fail(app, "Chapter route view missing before Level %d" % level_number)
 		return false
-	if route_view.get_level_center(10).y >= 300.0 or route_view.get_level_center(3).y <= 540.0:
-		_fail(app, "Future cabinets must stay compact above the authored opening trio")
+	var future_seal: Button = route_view.get_future_seal_button() if route_view.has_method("get_future_seal_button") else null
+	var hidden_future: Button = route_view.get_level_button(4)
+	if future_seal == null or not future_seal.visible or future_seal.size.y < 120.0 or hidden_future == null or hidden_future.visible or route_view.get_level_center(3).y <= 540.0:
+		_fail(app, "Future journey must stay behind one authored seal above the opening trio")
 		return false
 	if route_view.custom_minimum_size.y < 1450.0 or route_view.custom_minimum_size.y > 1520.0:
 		_fail(app, "Chapter route must fill one bounded portrait map panel without becoming a scroll journey")
