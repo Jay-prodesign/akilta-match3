@@ -38,6 +38,7 @@ func _run() -> void:
 	_expect(bool(contract.get("north_star_result_cta", false)), "Terminal reward CTA must match the large rounded North Star action family")
 	_expect(bool(contract.get("asset_backed_result_chrome", false)), "Terminal reward card must use the verified asset-backed production chrome family")
 	_expect(bool(contract.get("result_hero_scale", false)), "Terminal reward Curio reveal must retain hero-scale vertical space")
+	_expect(bool(contract.get("result_frame_clearance", false)), "Terminal reward copy must clear the ornamental top frame before the eyebrow")
 	_expect(not bool(contract.get("runtime_shell_factory", true)), "Gameplay must not rebuild persistent presentation shell at runtime")
 
 	var objective := screen.get_node_or_null("Layout/HUDPlate/HUD/Objective") as Label

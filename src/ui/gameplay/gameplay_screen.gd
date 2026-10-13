@@ -1046,6 +1046,7 @@ func gameplay_presentation_contract() -> Dictionary:
 		"north_star_result_cta": result_action != null and result_action.custom_minimum_size.y >= 82.0 and result_action.get_theme_stylebox("normal") != null,
 		"asset_backed_result_chrome": ($ResultOverlay/Card as PanelContainer).get_theme_stylebox("panel") is StyleBoxTexture,
 		"result_hero_scale": result_ritual != null and result_ritual.custom_minimum_size.y >= 270.0,
+		"result_frame_clearance": ($ResultOverlay/Card/Content/ResultTopPad as Control) != null and ($ResultOverlay/Card/Content/ResultTopPad as Control).custom_minimum_size.y >= 20.0,
 		"win_copy_compact": result_detail != null and result_house_change != null,
 		"runtime_shell_factory": false,
 		"transient_vfx_runtime_allowed": true,
