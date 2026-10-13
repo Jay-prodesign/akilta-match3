@@ -44,6 +44,8 @@ func _run() -> void:
 	_expect(bool(nav_contract.get("north_star_nav_zone", false)), "ProductNavigation must occupy the canonical 128–144 logical px North Star navigation zone")
 	_expect(float(nav_contract.get("nav_zone_height", 0.0)) == 136.0, "ProductNavigation authored baseline height must be 136 logical px")
 	_expect(bool(nav_contract.get("asset_backed_shell", false)), "ProductNavigation shell must use authored asset-backed production chrome")
+	var chrome_contract := preload("res://src/ui/theme/production_chrome.gd").contract()
+	_expect(bool(chrome_contract.get("global_shell_family_verified", false)), "Global top/bottom shell chrome family must resolve through authored texture-backed 9-slice styles")
 	_expect(not bool(nav_contract.get("runtime_ui_factory", true)), "ProductNavigation must not create persistent shell nodes at runtime")
 
 	var house := nav.get_node_or_null("Scroll/Items/NavHouse") as Button

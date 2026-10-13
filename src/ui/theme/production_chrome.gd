@@ -74,4 +74,5 @@ static func contract() -> Dictionary:
 		"nine_slice_margin": 64.0,
 		"top_shell_asset_backed": top_shell() != null and top_shell().texture != null,
 		"bottom_shell_asset_backed": bottom_shell() != null and bottom_shell().texture != null,
+		"global_shell_family_verified": top_shell() != null and top_shell().texture != null and bottom_shell() != null and bottom_shell().texture != null,
 	}
