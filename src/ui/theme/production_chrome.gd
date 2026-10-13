@@ -2,7 +2,7 @@ class_name Match3ProductionChrome
 extends RefCounted
 
 const PieceAssetLoader = preload("res://src/match3/presentation/piece_asset_loader.gd")
-const PRIMARY_PANEL_PATH := "res://assets/ui/chrome/gbl_ui_ritual_panel_9s_base_v01.png"
+const PRIMARY_PANEL_PATH := "res://assets/ui/chrome/gbl_ui_ritual_panel_9s_base_v01.svg"
 
 static var _primary_panel: StyleBoxTexture
 

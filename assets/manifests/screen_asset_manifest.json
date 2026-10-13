@@ -379,10 +379,9 @@
       ],
       "reuse": "global",
       "priority": "P0",
-      "production_status": "runtime_connected_authored_raster_9slice_candidate",
-      "current_path": "assets/ui/chrome/gbl_ui_ritual_panel_9s_base_v01.png",
-      "technical_policy": "runtime_decoded_png_9slice__authored_svg_source__render_verification_required",
-      "source_path": "assets/ui/chrome/gbl_ui_ritual_panel_9s_base_v01.svg",
+      "production_status": "runtime_connected_authored_9slice_candidate",
+      "current_path": "assets/ui/chrome/gbl_ui_ritual_panel_9s_base_v01.svg",
+      "technical_policy": "runtime_decoded_svg_to_imagetexture_9slice__authored_frame__render_verification_required",
       "runtime_style_script": "src/ui/theme/production_chrome.gd"
     },
     {

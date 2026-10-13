@@ -15,7 +15,7 @@ func _init() -> void:
 func _run() -> void:
 	var contract := ProductionChrome.contract()
 	_expect(bool(contract.get("asset_backed", false)), "shared production chrome texture must decode at runtime")
-	_expect(String(contract.get("runtime_path", "")).ends_with(".png"), "shared production chrome must resolve to raster PNG at runtime")
+	_expect(String(contract.get("runtime_path", "")).ends_with(".svg"), "shared production chrome must resolve from the authored frame source through the runtime image decoder")
 	_expect(float(contract.get("nine_slice_margin", 0.0)) >= 56.0, "shared production chrome must retain safe 9-slice corners")
 	await _expect_panel(PRESTART, "Layout/Card")
 	await _expect_panel(GAMEPLAY, "PauseOverlay/Card")
@@ -32,7 +32,7 @@ func _expect_panel(scene: PackedScene, path: String) -> void:
 	var panel := instance.get_node_or_null(path) as Control
 	_expect(panel != null, "production chrome panel missing: %s" % path)
 	_expect(panel != null and panel.get_theme_stylebox("panel") is StyleBoxTexture, "panel must use asset-backed production chrome: %s" % path)
-	_expect(panel != null and String(panel.get_meta("production_chrome_asset", "")).ends_with(".png"), "panel must expose raster chrome provenance: %s" % path)
+	_expect(panel != null and String(panel.get_meta("production_chrome_asset", "")).ends_with(".svg"), "panel must expose authored chrome provenance: %s" % path)
 	instance.queue_free()
 	await process_frame
 
