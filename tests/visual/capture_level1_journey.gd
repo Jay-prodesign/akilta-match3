@@ -118,7 +118,7 @@ func _capture() -> void:
 		return _fail(app, "S05 gameplay HUD depth drifted: %.3f" % hud_height_ratio)
 	if board_start_ratio < 0.18 or board_start_ratio > 0.22:
 		return _fail(app, "S05 board starts too high/low versus North Star: %.3f" % board_start_ratio)
-	if board_height_ratio < 0.56 or board_height_ratio > 0.61:
+	if board_height_ratio < 0.52 or board_height_ratio > 0.56:
 		return _fail(app, "S05 board height ratio drifted: %.3f" % board_height_ratio)
 	if board_width_ratio < 0.90:
 		return _fail(app, "S05 board width no longer dominates viewport: %.3f" % board_width_ratio)
