@@ -41,6 +41,7 @@ func _run() -> void:
 	_expect(not bool(reduced_vfx.get("active", true)), "Reduced Motion must resolve House awaken without decorative animation")
 	_expect(not bool(reduced_vfx.get("echo_spawned", true)), "Reduced Motion must not spawn the transient Curio awakening echo")
 	_expect(bool(reduced_vfx.get("world_fills_hidden_nav_region", false)), "Restoration world must fill the hidden navigation region instead of exposing a black footer")
+	_expect(bool(reduced_vfx.get("world_art_full_bleed", false)), "Restoration authored world rect must extend to the bottom edge while navigation is hidden")
 	var reduced_room = reduced.get_node_or_null("RoomView")
 	var reduced_card: PanelContainer = reduced.get_node_or_null("RestorationOverlay/CeremonyCard") as PanelContainer
 	var reduced_hero: TextureRect = reduced.get_node_or_null("RestorationOverlay/AwakeningMotif") as TextureRect
@@ -83,6 +84,7 @@ func _run() -> void:
 	_expect(bool(animated_vfx.get("active", false)), "Animated House awaken VFX must be active during the observed transition window")
 	_expect(bool(animated_vfx.get("echo_spawned", false)), "Stage 3 House awaken must spawn the contract-owned Curio echo")
 	_expect(bool(animated_vfx.get("world_fills_hidden_nav_region", false)), "Animated restoration world must fill the hidden navigation region")
+	_expect(bool(animated_vfx.get("world_art_full_bleed", false)), "Animated restoration authored world rect must use the ceremony full-bleed state")
 	var animated_room = animated.get_node_or_null("RoomView")
 	var animated_card: PanelContainer = animated.get_node_or_null("RestorationOverlay/CeremonyCard") as PanelContainer
 	var animated_hero: TextureRect = animated.get_node_or_null("RestorationOverlay/AwakeningMotif") as TextureRect
@@ -109,6 +111,8 @@ func _run() -> void:
 		animated_continue.emit_signal("pressed")
 		await _frames(3)
 		_expect(animated_room.offset_bottom <= -90.0, "House world must restore the bottom navigation reserve after restoration closes")
+		var returned_living: Dictionary = animated_room.living_house_contract()
+		_expect(not bool(returned_living.get("restoration_full_bleed", true)), "House world must leave full-bleed mode after restoration closes")
 	animated.queue_free()
 	await _frames(2)
 

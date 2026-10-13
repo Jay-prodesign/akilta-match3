@@ -329,6 +329,8 @@ func show_restoration_ceremony(curio_id: String, stage: int) -> void:
 	var product_nav := get_node_or_null("ProductNavigation") as Control
 	var room_view_bottom_before_ceremony: float = float(room_view.offset_bottom)
 	room_view.offset_bottom = 0.0
+	if room_view.has_method("set_restoration_full_bleed"):
+		room_view.set_restoration_full_bleed(true)
 	if product_nav != null:
 		product_nav.visible = false
 	play_button.visible = false
@@ -353,6 +355,8 @@ func show_restoration_ceremony(curio_id: String, stage: int) -> void:
 		curio_label.get_parent().visible = true
 		headline.visible = true
 		detail.visible = true
+		if room_view.has_method("set_restoration_full_bleed"):
+			room_view.set_restoration_full_bleed(false)
 		room_view.offset_bottom = room_view_bottom_before_ceremony
 		if product_nav != null:
 			product_nav.visible = true
@@ -437,6 +441,7 @@ func restoration_vfx_contract() -> Dictionary:
 		"active": _restoration_vfx_active,
 		"echo_spawned": _restoration_vfx_echo_spawned,
 		"world_fills_hidden_nav_region": room_view != null and room_view.offset_bottom >= -1.0,
+		"world_art_full_bleed": room_view != null and bool(room_view.living_house_contract().get("restoration_full_bleed", false)),
 		"reduced_motion": _reduced_motion,
 		"reduced_motion_supported": true,
 		"exact_curio_identity_preserved": true,
