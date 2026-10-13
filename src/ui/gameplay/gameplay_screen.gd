@@ -274,9 +274,8 @@ func load_level_path(path: String, seed_value: int = 1001) -> bool:
 	_last_objective_delta = 0
 	_reset_terminal_transition()
 	_style_impact_hint("normal")
-	var chapter_identity := String(parsed.get("eyebrow", "CURIO BOUTIQUE")).split("·")[0].strip_edges()
 	var level_identity := _level_badge_label.text if _level_badge_label != null else "LEVEL"
-	eyebrow_label.text = "%s · %s" % [level_identity, chapter_identity]
+	eyebrow_label.text = level_identity
 	title_label.text = String(parsed.get("title", "Hidden Display"))
 	hint_label.text = String(parsed.get("hint", "Swipe a sigil."))
 	var art_profile := String(parsed.get("visual_profile", "curio_boutique_opening"))
@@ -318,19 +317,19 @@ func _apply_level_art_profile(profile: String) -> void:
 	match profile:
 		"sealed_display":
 			world_backdrop.modulate = Color.WHITE
-			eyebrow_label.add_theme_color_override("font_color", Color("#9fb7d0"))
+			eyebrow_label.add_theme_color_override("font_color", Color("#ead5aa"))
 			title_label.add_theme_color_override("font_color", Color("#f1e6d2"))
 			objective_label.add_theme_color_override("font_color", Color("#a8c6d2"))
 			moves_label.add_theme_color_override("font_color", Color("#d8c8a1"))
 		"thornlight_arrangement":
 			world_backdrop.modulate = Color.WHITE
-			eyebrow_label.add_theme_color_override("font_color", Color("#d9a0b8"))
+			eyebrow_label.add_theme_color_override("font_color", Color("#ead5aa"))
 			title_label.add_theme_color_override("font_color", Color("#f5e6e2"))
 			objective_label.add_theme_color_override("font_color", Color("#c7a0df"))
 			moves_label.add_theme_color_override("font_color", Color("#e6bd83"))
 		_:
 			world_backdrop.modulate = Color.WHITE
-			eyebrow_label.add_theme_color_override("font_color", Color("#b7a5b8"))
+			eyebrow_label.add_theme_color_override("font_color", Color("#ead5aa"))
 			title_label.add_theme_color_override("font_color", Color("#f1e8dc"))
 			objective_label.add_theme_color_override("font_color", Color("#f0dec2"))
 			moves_label.add_theme_color_override("font_color", Color("#d9b56a"))
@@ -565,20 +564,20 @@ func _style_impact_hint(mode: String) -> void:
 	if hint_label == null:
 		return
 	var color := Color("#F4E5D3")
-	var size_px := 24
+	var size_px := 25
 	match mode:
 		"blocker":
 			color = Color("#F0CE8A")
-			size_px = 25
+			size_px = 26
 		"special":
 			color = Color("#E8C987")
-			size_px = 25
+			size_px = 26
 		"combo":
 			color = Color("#E7C8FF")
-			size_px = 26
+			size_px = 27
 		"cascade":
 			color = Color("#DDB7F5")
-			size_px = 25
+			size_px = 26
 		"invalid":
 			color = Color("#D8C5D2")
 		_:
@@ -1052,7 +1051,7 @@ func gameplay_presentation_contract() -> Dictionary:
 	)
 	var hierarchy_locked: bool = (
 		not title_label.visible
-		and eyebrow_label.get_theme_font_size("font_size") >= 22
+		and eyebrow_label.get_theme_font_size("font_size") >= 26
 		and objective_icon.custom_minimum_size.x >= 72.0
 		and objective_label.get_theme_font_size("font_size") >= 26
 		and moves_label.get_theme_font_size("font_size") >= 40
@@ -1065,8 +1064,8 @@ func gameplay_presentation_contract() -> Dictionary:
 		and moves_label.get_theme_stylebox("normal") != null
 	)
 	var hint_readable: bool = (
-		hint_label.custom_minimum_size.y >= 50.0
-		and hint_label.get_theme_font_size("font_size") >= 21
+		hint_label.custom_minimum_size.y >= 54.0
+		and hint_label.get_theme_font_size("font_size") >= 24
 	)
 	var booster_family_locked: bool = (
 		$BoosterTray/BoosterActions/SealedSlotA.visible
@@ -1074,15 +1073,15 @@ func gameplay_presentation_contract() -> Dictionary:
 		and $BoosterTray/BoosterActions/SealedSlotC.visible
 		and canonical_booster_names
 		and [_sealed_boost_a, _sealed_boost_b, _sealed_boost_c].all(
-			func(button): return button.disabled and button.custom_minimum_size.y >= 104.0 and button.icon != null
+			func(button): return button.disabled and button.custom_minimum_size.y >= 108.0 and button.icon != null
 		)
 	)
 	var composition_locked: bool = (
 		_booster_tray != null
-		and is_equal_approx(_booster_tray.anchor_top, 0.755)
-		and (_booster_tray.offset_bottom - _booster_tray.offset_top) >= 190.0
+		and is_equal_approx(_booster_tray.anchor_top, 0.8)
+		and (_booster_tray.offset_bottom - _booster_tray.offset_top) >= 216.0
 		and hint_label != null
-		and _booster_tray.global_position.y >= hint_label.global_position.y + hint_label.size.y + 24.0
+		and _booster_tray.global_position.y >= hint_label.global_position.y + hint_label.size.y + 32.0
 	)
 	var board_locked: bool = (
 		bool(board_contract.get("asset_loaded", false))
@@ -1106,13 +1105,14 @@ func gameplay_presentation_contract() -> Dictionary:
 	var compact_header_locked: bool = (
 		not title_label.visible
 		and eyebrow_label.text.begins_with("LEVEL ")
+		and not eyebrow_label.text.contains("·")
 		and pause_button.global_position.x < objective_icon.global_position.x
 		and moves_label.global_position.x > objective_label.global_position.x
 	)
 	var compact_geometry_locked: bool = (
 		is_equal_approx(_booster_tray.anchor_left, 0.08)
 		and is_equal_approx(_booster_tray.anchor_right, 0.92)
-		and ($Layout/BoardView as Control).custom_minimum_size.y >= 1060.0
+		and ($Layout/BoardView as Control).custom_minimum_size.y >= 1120.0
 		and hint_label.custom_minimum_size.x >= 680.0
 		and hint_label.custom_minimum_size.x <= 740.0
 	)
@@ -1136,7 +1136,7 @@ func gameplay_presentation_contract() -> Dictionary:
 		"asset_backed_resource_chips": [$ResourceBar/Resources/CoinChip, $ResourceBar/Resources/GemChip, $ResourceBar/Resources/LevelBadgePlate].all(func(panel): return panel is PanelContainer and (panel as PanelContainer).get_theme_stylebox("panel") is StyleBoxTexture),
 		"level_badge_separated": ($ResourceBar/Resources/ResourceSpacer as Control).size_flags_horizontal == Control.SIZE_EXPAND_FILL,
 		"hint_booster_clearance": composition_locked,
-		"booster_label_readability": shuffle_label.custom_minimum_size.y >= 34.0 and hand_label.custom_minimum_size.y >= 34.0 and magic_label.custom_minimum_size.y >= 34.0 and shuffle_label.get_theme_font_size("font_size") >= 24,
+		"booster_label_readability": shuffle_label.custom_minimum_size.y >= 40.0 and hand_label.custom_minimum_size.y >= 40.0 and magic_label.custom_minimum_size.y >= 40.0 and shuffle_label.get_theme_font_size("font_size") >= 26,
 		"north_star_booster_family": canonical_booster_names,
 		"booster_frame_family": String(_booster_tray.get_meta("production_chrome_kind", "")) == "gameplay_booster_tray",
 		"utility_separated_from_boosters": utilities_separated,
@@ -1145,7 +1145,7 @@ func gameplay_presentation_contract() -> Dictionary:
 		"quiet_gameplay_shell_family": String($Layout/HUDPlate.get_meta("production_chrome_asset", "")) == ProductionChrome.QUIET_PANEL_PATH and $ResourceBar.get_theme_stylebox("panel") is StyleBoxEmpty,
 		"integrated_hud_surface": integrated_hud_surface,
 		"final_hint_readability": hint_readable and hint_label.size_flags_horizontal == Control.SIZE_SHRINK_CENTER and hint_label.custom_minimum_size.x >= 680.0 and hint_label.custom_minimum_size.x <= 740.0,
-		"final_booster_readability": booster_family_locked and shuffle_label.get_theme_font_size("font_size") >= 24,
+		"final_booster_readability": booster_family_locked and shuffle_label.get_theme_font_size("font_size") >= 26,
 		"visual_parity_gate_v2": hierarchy_locked and booster_family_locked and composition_locked and board_locked and utilities_separated and String(_booster_tray.get_meta("production_chrome_kind", "")) == "gameplay_booster_tray",
 		"visual_parity_gate_v3": hierarchy_locked and integrated_hud_surface and hint_readable and booster_family_locked and composition_locked and board_locked and utilities_separated,
 		"visual_parity_gate_v4": hierarchy_locked and integrated_hud_surface and hint_readable and booster_family_locked and composition_locked and board_locked and utilities_separated and String($Layout/HUDPlate.get_meta("production_chrome_asset", "")) == ProductionChrome.QUIET_PANEL_PATH and $ResourceBar.get_theme_stylebox("panel") is StyleBoxEmpty and String(_booster_tray.get_meta("production_chrome_kind", "")) == "gameplay_booster_tray",

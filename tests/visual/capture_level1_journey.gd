@@ -108,7 +108,7 @@ func _capture() -> void:
 	var board_height_ratio: float = gameplay_board.size.y / gameplay_viewport.y
 	var board_width_ratio: float = gameplay_board.size.x / gameplay_viewport.x
 	var tray_width_ratio: float = gameplay_tray.size.x / gameplay_viewport.x
-	if board_height_ratio < 0.54 or board_height_ratio > 0.58:
+	if board_height_ratio < 0.56 or board_height_ratio > 0.61:
 		return _fail(app, "S05 board height ratio drifted: %.3f" % board_height_ratio)
 	if board_width_ratio < 0.90:
 		return _fail(app, "S05 board width no longer dominates viewport: %.3f" % board_width_ratio)
@@ -126,7 +126,7 @@ func _capture() -> void:
 		return _fail(app, "S05 hint callout width drifted: %.3f" % hint_width_ratio)
 	if gameplay_title.visible:
 		return _fail(app, "S05 room title regressed into the compact gameplay header")
-	if not gameplay_eyebrow.text.begins_with("LEVEL ") or gameplay_eyebrow.get_theme_font_size("font_size") < 22:
+	if not gameplay_eyebrow.text.begins_with("LEVEL ") or gameplay_eyebrow.text.contains("·") or gameplay_eyebrow.get_theme_font_size("font_size") < 26:
 		return _fail(app, "S05 compact Level identity regressed")
 	if eyebrow_rect.end.y + 4.0 > hud_rect.position.y:
 		return _fail(app, "S05 Level identity and objective HUD overlap")
@@ -136,7 +136,7 @@ func _capture() -> void:
 		return _fail(app, "S05 redundant target heading regressed")
 	if gameplay_moves.get_theme_font_size("font_size") < 40 or gameplay_objective.get_theme_font_size("font_size") < 26:
 		return _fail(app, "S05 objective/moves visual hierarchy regressed")
-	if gameplay_hint.get_theme_font_size("font_size") < 21:
+	if gameplay_hint.get_theme_font_size("font_size") < 24:
 		return _fail(app, "S05 hint readability regressed")
 	if not hud_rect.grow(-4.0).encloses(objective_icon_rect):
 		return _fail(app, "S05 objective icon escapes the authored HUD frame")
@@ -151,7 +151,7 @@ func _capture() -> void:
 		return _fail(app, "S05 objective HUD collides with board")
 	if board_rect.end.y > hint_rect.position.y + 2.0:
 		return _fail(app, "S05 board collides with authored hint band")
-	if hint_rect.end.y + 24.0 > tray_rect.position.y:
+	if hint_rect.end.y + 32.0 > tray_rect.position.y:
 		return _fail(app, "S05 hint-to-booster breathing room collapsed")
 	for booster_label in [shuffle_label, hand_label, magic_label]:
 		if booster_label == null or not tray_rect.grow(-8.0).encloses(booster_label.get_global_rect()):
