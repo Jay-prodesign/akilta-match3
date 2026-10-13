@@ -314,8 +314,9 @@ mode = "house"
 glow_strength = 0.88
 
 [node name="CurioChip" type="PanelContainer" parent="Layout"]
-custom_minimum_size = Vector2(0, 38)
+custom_minimum_size = Vector2(720, 42)
 layout_mode = 2
+size_flags_horizontal = 4
 theme_override_styles/panel = SubResource("CurioChip")
 
 [node name="Label" type="Label" parent="Layout/CurioChip"]
@@ -330,8 +331,9 @@ vertical_alignment = 1
 
 [node name="FirstRitualGuide" type="PanelContainer" parent="Layout"]
 visible = false
-custom_minimum_size = Vector2(0, 96)
+custom_minimum_size = Vector2(900, 104)
 layout_mode = 2
+size_flags_horizontal = 4
 theme_override_styles/panel = SubResource("Banner")
 
 [node name="GuideRow" type="HBoxContainer" parent="Layout/FirstRitualGuide"]
@@ -339,7 +341,7 @@ layout_mode = 2
 theme_override_constants/separation = 10
 
 [node name="KeeperArt" type="TextureRect" parent="Layout/FirstRitualGuide/GuideRow"]
-custom_minimum_size = Vector2(68, 68)
+custom_minimum_size = Vector2(76, 76)
 layout_mode = 2
 expand_mode = 1
 stretch_mode = 5
@@ -352,7 +354,7 @@ alignment = 1
 [node name="Heading" type="Label" parent="Layout/FirstRitualGuide/GuideRow/CopyColumn"]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.949, 0.816, 0.545, 1)
-theme_override_font_sizes/font_size = 18
+theme_override_font_sizes/font_size = 20
 text = "FIRST RITUAL"
 
 [node name="Copy" type="Label" parent="Layout/FirstRitualGuide/GuideRow/CopyColumn"]
@@ -399,12 +401,13 @@ horizontal_alignment = 1
 vertical_alignment = 1
 
 [node name="Headline" type="Label" parent="Layout"]
-custom_minimum_size = Vector2(0, 58)
+custom_minimum_size = Vector2(820, 68)
 layout_mode = 2
+size_flags_horizontal = 4
 theme_override_colors/font_color = Color(0.988, 0.933, 0.831, 1)
 theme_override_colors/font_outline_color = Color(0.02, 0.015, 0.025, 0.96)
 theme_override_constants/outline_size = 5
-theme_override_font_sizes/font_size = 34
+theme_override_font_sizes/font_size = 38
 theme_override_styles/normal = SubResource("HomeTitlePlate")
 text = "The Curio Boutique sleeps."
 vertical_alignment = 1
@@ -423,13 +426,13 @@ horizontal_alignment = 1
 autowrap_mode = 2
 
 [node name="PlayButton" type="Button" parent="Layout"]
-custom_minimum_size = Vector2(880, 104)
+custom_minimum_size = Vector2(760, 104)
 layout_mode = 2
 size_flags_horizontal = 4
 theme_override_colors/font_color = Color(0.988, 0.933, 0.831, 1)
 theme_override_colors/font_hover_color = Color(1, 0.965, 0.86, 1)
 theme_override_colors/font_pressed_color = Color(0.988, 0.933, 0.831, 1)
-theme_override_font_sizes/font_size = 27
+theme_override_font_sizes/font_size = 30
 theme_override_styles/normal = SubResource("ButtonNormal")
 theme_override_styles/hover = SubResource("ButtonHover")
 theme_override_styles/pressed = SubResource("ButtonPressed")
