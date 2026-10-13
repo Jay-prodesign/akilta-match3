@@ -14,6 +14,8 @@ const GAMEPLAY_BOOSTER_TRAY_PATH := "res://assets/ui/gameplay/booster_tray_frame
 const GAMEPLAY_LEVEL_PLAQUE_PATH := "res://assets/ui/gameplay/level_plaque_v01.svg"
 const GAMEPLAY_PRIMARY_ACTION_PATH := "res://assets/ui/gameplay/action_primary_bevel_v01.svg"
 const GAMEPLAY_UTILITY_ACTION_PATH := "res://assets/ui/gameplay/action_utility_bevel_v01.svg"
+const GAMEPLAY_PRIMARY_ACTION_OVERLAY_PATH := "res://assets/ui/gameplay/action_primary_overlay_v01.svg"
+const GAMEPLAY_UTILITY_ACTION_OVERLAY_PATH := "res://assets/ui/gameplay/action_utility_overlay_v01.svg"
 
 static var _primary_panel: StyleBoxTexture
 static var _top_shell: StyleBoxTexture
