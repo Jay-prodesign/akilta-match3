@@ -163,7 +163,7 @@ layout_mode = 2
 theme_override_constants/separation = 10
 
 [node name="HeaderBack" type="Button" parent="Layout/ChapterHeader"]
-custom_minimum_size = Vector2(62, 56)
+custom_minimum_size = Vector2(88, 88)
 layout_mode = 2
 theme_override_colors/font_color = Color(0.96, 0.9, 0.83, 1)
 theme_override_font_sizes/font_size = 30
@@ -197,7 +197,7 @@ text = "CHOOSE A WING"
 horizontal_alignment = 1
 
 [node name="HeaderSpacer" type="Control" parent="Layout/ChapterHeader"]
-custom_minimum_size = Vector2(62, 1)
+custom_minimum_size = Vector2(88, 1)
 layout_mode = 2
 
 [node name="ChapterSummary" type="Label" parent="Layout"]

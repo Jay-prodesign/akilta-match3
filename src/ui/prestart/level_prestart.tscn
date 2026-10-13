@@ -308,7 +308,7 @@ theme_override_font_sizes/font_size = 21
 text = "FAIL RECOVERY · +3"
 
 [node name="Start" type="Button" parent="Layout/Card/Content"]
-custom_minimum_size = Vector2(0, 88)
+custom_minimum_size = Vector2(0, 104)
 layout_mode = 2
 theme_override_colors/font_color = Color(0.988, 0.933, 0.831, 1)
 theme_override_colors/font_hover_color = Color(0.988, 0.933, 0.831, 1)
@@ -319,7 +319,7 @@ theme_override_styles/pressed = SubResource("StartHover")
 text = "PLAY"
 
 [node name="Back" type="Button" parent="Layout"]
-custom_minimum_size = Vector2(0, 60)
+custom_minimum_size = Vector2(0, 88)
 layout_mode = 2
 theme_override_colors/font_color = Color(0.945, 0.91, 0.866, 1)
 theme_override_colors/font_hover_color = Color(0.988, 0.933, 0.831, 1)
