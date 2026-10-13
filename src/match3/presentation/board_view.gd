@@ -701,7 +701,7 @@ func cell_at_local(position: Vector2) -> Vector2i:
 	return pos
 
 func _draw() -> void:
-	draw_rect(Rect2(Vector2.ZERO, size), Color("#090711"), true)
+	draw_rect(Rect2(Vector2.ZERO, size), Color(0.035, 0.027, 0.067, 0.72), true)
 	var ambient := Color(GOLD)
 	ambient.a = 0.025
 	draw_circle(Vector2(size.x * 0.5, size.y * 0.44), minf(size.x, size.y) * 0.44, ambient)
@@ -893,11 +893,11 @@ func _draw_cell(rect: Rect2, pos: Vector2i) -> void:
 
 func _cell_box(radius: float) -> StyleBoxFlat:
 	var box := StyleBoxFlat.new()
-	var fill := Color("#100C14", 0.68)
+	var fill := Color("#100C14", 0.58)
 	if _visual_profile == "sealed_display":
-		fill = Color("#0D141C", 0.70)
+		fill = Color("#0D141C", 0.60)
 	elif _visual_profile == "thornlight_arrangement":
-		fill = Color("#160D14", 0.70)
+		fill = Color("#160D14", 0.60)
 	box.bg_color = fill
 	box.border_color = Color(GOLD, 0.22) if _high_contrast else Color(0, 0, 0, 0)
 	box.set_border_width_all(1 if _high_contrast else 0)

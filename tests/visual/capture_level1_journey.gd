@@ -85,6 +85,7 @@ func _capture() -> void:
 		if not bool(gameplay_contract.get(parity_key, false)):
 			return _fail(app, "S05 North Star render gate failed: %s" % parity_key)
 	var gameplay_viewport: Vector2 = gameplay.get_viewport().get_visible_rect().size
+	var gameplay_resource_bar := gameplay.get_node_or_null("ResourceBar") as PanelContainer
 	var gameplay_title := gameplay.get_node_or_null("Layout/Title") as Label
 	var gameplay_hud := gameplay.get_node_or_null("Layout/HUDPlate") as Control
 	var gameplay_objective_icon := gameplay.get_node_or_null("Layout/HUDPlate/HUD/ObjectiveIcon") as Control
@@ -96,8 +97,10 @@ func _capture() -> void:
 	var shuffle_label := gameplay.get_node_or_null("BoosterTray/BoosterActions/SealedSlotA/Label") as Control
 	var hand_label := gameplay.get_node_or_null("BoosterTray/BoosterActions/SealedSlotB/Label") as Control
 	var magic_label := gameplay.get_node_or_null("BoosterTray/BoosterActions/SealedSlotC/Label") as Control
-	if gameplay_title == null or gameplay_hud == null or gameplay_objective_icon == null or gameplay_objective == null or gameplay_moves == null or gameplay_board == null or gameplay_hint == null or gameplay_tray == null:
-		return _fail(app, "S05 North Star render gate missing title/HUD/board/hint/tray")
+	if gameplay_resource_bar == null or gameplay_title == null or gameplay_hud == null or gameplay_objective_icon == null or gameplay_objective == null or gameplay_moves == null or gameplay_board == null or gameplay_hint == null or gameplay_tray == null:
+		return _fail(app, "S05 North Star render gate missing resource/title/HUD/board/hint/tray")
+	if gameplay_resource_bar.visible:
+		return _fail(app, "S05 meta currency/level row regressed into gameplay")
 	var board_height_ratio: float = gameplay_board.size.y / gameplay_viewport.y
 	var board_width_ratio: float = gameplay_board.size.x / gameplay_viewport.x
 	var tray_width_ratio: float = gameplay_tray.size.x / gameplay_viewport.x
@@ -113,6 +116,9 @@ func _capture() -> void:
 	var board_rect: Rect2 = gameplay_board.get_global_rect()
 	var hint_rect: Rect2 = gameplay_hint.get_global_rect()
 	var tray_rect: Rect2 = gameplay_tray.get_global_rect()
+	var hint_width_ratio: float = hint_rect.size.x / gameplay_viewport.x
+	if hint_width_ratio < 0.70 or hint_width_ratio > 0.82:
+		return _fail(app, "S05 hint callout width drifted: %.3f" % hint_width_ratio)
 	if title_rect.end.y + 4.0 > hud_rect.position.y:
 		return _fail(app, "S05 title and objective HUD overlap")
 	if gameplay_objective.has_theme_stylebox_override("normal"):

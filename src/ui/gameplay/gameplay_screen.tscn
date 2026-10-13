@@ -287,6 +287,7 @@ stretch_mode = 6
 modulate = Color(0.92, 0.84, 0.87, 0.48)
 
 [node name="ResourceBar" type="PanelContainer" parent="."]
+visible = false
 layout_mode = 1
 anchor_left = 0.025
 anchor_top = 0.0
@@ -375,7 +376,7 @@ anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 offset_left = 24.0
-offset_top = 142.0
+offset_top = 76.0
 offset_right = -24.0
 offset_bottom = -112.0
 grow_horizontal = 2
@@ -415,7 +416,7 @@ custom_minimum_size = Vector2(6, 0)
 layout_mode = 2
 
 [node name="ObjectiveIcon" type="TextureRect" parent="Layout/HUDPlate/HUD"]
-custom_minimum_size = Vector2(82, 82)
+custom_minimum_size = Vector2(88, 88)
 layout_mode = 2
 mouse_filter = 2
 expand_mode = 1
@@ -428,7 +429,7 @@ size_flags_horizontal = 3
 theme_override_colors/font_color = Color(1, 0.94, 0.82, 1)
 theme_override_colors/font_outline_color = Color(0.03, 0.02, 0.04, 0.92)
 theme_override_constants/outline_size = 5
-theme_override_font_sizes/font_size = 32
+theme_override_font_sizes/font_size = 36
 text = "TARGET\nMOON SIGILS  0 / 6"
 horizontal_alignment = 0
 vertical_alignment = 1
@@ -446,7 +447,7 @@ horizontal_alignment = 1
 vertical_alignment = 1
 
 [node name="Pause" type="Button" parent="Layout/HUDPlate/HUD"]
-custom_minimum_size = Vector2(76, 76)
+custom_minimum_size = Vector2(96, 96)
 layout_mode = 2
 theme_override_colors/font_color = Color(0.945, 0.91, 0.866, 1)
 theme_override_font_sizes/font_size = 30
@@ -480,8 +481,9 @@ mouse_filter = 2
 theme_override_styles/panel = SubResource("BoardFrameStyle")
 
 [node name="Hint" type="Label" parent="Layout"]
-custom_minimum_size = Vector2(0, 64)
+custom_minimum_size = Vector2(820, 64)
 layout_mode = 2
+size_flags_horizontal = 4
 theme_override_colors/font_color = Color(0.965, 0.89, 0.72, 1)
 theme_override_colors/font_outline_color = Color(0.02, 0.015, 0.025, 0.98)
 theme_override_constants/outline_size = 4
