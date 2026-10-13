@@ -7,7 +7,7 @@ const ScreenArt = preload("res://src/ui/shared/screen_art_registry.gd")
 const PieceAssetLoader = preload("res://src/match3/presentation/piece_asset_loader.gd")
 const ProductionChrome = preload("res://src/ui/theme/production_chrome.gd")
 
-const WEEKLY_ART_PATH := "res://assets/curios/ch01_curio_moon_cameo_awakened_v01.webp"
+const WEEKLY_ART_PATH := "res://assets/curios/ch01_curio_moon_cameo_sealed_v01.webp"
 
 @onready var world_art: TextureRect = $MissionWorldArt
 @onready var mission_timer: Label = $MissionLayout/MissionTimer
@@ -21,6 +21,8 @@ const WEEKLY_ART_PATH := "res://assets/curios/ch01_curio_moon_cameo_awakened_v01
 
 func _ready() -> void:
 	ProductionChrome.apply_secondary(empty_state, "weekly_altar")
+	ProductionChrome.apply_action_button(return_events, "primary", "weekly_events_return")
+	ProductionChrome.apply_action_button(return_house, "utility", "weekly_house_return")
 	return_events.pressed.connect(func(): return_events_requested.emit())
 	return_house.pressed.connect(func(): return_house_requested.emit())
 
@@ -52,6 +54,10 @@ func screen_contract() -> Dictionary:
 		"north_star_title_hierarchy": ($MissionLayout/MissionTitle as Label).get_theme_font_size("font_size") >= 52,
 		"north_star_altar_stack": ($MissionLayout/MissionEmptyState/EmptyContent as VBoxContainer) != null and reward_art.custom_minimum_size.y <= 260.0,
 		"asset_backed_altar_chrome": empty_state != null and empty_state.get_theme_stylebox("panel") is StyleBoxTexture and String(empty_state.get_meta("production_chrome_kind", "")) == "secondary_weekly_altar",
+		"header_readability_scrim": ($HeaderShade as ColorRect) != null and ($HeaderShade as ColorRect).color.a >= 0.4,
+		"sealed_offline_art": String(reward_art.get_meta("asset_path", "")).contains("_sealed_"),
+		"production_return_actions": return_events.get_theme_stylebox("normal") is StyleBoxTexture and return_house.get_theme_stylebox("normal") is StyleBoxTexture and String(return_events.get_meta("production_chrome_kind", "")) == "action_primary_weekly_events_return" and String(return_house.get_meta("production_chrome_kind", "")) == "action_utility_weekly_house_return",
+		"compact_offline_copy": availability != null and not availability.visible,
 		"primary_cta_rounding": return_events.get_theme_stylebox("normal") != null,
 
 	}
