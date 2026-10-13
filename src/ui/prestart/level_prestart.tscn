@@ -281,7 +281,7 @@ stretch_mode = 5
 [node name="Caption" type="Label" parent="Layout/Card/Content/RitualAids/Column/AidRow/KeeperChip/Content"]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.96, 0.9, 0.83, 1)
-theme_override_font_sizes/font_size = 21
+theme_override_font_sizes/font_size = 24
 text = "ASK KEEPER"
 
 [node name="RecoveryChip" type="PanelContainer" parent="Layout/Card/Content/RitualAids/Column/AidRow"]
@@ -305,7 +305,7 @@ stretch_mode = 5
 [node name="Caption" type="Label" parent="Layout/Card/Content/RitualAids/Column/AidRow/RecoveryChip/Content"]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.96, 0.9, 0.83, 1)
-theme_override_font_sizes/font_size = 21
+theme_override_font_sizes/font_size = 24
 text = "FAIL RECOVERY · +3"
 
 [node name="Start" type="Button" parent="Layout/Card/Content"]
