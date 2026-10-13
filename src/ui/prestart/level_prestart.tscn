@@ -241,7 +241,7 @@ horizontal_alignment = 1
 autowrap_mode = 2
 
 [node name="RitualAids" type="PanelContainer" parent="Layout/Card/Content"]
-custom_minimum_size = Vector2(0, 128)
+custom_minimum_size = Vector2(0, 160)
 layout_mode = 2
 theme_override_styles/panel = SubResource("AidPanel")
 
@@ -261,7 +261,7 @@ layout_mode = 2
 theme_override_constants/separation = 6
 
 [node name="KeeperChip" type="PanelContainer" parent="Layout/Card/Content/RitualAids/Column/AidRow"]
-custom_minimum_size = Vector2(0, 70)
+custom_minimum_size = Vector2(0, 78)
 layout_mode = 2
 size_flags_horizontal = 3
 theme_override_styles/panel = SubResource("AidChip")
@@ -285,7 +285,7 @@ theme_override_font_sizes/font_size = 21
 text = "ASK KEEPER"
 
 [node name="RecoveryChip" type="PanelContainer" parent="Layout/Card/Content/RitualAids/Column/AidRow"]
-custom_minimum_size = Vector2(0, 70)
+custom_minimum_size = Vector2(0, 78)
 layout_mode = 2
 size_flags_horizontal = 3
 theme_override_styles/panel = SubResource("AidChip")
