@@ -845,7 +845,7 @@ func _present_objective_progress() -> void:
 	var complete := progress >= target
 	objective_label.text = "%d / %d" % [progress, target]
 	if String(board_state.objective_type) == "clear_blockers":
-		objective_name_label.text = "OBJECTIVE COMPLETE" if complete else "+%d SEAL LAYER" % _last_objective_delta
+		objective_name_label.text = "OBJECTIVE COMPLETE" if complete else "+%d THIS MOVE" % _last_objective_delta
 	else:
 		objective_name_label.text = "OBJECTIVE COMPLETE" if complete else "+%d THIS MOVE" % _last_objective_delta
 	objective_label.set_meta("objective_feedback_state", "complete" if complete else "progress")
