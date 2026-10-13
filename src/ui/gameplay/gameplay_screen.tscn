@@ -14,10 +14,10 @@ border_width_top = 2
 border_width_right = 2
 border_width_bottom = 2
 border_color = Color(0.835, 0.678, 0.439, 0.72)
-corner_radius_top_left = 18
-corner_radius_top_right = 18
-corner_radius_bottom_right = 18
-corner_radius_bottom_left = 18
+corner_radius_top_left = 36
+corner_radius_top_right = 36
+corner_radius_bottom_right = 36
+corner_radius_bottom_left = 36
 shadow_color = Color(0, 0, 0, 0.58)
 shadow_size = 18
 
@@ -456,7 +456,9 @@ theme_override_font_sizes/font_size = 28
 theme_override_styles/normal = SubResource("PauseUtility")
 theme_override_styles/hover = SubResource("PauseUtility")
 theme_override_styles/pressed = SubResource("PauseUtility")
-text = "Ⅱ"
+text = ""
+expand_icon = true
+theme_override_constants/icon_max_width = 44
 tooltip_text = "Pause"
 
 [node name="BoardView" type="Control" parent="Layout"]
