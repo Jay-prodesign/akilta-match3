@@ -31,6 +31,9 @@ func _run() -> void:
 	_expect(bool(contract.get("board_frame_asset_owner", false)), "Gameplay board frame must be owned by the raster-backed BoardView rather than a second code-drawn panel border")
 	_expect(bool(contract.get("north_star_gameplay_geometry", false)), "Gameplay resource bar, target/moves HUD and lower tray must retain canonical North Star proportions")
 	_expect(bool(contract.get("gameplay_header_clearance", false)), "Gameplay level/title stack must clear the resource bar at real mobile scale")
+	_expect(bool(contract.get("compact_resource_chips", false)), "Gameplay coin/gem chips must stay compact instead of stretching into oversized blocks")
+	_expect(bool(contract.get("asset_backed_resource_chips", false)), "Gameplay coin/gem/level chips must use verified compact production chrome")
+	_expect(bool(contract.get("level_badge_separated", false)), "Gameplay level badge must remain a distinct right-side status chip")
 	_expect(float(contract.get("resource_bar_height", 0.0)) >= 76.0, "Gameplay resource strip must not collapse into a tiny utility row")
 	_expect(float(contract.get("hud_plate_height", 0.0)) >= 108.0, "Gameplay target/moves plate must keep its authored vertical hierarchy")
 	_expect(float(contract.get("booster_tray_height", 0.0)) >= 132.0, "Gameplay lower tray must keep the canonical booster-zone height")
@@ -56,6 +59,9 @@ func _run() -> void:
 	_expect(objective != null and objective.text.begins_with("TARGET ·"), "Objective copy must read as a clear top target block")
 	_expect(moves != null and moves.custom_minimum_size.x >= 240.0 and moves.custom_minimum_size.y >= 88.0, "Moves must retain a distinct right-side counter block")
 	var resource_bar := screen.get_node_or_null("ResourceBar") as PanelContainer
+	var coin_chip := screen.get_node_or_null("ResourceBar/Resources/CoinChip") as PanelContainer
+	var gem_chip := screen.get_node_or_null("ResourceBar/Resources/GemChip") as PanelContainer
+	var level_badge_plate := screen.get_node_or_null("ResourceBar/Resources/LevelBadgePlate") as PanelContainer
 	var hud_plate := screen.get_node_or_null("Layout/HUDPlate") as PanelContainer
 	var booster_tray := screen.get_node_or_null("BoosterTray") as PanelContainer
 	_expect(resource_bar != null and resource_bar.offset_bottom - resource_bar.offset_top == 80.0, "Gameplay resource strip height drifted")
@@ -66,6 +72,9 @@ func _run() -> void:
 	var hint_band := screen.get_node_or_null("Layout/Hint") as Label
 	_expect(hint_band != null and booster_tray.global_position.y >= hint_band.global_position.y + hint_band.size.y + 12.0, "Gameplay booster tray must not cover the hint band")
 	_expect(resource_bar != null and resource_bar.get_theme_stylebox("panel") is StyleBoxTexture, "Gameplay resource strip must use production chrome")
+	_expect(coin_chip != null and coin_chip.size.x <= 300.0 and coin_chip.get_theme_stylebox("panel") is StyleBoxTexture, "Gameplay coin chip must use compact asset-backed chrome")
+	_expect(gem_chip != null and gem_chip.size.x <= 300.0 and gem_chip.get_theme_stylebox("panel") is StyleBoxTexture, "Gameplay gem chip must use compact asset-backed chrome")
+	_expect(level_badge_plate != null and level_badge_plate.size.x <= 200.0 and level_badge_plate.get_theme_stylebox("panel") is StyleBoxTexture, "Gameplay level badge must use a compact asset-backed plate")
 	_expect(hud_plate != null and hud_plate.get_theme_stylebox("panel") is StyleBoxTexture, "Gameplay objective/moves HUD must use production chrome")
 	_expect(booster_tray != null and booster_tray.get_theme_stylebox("panel") is StyleBoxTexture, "Gameplay booster tray must use production chrome")
 	_expect(keeper != null and keeper.custom_minimum_size.y >= 88.0 and keeper.icon != null, "ASK KEEPER must retain a mobile touch target and production familiar art")
