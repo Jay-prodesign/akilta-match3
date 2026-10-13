@@ -59,6 +59,8 @@ const BOOSTER_ART_PATHS := {
 	"retry": "res://assets/pieces/skull.webp"
 }
 const GAMEPLAY_PAUSE_ICON_PATH := "res://assets/ui/gameplay/pause_gothic_v01.svg"
+const SEALED_BADGE_PATH := "res://assets/ui/gameplay/booster_sealed_badge_v01.svg"
+const REWARD_STAR_PATH := "res://assets/ui/gameplay/reward_star_gothic_v01.svg"
 const NORTH_STAR_BOOSTER_ART_PATHS := {
 	"shuffle": "res://assets/ui/gameplay/booster_shuffle_gothic_v01.svg",
 	"hand": "res://assets/ui/gameplay/booster_hand_gothic_v01.svg",
@@ -95,6 +97,7 @@ var _result_transition_active: bool = false
 var _result_transition_tween: Tween
 var _pause_transition_tween: Tween
 var _gameplay_intro_tween: Tween
+var _result_star_tween: Tween
 var _pause_closing := false
 const LOW_MOVE_WARNING_THRESHOLD := 3
 const LAST_MOVE_THRESHOLD := 1
@@ -112,6 +115,7 @@ const LAST_MOVE_THRESHOLD := 1
 @onready var pause_retry: Button = $PauseOverlay/Card/Content/Retry
 @onready var pause_settings: Button = $PauseOverlay/Card/Content/Settings
 @onready var pause_exit: Button = $PauseOverlay/Card/Content/Exit
+@onready var pause_sigil: TextureRect = $PauseOverlay/Card/Content/PauseSigil
 @onready var hint_label: Label = $Layout/Hint
 @onready var awakening_title: Label = $Layout/Awakening/Content/Label
 @onready var awakening_view: Control = $Layout/Awakening/Content/ProgressView
@@ -133,6 +137,9 @@ const LAST_MOVE_THRESHOLD := 1
 @onready var _sealed_boost_a: Button = $BoosterTray/BoosterActions/SealedSlotA/SealedBoostA
 @onready var _sealed_boost_b: Button = $BoosterTray/BoosterActions/SealedSlotB/SealedBoostB
 @onready var _sealed_boost_c: Button = $BoosterTray/BoosterActions/SealedSlotC/SealedBoostC
+@onready var _sealed_badge_a: TextureRect = $BoosterTray/BoosterActions/SealedSlotA/SealedBoostA/SealBadge
+@onready var _sealed_badge_b: TextureRect = $BoosterTray/BoosterActions/SealedSlotB/SealedBoostB/SealBadge
+@onready var _sealed_badge_c: TextureRect = $BoosterTray/BoosterActions/SealedSlotC/SealedBoostC/SealBadge
 @onready var _settings_shortcut: Button = $BoosterTray/BoosterActions/SettingsSlot/SettingsShortcut
 @onready var _resource_coin_label: Label = $ResourceBar/Resources/CoinChip/Content/CoinResource
 @onready var _resource_gem_label: Label = $ResourceBar/Resources/GemChip/Content/GemResource
@@ -143,6 +150,9 @@ const LAST_MOVE_THRESHOLD := 1
 @onready var _result_gem_icon: TextureRect = $ResultOverlay/Card/Content/ResultRewardValues/GemReward/Content/Icon
 @onready var _result_proclamation: Label = $ResultOverlay/Card/Content/ResultProclamation/Copy/ResultProclamationCopy
 @onready var _result_keeper_cat: TextureRect = $ResultOverlay/Card/Content/ResultProclamation/KeeperCat
+@onready var _result_star_a: TextureRect = $ResultOverlay/Card/Content/StarRow/StarA
+@onready var _result_star_b: TextureRect = $ResultOverlay/Card/Content/StarRow/StarB
+@onready var _result_star_c: TextureRect = $ResultOverlay/Card/Content/StarRow/StarC
 
 func _process(delta: float) -> void:
 	if board_state == null or result_overlay.visible or pause_overlay.visible or _pending_terminal_result != "":
@@ -170,11 +180,13 @@ func _ready() -> void:
 	ProductionChrome.apply_compact_panel($ResourceBar/Resources/GemChip, "gameplay_gem_resource")
 	ProductionChrome.apply_compact_panel($ResourceBar/Resources/LevelBadgePlate, "gameplay_level_badge")
 	ProductionChrome.apply_gameplay_shell($Layout/HUDPlate, "objective")
+	ProductionChrome.apply_gameplay_level_plaque(eyebrow_label)
 	ProductionChrome.apply_gameplay_booster_tray($BoosterTray)
 	var gameplay_hud := $Layout/HUDPlate/HUD as HBoxContainer
 	if gameplay_hud != null:
 		gameplay_hud.move_child(pause_button, 1)
 	pause_button.icon = PieceAssetLoader.ornament(GAMEPLAY_PAUSE_ICON_PATH)
+	pause_sigil.texture = PieceAssetLoader.ornament(String(OBJECTIVE_ART_PATHS["moon"]))
 	pause_button.set_meta("production_chrome_kind", "gameplay_pause_icon")
 	pause_button.set_meta("production_chrome_asset", GAMEPLAY_PAUSE_ICON_PATH)
 	ProductionChrome.apply_action_button(pause_resume, "primary", "pause_resume")
@@ -198,6 +210,14 @@ func _ready() -> void:
 	_sealed_boost_a.icon = PieceAssetLoader.ornament(String(NORTH_STAR_BOOSTER_ART_PATHS["shuffle"]))
 	_sealed_boost_b.icon = PieceAssetLoader.ornament(String(NORTH_STAR_BOOSTER_ART_PATHS["hand"]))
 	_sealed_boost_c.icon = PieceAssetLoader.ornament(String(NORTH_STAR_BOOSTER_ART_PATHS["magic"]))
+	var sealed_badge_texture := PieceAssetLoader.ornament(SEALED_BADGE_PATH)
+	_sealed_badge_a.texture = sealed_badge_texture
+	_sealed_badge_b.texture = sealed_badge_texture
+	_sealed_badge_c.texture = sealed_badge_texture
+	var reward_star_texture := PieceAssetLoader.ornament(REWARD_STAR_PATH)
+	_result_star_a.texture = reward_star_texture
+	_result_star_b.texture = reward_star_texture
+	_result_star_c.texture = reward_star_texture
 	_settings_shortcut.icon = PieceAssetLoader.ornament("res://assets/ui/ui_settings.svg")
 	_hint_boost_button.pressed.connect(_use_hint_boost)
 	_settings_shortcut.pressed.connect(func(): settings_requested.emit())
@@ -298,6 +318,11 @@ func _play_pause_open() -> void:
 	card.modulate = Color(1, 1, 1, 0)
 	if dim != null:
 		dim.modulate = Color(1, 1, 1, 0)
+	for star in [_result_star_a, _result_star_b, _result_star_c]:
+		if star != null:
+			star.pivot_offset = star.size * 0.5
+			star.scale = Vector2(0.42, 0.42)
+			star.modulate = Color(1.25, 1.12, 0.78, 0)
 	var content := card.get_node_or_null("Content") as Control
 	var reveal_items: Array[CanvasItem] = []
 	if content != null:
@@ -1084,6 +1109,12 @@ func _present_result_overlay(kind: String) -> void:
 	_result_transition_tween.tween_property(card, "modulate", Color.WHITE, 0.22)
 	for index in range(reveal_items.size()):
 		_result_transition_tween.tween_property(reveal_items[index], "modulate", Color.WHITE, 0.17).set_delay(0.07 + float(index) * 0.032)
+	for index in range(3):
+		var star: TextureRect = [_result_star_a, _result_star_b, _result_star_c][index]
+		if star == null:
+			continue
+		_result_transition_tween.tween_property(star, "modulate", Color.WHITE, 0.20).set_delay(0.16 + float(index) * 0.10)
+		_result_transition_tween.tween_property(star, "scale", Vector2.ONE, 0.34).set_delay(0.16 + float(index) * 0.10).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
 	_result_transition_tween.finished.connect(func(): _result_transition_active = false)
 
 func _reset_terminal_transition() -> void:
