@@ -65,7 +65,6 @@ func _run() -> void:
 	var reduced_overlay_contract: Dictionary = reduced.get_node("RestorationOverlay").restoration_contract()
 	_expect(bool(reduced_overlay_contract.get("house_first_composition", false)), "Restoration must keep the recovered Curio bounded so the House remains the visual hero")
 	_expect(bool(reduced_overlay_contract.get("before_after_state_rail", false)), "Restoration must expose a truthful dormant-to-awakened state comparison")
-	var reduced_continue := reduced.get_node("RestorationOverlay/CeremonyCard/CeremonyContent/CeremonyRow/Copy/Continue") as Button
 	reduced_continue.emit_signal("pressed")
 	await _frames(2)
 	_expect(reduced.get_node_or_null("RestorationOverlay") == null, "Restoration Continue must close the ceremony overlay")
