@@ -25,6 +25,7 @@ func _ready() -> void:
 	if record_style != null:
 		opening_record.add_theme_stylebox_override("normal", record_style)
 		opening_record.set_meta("production_chrome_kind", "compact_weekly_record")
+	opening_record.set_meta("stage_role", "anchored_footer_status")
 	ProductionChrome.apply_action_button(return_events, "primary", "weekly_events_return")
 	ProductionChrome.apply_action_button(return_house, "utility", "weekly_house_return")
 	return_events.pressed.connect(func(): return_events_requested.emit())
@@ -64,6 +65,7 @@ func screen_contract() -> Dictionary:
 		"compact_offline_copy": availability != null and not availability.visible,
 		"intentional_world_stage": ($MissionLayout/StageSpacer as Control) != null and ($MissionLayout/StageSpacer as Control).size_flags_vertical == Control.SIZE_EXPAND_FILL and ($MissionLayout as VBoxContainer).offset_bottom <= -150.0,
 		"asset_backed_opening_record": opening_record != null and opening_record.get_theme_stylebox("normal") is StyleBoxTexture and String(opening_record.get_meta("production_chrome_kind", "")) == "compact_weekly_record",
+		"anchored_footer_status": opening_record != null and String(opening_record.get_meta("stage_role", "")) == "anchored_footer_status",
 		"primary_cta_rounding": return_events.get_theme_stylebox("normal") != null,
 
 	}

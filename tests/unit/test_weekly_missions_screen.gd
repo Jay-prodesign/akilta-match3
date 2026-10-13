@@ -28,6 +28,7 @@ func _run() -> void:
 	_expect(bool(contract.get("compact_offline_copy", false)), "Weekly Rituals offline state must hide redundant live-feed copy from the visual stack")
 	_expect(bool(contract.get("intentional_world_stage", false)), "Weekly Rituals must use the lower event world as intentional breathing room instead of leaving accidental dead space")
 	_expect(bool(contract.get("asset_backed_opening_record", false)), "Weekly Rituals opening record must use verified compact production chrome")
+	_expect(bool(contract.get("anchored_footer_status", false)), "Weekly Rituals opening record must explicitly own the anchored footer status role")
 
 	var timer := screen.get_node_or_null("MissionLayout/MissionTimer") as Label
 	var empty := screen.get_node_or_null("MissionLayout/MissionEmptyState") as PanelContainer
