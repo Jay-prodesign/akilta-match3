@@ -1,6 +1,12 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="512" height="160" viewBox="0 0 512 160">
-<defs><linearGradient id="p" x1="0" y1="0" x2="0" y2="1"><stop stop-color="#8d3298"/><stop offset=".48" stop-color="#651a73"/><stop offset="1" stop-color="#350d42"/></linearGradient><linearGradient id="g" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#fff0b3"/><stop offset=".45" stop-color="#e1b76d"/><stop offset="1" stop-color="#8a512c"/></linearGradient></defs>
-<path d="M42 8h428l34 34v76l-34 34H42L8 118V42z" fill="url(#p)" stroke="url(#g)" stroke-width="10"/>
-<path d="M58 22h396l25 25v66l-25 25H58l-25-25V47z" fill="none" stroke="#fff0ba" stroke-opacity=".72" stroke-width="3"/>
-<path d="M14 80h34M464 80h34" stroke="#f0cd7e" stroke-width="5"/><circle cx="37" cy="80" r="6" fill="#c58ad0" stroke="#ffe9a3" stroke-width="2"/><circle cx="475" cy="80" r="6" fill="#c58ad0" stroke="#ffe9a3" stroke-width="2"/>
-<path d="M234 13h44l-9 10h-26zM234 147h44l-9-10h-26z" fill="#f2ce7e" opacity=".9"/></svg>
+<svg xmlns="http://www.w3.org/2000/svg" width="640" height="180" viewBox="0 0 640 180">
+<defs>
+ <linearGradient id="p" x1="0" y1="0" x2="0" y2="1"><stop stop-color="#8f339b"/><stop offset=".5" stop-color="#641a73"/><stop offset="1" stop-color="#300a3b"/></linearGradient>
+ <linearGradient id="g" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#fff0b5"/><stop offset=".42" stop-color="#e5bc6b"/><stop offset=".78" stop-color="#985b31"/><stop offset="1" stop-color="#f2d188"/></linearGradient>
+</defs>
+<path d="M58 10h524l48 48v64l-48 48H58L10 122V58z" fill="url(#p)" stroke="url(#g)" stroke-width="10"/>
+<path d="M78 25h484l34 34v62l-34 34H78l-34-34V59z" fill="none" stroke="#fff0bc" stroke-opacity=".72" stroke-width="3"/>
+<path d="M22 90h46M572 90h46" stroke="#f2cf80" stroke-width="5"/>
+<g fill="#b982c6" stroke="#ffe9a8" stroke-width="2"><circle cx="54" cy="90" r="7"/><circle cx="586" cy="90" r="7"/></g>
+<path d="M292 15h56l-12 12h-32zM292 165h56l-12-12h-32z" fill="#f0ca78"/>
+<path d="M83 40l20 20-20 20M557 40l-20 20 20 20M83 140l20-20-20-20M557 140l-20-20 20-20" fill="none" stroke="#dba95f" stroke-width="3" opacity=".85"/>
+</svg>
