@@ -194,7 +194,7 @@ static func apply_secondary(panel: Control, role: String) -> bool:
 
 static func gameplay_shell() -> StyleBoxTexture:
 	if _gameplay_shell == null:
-		_gameplay_shell = _style(6.0, 48.0)
+		_gameplay_shell = _style(8.0, 52.0, QUIET_PANEL_PATH)
 	return _gameplay_shell
 
 static func apply_gameplay_shell(panel: Control, kind: String) -> bool:
@@ -204,7 +204,7 @@ static func apply_gameplay_shell(panel: Control, kind: String) -> bool:
 	if style == null:
 		return false
 	panel.add_theme_stylebox_override("panel", style)
-	panel.set_meta("production_chrome_asset", PRIMARY_PANEL_PATH)
+	panel.set_meta("production_chrome_asset", QUIET_PANEL_PATH)
 	panel.set_meta("production_chrome_kind", "gameplay_" + kind)
 	return true
 
