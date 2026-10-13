@@ -1,6 +1,6 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="512" height="160" viewBox="0 0 512 160">
-<defs><linearGradient id="p" x1="0" y1="0" x2="0" y2="1"><stop stop-color="#191020"/><stop offset="1" stop-color="#09070d"/></linearGradient></defs>
-<path d="M32 10h448l22 22v96l-22 22H32L10 128V32z" fill="url(#p)" stroke="#c99a5b" stroke-width="5"/>
-<path d="M47 23h418l18 18v78l-18 18H47l-18-18V41z" fill="none" stroke="#7d5685" stroke-width="3"/>
-<path d="M22 80h20M470 80h20" stroke="#e6c77e" stroke-width="2" opacity=".75"/>
+<defs><linearGradient id="p" x1="0" y1="0" x2="0" y2="1"><stop stop-color="#25152d"/><stop offset="1" stop-color="#09070d"/></linearGradient></defs>
+<path d="M38 10h436l28 28v84l-28 28H38L10 122V38z" fill="url(#p)" stroke="#dcb46e" stroke-width="8"/>
+<path d="M54 24h404l20 20v72l-20 20H54l-20-20V44z" fill="none" stroke="#9a6ca5" stroke-width="4"/>
+<path d="M18 80h28M466 80h28" stroke="#ffe0a1" stroke-width="4" opacity=".9"/><circle cx="35" cy="80" r="5" fill="#b98bc5"/><circle cx="477" cy="80" r="5" fill="#b98bc5"/>
 </svg>
