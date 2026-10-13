@@ -37,6 +37,8 @@ func _run() -> void:
 		_expect(bool(visual_contract.get("compact_header_back", false)), "S02 back control must remain compact instead of consuming header width")
 		_expect(bool(visual_contract.get("summary_plate", false)), "S02 progress summary must sit on an authored plate")
 		_expect(bool(visual_contract.get("chapter_descriptors_present", false)), "S02 sealed wings must preserve their North Star chapter identities without fabricated art")
+		_expect(bool(visual_contract.get("north_star_vertical_wing_list", false)), "S02 must present the six House wings as a single North Star portrait list")
+		_expect(bool(visual_contract.get("current_wing_art_subordinate", false)), "S02 current wing artwork must remain a compact list thumbnail rather than consume the card")
 	_expect(screen.get_node_or_null("ResourceBar") != null, "S02 global resources header missing")
 	_expect(screen.get_node_or_null("Layout/ChapterHeader/HeaderBack") != null, "S02 header back missing")
 	var current_wing_art: TextureRect = current.get_node_or_null("CurrentWingArtwork") as TextureRect if current != null else null

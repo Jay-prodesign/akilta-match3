@@ -30,16 +30,19 @@ func _run() -> void:
 	_expect(bool(contract.get("hero_curio_scale", false)), "Reliquary Moon Cameo must remain a hero-scale Curio")
 	_expect(bool(contract.get("north_star_collection_grid", false)), "Reliquary must present the opening Curios as a visual collection grid")
 	_expect(bool(contract.get("collection_copy_subordinate", false)), "Reliquary must keep long lore/origin copy behind Details instead of crowding the collection")
-	_expect(bool(contract.get("compact_collection_cards", false)), "Reliquary grid cards must not become tall empty slabs")
+	_expect(bool(contract.get("collection_occupies_cabinet_stage", false)), "Reliquary opening set must use a bounded cabinet stage without oversized dead vertical space")
+	_expect(bool(contract.get("cabinet_footer", false)), "Reliquary must finish the collection stage with an authored cabinet-status footer")
 	_expect(bool(contract.get("intro_subordinate", false)), "Reliquary explanatory prose must not compete with the collection")
 	_expect(not bool(contract.get("runtime_ui_factory", true)), "Reliquary must not rebuild presentation nodes at runtime")
 
 	var moon_art := screen.get_node_or_null("Layout/Cards/MoonCard/Content/RitualArt") as TextureRect
 	var moth_art := screen.get_node_or_null("Layout/Cards/Slot2/Content/Number/RewardArt") as TextureRect
 	var locket_art := screen.get_node_or_null("Layout/Cards/Slot3/Content/Number/RewardArt") as TextureRect
-	_expect(moon_art != null and moon_art.texture != null and moon_art.custom_minimum_size.y >= 210.0, "Moon Cameo must render as a hero-scale authored display")
+	var footer := screen.get_node_or_null("Layout/CabinetFooter") as Label
+	_expect(moon_art != null and moon_art.texture != null and moon_art.custom_minimum_size.y >= 220.0, "Moon Cameo must render as a hero-scale authored display")
 	_expect(moth_art != null and moth_art.texture != null, "Moth Reliquary authored display art missing")
 	_expect(locket_art != null and locket_art.texture != null, "Thorned Locket authored display art missing")
+	_expect(footer != null and footer.text.contains("3 / 3 CURIOS RECOVERED"), "Reliquary footer must reflect completed opening collection truth")
 
 	for path in [
 		"Layout/Cards/MoonCard/DetailActionLayer/InspectAction",
