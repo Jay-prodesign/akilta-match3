@@ -245,40 +245,6 @@
               "id": "global_header",
               "slots": [
                 {
-                  "id": "lives",
-                  "layer": "functional_icon",
-                  "states": [
-                    "normal",
-                    "low",
-                    "full"
-                  ],
-                  "geometry": {
-                    "profile": "utility_touch",
-                    "min_size": [
-                      88,
-                      88
-                    ],
-                    "preferred_size": [
-                      96,
-                      96
-                    ],
-                    "placement": "owner_anchor",
-                    "aspect_policy": "1:1",
-                    "fit": "contain",
-                    "safe_area": "content",
-                    "z_policy": "functional_icon",
-                    "source_min_size": [
-                      192,
-                      192
-                    ],
-                    "touch_target": [
-                      88,
-                      88
-                    ]
-                  },
-                  "geometry_ref": "resource_chip"
-                },
-                {
                   "id": "coins",
                   "layer": "functional_icon",
                   "states": [
@@ -6197,5 +6163,8 @@
       "min_height": 32,
       "fit": "intrinsic"
     }
+  },
+  "product_truth": {
+    "life_economy": "NOT_EXPOSED_UNTIL_CONSUMPTION_AND_REFILL_EXIST"
   }
 }

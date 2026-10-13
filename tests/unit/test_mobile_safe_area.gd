@@ -14,6 +14,8 @@ func _init() -> void:
 
 	var invalid := SafeArea.insets_for_geometry(Vector2(1080, 1920), Vector2i.ZERO, Rect2i())
 	_expect(invalid == Vector4.ZERO, "invalid display geometry must fail safe")
+	_expect(SafeArea.TOP_RESOURCE_CONTENT_START == 128.0, "meta content must start below the 104 logical px resource bar")
+	_expect(SafeArea.PRODUCT_NAV_CONTENT_RESERVE == 152.0, "meta content must reserve the bottom navigation shell")
 
 	if failures.is_empty():
 		print("TEST_PASS: mobile safe-area geometry contract")

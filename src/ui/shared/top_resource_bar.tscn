@@ -77,30 +77,6 @@ theme_override_constants/separation = 8
 alignment = 1
 
 
-[node name="LifeResourceChip" type="PanelContainer" parent="Resources"]
-custom_minimum_size = Vector2(0, 88)
-layout_mode = 2
-size_flags_horizontal = 3
-theme_override_styles/panel = SubResource("Chip")
-
-[node name="Content" type="HBoxContainer" parent="Resources/LifeResourceChip"]
-layout_mode = 2
-theme_override_constants/separation = 3
-alignment = 1
-
-[node name="Icon" type="TextureRect" parent="Resources/LifeResourceChip/Content"]
-custom_minimum_size = Vector2(42, 42)
-layout_mode = 2
-mouse_filter = 2
-expand_mode = 1
-stretch_mode = 5
-
-[node name="LifeResource" type="Label" parent="Resources/LifeResourceChip/Content"]
-layout_mode = 2
-theme_override_colors/font_color = Color(0.969, 0.914, 0.839, 1)
-theme_override_font_sizes/font_size = 22
-text = "5"
-
 [node name="CoinResourceChip" type="PanelContainer" parent="Resources"]
 custom_minimum_size = Vector2(0, 88)
 layout_mode = 2
