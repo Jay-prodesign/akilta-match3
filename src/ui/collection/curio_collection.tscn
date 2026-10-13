@@ -162,7 +162,7 @@ horizontal_alignment = 1
 autowrap_mode = 2
 
 [node name="Cards" type="GridContainer" parent="Layout"]
-custom_minimum_size = Vector2(0, 430)
+custom_minimum_size = Vector2(0, 1040)
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 0
@@ -171,7 +171,7 @@ theme_override_constants/v_separation = 12
 columns = 2
 
 [node name="MoonCard" type="PanelContainer" parent="Layout/Cards"]
-custom_minimum_size = Vector2(0, 209)
+custom_minimum_size = Vector2(0, 500)
 layout_mode = 2
 size_flags_horizontal = 3
 theme_override_styles/panel = SubResource("Display")
@@ -183,7 +183,7 @@ theme_override_constants/separation = 6
 alignment = 0
 
 [node name="RitualArt" type="TextureRect" parent="Layout/Cards/MoonCard/Content"]
-custom_minimum_size = Vector2(0, 100)
+custom_minimum_size = Vector2(0, 310)
 layout_mode = 2
 size_flags_horizontal = 3
 expand_mode = 1
@@ -198,7 +198,7 @@ theme_override_constants/separation = 5
 [node name="Name" type="Label" parent="Layout/Cards/MoonCard/Content/Copy"]
 layout_mode = 2
 theme_override_colors/font_color = Color(1, 0.941, 0.847, 1)
-theme_override_font_sizes/font_size = 24
+theme_override_font_sizes/font_size = 30
 text = "MOON CAMEO"
 horizontal_alignment = 1
 
@@ -213,7 +213,7 @@ autowrap_mode = 2
 [node name="State" type="Label" parent="Layout/Cards/MoonCard/Content/Copy"]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.949, 0.816, 0.545, 1)
-theme_override_font_sizes/font_size = 16
+theme_override_font_sizes/font_size = 18
 text = "DORMANT · RELIC 01"
 horizontal_alignment = 1
 
@@ -238,25 +238,25 @@ layout_mode = 2
 mouse_filter = 2
 
 [node name="InspectAction" type="Button" parent="Layout/Cards/MoonCard/DetailActionLayer"]
-custom_minimum_size = Vector2(0, 60)
+custom_minimum_size = Vector2(0, 76)
 layout_mode = 1
 anchors_preset = 0
 anchor_left = 0.18
-anchor_top = 0.70
+anchor_top = 0.80
 anchor_right = 0.82
-anchor_bottom = 0.98
+anchor_bottom = 0.965
 grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 0
 theme_override_colors/font_color = Color(1, 0.941, 0.847, 1)
-theme_override_font_sizes/font_size = 17
+theme_override_font_sizes/font_size = 19
 theme_override_styles/normal = SubResource("Action")
 theme_override_styles/hover = SubResource("Action")
 theme_override_styles/pressed = SubResource("Action")
 text = "DETAILS"
 
 [node name="Slot2" type="PanelContainer" parent="Layout/Cards"]
-custom_minimum_size = Vector2(0, 209)
+custom_minimum_size = Vector2(0, 500)
 layout_mode = 2
 size_flags_horizontal = 3
 theme_override_styles/panel = SubResource("DisplayCool")
@@ -268,7 +268,7 @@ theme_override_constants/separation = 6
 alignment = 0
 
 [node name="Number" type="Label" parent="Layout/Cards/Slot2/Content"]
-custom_minimum_size = Vector2(0, 100)
+custom_minimum_size = Vector2(0, 310)
 size_flags_horizontal = 3
 size_flags_vertical = 0
 layout_mode = 2
@@ -294,7 +294,7 @@ theme_override_constants/separation = 5
 [node name="Name" type="Label" parent="Layout/Cards/Slot2/Content/Copy"]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.96, 0.9, 0.84, 1)
-theme_override_font_sizes/font_size = 23
+theme_override_font_sizes/font_size = 29
 text = "MOTH RELIQUARY"
 horizontal_alignment = 1
 
@@ -309,7 +309,7 @@ autowrap_mode = 2
 [node name="State" type="Label" parent="Layout/Cards/Slot2/Content/Copy"]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.949, 0.816, 0.545, 1)
-theme_override_font_sizes/font_size = 16
+theme_override_font_sizes/font_size = 18
 text = "DORMANT · RELIC 02"
 horizontal_alignment = 1
 
@@ -325,24 +325,24 @@ layout_mode = 2
 mouse_filter = 2
 
 [node name="InspectAction" type="Button" parent="Layout/Cards/Slot2/DetailActionLayer"]
-custom_minimum_size = Vector2(0, 60)
+custom_minimum_size = Vector2(0, 76)
 layout_mode = 1
 anchor_left = 0.18
-anchor_top = 0.70
+anchor_top = 0.80
 anchor_right = 0.82
-anchor_bottom = 0.98
+anchor_bottom = 0.965
 grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 0
 theme_override_colors/font_color = Color(1, 0.941, 0.847, 1)
-theme_override_font_sizes/font_size = 17
+theme_override_font_sizes/font_size = 19
 theme_override_styles/normal = SubResource("Action")
 theme_override_styles/hover = SubResource("Action")
 theme_override_styles/pressed = SubResource("Action")
 text = "DETAILS"
 
 [node name="Slot3" type="PanelContainer" parent="Layout/Cards"]
-custom_minimum_size = Vector2(0, 209)
+custom_minimum_size = Vector2(0, 500)
 layout_mode = 2
 size_flags_horizontal = 3
 theme_override_styles/panel = SubResource("DisplayCool")
@@ -354,7 +354,7 @@ theme_override_constants/separation = 6
 alignment = 0
 
 [node name="Number" type="Label" parent="Layout/Cards/Slot3/Content"]
-custom_minimum_size = Vector2(0, 100)
+custom_minimum_size = Vector2(0, 310)
 size_flags_horizontal = 3
 size_flags_vertical = 0
 layout_mode = 2
@@ -380,7 +380,7 @@ theme_override_constants/separation = 5
 [node name="Name" type="Label" parent="Layout/Cards/Slot3/Content/Copy"]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.96, 0.9, 0.84, 1)
-theme_override_font_sizes/font_size = 23
+theme_override_font_sizes/font_size = 29
 text = "THORNED LOCKET"
 horizontal_alignment = 1
 
@@ -395,7 +395,7 @@ autowrap_mode = 2
 [node name="State" type="Label" parent="Layout/Cards/Slot3/Content/Copy"]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.949, 0.816, 0.545, 1)
-theme_override_font_sizes/font_size = 16
+theme_override_font_sizes/font_size = 18
 text = "DORMANT · RELIC 03"
 horizontal_alignment = 1
 
@@ -411,24 +411,24 @@ layout_mode = 2
 mouse_filter = 2
 
 [node name="InspectAction" type="Button" parent="Layout/Cards/Slot3/DetailActionLayer"]
-custom_minimum_size = Vector2(0, 60)
+custom_minimum_size = Vector2(0, 76)
 layout_mode = 1
 anchor_left = 0.18
-anchor_top = 0.70
+anchor_top = 0.80
 anchor_right = 0.82
-anchor_bottom = 0.98
+anchor_bottom = 0.965
 grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 0
 theme_override_colors/font_color = Color(1, 0.941, 0.847, 1)
-theme_override_font_sizes/font_size = 17
+theme_override_font_sizes/font_size = 19
 theme_override_styles/normal = SubResource("Action")
 theme_override_styles/hover = SubResource("Action")
 theme_override_styles/pressed = SubResource("Action")
 text = "DETAILS"
 
 [node name="SetSummary" type="PanelContainer" parent="Layout/Cards"]
-custom_minimum_size = Vector2(0, 209)
+custom_minimum_size = Vector2(0, 500)
 layout_mode = 2
 size_flags_horizontal = 3
 theme_override_styles/panel = SubResource("Display")
@@ -439,10 +439,10 @@ theme_override_constants/separation = 8
 alignment = 1
 
 [node name="Sigil" type="Label" parent="Layout/Cards/SetSummary/Content"]
-custom_minimum_size = Vector2(0, 52)
+custom_minimum_size = Vector2(0, 150)
 layout_mode = 2
 theme_override_colors/font_color = Color(0.878, 0.714, 0.455, 1)
-theme_override_font_sizes/font_size = 34
+theme_override_font_sizes/font_size = 72
 text = "☾"
 horizontal_alignment = 1
 vertical_alignment = 1
@@ -450,26 +450,27 @@ vertical_alignment = 1
 [node name="Title" type="Label" parent="Layout/Cards/SetSummary/Content"]
 layout_mode = 2
 theme_override_colors/font_color = Color(1, 0.941, 0.847, 1)
-theme_override_font_sizes/font_size = 23
+theme_override_font_sizes/font_size = 32
 text = "OPENING CABINET"
 horizontal_alignment = 1
 
 [node name="Progress" type="Label" parent="Layout/Cards/SetSummary/Content"]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.949, 0.816, 0.545, 1)
-theme_override_font_sizes/font_size = 18
+theme_override_font_sizes/font_size = 25
 text = "0 / 3 AWAKENED"
 horizontal_alignment = 1
 
 [node name="Copy" type="Label" parent="Layout/Cards/SetSummary/Content"]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.82, 0.76, 0.84, 1)
-theme_override_font_sizes/font_size = 15
+theme_override_font_sizes/font_size = 18
 text = "Three Curios complete the first House cabinet."
 horizontal_alignment = 1
 autowrap_mode = 2
 
 [node name="CabinetFooter" type="Label" parent="Layout"]
+visible = false
 custom_minimum_size = Vector2(0, 52)
 layout_mode = 2
 theme_override_colors/font_color = Color(0.949, 0.816, 0.545, 1)
@@ -482,12 +483,14 @@ horizontal_alignment = 1
 vertical_alignment = 1
 
 [node name="StageSpacer" type="Control" parent="Layout"]
-custom_minimum_size = Vector2(0, 24)
+visible = false
+custom_minimum_size = Vector2(0, 0)
 layout_mode = 2
-size_flags_vertical = 3
+size_flags_vertical = 0
 mouse_filter = 2
 
 [node name="Back" type="Button" parent="Layout"]
+visible = false
 custom_minimum_size = Vector2(0, 72)
 layout_mode = 2
 theme_override_colors/font_color = Color(1, 0.941, 0.847, 1)
