@@ -29,6 +29,7 @@ func _run() -> void:
 	_expect(not bool(contract.get("runtime_ui_factory", true)), "Prestart must not rebuild persistent presentation UI at runtime")
 	_expect(bool(contract.get("north_star_readability", false)), "Prestart must retain a strong North Star title/objective/Play hierarchy")
 	_expect(bool(contract.get("note_subordinate", false)), "Long explanatory copy must not compete with the primary prestart decision")
+	_expect(bool(contract.get("asset_backed_prestart_chrome", false)), "Prestart card, Ritual Help chips and actions must use verified production chrome without ceremonial nesting")
 	_expect(bool(contract.get("raster_runtime", false)), "Prestart aid art must use raster runtime assets")
 
 	var keeper := screen.get_node_or_null("Layout/Card/Content/RitualAids/Column/AidRow/KeeperChip/Content/Art") as TextureRect
