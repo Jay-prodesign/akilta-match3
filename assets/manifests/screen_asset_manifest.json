@@ -385,9 +385,9 @@
       ],
       "reuse": "global",
       "priority": "P0",
-      "production_status": "runtime_connected_authored_9slice_candidate",
+      "production_status": "runtime_connected_authored_9slice_verified",
       "current_path": "assets/ui/chrome/gbl_ui_ritual_panel_9s_base_v01.svg",
-      "technical_policy": "runtime_decoded_svg_to_imagetexture_9slice__authored_frame__render_verification_required",
+      "technical_policy": "runtime_decoded_svg_to_imagetexture_9slice__authored_frame__godot_4_7_2_render_verified",
       "runtime_style_script": "src/ui/theme/production_chrome.gd"
     },
     {
@@ -2230,10 +2230,10 @@
       ],
       "reuse": "declared_reuse_of_gbl_primary_panel_frame",
       "priority": "P0",
-      "production_status": "runtime_connected_authored_9slice_candidate",
+      "production_status": "runtime_connected_authored_9slice_verified",
       "current_path": "assets/ui/chrome/gbl_ui_ritual_panel_9s_base_v01.svg",
       "runtime_style_script": "src/ui/theme/production_chrome.gd",
-      "technical_policy": "runtime_decoded_svg_to_imagetexture_9slice__gameplay_shell__render_verification_required",
+      "technical_policy": "runtime_decoded_svg_to_imagetexture_9slice__gameplay_shell__godot_4_7_2_render_verified",
       "block": "resource_strip",
       "slot": "resource_strip_frame",
       "state": [
@@ -2268,10 +2268,10 @@
       ],
       "reuse": "declared_reuse_of_gbl_primary_panel_frame",
       "priority": "P0",
-      "production_status": "runtime_connected_authored_9slice_candidate",
+      "production_status": "runtime_connected_authored_9slice_verified",
       "current_path": "assets/ui/chrome/gbl_ui_ritual_panel_9s_base_v01.svg",
       "runtime_style_script": "src/ui/theme/production_chrome.gd",
-      "technical_policy": "runtime_decoded_svg_to_imagetexture_9slice__gameplay_shell__render_verification_required",
+      "technical_policy": "runtime_decoded_svg_to_imagetexture_9slice__gameplay_shell__godot_4_7_2_render_verified",
       "block": "gameplay_header",
       "slot": "objective_hud_frame",
       "state": [
@@ -2317,10 +2317,10 @@
       ],
       "reuse": "declared_reuse_of_gbl_primary_panel_frame",
       "priority": "P0",
-      "production_status": "runtime_connected_authored_9slice_candidate",
+      "production_status": "runtime_connected_authored_9slice_verified",
       "current_path": "assets/ui/chrome/gbl_ui_ritual_panel_9s_base_v01.svg",
       "runtime_style_script": "src/ui/theme/production_chrome.gd",
-      "technical_policy": "runtime_decoded_svg_to_imagetexture_9slice__gameplay_shell__render_verification_required",
+      "technical_policy": "runtime_decoded_svg_to_imagetexture_9slice__gameplay_shell__godot_4_7_2_render_verified",
       "block": "booster_row",
       "slot": "booster_tray_frame",
       "state": [
@@ -2417,6 +2417,89 @@
           ]
         }
       ]
+    },
+    {
+      "asset_id": "gbl_resource_chip_frame",
+      "screen": [
+        "global"
+      ],
+      "block": "global_header",
+      "slot": "currency_chip_shell",
+      "state": [
+        "normal"
+      ],
+      "type": "structural_ui",
+      "dimensions": "512x512_9slice_runtime_reuse",
+      "aspect_ratio": "scalable",
+      "transparent": true,
+      "variants": [
+        "coin",
+        "gem"
+      ],
+      "reuse": "declared_reuse_of_gbl_primary_panel_frame",
+      "priority": "P0",
+      "production_status": "runtime_connected_authored_9slice_render_required",
+      "current_path": "assets/ui/chrome/gbl_ui_ritual_panel_9s_base_v01.svg",
+      "runtime_style_script": "src/ui/theme/production_chrome.gd",
+      "technical_policy": "runtime_decoded_svg_to_imagetexture_9slice__global_resource_chip__render_verification_required"
+    },
+    {
+      "asset_id": "gbl_nav_item_frame",
+      "screen": [
+        "global"
+      ],
+      "block": "bottom_navigation",
+      "slot": "destination_button_state",
+      "state": [
+        "normal",
+        "selected",
+        "hover",
+        "pressed",
+        "focus",
+        "disabled"
+      ],
+      "type": "structural_ui",
+      "dimensions": "512x512_9slice_runtime_reuse",
+      "aspect_ratio": "scalable",
+      "transparent": true,
+      "variants": [
+        "quiet",
+        "focused"
+      ],
+      "reuse": "declared_reuse_of_gbl_primary_panel_frame",
+      "priority": "P0",
+      "production_status": "runtime_connected_authored_9slice_render_required",
+      "current_path": "assets/ui/chrome/gbl_ui_ritual_panel_9s_base_v01.svg",
+      "runtime_style_script": "src/ui/theme/production_chrome.gd",
+      "technical_policy": "runtime_decoded_svg_to_imagetexture_9slice__global_navigation_state__render_verification_required"
+    },
+    {
+      "asset_id": "gbl_profile_action_frame",
+      "screen": [
+        "global"
+      ],
+      "block": "global_header",
+      "slot": "profile_action",
+      "state": [
+        "normal",
+        "hover",
+        "pressed",
+        "focus"
+      ],
+      "type": "structural_ui",
+      "dimensions": "512x512_9slice_runtime_reuse",
+      "aspect_ratio": "scalable",
+      "transparent": true,
+      "variants": [
+        "quiet",
+        "focused"
+      ],
+      "reuse": "declared_reuse_of_gbl_primary_panel_frame",
+      "priority": "P0",
+      "production_status": "runtime_connected_authored_9slice_render_required",
+      "current_path": "assets/ui/chrome/gbl_ui_ritual_panel_9s_base_v01.svg",
+      "runtime_style_script": "src/ui/theme/production_chrome.gd",
+      "technical_policy": "runtime_decoded_svg_to_imagetexture_9slice__global_profile_action__render_verification_required"
     }
   ],
   "vertical_slice_art_policy": {
@@ -2509,7 +2592,8 @@
   },
   "asset_gap_pass": {
     "global_shell_chrome": "RUNTIME_AND_RENDER_VERIFIED",
-    "gameplay_chrome": "IN_PROGRESS_RENDER_REQUIRED",
-    "secondary_hero_chrome": "RUNTIME_AND_RENDER_VERIFIED"
+    "gameplay_chrome": "RUNTIME_AND_RENDER_VERIFIED",
+    "secondary_hero_chrome": "RUNTIME_AND_RENDER_VERIFIED",
+    "global_interactive_chrome": "IN_PROGRESS_RENDER_REQUIRED"
   }
 }

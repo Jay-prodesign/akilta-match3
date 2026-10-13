@@ -9,6 +9,9 @@ static var _top_shell: StyleBoxTexture
 static var _bottom_shell: StyleBoxTexture
 static var _gameplay_shell: StyleBoxTexture
 static var _secondary_panel: StyleBoxTexture
+static var _compact_panel: StyleBoxTexture
+static var _interactive_normal: StyleBoxTexture
+static var _interactive_focus: StyleBoxTexture
 
 static func _style(content_margin: float, texture_margin: float = 64.0) -> StyleBoxTexture:
 	var texture := PieceAssetLoader.ornament(PRIMARY_PANEL_PATH)
@@ -51,6 +54,54 @@ static func secondary_panel() -> StyleBoxTexture:
 	if _secondary_panel == null:
 		_secondary_panel = _style(16.0, 56.0)
 	return _secondary_panel
+
+static func compact_panel() -> StyleBoxTexture:
+	if _compact_panel == null:
+		_compact_panel = _style(4.0, 52.0)
+		if _compact_panel != null:
+			_compact_panel.modulate_color = Color(0.84, 0.78, 0.88, 0.92)
+	return _compact_panel
+
+static func interactive_normal() -> StyleBoxTexture:
+	if _interactive_normal == null:
+		_interactive_normal = _style(4.0, 52.0)
+		if _interactive_normal != null:
+			_interactive_normal.modulate_color = Color(0.72, 0.64, 0.76, 0.78)
+	return _interactive_normal
+
+static func interactive_focus() -> StyleBoxTexture:
+	if _interactive_focus == null:
+		_interactive_focus = _style(4.0, 52.0)
+		if _interactive_focus != null:
+			_interactive_focus.modulate_color = Color(1.0, 0.98, 1.0, 1.0)
+	return _interactive_focus
+
+static func apply_compact_panel(panel: Control, role: String) -> bool:
+	if panel == null:
+		return false
+	var style := compact_panel()
+	if style == null:
+		return false
+	panel.add_theme_stylebox_override("panel", style)
+	panel.set_meta("production_chrome_asset", PRIMARY_PANEL_PATH)
+	panel.set_meta("production_chrome_kind", "compact_" + role)
+	return true
+
+static func apply_interactive_button(button: Button, selected: bool, role: String) -> bool:
+	if button == null:
+		return false
+	var normal_style := interactive_normal()
+	var focus_style := interactive_focus()
+	if normal_style == null or focus_style == null:
+		return false
+	button.add_theme_stylebox_override("normal", focus_style if selected else normal_style)
+	button.add_theme_stylebox_override("hover", focus_style)
+	button.add_theme_stylebox_override("pressed", focus_style)
+	button.add_theme_stylebox_override("focus", focus_style)
+	button.add_theme_stylebox_override("disabled", focus_style if selected else normal_style)
+	button.set_meta("production_chrome_asset", PRIMARY_PANEL_PATH)
+	button.set_meta("production_chrome_kind", "interactive_" + role)
+	return true
 
 static func apply_secondary(panel: Control, role: String) -> bool:
 	if panel == null:
@@ -112,4 +163,7 @@ static func contract() -> Dictionary:
 		"gameplay_shell_asset_backed": gameplay_shell() != null and gameplay_shell().texture != null,
 		"secondary_panel_asset_backed": secondary_panel() != null and secondary_panel().texture != null,
 		"secondary_hero_family_verified": secondary_panel() != null and secondary_panel().texture != null,
+		"compact_panel_asset_backed": compact_panel() != null and compact_panel().texture != null,
+		"interactive_button_asset_backed": interactive_normal() != null and interactive_normal().texture != null and interactive_focus() != null and interactive_focus().texture != null,
+		"global_interactive_family_ready": compact_panel() != null and compact_panel().texture != null and interactive_normal() != null and interactive_normal().texture != null and interactive_focus() != null and interactive_focus().texture != null,
 	}
