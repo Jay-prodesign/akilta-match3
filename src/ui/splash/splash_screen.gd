@@ -190,7 +190,7 @@ func set_boot_state(state: String, message: String = "", can_continue: bool = tr
 			enter_button.mouse_filter = Control.MOUSE_FILTER_STOP
 			_reveal_enter()
 		"recoverable_error":
-			boot_state_panel.custom_minimum_size.y = 170.0
+			boot_state_panel.custom_minimum_size.y = 190.0
 			progress_label.visible = true
 			progress_label.text = "THE HOUSE NEEDS ATTENTION" if not can_continue else "THE HOUSE RECOVERED SAFELY"
 			load_track.visible = false
