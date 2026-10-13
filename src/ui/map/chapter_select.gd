@@ -193,6 +193,7 @@ func chapter_visual_contract() -> Dictionary:
 		"asset_backed_wing_rows": [_current, _witch_atelier, _dark_vanity, _archive, _moon_conservatory, _cemetery_garden].all(func(button): return button.get_theme_stylebox("normal") is StyleBoxTexture),
 		"asset_backed_header_back": _back != null and _back.get_theme_stylebox("normal") is StyleBoxTexture and String(_back.get_meta("production_chrome_kind", "")) == "action_utility_chapter_back",
 		"current_copy_clears_thumbnail": _current != null and _current.text == "" and _current_copy != null and _current_copy.anchor_left >= 0.30 and _current_copy.anchor_right <= 0.97 and _current_copy.get_theme_font_size("font_size") <= 24,
+		"current_copy_scene_owned": _current_copy != null and _current_copy.get_parent() == _current and _current_copy.mouse_filter == Control.MOUSE_FILTER_IGNORE,
 		"runtime_style_factory": false,
 	}
 

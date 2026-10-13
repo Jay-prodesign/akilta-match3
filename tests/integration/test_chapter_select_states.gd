@@ -43,6 +43,7 @@ func _run() -> void:
 		_expect(bool(visual_contract.get("asset_backed_wing_rows", false)), "S02 current and sealed wing rows must use verified asset-backed interactive chrome")
 		_expect(bool(visual_contract.get("asset_backed_header_back", false)), "S02 back control must use verified utility action chrome")
 		_expect(bool(visual_contract.get("current_copy_clears_thumbnail", false)), "S02 current wing copy must clear the authored thumbnail instead of overlapping it")
+		_expect(bool(visual_contract.get("current_copy_scene_owned", false)), "S02 current wing copy must remain a scene-owned, non-intercepting child of the chapter hit target")
 		_expect(not bool(visual_contract.get("runtime_style_factory", true)), "S02 must not create StyleBox presentation resources at runtime")
 	_expect(screen.get_node_or_null("ResourceBar") != null, "S02 global resources header missing")
 	_expect(screen.get_node_or_null("Layout/ChapterHeader/HeaderBack") != null, "S02 header back missing")
