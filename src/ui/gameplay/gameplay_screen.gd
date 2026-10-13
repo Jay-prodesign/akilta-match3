@@ -560,6 +560,7 @@ func show_pause() -> bool:
 	pause_overlay.mouse_filter = Control.MOUSE_FILTER_STOP
 	if _booster_tray != null:
 		_booster_tray.visible = false
+	pause_resume.grab_focus()
 	_play_pause_open()
 	return true
 
