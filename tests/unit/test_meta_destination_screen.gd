@@ -36,6 +36,8 @@ func _run() -> void:
 		_expect(bool(preload("res://src/ui/theme/production_chrome.gd").contract().get("secondary_hero_family_verified", false)), "%s hero chrome family must resolve through the verified shared asset" % feature)
 		_expect(bool(contract.get("raster_feature_art", false)), "%s hero art must use production raster assets" % feature)
 		_expect(bool(contract.get("card_copy_compact", false)), "%s cards must prioritize art/title/status instead of paragraph copy" % feature)
+		_expect(bool(contract.get("header_readability_scrim", false)), "%s must retain a dedicated top readability scrim over authored world art" % feature)
+		_expect(bool(contract.get("secondary_header_compact", false)), "%s must avoid redundant progress/commerce lines above the hero" % feature)
 		_expect(screen.get_node_or_null("FeatureLayout/FeatureHero/HeroRow/HeroArt") != null, "%s must keep a scene-owned hero art slot" % feature)
 		var expected_title := "EVENT CENTER" if feature == "events" else ("THE CURIO EMPORIUM" if feature == "shop" else "THE KEEPER")
 		_expect((screen.get_node("FeatureLayout/FeatureTitle") as Label).text == expected_title, "%s must preserve its authored route title" % feature)

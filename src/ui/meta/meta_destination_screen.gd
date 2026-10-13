@@ -61,10 +61,10 @@ func configure(feature_key: String, state: Dictionary) -> bool:
 	var hero_path := ""
 	var cards: Array[Dictionary] = []
 
-	chapter_progress.visible = _feature_key == "events"
+	chapter_progress.visible = false
 	daily_card.visible = _feature_key == "events"
 	weekly_action.visible = _feature_key == "events"
-	shop_notice.visible = _feature_key == "shop"
+	shop_notice.visible = false
 	shop_currency.visible = _feature_key == "shop"
 	shop_truth.visible = _feature_key == "shop"
 	shop_offer_art.visible = _feature_key == "shop"
@@ -194,6 +194,8 @@ func screen_contract() -> Dictionary:
 		"raster_feature_art": _hero_asset_path.to_lower().ends_with(".webp") or _hero_asset_path.to_lower().ends_with(".png"),
 		"rounded_primary_actions": weekly_action.get_theme_stylebox("normal") != null and profile_settings.get_theme_stylebox("normal") != null,
 		"card_copy_compact": not ($FeatureLayout/CardScroll/Cards/Card1/Row/Copy/Body as Label).visible and not ($FeatureLayout/CardScroll/Cards/Card2/Row/Copy/Body as Label).visible and not ($FeatureLayout/CardScroll/Cards/Card3/Row/Copy/Body as Label).visible,
-		"profile_save_health_compact": _feature_key != "profile" or (save_health_card != null and save_health_card.custom_minimum_size.y <= 200.0),
+		"header_readability_scrim": ($HeaderShade as ColorRect) != null and ($HeaderShade as ColorRect).color.a >= 0.4,
+		"secondary_header_compact": (_feature_key != "events" or not chapter_progress.visible) and (_feature_key != "shop" or not shop_notice.visible),
+		"profile_save_health_compact": _feature_key != "profile" or (save_health_card != null and save_health_card.custom_minimum_size.y <= 170.0),
 
 	}
