@@ -21,8 +21,8 @@ func _run() -> void:
 		"level_badge_separated", "hint_booster_clearance", "booster_label_readability",
 		"north_star_booster_family", "utility_separated_from_boosters", "north_star_board_object",
 		"north_star_header_hierarchy", "booster_frame_family", "quiet_gameplay_shell_family", "integrated_hud_surface",
-		"final_hint_readability", "final_booster_readability", "canonical_booster_art", "gothic_board_material",
-		"visual_parity_gate_v2", "visual_parity_gate_v3", "visual_parity_gate_v4", "visual_parity_gate_v5", "visual_parity_gate_v10",
+		"final_hint_readability", "final_booster_readability", "canonical_booster_art", "gothic_board_material", "objective_spacing_locked",
+		"visual_parity_gate_v2", "visual_parity_gate_v3", "visual_parity_gate_v4", "visual_parity_gate_v5", "visual_parity_gate_v10", "visual_parity_gate_v11",
 	]:
 		_expect(bool(contract.get(key, false)), "Gameplay North Star parity contract failed: %s" % key)
 	_expect(int(contract.get("visible_booster_count", 0)) == 3, "Exactly three gameplay boosters must be visible")
@@ -50,6 +50,8 @@ func _run() -> void:
 	_expect(objective != null and objective.text.contains("SIGILS"), "Objective must remain explicit")
 	_expect(objective_icon != null and objective_icon.texture != null and objective_icon.custom_minimum_size.x >= 80.0, "Objective art must be visually dominant")
 	_expect(moves != null and moves.custom_minimum_size.x >= 180.0 and moves.get_theme_font_size("font_size") >= 44, "Moves must be a dominant counter")
+	_expect(objective != null and objective.size.x >= screen.get_viewport().get_visible_rect().size.x * 0.50, "Objective copy must own at least half the viewport width")
+	_expect(objective != null and objective_icon != null and objective.global_position.x >= objective_icon.global_position.x + objective_icon.size.x + 6.0, "Objective icon and copy must retain readable clearance")
 	_expect(board != null and board.custom_minimum_size.y >= 980.0, "Board must remain the dominant gameplay object")
 	_expect(hint_band != null and tray != null and tray.global_position.y >= hint_band.global_position.y + hint_band.size.y + 20.0, "Hint and booster tray collide")
 	_expect(tray != null and is_equal_approx(tray.anchor_left, 0.12) and is_equal_approx(tray.anchor_right, 0.88), "Booster tray became navigation-width chrome")
