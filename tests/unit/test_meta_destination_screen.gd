@@ -54,8 +54,12 @@ func _run() -> void:
 		var expected_title := "EVENT CENTER" if feature == "events" else ("THE CURIO EMPORIUM" if feature == "shop" else "THE KEEPER")
 		_expect((screen.get_node("FeatureLayout/FeatureTitle") as Label).text == expected_title, "%s must preserve its authored route title" % feature)
 		for card_name in ["Card1", "Card2", "Card3"]:
+			var card := screen.get_node_or_null("FeatureLayout/CardScroll/Cards/%s" % card_name) as PanelContainer
 			var art := screen.get_node_or_null("FeatureLayout/CardScroll/Cards/%s/Row/Art" % card_name) as TextureRect
-			_expect(art != null and art.texture != null, "%s %s must render object art" % [feature, card_name])
+			if feature == "events" and card_name == "Card3":
+				_expect(card != null and not card.visible, "events must avoid a redundant Weekly Rituals card below its dedicated CTA")
+				continue
+			_expect(card != null and card.visible and art != null and art.texture != null, "%s %s must render object art" % [feature, card_name])
 			_expect(art != null and art.custom_minimum_size.x >= 220.0 and art.custom_minimum_size.y >= 195.0, "%s %s art must not collapse into a thumbnail row" % [feature, card_name])
 			if art != null and art.texture != null:
 				_expect(String(art.get_meta("asset_path", "")).ends_with(".webp") or String(art.get_meta("asset_path", "")).ends_with(".png"), "%s %s must use raster object art" % [feature, card_name])
@@ -64,7 +68,7 @@ func _run() -> void:
 			_expect(events_world != null and events_world.texture != null and events_world.texture.get_width() >= 1080 and events_world.texture.get_height() >= 1500, "events world reuse must retain the verified 1080x1500 chapter-world raster")
 			var events_hero := screen.get_node_or_null("FeatureLayout/FeatureHero/HeroRow/HeroArt") as TextureRect
 			_expect(events_hero != null and events_hero.texture != null and events_hero.texture.get_width() >= 512 and events_hero.texture.get_height() >= 512, "events hero must retain production-resolution Curio art")
-			for event_card in ["Card1", "Card2", "Card3"]:
+			for event_card in ["Card1", "Card2"]:
 				var event_art := screen.get_node_or_null("FeatureLayout/CardScroll/Cards/%s/Row/Art" % event_card) as TextureRect
 				_expect(event_art != null and event_art.texture != null and event_art.texture.get_width() >= 512 and event_art.texture.get_height() >= 512, "events %s must retain production-resolution Curio art" % event_card)
 			var weekly := {"hit": false}
