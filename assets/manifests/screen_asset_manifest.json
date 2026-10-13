@@ -55,7 +55,10 @@
       ],
       "reuse": "global",
       "priority": "P0",
-      "production_status": "frozen_component_candidate_not_direct_slot_asset"
+      "production_status": "runtime_connected_authored_9slice_candidate",
+      "current_path": "assets/ui/chrome/gbl_ui_ritual_panel_9s_base_v01.svg",
+      "runtime_style_script": "src/ui/theme/production_chrome.gd",
+      "technical_policy": "runtime_decoded_svg_to_imagetexture_9slice__global_shell__render_verification_required"
     },
     {
       "asset_id": "gbl_shell_bottom_nav_frame",
@@ -82,7 +85,10 @@
       ],
       "reuse": "global",
       "priority": "P0",
-      "production_status": "frozen_component_candidate_not_direct_slot_asset"
+      "production_status": "runtime_connected_authored_9slice_candidate",
+      "current_path": "assets/ui/chrome/gbl_ui_ritual_panel_9s_base_v01.svg",
+      "runtime_style_script": "src/ui/theme/production_chrome.gd",
+      "technical_policy": "runtime_decoded_svg_to_imagetexture_9slice__global_shell__render_verification_required"
     },
     {
       "asset_id": "gbl_nav_house",
@@ -2297,5 +2303,8 @@
   },
   "product_truth": {
     "life_economy": "NO_GLOBAL_LIFE_ASSET_BOUND"
+  },
+  "asset_gap_pass": {
+    "global_shell_chrome": "IN_PROGRESS_RENDER_REQUIRED"
   }
 }
