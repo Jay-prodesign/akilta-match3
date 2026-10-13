@@ -251,7 +251,7 @@ func _open_house_curio_inspect(curio_id: String) -> void:
 	var overlay := HouseCurioInspectScene.instantiate()
 	add_child(overlay)
 	_house_curio_overlay = overlay
-	if not bool(overlay.configure(curio_id, _curio_name(curio_id), String(data.get("origin", "")), String(data.get("effect", "")), texture)):
+	if not bool(overlay.configure(curio_id, _curio_name(curio_id), String(data.get("origin", "")), String(data.get("effect", "")), texture, _reduced_motion)):
 		overlay.queue_free()
 		_house_curio_overlay = null
 		return
