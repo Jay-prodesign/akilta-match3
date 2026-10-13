@@ -77,8 +77,8 @@ func _run() -> void:
 	_expect(prestart.get_node_or_null("ProductNavigation") == null, "pre-start must not carry the meta bottom navigation")
 	var prestart_back: Button = prestart.get_node_or_null("Layout/Back") as Button
 	_expect(prestart_back != null, "pre-start must own a focused back affordance")
-	var objective: Label = prestart.get_node("Layout/Card/Content/Objective")
-	_expect(objective.text == "GOAL · GATHER 6 MOON SIGILS", "prestart must reflect the canonical Level 1 collect-family objective")
+	var objective: Label = prestart.get_node("Layout/Card/Content/ObjectiveBand/Row/ObjectiveCluster/Copy/Objective")
+	_expect(objective.text.replace("\n", " ") == "GATHER 6 MOON SIGILS", "prestart must reflect the canonical Level 1 collect-family objective")
 	_expect(prestart.has_method("aid_asset_contract"), "prestart must expose its contract-owned aid artwork")
 	if prestart.has_method("aid_asset_contract"):
 		var prestart_aids: Dictionary = prestart.aid_asset_contract()
