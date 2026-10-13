@@ -2,6 +2,7 @@ extends SceneTree
 
 const ChapterMapScene = preload("res://src/ui/map/chapter_map.tscn")
 const ProgressScript = preload("res://src/progression/player_progress.gd")
+const ScreenArt = preload("res://src/ui/shared/screen_art_registry.gd")
 
 var failures: Array[String] = []
 
@@ -20,6 +21,13 @@ func _run() -> void:
 	_expect(title != null and title.get_theme_font_size("font_size") >= 52, "S03 Chapter title must retain mobile-readable hierarchy")
 	_expect(progress_label != null and progress_label.get_theme_font_size("font_size") >= 26, "S03 chapter progress must remain legible")
 	_expect(intro != null and intro.get_theme_font_size("font_size") >= 21, "S03 chapter intro copy must remain legible")
+	var route_world := ScreenArt.texture("chapter_route_curio_boutique")
+	_expect(ScreenArt.path("chapter_route_curio_boutique").ends_with(".webp"), "S03 chapter route world must resolve from authored raster WebP")
+	_expect(route_world != null and route_world.get_width() >= 1080 and route_world.get_height() >= 1500, "S03 chapter route world must meet the locked 1080x1500 ship-region contract")
+	var chapter_world := ScreenArt.texture("chapters_bg_curio_house")
+	var reliquary_world := ScreenArt.texture("reliquary_bg_curio_boutique")
+	_expect(chapter_world != null and chapter_world.get_width() >= 1080 and chapter_world.get_height() >= 1500, "S02 declared chapter-world reuse must preserve production resolution")
+	_expect(reliquary_world != null and reliquary_world.get_width() >= 1080 and reliquary_world.get_height() >= 1500, "S08 declared Reliquary world reuse must preserve production resolution")
 	var visual_contract: Dictionary = screen.north_star_map_contract()
 	_expect(bool(visual_contract.get("strong_title", false)), "S03 must retain a strong North Star chapter title")
 	_expect(bool(visual_contract.get("progress_plate", false)), "S03 progress must sit on an authored readable plate")
