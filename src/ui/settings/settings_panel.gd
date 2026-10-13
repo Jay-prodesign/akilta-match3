@@ -149,7 +149,7 @@ func _style_settings_overlay() -> void:
 		ProductionChrome.apply_action_button(close_button, "primary", "settings_return")
 	close_button.add_theme_color_override("font_color", Color("#FFF7E8"))
 	close_button.add_theme_color_override("font_hover_color", Color("#FFFFFF"))
-	close_button.add_theme_font_size_override("font_size", 22)
+	close_button.add_theme_font_size_override("font_size", 24)
 
 func _style_toggle(toggle: Button) -> void:
 	if toggle == null:
@@ -164,7 +164,7 @@ func _style_toggle(toggle: Button) -> void:
 		ProductionChrome.apply_interactive_button(toggle, toggle.button_pressed, "settings_toggle")
 	toggle.add_theme_color_override("font_color", Color("#FFFFFF") if _high_contrast else Color("#E8DCE4"))
 	toggle.add_theme_color_override("font_hover_color", Color("#FFFFFF"))
-	toggle.add_theme_font_size_override("font_size", 21)
+	toggle.add_theme_font_size_override("font_size", 25)
 
 func _wire_tactile_controls() -> void:
 	for control in [master_toggle, music_toggle, sfx_toggle, haptics_toggle, reduced_toggle, contrast_toggle, close_button]:
