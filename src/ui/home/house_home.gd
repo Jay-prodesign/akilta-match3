@@ -48,6 +48,7 @@ var _restoration_vfx_last_stage: int = 0
 var _restoration_vfx_last_curio_id: String = ""
 var _restoration_vfx_active: bool = false
 var _restoration_vfx_echo_spawned: bool = false
+var _restoration_room_bottom_offset: float = 0.0
 var _hotspot_buttons: Dictionary = {}
 var _house_curio_overlay: Control
 var _keeper_overlay: Control
@@ -329,6 +330,8 @@ func show_restoration_ceremony(curio_id: String, stage: int) -> void:
 	var product_nav := get_node_or_null("ProductNavigation") as Control
 	if product_nav != null:
 		product_nav.visible = false
+	_restoration_room_bottom_offset = room_view.offset_bottom
+	room_view.offset_bottom = 0.0
 	play_button.visible = false
 	curio_label.get_parent().visible = false
 	headline.visible = false
@@ -351,6 +354,7 @@ func show_restoration_ceremony(curio_id: String, stage: int) -> void:
 		curio_label.get_parent().visible = true
 		headline.visible = true
 		detail.visible = true
+		room_view.offset_bottom = _restoration_room_bottom_offset
 		if product_nav != null:
 			product_nav.visible = true
 		_refresh()
@@ -436,6 +440,7 @@ func restoration_vfx_contract() -> Dictionary:
 		"reduced_motion": _reduced_motion,
 		"reduced_motion_supported": true,
 		"exact_curio_identity_preserved": true,
+		"world_fills_hidden_nav_slot": get_node_or_null("RestorationOverlay") == null or room_view.offset_bottom >= -0.5,
 	}
 
 func house_presentation_contract() -> Dictionary:
