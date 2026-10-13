@@ -22,13 +22,13 @@ func _run() -> void:
 		"north_star_booster_family", "utility_separated_from_boosters", "north_star_board_object",
 		"north_star_header_hierarchy", "booster_frame_family", "quiet_gameplay_shell_family", "clear_pause_control", "integrated_hint_surface", "integrated_hud_surface",
 		"final_hint_readability", "final_booster_readability", "canonical_booster_art", "gothic_board_material", "objective_spacing_locked",
-		"north_star_compact_gameplay_header", "north_star_compact_gameplay_geometry", "north_star_gameplay_hud_frame",
-		"visual_parity_gate_v2", "visual_parity_gate_v3", "visual_parity_gate_v4", "visual_parity_gate_v5", "visual_parity_gate_v10", "visual_parity_gate_v11", "visual_parity_gate_v12", "visual_parity_gate_v13", "visual_parity_gate_v14",
+		"north_star_compact_gameplay_header", "north_star_compact_gameplay_geometry", "north_star_gameplay_hud_frame", "north_star_header_depth",
+		"visual_parity_gate_v2", "visual_parity_gate_v3", "visual_parity_gate_v4", "visual_parity_gate_v5", "visual_parity_gate_v10", "visual_parity_gate_v11", "visual_parity_gate_v12", "visual_parity_gate_v13", "visual_parity_gate_v14", "visual_parity_gate_v15",
 	]:
 		_expect(bool(contract.get(key, false)), "Gameplay North Star parity contract failed: %s" % key)
 	_expect(int(contract.get("visible_booster_count", 0)) == 3, "Exactly three gameplay boosters must be visible")
 	_expect(float(contract.get("resource_bar_height", 0.0)) == 80.0, "Resource strip height drifted")
-	_expect(float(contract.get("hud_plate_height", 0.0)) >= 120.0, "Target/moves hierarchy collapsed")
+	_expect(float(contract.get("hud_plate_height", 0.0)) >= 184.0 and float(contract.get("hud_plate_height", 0.0)) <= 200.0, "Target/moves HUD depth drifted from North Star composition")
 	_expect(float(contract.get("booster_tray_height", 0.0)) >= 216.0, "Booster tray is too shallow")
 
 	var eyebrow := screen.get_node_or_null("Layout/Eyebrow") as Label
