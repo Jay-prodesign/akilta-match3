@@ -464,8 +464,8 @@ horizontal_alignment = 1
 [node name="Copy" type="Label" parent="Layout/Cards/SetSummary/Content"]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.82, 0.76, 0.84, 1)
-theme_override_font_sizes/font_size = 20
-text = "Three Curios complete the first House cabinet."
+theme_override_font_sizes/font_size = 22
+text = "3 CURIOS STILL DORMANT"
 horizontal_alignment = 1
 autowrap_mode = 2
 
