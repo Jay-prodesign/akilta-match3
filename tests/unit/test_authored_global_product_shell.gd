@@ -64,6 +64,7 @@ func _run() -> void:
 	_expect(layout.offset_top >= 128.0, "TopResourceBar must reserve the canonical top content start instead of covering screen titles")
 	_expect(layout.offset_bottom <= -152.0, "ProductNavigation must preserve the canonical bottom content reserve")
 	_expect(bar.find_child("LifeResource", true, false) == null, "Shared resource bar must not expose unimplemented life economy")
+	_expect(bar.get_node_or_null("Resources/LifeResourceChip") == null, "Shared resource bar must not retain a hidden life-economy chip")
 	_expect(not bool(bar_contract.get("runtime_ui_factory", true)), "TopResourceBar must not create persistent shell nodes at runtime")
 
 	var coin := bar.find_child("CoinResource", true, false) as Label
