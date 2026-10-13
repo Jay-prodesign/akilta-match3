@@ -2,6 +2,7 @@
 
 [ext_resource type="Script" path="res://src/ui/home/restoration_overlay.gd" id="1_restoration"]
 
+
 [sub_resource type="StyleBoxFlat" id="Card"]
 bg_color = Color(0.035, 0.024, 0.045, 0.92)
 border_width_left = 2
@@ -199,6 +200,11 @@ theme_override_styles/panel = SubResource("Card")
 layout_mode = 2
 theme_override_constants/separation = 6
 
+[node name="TopPad" type="Control" parent="CeremonyCard/CeremonyContent"]
+custom_minimum_size = Vector2(0, 18)
+layout_mode = 2
+mouse_filter = 2
+
 [node name="CeremonyRow" type="HBoxContainer" parent="CeremonyCard/CeremonyContent"]
 layout_mode = 2
 theme_override_constants/separation = 12
@@ -222,7 +228,7 @@ text = "A recovered Curio takes its place in the House."
 autowrap_mode = 2
 
 [node name="Continue" type="Button" parent="CeremonyCard/CeremonyContent/CeremonyRow/Copy"]
-custom_minimum_size = Vector2(0, 96)
+custom_minimum_size = Vector2(0, 88)
 layout_mode = 2
 theme_override_colors/font_color = Color(1, 0.941, 0.847, 1)
 theme_override_font_sizes/font_size = 21

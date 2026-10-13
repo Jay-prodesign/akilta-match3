@@ -5,6 +5,7 @@ extends RefCounted
 ## availability.
 
 const LockedExplanationScene = preload("res://src/ui/shared/locked_explanation.tscn")
+const ProductionChrome = preload("res://src/ui/theme/production_chrome.gd")
 
 static func present(owner: Control, title_text: String, reason_text: String, requirement_text: String, close_text: String) -> Control:
 	if owner == null:
@@ -20,6 +21,7 @@ static func present(owner: Control, title_text: String, reason_text: String, req
 	overlay.set_meta("sealed_truth", true)
 	overlay.set_meta("no_fake_unlock", true)
 	owner.add_child(overlay)
+	ProductionChrome.apply_primary(overlay.get_node_or_null("LockedPanel") as Control)
 
 	var title := overlay.get_node_or_null("LockedPanel/Content/Title") as Label
 	var reason := overlay.get_node_or_null("LockedPanel/Content/Reason") as Label

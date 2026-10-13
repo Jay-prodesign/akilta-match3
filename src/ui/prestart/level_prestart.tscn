@@ -3,6 +3,7 @@
 [ext_resource type="Script" path="res://src/ui/prestart/level_prestart.gd" id="1_pre"]
 [ext_resource type="Script" path="res://src/ui/shared/moon_cameo_ritual_view.gd" id="2_cameo"]
 
+
 [sub_resource type="StyleBoxFlat" id="Card"]
 bg_color = Color(0.020, 0.014, 0.030, 0.975)
 border_width_left = 2

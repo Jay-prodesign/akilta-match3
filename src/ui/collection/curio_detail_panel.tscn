@@ -2,6 +2,7 @@
 
 [ext_resource type="Script" path="res://src/ui/collection/curio_detail_panel.gd" id="1_detail"]
 
+
 [sub_resource type="StyleBoxFlat" id="DetailCard"]
 bg_color = Color(0.035, 0.024, 0.045, 0.94)
 border_width_left = 2

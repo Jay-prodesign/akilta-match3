@@ -1,0 +1,4 @@
+[gd_resource type="Resource" format=3]
+
+[resource]
+resource_name = "Deprecated static chrome binding; runtime uses production_chrome.gd"

@@ -49,6 +49,9 @@ func _run() -> void:
 		_expect(not bool(living.get("breathing_active", true)), "Reduced Motion must keep Living House lighting static")
 		_expect(int(living.get("restored_curio_count", 0)) == 2, "stage 2 Living House must reflect two persistent Curios")
 	_expect(reduced_card != null and reduced_card.size.y <= reduced.size.y * 0.13, "Restoration ceremony summary must stay compact over the House world")
+	_expect(reduced_card != null and reduced_card.get_node_or_null("CeremonyContent/TopPad") != null, "Restoration ceremony must reserve a top inset inside production chrome")
+	var reduced_continue := reduced.get_node_or_null("RestorationOverlay/CeremonyCard/CeremonyContent/CeremonyRow/Copy/Continue") as Button
+	_expect(reduced_continue != null and reduced_continue.custom_minimum_size.y >= 88.0, "Restoration CTA must preserve the 88px touch target after chrome inset")
 	_expect(reduced_hero != null and reduced_hero.texture != null, "Restoration must render the recovered Curio motif as production hero artwork while exact item identity remains in the summary")
 	var reduced_overlay_contract: Dictionary = reduced.get_node("RestorationOverlay").restoration_contract()
 	_expect(bool(reduced_overlay_contract.get("house_first_composition", false)), "Restoration must keep the recovered Curio bounded so the House remains the visual hero")
@@ -81,6 +84,7 @@ func _run() -> void:
 		_expect(float(living.get("stage_veil_alpha", 1.0)) < 0.10, "stage 3 House must reveal nearly all authored environment luminance")
 		_expect(int(living.get("restored_curio_count", 0)) == 3, "stage 3 Living House must reflect all three persistent Curios")
 	_expect(animated_card != null and animated_card.size.y <= animated.size.y * 0.13, "Animated ceremony summary must stay compact over the House world")
+	_expect(animated_card != null and animated_card.get_node_or_null("CeremonyContent/TopPad") != null, "Animated restoration must preserve the production-chrome top inset")
 	_expect(animated_hero != null and animated_hero.texture != null, "Animated restoration must retain the recovered Curio production motif")
 	var animated_overlay_contract: Dictionary = animated.get_node("RestorationOverlay").restoration_contract()
 	_expect(bool(animated_overlay_contract.get("house_first_composition", false)), "Animated restoration must preserve the bounded House-first Curio composition")
