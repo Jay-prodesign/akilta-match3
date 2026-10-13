@@ -31,7 +31,6 @@ var level_number: int = 1
 
 func _ready() -> void:
 	ProductionChrome.apply_primary($Layout/Card)
-	ProductionChrome.apply_secondary($Layout/Card/Content/RitualAids, "prestart_aids")
 	ProductionChrome.apply_compact_panel($Layout/Card/Content/RitualAids/Column/AidRow/KeeperChip, "prestart_keeper_aid")
 	ProductionChrome.apply_compact_panel($Layout/Card/Content/RitualAids/Column/AidRow/RecoveryChip, "prestart_recovery_aid")
 	ProductionChrome.apply_action_button(start_button, "primary", "prestart_play")
@@ -62,7 +61,7 @@ func aid_asset_contract() -> Dictionary:
 		"authored_ritual_aids": keeper_aid_art != null and keeper_aid_art.texture != null and recovery_aid_art != null and recovery_aid_art.texture != null,
 		"north_star_readability": title_label != null and title_label.get_theme_font_size("font_size") >= 48 and objective_label != null and objective_label.get_theme_font_size("font_size") >= 32 and start_button != null and start_button.custom_minimum_size.y >= 84.0,
 		"note_subordinate": note_label != null and not note_label.visible,
-		"asset_backed_prestart_chrome": ($Layout/Card as PanelContainer).get_theme_stylebox("panel") is StyleBoxTexture and ($Layout/Card/Content/RitualAids as PanelContainer).get_theme_stylebox("panel") is StyleBoxTexture and ($Layout/Card/Content/RitualAids/Column/AidRow/KeeperChip as PanelContainer).get_theme_stylebox("panel") is StyleBoxTexture and ($Layout/Card/Content/RitualAids/Column/AidRow/RecoveryChip as PanelContainer).get_theme_stylebox("panel") is StyleBoxTexture and start_button.get_theme_stylebox("normal") is StyleBoxTexture and back_button.get_theme_stylebox("normal") is StyleBoxTexture,
+		"asset_backed_prestart_chrome": ($Layout/Card as PanelContainer).get_theme_stylebox("panel") is StyleBoxTexture and ($Layout/Card/Content/RitualAids/Column/AidRow/KeeperChip as PanelContainer).get_theme_stylebox("panel") is StyleBoxTexture and ($Layout/Card/Content/RitualAids/Column/AidRow/RecoveryChip as PanelContainer).get_theme_stylebox("panel") is StyleBoxTexture and start_button.get_theme_stylebox("normal") is StyleBoxTexture and back_button.get_theme_stylebox("normal") is StyleBoxTexture,
 		"runtime_ui_factory": false
 	}
 
