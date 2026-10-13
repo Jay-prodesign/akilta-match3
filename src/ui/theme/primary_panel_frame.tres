@@ -1,6 +1,6 @@
 [gd_resource type="StyleBoxTexture" load_steps=2 format=3]
 
-[ext_resource type="Texture2D" path="res://assets/ui/chrome/gbl_ui_ritual_panel_9s_base_v01.svg" id="1_frame"]
+[ext_resource type="Texture2D" path="res://assets/ui/chrome/gbl_ui_ritual_panel_9s_base_v01.png" id="1_frame"]
 
 [resource]
 texture = ExtResource("1_frame")

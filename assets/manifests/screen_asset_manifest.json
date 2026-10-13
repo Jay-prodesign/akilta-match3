@@ -379,10 +379,11 @@
       ],
       "reuse": "global",
       "priority": "P0",
-      "production_status": "runtime_connected_authored_9slice_candidate",
-      "current_path": "assets/ui/chrome/gbl_ui_ritual_panel_9s_base_v01.svg",
+      "production_status": "runtime_connected_authored_raster_9slice_candidate",
+      "current_path": "assets/ui/chrome/gbl_ui_ritual_panel_9s_base_v01.png",
       "runtime_style_path": "src/ui/theme/primary_panel_frame.tres",
-      "technical_policy": "authored_9slice_texture_runtime__shared_ceremonial_panel__render_verification_required"
+      "technical_policy": "png_raster_runtime__authored_svg_source__shared_ceremonial_panel__render_verification_required",
+      "source_path": "assets/ui/chrome/gbl_ui_ritual_panel_9s_base_v01.svg"
     },
     {
       "asset_id": "prestart_ch01_level01_art",
