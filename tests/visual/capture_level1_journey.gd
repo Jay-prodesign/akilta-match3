@@ -29,6 +29,33 @@ func _capture() -> void:
 	if String(app.current_route_name()) != "house":
 		return _fail(app, "S00 must enter S01 House")
 	var house = app.current_screen()
+	var house_contract: Dictionary = house.north_star_home_contract() if house != null and house.has_method("north_star_home_contract") else {}
+	for house_key in [
+		"controlled_primary_cta",
+		"floating_headline",
+		"compact_first_ritual",
+		"quiet_global_shells",
+		"home_visual_parity_gate",
+	]:
+		if not bool(house_contract.get(house_key, false)):
+			return _fail(app, "S01 Home North Star render gate failed: %s" % house_key)
+	var house_viewport: Vector2 = house.get_viewport().get_visible_rect().size
+	var house_cta := house.get_node_or_null("Layout/PlayButton") as Control
+	var house_headline := house.get_node_or_null("Layout/Headline") as Control
+	var house_ritual := house.get_node_or_null("Layout/FirstRitualGuide") as Control
+	var house_top := house.get_node_or_null("ResourceBar") as Control
+	var house_bottom := house.get_node_or_null("ProductNavigation") as Control
+	if house_cta == null or house_headline == null or house_ritual == null or house_top == null or house_bottom == null:
+		return _fail(app, "S01 Home render gate missing CTA/headline/ritual/global shell")
+	var cta_ratio := house_cta.size.x / house_viewport.x
+	var headline_ratio := house_headline.size.x / house_viewport.x
+	var ritual_ratio := house_ritual.size.x / house_viewport.x
+	if cta_ratio < 0.66 or cta_ratio > 0.76:
+		return _fail(app, "S01 Home CTA width drifted: %.3f" % cta_ratio)
+	if headline_ratio < 0.70 or headline_ratio > 0.80:
+		return _fail(app, "S01 Home headline width drifted: %.3f" % headline_ratio)
+	if ritual_ratio < 0.78 or ritual_ratio > 0.88:
+		return _fail(app, "S01 First Ritual card width drifted: %.3f" % ritual_ratio)
 	if not await _save(app, "golden-01-house-dormant.png"):
 		return
 
