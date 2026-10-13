@@ -33,6 +33,7 @@ func _run() -> void:
 	_expect(bool(visual_contract.get("progress_plate", false)), "S03 progress must sit on an authored readable plate")
 	_expect(bool(visual_contract.get("concise_route_instruction", false)), "S03 route instruction must not become a tiny paragraph")
 	_expect(bool(visual_contract.get("route_world_dominant", false)), "S03 authored route world must remain the dominant visual surface")
+	_expect(bool(visual_contract.get("resource_header_clearance", false)), "S03 title stack must clear the global resource header instead of rendering underneath it")
 	var route = screen.get_node_or_null("Layout/RoutePanel/Scroll/RouteView")
 	_expect(route != null, "S03 authored RouteView missing")
 	if route == null:
@@ -51,6 +52,8 @@ func _run() -> void:
 	_expect(bool(contract.get("opening_label_readability", false)), "S03 opening ritual captions must retain readable authored plates")
 	_expect(bool(contract.get("frontier_label_readability", false)), "S03 CURRENT RITUAL label must retain readable authored plate")
 	_expect(not bool(contract.get("runtime_node_factory", true)), "S03 must not rebuild route nodes at runtime")
+	_expect(bool(contract.get("asset_backed_level_chrome", false)), "S03 route nodes must use verified asset-backed interactive chrome")
+	_expect(not bool(contract.get("runtime_flat_node_factory", true)), "S03 route nodes must not create flat StyleBox presentation resources at runtime")
 
 	for level_number in range(1, 11):
 		var button := route.get_level_button(level_number) as Button
