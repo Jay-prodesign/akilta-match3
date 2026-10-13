@@ -30,7 +30,8 @@ func _run() -> void:
 	_expect(bool(contract.get("hero_curio_scale", false)), "Reliquary Moon Cameo must remain a hero-scale Curio")
 	_expect(bool(contract.get("north_star_collection_grid", false)), "Reliquary must present the opening Curios as a visual collection grid")
 	_expect(bool(contract.get("collection_copy_subordinate", false)), "Reliquary must keep long lore/origin copy behind Details instead of crowding the collection")
-	_expect(bool(contract.get("collection_occupies_cabinet_stage", false)), "Reliquary opening set must expand through the available cabinet stage instead of leaving oversized dead vertical space")
+	_expect(bool(contract.get("collection_occupies_cabinet_stage", false)), "Reliquary opening set must stay as a bounded cabinet display instead of stretching into empty towers")
+	_expect(bool(contract.get("back_anchored_to_stage_bottom", false)), "Reliquary must use the world stage as breathing room and anchor Back near the navigation edge")
 	_expect(bool(contract.get("asset_backed_display_chrome", false)), "Reliquary displays must use verified quiet production chrome")
 	_expect(bool(contract.get("asset_backed_actions", false)), "Reliquary DETAILS and Back actions must use verified production action chrome")
 	_expect(not bool(contract.get("runtime_style_factory", true)), "Reliquary must not create StyleBox presentation resources at runtime")
@@ -42,7 +43,7 @@ func _run() -> void:
 	var moth_art := screen.get_node_or_null("Layout/Cards/Slot2/Content/Number/RewardArt") as TextureRect
 	var locket_art := screen.get_node_or_null("Layout/Cards/Slot3/Content/Number/RewardArt") as TextureRect
 	var footer := screen.get_node_or_null("Layout/CabinetFooter") as Label
-	_expect(moon_art != null and moon_art.texture != null and moon_art.custom_minimum_size.y >= 300.0, "Moon Cameo must render as a hero-scale authored display")
+	_expect(moon_art != null and moon_art.texture != null and moon_art.custom_minimum_size.y >= 260.0, "Moon Cameo must render as a hero-scale authored display")
 	_expect(moth_art != null and moth_art.texture != null, "Moth Reliquary authored display art missing")
 	_expect(locket_art != null and locket_art.texture != null, "Thorned Locket authored display art missing")
 	_expect(footer != null and footer.text.contains("3 / 3 CURIOS RECOVERED"), "Reliquary footer must reflect completed opening collection truth")
