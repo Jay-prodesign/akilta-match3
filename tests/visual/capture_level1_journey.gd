@@ -72,6 +72,7 @@ func _capture() -> void:
 		"north_star_compact_gameplay_header",
 		"north_star_compact_gameplay_geometry",
 		"north_star_gameplay_hud_frame",
+		"integrated_hint_surface",
 		"canonical_booster_art",
 		"gothic_board_material",
 		"quiet_gameplay_shell_family",
@@ -83,7 +84,7 @@ func _capture() -> void:
 		"north_star_booster_family",
 		"utility_separated_from_boosters",
 		"hint_booster_clearance",
-		"visual_parity_gate_v12",
+		"visual_parity_gate_v13",
 	]:
 		if not bool(gameplay_contract.get(parity_key, false)):
 			return _fail(app, "S05 North Star render gate failed: %s" % parity_key)
@@ -139,6 +140,9 @@ func _capture() -> void:
 		return _fail(app, "S05 objective/moves visual hierarchy regressed")
 	if gameplay_hint.get_theme_font_size("font_size") < 24:
 		return _fail(app, "S05 hint readability regressed")
+	var hint_style := gameplay_hint.get_theme_stylebox("normal")
+	if not (hint_style is StyleBoxFlat) or (hint_style as StyleBoxFlat).bg_color.a > 0.22 or (hint_style as StyleBoxFlat).border_color.a > 0.14:
+		return _fail(app, "S05 hint regressed into a detached UI strip")
 	if not hud_rect.grow(-4.0).encloses(objective_icon_rect):
 		return _fail(app, "S05 objective icon escapes the authored HUD frame")
 	var objective_rect: Rect2 = gameplay_objective.get_global_rect()
