@@ -20,7 +20,7 @@ func _run() -> void:
 		"gameplay_header_clearance", "compact_resource_chips", "asset_backed_resource_chips",
 		"level_badge_separated", "hint_booster_clearance", "booster_label_readability",
 		"north_star_booster_family", "utility_separated_from_boosters", "north_star_board_object",
-		"north_star_header_hierarchy", "booster_frame_family", "quiet_gameplay_shell_family", "integrated_hint_surface", "integrated_hud_surface",
+		"north_star_header_hierarchy", "booster_frame_family", "quiet_gameplay_shell_family", "clear_pause_control", "integrated_hint_surface", "integrated_hud_surface",
 		"final_hint_readability", "final_booster_readability", "canonical_booster_art", "gothic_board_material", "objective_spacing_locked",
 		"north_star_compact_gameplay_header", "north_star_compact_gameplay_geometry", "north_star_gameplay_hud_frame",
 		"visual_parity_gate_v2", "visual_parity_gate_v3", "visual_parity_gate_v4", "visual_parity_gate_v5", "visual_parity_gate_v10", "visual_parity_gate_v11", "visual_parity_gate_v12", "visual_parity_gate_v13", "visual_parity_gate_v14",
@@ -57,6 +57,7 @@ func _run() -> void:
 	_expect(objective != null and objective.size.x >= screen.get_viewport().get_visible_rect().size.x * 0.36 and objective.get_theme_font_size("font_size") >= 30 and objective.horizontal_alignment == HORIZONTAL_ALIGNMENT_LEFT, "Objective copy must remain readable and attached to its icon")
 	_expect(objective != null and objective_icon != null and objective.global_position.x >= objective_icon.global_position.x + objective_icon.size.x + 6.0, "Objective icon and copy must retain readable clearance")
 	_expect(pause != null and objective_icon != null and pause.global_position.x < objective_icon.global_position.x, "Pause must sit at the quiet left edge of the gameplay HUD")
+	_expect(pause != null and pause.icon != null and pause.text == "" and pause.get_theme_stylebox("normal") is StyleBoxFlat and String(pause.get_meta("production_chrome_kind", "")) == "gameplay_pause_icon", "Pause must render as the clear authored icon rather than a clipped text glyph")
 	_expect(board != null and board.custom_minimum_size.y >= 1120.0, "Board must remain the dominant gameplay object")
 	_expect(hint_band != null and tray != null and tray.global_position.y >= hint_band.global_position.y + hint_band.size.y + 32.0, "Hint and booster tray collide")
 	_expect(tray != null and is_equal_approx(tray.anchor_left, 0.08) and is_equal_approx(tray.anchor_right, 0.92), "Booster tray width drifted from the final gameplay family")
