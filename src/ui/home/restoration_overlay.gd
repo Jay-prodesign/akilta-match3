@@ -1,4 +1,5 @@
 extends Control
+const ProductionChrome = preload("res://src/ui/theme/production_chrome.gd")
 
 signal continue_requested
 
@@ -11,6 +12,7 @@ signal continue_requested
 @onready var continue_button: Button = $CeremonyCard/CeremonyContent/CeremonyRow/Copy/Continue
 
 func _ready() -> void:
+	ProductionChrome.apply_primary($CeremonyCard)
 	continue_button.pressed.connect(func(): continue_requested.emit())
 
 func configure(curio_name: String, restoration_copy: String, motif_texture: Texture2D, curio_texture: Texture2D) -> bool:

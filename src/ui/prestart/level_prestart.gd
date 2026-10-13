@@ -6,6 +6,7 @@ signal start_requested(level_number: int)
 
 const PieceAssetLoader = preload("res://src/match3/presentation/piece_asset_loader.gd")
 const ScreenArt = preload("res://src/ui/shared/screen_art_registry.gd")
+const ProductionChrome = preload("res://src/ui/theme/production_chrome.gd")
 
 @onready var level_label: Label = $Layout/Card/Content/Level
 @onready var title_label: Label = $Layout/Card/Content/Title
@@ -29,6 +30,7 @@ const AID_ART_PATHS := {
 var level_number: int = 1
 
 func _ready() -> void:
+	ProductionChrome.apply_primary($Layout/Card)
 	world_backdrop.texture = ScreenArt.texture("prestart_bg_curio_boutique")
 	level_artwork.texture = ScreenArt.texture("prestart_ch01_level01_art")
 	keeper_aid_art.texture = PieceAssetLoader.ornament(String(AID_ART_PATHS["hint"]))

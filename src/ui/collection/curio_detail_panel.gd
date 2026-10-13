@@ -1,4 +1,5 @@
 extends Control
+const ProductionChrome = preload("res://src/ui/theme/production_chrome.gd")
 
 signal close_requested
 signal view_house_requested(curio_id: String)
@@ -15,6 +16,7 @@ var _curio_id: String = ""
 @onready var close: Button = $CurioDetailCard/Content/Close
 
 func _ready() -> void:
+	ProductionChrome.apply_primary(card)
 	close.pressed.connect(func(): close_requested.emit())
 	view_house.pressed.connect(func(): view_house_requested.emit(_curio_id))
 

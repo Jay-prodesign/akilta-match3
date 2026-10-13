@@ -19,6 +19,7 @@ const ScreenArt = preload("res://src/ui/shared/screen_art_registry.gd")
 const RewardRevealFx = preload("res://src/ui/shared/reward_reveal_fx.gd")
 const MoveResolver = preload("res://src/match3/domain/move_resolver.gd")
 const HapticsController = preload("res://src/feedback/haptics_controller.gd")
+const ProductionChrome = preload("res://src/ui/theme/production_chrome.gd")
 
 @export var default_level_path := "res://content/levels/ch01/level_001.json"
 @export var default_seed := 1001
@@ -151,6 +152,8 @@ func _current_auto_hint_delay() -> float:
 	return GUIDED_HINT_DELAY_SECONDS if _consecutive_failures >= 3 else AUTO_HINT_DELAY_SECONDS
 
 func _ready() -> void:
+	ProductionChrome.apply_primary($PauseOverlay/Card)
+	ProductionChrome.apply_primary($ResultOverlay/Card)
 	world_backdrop.texture = ScreenArt.texture("gameplay_bg_curio_boutique")
 	world_backdrop.modulate = Color.WHITE
 	_resource_coin_icon.texture = PieceAssetLoader.ornament("res://assets/ui/ui_coin.svg")
