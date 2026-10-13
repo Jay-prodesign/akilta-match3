@@ -213,12 +213,12 @@ func _ready() -> void:
 	ProductionChrome.apply_gameplay_action_button(result_recovery_action, "primary", "fail_recovery_plus_three")
 	ProductionChrome.apply_gameplay_action_button(result_action, "primary", "result_continue_or_retry")
 	pause_frame_art.texture = PieceAssetLoader.ornament(ProductionChrome.GAMEPLAY_PAUSE_FRAME_PATH)
-	_install_direct_action_frame(pause_resume, pause_resume_frame, ProductionChrome.GAMEPLAY_PRIMARY_ACTION_PATH)
-	_install_direct_action_frame(pause_retry, pause_retry_frame, ProductionChrome.GAMEPLAY_UTILITY_ACTION_PATH)
-	_install_direct_action_frame(pause_settings, pause_settings_frame, ProductionChrome.GAMEPLAY_UTILITY_ACTION_PATH)
-	_install_direct_action_frame(pause_exit, pause_exit_frame, ProductionChrome.GAMEPLAY_UTILITY_ACTION_PATH)
-	_install_direct_action_frame(result_recovery_action, result_recovery_frame, ProductionChrome.GAMEPLAY_PRIMARY_ACTION_PATH)
-	_install_direct_action_frame(result_action, result_action_frame, ProductionChrome.GAMEPLAY_PRIMARY_ACTION_PATH)
+	_install_direct_action_frame(pause_resume, pause_resume_frame, ProductionChrome.GAMEPLAY_PRIMARY_ACTION_OVERLAY_PATH)
+	_install_direct_action_frame(pause_retry, pause_retry_frame, ProductionChrome.GAMEPLAY_UTILITY_ACTION_OVERLAY_PATH)
+	_install_direct_action_frame(pause_settings, pause_settings_frame, ProductionChrome.GAMEPLAY_UTILITY_ACTION_OVERLAY_PATH)
+	_install_direct_action_frame(pause_exit, pause_exit_frame, ProductionChrome.GAMEPLAY_UTILITY_ACTION_OVERLAY_PATH)
+	_install_direct_action_frame(result_recovery_action, result_recovery_frame, ProductionChrome.GAMEPLAY_PRIMARY_ACTION_OVERLAY_PATH)
+	_install_direct_action_frame(result_action, result_action_frame, ProductionChrome.GAMEPLAY_PRIMARY_ACTION_OVERLAY_PATH)
 	var board_frame := $Layout/BoardView/OrnateFrame as Panel
 	if board_frame != null:
 		board_frame.add_theme_stylebox_override("panel", StyleBoxEmpty.new())
@@ -281,9 +281,6 @@ func _install_direct_action_frame(button: Button, frame_art: TextureRect, asset_
 	frame_art.texture = PieceAssetLoader.ornament(asset_path)
 	if frame_art.texture == null:
 		return
-	var empty := StyleBoxEmpty.new()
-	for state_name in ["normal", "hover", "pressed", "focus", "disabled"]:
-		button.add_theme_stylebox_override(state_name, empty)
 	button.set_meta("direct_action_frame", asset_path)
 
 func _wire_tactile_button(button: Button, feedback_kind: String) -> void:
