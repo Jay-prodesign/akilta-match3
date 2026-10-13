@@ -76,6 +76,8 @@ func _run() -> void:
 			var profile_hero := screen.get_node("FeatureLayout/FeatureHero/HeroRow/HeroArt") as TextureRect
 			_expect(profile_hero != null and String(contract.get("hero_asset_path", "")).ends_with("black_cat.webp"), "profile hero must use the Keeper familiar rather than a generic Curio")
 			_expect(bool(contract.get("profile_save_health_compact", false)), "profile save-health truth must stay compact instead of dominating the screen")
+			_expect(bool(contract.get("profile_save_truth_not_duplicated", false)), "profile cloud/local-save truth must live in the save-health card without a duplicate footer line")
+			_expect(not (screen.get_node("FeatureLayout/TruthStrip") as Label).visible, "profile duplicate cloud-sync truth strip must stay hidden")
 			var settings := {"hit": false}
 			screen.settings_requested.connect(func(): settings["hit"] = true)
 			(screen.get_node("FeatureLayout/ProfileSettings") as Button).emit_signal("pressed")

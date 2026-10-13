@@ -72,6 +72,7 @@ func configure(feature_key: String, state: Dictionary) -> bool:
 	hero_art.visible = _feature_key != "shop"
 	profile_settings.visible = _feature_key == "profile"
 	save_health_card.visible = _feature_key == "profile"
+	truth_strip.visible = _feature_key != "profile"
 	hero_body.visible = false
 
 	local_save_status.text = String(state.get("save_status", "LOCAL SAVE · DEVICE-LOCAL"))
@@ -197,5 +198,6 @@ func screen_contract() -> Dictionary:
 		"header_readability_scrim": ($HeaderShade as ColorRect) != null and ($HeaderShade as ColorRect).color.a >= 0.4,
 		"secondary_header_compact": (_feature_key != "events" or not chapter_progress.visible) and (_feature_key != "shop" or not shop_notice.visible),
 		"profile_save_health_compact": _feature_key != "profile" or (save_health_card != null and save_health_card.custom_minimum_size.y <= 170.0),
+		"profile_save_truth_not_duplicated": _feature_key != "profile" or (save_health_card.visible and not truth_strip.visible and cloud_sync_status.text.contains("NOT CONNECTED")),
 
 	}
