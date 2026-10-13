@@ -299,7 +299,7 @@ static func apply_gameplay_action_button(button: Button, hierarchy: String, role
 	button.add_theme_stylebox_override("focus", normal)
 	button.add_theme_stylebox_override("disabled", pressed)
 	button.set_meta("production_chrome_asset", GAMEPLAY_PRIMARY_ACTION_PATH if primary else GAMEPLAY_UTILITY_ACTION_PATH)
-	button.set_meta("production_chrome_kind", "gameplay_action_" + hierarchy + "_" + role)
+	button.set_meta("production_chrome_kind", "action_" + hierarchy + "_gameplay_" + role)
 	return true
 
 static func gameplay_pause_frame() -> StyleBoxTexture:
