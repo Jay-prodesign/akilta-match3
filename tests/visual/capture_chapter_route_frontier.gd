@@ -43,9 +43,12 @@ func _capture() -> void:
 		if not await _save(screen, String(state["name"])):
 			return
 		if int(state["wins"]) == 3:
-			var future_button: Button = route.get_level_button(4)
-			if future_button == null or future_button.disabled:
-				return _fail(screen, "future cabinet must remain inspectable")
+			var future_button: Button = route.get_future_seal_button()
+			if future_button == null or future_button.disabled or not future_button.visible:
+				return _fail(screen, "future upper-cabinets seal must remain inspectable")
+			var hidden_future: Button = route.get_level_button(4)
+			if hidden_future == null or hidden_future.visible:
+				return _fail(screen, "future compatibility level nodes must not return to the player-facing route")
 			future_button.emit_signal("pressed")
 			await process_frame
 			await process_frame

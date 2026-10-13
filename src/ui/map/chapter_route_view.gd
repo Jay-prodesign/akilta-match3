@@ -12,7 +12,9 @@ const CYAN := Color("#9BBED0")
 const ROSE := Color("#C98BA8")
 const PieceAssetLoader = preload("res://src/match3/presentation/piece_asset_loader.gd")
 const ScreenArt = preload("res://src/ui/shared/screen_art_registry.gd")
+const ProductionChrome = preload("res://src/ui/theme/production_chrome.gd")
 const FRONTIER_ART_PATH := "res://assets/pieces/moon_sigil.webp"
+const FUTURE_SEAL_ART_PATH := "res://assets/ui/gameplay/booster_sealed_badge_v01.svg"
 const RELIC_ART_PATHS := {
 	1: "res://assets/curios/ch01_curio_moon_cameo_awakened_v01.webp",
 	2: "res://assets/curios/ch01_curio_moth_reliquary.png",
@@ -33,6 +35,8 @@ var _level_states: Dictionary = {}
 var _frontier_level: int = -1
 var _frontier_focus: TextureRect
 var _frontier_label: Label
+var _future_seal_button: Button
+var _future_seal_art: TextureRect
 
 func _ready() -> void:
 	_bind_authored_route()
@@ -58,6 +62,9 @@ func get_level_state(level_number: int) -> String:
 func get_frontier_level() -> int:
 	return _frontier_level
 
+func get_future_seal_button() -> Button:
+	return _future_seal_button
+
 func _bind_authored_route() -> void:
 	custom_minimum_size = Vector2(route_width, 1500.0)
 	size = custom_minimum_size
@@ -68,8 +75,16 @@ func _bind_authored_route() -> void:
 
 	_frontier_focus = get_node_or_null("FrontierFocus") as TextureRect
 	_frontier_label = get_node_or_null("FrontierFocusLabel") as Label
+	_future_seal_button = get_node_or_null("FutureCabinetsSeal") as Button
+	_future_seal_art = get_node_or_null("FutureCabinetsSeal/SealArt") as TextureRect
 	if _frontier_focus != null:
 		_frontier_focus.texture = PieceAssetLoader.ornament(FRONTIER_ART_PATH)
+	if _future_seal_art != null:
+		_future_seal_art.texture = PieceAssetLoader.ornament(FUTURE_SEAL_ART_PATH)
+	if _future_seal_button != null:
+		ProductionChrome.apply_interactive_button(_future_seal_button, false, "chapter_future_seal")
+		_future_seal_button.tooltip_text = "Upper cabinets · future journey · no active unlock"
+		_future_seal_button.pressed.connect(_request_future_cabinets)
 
 	for level_number in range(1, visible_route_levels + 1):
 		var button := get_node_or_null("Level%d" % level_number) as Button
@@ -79,6 +94,8 @@ func _bind_authored_route() -> void:
 			continue
 		button.tooltip_text = _tooltip_for(level_number)
 		button.pressed.connect(_request.bind(level_number))
+		button.visible = level_number <= 3
+		label.visible = level_number <= 3
 		_level_buttons[level_number] = button
 		_level_labels[level_number] = label
 		_centers[level_number] = button.position + button.size * 0.5
@@ -102,6 +119,11 @@ func route_authored_contract() -> Dictionary:
 		var plate := label.get_theme_stylebox("normal") if label != null else null
 		opening_labels_readable = opening_labels_readable and label != null and label.get_theme_font_size("font_size") >= 25 and plate is StyleBoxFlat and (plate as StyleBoxFlat).bg_color.a >= 0.9
 	var frontier_plate := _frontier_label.get_theme_stylebox("normal") if _frontier_label != null else null
+	var future_levels_suppressed := true
+	for level_number in range(4, visible_route_levels + 1):
+		var future_button := _level_buttons.get(level_number) as Button
+		var future_label := _level_labels.get(level_number) as Label
+		future_levels_suppressed = future_levels_suppressed and future_button != null and not future_button.visible and future_label != null and not future_label.visible
 	return {
 		"authored_level_slots": _level_buttons.size() == visible_route_levels and _level_labels.size() == visible_route_levels,
 		"authored_frontier_slots": _frontier_focus != null and _frontier_label != null,
@@ -109,6 +131,9 @@ func route_authored_contract() -> Dictionary:
 		"raster_relics_loaded": raster_relics_loaded,
 		"opening_label_readability": opening_labels_readable,
 		"frontier_label_readability": _frontier_label != null and _frontier_label.get_theme_font_size("font_size") >= 20 and frontier_plate is StyleBoxFlat,
+		"future_seal_authored": _future_seal_button != null and _future_seal_button.visible and _future_seal_art != null and _future_seal_art.texture != null,
+		"future_seal_raster_or_vector_art": FUTURE_SEAL_ART_PATH.ends_with(".webp") or FUTURE_SEAL_ART_PATH.ends_with(".png") or FUTURE_SEAL_ART_PATH.ends_with(".svg"),
+		"future_levels_visually_suppressed": future_levels_suppressed,
 		"runtime_node_factory": false,
 		"runtime_route_vfx_allowed": true,
 	}
@@ -119,6 +144,9 @@ func _request(level_number: int) -> void:
 		return
 	var kind := "future_content" if level_number > canonical_level_cap else "progression_locked"
 	sealed_level_requested.emit(level_number, kind)
+
+func _request_future_cabinets() -> void:
+	sealed_level_requested.emit(4, "future_content")
 
 func _refresh() -> void:
 	if not is_node_ready() or _level_buttons.is_empty():
@@ -142,6 +170,8 @@ func _refresh() -> void:
 		_level_states[level_number] = state
 		button.set_meta("level_state", state)
 		button.set_meta("sealed_kind", "" if open else ("future_content" if level_number > canonical_level_cap else "progression_locked"))
+		button.visible = level_number <= 3
+		label.visible = level_number <= 3
 		button.disabled = false
 		button.text = "✓" if completed else str(level_number)
 		button.tooltip_text = _tooltip_for(level_number)
@@ -266,11 +296,9 @@ func _draw() -> void:
 		draw_arc(frontier_center, frontier_radius + 8.0, 0.0, TAU, 48, Color("#F2D49A", 0.82), 4.0)
 		draw_arc(frontier_center, frontier_radius + 18.0, 0.0, TAU, 48, Color("#BFA5D8", 0.34), 2.0)
 
-	# Future levels remain visibly connected but subordinate to the opening
-	# three-level journey. Their lock/state styling is owned by live buttons.
-	var future_hub := Vector2(route_width * 0.50, 385.0)
-	draw_line(get_level_center(3), future_hub, Color(GOLD, 0.24), 2.0, true)
-	draw_circle(future_hub, 8.0, Color("#130D18", 0.90))
-	draw_arc(future_hub, 8.0, 0.0, TAU, 18, Color(GOLD, 0.38), 1.5)
-	for level_number in range(4, visible_route_levels + 1):
-		draw_line(future_hub, get_level_center(level_number), Color(LILAC, 0.11), 1.2, true)
+	# Future journey content is represented by one truthful authored seal card,
+	# not seven tiny pseudo-level nodes. Keep only a restrained continuation line.
+	var future_seal_anchor := Vector2(route_width * 0.50, 310.0)
+	draw_line(get_level_center(3), future_seal_anchor, Color(GOLD, 0.26), 3.0, true)
+	draw_circle(future_seal_anchor, 8.0, Color("#130D18", 0.92))
+	draw_arc(future_seal_anchor, 8.0, 0.0, TAU, 18, Color(GOLD, 0.44), 1.5)
