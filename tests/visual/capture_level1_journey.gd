@@ -66,6 +66,31 @@ func _capture() -> void:
 	if String(app.current_route_name()) != "gameplay":
 		return _fail(app, "S04 must enter S05 Gameplay")
 	var gameplay = app.current_screen()
+	var gameplay_contract: Dictionary = gameplay.gameplay_presentation_contract() if gameplay != null and gameplay.has_method("gameplay_presentation_contract") else {}
+	for parity_key in [
+		"visual_parity_gate_v2",
+		"north_star_header_hierarchy",
+		"north_star_board_object",
+		"north_star_booster_family",
+		"utility_separated_from_boosters",
+		"hint_booster_clearance",
+	]:
+		if not bool(gameplay_contract.get(parity_key, false)):
+			return _fail(app, "S05 North Star render gate failed: %s" % parity_key)
+	var gameplay_viewport := gameplay.get_viewport().get_visible_rect().size
+	var gameplay_board := gameplay.get_node_or_null("Layout/BoardView") as Control
+	var gameplay_tray := gameplay.get_node_or_null("BoosterTray") as Control
+	if gameplay_board == null or gameplay_tray == null:
+		return _fail(app, "S05 North Star render gate missing board/tray")
+	var board_height_ratio := gameplay_board.size.y / gameplay_viewport.y
+	var board_width_ratio := gameplay_board.size.x / gameplay_viewport.x
+	var tray_width_ratio := gameplay_tray.size.x / gameplay_viewport.x
+	if board_height_ratio < 0.49 or board_height_ratio > 0.55:
+		return _fail(app, "S05 board height ratio drifted: %.3f" % board_height_ratio)
+	if board_width_ratio < 0.90:
+		return _fail(app, "S05 board width no longer dominates viewport: %.3f" % board_width_ratio)
+	if tray_width_ratio < 0.72 or tray_width_ratio > 0.80:
+		return _fail(app, "S05 booster tray width drifted: %.3f" % tray_width_ratio)
 	if not await _save(app, "golden-04-gameplay.png"):
 		return
 

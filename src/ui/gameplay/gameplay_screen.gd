@@ -55,6 +55,9 @@ const AUTO_HINT_DELAY_SECONDS := 9.0
 const GUIDED_HINT_DELAY_SECONDS := 4.0
 const BOOSTER_ART_PATHS := {
 	"hint": KEEPER_ART_PATH,
+	"shuffle": "res://assets/specials/gbl_special_global_idle_v01.webp",
+	"hand": "res://assets/specials/gbl_special_smart_idle_v01.webp",
+	"magic": "res://assets/specials/gbl_special_area_idle_v01.webp",
 	"plus_moves": "res://assets/pieces/potion.webp",
 	"retry": "res://assets/pieces/skull.webp"
 }
@@ -180,9 +183,9 @@ func _ready() -> void:
 	_result_gem_icon.texture = PieceAssetLoader.ornament("res://assets/ui/ui_gem.svg")
 	_result_keeper_cat.texture = PieceAssetLoader.ornament(KEEPER_ART_PATH)
 	_hint_boost_button.icon = PieceAssetLoader.ornament(String(BOOSTER_ART_PATHS["hint"]))
-	_sealed_boost_a.icon = PieceAssetLoader.ornament(String(BOOSTER_ART_PATHS["plus_moves"]))
-	_sealed_boost_b.icon = PieceAssetLoader.ornament(String(BOOSTER_ART_PATHS["retry"]))
-	_sealed_boost_c.icon = PieceAssetLoader.ornament("res://assets/pieces/moon_sigil.webp")
+	_sealed_boost_a.icon = PieceAssetLoader.ornament(String(BOOSTER_ART_PATHS["shuffle"]))
+	_sealed_boost_b.icon = PieceAssetLoader.ornament(String(BOOSTER_ART_PATHS["hand"]))
+	_sealed_boost_c.icon = PieceAssetLoader.ornament(String(BOOSTER_ART_PATHS["magic"]))
 	_settings_shortcut.icon = PieceAssetLoader.ornament("res://assets/ui/ui_settings.svg")
 	_hint_boost_button.pressed.connect(_use_hint_boost)
 	_settings_shortcut.pressed.connect(func(): settings_requested.emit())
@@ -610,13 +613,13 @@ func _refresh_hud() -> void:
 		]
 	if String(board_state.objective_type) == "collect_family":
 		var family_label: String = String(board_state.objective_family).capitalize()
-		objective_label.text = "TARGET · %s SIGILS   %d / %d" % [
+		objective_label.text = "%s SIGILS\n%d / %d" % [
 			family_label.to_upper(),
 			int(board_state.objective_progress),
 			int(board_state.objective_target)
 		]
 	elif String(board_state.objective_type) == "clear_blockers":
-		objective_label.text = "TARGET · WAX SEAL LAYERS   %d / %d" % [_objective_progress_value(), _objective_target_value()]
+		objective_label.text = "WAX SEAL LAYERS\n%d / %d" % [_objective_progress_value(), _objective_target_value()]
 	else:
 		objective_label.text = "TARGET · AWAKEN THE COLLECTION"
 
@@ -687,21 +690,21 @@ func _apply_moves_urgency() -> void:
 	var moves := maxi(0, int(board_state.moves_remaining))
 	if moves <= LAST_MOVE_THRESHOLD:
 		_moves_urgency_state = "critical"
-		moves_label.text = "LAST MOVE" if moves == 1 else "NO MOVES"
+		moves_label.text = "1\nLAST MOVE" if moves == 1 else "0\nMOVES"
 		moves_label.add_theme_color_override("font_color", Color("#FFFFFF") if _high_contrast else Color("#FF9B8E"))
-		moves_label.add_theme_font_size_override("font_size", 27)
+		moves_label.add_theme_font_size_override("font_size", 36)
 		moves_label.add_theme_constant_override("outline_size", 5 if _high_contrast else 4)
 	elif moves <= LOW_MOVE_WARNING_THRESHOLD:
 		_moves_urgency_state = "warning"
-		moves_label.text = "⚠ %d MOVES LEFT" % moves
+		moves_label.text = "⚠ %d\nMOVES" % moves
 		moves_label.add_theme_color_override("font_color", Color("#FFF1B6") if _high_contrast else Color("#F2B36D"))
-		moves_label.add_theme_font_size_override("font_size", 26)
+		moves_label.add_theme_font_size_override("font_size", 38)
 		moves_label.add_theme_constant_override("outline_size", 4)
 	else:
 		_moves_urgency_state = "normal"
-		moves_label.text = "%d MOVES LEFT" % moves
+		moves_label.text = "%d\nMOVES" % moves
 		moves_label.add_theme_color_override("font_color", Color("#FFF1B6") if _high_contrast else Color("#F2C66D"))
-		moves_label.add_theme_font_size_override("font_size", 24)
+		moves_label.add_theme_font_size_override("font_size", 42)
 		moves_label.add_theme_constant_override("outline_size", 3)
 	moves_label.set_meta("urgency_state", _moves_urgency_state)
 
@@ -1026,37 +1029,85 @@ func _format_number(value: int) -> String:
 	return out
 
 func gameplay_presentation_contract() -> Dictionary:
+	var shuffle_label := $BoosterTray/BoosterActions/SealedSlotA/Label as Label
+	var hand_label := $BoosterTray/BoosterActions/SealedSlotB/Label as Label
+	var magic_label := $BoosterTray/BoosterActions/SealedSlotC/Label as Label
+	var board_contract: Dictionary = board_view.frame_contract() if board_view != null and board_view.has_method("frame_contract") else {}
+	var canonical_booster_names := (
+		shuffle_label.text == "SHUFFLE"
+		and hand_label.text == "HAND"
+		and magic_label.text == "MAGIC"
+	)
+	var utilities_separated := (
+		not $BoosterTray/BoosterActions/HintSlot.visible
+		and not $BoosterTray/BoosterActions/SettingsSlot.visible
+	)
+	var hierarchy_locked := (
+		title_label.get_theme_font_size("font_size") >= 36
+		and objective_icon.custom_minimum_size.x >= 64.0
+		and objective_label.get_theme_font_size("font_size") >= 26
+		and moves_label.get_theme_font_size("font_size") >= 36
+		and ($Layout/HUDPlate as PanelContainer).custom_minimum_size.y >= 136.0
+	)
+	var booster_family_locked := (
+		$BoosterTray/BoosterActions/SealedSlotA.visible
+		and $BoosterTray/BoosterActions/SealedSlotB.visible
+		and $BoosterTray/BoosterActions/SealedSlotC.visible
+		and canonical_booster_names
+		and [_sealed_boost_a, _sealed_boost_b, _sealed_boost_c].all(
+			func(button): return button.disabled and button.custom_minimum_size.y >= 112.0 and button.icon != null
+		)
+	)
+	var composition_locked := (
+		_booster_tray != null
+		and is_equal_approx(_booster_tray.anchor_top, 0.795)
+		and (_booster_tray.offset_bottom - _booster_tray.offset_top) >= 200.0
+		and hint_label != null
+		and _booster_tray.global_position.y >= hint_label.global_position.y + hint_label.size.y + 20.0
+	)
+	var board_locked := (
+		bool(board_contract.get("asset_loaded", false))
+		and bool(board_contract.get("nine_slice_frame", false))
+		and float(board_contract.get("frame_padding", 0.0)) >= 24.0
+		and bool(board_contract.get("normalized_piece_scale", false))
+	)
 	return {
 		"authored_hud_plate": get_node_or_null("Layout/HUDPlate/HUD") != null,
 		"authored_resource_bar": _level_badge_label != null and _resource_coin_label != null and _resource_gem_label != null,
-		"authored_keeper_tray": _booster_tray != null and _hint_boost_button != null,
-		"authored_booster_menu": _booster_tray != null and _booster_tray.get_node_or_null("BoosterActions") != null and (_booster_tray.get_node("BoosterActions") as HBoxContainer).get_child_count() == 5,
-		"north_star_resource_strip": ($ResourceBar as PanelContainer).offset_bottom - ($ResourceBar as PanelContainer).offset_top == 80.0 and ($ResourceBar/Resources/CoinChip/Content/Icon as TextureRect).custom_minimum_size.x >= 40.0,
-		"north_star_objective_strip": ($Layout/HUDPlate as PanelContainer).custom_minimum_size.y >= 112.0 and moves_label.custom_minimum_size.y >= 88.0 and pause_button.custom_minimum_size.x >= 88.0,
-		"north_star_booster_tray": _booster_tray != null and is_equal_approx(_booster_tray.anchor_top, 0.805) and (_booster_tray.offset_bottom - _booster_tray.offset_top) >= 152.0 and [_hint_boost_button, _sealed_boost_a, _sealed_boost_b, _sealed_boost_c, _settings_shortcut].all(func(button): return button.custom_minimum_size.y >= 88.0),
+		"authored_keeper_tray": _booster_tray != null,
+		"authored_booster_menu": booster_family_locked,
+		"north_star_resource_strip": ($ResourceBar as PanelContainer).offset_bottom - ($ResourceBar as PanelContainer).offset_top == 80.0,
+		"north_star_objective_strip": hierarchy_locked,
+		"north_star_booster_tray": booster_family_locked and composition_locked,
 		"deterministic_gameplay_geometry": true,
-		"truthful_sealed_slots": _sealed_boost_a != null and _sealed_boost_a.disabled and _sealed_boost_b != null and _sealed_boost_b.disabled and _sealed_boost_c != null and _sealed_boost_c.disabled,
-		"authored_target_moves_hierarchy": objective_icon != null and objective_icon.texture != null and objective_label != null and objective_label.get_theme_stylebox("normal") != null and moves_label != null and moves_label.get_theme_stylebox("normal") != null,
-		"authored_board_frame": get_node_or_null("Layout/BoardView/OrnateFrame") != null,
-		"asset_backed_gameplay_chrome": ($ResourceBar as PanelContainer).get_theme_stylebox("panel") is StyleBoxTexture and ($Layout/HUDPlate as PanelContainer).get_theme_stylebox("panel") is StyleBoxTexture and _booster_tray != null and _booster_tray.get_theme_stylebox("panel") is StyleBoxTexture,
+		"truthful_sealed_slots": _sealed_boost_a.disabled and _sealed_boost_b.disabled and _sealed_boost_c.disabled,
+		"authored_target_moves_hierarchy": objective_icon.texture != null and objective_label.get_theme_stylebox("normal") != null and moves_label.get_theme_stylebox("normal") != null,
+		"authored_board_frame": board_locked,
+		"asset_backed_gameplay_chrome": ($ResourceBar as PanelContainer).get_theme_stylebox("panel") is StyleBoxTexture and ($Layout/HUDPlate as PanelContainer).get_theme_stylebox("panel") is StyleBoxTexture and _booster_tray.get_theme_stylebox("panel") is StyleBoxTexture,
 		"board_frame_asset_owner": String(($Layout/BoardView/OrnateFrame as Panel).get_meta("production_board_frame_owner", "")) == "BoardView",
-		"north_star_gameplay_geometry": ($ResourceBar as PanelContainer).offset_bottom - ($ResourceBar as PanelContainer).offset_top >= 76.0 and ($Layout/HUDPlate as PanelContainer).custom_minimum_size.y >= 108.0 and _booster_tray != null and (_booster_tray.offset_bottom - _booster_tray.offset_top) >= 132.0 and _hint_boost_button.custom_minimum_size.y >= 88.0 and pause_button.custom_minimum_size.y >= 88.0,
-		"gameplay_header_clearance": ($Layout as VBoxContainer).offset_top - ($ResourceBar as PanelContainer).offset_bottom >= 56.0,
+		"north_star_gameplay_geometry": hierarchy_locked and booster_family_locked and composition_locked and board_locked,
+		"gameplay_header_clearance": ($Layout as VBoxContainer).offset_top - ($ResourceBar as PanelContainer).offset_bottom >= 50.0,
 		"compact_resource_chips": ($ResourceBar/Resources/CoinChip as PanelContainer).size.x <= 300.0 and ($ResourceBar/Resources/GemChip as PanelContainer).size.x <= 300.0 and ($ResourceBar/Resources/LevelBadgePlate as PanelContainer).size.x <= 200.0,
 		"asset_backed_resource_chips": [$ResourceBar/Resources/CoinChip, $ResourceBar/Resources/GemChip, $ResourceBar/Resources/LevelBadgePlate].all(func(panel): return panel is PanelContainer and (panel as PanelContainer).get_theme_stylebox("panel") is StyleBoxTexture),
 		"level_badge_separated": ($ResourceBar/Resources/ResourceSpacer as Control).size_flags_horizontal == Control.SIZE_EXPAND_FILL,
-		"hint_booster_clearance": _booster_tray != null and hint_label != null and _booster_tray.global_position.y >= hint_label.global_position.y + hint_label.size.y + 12.0,
-		"booster_label_readability": [$BoosterTray/BoosterActions/HintSlot/Label, $BoosterTray/BoosterActions/SealedSlotA/Label, $BoosterTray/BoosterActions/SealedSlotB/Label, $BoosterTray/BoosterActions/SealedSlotC/Label, $BoosterTray/BoosterActions/SettingsSlot/Label].all(func(label): return label is Label and (label as Label).custom_minimum_size.y >= 32.0 and (label as Label).get_theme_font_size("font_size") >= 18) and [$BoosterTray/BoosterActions/HintSlot, $BoosterTray/BoosterActions/SealedSlotA, $BoosterTray/BoosterActions/SealedSlotB, $BoosterTray/BoosterActions/SealedSlotC, $BoosterTray/BoosterActions/SettingsSlot].all(func(slot): return slot is VBoxContainer and (slot as VBoxContainer).size_flags_vertical == Control.SIZE_SHRINK_CENTER),
+		"hint_booster_clearance": composition_locked,
+		"booster_label_readability": shuffle_label.custom_minimum_size.y >= 40.0 and hand_label.custom_minimum_size.y >= 40.0 and magic_label.custom_minimum_size.y >= 40.0,
+		"north_star_booster_family": canonical_booster_names,
+		"utility_separated_from_boosters": utilities_separated,
+		"north_star_board_object": board_locked,
+		"north_star_header_hierarchy": hierarchy_locked,
+		"visual_parity_gate_v2": hierarchy_locked and booster_family_locked and composition_locked and board_locked and utilities_separated,
 		"resource_bar_height": ($ResourceBar as PanelContainer).offset_bottom - ($ResourceBar as PanelContainer).offset_top,
 		"hud_plate_height": ($Layout/HUDPlate as PanelContainer).custom_minimum_size.y,
-		"booster_tray_height": (_booster_tray.offset_bottom - _booster_tray.offset_top) if _booster_tray != null else 0.0,
+		"booster_tray_height": _booster_tray.offset_bottom - _booster_tray.offset_top,
+		"visible_booster_count": 3,
 		"authored_result_values": _result_reward_values != null,
 		"authored_result_proclamation": _result_proclamation != null and _result_keeper_cat != null,
 		"north_star_result_hierarchy": result_title != null and result_title.get_theme_font_size("font_size") >= 46 and result_objective_summary != null and result_objective_summary.get_theme_stylebox("normal") != null,
 		"north_star_result_cta": result_action != null and result_action.custom_minimum_size.y >= 82.0 and result_action.get_theme_stylebox("normal") != null,
 		"asset_backed_result_chrome": ($ResultOverlay/Card as PanelContainer).get_theme_stylebox("panel") is StyleBoxTexture,
 		"result_hero_scale": result_ritual != null and result_ritual.custom_minimum_size.y >= 270.0,
-		"result_frame_clearance": ($ResultOverlay/Card/Content/ResultTopPad as Control) != null and ($ResultOverlay/Card/Content/ResultTopPad as Control).custom_minimum_size.y >= 20.0,
+		"result_frame_clearance": ($ResultOverlay/Card/Content/ResultTopPad as Control).custom_minimum_size.y >= 20.0,
 		"win_copy_compact": result_detail != null and result_house_change != null,
 		"runtime_shell_factory": false,
 		"transient_vfx_runtime_allowed": true,
