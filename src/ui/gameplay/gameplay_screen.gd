@@ -107,8 +107,9 @@ const LAST_MOVE_THRESHOLD := 1
 @onready var eyebrow_label: Label = $Layout/LevelPlaque/Eyebrow
 @onready var title_label: Label = $Layout/Title
 @onready var board_view = $Layout/BoardView
-@onready var objective_icon: TextureRect = $Layout/HUDPlate/HUD/ObjectiveIcon
-@onready var objective_label: Label = $Layout/HUDPlate/HUD/Objective
+@onready var objective_name_label: Label = $Layout/HUDPlate/HUD/ObjectiveSlot/ObjectiveName
+@onready var objective_icon: TextureRect = $Layout/HUDPlate/HUD/ObjectiveSlot/ObjectiveIcon
+@onready var objective_label: Label = $Layout/HUDPlate/HUD/ObjectiveSlot/Objective
 @onready var moves_label: Label = $Layout/HUDPlate/HUD/Moves
 @onready var pause_button: Button = $Layout/HUDPlate/HUD/Pause
 @onready var pause_overlay: Control = $PauseOverlay
@@ -758,7 +759,8 @@ func _refresh_hud() -> void:
 	if objective_icon != null:
 		objective_icon.texture = PieceAssetLoader.ornament(_objective_art_path())
 	if board_state == null:
-		objective_label.text = "AWAKEN\nTHE COLLECTION"
+		objective_name_label.text = "OBJECTIVE"
+		objective_label.text = "— / —"
 		moves_label.text = "—"
 		return
 	_apply_moves_urgency()
@@ -789,15 +791,19 @@ func _refresh_hud() -> void:
 		]
 	if String(board_state.objective_type) == "collect_family":
 		var family_label: String = String(board_state.objective_family).capitalize()
-		objective_label.text = "%s SIGILS\n%d / %d" % [
-			family_label.to_upper(),
+		objective_name_label.text = "%s SIGILS" % family_label.to_upper()
+		objective_label.text = "%d / %d" % [
 			int(board_state.objective_progress),
 			int(board_state.objective_target)
 		]
+		objective_icon.tooltip_text = "%s · collect %d" % [objective_name_label.text.capitalize(), int(board_state.objective_target)]
 	elif String(board_state.objective_type) == "clear_blockers":
-		objective_label.text = "WAX SEAL LAYERS\n%d / %d" % [_objective_progress_value(), _objective_target_value()]
+		objective_name_label.text = "WAX SEAL LAYERS"
+		objective_label.text = "%d / %d" % [_objective_progress_value(), _objective_target_value()]
+		objective_icon.tooltip_text = "Wax seal layers · clear %d" % _objective_target_value()
 	else:
-		objective_label.text = "AWAKEN\nTHE COLLECTION"
+		objective_name_label.text = "OBJECTIVE"
+		objective_label.text = "— / —"
 
 func _objective_art_path() -> String:
 	if board_state != null and String(board_state.objective_type) == "clear_blockers":
@@ -837,11 +843,11 @@ func _present_objective_progress() -> void:
 	var progress := _objective_progress_value()
 	var target := _objective_target_value()
 	var complete := progress >= target
+	objective_label.text = "%d / %d" % [progress, target]
 	if String(board_state.objective_type) == "clear_blockers":
-		objective_label.text = "WAX SEAL LAYERS\n%d / %d · %s" % [progress, target, "OBJECTIVE COMPLETE" if complete else "+%d THIS MOVE" % _last_objective_delta]
+		objective_name_label.text = "OBJECTIVE COMPLETE" if complete else "+%d SEAL LAYER" % _last_objective_delta
 	else:
-		var family := String(board_state.objective_family).to_upper()
-		objective_label.text = "%s SIGILS\n%d / %d · %s" % [family, progress, target, "OBJECTIVE COMPLETE" if complete else "+%d THIS MOVE" % _last_objective_delta]
+		objective_name_label.text = "OBJECTIVE COMPLETE" if complete else "+%d THIS MOVE" % _last_objective_delta
 	objective_label.set_meta("objective_feedback_state", "complete" if complete else "progress")
 	objective_label.add_theme_color_override("font_color", Color("#FFFFFF") if _high_contrast else (Color("#F0CE8A") if complete else Color("#E4CDEB")))
 	if _objective_pulse_tween != null and _objective_pulse_tween.is_valid():
@@ -900,7 +906,7 @@ func gameplay_feel_contract() -> Dictionary:
 		"objective_progress": _last_objective_progress,
 		"objective_delta": _last_objective_delta,
 		"objective_target": _objective_target_value(),
-		"objective_copy": objective_label.text if objective_label != null else "",
+		"objective_copy": ("%s · %s" % [objective_name_label.text, objective_label.text]) if objective_label != null and objective_name_label != null else "",
 	}
 
 func _show_result_if_terminal(result: String) -> void:
@@ -1238,9 +1244,12 @@ func gameplay_presentation_contract() -> Dictionary:
 		and hand_label.text == "HAND"
 		and magic_label.text == "MAGIC"
 	)
+	var settings_slot := $BoosterTray/BoosterActions/SettingsSlot as VBoxContainer
 	var utilities_separated: bool = (
 		not $BoosterTray/BoosterActions/HintSlot.visible
-		and not $BoosterTray/BoosterActions/SettingsSlot.visible
+		and settings_slot.visible
+		and settings_slot.custom_minimum_size.x < ($BoosterTray/BoosterActions/SealedSlotA as VBoxContainer).custom_minimum_size.x
+		and _settings_shortcut.custom_minimum_size.x <= 80.0
 	)
 	var hierarchy_locked: bool = (
 		not title_label.visible
@@ -1253,8 +1262,9 @@ func gameplay_presentation_contract() -> Dictionary:
 	)
 	var integrated_hud_surface: bool = (
 		not objective_label.has_theme_stylebox_override("normal")
-		and objective_label.text.contains("\n")
-		and not objective_label.text.begins_with("TARGET\n")
+		and objective_label.text.contains("/")
+		and objective_name_label != null
+		and objective_name_label.text != ""
 		and moves_label.get_theme_stylebox("normal") != null
 	)
 	var hint_readable: bool = (
@@ -1272,9 +1282,9 @@ func gameplay_presentation_contract() -> Dictionary:
 	)
 	var composition_locked: bool = (
 		_booster_tray != null
-		and is_equal_approx(_booster_tray.anchor_top, 0.755)
-		and (_booster_tray.offset_bottom - _booster_tray.offset_top) >= 200.0
-		and (_booster_tray.offset_bottom - _booster_tray.offset_top) <= 212.0
+		and is_equal_approx(_booster_tray.anchor_top, 0.79)
+		and (_booster_tray.offset_bottom - _booster_tray.offset_top) >= 210.0
+		and (_booster_tray.offset_bottom - _booster_tray.offset_top) <= 230.0
 		and hint_label != null
 		and (not hint_label.visible or _booster_tray.global_position.y >= hint_label.global_position.y + hint_label.size.y + 10.0)
 	)
@@ -1293,10 +1303,13 @@ func gameplay_presentation_contract() -> Dictionary:
 		and PieceAssetLoader.ornament(String(NORTH_STAR_BOOSTER_ART_PATHS["magic"])) != null
 	)
 	var gothic_board_material: bool = String(board_contract.get("frame_revision", "")) == "gothic_corner_v3" and float(board_contract.get("corner_preservation_margin", 0.0)) >= 72.0
+	var objective_slot := $Layout/HUDPlate/HUD/ObjectiveSlot as VBoxContainer
 	var objective_spacing_locked: bool = (
-		objective_label.size.x >= 220.0
-		and objective_label.global_position.x >= objective_icon.global_position.x + objective_icon.size.x + 6.0
+		objective_slot != null
+		and objective_slot.custom_minimum_size.x >= 160.0
+		and objective_icon.custom_minimum_size.y >= 88.0
 		and objective_label.horizontal_alignment == HORIZONTAL_ALIGNMENT_CENTER
+		and objective_label.global_position.y >= objective_icon.global_position.y + objective_icon.size.y - 8.0
 	)
 	var compact_header_locked: bool = (
 		not title_label.visible
@@ -1311,7 +1324,7 @@ func gameplay_presentation_contract() -> Dictionary:
 	var compact_geometry_locked: bool = (
 		is_equal_approx(_booster_tray.anchor_left, 0.045)
 		and is_equal_approx(_booster_tray.anchor_right, 0.955)
-		and is_equal_approx(_booster_tray.anchor_top, 0.755)
+		and is_equal_approx(_booster_tray.anchor_top, 0.79)
 		and ($Layout/BoardView as Control).custom_minimum_size.y >= 1020.0
 		and ($Layout/BoardView as Control).custom_minimum_size.y <= 1080.0
 	)
