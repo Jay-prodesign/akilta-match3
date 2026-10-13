@@ -152,13 +152,19 @@ func _refresh() -> void:
 		play_button.text = "PLAY LEVEL 1"
 
 func north_star_home_contract() -> Dictionary:
+	var nav := get_node_or_null("ProductNavigation") as PanelContainer
 	return {
 		"primary_cta_height": play_button.custom_minimum_size.y if play_button != null else 0.0,
 		"primary_cta_width": play_button.custom_minimum_size.x if play_button != null else 0.0,
 		"primary_cta_centered": play_button != null and (play_button.size_flags_horizontal & Control.SIZE_SHRINK_CENTER) != 0,
+		"controlled_primary_cta": play_button != null and play_button.custom_minimum_size.x >= 720.0 and play_button.custom_minimum_size.x <= 800.0 and play_button.custom_minimum_size.y >= 96.0 and play_button.custom_minimum_size.y <= 112.0,
+		"floating_headline": headline != null and headline.custom_minimum_size.x >= 780.0 and headline.custom_minimum_size.x <= 840.0 and (headline.size_flags_horizontal & Control.SIZE_SHRINK_CENTER) != 0,
+		"compact_first_ritual": _first_ritual_panel != null and _first_ritual_panel.custom_minimum_size.x >= 860.0 and _first_ritual_panel.custom_minimum_size.x <= 920.0 and ( _first_ritual_panel.size_flags_horizontal & Control.SIZE_SHRINK_CENTER) != 0,
+		"quiet_global_shells": _resource_bar != null and String(_resource_bar.get_meta("production_chrome_asset", "")) == ProductionChrome.QUIET_PANEL_PATH and nav != null and String(nav.get_meta("production_chrome_asset", "")) == ProductionChrome.QUIET_PANEL_PATH,
 		"bottom_nav_reserved": ($Layout.offset_bottom <= -90.0),
 		"world_underlays_home_ui": room_view != null and room_view.get_parent() == self and $Layout/WorldSpacer != null,
 		"direct_level_cta": play_button != null and (play_button.text.begins_with("PLAY LEVEL") or play_button.text.begins_with("EXPLORE")),
+		"home_visual_parity_gate": play_button != null and play_button.custom_minimum_size.x >= 720.0 and play_button.custom_minimum_size.x <= 800.0 and headline != null and headline.custom_minimum_size.x <= 840.0 and _first_ritual_panel != null and _first_ritual_panel.custom_minimum_size.x <= 920.0 and _resource_bar != null and String(_resource_bar.get_meta("production_chrome_asset", "")) == ProductionChrome.QUIET_PANEL_PATH and nav != null and String(nav.get_meta("production_chrome_asset", "")) == ProductionChrome.QUIET_PANEL_PATH,
 	}
 
 func _on_play_pressed() -> void:
