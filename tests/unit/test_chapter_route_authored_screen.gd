@@ -33,6 +33,7 @@ func _run() -> void:
 	_expect(bool(visual_contract.get("progress_plate", false)), "S03 progress must sit on an authored readable plate")
 	_expect(bool(visual_contract.get("concise_route_instruction", false)), "S03 route instruction must not become a tiny paragraph")
 	_expect(bool(visual_contract.get("route_world_dominant", false)), "S03 authored route world must remain the dominant visual surface")
+	_expect(bool(visual_contract.get("resource_header_clearance", false)), "S03 title stack must clear the global resource header instead of rendering underneath it")
 	var route = screen.get_node_or_null("Layout/RoutePanel/Scroll/RouteView")
 	_expect(route != null, "S03 authored RouteView missing")
 	if route == null:
