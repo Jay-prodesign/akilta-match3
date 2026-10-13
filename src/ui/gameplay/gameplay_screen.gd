@@ -154,6 +154,13 @@ func _current_auto_hint_delay() -> float:
 func _ready() -> void:
 	ProductionChrome.apply_primary($PauseOverlay/Card)
 	ProductionChrome.apply_primary($ResultOverlay/Card)
+	ProductionChrome.apply_gameplay_shell($ResourceBar, "resources")
+	ProductionChrome.apply_gameplay_shell($Layout/HUDPlate, "objective")
+	ProductionChrome.apply_gameplay_shell($BoosterTray, "boosters")
+	var board_frame := $Layout/BoardFrame as PanelContainer
+	if board_frame != null:
+		board_frame.add_theme_stylebox_override("panel", StyleBoxEmpty.new())
+		board_frame.set_meta("production_board_frame_owner", "BoardView")
 	world_backdrop.texture = ScreenArt.texture("gameplay_bg_curio_boutique")
 	world_backdrop.modulate = Color.WHITE
 	_resource_coin_icon.texture = PieceAssetLoader.ornament("res://assets/ui/ui_coin.svg")

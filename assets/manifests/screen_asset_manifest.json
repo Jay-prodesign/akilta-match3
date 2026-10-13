@@ -2214,6 +2214,132 @@
       ],
       "current_path": "assets/world/ch01_curio_boutique/hub_bg_grandhall.webp",
       "provenance": "AKILTA first-party authored House environment reused for Settings continuity"
+    },
+    {
+      "asset_id": "gameplay_resource_strip_frame",
+      "screen": [
+        "S05"
+      ],
+      "type": "structural_ui",
+      "dimensions": "512x512_9slice_runtime_reuse",
+      "aspect_ratio": "scalable",
+      "transparent": true,
+      "variants": [
+        "default",
+        "high_contrast_runtime"
+      ],
+      "reuse": "declared_reuse_of_gbl_primary_panel_frame",
+      "priority": "P0",
+      "production_status": "runtime_connected_authored_9slice_candidate",
+      "current_path": "assets/ui/chrome/gbl_ui_ritual_panel_9s_base_v01.svg",
+      "runtime_style_script": "src/ui/theme/production_chrome.gd",
+      "technical_policy": "runtime_decoded_svg_to_imagetexture_9slice__gameplay_shell__render_verification_required",
+      "block": "resource_strip",
+      "slot": "resource_strip_frame",
+      "state": [
+        "playing",
+        "won",
+        "failed"
+      ],
+      "contract_owners": [
+        {
+          "screen": "S05",
+          "region": "hud",
+          "block": "resource_strip",
+          "slot": "coins",
+          "states": [
+            "normal"
+          ]
+        }
+      ]
+    },
+    {
+      "asset_id": "gameplay_objective_hud_frame",
+      "screen": [
+        "S05"
+      ],
+      "type": "structural_ui",
+      "dimensions": "512x512_9slice_runtime_reuse",
+      "aspect_ratio": "scalable",
+      "transparent": true,
+      "variants": [
+        "default",
+        "high_contrast_runtime"
+      ],
+      "reuse": "declared_reuse_of_gbl_primary_panel_frame",
+      "priority": "P0",
+      "production_status": "runtime_connected_authored_9slice_candidate",
+      "current_path": "assets/ui/chrome/gbl_ui_ritual_panel_9s_base_v01.svg",
+      "runtime_style_script": "src/ui/theme/production_chrome.gd",
+      "technical_policy": "runtime_decoded_svg_to_imagetexture_9slice__gameplay_shell__render_verification_required",
+      "block": "gameplay_header",
+      "slot": "objective_hud_frame",
+      "state": [
+        "playing",
+        "teaching",
+        "low_moves"
+      ],
+      "contract_owners": [
+        {
+          "screen": "S05",
+          "region": "hud",
+          "block": "gameplay_header",
+          "slot": "objective_remaining",
+          "states": [
+            "normal",
+            "complete"
+          ]
+        },
+        {
+          "screen": "S05",
+          "region": "hud",
+          "block": "gameplay_header",
+          "slot": "moves",
+          "states": [
+            "normal",
+            "low"
+          ]
+        }
+      ]
+    },
+    {
+      "asset_id": "gameplay_booster_tray_frame",
+      "screen": [
+        "S05"
+      ],
+      "type": "structural_ui",
+      "dimensions": "512x512_9slice_runtime_reuse",
+      "aspect_ratio": "scalable",
+      "transparent": true,
+      "variants": [
+        "default",
+        "high_contrast_runtime"
+      ],
+      "reuse": "declared_reuse_of_gbl_primary_panel_frame",
+      "priority": "P0",
+      "production_status": "runtime_connected_authored_9slice_candidate",
+      "current_path": "assets/ui/chrome/gbl_ui_ritual_panel_9s_base_v01.svg",
+      "runtime_style_script": "src/ui/theme/production_chrome.gd",
+      "technical_policy": "runtime_decoded_svg_to_imagetexture_9slice__gameplay_shell__render_verification_required",
+      "block": "booster_row",
+      "slot": "booster_tray_frame",
+      "state": [
+        "playing",
+        "paused_hidden"
+      ],
+      "contract_owners": [
+        {
+          "screen": "S05",
+          "region": "actions",
+          "block": "booster_row",
+          "slot": "hint",
+          "states": [
+            "available",
+            "disabled",
+            "pressed"
+          ]
+        }
+      ]
     }
   ],
   "vertical_slice_art_policy": {
@@ -2305,6 +2431,7 @@
     "life_economy": "NO_GLOBAL_LIFE_ASSET_BOUND"
   },
   "asset_gap_pass": {
-    "global_shell_chrome": "RUNTIME_AND_RENDER_VERIFIED"
+    "global_shell_chrome": "RUNTIME_AND_RENDER_VERIFIED",
+    "gameplay_chrome": "IN_PROGRESS_RENDER_REQUIRED"
   }
 }
