@@ -2526,10 +2526,10 @@
       ],
       "reuse": "golden_loop_primary_action_family",
       "priority": "P0",
-      "production_status": "runtime_connected_authored_9slice_render_required",
+      "production_status": "runtime_connected_authored_9slice_verified",
       "current_path": "assets/ui/chrome/gbl_ui_action_primary_9s_v01.svg",
       "runtime_style_script": "src/ui/theme/production_chrome.gd",
-      "technical_policy": "runtime_decoded_svg_to_imagetexture_9slice__compact_corner_primary_cta__render_verification_required",
+      "technical_policy": "runtime_decoded_svg_to_imagetexture_9slice__compact_corner_primary_cta__godot_4_7_2_render_verified",
       "contract_owners": [
         {
           "screen": "S01",
@@ -2621,10 +2621,10 @@
       ],
       "reuse": "golden_loop_utility_action_family",
       "priority": "P0",
-      "production_status": "runtime_connected_authored_9slice_render_required",
+      "production_status": "runtime_connected_authored_9slice_verified",
       "current_path": "assets/ui/chrome/gbl_ui_action_utility_9s_v01.svg",
       "runtime_style_script": "src/ui/theme/production_chrome.gd",
-      "technical_policy": "runtime_decoded_svg_to_imagetexture_9slice__compact_corner_utility_cta__render_verification_required",
+      "technical_policy": "runtime_decoded_svg_to_imagetexture_9slice__compact_corner_utility_cta__godot_4_7_2_render_verified",
       "contract_owners": [
         {
           "screen": "S03",
@@ -2778,6 +2778,7 @@
     "secondary_hero_chrome": "RUNTIME_AND_RENDER_VERIFIED",
     "global_interactive_chrome": "RUNTIME_AND_RENDER_VERIFIED",
     "global_interactive_chrome_evidence_head": "d66f1659367474ee6c21f7a2beef281a477ac7a6",
-    "golden_loop_action_chrome": "IN_PROGRESS_RENDER_REQUIRED"
+    "golden_loop_action_chrome": "RUNTIME_AND_RENDER_VERIFIED",
+    "golden_loop_action_chrome_evidence_head": "81f19420280e2164af0abbe42571ae06a29961c8"
   }
 }
