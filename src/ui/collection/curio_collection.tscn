@@ -162,14 +162,14 @@ horizontal_alignment = 1
 autowrap_mode = 2
 
 [node name="Cards" type="HBoxContainer" parent="Layout"]
-custom_minimum_size = Vector2(0, 500)
+custom_minimum_size = Vector2(0, 560)
 layout_mode = 2
 size_flags_vertical = 1
 theme_override_constants/separation = 12
 alignment = 1
 
 [node name="MoonCard" type="PanelContainer" parent="Layout/Cards"]
-custom_minimum_size = Vector2(0, 490)
+custom_minimum_size = Vector2(0, 550)
 layout_mode = 2
 size_flags_horizontal = 3
 theme_override_styles/panel = SubResource("Display")
@@ -181,7 +181,7 @@ theme_override_constants/separation = 14
 alignment = 0
 
 [node name="RitualArt" type="TextureRect" parent="Layout/Cards/MoonCard/Content"]
-custom_minimum_size = Vector2(0, 240)
+custom_minimum_size = Vector2(0, 270)
 layout_mode = 2
 size_flags_horizontal = 3
 expand_mode = 1
@@ -254,7 +254,7 @@ theme_override_styles/pressed = SubResource("Action")
 text = "DETAILS"
 
 [node name="Slot2" type="PanelContainer" parent="Layout/Cards"]
-custom_minimum_size = Vector2(0, 490)
+custom_minimum_size = Vector2(0, 550)
 layout_mode = 2
 size_flags_horizontal = 3
 theme_override_styles/panel = SubResource("DisplayCool")
@@ -266,7 +266,7 @@ theme_override_constants/separation = 14
 alignment = 0
 
 [node name="Number" type="Label" parent="Layout/Cards/Slot2/Content"]
-custom_minimum_size = Vector2(0, 240)
+custom_minimum_size = Vector2(0, 270)
 size_flags_horizontal = 3
 size_flags_vertical = 0
 layout_mode = 2
@@ -340,7 +340,7 @@ theme_override_styles/pressed = SubResource("Action")
 text = "DETAILS"
 
 [node name="Slot3" type="PanelContainer" parent="Layout/Cards"]
-custom_minimum_size = Vector2(0, 490)
+custom_minimum_size = Vector2(0, 550)
 layout_mode = 2
 size_flags_horizontal = 3
 theme_override_styles/panel = SubResource("DisplayCool")
@@ -352,7 +352,7 @@ theme_override_constants/separation = 14
 alignment = 0
 
 [node name="Number" type="Label" parent="Layout/Cards/Slot3/Content"]
-custom_minimum_size = Vector2(0, 240)
+custom_minimum_size = Vector2(0, 270)
 size_flags_horizontal = 3
 size_flags_vertical = 0
 layout_mode = 2
@@ -436,6 +436,11 @@ theme_override_styles/normal = SubResource("CountPlate")
 text = "OPENING CABINET · 0 / 3 CURIOS RECOVERED"
 horizontal_alignment = 1
 vertical_alignment = 1
+
+[node name="StageSpacer" type="Control" parent="Layout"]
+layout_mode = 2
+size_flags_vertical = 3
+mouse_filter = 2
 
 [node name="Back" type="Button" parent="Layout"]
 custom_minimum_size = Vector2(0, 88)
