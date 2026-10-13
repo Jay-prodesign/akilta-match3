@@ -1051,10 +1051,11 @@ func gameplay_presentation_contract() -> Dictionary:
 	)
 	var hierarchy_locked: bool = (
 		not title_label.visible
-		and eyebrow_label.get_theme_font_size("font_size") >= 26
-		and objective_icon.custom_minimum_size.x >= 72.0
-		and objective_label.get_theme_font_size("font_size") >= 26
-		and moves_label.get_theme_font_size("font_size") >= 40
+		and eyebrow_label.get_theme_font_size("font_size") >= 30
+		and objective_icon.custom_minimum_size.x >= 80.0
+		and objective_label.get_theme_font_size("font_size") >= 30
+		and moves_label.get_theme_font_size("font_size") >= 38
+		and moves_label.get_theme_font_size("font_size") <= 42
 		and ($Layout/HUDPlate as PanelContainer).custom_minimum_size.y >= 120.0
 	)
 	var integrated_hud_surface: bool = (
@@ -1065,7 +1066,7 @@ func gameplay_presentation_contract() -> Dictionary:
 	)
 	var hint_readable: bool = (
 		hint_label.custom_minimum_size.y >= 54.0
-		and hint_label.get_theme_font_size("font_size") >= 24
+		and hint_label.get_theme_font_size("font_size") >= 26
 	)
 	var booster_family_locked: bool = (
 		$BoosterTray/BoosterActions/SealedSlotA.visible
@@ -1101,6 +1102,7 @@ func gameplay_presentation_contract() -> Dictionary:
 	var objective_spacing_locked: bool = (
 		objective_label.size.x >= get_viewport().get_visible_rect().size.x * 0.36
 		and objective_label.global_position.x >= objective_icon.global_position.x + objective_icon.size.x + 6.0
+		and objective_label.horizontal_alignment == HORIZONTAL_ALIGNMENT_LEFT
 	)
 	var compact_header_locked: bool = (
 		not title_label.visible
@@ -1124,9 +1126,9 @@ func gameplay_presentation_contract() -> Dictionary:
 	var hint_style := hint_label.get_theme_stylebox("normal")
 	var integrated_hint_surface: bool = (
 		hint_style is StyleBoxFlat
-		and (hint_style as StyleBoxFlat).bg_color.a <= 0.22
-		and (hint_style as StyleBoxFlat).border_color.a <= 0.14
-		and (hint_style as StyleBoxFlat).shadow_color.a <= 0.14
+		and (hint_style as StyleBoxFlat).bg_color.a <= 0.10
+		and (hint_style as StyleBoxFlat).border_color.a <= 0.08
+		and (hint_style as StyleBoxFlat).shadow_color.a <= 0.08
 	)
 	return {
 		"authored_hud_plate": get_node_or_null("Layout/HUDPlate/HUD") != null,
@@ -1173,7 +1175,8 @@ func gameplay_presentation_contract() -> Dictionary:
 		"visual_parity_gate_v11": hierarchy_locked and integrated_hud_surface and hint_readable and booster_family_locked and composition_locked and board_locked and utilities_separated and canonical_booster_art and gothic_board_material and objective_spacing_locked and compact_header_locked,
 		"visual_parity_gate_v12": hierarchy_locked and integrated_hud_surface and hint_readable and booster_family_locked and composition_locked and board_locked and utilities_separated and canonical_booster_art and gothic_board_material and objective_spacing_locked and compact_header_locked and compact_geometry_locked and north_star_gameplay_hud_frame,
 		"visual_parity_gate_v13": hierarchy_locked and integrated_hud_surface and integrated_hint_surface and hint_readable and booster_family_locked and composition_locked and board_locked and utilities_separated and canonical_booster_art and gothic_board_material and objective_spacing_locked and compact_header_locked and compact_geometry_locked and north_star_gameplay_hud_frame,
-		"visual_parity_version": 13,
+		"visual_parity_gate_v14": hierarchy_locked and integrated_hud_surface and integrated_hint_surface and hint_readable and booster_family_locked and composition_locked and board_locked and utilities_separated and canonical_booster_art and gothic_board_material and objective_spacing_locked and compact_header_locked and compact_geometry_locked and north_star_gameplay_hud_frame,
+		"visual_parity_version": 14,
 		"resource_bar_height": ($ResourceBar as PanelContainer).offset_bottom - ($ResourceBar as PanelContainer).offset_top,
 		"hud_plate_height": ($Layout/HUDPlate as PanelContainer).custom_minimum_size.y,
 		"booster_tray_height": _booster_tray.offset_bottom - _booster_tray.offset_top,
