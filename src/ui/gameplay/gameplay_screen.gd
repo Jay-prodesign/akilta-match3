@@ -190,12 +190,12 @@ func _ready() -> void:
 	pause_sigil.texture = PieceAssetLoader.ornament(String(OBJECTIVE_ART_PATHS["moon"]))
 	pause_button.set_meta("production_chrome_kind", "gameplay_pause_icon")
 	pause_button.set_meta("production_chrome_asset", GAMEPLAY_PAUSE_ICON_PATH)
-	ProductionChrome.apply_action_button(pause_resume, "primary", "pause_resume")
-	ProductionChrome.apply_action_button(pause_retry, "utility", "pause_retry")
-	ProductionChrome.apply_action_button(pause_settings, "utility", "pause_settings")
-	ProductionChrome.apply_action_button(pause_exit, "utility", "pause_exit")
-	ProductionChrome.apply_action_button(result_recovery_action, "primary", "fail_recovery_plus_three")
-	ProductionChrome.apply_action_button(result_action, "primary", "result_continue_or_retry")
+	ProductionChrome.apply_gameplay_action_button(pause_resume, "primary", "pause_resume")
+	ProductionChrome.apply_gameplay_action_button(pause_retry, "utility", "pause_retry")
+	ProductionChrome.apply_gameplay_action_button(pause_settings, "utility", "pause_settings")
+	ProductionChrome.apply_gameplay_action_button(pause_exit, "utility", "pause_exit")
+	ProductionChrome.apply_gameplay_action_button(result_recovery_action, "primary", "fail_recovery_plus_three")
+	ProductionChrome.apply_gameplay_action_button(result_action, "primary", "result_continue_or_retry")
 	var board_frame := $Layout/BoardView/OrnateFrame as Panel
 	if board_frame != null:
 		board_frame.add_theme_stylebox_override("panel", StyleBoxEmpty.new())
