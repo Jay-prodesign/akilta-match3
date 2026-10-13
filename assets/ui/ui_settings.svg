@@ -1,1 +1,5 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="72" height="72" viewBox="0 0 72 72"><path d="m36 9 5 8 9-2 3 9 9 3-2 9 8 5-5 8 2 9-9 3-3 9-9-2-5 8-8-5-9 2-3-9-9-3 2-9-8-5 5-8-2-9 9-3 3-9 9 2Z" fill="none" stroke="#E4C07A" stroke-width="3"/><circle cx="36" cy="36" r="10" fill="none" stroke="#BFA5D8" stroke-width="4"/></svg>
+<svg xmlns="http://www.w3.org/2000/svg" width="128" height="128" viewBox="0 0 128 128"><defs>
+<linearGradient id="gold" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#FFF0B5"/><stop offset=".45" stop-color="#E0B15D"/><stop offset="1" stop-color="#8C5527"/></linearGradient>
+<linearGradient id="plum" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#4C2B58"/><stop offset="1" stop-color="#1C1125"/></linearGradient>
+<linearGradient id="lilac" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#E5C8F5"/><stop offset="1" stop-color="#8E629F"/></linearGradient>
+</defs><metadata>cat-coven-production-icon-v1</metadata><path d="m64 12 9 12 15-4 5 14 15 5-4 15 12 10-12 10 4 15-15 5-5 14-15-4-9 12-9-12-15 4-5-14-15-5 4-15-12-10 12-10-4-15 15-5 5-14 15 4Z" fill="url(#plum)" stroke="url(#gold)" stroke-width="5" stroke-linejoin="round"/><circle cx="64" cy="64" r="25" fill="#180F1E" stroke="#C9A7DB" stroke-width="4"/><path d="M69 44a21 21 0 1 0 14 35 18 18 0 1 1-14-35Z" fill="url(#gold)"/><circle cx="83" cy="43" r="5" fill="#D9B4EB"/></svg>

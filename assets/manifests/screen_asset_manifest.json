@@ -98,7 +98,7 @@
         "disabled"
       ],
       "type": "functional_icon",
-      "dimensions": "128x128_svg",
+      "dimensions": "128x128_svg_production_master",
       "aspect_ratio": "1:1",
       "transparent": true,
       "variants": [
@@ -106,8 +106,10 @@
       ],
       "reuse": "global",
       "priority": "P0",
-      "production_status": "candidate",
-      "current_path": "assets/ui/nav_house.svg"
+      "production_status": "runtime_connected_authored_vector_candidate",
+      "current_path": "assets/ui/nav_house.svg",
+      "technical_policy": "authored_functional_vector__antique_gold_plum_lilac_material_family__small_scale_render_verification_required",
+      "provenance": "AKILTA first-party Cat & Coven production functional icon family; unified antique-gold, plum and lilac material language with silhouette-first small-scale readability."
     },
     {
       "asset_id": "gbl_nav_curios",
@@ -123,7 +125,7 @@
         "disabled"
       ],
       "type": "functional_icon",
-      "dimensions": "128x128_svg",
+      "dimensions": "128x128_svg_production_master",
       "aspect_ratio": "1:1",
       "transparent": true,
       "variants": [
@@ -131,8 +133,10 @@
       ],
       "reuse": "global",
       "priority": "P0",
-      "production_status": "candidate",
-      "current_path": "assets/ui/nav_curios.svg"
+      "production_status": "runtime_connected_authored_vector_candidate",
+      "current_path": "assets/ui/nav_curios.svg",
+      "technical_policy": "authored_functional_vector__antique_gold_plum_lilac_material_family__small_scale_render_verification_required",
+      "provenance": "AKILTA first-party Cat & Coven production functional icon family; unified antique-gold, plum and lilac material language with silhouette-first small-scale readability."
     },
     {
       "asset_id": "gbl_nav_map",
@@ -148,7 +152,7 @@
         "disabled"
       ],
       "type": "functional_icon",
-      "dimensions": "128x128_svg",
+      "dimensions": "128x128_svg_production_master",
       "aspect_ratio": "1:1",
       "transparent": true,
       "variants": [
@@ -156,8 +160,10 @@
       ],
       "reuse": "global",
       "priority": "P0",
-      "production_status": "candidate",
-      "current_path": "assets/ui/nav_map.svg"
+      "production_status": "runtime_connected_authored_vector_candidate",
+      "current_path": "assets/ui/nav_map.svg",
+      "technical_policy": "authored_functional_vector__antique_gold_plum_lilac_material_family__small_scale_render_verification_required",
+      "provenance": "AKILTA first-party Cat & Coven production functional icon family; unified antique-gold, plum and lilac material language with silhouette-first small-scale readability."
     },
     {
       "asset_id": "gbl_nav_events",
@@ -173,7 +179,7 @@
         "disabled"
       ],
       "type": "functional_icon",
-      "dimensions": "128x128_svg",
+      "dimensions": "128x128_svg_production_master",
       "aspect_ratio": "1:1",
       "transparent": true,
       "variants": [
@@ -181,8 +187,10 @@
       ],
       "reuse": "global",
       "priority": "P0",
-      "production_status": "candidate",
-      "current_path": "assets/ui/nav_events.svg"
+      "production_status": "runtime_connected_authored_vector_candidate",
+      "current_path": "assets/ui/nav_events.svg",
+      "technical_policy": "authored_functional_vector__antique_gold_plum_lilac_material_family__small_scale_render_verification_required",
+      "provenance": "AKILTA first-party Cat & Coven production functional icon family; unified antique-gold, plum and lilac material language with silhouette-first small-scale readability."
     },
     {
       "asset_id": "gbl_nav_shop",
@@ -198,7 +206,7 @@
         "disabled"
       ],
       "type": "functional_icon",
-      "dimensions": "128x128_svg",
+      "dimensions": "128x128_svg_production_master",
       "aspect_ratio": "1:1",
       "transparent": true,
       "variants": [
@@ -206,8 +214,10 @@
       ],
       "reuse": "global",
       "priority": "P0",
-      "production_status": "candidate",
-      "current_path": "assets/ui/nav_shop.svg"
+      "production_status": "runtime_connected_authored_vector_candidate",
+      "current_path": "assets/ui/nav_shop.svg",
+      "technical_policy": "authored_functional_vector__antique_gold_plum_lilac_material_family__small_scale_render_verification_required",
+      "provenance": "AKILTA first-party Cat & Coven production functional icon family; unified antique-gold, plum and lilac material language with silhouette-first small-scale readability."
     },
     {
       "asset_id": "gbl_currency_coin",
@@ -220,14 +230,16 @@
         "normal"
       ],
       "type": "functional_icon",
-      "dimensions": "128x128_svg",
+      "dimensions": "128x128_svg_production_master",
       "aspect_ratio": "1:1",
       "transparent": true,
       "variants": [],
       "reuse": "global",
       "priority": "P0",
-      "production_status": "candidate",
-      "current_path": "assets/ui/ui_coin.svg"
+      "production_status": "runtime_connected_authored_vector_candidate",
+      "current_path": "assets/ui/ui_coin.svg",
+      "technical_policy": "authored_functional_vector__antique_gold_plum_lilac_material_family__small_scale_render_verification_required",
+      "provenance": "AKILTA first-party Cat & Coven production functional icon family; unified antique-gold, plum and lilac material language with silhouette-first small-scale readability."
     },
     {
       "asset_id": "gbl_currency_gem",
@@ -240,14 +252,16 @@
         "normal"
       ],
       "type": "functional_icon",
-      "dimensions": "128x128_svg",
+      "dimensions": "128x128_svg_production_master",
       "aspect_ratio": "1:1",
       "transparent": true,
       "variants": [],
       "reuse": "global",
       "priority": "P0",
-      "production_status": "candidate",
-      "current_path": "assets/ui/ui_gem.svg"
+      "production_status": "runtime_connected_authored_vector_candidate",
+      "current_path": "assets/ui/ui_gem.svg",
+      "technical_policy": "authored_functional_vector__antique_gold_plum_lilac_material_family__small_scale_render_verification_required",
+      "provenance": "AKILTA first-party Cat & Coven production functional icon family; unified antique-gold, plum and lilac material language with silhouette-first small-scale readability."
     },
     {
       "asset_id": "hub_bg_grandhall",
@@ -2208,6 +2222,56 @@
       ],
       "current_path": "assets/world/ch01_curio_boutique/hub_bg_grandhall.webp",
       "provenance": "AKILTA first-party authored House environment reused for Settings continuity"
+    },
+    {
+      "asset_id": "gbl_profile_keeper",
+      "screen": [
+        "global"
+      ],
+      "block": "global_shell",
+      "slot": "profile_settings",
+      "state": [
+        "normal",
+        "pressed"
+      ],
+      "type": "functional_icon",
+      "dimensions": "128x128_svg_production_master",
+      "aspect_ratio": "1:1",
+      "transparent": true,
+      "variants": [
+        "state_tint_runtime"
+      ],
+      "reuse": "global",
+      "priority": "P0",
+      "production_status": "runtime_connected_authored_vector_candidate",
+      "current_path": "assets/ui/ui_profile.svg",
+      "technical_policy": "authored_functional_vector__antique_gold_plum_lilac_material_family__small_scale_render_verification_required",
+      "provenance": "AKILTA first-party Cat & Coven production functional icon family."
+    },
+    {
+      "asset_id": "gbl_settings_gear",
+      "screen": [
+        "global"
+      ],
+      "block": "global_shell",
+      "slot": "settings_shortcut",
+      "state": [
+        "normal",
+        "pressed"
+      ],
+      "type": "functional_icon",
+      "dimensions": "128x128_svg_production_master",
+      "aspect_ratio": "1:1",
+      "transparent": true,
+      "variants": [
+        "state_tint_runtime"
+      ],
+      "reuse": "global",
+      "priority": "P0",
+      "production_status": "runtime_connected_authored_vector_candidate",
+      "current_path": "assets/ui/ui_settings.svg",
+      "technical_policy": "authored_functional_vector__antique_gold_plum_lilac_material_family__small_scale_render_verification_required",
+      "provenance": "AKILTA first-party Cat & Coven production functional icon family."
     }
   ],
   "vertical_slice_art_policy": {
