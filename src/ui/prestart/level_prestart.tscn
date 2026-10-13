@@ -136,22 +136,27 @@ layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
-offset_left = 26.0
-offset_top = 20.0
-offset_right = -26.0
-offset_bottom = -20.0
-theme_override_constants/separation = 10
+offset_left = 28.0
+offset_top = 130.0
+offset_right = -28.0
+offset_bottom = -82.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/separation = 12
 alignment = 1
 
-[node name="Eyebrow" type="Label" parent="Layout"]
-custom_minimum_size = Vector2(0, 54)
+[node name="LevelPlaque" type="PanelContainer" parent="Layout"]
+custom_minimum_size = Vector2(580, 92)
 layout_mode = 2
-theme_override_colors/font_color = Color(0.851, 0.71, 0.416, 1)
-theme_override_colors/font_outline_color = Color(0.02, 0.015, 0.025, 0.92)
-theme_override_constants/outline_size = 4
-theme_override_font_sizes/font_size = 22
-theme_override_styles/normal = SubResource("EyebrowBand")
-text = "CURIO BOUTIQUE · RITUAL PREVIEW"
+size_flags_horizontal = 4
+
+[node name="Level" type="Label" parent="Layout/LevelPlaque"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.969, 0.875, 0.682, 1)
+theme_override_colors/font_outline_color = Color(0.02, 0.015, 0.025, 0.94)
+theme_override_constants/outline_size = 3
+theme_override_font_sizes/font_size = 50
+text = "LEVEL 1"
 horizontal_alignment = 1
 vertical_alignment = 1
 
@@ -164,17 +169,17 @@ theme_override_styles/panel = SubResource("Card")
 
 [node name="Content" type="VBoxContainer" parent="Layout/Card"]
 layout_mode = 2
-theme_override_constants/separation = 8
+theme_override_constants/separation = 10
 alignment = 0
 
 [node name="RitualArt" type="Control" parent="Layout/Card/Content"]
-custom_minimum_size = Vector2(0, 310)
+custom_minimum_size = Vector2(0, 190)
 layout_mode = 2
 mouse_filter = 2
 clip_contents = true
 script = ExtResource("2_cameo")
 mode = "prestart"
-glow_strength = 0.5
+glow_strength = 0.45
 
 [node name="LevelArtwork" type="TextureRect" parent="Layout/Card/Content/RitualArt"]
 layout_mode = 1
@@ -187,93 +192,132 @@ mouse_filter = 2
 show_behind_parent = true
 expand_mode = 1
 stretch_mode = 6
-modulate = Color(0.88, 0.82, 0.9, 0.72)
-
-[node name="Level" type="Label" parent="Layout/Card/Content"]
-layout_mode = 2
-theme_override_colors/font_color = Color(0.851, 0.71, 0.416, 1)
-theme_override_font_sizes/font_size = 32
-text = "LEVEL 1"
-horizontal_alignment = 1
+modulate = Color(0.82, 0.77, 0.86, 0.62)
 
 [node name="Title" type="Label" parent="Layout/Card/Content"]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.988, 0.933, 0.831, 1)
 theme_override_colors/font_outline_color = Color(0.02, 0.015, 0.025, 0.96)
-theme_override_constants/outline_size = 5
-theme_override_font_sizes/font_size = 50
+theme_override_constants/outline_size = 4
+theme_override_font_sizes/font_size = 46
 text = "Moonlit Cabinet"
 horizontal_alignment = 1
 
-[node name="Objective" type="Label" parent="Layout/Card/Content"]
-custom_minimum_size = Vector2(0, 60)
-layout_mode = 2
-theme_override_colors/font_color = Color(0.89, 0.82, 0.84, 1)
-theme_override_font_sizes/font_size = 34
-theme_override_styles/normal = SubResource("EyebrowBand")
-text = "GOAL · GATHER 6 MOON SIGILS"
-vertical_alignment = 1
-horizontal_alignment = 1
-
-[node name="Moves" type="Label" parent="Layout/Card/Content"]
-custom_minimum_size = Vector2(0, 48)
-layout_mode = 2
-theme_override_colors/font_color = Color(0.749, 0.647, 0.847, 1)
-theme_override_font_sizes/font_size = 29
-text = "20 MOVES"
-horizontal_alignment = 1
-
 [node name="Reward" type="Label" parent="Layout/Card/Content"]
-custom_minimum_size = Vector2(0, 50)
+custom_minimum_size = Vector2(0, 42)
 layout_mode = 2
 theme_override_colors/font_color = Color(0.902, 0.772, 0.502, 1)
-theme_override_font_sizes/font_size = 29
+theme_override_font_sizes/font_size = 23
 text = "REWARD · MOON CAMEO"
 horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="ObjectiveBand" type="PanelContainer" parent="Layout/Card/Content"]
+custom_minimum_size = Vector2(0, 170)
+layout_mode = 2
+theme_override_styles/panel = SubResource("AidPanel")
+
+[node name="Row" type="HBoxContainer" parent="Layout/Card/Content/ObjectiveBand"]
+layout_mode = 2
+theme_override_constants/separation = 12
+alignment = 1
+
+[node name="ObjectiveCluster" type="HBoxContainer" parent="Layout/Card/Content/ObjectiveBand/Row"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 12
+alignment = 1
+
+[node name="Icon" type="TextureRect" parent="Layout/Card/Content/ObjectiveBand/Row/ObjectiveCluster"]
+custom_minimum_size = Vector2(112, 112)
+layout_mode = 2
+mouse_filter = 2
+expand_mode = 1
+stretch_mode = 5
+
+[node name="Copy" type="VBoxContainer" parent="Layout/Card/Content/ObjectiveBand/Row/ObjectiveCluster"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 2
+alignment = 1
+
+[node name="Caption" type="Label" parent="Layout/Card/Content/ObjectiveBand/Row/ObjectiveCluster/Copy"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.831, 0.678, 0.439, 1)
+theme_override_font_sizes/font_size = 18
+text = "OBJECTIVE"
+horizontal_alignment = 1
+
+[node name="Objective" type="Label" parent="Layout/Card/Content/ObjectiveBand/Row/ObjectiveCluster/Copy"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.956, 0.899, 0.826, 1)
+theme_override_colors/font_outline_color = Color(0.02, 0.015, 0.025, 0.94)
+theme_override_constants/outline_size = 2
+theme_override_font_sizes/font_size = 30
+text = "GATHER 6\nMOON SIGILS"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="MovesPlate" type="PanelContainer" parent="Layout/Card/Content/ObjectiveBand/Row"]
+custom_minimum_size = Vector2(190, 132)
+layout_mode = 2
+theme_override_styles/panel = SubResource("AidChip")
+
+[node name="Moves" type="Label" parent="Layout/Card/Content/ObjectiveBand/Row/MovesPlate"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.969, 0.875, 0.682, 1)
+theme_override_colors/font_outline_color = Color(0.02, 0.015, 0.025, 0.96)
+theme_override_constants/outline_size = 3
+theme_override_font_sizes/font_size = 34
+text = "20\nMOVES"
+horizontal_alignment = 1
+vertical_alignment = 1
 
 [node name="Note" type="Label" parent="Layout/Card/Content"]
 visible = false
 layout_mode = 2
 theme_override_colors/font_color = Color(0.72, 0.66, 0.73, 1)
-theme_override_font_sizes/font_size = 22
+theme_override_font_sizes/font_size = 20
 text = "Wake the Moon Cameo. The first cabinet will remember this victory."
 horizontal_alignment = 1
 autowrap_mode = 2
 
 [node name="RitualAids" type="PanelContainer" parent="Layout/Card/Content"]
-custom_minimum_size = Vector2(0, 160)
+custom_minimum_size = Vector2(0, 210)
 layout_mode = 2
 theme_override_styles/panel = SubResource("AidPanel")
 
 [node name="Column" type="VBoxContainer" parent="Layout/Card/Content/RitualAids"]
 layout_mode = 2
-theme_override_constants/separation = 5
+theme_override_constants/separation = 8
 
 [node name="RitualAidsHeading" type="Label" parent="Layout/Card/Content/RitualAids/Column"]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.831, 0.678, 0.439, 1)
-theme_override_font_sizes/font_size = 22
-text = "SELECT RITUAL HELP"
+theme_override_font_sizes/font_size = 21
+text = "RITUAL AIDS"
 horizontal_alignment = 1
 
 [node name="AidRow" type="HBoxContainer" parent="Layout/Card/Content/RitualAids/Column"]
 layout_mode = 2
-theme_override_constants/separation = 6
+theme_override_constants/separation = 14
+alignment = 1
 
 [node name="KeeperChip" type="PanelContainer" parent="Layout/Card/Content/RitualAids/Column/AidRow"]
-custom_minimum_size = Vector2(0, 78)
+custom_minimum_size = Vector2(0, 148)
 layout_mode = 2
 size_flags_horizontal = 3
 theme_override_styles/panel = SubResource("AidChip")
 
-[node name="Content" type="HBoxContainer" parent="Layout/Card/Content/RitualAids/Column/AidRow/KeeperChip"]
+[node name="Content" type="VBoxContainer" parent="Layout/Card/Content/RitualAids/Column/AidRow/KeeperChip"]
 layout_mode = 2
-theme_override_constants/separation = 4
+theme_override_constants/separation = 2
 alignment = 1
 
 [node name="Art" type="TextureRect" parent="Layout/Card/Content/RitualAids/Column/AidRow/KeeperChip/Content"]
-custom_minimum_size = Vector2(48, 48)
+custom_minimum_size = Vector2(82, 82)
 layout_mode = 2
+size_flags_horizontal = 4
 mouse_filter = 2
 expand_mode = 1
 stretch_mode = 5
@@ -281,23 +325,32 @@ stretch_mode = 5
 [node name="Caption" type="Label" parent="Layout/Card/Content/RitualAids/Column/AidRow/KeeperChip/Content"]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.96, 0.9, 0.83, 1)
-theme_override_font_sizes/font_size = 24
+theme_override_font_sizes/font_size = 21
 text = "ASK KEEPER"
+horizontal_alignment = 1
+
+[node name="State" type="Label" parent="Layout/Card/Content/RitualAids/Column/AidRow/KeeperChip/Content"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.72, 0.66, 0.75, 1)
+theme_override_font_sizes/font_size = 15
+text = "HINT · IN LEVEL"
+horizontal_alignment = 1
 
 [node name="RecoveryChip" type="PanelContainer" parent="Layout/Card/Content/RitualAids/Column/AidRow"]
-custom_minimum_size = Vector2(0, 78)
+custom_minimum_size = Vector2(0, 148)
 layout_mode = 2
 size_flags_horizontal = 3
 theme_override_styles/panel = SubResource("AidChip")
 
-[node name="Content" type="HBoxContainer" parent="Layout/Card/Content/RitualAids/Column/AidRow/RecoveryChip"]
+[node name="Content" type="VBoxContainer" parent="Layout/Card/Content/RitualAids/Column/AidRow/RecoveryChip"]
 layout_mode = 2
-theme_override_constants/separation = 4
+theme_override_constants/separation = 2
 alignment = 1
 
 [node name="Art" type="TextureRect" parent="Layout/Card/Content/RitualAids/Column/AidRow/RecoveryChip/Content"]
-custom_minimum_size = Vector2(48, 48)
+custom_minimum_size = Vector2(82, 82)
 layout_mode = 2
+size_flags_horizontal = 4
 mouse_filter = 2
 expand_mode = 1
 stretch_mode = 5
@@ -305,27 +358,35 @@ stretch_mode = 5
 [node name="Caption" type="Label" parent="Layout/Card/Content/RitualAids/Column/AidRow/RecoveryChip/Content"]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.96, 0.9, 0.83, 1)
-theme_override_font_sizes/font_size = 24
-text = "FAIL RECOVERY · +3"
+theme_override_font_sizes/font_size = 21
+text = "FAIL RECOVERY"
+horizontal_alignment = 1
+
+[node name="State" type="Label" parent="Layout/Card/Content/RitualAids/Column/AidRow/RecoveryChip/Content"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.72, 0.66, 0.75, 1)
+theme_override_font_sizes/font_size = 15
+text = "+3 MOVES ON FAIL"
+horizontal_alignment = 1
 
 [node name="Start" type="Button" parent="Layout/Card/Content"]
 custom_minimum_size = Vector2(0, 104)
 layout_mode = 2
 theme_override_colors/font_color = Color(0.988, 0.933, 0.831, 1)
 theme_override_colors/font_hover_color = Color(0.988, 0.933, 0.831, 1)
-theme_override_font_sizes/font_size = 26
+theme_override_font_sizes/font_size = 28
 theme_override_styles/normal = SubResource("Start")
 theme_override_styles/hover = SubResource("StartHover")
 theme_override_styles/pressed = SubResource("StartHover")
 text = "PLAY"
 
 [node name="Back" type="Button" parent="Layout"]
-custom_minimum_size = Vector2(0, 88)
+custom_minimum_size = Vector2(0, 72)
 layout_mode = 2
-theme_override_colors/font_color = Color(0.945, 0.91, 0.866, 1)
+theme_override_colors/font_color = Color(0.88, 0.84, 0.86, 1)
 theme_override_colors/font_hover_color = Color(0.988, 0.933, 0.831, 1)
-theme_override_font_sizes/font_size = 21
+theme_override_font_sizes/font_size = 19
 theme_override_styles/normal = SubResource("Back")
 theme_override_styles/hover = SubResource("StartHover")
 theme_override_styles/pressed = SubResource("StartHover")
-text = "BACK TO HOUSE"
+text = "BACK TO MAP"
