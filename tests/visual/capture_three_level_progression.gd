@@ -327,19 +327,20 @@ func _capture() -> void:
 	if settings_close == null or settings_close.text != "RETURN TO PROFILE":
 		return _fail(app, "Profile Settings must return to its origin screen")
 	var settings_contract: Dictionary = settings_panel.settings_authored_contract() if settings_panel.has_method("settings_authored_contract") else {}
-	if not bool(settings_contract.get("visual_parity_gate_v2", false)):
+	if not bool(settings_contract.get("visual_parity_gate_v3", false)):
 		return _fail(app, "Settings final-direction visual parity gate failed")
 	var settings_viewport: Vector2 = settings_panel.get_viewport().get_visible_rect().size
 	var settings_card := settings_panel.get_node_or_null("Card") as Control
 	var settings_sigil := settings_panel.get_node_or_null("Card/Content/HouseSigil") as Control
 	if settings_card == null or settings_sigil == null:
 		return _fail(app, "Settings visual parity geometry missing")
-	if settings_card.size.x / settings_viewport.x > 0.86 or settings_card.size.y / settings_viewport.y > 0.42:
-		return _fail(app, "Settings card expanded back into a full-screen form")
+	var settings_height_ratio := settings_card.size.y / settings_viewport.y
+	if settings_card.size.x / settings_viewport.x > 0.86 or settings_height_ratio < 0.68 or settings_height_ratio > 0.79:
+		return _fail(app, "Settings card lost its tall North Star destination proportion: %.3f" % settings_height_ratio)
 	if settings_sigil.custom_minimum_size.y < 120.0:
 		return _fail(app, "Settings House sigil visual anchor collapsed")
-	var reduced_toggle: CheckButton = settings_panel.get_node_or_null("Card/Content/ExperienceRow/Reduced") as CheckButton
-	var contrast_toggle: CheckButton = settings_panel.get_node_or_null("Card/Content/ExperienceRow/Contrast") as CheckButton
+	var reduced_toggle: Button = settings_panel.get_node_or_null("Card/Content/ExperienceRow/Reduced") as Button
+	var contrast_toggle: Button = settings_panel.get_node_or_null("Card/Content/ExperienceRow/Contrast") as Button
 	var saved_note: Label = settings_panel.get_node_or_null("Card/Content/SavedNote") as Label
 	if reduced_toggle == null or contrast_toggle == null or saved_note == null:
 		return _fail(app, "Settings changed-state controls missing")
