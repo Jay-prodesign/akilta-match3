@@ -437,7 +437,7 @@ alignment = 1
 tooltip_text = "Current level objective"
 
 [node name="ObjectiveName" type="Label" parent="Layout/HUDPlate/HUD/ObjectiveSlot"]
-custom_minimum_size = Vector2(0, 24)
+custom_minimum_size = Vector2(0, 12)
 layout_mode = 2
 theme_override_colors/font_color = Color(0.92, 0.79, 0.62, 1)
 theme_override_colors/font_outline_color = Color(0.03, 0.02, 0.04, 0.94)
@@ -872,10 +872,12 @@ horizontal_alignment = 1
 custom_minimum_size = Vector2(520, 92)
 layout_mode = 2
 size_flags_horizontal = 4
-theme_override_colors/font_color = Color(0.0627, 0.051, 0.0706, 1)
-theme_override_colors/font_hover_color = Color(1, 0.96, 0.86, 1)
-theme_override_colors/font_pressed_color = Color(1, 0.96, 0.86, 1)
-theme_override_font_sizes/font_size = 24
+theme_override_colors/font_color = Color(1, 0.95, 0.84, 1)
+theme_override_colors/font_hover_color = Color(1, 0.98, 0.90, 1)
+theme_override_colors/font_pressed_color = Color(1, 0.98, 0.90, 1)
+theme_override_colors/icon_normal_color = Color(1, 0.94, 0.82, 1)
+theme_override_font_sizes/font_size = 27
+theme_override_constants/icon_max_width = 38
 theme_override_styles/normal = SubResource("ActionNormal")
 theme_override_styles/hover = SubResource("ActionHover")
 theme_override_styles/pressed = SubResource("ActionPressed")
@@ -885,8 +887,10 @@ text = "RESUME"
 custom_minimum_size = Vector2(500, 74)
 layout_mode = 2
 size_flags_horizontal = 4
-theme_override_colors/font_color = Color(0.945, 0.91, 0.866, 1)
-theme_override_font_sizes/font_size = 21
+theme_override_colors/font_color = Color(0.98, 0.91, 0.78, 1)
+theme_override_colors/icon_normal_color = Color(0.96, 0.86, 0.72, 1)
+theme_override_constants/icon_max_width = 34
+theme_override_font_sizes/font_size = 23
 theme_override_styles/normal = SubResource("PauseUtility")
 theme_override_styles/hover = SubResource("PauseUtility")
 theme_override_styles/pressed = SubResource("PauseUtility")
@@ -896,8 +900,10 @@ text = "RESTART LEVEL"
 custom_minimum_size = Vector2(500, 74)
 layout_mode = 2
 size_flags_horizontal = 4
-theme_override_colors/font_color = Color(0.945, 0.91, 0.866, 1)
-theme_override_font_sizes/font_size = 21
+theme_override_colors/font_color = Color(0.98, 0.91, 0.78, 1)
+theme_override_colors/icon_normal_color = Color(0.96, 0.86, 0.72, 1)
+theme_override_constants/icon_max_width = 34
+theme_override_font_sizes/font_size = 23
 theme_override_styles/normal = SubResource("PauseUtility")
 theme_override_styles/hover = SubResource("PauseUtility")
 theme_override_styles/pressed = SubResource("PauseUtility")
@@ -908,7 +914,7 @@ custom_minimum_size = Vector2(500, 74)
 layout_mode = 2
 size_flags_horizontal = 4
 theme_override_colors/font_color = Color(0.851, 0.804, 0.835, 1)
-theme_override_font_sizes/font_size = 21
+theme_override_font_sizes/font_size = 23
 theme_override_styles/normal = SubResource("PauseUtility")
 theme_override_styles/hover = SubResource("PauseUtility")
 theme_override_styles/pressed = SubResource("PauseUtility")
@@ -941,9 +947,9 @@ anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
 offset_left = -390.0
-offset_top = -440.0
+offset_top = -405.0
 offset_right = 390.0
-offset_bottom = 440.0
+offset_bottom = 405.0
 grow_horizontal = 2
 grow_vertical = 2
 theme_override_styles/panel = SubResource("StylePanel")
@@ -963,7 +969,7 @@ layout_mode = 2
 theme_override_colors/font_color = Color(0.851, 0.71, 0.416, 1)
 theme_override_colors/font_outline_color = Color(0.02, 0.015, 0.025, 0.92)
 theme_override_constants/outline_size = 3
-theme_override_font_sizes/font_size = 22
+theme_override_font_sizes/font_size = 24
 text = "CURIO RECOVERED · RELIC 01"
 horizontal_alignment = 1
 
@@ -972,7 +978,7 @@ layout_mode = 2
 theme_override_colors/font_color = Color(0.975, 0.91, 0.79, 1)
 theme_override_colors/font_outline_color = Color(0.02, 0.015, 0.025, 0.95)
 theme_override_constants/outline_size = 5
-theme_override_font_sizes/font_size = 52
+theme_override_font_sizes/font_size = 56
 text = "THE CABINET STIRS"
 horizontal_alignment = 1
 vertical_alignment = 1
@@ -991,7 +997,7 @@ expand_mode = 1
 stretch_mode = 5
 
 [node name="StarB" type="TextureRect" parent="ResultOverlay/Card/Content/StarRow"]
-custom_minimum_size = Vector2(118, 118)
+custom_minimum_size = Vector2(126, 126)
 layout_mode = 2
 mouse_filter = 2
 expand_mode = 1
@@ -1102,7 +1108,8 @@ horizontal_alignment = 1
 autowrap_mode = 2
 
 [node name="ResultProclamation" type="HBoxContainer" parent="ResultOverlay/Card/Content"]
-custom_minimum_size = Vector2(0, 72)
+custom_minimum_size = Vector2(520, 132)
+size_flags_horizontal = 4
 layout_mode = 2
 theme_override_constants/separation = 10
 alignment = 1
@@ -1115,20 +1122,21 @@ expand_mode = 1
 stretch_mode = 5
 
 [node name="Copy" type="VBoxContainer" parent="ResultOverlay/Card/Content/ResultProclamation"]
+custom_minimum_size = Vector2(330, 0)
 layout_mode = 2
-size_flags_horizontal = 3
+size_flags_horizontal = 0
 alignment = 1
 
 [node name="Kicker" type="Label" parent="ResultOverlay/Card/Content/ResultProclamation/Copy"]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.831, 0.678, 0.439, 1)
-theme_override_font_sizes/font_size = 18
+theme_override_font_sizes/font_size = 20
 text = "THE HOUSE REMEMBERS"
 
 [node name="ResultProclamationCopy" type="Label" parent="ResultOverlay/Card/Content/ResultProclamation/Copy"]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.96, 0.9, 0.83, 1)
-theme_override_font_sizes/font_size = 17
+theme_override_font_sizes/font_size = 19
 text = "A Curio has returned to its place."
 autowrap_mode = 2
 
