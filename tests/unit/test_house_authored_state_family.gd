@@ -71,7 +71,8 @@ func _run() -> void:
 		var inspect_close := inspect.get_node_or_null("Card/Content/Close") as Button
 		if inspect_close != null:
 			inspect_close.emit_signal("pressed")
-			await process_frame
+			for _frame in range(12):
+				await process_frame
 
 	house.show_restoration_ceremony("moon_cameo", 1)
 	await process_frame
