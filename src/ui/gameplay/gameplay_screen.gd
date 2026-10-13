@@ -1117,7 +1117,8 @@ func gameplay_presentation_contract() -> Dictionary:
 	var compact_geometry_locked: bool = (
 		is_equal_approx(_booster_tray.anchor_left, 0.08)
 		and is_equal_approx(_booster_tray.anchor_right, 0.92)
-		and ($Layout/BoardView as Control).custom_minimum_size.y >= 1120.0
+		and ($Layout/BoardView as Control).custom_minimum_size.y >= 1020.0
+		and ($Layout/BoardView as Control).custom_minimum_size.y <= 1080.0
 		and hint_label.custom_minimum_size.x >= 680.0
 		and hint_label.custom_minimum_size.x <= 740.0
 	)
@@ -1131,6 +1132,8 @@ func gameplay_presentation_contract() -> Dictionary:
 		and hud_rect.size.y / viewport_size.y <= 0.11
 		and board_rect.position.y / viewport_size.y >= 0.18
 		and board_rect.position.y / viewport_size.y <= 0.22
+		and board_rect.size.y / viewport_size.y >= 0.52
+		and board_rect.size.y / viewport_size.y <= 0.56
 	)
 	var north_star_gameplay_hud_frame: bool = (
 		String($Layout/HUDPlate.get_meta("production_chrome_asset", "")) == ProductionChrome.GAMEPLAY_HUD_FRAME_PATH
