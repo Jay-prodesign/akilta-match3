@@ -283,20 +283,29 @@ horizontal_alignment = 1
 autowrap_mode = 2
 
 [node name="RitualAids" type="PanelContainer" parent="Layout/Card/Content"]
-custom_minimum_size = Vector2(0, 210)
+custom_minimum_size = Vector2(0, 240)
 layout_mode = 2
 theme_override_styles/panel = SubResource("AidPanel")
 
 [node name="Column" type="VBoxContainer" parent="Layout/Card/Content/RitualAids"]
 layout_mode = 2
-theme_override_constants/separation = 8
+theme_override_constants/separation = 6
+
+[node name="TopInset" type="Control" parent="Layout/Card/Content/RitualAids/Column"]
+custom_minimum_size = Vector2(0, 18)
+layout_mode = 2
+mouse_filter = 2
 
 [node name="RitualAidsHeading" type="Label" parent="Layout/Card/Content/RitualAids/Column"]
+custom_minimum_size = Vector2(0, 32)
 layout_mode = 2
-theme_override_colors/font_color = Color(0.831, 0.678, 0.439, 1)
-theme_override_font_sizes/font_size = 21
+theme_override_colors/font_color = Color(0.949, 0.816, 0.545, 1)
+theme_override_colors/font_outline_color = Color(0.02, 0.015, 0.025, 0.94)
+theme_override_constants/outline_size = 2
+theme_override_font_sizes/font_size = 23
 text = "RITUAL AIDS"
 horizontal_alignment = 1
+vertical_alignment = 1
 
 [node name="AidRow" type="HBoxContainer" parent="Layout/Card/Content/RitualAids/Column"]
 layout_mode = 2
@@ -304,7 +313,7 @@ theme_override_constants/separation = 14
 alignment = 1
 
 [node name="KeeperChip" type="PanelContainer" parent="Layout/Card/Content/RitualAids/Column/AidRow"]
-custom_minimum_size = Vector2(0, 148)
+custom_minimum_size = Vector2(0, 154)
 layout_mode = 2
 size_flags_horizontal = 3
 theme_override_styles/panel = SubResource("AidChip")
@@ -315,7 +324,7 @@ theme_override_constants/separation = 2
 alignment = 1
 
 [node name="Art" type="TextureRect" parent="Layout/Card/Content/RitualAids/Column/AidRow/KeeperChip/Content"]
-custom_minimum_size = Vector2(82, 82)
+custom_minimum_size = Vector2(78, 78)
 layout_mode = 2
 size_flags_horizontal = 4
 mouse_filter = 2
@@ -325,19 +334,19 @@ stretch_mode = 5
 [node name="Caption" type="Label" parent="Layout/Card/Content/RitualAids/Column/AidRow/KeeperChip/Content"]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.96, 0.9, 0.83, 1)
-theme_override_font_sizes/font_size = 21
+theme_override_font_sizes/font_size = 22
 text = "ASK KEEPER"
 horizontal_alignment = 1
 
 [node name="State" type="Label" parent="Layout/Card/Content/RitualAids/Column/AidRow/KeeperChip/Content"]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.72, 0.66, 0.75, 1)
-theme_override_font_sizes/font_size = 15
+theme_override_font_sizes/font_size = 17
 text = "HINT · IN LEVEL"
 horizontal_alignment = 1
 
 [node name="RecoveryChip" type="PanelContainer" parent="Layout/Card/Content/RitualAids/Column/AidRow"]
-custom_minimum_size = Vector2(0, 148)
+custom_minimum_size = Vector2(0, 154)
 layout_mode = 2
 size_flags_horizontal = 3
 theme_override_styles/panel = SubResource("AidChip")
@@ -348,7 +357,7 @@ theme_override_constants/separation = 2
 alignment = 1
 
 [node name="Art" type="TextureRect" parent="Layout/Card/Content/RitualAids/Column/AidRow/RecoveryChip/Content"]
-custom_minimum_size = Vector2(82, 82)
+custom_minimum_size = Vector2(78, 78)
 layout_mode = 2
 size_flags_horizontal = 4
 mouse_filter = 2
@@ -358,14 +367,14 @@ stretch_mode = 5
 [node name="Caption" type="Label" parent="Layout/Card/Content/RitualAids/Column/AidRow/RecoveryChip/Content"]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.96, 0.9, 0.83, 1)
-theme_override_font_sizes/font_size = 21
+theme_override_font_sizes/font_size = 22
 text = "FAIL RECOVERY"
 horizontal_alignment = 1
 
 [node name="State" type="Label" parent="Layout/Card/Content/RitualAids/Column/AidRow/RecoveryChip/Content"]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.72, 0.66, 0.75, 1)
-theme_override_font_sizes/font_size = 15
+theme_override_font_sizes/font_size = 17
 text = "+3 MOVES ON FAIL"
 horizontal_alignment = 1
 
@@ -374,7 +383,9 @@ custom_minimum_size = Vector2(0, 104)
 layout_mode = 2
 theme_override_colors/font_color = Color(0.988, 0.933, 0.831, 1)
 theme_override_colors/font_hover_color = Color(0.988, 0.933, 0.831, 1)
-theme_override_font_sizes/font_size = 28
+theme_override_colors/font_outline_color = Color(0.02, 0.015, 0.025, 0.9)
+theme_override_constants/outline_size = 2
+theme_override_font_sizes/font_size = 30
 theme_override_styles/normal = SubResource("Start")
 theme_override_styles/hover = SubResource("StartHover")
 theme_override_styles/pressed = SubResource("StartHover")
