@@ -1201,12 +1201,12 @@
       "variants": [
         "shared_opening_levels"
       ],
-      "reuse": "Opening_prestart",
+      "reuse": "declared_reuse_of_prestart_ch01_level01_art__generic_empty_cabinet_scene",
       "priority": "P0",
-      "production_status": "candidate_runtime_connected_raster",
-      "current_path": "assets/world/ch01_curio_boutique/prestart_curio_boutique_shared.webp",
-      "source_resolution": "240x180 transport preview; production-resolution master retained outside repo pending binary handoff",
-      "technical_policy": "raster_only_no_svg_fallback",
+      "production_status": "runtime_connected_declared_reuse_candidate",
+      "current_path": "assets/world/ch01_curio_boutique/prestart_level01_cabinet.webp",
+      "source_resolution": "1024x768 declared reuse master",
+      "technical_policy": "raster_only_no_svg_fallback__240x180_transport_preview_retired_from_runtime",
       "architecture_owned": true,
       "contract_owners": [
         {
@@ -1219,7 +1219,8 @@
             "replay"
           ]
         }
-      ]
+      ],
+      "deprecated_candidate_path": "assets/world/ch01_curio_boutique/prestart_curio_boutique_shared.webp"
     },
     {
       "asset_id": "chapter_route_curio_boutique",
@@ -2510,6 +2511,7 @@
   "asset_gap_pass": {
     "global_shell_chrome": "RUNTIME_AND_RENDER_VERIFIED",
     "gameplay_chrome": "IN_PROGRESS_RENDER_REQUIRED",
-    "secondary_hero_chrome": "RUNTIME_AND_RENDER_VERIFIED"
+    "secondary_hero_chrome": "RUNTIME_AND_RENDER_VERIFIED",
+    "prestart_shared_art_resolution": "IN_PROGRESS_RENDER_REQUIRED"
   }
 }

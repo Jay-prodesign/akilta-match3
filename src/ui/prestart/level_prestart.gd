@@ -54,6 +54,8 @@ func aid_asset_contract() -> Dictionary:
 		"plus_moves_availability": "fail_recovery_only",
 		"authored_world_backdrop": world_backdrop != null and world_backdrop.texture != null,
 		"authored_level_artwork": level_artwork != null and level_artwork.texture != null,
+		"level_art_asset_id": String(level_artwork.get_meta("asset_id", "")) if level_artwork != null else "",
+		"level_art_asset_path": String(level_artwork.get_meta("asset_path", "")) if level_artwork != null else "",
 		"authored_ritual_aids": keeper_aid_art != null and keeper_aid_art.texture != null and recovery_aid_art != null and recovery_aid_art.texture != null,
 		"north_star_readability": title_label != null and title_label.get_theme_font_size("font_size") >= 48 and objective_label != null and objective_label.get_theme_font_size("font_size") >= 32 and start_button != null and start_button.custom_minimum_size.y >= 84.0,
 		"note_subordinate": note_label != null and not note_label.visible,
@@ -100,6 +102,9 @@ func configure_level(value: int, replay: bool = false) -> bool:
 		ritual_art.set("relic_id", curio_id)
 		ritual_art.set("mode", "replay" if replay else "prestart")
 		level_artwork.visible = true
-		level_artwork.texture = ScreenArt.texture("prestart_ch01_level01_art" if level_number == 1 else "prestart_ch01_shared_art")
+		var level_art_id := "prestart_ch01_level01_art" if level_number == 1 else "prestart_ch01_shared_art"
+		level_artwork.texture = ScreenArt.texture(level_art_id)
+		level_artwork.set_meta("asset_id", level_art_id)
+		level_artwork.set_meta("asset_path", ScreenArt.path(level_art_id))
 		ritual_art.queue_redraw()
 	return true
