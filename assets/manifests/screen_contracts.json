@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "product": "AKILTA Match-3",
   "authority": "North Star Product Board interpreted as product architecture, not an asset reference",
   "hierarchy": "screen -> region -> block -> slot -> state -> component/asset",
@@ -66,7 +66,27 @@
                     "loading",
                     "ready",
                     "recoverable_error"
-                  ]
+                  ],
+                  "geometry": {
+                    "profile": "full_bleed",
+                    "min_size": [
+                      1080,
+                      1920
+                    ],
+                    "preferred_size": [
+                      1080,
+                      1920
+                    ],
+                    "placement": "viewport_fill",
+                    "aspect_policy": "9:16",
+                    "fit": "cover",
+                    "safe_area": "bleed",
+                    "z_policy": "background_art",
+                    "source_min_size": [
+                      2160,
+                      3840
+                    ]
+                  }
                 },
                 {
                   "id": "brand_mark",
@@ -74,7 +94,23 @@
                   "states": [
                     "loading",
                     "ready"
-                  ]
+                  ],
+                  "geometry": {
+                    "profile": "structural_text",
+                    "min_size": [
+                      320,
+                      44
+                    ],
+                    "preferred_size": [
+                      800,
+                      64
+                    ],
+                    "placement": "container_flow",
+                    "aspect_policy": "flexible",
+                    "fit": "n/a",
+                    "safe_area": "content",
+                    "z_policy": "structural_ui"
+                  }
                 }
               ]
             }
@@ -91,21 +127,73 @@
                   "layer": "structural_ui",
                   "states": [
                     "loading"
-                  ]
+                  ],
+                  "geometry": {
+                    "profile": "structural_text",
+                    "min_size": [
+                      320,
+                      44
+                    ],
+                    "preferred_size": [
+                      800,
+                      64
+                    ],
+                    "placement": "container_flow",
+                    "aspect_policy": "flexible",
+                    "fit": "n/a",
+                    "safe_area": "content",
+                    "z_policy": "structural_ui"
+                  }
                 },
                 {
                   "id": "enter_cta",
                   "layer": "structural_ui",
                   "states": [
                     "ready"
-                  ]
+                  ],
+                  "geometry": {
+                    "profile": "primary_cta",
+                    "min_size": [
+                      780,
+                      96
+                    ],
+                    "preferred_size": [
+                      880,
+                      104
+                    ],
+                    "placement": "container_flow",
+                    "aspect_policy": "flexible",
+                    "fit": "n/a",
+                    "safe_area": "content",
+                    "z_policy": "structural_ui",
+                    "touch_target": [
+                      88,
+                      88
+                    ]
+                  }
                 },
                 {
                   "id": "recovery_message",
                   "layer": "structural_ui",
                   "states": [
                     "recoverable_error"
-                  ]
+                  ],
+                  "geometry": {
+                    "profile": "structural_text",
+                    "min_size": [
+                      320,
+                      44
+                    ],
+                    "preferred_size": [
+                      800,
+                      64
+                    ],
+                    "placement": "container_flow",
+                    "aspect_policy": "flexible",
+                    "fit": "n/a",
+                    "safe_area": "content",
+                    "z_policy": "structural_ui"
+                  }
                 }
               ]
             }
@@ -158,21 +246,93 @@
                     "normal",
                     "low",
                     "full"
-                  ]
+                  ],
+                  "geometry": {
+                    "profile": "utility_touch",
+                    "min_size": [
+                      88,
+                      88
+                    ],
+                    "preferred_size": [
+                      96,
+                      96
+                    ],
+                    "placement": "owner_anchor",
+                    "aspect_policy": "1:1",
+                    "fit": "contain",
+                    "safe_area": "content",
+                    "z_policy": "functional_icon",
+                    "source_min_size": [
+                      192,
+                      192
+                    ],
+                    "touch_target": [
+                      88,
+                      88
+                    ]
+                  }
                 },
                 {
                   "id": "coins",
                   "layer": "functional_icon",
                   "states": [
                     "normal"
-                  ]
+                  ],
+                  "geometry": {
+                    "profile": "utility_touch",
+                    "min_size": [
+                      88,
+                      88
+                    ],
+                    "preferred_size": [
+                      96,
+                      96
+                    ],
+                    "placement": "owner_anchor",
+                    "aspect_policy": "1:1",
+                    "fit": "contain",
+                    "safe_area": "content",
+                    "z_policy": "functional_icon",
+                    "source_min_size": [
+                      192,
+                      192
+                    ],
+                    "touch_target": [
+                      88,
+                      88
+                    ]
+                  }
                 },
                 {
                   "id": "gems",
                   "layer": "functional_icon",
                   "states": [
                     "normal"
-                  ]
+                  ],
+                  "geometry": {
+                    "profile": "utility_touch",
+                    "min_size": [
+                      88,
+                      88
+                    ],
+                    "preferred_size": [
+                      96,
+                      96
+                    ],
+                    "placement": "owner_anchor",
+                    "aspect_policy": "1:1",
+                    "fit": "contain",
+                    "safe_area": "content",
+                    "z_policy": "functional_icon",
+                    "source_min_size": [
+                      192,
+                      192
+                    ],
+                    "touch_target": [
+                      88,
+                      88
+                    ]
+                  }
                 },
                 {
                   "id": "profile_settings",
@@ -180,7 +340,31 @@
                   "states": [
                     "normal",
                     "pressed"
-                  ]
+                  ],
+                  "geometry": {
+                    "profile": "utility_touch",
+                    "min_size": [
+                      88,
+                      88
+                    ],
+                    "preferred_size": [
+                      96,
+                      96
+                    ],
+                    "placement": "owner_anchor",
+                    "aspect_policy": "1:1",
+                    "fit": "contain",
+                    "safe_area": "content",
+                    "z_policy": "functional_icon",
+                    "source_min_size": [
+                      192,
+                      192
+                    ],
+                    "touch_target": [
+                      88,
+                      88
+                    ]
+                  }
                 }
               ]
             }
@@ -200,7 +384,27 @@
                     "stage01",
                     "stage02",
                     "stage03"
-                  ]
+                  ],
+                  "geometry": {
+                    "profile": "full_bleed",
+                    "min_size": [
+                      1080,
+                      1920
+                    ],
+                    "preferred_size": [
+                      1080,
+                      1920
+                    ],
+                    "placement": "viewport_fill",
+                    "aspect_policy": "9:16",
+                    "fit": "cover",
+                    "safe_area": "bleed",
+                    "z_policy": "background_art",
+                    "source_min_size": [
+                      2160,
+                      3840
+                    ]
+                  }
                 },
                 {
                   "id": "character_world_layer",
@@ -209,7 +413,27 @@
                     "idle",
                     "attention",
                     "celebrate"
-                  ]
+                  ],
+                  "geometry": {
+                    "profile": "world_character",
+                    "min_size": [
+                      280,
+                      420
+                    ],
+                    "preferred_size": [
+                      420,
+                      620
+                    ],
+                    "placement": "owner_anchor",
+                    "aspect_policy": "preserve",
+                    "fit": "contain",
+                    "safe_area": "content",
+                    "z_policy": "content_artwork",
+                    "source_min_size": [
+                      840,
+                      1240
+                    ]
+                  }
                 },
                 {
                   "id": "restoration_slots",
@@ -217,7 +441,27 @@
                   "states": [
                     "empty",
                     "restored"
-                  ]
+                  ],
+                  "geometry": {
+                    "profile": "world_object",
+                    "min_size": [
+                      220,
+                      220
+                    ],
+                    "preferred_size": [
+                      360,
+                      360
+                    ],
+                    "placement": "owner_anchor",
+                    "aspect_policy": "preserve",
+                    "fit": "contain",
+                    "safe_area": "content",
+                    "z_policy": "content_artwork",
+                    "source_min_size": [
+                      720,
+                      720
+                    ]
+                  }
                 },
                 {
                   "id": "ambient_world_fx",
@@ -225,7 +469,23 @@
                   "states": [
                     "normal",
                     "awakening"
-                  ]
+                  ],
+                  "geometry": {
+                    "profile": "owner_vfx",
+                    "min_size": [
+                      220,
+                      220
+                    ],
+                    "preferred_size": [
+                      480,
+                      480
+                    ],
+                    "placement": "follow_semantic_owner",
+                    "aspect_policy": "owner_bounds",
+                    "fit": "owner_bounds",
+                    "safe_area": "owner",
+                    "z_policy": "runtime_vfx"
+                  }
                 }
               ]
             }
@@ -243,7 +503,23 @@
                   "states": [
                     "normal",
                     "complete"
-                  ]
+                  ],
+                  "geometry": {
+                    "profile": "structural_text",
+                    "min_size": [
+                      320,
+                      44
+                    ],
+                    "preferred_size": [
+                      800,
+                      64
+                    ],
+                    "placement": "container_flow",
+                    "aspect_policy": "flexible",
+                    "fit": "n/a",
+                    "safe_area": "content",
+                    "z_policy": "structural_ui"
+                  }
                 },
                 {
                   "id": "curio_progress",
@@ -251,7 +527,23 @@
                   "states": [
                     "normal",
                     "complete"
-                  ]
+                  ],
+                  "geometry": {
+                    "profile": "structural_text",
+                    "min_size": [
+                      320,
+                      44
+                    ],
+                    "preferred_size": [
+                      800,
+                      64
+                    ],
+                    "placement": "container_flow",
+                    "aspect_policy": "flexible",
+                    "fit": "n/a",
+                    "safe_area": "content",
+                    "z_policy": "structural_ui"
+                  }
                 }
               ]
             },
@@ -265,7 +557,27 @@
                     "enabled",
                     "disabled",
                     "complete"
-                  ]
+                  ],
+                  "geometry": {
+                    "profile": "primary_cta",
+                    "min_size": [
+                      780,
+                      96
+                    ],
+                    "preferred_size": [
+                      880,
+                      104
+                    ],
+                    "placement": "container_flow",
+                    "aspect_policy": "flexible",
+                    "fit": "n/a",
+                    "safe_area": "content",
+                    "z_policy": "structural_ui",
+                    "touch_target": [
+                      88,
+                      88
+                    ]
+                  }
                 }
               ]
             }
@@ -282,7 +594,31 @@
                   "layer": "functional_icon",
                   "states": [
                     "selected"
-                  ]
+                  ],
+                  "geometry": {
+                    "profile": "nav_item",
+                    "min_size": [
+                      160,
+                      120
+                    ],
+                    "preferred_size": [
+                      204,
+                      120
+                    ],
+                    "placement": "bottom_nav_flow",
+                    "aspect_policy": "flexible",
+                    "fit": "contain",
+                    "safe_area": "bottom",
+                    "z_policy": "functional_icon",
+                    "source_min_size": [
+                      192,
+                      192
+                    ],
+                    "touch_target": [
+                      88,
+                      88
+                    ]
+                  }
                 },
                 {
                   "id": "curios",
@@ -290,7 +626,31 @@
                   "states": [
                     "normal",
                     "pressed"
-                  ]
+                  ],
+                  "geometry": {
+                    "profile": "nav_item",
+                    "min_size": [
+                      160,
+                      120
+                    ],
+                    "preferred_size": [
+                      204,
+                      120
+                    ],
+                    "placement": "bottom_nav_flow",
+                    "aspect_policy": "flexible",
+                    "fit": "contain",
+                    "safe_area": "bottom",
+                    "z_policy": "functional_icon",
+                    "source_min_size": [
+                      192,
+                      192
+                    ],
+                    "touch_target": [
+                      88,
+                      88
+                    ]
+                  }
                 },
                 {
                   "id": "map",
@@ -298,7 +658,31 @@
                   "states": [
                     "normal",
                     "pressed"
-                  ]
+                  ],
+                  "geometry": {
+                    "profile": "nav_item",
+                    "min_size": [
+                      160,
+                      120
+                    ],
+                    "preferred_size": [
+                      204,
+                      120
+                    ],
+                    "placement": "bottom_nav_flow",
+                    "aspect_policy": "flexible",
+                    "fit": "contain",
+                    "safe_area": "bottom",
+                    "z_policy": "functional_icon",
+                    "source_min_size": [
+                      192,
+                      192
+                    ],
+                    "touch_target": [
+                      88,
+                      88
+                    ]
+                  }
                 },
                 {
                   "id": "events",
@@ -307,7 +691,31 @@
                     "normal",
                     "pressed",
                     "disabled"
-                  ]
+                  ],
+                  "geometry": {
+                    "profile": "nav_item",
+                    "min_size": [
+                      160,
+                      120
+                    ],
+                    "preferred_size": [
+                      204,
+                      120
+                    ],
+                    "placement": "bottom_nav_flow",
+                    "aspect_policy": "flexible",
+                    "fit": "contain",
+                    "safe_area": "bottom",
+                    "z_policy": "functional_icon",
+                    "source_min_size": [
+                      192,
+                      192
+                    ],
+                    "touch_target": [
+                      88,
+                      88
+                    ]
+                  }
                 },
                 {
                   "id": "shop",
@@ -316,7 +724,31 @@
                     "normal",
                     "pressed",
                     "disabled"
-                  ]
+                  ],
+                  "geometry": {
+                    "profile": "nav_item",
+                    "min_size": [
+                      160,
+                      120
+                    ],
+                    "preferred_size": [
+                      204,
+                      120
+                    ],
+                    "placement": "bottom_nav_flow",
+                    "aspect_policy": "flexible",
+                    "fit": "contain",
+                    "safe_area": "bottom",
+                    "z_policy": "functional_icon",
+                    "source_min_size": [
+                      192,
+                      192
+                    ],
+                    "touch_target": [
+                      88,
+                      88
+                    ]
+                  }
                 }
               ]
             }
@@ -358,7 +790,23 @@
                   "layer": "structural_ui",
                   "states": [
                     "normal"
-                  ]
+                  ],
+                  "geometry": {
+                    "profile": "resource_group",
+                    "min_size": [
+                      720,
+                      96
+                    ],
+                    "preferred_size": [
+                      1000,
+                      104
+                    ],
+                    "placement": "header_flow",
+                    "aspect_policy": "flexible",
+                    "fit": "n/a",
+                    "safe_area": "top",
+                    "z_policy": "structural_ui"
+                  }
                 },
                 {
                   "id": "back",
@@ -366,7 +814,31 @@
                   "states": [
                     "normal",
                     "pressed"
-                  ]
+                  ],
+                  "geometry": {
+                    "profile": "utility_touch",
+                    "min_size": [
+                      88,
+                      88
+                    ],
+                    "preferred_size": [
+                      96,
+                      96
+                    ],
+                    "placement": "owner_anchor",
+                    "aspect_policy": "1:1",
+                    "fit": "contain",
+                    "safe_area": "content",
+                    "z_policy": "functional_icon",
+                    "source_min_size": [
+                      192,
+                      192
+                    ],
+                    "touch_target": [
+                      88,
+                      88
+                    ]
+                  }
                 }
               ]
             }
@@ -383,7 +855,27 @@
                   "layer": "background_art",
                   "states": [
                     "default"
-                  ]
+                  ],
+                  "geometry": {
+                    "profile": "full_bleed",
+                    "min_size": [
+                      1080,
+                      1920
+                    ],
+                    "preferred_size": [
+                      1080,
+                      1920
+                    ],
+                    "placement": "viewport_fill",
+                    "aspect_policy": "9:16",
+                    "fit": "cover",
+                    "safe_area": "bleed",
+                    "z_policy": "background_art",
+                    "source_min_size": [
+                      2160,
+                      3840
+                    ]
+                  }
                 },
                 {
                   "id": "chapter_hotspots",
@@ -393,14 +885,46 @@
                     "current",
                     "locked",
                     "complete"
-                  ]
+                  ],
+                  "geometry": {
+                    "profile": "map_region",
+                    "min_size": [
+                      880,
+                      960
+                    ],
+                    "preferred_size": [
+                      1000,
+                      1320
+                    ],
+                    "placement": "region_fill",
+                    "aspect_policy": "flexible",
+                    "fit": "contain",
+                    "safe_area": "content",
+                    "z_policy": "structural_ui"
+                  }
                 },
                 {
                   "id": "lock_reason",
                   "layer": "structural_ui",
                   "states": [
                     "locked"
-                  ]
+                  ],
+                  "geometry": {
+                    "profile": "structural_text",
+                    "min_size": [
+                      320,
+                      44
+                    ],
+                    "preferred_size": [
+                      800,
+                      64
+                    ],
+                    "placement": "container_flow",
+                    "aspect_policy": "flexible",
+                    "fit": "n/a",
+                    "safe_area": "content",
+                    "z_policy": "structural_ui"
+                  }
                 }
               ]
             }
@@ -417,7 +941,31 @@
                   "layer": "functional_icon",
                   "states": [
                     "selected"
-                  ]
+                  ],
+                  "geometry": {
+                    "profile": "nav_item",
+                    "min_size": [
+                      160,
+                      120
+                    ],
+                    "preferred_size": [
+                      204,
+                      120
+                    ],
+                    "placement": "bottom_nav_flow",
+                    "aspect_policy": "flexible",
+                    "fit": "contain",
+                    "safe_area": "bottom",
+                    "z_policy": "functional_icon",
+                    "source_min_size": [
+                      192,
+                      192
+                    ],
+                    "touch_target": [
+                      88,
+                      88
+                    ]
+                  }
                 },
                 {
                   "id": "other_tabs",
@@ -425,7 +973,27 @@
                   "states": [
                     "normal",
                     "pressed"
-                  ]
+                  ],
+                  "geometry": {
+                    "profile": "nav_group",
+                    "min_size": [
+                      640,
+                      120
+                    ],
+                    "preferred_size": [
+                      816,
+                      120
+                    ],
+                    "placement": "bottom_nav_flow",
+                    "aspect_policy": "flexible",
+                    "fit": "contain",
+                    "safe_area": "bottom",
+                    "z_policy": "functional_icon",
+                    "touch_target": [
+                      88,
+                      88
+                    ]
+                  }
                 }
               ]
             }
@@ -473,7 +1041,23 @@
                   "layer": "structural_ui",
                   "states": [
                     "normal"
-                  ]
+                  ],
+                  "geometry": {
+                    "profile": "title",
+                    "min_size": [
+                      520,
+                      64
+                    ],
+                    "preferred_size": [
+                      880,
+                      80
+                    ],
+                    "placement": "container_flow",
+                    "aspect_policy": "flexible",
+                    "fit": "n/a",
+                    "safe_area": "content",
+                    "z_policy": "structural_ui"
+                  }
                 },
                 {
                   "id": "progress",
@@ -483,7 +1067,23 @@
                     "opening_1_3",
                     "opening_2_3",
                     "opening_3_3"
-                  ]
+                  ],
+                  "geometry": {
+                    "profile": "structural_text",
+                    "min_size": [
+                      320,
+                      44
+                    ],
+                    "preferred_size": [
+                      800,
+                      64
+                    ],
+                    "placement": "container_flow",
+                    "aspect_policy": "flexible",
+                    "fit": "n/a",
+                    "safe_area": "content",
+                    "z_policy": "structural_ui"
+                  }
                 },
                 {
                   "id": "back",
@@ -491,7 +1091,31 @@
                   "states": [
                     "normal",
                     "pressed"
-                  ]
+                  ],
+                  "geometry": {
+                    "profile": "utility_touch",
+                    "min_size": [
+                      88,
+                      88
+                    ],
+                    "preferred_size": [
+                      96,
+                      96
+                    ],
+                    "placement": "owner_anchor",
+                    "aspect_policy": "1:1",
+                    "fit": "contain",
+                    "safe_area": "content",
+                    "z_policy": "functional_icon",
+                    "source_min_size": [
+                      192,
+                      192
+                    ],
+                    "touch_target": [
+                      88,
+                      88
+                    ]
+                  }
                 }
               ]
             }
@@ -508,14 +1132,50 @@
                   "layer": "background_art",
                   "states": [
                     "default"
-                  ]
+                  ],
+                  "geometry": {
+                    "profile": "full_bleed",
+                    "min_size": [
+                      1080,
+                      1920
+                    ],
+                    "preferred_size": [
+                      1080,
+                      1920
+                    ],
+                    "placement": "viewport_fill",
+                    "aspect_policy": "9:16",
+                    "fit": "cover",
+                    "safe_area": "bleed",
+                    "z_policy": "background_art",
+                    "source_min_size": [
+                      2160,
+                      3840
+                    ]
+                  }
                 },
                 {
                   "id": "route_path",
                   "layer": "structural_ui",
                   "states": [
                     "normal"
-                  ]
+                  ],
+                  "geometry": {
+                    "profile": "map_region",
+                    "min_size": [
+                      880,
+                      960
+                    ],
+                    "preferred_size": [
+                      1000,
+                      1320
+                    ],
+                    "placement": "region_fill",
+                    "aspect_policy": "flexible",
+                    "fit": "contain",
+                    "safe_area": "content",
+                    "z_policy": "structural_ui"
+                  }
                 },
                 {
                   "id": "level_nodes",
@@ -525,14 +1185,50 @@
                     "available",
                     "completed",
                     "locked"
-                  ]
+                  ],
+                  "geometry": {
+                    "profile": "map_region",
+                    "min_size": [
+                      880,
+                      960
+                    ],
+                    "preferred_size": [
+                      1000,
+                      1320
+                    ],
+                    "placement": "region_fill",
+                    "aspect_policy": "flexible",
+                    "fit": "contain",
+                    "safe_area": "content",
+                    "z_policy": "structural_ui"
+                  }
                 },
                 {
                   "id": "frontier_focus",
                   "layer": "state_asset",
                   "states": [
                     "current"
-                  ]
+                  ],
+                  "geometry": {
+                    "profile": "state_art",
+                    "min_size": [
+                      128,
+                      128
+                    ],
+                    "preferred_size": [
+                      192,
+                      192
+                    ],
+                    "placement": "owner_anchor",
+                    "aspect_policy": "1:1",
+                    "fit": "contain",
+                    "safe_area": "content",
+                    "z_policy": "state_asset",
+                    "source_min_size": [
+                      384,
+                      384
+                    ]
+                  }
                 }
               ]
             }
@@ -549,7 +1245,31 @@
                   "layer": "functional_icon",
                   "states": [
                     "selected"
-                  ]
+                  ],
+                  "geometry": {
+                    "profile": "nav_item",
+                    "min_size": [
+                      160,
+                      120
+                    ],
+                    "preferred_size": [
+                      204,
+                      120
+                    ],
+                    "placement": "bottom_nav_flow",
+                    "aspect_policy": "flexible",
+                    "fit": "contain",
+                    "safe_area": "bottom",
+                    "z_policy": "functional_icon",
+                    "source_min_size": [
+                      192,
+                      192
+                    ],
+                    "touch_target": [
+                      88,
+                      88
+                    ]
+                  }
                 },
                 {
                   "id": "other_tabs",
@@ -557,7 +1277,27 @@
                   "states": [
                     "normal",
                     "pressed"
-                  ]
+                  ],
+                  "geometry": {
+                    "profile": "nav_group",
+                    "min_size": [
+                      640,
+                      120
+                    ],
+                    "preferred_size": [
+                      816,
+                      120
+                    ],
+                    "placement": "bottom_nav_flow",
+                    "aspect_policy": "flexible",
+                    "fit": "contain",
+                    "safe_area": "bottom",
+                    "z_policy": "functional_icon",
+                    "touch_target": [
+                      88,
+                      88
+                    ]
+                  }
                 }
               ]
             }
@@ -601,7 +1341,31 @@
                   "states": [
                     "normal",
                     "pressed"
-                  ]
+                  ],
+                  "geometry": {
+                    "profile": "utility_touch",
+                    "min_size": [
+                      88,
+                      88
+                    ],
+                    "preferred_size": [
+                      96,
+                      96
+                    ],
+                    "placement": "owner_anchor",
+                    "aspect_policy": "1:1",
+                    "fit": "contain",
+                    "safe_area": "content",
+                    "z_policy": "functional_icon",
+                    "source_min_size": [
+                      192,
+                      192
+                    ],
+                    "touch_target": [
+                      88,
+                      88
+                    ]
+                  }
                 },
                 {
                   "id": "level_identity",
@@ -609,7 +1373,23 @@
                   "states": [
                     "first_attempt",
                     "replay"
-                  ]
+                  ],
+                  "geometry": {
+                    "profile": "gameplay_hud",
+                    "min_size": [
+                      220,
+                      88
+                    ],
+                    "preferred_size": [
+                      520,
+                      92
+                    ],
+                    "placement": "hud_flow",
+                    "aspect_policy": "flexible",
+                    "fit": "n/a",
+                    "safe_area": "top",
+                    "z_policy": "structural_ui"
+                  }
                 }
               ]
             }
@@ -627,21 +1407,73 @@
                   "states": [
                     "first_attempt",
                     "replay"
-                  ]
+                  ],
+                  "geometry": {
+                    "profile": "hero_art",
+                    "min_size": [
+                      300,
+                      240
+                    ],
+                    "preferred_size": [
+                      480,
+                      360
+                    ],
+                    "placement": "container_flow",
+                    "aspect_policy": "preserve",
+                    "fit": "contain",
+                    "safe_area": "content",
+                    "z_policy": "content_artwork",
+                    "source_min_size": [
+                      960,
+                      720
+                    ]
+                  }
                 },
                 {
                   "id": "objective",
                   "layer": "structural_ui",
                   "states": [
                     "normal"
-                  ]
+                  ],
+                  "geometry": {
+                    "profile": "gameplay_hud",
+                    "min_size": [
+                      220,
+                      88
+                    ],
+                    "preferred_size": [
+                      520,
+                      92
+                    ],
+                    "placement": "hud_flow",
+                    "aspect_policy": "flexible",
+                    "fit": "n/a",
+                    "safe_area": "top",
+                    "z_policy": "structural_ui"
+                  }
                 },
                 {
                   "id": "move_budget",
                   "layer": "structural_ui",
                   "states": [
                     "normal"
-                  ]
+                  ],
+                  "geometry": {
+                    "profile": "gameplay_hud",
+                    "min_size": [
+                      220,
+                      88
+                    ],
+                    "preferred_size": [
+                      520,
+                      92
+                    ],
+                    "placement": "hud_flow",
+                    "aspect_policy": "flexible",
+                    "fit": "n/a",
+                    "safe_area": "top",
+                    "z_policy": "structural_ui"
+                  }
                 },
                 {
                   "id": "reward_curio",
@@ -649,7 +1481,27 @@
                   "states": [
                     "sealed",
                     "owned_replay"
-                  ]
+                  ],
+                  "geometry": {
+                    "profile": "curio_art",
+                    "min_size": [
+                      220,
+                      220
+                    ],
+                    "preferred_size": [
+                      360,
+                      360
+                    ],
+                    "placement": "container_flow",
+                    "aspect_policy": "1:1_preserve",
+                    "fit": "contain",
+                    "safe_area": "content",
+                    "z_policy": "content_artwork",
+                    "source_min_size": [
+                      720,
+                      720
+                    ]
+                  }
                 },
                 {
                   "id": "house_consequence",
@@ -657,7 +1509,23 @@
                   "states": [
                     "first_attempt",
                     "replay"
-                  ]
+                  ],
+                  "geometry": {
+                    "profile": "structural_text",
+                    "min_size": [
+                      320,
+                      44
+                    ],
+                    "preferred_size": [
+                      800,
+                      64
+                    ],
+                    "placement": "container_flow",
+                    "aspect_policy": "flexible",
+                    "fit": "n/a",
+                    "safe_area": "content",
+                    "z_policy": "structural_ui"
+                  }
                 }
               ]
             }
@@ -675,7 +1543,31 @@
                   "states": [
                     "available",
                     "disabled"
-                  ]
+                  ],
+                  "geometry": {
+                    "profile": "booster_action",
+                    "min_size": [
+                      88,
+                      88
+                    ],
+                    "preferred_size": [
+                      128,
+                      142
+                    ],
+                    "placement": "booster_tray_flow",
+                    "aspect_policy": "1:1_art_plus_label",
+                    "fit": "contain",
+                    "safe_area": "content",
+                    "z_policy": "gameplay_asset",
+                    "source_min_size": [
+                      256,
+                      256
+                    ],
+                    "touch_target": [
+                      88,
+                      88
+                    ]
+                  }
                 },
                 {
                   "id": "plus_moves",
@@ -683,7 +1575,31 @@
                   "states": [
                     "available",
                     "disabled"
-                  ]
+                  ],
+                  "geometry": {
+                    "profile": "booster_action",
+                    "min_size": [
+                      88,
+                      88
+                    ],
+                    "preferred_size": [
+                      128,
+                      142
+                    ],
+                    "placement": "booster_tray_flow",
+                    "aspect_policy": "1:1_art_plus_label",
+                    "fit": "contain",
+                    "safe_area": "content",
+                    "z_policy": "gameplay_asset",
+                    "source_min_size": [
+                      256,
+                      256
+                    ],
+                    "touch_target": [
+                      88,
+                      88
+                    ]
+                  }
                 }
               ]
             },
@@ -697,7 +1613,27 @@
                     "enabled",
                     "pressed",
                     "disabled"
-                  ]
+                  ],
+                  "geometry": {
+                    "profile": "primary_cta",
+                    "min_size": [
+                      780,
+                      96
+                    ],
+                    "preferred_size": [
+                      880,
+                      104
+                    ],
+                    "placement": "container_flow",
+                    "aspect_policy": "flexible",
+                    "fit": "n/a",
+                    "safe_area": "content",
+                    "z_policy": "structural_ui",
+                    "touch_target": [
+                      88,
+                      88
+                    ]
+                  }
                 }
               ]
             }
@@ -715,7 +1651,27 @@
                   "states": [
                     "first_attempt",
                     "replay"
-                  ]
+                  ],
+                  "geometry": {
+                    "profile": "full_bleed",
+                    "min_size": [
+                      1080,
+                      1920
+                    ],
+                    "preferred_size": [
+                      1080,
+                      1920
+                    ],
+                    "placement": "viewport_fill",
+                    "aspect_policy": "9:16",
+                    "fit": "cover",
+                    "safe_area": "bleed",
+                    "z_policy": "background_art",
+                    "source_min_size": [
+                      2160,
+                      3840
+                    ]
+                  }
                 }
               ]
             }
@@ -764,22 +1720,104 @@
           "id": "hud",
           "blocks": [
             {
-              "id": "gameplay_header",
+              "id": "resource_strip",
               "slots": [
                 {
-                  "id": "level",
+                  "id": "coins",
                   "layer": "structural_ui",
                   "states": [
                     "normal"
-                  ]
+                  ],
+                  "geometry": {
+                    "profile": "resource_chip",
+                    "min_size": [
+                      180,
+                      88
+                    ],
+                    "preferred_size": [
+                      260,
+                      96
+                    ],
+                    "placement": "header_flow",
+                    "aspect_policy": "flexible",
+                    "fit": "n/a",
+                    "safe_area": "top",
+                    "z_policy": "structural_ui"
+                  }
                 },
                 {
-                  "id": "moves",
+                  "id": "gems",
                   "layer": "structural_ui",
                   "states": [
-                    "normal",
-                    "low"
-                  ]
+                    "normal"
+                  ],
+                  "geometry": {
+                    "profile": "resource_chip",
+                    "min_size": [
+                      180,
+                      88
+                    ],
+                    "preferred_size": [
+                      260,
+                      96
+                    ],
+                    "placement": "header_flow",
+                    "aspect_policy": "flexible",
+                    "fit": "n/a",
+                    "safe_area": "top",
+                    "z_policy": "structural_ui"
+                  }
+                },
+                {
+                  "id": "level_badge",
+                  "layer": "structural_ui",
+                  "states": [
+                    "normal"
+                  ],
+                  "geometry": {
+                    "profile": "resource_chip",
+                    "min_size": [
+                      180,
+                      88
+                    ],
+                    "preferred_size": [
+                      260,
+                      96
+                    ],
+                    "placement": "header_flow",
+                    "aspect_policy": "flexible",
+                    "fit": "n/a",
+                    "safe_area": "top",
+                    "z_policy": "structural_ui"
+                  }
+                }
+              ]
+            },
+            {
+              "id": "gameplay_header",
+              "slots": [
+                {
+                  "id": "ritual_title",
+                  "layer": "structural_ui",
+                  "states": [
+                    "normal"
+                  ],
+                  "geometry": {
+                    "profile": "title",
+                    "min_size": [
+                      520,
+                      64
+                    ],
+                    "preferred_size": [
+                      880,
+                      80
+                    ],
+                    "placement": "container_flow",
+                    "aspect_policy": "flexible",
+                    "fit": "n/a",
+                    "safe_area": "content",
+                    "z_policy": "structural_ui"
+                  }
                 },
                 {
                   "id": "objective_remaining",
@@ -787,7 +1825,47 @@
                   "states": [
                     "normal",
                     "complete"
-                  ]
+                  ],
+                  "geometry": {
+                    "profile": "gameplay_hud",
+                    "min_size": [
+                      220,
+                      88
+                    ],
+                    "preferred_size": [
+                      520,
+                      92
+                    ],
+                    "placement": "hud_flow",
+                    "aspect_policy": "flexible",
+                    "fit": "n/a",
+                    "safe_area": "top",
+                    "z_policy": "structural_ui"
+                  }
+                },
+                {
+                  "id": "moves",
+                  "layer": "structural_ui",
+                  "states": [
+                    "normal",
+                    "low"
+                  ],
+                  "geometry": {
+                    "profile": "gameplay_hud",
+                    "min_size": [
+                      220,
+                      88
+                    ],
+                    "preferred_size": [
+                      520,
+                      92
+                    ],
+                    "placement": "hud_flow",
+                    "aspect_policy": "flexible",
+                    "fit": "n/a",
+                    "safe_area": "top",
+                    "z_policy": "structural_ui"
+                  }
                 },
                 {
                   "id": "pause",
@@ -795,7 +1873,31 @@
                   "states": [
                     "normal",
                     "pressed"
-                  ]
+                  ],
+                  "geometry": {
+                    "profile": "utility_touch",
+                    "min_size": [
+                      88,
+                      88
+                    ],
+                    "preferred_size": [
+                      96,
+                      96
+                    ],
+                    "placement": "owner_anchor",
+                    "aspect_policy": "1:1",
+                    "fit": "contain",
+                    "safe_area": "content",
+                    "z_policy": "functional_icon",
+                    "source_min_size": [
+                      192,
+                      192
+                    ],
+                    "touch_target": [
+                      88,
+                      88
+                    ]
+                  }
                 }
               ]
             }
@@ -813,7 +1915,23 @@
                   "states": [
                     "normal",
                     "high_contrast"
-                  ]
+                  ],
+                  "geometry": {
+                    "profile": "board_field",
+                    "min_size": [
+                      960,
+                      960
+                    ],
+                    "preferred_size": [
+                      1032,
+                      1040
+                    ],
+                    "placement": "container_flow",
+                    "aspect_policy": "near_square",
+                    "fit": "contain",
+                    "safe_area": "content",
+                    "z_policy": "structural_ui"
+                  }
                 },
                 {
                   "id": "base_pieces",
@@ -823,7 +1941,27 @@
                     "selected",
                     "matched",
                     "moving"
-                  ]
+                  ],
+                  "geometry": {
+                    "profile": "board_token",
+                    "min_size": [
+                      96,
+                      96
+                    ],
+                    "preferred_size": [
+                      116,
+                      116
+                    ],
+                    "placement": "board_cell",
+                    "aspect_policy": "1:1",
+                    "fit": "contain",
+                    "safe_area": "board",
+                    "z_policy": "gameplay_asset",
+                    "source_min_size": [
+                      256,
+                      256
+                    ]
+                  }
                 },
                 {
                   "id": "specials",
@@ -832,7 +1970,27 @@
                     "created",
                     "armed",
                     "triggered"
-                  ]
+                  ],
+                  "geometry": {
+                    "profile": "board_token",
+                    "min_size": [
+                      96,
+                      96
+                    ],
+                    "preferred_size": [
+                      116,
+                      116
+                    ],
+                    "placement": "board_cell",
+                    "aspect_policy": "1:1",
+                    "fit": "contain",
+                    "safe_area": "board",
+                    "z_policy": "gameplay_asset",
+                    "source_min_size": [
+                      256,
+                      256
+                    ]
+                  }
                 },
                 {
                   "id": "blockers",
@@ -841,7 +1999,27 @@
                     "normal",
                     "damaged",
                     "cleared"
-                  ]
+                  ],
+                  "geometry": {
+                    "profile": "board_token",
+                    "min_size": [
+                      96,
+                      96
+                    ],
+                    "preferred_size": [
+                      116,
+                      116
+                    ],
+                    "placement": "board_cell",
+                    "aspect_policy": "1:1",
+                    "fit": "contain",
+                    "safe_area": "board",
+                    "z_policy": "gameplay_asset",
+                    "source_min_size": [
+                      256,
+                      256
+                    ]
+                  }
                 },
                 {
                   "id": "board_fx",
@@ -851,7 +2029,114 @@
                     "cascade",
                     "special",
                     "objective_complete"
-                  ]
+                  ],
+                  "geometry": {
+                    "profile": "owner_vfx",
+                    "min_size": [
+                      220,
+                      220
+                    ],
+                    "preferred_size": [
+                      480,
+                      480
+                    ],
+                    "placement": "follow_semantic_owner",
+                    "aspect_policy": "owner_bounds",
+                    "fit": "owner_bounds",
+                    "safe_area": "owner",
+                    "z_policy": "runtime_vfx"
+                  }
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "feedback",
+          "blocks": [
+            {
+              "id": "hint_strip",
+              "slots": [
+                {
+                  "id": "guidance_copy",
+                  "layer": "structural_ui",
+                  "states": [
+                    "normal",
+                    "hint",
+                    "impact",
+                    "recovery"
+                  ],
+                  "geometry": {
+                    "profile": "gameplay_feedback",
+                    "min_size": [
+                      860,
+                      64
+                    ],
+                    "preferred_size": [
+                      1032,
+                      64
+                    ],
+                    "placement": "container_flow",
+                    "aspect_policy": "flexible",
+                    "fit": "n/a",
+                    "safe_area": "content",
+                    "z_policy": "structural_ui"
+                  }
+                }
+              ]
+            },
+            {
+              "id": "awakening_progress",
+              "slots": [
+                {
+                  "id": "curio_progress",
+                  "layer": "structural_ui",
+                  "states": [
+                    "hidden",
+                    "visible",
+                    "complete"
+                  ],
+                  "geometry": {
+                    "profile": "structural_text",
+                    "min_size": [
+                      320,
+                      44
+                    ],
+                    "preferred_size": [
+                      800,
+                      64
+                    ],
+                    "placement": "container_flow",
+                    "aspect_policy": "flexible",
+                    "fit": "n/a",
+                    "safe_area": "content",
+                    "z_policy": "structural_ui"
+                  }
+                },
+                {
+                  "id": "progress_copy",
+                  "layer": "structural_ui",
+                  "states": [
+                    "hidden",
+                    "visible",
+                    "complete"
+                  ],
+                  "geometry": {
+                    "profile": "gameplay_feedback",
+                    "min_size": [
+                      860,
+                      64
+                    ],
+                    "preferred_size": [
+                      1032,
+                      64
+                    ],
+                    "placement": "container_flow",
+                    "aspect_policy": "flexible",
+                    "fit": "n/a",
+                    "safe_area": "content",
+                    "z_policy": "structural_ui"
+                  }
                 }
               ]
             }
@@ -870,16 +2155,94 @@
                     "available",
                     "disabled",
                     "pressed"
-                  ]
+                  ],
+                  "geometry": {
+                    "profile": "booster_action",
+                    "min_size": [
+                      88,
+                      88
+                    ],
+                    "preferred_size": [
+                      128,
+                      142
+                    ],
+                    "placement": "booster_tray_flow",
+                    "aspect_policy": "1:1_art_plus_label",
+                    "fit": "contain",
+                    "safe_area": "content",
+                    "z_policy": "gameplay_asset",
+                    "source_min_size": [
+                      256,
+                      256
+                    ],
+                    "touch_target": [
+                      88,
+                      88
+                    ]
+                  }
                 },
                 {
-                  "id": "plus_moves",
+                  "id": "sealed_future_boosters",
                   "layer": "gameplay_asset",
                   "states": [
-                    "available",
-                    "disabled",
+                    "sealed"
+                  ],
+                  "geometry": {
+                    "profile": "booster_action",
+                    "min_size": [
+                      88,
+                      88
+                    ],
+                    "preferred_size": [
+                      128,
+                      142
+                    ],
+                    "placement": "booster_tray_flow",
+                    "aspect_policy": "1:1_art_plus_label",
+                    "fit": "contain",
+                    "safe_area": "content",
+                    "z_policy": "gameplay_asset",
+                    "source_min_size": [
+                      256,
+                      256
+                    ],
+                    "touch_target": [
+                      88,
+                      88
+                    ]
+                  }
+                },
+                {
+                  "id": "settings_shortcut",
+                  "layer": "functional_icon",
+                  "states": [
+                    "normal",
                     "pressed"
-                  ]
+                  ],
+                  "geometry": {
+                    "profile": "utility_touch",
+                    "min_size": [
+                      88,
+                      88
+                    ],
+                    "preferred_size": [
+                      96,
+                      96
+                    ],
+                    "placement": "owner_anchor",
+                    "aspect_policy": "1:1",
+                    "fit": "contain",
+                    "safe_area": "content",
+                    "z_policy": "functional_icon",
+                    "source_min_size": [
+                      192,
+                      192
+                    ],
+                    "touch_target": [
+                      88,
+                      88
+                    ]
+                  }
                 }
               ]
             }
@@ -898,7 +2261,27 @@
                     "playing",
                     "won",
                     "failed"
-                  ]
+                  ],
+                  "geometry": {
+                    "profile": "full_bleed",
+                    "min_size": [
+                      1080,
+                      1920
+                    ],
+                    "preferred_size": [
+                      1080,
+                      1920
+                    ],
+                    "placement": "viewport_fill",
+                    "aspect_policy": "9:16",
+                    "fit": "cover",
+                    "safe_area": "bleed",
+                    "z_policy": "background_art",
+                    "source_min_size": [
+                      2160,
+                      3840
+                    ]
+                  }
                 }
               ]
             }
@@ -942,7 +2325,27 @@
                   "states": [
                     "first_time_reveal",
                     "replay_reveal"
-                  ]
+                  ],
+                  "geometry": {
+                    "profile": "state_art",
+                    "min_size": [
+                      128,
+                      128
+                    ],
+                    "preferred_size": [
+                      192,
+                      192
+                    ],
+                    "placement": "owner_anchor",
+                    "aspect_policy": "1:1",
+                    "fit": "contain",
+                    "safe_area": "content",
+                    "z_policy": "state_asset",
+                    "source_min_size": [
+                      384,
+                      384
+                    ]
+                  }
                 }
               ]
             }
@@ -960,7 +2363,23 @@
                   "states": [
                     "reveal",
                     "ready"
-                  ]
+                  ],
+                  "geometry": {
+                    "profile": "title",
+                    "min_size": [
+                      520,
+                      64
+                    ],
+                    "preferred_size": [
+                      880,
+                      80
+                    ],
+                    "placement": "container_flow",
+                    "aspect_policy": "flexible",
+                    "fit": "n/a",
+                    "safe_area": "content",
+                    "z_policy": "structural_ui"
+                  }
                 },
                 {
                   "id": "reward_curio",
@@ -970,7 +2389,27 @@
                     "awakening",
                     "awakened",
                     "replay_owned"
-                  ]
+                  ],
+                  "geometry": {
+                    "profile": "curio_art",
+                    "min_size": [
+                      220,
+                      220
+                    ],
+                    "preferred_size": [
+                      360,
+                      360
+                    ],
+                    "placement": "container_flow",
+                    "aspect_policy": "1:1_preserve",
+                    "fit": "contain",
+                    "safe_area": "content",
+                    "z_policy": "content_artwork",
+                    "source_min_size": [
+                      720,
+                      720
+                    ]
+                  }
                 },
                 {
                   "id": "reward_values",
@@ -978,7 +2417,23 @@
                   "states": [
                     "earned",
                     "replay"
-                  ]
+                  ],
+                  "geometry": {
+                    "profile": "structural_text",
+                    "min_size": [
+                      320,
+                      44
+                    ],
+                    "preferred_size": [
+                      800,
+                      64
+                    ],
+                    "placement": "container_flow",
+                    "aspect_policy": "flexible",
+                    "fit": "n/a",
+                    "safe_area": "content",
+                    "z_policy": "structural_ui"
+                  }
                 },
                 {
                   "id": "house_consequence",
@@ -986,7 +2441,23 @@
                   "states": [
                     "first_time",
                     "replay"
-                  ]
+                  ],
+                  "geometry": {
+                    "profile": "structural_text",
+                    "min_size": [
+                      320,
+                      44
+                    ],
+                    "preferred_size": [
+                      800,
+                      64
+                    ],
+                    "placement": "container_flow",
+                    "aspect_policy": "flexible",
+                    "fit": "n/a",
+                    "safe_area": "content",
+                    "z_policy": "structural_ui"
+                  }
                 },
                 {
                   "id": "continue",
@@ -994,7 +2465,27 @@
                   "states": [
                     "enabled",
                     "pressed"
-                  ]
+                  ],
+                  "geometry": {
+                    "profile": "primary_cta",
+                    "min_size": [
+                      780,
+                      96
+                    ],
+                    "preferred_size": [
+                      880,
+                      104
+                    ],
+                    "placement": "container_flow",
+                    "aspect_policy": "flexible",
+                    "fit": "n/a",
+                    "safe_area": "content",
+                    "z_policy": "structural_ui",
+                    "touch_target": [
+                      88,
+                      88
+                    ]
+                  }
                 },
                 {
                   "id": "reward_fx",
@@ -1002,7 +2493,23 @@
                   "states": [
                     "reveal",
                     "reduced_motion"
-                  ]
+                  ],
+                  "geometry": {
+                    "profile": "owner_vfx",
+                    "min_size": [
+                      220,
+                      220
+                    ],
+                    "preferred_size": [
+                      480,
+                      480
+                    ],
+                    "placement": "follow_semantic_owner",
+                    "aspect_policy": "owner_bounds",
+                    "fit": "owner_bounds",
+                    "safe_area": "owner",
+                    "z_policy": "runtime_vfx"
+                  }
                 }
               ]
             }
@@ -1045,7 +2552,27 @@
                   "states": [
                     "before",
                     "after"
-                  ]
+                  ],
+                  "geometry": {
+                    "profile": "full_bleed",
+                    "min_size": [
+                      1080,
+                      1920
+                    ],
+                    "preferred_size": [
+                      1080,
+                      1920
+                    ],
+                    "placement": "viewport_fill",
+                    "aspect_policy": "9:16",
+                    "fit": "cover",
+                    "safe_area": "bleed",
+                    "z_policy": "background_art",
+                    "source_min_size": [
+                      2160,
+                      3840
+                    ]
+                  }
                 },
                 {
                   "id": "restored_curio_slot",
@@ -1054,7 +2581,27 @@
                     "empty",
                     "awakening",
                     "restored"
-                  ]
+                  ],
+                  "geometry": {
+                    "profile": "curio_art",
+                    "min_size": [
+                      220,
+                      220
+                    ],
+                    "preferred_size": [
+                      360,
+                      360
+                    ],
+                    "placement": "container_flow",
+                    "aspect_policy": "1:1_preserve",
+                    "fit": "contain",
+                    "safe_area": "content",
+                    "z_policy": "content_artwork",
+                    "source_min_size": [
+                      720,
+                      720
+                    ]
+                  }
                 },
                 {
                   "id": "character_world_layer",
@@ -1062,7 +2609,27 @@
                   "states": [
                     "attention",
                     "celebrate"
-                  ]
+                  ],
+                  "geometry": {
+                    "profile": "world_character",
+                    "min_size": [
+                      280,
+                      420
+                    ],
+                    "preferred_size": [
+                      420,
+                      620
+                    ],
+                    "placement": "owner_anchor",
+                    "aspect_policy": "preserve",
+                    "fit": "contain",
+                    "safe_area": "content",
+                    "z_policy": "content_artwork",
+                    "source_min_size": [
+                      840,
+                      1240
+                    ]
+                  }
                 },
                 {
                   "id": "awakening_fx",
@@ -1070,7 +2637,23 @@
                   "states": [
                     "play",
                     "reduced_motion"
-                  ]
+                  ],
+                  "geometry": {
+                    "profile": "owner_vfx",
+                    "min_size": [
+                      220,
+                      220
+                    ],
+                    "preferred_size": [
+                      480,
+                      480
+                    ],
+                    "placement": "follow_semantic_owner",
+                    "aspect_policy": "owner_bounds",
+                    "fit": "owner_bounds",
+                    "safe_area": "owner",
+                    "z_policy": "runtime_vfx"
+                  }
                 }
               ]
             }
@@ -1088,14 +2671,50 @@
                   "states": [
                     "awakening",
                     "restored"
-                  ]
+                  ],
+                  "geometry": {
+                    "profile": "curio_art",
+                    "min_size": [
+                      220,
+                      220
+                    ],
+                    "preferred_size": [
+                      360,
+                      360
+                    ],
+                    "placement": "container_flow",
+                    "aspect_policy": "1:1_preserve",
+                    "fit": "contain",
+                    "safe_area": "content",
+                    "z_policy": "content_artwork",
+                    "source_min_size": [
+                      720,
+                      720
+                    ]
+                  }
                 },
                 {
                   "id": "change_copy",
                   "layer": "structural_ui",
                   "states": [
                     "after"
-                  ]
+                  ],
+                  "geometry": {
+                    "profile": "structural_text",
+                    "min_size": [
+                      320,
+                      44
+                    ],
+                    "preferred_size": [
+                      800,
+                      64
+                    ],
+                    "placement": "container_flow",
+                    "aspect_policy": "flexible",
+                    "fit": "n/a",
+                    "safe_area": "content",
+                    "z_policy": "structural_ui"
+                  }
                 },
                 {
                   "id": "continue",
@@ -1103,7 +2722,27 @@
                   "states": [
                     "enabled",
                     "pressed"
-                  ]
+                  ],
+                  "geometry": {
+                    "profile": "primary_cta",
+                    "min_size": [
+                      780,
+                      96
+                    ],
+                    "preferred_size": [
+                      880,
+                      104
+                    ],
+                    "placement": "container_flow",
+                    "aspect_policy": "flexible",
+                    "fit": "n/a",
+                    "safe_area": "content",
+                    "z_policy": "structural_ui",
+                    "touch_target": [
+                      88,
+                      88
+                    ]
+                  }
                 }
               ]
             }
@@ -1149,7 +2788,27 @@
                     "empty",
                     "partial",
                     "complete"
-                  ]
+                  ],
+                  "geometry": {
+                    "profile": "full_bleed",
+                    "min_size": [
+                      1080,
+                      1920
+                    ],
+                    "preferred_size": [
+                      1080,
+                      1920
+                    ],
+                    "placement": "viewport_fill",
+                    "aspect_policy": "9:16",
+                    "fit": "cover",
+                    "safe_area": "bleed",
+                    "z_policy": "background_art",
+                    "source_min_size": [
+                      2160,
+                      3840
+                    ]
+                  }
                 }
               ]
             }
@@ -1166,7 +2825,23 @@
                   "layer": "structural_ui",
                   "states": [
                     "normal"
-                  ]
+                  ],
+                  "geometry": {
+                    "profile": "title",
+                    "min_size": [
+                      520,
+                      64
+                    ],
+                    "preferred_size": [
+                      880,
+                      80
+                    ],
+                    "placement": "container_flow",
+                    "aspect_policy": "flexible",
+                    "fit": "n/a",
+                    "safe_area": "content",
+                    "z_policy": "structural_ui"
+                  }
                 },
                 {
                   "id": "count",
@@ -1175,7 +2850,23 @@
                     "empty",
                     "partial",
                     "complete"
-                  ]
+                  ],
+                  "geometry": {
+                    "profile": "structural_text",
+                    "min_size": [
+                      320,
+                      44
+                    ],
+                    "preferred_size": [
+                      800,
+                      64
+                    ],
+                    "placement": "container_flow",
+                    "aspect_policy": "flexible",
+                    "fit": "n/a",
+                    "safe_area": "content",
+                    "z_policy": "structural_ui"
+                  }
                 }
               ]
             }
@@ -1193,14 +2884,50 @@
                   "states": [
                     "locked",
                     "awakened"
-                  ]
+                  ],
+                  "geometry": {
+                    "profile": "collection_cards",
+                    "min_size": [
+                      960,
+                      480
+                    ],
+                    "preferred_size": [
+                      1012,
+                      500
+                    ],
+                    "placement": "container_flow",
+                    "aspect_policy": "three_column_stage",
+                    "fit": "contain",
+                    "safe_area": "content",
+                    "z_policy": "content_artwork",
+                    "source_min_size": [
+                      720,
+                      720
+                    ]
+                  }
                 },
                 {
                   "id": "empty_state",
                   "layer": "structural_ui",
                   "states": [
                     "empty"
-                  ]
+                  ],
+                  "geometry": {
+                    "profile": "card_group",
+                    "min_size": [
+                      880,
+                      180
+                    ],
+                    "preferred_size": [
+                      1000,
+                      240
+                    ],
+                    "placement": "container_flow",
+                    "aspect_policy": "flexible",
+                    "fit": "contain",
+                    "safe_area": "content",
+                    "z_policy": "structural_ui"
+                  }
                 }
               ]
             }
@@ -1217,7 +2944,31 @@
                   "layer": "functional_icon",
                   "states": [
                     "selected"
-                  ]
+                  ],
+                  "geometry": {
+                    "profile": "nav_item",
+                    "min_size": [
+                      160,
+                      120
+                    ],
+                    "preferred_size": [
+                      204,
+                      120
+                    ],
+                    "placement": "bottom_nav_flow",
+                    "aspect_policy": "flexible",
+                    "fit": "contain",
+                    "safe_area": "bottom",
+                    "z_policy": "functional_icon",
+                    "source_min_size": [
+                      192,
+                      192
+                    ],
+                    "touch_target": [
+                      88,
+                      88
+                    ]
+                  }
                 },
                 {
                   "id": "other_tabs",
@@ -1225,7 +2976,27 @@
                   "states": [
                     "normal",
                     "pressed"
-                  ]
+                  ],
+                  "geometry": {
+                    "profile": "nav_group",
+                    "min_size": [
+                      640,
+                      120
+                    ],
+                    "preferred_size": [
+                      816,
+                      120
+                    ],
+                    "placement": "bottom_nav_flow",
+                    "aspect_policy": "flexible",
+                    "fit": "contain",
+                    "safe_area": "bottom",
+                    "z_policy": "functional_icon",
+                    "touch_target": [
+                      88,
+                      88
+                    ]
+                  }
                 }
               ]
             }
@@ -1270,7 +3041,23 @@
                   "layer": "structural_ui",
                   "states": [
                     "normal"
-                  ]
+                  ],
+                  "geometry": {
+                    "profile": "title",
+                    "min_size": [
+                      520,
+                      64
+                    ],
+                    "preferred_size": [
+                      880,
+                      80
+                    ],
+                    "placement": "container_flow",
+                    "aspect_policy": "flexible",
+                    "fit": "n/a",
+                    "safe_area": "content",
+                    "z_policy": "structural_ui"
+                  }
                 },
                 {
                   "id": "timer",
@@ -1278,7 +3065,23 @@
                   "states": [
                     "active",
                     "offline"
-                  ]
+                  ],
+                  "geometry": {
+                    "profile": "structural_text",
+                    "min_size": [
+                      320,
+                      44
+                    ],
+                    "preferred_size": [
+                      800,
+                      64
+                    ],
+                    "placement": "container_flow",
+                    "aspect_policy": "flexible",
+                    "fit": "n/a",
+                    "safe_area": "content",
+                    "z_policy": "structural_ui"
+                  }
                 }
               ]
             }
@@ -1297,7 +3100,23 @@
                     "in_progress",
                     "claimable",
                     "claimed"
-                  ]
+                  ],
+                  "geometry": {
+                    "profile": "card_group",
+                    "min_size": [
+                      880,
+                      180
+                    ],
+                    "preferred_size": [
+                      1000,
+                      240
+                    ],
+                    "placement": "container_flow",
+                    "aspect_policy": "flexible",
+                    "fit": "contain",
+                    "safe_area": "content",
+                    "z_policy": "structural_ui"
+                  }
                 },
                 {
                   "id": "reward",
@@ -1306,7 +3125,27 @@
                     "locked",
                     "claimable",
                     "claimed"
-                  ]
+                  ],
+                  "geometry": {
+                    "profile": "hero_art",
+                    "min_size": [
+                      300,
+                      240
+                    ],
+                    "preferred_size": [
+                      480,
+                      360
+                    ],
+                    "placement": "container_flow",
+                    "aspect_policy": "preserve",
+                    "fit": "contain",
+                    "safe_area": "content",
+                    "z_policy": "content_artwork",
+                    "source_min_size": [
+                      960,
+                      720
+                    ]
+                  }
                 },
                 {
                   "id": "empty_state",
@@ -1314,7 +3153,23 @@
                   "states": [
                     "reset_empty",
                     "offline"
-                  ]
+                  ],
+                  "geometry": {
+                    "profile": "card_group",
+                    "min_size": [
+                      880,
+                      180
+                    ],
+                    "preferred_size": [
+                      1000,
+                      240
+                    ],
+                    "placement": "container_flow",
+                    "aspect_policy": "flexible",
+                    "fit": "contain",
+                    "safe_area": "content",
+                    "z_policy": "structural_ui"
+                  }
                 }
               ]
             }
@@ -1364,7 +3219,27 @@
                     "locked",
                     "completed",
                     "empty"
-                  ]
+                  ],
+                  "geometry": {
+                    "profile": "full_bleed",
+                    "min_size": [
+                      1080,
+                      1920
+                    ],
+                    "preferred_size": [
+                      1080,
+                      1920
+                    ],
+                    "placement": "viewport_fill",
+                    "aspect_policy": "9:16",
+                    "fit": "cover",
+                    "safe_area": "bleed",
+                    "z_policy": "background_art",
+                    "source_min_size": [
+                      2160,
+                      3840
+                    ]
+                  }
                 }
               ]
             }
@@ -1381,7 +3256,23 @@
                   "layer": "structural_ui",
                   "states": [
                     "normal"
-                  ]
+                  ],
+                  "geometry": {
+                    "profile": "title",
+                    "min_size": [
+                      520,
+                      64
+                    ],
+                    "preferred_size": [
+                      880,
+                      80
+                    ],
+                    "placement": "container_flow",
+                    "aspect_policy": "flexible",
+                    "fit": "n/a",
+                    "safe_area": "content",
+                    "z_policy": "structural_ui"
+                  }
                 },
                 {
                   "id": "status",
@@ -1390,7 +3281,23 @@
                     "live",
                     "coming_soon",
                     "empty"
-                  ]
+                  ],
+                  "geometry": {
+                    "profile": "structural_text",
+                    "min_size": [
+                      320,
+                      44
+                    ],
+                    "preferred_size": [
+                      800,
+                      64
+                    ],
+                    "placement": "container_flow",
+                    "aspect_policy": "flexible",
+                    "fit": "n/a",
+                    "safe_area": "content",
+                    "z_policy": "structural_ui"
+                  }
                 }
               ]
             }
@@ -1410,7 +3317,27 @@
                     "coming_soon",
                     "locked",
                     "completed"
-                  ]
+                  ],
+                  "geometry": {
+                    "profile": "hero_art",
+                    "min_size": [
+                      300,
+                      240
+                    ],
+                    "preferred_size": [
+                      480,
+                      360
+                    ],
+                    "placement": "container_flow",
+                    "aspect_policy": "preserve",
+                    "fit": "contain",
+                    "safe_area": "content",
+                    "z_policy": "content_artwork",
+                    "source_min_size": [
+                      960,
+                      720
+                    ]
+                  }
                 },
                 {
                   "id": "timer",
@@ -1418,7 +3345,23 @@
                   "states": [
                     "live",
                     "coming_soon"
-                  ]
+                  ],
+                  "geometry": {
+                    "profile": "structural_text",
+                    "min_size": [
+                      320,
+                      44
+                    ],
+                    "preferred_size": [
+                      800,
+                      64
+                    ],
+                    "placement": "container_flow",
+                    "aspect_policy": "flexible",
+                    "fit": "n/a",
+                    "safe_area": "content",
+                    "z_policy": "structural_ui"
+                  }
                 },
                 {
                   "id": "reward_metadata",
@@ -1426,7 +3369,23 @@
                   "states": [
                     "live",
                     "completed"
-                  ]
+                  ],
+                  "geometry": {
+                    "profile": "structural_text",
+                    "min_size": [
+                      320,
+                      44
+                    ],
+                    "preferred_size": [
+                      800,
+                      64
+                    ],
+                    "placement": "container_flow",
+                    "aspect_policy": "flexible",
+                    "fit": "n/a",
+                    "safe_area": "content",
+                    "z_policy": "structural_ui"
+                  }
                 },
                 {
                   "id": "cta",
@@ -1434,14 +3393,50 @@
                   "states": [
                     "enabled",
                     "disabled"
-                  ]
+                  ],
+                  "geometry": {
+                    "profile": "primary_cta",
+                    "min_size": [
+                      780,
+                      96
+                    ],
+                    "preferred_size": [
+                      880,
+                      104
+                    ],
+                    "placement": "container_flow",
+                    "aspect_policy": "flexible",
+                    "fit": "n/a",
+                    "safe_area": "content",
+                    "z_policy": "structural_ui",
+                    "touch_target": [
+                      88,
+                      88
+                    ]
+                  }
                 },
                 {
                   "id": "empty_state",
                   "layer": "structural_ui",
                   "states": [
                     "empty"
-                  ]
+                  ],
+                  "geometry": {
+                    "profile": "card_group",
+                    "min_size": [
+                      880,
+                      180
+                    ],
+                    "preferred_size": [
+                      1000,
+                      240
+                    ],
+                    "placement": "container_flow",
+                    "aspect_policy": "flexible",
+                    "fit": "contain",
+                    "safe_area": "content",
+                    "z_policy": "structural_ui"
+                  }
                 }
               ]
             }
@@ -1458,7 +3453,31 @@
                   "layer": "functional_icon",
                   "states": [
                     "selected"
-                  ]
+                  ],
+                  "geometry": {
+                    "profile": "nav_item",
+                    "min_size": [
+                      160,
+                      120
+                    ],
+                    "preferred_size": [
+                      204,
+                      120
+                    ],
+                    "placement": "bottom_nav_flow",
+                    "aspect_policy": "flexible",
+                    "fit": "contain",
+                    "safe_area": "bottom",
+                    "z_policy": "functional_icon",
+                    "source_min_size": [
+                      192,
+                      192
+                    ],
+                    "touch_target": [
+                      88,
+                      88
+                    ]
+                  }
                 },
                 {
                   "id": "other_tabs",
@@ -1466,7 +3485,27 @@
                   "states": [
                     "normal",
                     "pressed"
-                  ]
+                  ],
+                  "geometry": {
+                    "profile": "nav_group",
+                    "min_size": [
+                      640,
+                      120
+                    ],
+                    "preferred_size": [
+                      816,
+                      120
+                    ],
+                    "placement": "bottom_nav_flow",
+                    "aspect_policy": "flexible",
+                    "fit": "contain",
+                    "safe_area": "bottom",
+                    "z_policy": "functional_icon",
+                    "touch_target": [
+                      88,
+                      88
+                    ]
+                  }
                 }
               ]
             }
@@ -1516,7 +3555,27 @@
                     "purchase_in_progress",
                     "purchase_success",
                     "purchase_failure"
-                  ]
+                  ],
+                  "geometry": {
+                    "profile": "full_bleed",
+                    "min_size": [
+                      1080,
+                      1920
+                    ],
+                    "preferred_size": [
+                      1080,
+                      1920
+                    ],
+                    "placement": "viewport_fill",
+                    "aspect_policy": "9:16",
+                    "fit": "cover",
+                    "safe_area": "bleed",
+                    "z_policy": "background_art",
+                    "source_min_size": [
+                      2160,
+                      3840
+                    ]
+                  }
                 }
               ]
             }
@@ -1533,14 +3592,46 @@
                   "layer": "structural_ui",
                   "states": [
                     "normal"
-                  ]
+                  ],
+                  "geometry": {
+                    "profile": "title",
+                    "min_size": [
+                      520,
+                      64
+                    ],
+                    "preferred_size": [
+                      880,
+                      80
+                    ],
+                    "placement": "container_flow",
+                    "aspect_policy": "flexible",
+                    "fit": "n/a",
+                    "safe_area": "content",
+                    "z_policy": "structural_ui"
+                  }
                 },
                 {
                   "id": "currency_summary",
                   "layer": "structural_ui",
                   "states": [
                     "normal"
-                  ]
+                  ],
+                  "geometry": {
+                    "profile": "resource_chip",
+                    "min_size": [
+                      180,
+                      88
+                    ],
+                    "preferred_size": [
+                      260,
+                      96
+                    ],
+                    "placement": "header_flow",
+                    "aspect_policy": "flexible",
+                    "fit": "n/a",
+                    "safe_area": "top",
+                    "z_policy": "structural_ui"
+                  }
                 }
               ]
             }
@@ -1559,7 +3650,27 @@
                     "available",
                     "unavailable",
                     "review_disabled"
-                  ]
+                  ],
+                  "geometry": {
+                    "profile": "hero_art",
+                    "min_size": [
+                      300,
+                      240
+                    ],
+                    "preferred_size": [
+                      480,
+                      360
+                    ],
+                    "placement": "container_flow",
+                    "aspect_policy": "preserve",
+                    "fit": "contain",
+                    "safe_area": "content",
+                    "z_policy": "content_artwork",
+                    "source_min_size": [
+                      960,
+                      720
+                    ]
+                  }
                 },
                 {
                   "id": "price_or_disabled_truth",
@@ -1567,7 +3678,23 @@
                   "states": [
                     "available",
                     "review_disabled"
-                  ]
+                  ],
+                  "geometry": {
+                    "profile": "structural_text",
+                    "min_size": [
+                      320,
+                      44
+                    ],
+                    "preferred_size": [
+                      800,
+                      64
+                    ],
+                    "placement": "container_flow",
+                    "aspect_policy": "flexible",
+                    "fit": "n/a",
+                    "safe_area": "content",
+                    "z_policy": "structural_ui"
+                  }
                 },
                 {
                   "id": "cta",
@@ -1576,7 +3703,27 @@
                     "enabled",
                     "disabled",
                     "loading"
-                  ]
+                  ],
+                  "geometry": {
+                    "profile": "primary_cta",
+                    "min_size": [
+                      780,
+                      96
+                    ],
+                    "preferred_size": [
+                      880,
+                      104
+                    ],
+                    "placement": "container_flow",
+                    "aspect_policy": "flexible",
+                    "fit": "n/a",
+                    "safe_area": "content",
+                    "z_policy": "structural_ui",
+                    "touch_target": [
+                      88,
+                      88
+                    ]
+                  }
                 }
               ]
             },
@@ -1590,7 +3737,23 @@
                     "loading",
                     "available",
                     "unavailable"
-                  ]
+                  ],
+                  "geometry": {
+                    "profile": "card_group",
+                    "min_size": [
+                      880,
+                      180
+                    ],
+                    "preferred_size": [
+                      1000,
+                      240
+                    ],
+                    "placement": "container_flow",
+                    "aspect_policy": "flexible",
+                    "fit": "contain",
+                    "safe_area": "content",
+                    "z_policy": "structural_ui"
+                  }
                 }
               ]
             }
@@ -1607,7 +3770,31 @@
                   "layer": "functional_icon",
                   "states": [
                     "selected"
-                  ]
+                  ],
+                  "geometry": {
+                    "profile": "nav_item",
+                    "min_size": [
+                      160,
+                      120
+                    ],
+                    "preferred_size": [
+                      204,
+                      120
+                    ],
+                    "placement": "bottom_nav_flow",
+                    "aspect_policy": "flexible",
+                    "fit": "contain",
+                    "safe_area": "bottom",
+                    "z_policy": "functional_icon",
+                    "source_min_size": [
+                      192,
+                      192
+                    ],
+                    "touch_target": [
+                      88,
+                      88
+                    ]
+                  }
                 },
                 {
                   "id": "other_tabs",
@@ -1615,7 +3802,27 @@
                   "states": [
                     "normal",
                     "pressed"
-                  ]
+                  ],
+                  "geometry": {
+                    "profile": "nav_group",
+                    "min_size": [
+                      640,
+                      120
+                    ],
+                    "preferred_size": [
+                      816,
+                      120
+                    ],
+                    "placement": "bottom_nav_flow",
+                    "aspect_policy": "flexible",
+                    "fit": "contain",
+                    "safe_area": "bottom",
+                    "z_policy": "functional_icon",
+                    "touch_target": [
+                      88,
+                      88
+                    ]
+                  }
                 }
               ]
             }
@@ -1624,8 +3831,8 @@
       ]
     },
     "S12": {
-      "name": "Profile / Settings",
-      "purpose": "Show player progress and control local experience preferences.",
+      "name": "Profile",
+      "purpose": "Show Keeper identity, opening-chapter progress, Curio/House progress and truthful local-save health, with Settings as a separate suspended-origin surface.",
       "entry": [
         "S01_header",
         "meta_header"
@@ -1635,15 +3842,15 @@
       ],
       "states": [
         "profile_summary",
-        "settings_open",
-        "settings_changed"
+        "opening_progress",
+        "save_health"
       ],
       "systems": [
         "player_progress",
-        "settings",
-        "accessibility"
+        "save",
+        "settings_entry"
       ],
-      "shell": "meta_or_modal",
+      "shell": "meta",
       "regions": [
         {
           "id": "world",
@@ -1656,9 +3863,29 @@
                   "layer": "background_art",
                   "states": [
                     "profile_summary",
-                    "settings_open",
-                    "settings_changed"
-                  ]
+                    "opening_progress",
+                    "save_health"
+                  ],
+                  "geometry": {
+                    "profile": "full_bleed",
+                    "min_size": [
+                      1080,
+                      1920
+                    ],
+                    "preferred_size": [
+                      1080,
+                      1920
+                    ],
+                    "placement": "viewport_fill",
+                    "aspect_policy": "9:16",
+                    "fit": "cover",
+                    "safe_area": "bleed",
+                    "z_policy": "background_art",
+                    "source_min_size": [
+                      2160,
+                      3840
+                    ]
+                  }
                 }
               ]
             }
@@ -1675,86 +3902,181 @@
                   "layer": "structural_ui",
                   "states": [
                     "normal"
-                  ]
+                  ],
+                  "geometry": {
+                    "profile": "title",
+                    "min_size": [
+                      520,
+                      64
+                    ],
+                    "preferred_size": [
+                      880,
+                      80
+                    ],
+                    "placement": "container_flow",
+                    "aspect_policy": "flexible",
+                    "fit": "n/a",
+                    "safe_area": "content",
+                    "z_policy": "structural_ui"
+                  }
                 },
                 {
                   "id": "level_progress",
                   "layer": "structural_ui",
                   "states": [
                     "normal"
-                  ]
+                  ],
+                  "geometry": {
+                    "profile": "structural_text",
+                    "min_size": [
+                      320,
+                      44
+                    ],
+                    "preferred_size": [
+                      800,
+                      64
+                    ],
+                    "placement": "container_flow",
+                    "aspect_policy": "flexible",
+                    "fit": "n/a",
+                    "safe_area": "content",
+                    "z_policy": "structural_ui"
+                  }
                 },
                 {
                   "id": "curio_progress",
                   "layer": "structural_ui",
                   "states": [
                     "normal"
-                  ]
+                  ],
+                  "geometry": {
+                    "profile": "structural_text",
+                    "min_size": [
+                      320,
+                      44
+                    ],
+                    "preferred_size": [
+                      800,
+                      64
+                    ],
+                    "placement": "container_flow",
+                    "aspect_policy": "flexible",
+                    "fit": "n/a",
+                    "safe_area": "content",
+                    "z_policy": "structural_ui"
+                  }
                 },
                 {
                   "id": "house_progress",
                   "layer": "structural_ui",
                   "states": [
                     "normal"
-                  ]
+                  ],
+                  "geometry": {
+                    "profile": "structural_text",
+                    "min_size": [
+                      320,
+                      44
+                    ],
+                    "preferred_size": [
+                      800,
+                      64
+                    ],
+                    "placement": "container_flow",
+                    "aspect_policy": "flexible",
+                    "fit": "n/a",
+                    "safe_area": "content",
+                    "z_policy": "structural_ui"
+                  }
+                },
+                {
+                  "id": "save_health",
+                  "layer": "structural_ui",
+                  "states": [
+                    "normal",
+                    "recovered",
+                    "update_required"
+                  ],
+                  "geometry": {
+                    "profile": "card_group",
+                    "min_size": [
+                      880,
+                      180
+                    ],
+                    "preferred_size": [
+                      1000,
+                      240
+                    ],
+                    "placement": "container_flow",
+                    "aspect_policy": "flexible",
+                    "fit": "contain",
+                    "safe_area": "content",
+                    "z_policy": "structural_ui"
+                  }
                 }
               ]
             }
           ]
         },
         {
-          "id": "settings",
+          "id": "actions",
           "blocks": [
             {
-              "id": "settings_controls",
+              "id": "profile_actions",
               "slots": [
                 {
-                  "id": "master_audio",
+                  "id": "settings_entry",
                   "layer": "structural_ui",
                   "states": [
-                    "on",
-                    "off"
-                  ]
+                    "enabled"
+                  ],
+                  "geometry": {
+                    "profile": "secondary_cta",
+                    "min_size": [
+                      320,
+                      88
+                    ],
+                    "preferred_size": [
+                      760,
+                      96
+                    ],
+                    "placement": "container_flow",
+                    "aspect_policy": "flexible",
+                    "fit": "n/a",
+                    "safe_area": "content",
+                    "z_policy": "structural_ui",
+                    "touch_target": [
+                      88,
+                      88
+                    ]
+                  }
                 },
                 {
-                  "id": "music",
+                  "id": "back_to_house",
                   "layer": "structural_ui",
                   "states": [
-                    "on",
-                    "off"
-                  ]
-                },
-                {
-                  "id": "sfx",
-                  "layer": "structural_ui",
-                  "states": [
-                    "on",
-                    "off"
-                  ]
-                },
-                {
-                  "id": "haptics",
-                  "layer": "structural_ui",
-                  "states": [
-                    "on",
-                    "off"
-                  ]
-                },
-                {
-                  "id": "reduced_motion",
-                  "layer": "structural_ui",
-                  "states": [
-                    "on",
-                    "off"
-                  ]
-                },
-                {
-                  "id": "high_contrast",
-                  "layer": "structural_ui",
-                  "states": [
-                    "on",
-                    "off"
-                  ]
+                    "enabled"
+                  ],
+                  "geometry": {
+                    "profile": "secondary_cta",
+                    "min_size": [
+                      320,
+                      88
+                    ],
+                    "preferred_size": [
+                      760,
+                      96
+                    ],
+                    "placement": "container_flow",
+                    "aspect_policy": "flexible",
+                    "fit": "n/a",
+                    "safe_area": "content",
+                    "z_policy": "structural_ui",
+                    "touch_target": [
+                      88,
+                      88
+                    ]
+                  }
                 }
               ]
             }
@@ -1777,35 +4099,153 @@
           "id": "pause_panel",
           "slots": [
             {
+              "id": "title",
+              "layer": "structural_ui",
+              "states": [
+                "visible"
+              ],
+              "geometry": {
+                "profile": "title",
+                "min_size": [
+                  520,
+                  64
+                ],
+                "preferred_size": [
+                  880,
+                  80
+                ],
+                "placement": "container_flow",
+                "aspect_policy": "flexible",
+                "fit": "n/a",
+                "safe_area": "content",
+                "z_policy": "structural_ui"
+              }
+            },
+            {
+              "id": "detail",
+              "layer": "structural_ui",
+              "states": [
+                "visible"
+              ],
+              "geometry": {
+                "profile": "structural_text",
+                "min_size": [
+                  320,
+                  44
+                ],
+                "preferred_size": [
+                  800,
+                  64
+                ],
+                "placement": "container_flow",
+                "aspect_policy": "flexible",
+                "fit": "n/a",
+                "safe_area": "content",
+                "z_policy": "structural_ui"
+              }
+            },
+            {
               "id": "resume",
+              "layer": "structural_ui",
               "states": [
                 "enabled"
-              ]
+              ],
+              "geometry": {
+                "profile": "structural_text",
+                "min_size": [
+                  320,
+                  44
+                ],
+                "preferred_size": [
+                  800,
+                  64
+                ],
+                "placement": "container_flow",
+                "aspect_policy": "flexible",
+                "fit": "n/a",
+                "safe_area": "content",
+                "z_policy": "structural_ui"
+              }
             },
             {
               "id": "retry",
+              "layer": "structural_ui",
               "states": [
                 "enabled"
-              ]
+              ],
+              "geometry": {
+                "profile": "primary_cta",
+                "min_size": [
+                  780,
+                  96
+                ],
+                "preferred_size": [
+                  880,
+                  104
+                ],
+                "placement": "container_flow",
+                "aspect_policy": "flexible",
+                "fit": "n/a",
+                "safe_area": "content",
+                "z_policy": "structural_ui",
+                "touch_target": [
+                  88,
+                  88
+                ]
+              }
             },
             {
               "id": "settings",
+              "layer": "structural_ui",
               "states": [
                 "enabled"
-              ]
+              ],
+              "geometry": {
+                "profile": "structural_text",
+                "min_size": [
+                  320,
+                  44
+                ],
+                "preferred_size": [
+                  800,
+                  64
+                ],
+                "placement": "container_flow",
+                "aspect_policy": "flexible",
+                "fit": "n/a",
+                "safe_area": "content",
+                "z_policy": "structural_ui"
+              }
             },
             {
               "id": "exit",
+              "layer": "structural_ui",
               "states": [
                 "enabled"
-              ]
+              ],
+              "geometry": {
+                "profile": "structural_text",
+                "min_size": [
+                  320,
+                  44
+                ],
+                "preferred_size": [
+                  800,
+                  64
+                ],
+                "placement": "container_flow",
+                "aspect_policy": "flexible",
+                "fit": "n/a",
+                "safe_area": "content",
+                "z_policy": "structural_ui"
+              }
             }
           ]
         }
       ]
     },
     "O02": {
-      "name": "Settings Modal",
+      "name": "Settings Surface",
       "owner": [
         "S01",
         "S05",
@@ -1817,27 +4257,290 @@
       ],
       "blocks": [
         {
+          "id": "settings_world",
+          "slots": [
+            {
+              "id": "environment",
+              "layer": "background_art",
+              "states": [
+                "open",
+                "changed"
+              ],
+              "geometry": {
+                "profile": "full_bleed",
+                "min_size": [
+                  1080,
+                  1920
+                ],
+                "preferred_size": [
+                  1080,
+                  1920
+                ],
+                "placement": "viewport_fill",
+                "aspect_policy": "9:16",
+                "fit": "cover",
+                "safe_area": "bleed",
+                "z_policy": "background_art",
+                "source_min_size": [
+                  2160,
+                  3840
+                ]
+              }
+            },
+            {
+              "id": "house_sigil",
+              "layer": "content_artwork",
+              "states": [
+                "open",
+                "changed"
+              ],
+              "geometry": {
+                "profile": "hero_art",
+                "min_size": [
+                  300,
+                  240
+                ],
+                "preferred_size": [
+                  480,
+                  360
+                ],
+                "placement": "container_flow",
+                "aspect_policy": "preserve",
+                "fit": "contain",
+                "safe_area": "content",
+                "z_policy": "content_artwork",
+                "source_min_size": [
+                  960,
+                  720
+                ]
+              }
+            }
+          ]
+        },
+        {
           "id": "settings_panel",
           "slots": [
             {
-              "id": "audio_controls",
+              "id": "title",
+              "layer": "structural_ui",
               "states": [
-                "on",
-                "off"
-              ]
+                "visible"
+              ],
+              "geometry": {
+                "profile": "title",
+                "min_size": [
+                  520,
+                  64
+                ],
+                "preferred_size": [
+                  880,
+                  80
+                ],
+                "placement": "container_flow",
+                "aspect_policy": "flexible",
+                "fit": "n/a",
+                "safe_area": "content",
+                "z_policy": "structural_ui"
+              }
             },
             {
-              "id": "accessibility_controls",
+              "id": "master_audio",
+              "layer": "structural_ui",
               "states": [
                 "on",
                 "off"
-              ]
+              ],
+              "geometry": {
+                "profile": "settings_control",
+                "min_size": [
+                  760,
+                  88
+                ],
+                "preferred_size": [
+                  860,
+                  92
+                ],
+                "placement": "container_flow",
+                "aspect_policy": "flexible",
+                "fit": "n/a",
+                "safe_area": "content",
+                "z_policy": "structural_ui",
+                "touch_target": [
+                  88,
+                  88
+                ]
+              }
+            },
+            {
+              "id": "music",
+              "layer": "structural_ui",
+              "states": [
+                "on",
+                "off"
+              ],
+              "geometry": {
+                "profile": "settings_control",
+                "min_size": [
+                  760,
+                  88
+                ],
+                "preferred_size": [
+                  860,
+                  92
+                ],
+                "placement": "container_flow",
+                "aspect_policy": "flexible",
+                "fit": "n/a",
+                "safe_area": "content",
+                "z_policy": "structural_ui",
+                "touch_target": [
+                  88,
+                  88
+                ]
+              }
+            },
+            {
+              "id": "sfx",
+              "layer": "structural_ui",
+              "states": [
+                "on",
+                "off"
+              ],
+              "geometry": {
+                "profile": "settings_control",
+                "min_size": [
+                  760,
+                  88
+                ],
+                "preferred_size": [
+                  860,
+                  92
+                ],
+                "placement": "container_flow",
+                "aspect_policy": "flexible",
+                "fit": "n/a",
+                "safe_area": "content",
+                "z_policy": "structural_ui",
+                "touch_target": [
+                  88,
+                  88
+                ]
+              }
+            },
+            {
+              "id": "haptics",
+              "layer": "structural_ui",
+              "states": [
+                "on",
+                "off"
+              ],
+              "geometry": {
+                "profile": "settings_control",
+                "min_size": [
+                  760,
+                  88
+                ],
+                "preferred_size": [
+                  860,
+                  92
+                ],
+                "placement": "container_flow",
+                "aspect_policy": "flexible",
+                "fit": "n/a",
+                "safe_area": "content",
+                "z_policy": "structural_ui",
+                "touch_target": [
+                  88,
+                  88
+                ]
+              }
+            },
+            {
+              "id": "reduced_motion",
+              "layer": "structural_ui",
+              "states": [
+                "on",
+                "off"
+              ],
+              "geometry": {
+                "profile": "settings_control",
+                "min_size": [
+                  760,
+                  88
+                ],
+                "preferred_size": [
+                  860,
+                  92
+                ],
+                "placement": "container_flow",
+                "aspect_policy": "flexible",
+                "fit": "n/a",
+                "safe_area": "content",
+                "z_policy": "structural_ui",
+                "touch_target": [
+                  88,
+                  88
+                ]
+              }
+            },
+            {
+              "id": "high_contrast",
+              "layer": "structural_ui",
+              "states": [
+                "on",
+                "off"
+              ],
+              "geometry": {
+                "profile": "settings_control",
+                "min_size": [
+                  760,
+                  88
+                ],
+                "preferred_size": [
+                  860,
+                  92
+                ],
+                "placement": "container_flow",
+                "aspect_policy": "flexible",
+                "fit": "n/a",
+                "safe_area": "content",
+                "z_policy": "structural_ui",
+                "touch_target": [
+                  88,
+                  88
+                ]
+              }
             },
             {
               "id": "close",
+              "layer": "structural_ui",
               "states": [
                 "enabled"
-              ]
+              ],
+              "geometry": {
+                "profile": "utility_touch",
+                "min_size": [
+                  88,
+                  88
+                ],
+                "preferred_size": [
+                  96,
+                  96
+                ],
+                "placement": "owner_anchor",
+                "aspect_policy": "1:1",
+                "fit": "contain",
+                "safe_area": "content",
+                "z_policy": "structural_ui",
+                "source_min_size": [
+                  192,
+                  192
+                ],
+                "touch_target": [
+                  88,
+                  88
+                ]
+              }
             }
           ]
         }
@@ -1850,29 +4553,186 @@
       ],
       "states": [
         "out_of_moves",
-        "failed_objective"
+        "failed_objective",
+        "recovered"
       ],
       "blocks": [
         {
           "id": "fail_panel",
           "slots": [
             {
-              "id": "reason",
+              "id": "title",
+              "layer": "structural_ui",
               "states": [
                 "visible"
-              ]
+              ],
+              "geometry": {
+                "profile": "title",
+                "min_size": [
+                  520,
+                  64
+                ],
+                "preferred_size": [
+                  880,
+                  80
+                ],
+                "placement": "container_flow",
+                "aspect_policy": "flexible",
+                "fit": "n/a",
+                "safe_area": "content",
+                "z_policy": "structural_ui"
+              }
+            },
+            {
+              "id": "objective_summary",
+              "layer": "structural_ui",
+              "states": [
+                "visible"
+              ],
+              "geometry": {
+                "profile": "structural_text",
+                "min_size": [
+                  320,
+                  44
+                ],
+                "preferred_size": [
+                  800,
+                  64
+                ],
+                "placement": "container_flow",
+                "aspect_policy": "flexible",
+                "fit": "n/a",
+                "safe_area": "content",
+                "z_policy": "structural_ui"
+              }
+            },
+            {
+              "id": "reason",
+              "layer": "structural_ui",
+              "states": [
+                "visible"
+              ],
+              "geometry": {
+                "profile": "structural_text",
+                "min_size": [
+                  320,
+                  44
+                ],
+                "preferred_size": [
+                  800,
+                  64
+                ],
+                "placement": "container_flow",
+                "aspect_policy": "flexible",
+                "fit": "n/a",
+                "safe_area": "content",
+                "z_policy": "structural_ui"
+              }
+            },
+            {
+              "id": "sealed_curio",
+              "layer": "content_artwork",
+              "states": [
+                "sealed"
+              ],
+              "geometry": {
+                "profile": "hero_art",
+                "min_size": [
+                  300,
+                  240
+                ],
+                "preferred_size": [
+                  480,
+                  360
+                ],
+                "placement": "container_flow",
+                "aspect_policy": "preserve",
+                "fit": "contain",
+                "safe_area": "content",
+                "z_policy": "content_artwork",
+                "source_min_size": [
+                  960,
+                  720
+                ]
+              }
+            },
+            {
+              "id": "keeper_proclamation",
+              "layer": "structural_ui",
+              "states": [
+                "visible"
+              ],
+              "geometry": {
+                "profile": "card_group",
+                "min_size": [
+                  880,
+                  180
+                ],
+                "preferred_size": [
+                  1000,
+                  240
+                ],
+                "placement": "container_flow",
+                "aspect_policy": "flexible",
+                "fit": "contain",
+                "safe_area": "content",
+                "z_policy": "structural_ui"
+              }
+            },
+            {
+              "id": "recovery_plus_three",
+              "layer": "structural_ui",
+              "states": [
+                "enabled",
+                "used"
+              ],
+              "geometry": {
+                "profile": "primary_cta",
+                "min_size": [
+                  780,
+                  96
+                ],
+                "preferred_size": [
+                  880,
+                  104
+                ],
+                "placement": "container_flow",
+                "aspect_policy": "flexible",
+                "fit": "n/a",
+                "safe_area": "content",
+                "z_policy": "structural_ui",
+                "touch_target": [
+                  88,
+                  88
+                ]
+              }
             },
             {
               "id": "retry",
+              "layer": "structural_ui",
               "states": [
                 "enabled"
-              ]
-            },
-            {
-              "id": "exit",
-              "states": [
-                "enabled"
-              ]
+              ],
+              "geometry": {
+                "profile": "primary_cta",
+                "min_size": [
+                  780,
+                  96
+                ],
+                "preferred_size": [
+                  880,
+                  104
+                ],
+                "placement": "container_flow",
+                "aspect_policy": "flexible",
+                "fit": "n/a",
+                "safe_area": "content",
+                "z_policy": "structural_ui",
+                "touch_target": [
+                  88,
+                  88
+                ]
+              }
             }
           ]
         }
@@ -1896,31 +4756,128 @@
               "states": [
                 "locked",
                 "awakened"
-              ]
+              ],
+              "layer": "content_artwork",
+              "geometry": {
+                "profile": "hero_art",
+                "min_size": [
+                  300,
+                  240
+                ],
+                "preferred_size": [
+                  480,
+                  360
+                ],
+                "placement": "container_flow",
+                "aspect_policy": "preserve",
+                "fit": "contain",
+                "safe_area": "content",
+                "z_policy": "content_artwork",
+                "source_min_size": [
+                  960,
+                  720
+                ]
+              }
             },
             {
               "id": "name",
               "states": [
                 "visible"
-              ]
+              ],
+              "layer": "structural_ui",
+              "geometry": {
+                "profile": "structural_text",
+                "min_size": [
+                  320,
+                  44
+                ],
+                "preferred_size": [
+                  800,
+                  64
+                ],
+                "placement": "container_flow",
+                "aspect_policy": "flexible",
+                "fit": "n/a",
+                "safe_area": "content",
+                "z_policy": "structural_ui"
+              }
             },
             {
               "id": "origin",
               "states": [
                 "visible"
-              ]
+              ],
+              "layer": "structural_ui",
+              "geometry": {
+                "profile": "structural_text",
+                "min_size": [
+                  320,
+                  44
+                ],
+                "preferred_size": [
+                  800,
+                  64
+                ],
+                "placement": "container_flow",
+                "aspect_policy": "flexible",
+                "fit": "n/a",
+                "safe_area": "content",
+                "z_policy": "structural_ui"
+              }
             },
             {
               "id": "lore",
               "states": [
                 "visible"
-              ]
+              ],
+              "layer": "structural_ui",
+              "geometry": {
+                "profile": "structural_text",
+                "min_size": [
+                  320,
+                  44
+                ],
+                "preferred_size": [
+                  800,
+                  64
+                ],
+                "placement": "container_flow",
+                "aspect_policy": "flexible",
+                "fit": "n/a",
+                "safe_area": "content",
+                "z_policy": "structural_ui"
+              }
             },
             {
               "id": "close",
               "states": [
                 "enabled"
-              ]
+              ],
+              "layer": "functional_icon",
+              "geometry": {
+                "profile": "utility_touch",
+                "min_size": [
+                  88,
+                  88
+                ],
+                "preferred_size": [
+                  96,
+                  96
+                ],
+                "placement": "owner_anchor",
+                "aspect_policy": "1:1",
+                "fit": "contain",
+                "safe_area": "content",
+                "z_policy": "functional_icon",
+                "source_min_size": [
+                  192,
+                  192
+                ],
+                "touch_target": [
+                  88,
+                  88
+                ]
+              }
             }
           ]
         }
@@ -1945,19 +4902,78 @@
               "id": "reason",
               "states": [
                 "visible"
-              ]
+              ],
+              "layer": "structural_ui",
+              "geometry": {
+                "profile": "structural_text",
+                "min_size": [
+                  320,
+                  44
+                ],
+                "preferred_size": [
+                  800,
+                  64
+                ],
+                "placement": "container_flow",
+                "aspect_policy": "flexible",
+                "fit": "n/a",
+                "safe_area": "content",
+                "z_policy": "structural_ui"
+              }
             },
             {
               "id": "requirement",
               "states": [
                 "visible"
-              ]
+              ],
+              "layer": "structural_ui",
+              "geometry": {
+                "profile": "structural_text",
+                "min_size": [
+                  320,
+                  44
+                ],
+                "preferred_size": [
+                  800,
+                  64
+                ],
+                "placement": "container_flow",
+                "aspect_policy": "flexible",
+                "fit": "n/a",
+                "safe_area": "content",
+                "z_policy": "structural_ui"
+              }
             },
             {
               "id": "close",
               "states": [
                 "enabled"
-              ]
+              ],
+              "layer": "functional_icon",
+              "geometry": {
+                "profile": "utility_touch",
+                "min_size": [
+                  88,
+                  88
+                ],
+                "preferred_size": [
+                  96,
+                  96
+                ],
+                "placement": "owner_anchor",
+                "aspect_policy": "1:1",
+                "fit": "contain",
+                "safe_area": "content",
+                "z_policy": "functional_icon",
+                "source_min_size": [
+                  192,
+                  192
+                ],
+                "touch_target": [
+                  88,
+                  88
+                ]
+              }
             }
           ]
         }
@@ -1981,19 +4997,78 @@
               "id": "message",
               "states": [
                 "visible"
-              ]
+              ],
+              "layer": "structural_ui",
+              "geometry": {
+                "profile": "structural_text",
+                "min_size": [
+                  320,
+                  44
+                ],
+                "preferred_size": [
+                  800,
+                  64
+                ],
+                "placement": "container_flow",
+                "aspect_policy": "flexible",
+                "fit": "n/a",
+                "safe_area": "content",
+                "z_policy": "structural_ui"
+              }
             },
             {
               "id": "confirm",
               "states": [
                 "enabled"
-              ]
+              ],
+              "layer": "structural_ui",
+              "geometry": {
+                "profile": "primary_cta",
+                "min_size": [
+                  780,
+                  96
+                ],
+                "preferred_size": [
+                  880,
+                  104
+                ],
+                "placement": "container_flow",
+                "aspect_policy": "flexible",
+                "fit": "n/a",
+                "safe_area": "content",
+                "z_policy": "structural_ui",
+                "touch_target": [
+                  88,
+                  88
+                ]
+              }
             },
             {
               "id": "cancel",
               "states": [
                 "enabled"
-              ]
+              ],
+              "layer": "structural_ui",
+              "geometry": {
+                "profile": "secondary_cta",
+                "min_size": [
+                  320,
+                  88
+                ],
+                "preferred_size": [
+                  760,
+                  96
+                ],
+                "placement": "container_flow",
+                "aspect_policy": "flexible",
+                "fit": "n/a",
+                "safe_area": "content",
+                "z_policy": "structural_ui",
+                "touch_target": [
+                  88,
+                  88
+                ]
+              }
             }
           ]
         }
@@ -2017,19 +5092,78 @@
               "id": "message",
               "states": [
                 "visible"
-              ]
+              ],
+              "layer": "structural_ui",
+              "geometry": {
+                "profile": "structural_text",
+                "min_size": [
+                  320,
+                  44
+                ],
+                "preferred_size": [
+                  800,
+                  64
+                ],
+                "placement": "container_flow",
+                "aspect_policy": "flexible",
+                "fit": "n/a",
+                "safe_area": "content",
+                "z_policy": "structural_ui"
+              }
             },
             {
               "id": "retry",
               "states": [
                 "enabled"
-              ]
+              ],
+              "layer": "structural_ui",
+              "geometry": {
+                "profile": "primary_cta",
+                "min_size": [
+                  780,
+                  96
+                ],
+                "preferred_size": [
+                  880,
+                  104
+                ],
+                "placement": "container_flow",
+                "aspect_policy": "flexible",
+                "fit": "n/a",
+                "safe_area": "content",
+                "z_policy": "structural_ui",
+                "touch_target": [
+                  88,
+                  88
+                ]
+              }
             },
             {
               "id": "safe_exit",
               "states": [
                 "enabled"
-              ]
+              ],
+              "layer": "structural_ui",
+              "geometry": {
+                "profile": "primary_cta",
+                "min_size": [
+                  780,
+                  96
+                ],
+                "preferred_size": [
+                  880,
+                  104
+                ],
+                "placement": "container_flow",
+                "aspect_policy": "flexible",
+                "fit": "n/a",
+                "safe_area": "content",
+                "z_policy": "structural_ui",
+                "touch_target": [
+                  88,
+                  88
+                ]
+              }
             }
           ]
         }
@@ -2077,9 +5211,497 @@
   "canonical_source": "assets/manifests/screen_contracts.json",
   "north_star_role": "product_architecture_source",
   "production_gate": {
-    "status": "GOLDEN_LOOP_ONLY",
-    "bulk_art_authorized": false,
-    "random_screen_asset_polish_authorized": false,
-    "rule": "Before Golden Loop acceptance, production is limited to missing authored-art assets owned by exact Golden Loop Screen -> Region -> Block -> Slot -> State contracts."
+    "status": "SLOT_GEOMETRY_RECONCILIATION_ACTIVE",
+    "rule": "No new production art is authorized until every canonical screen/overlay slot has explicit geometry and the implemented geometry passes real Godot render inspection."
+  },
+  "geometry_system": {
+    "status": "CANONICAL_TARGET_ACTIVE",
+    "design_viewport": {
+      "width": 1080,
+      "height": 1920,
+      "orientation": "portrait"
+    },
+    "verification_viewport": {
+      "width": 540,
+      "height": 960,
+      "scale": 0.5
+    },
+    "safe_horizontal_range": [
+      32,
+      48
+    ],
+    "top_resource_zone_range": [
+      96,
+      112
+    ],
+    "bottom_navigation_zone_range": [
+      128,
+      144
+    ],
+    "minimum_touch_target": [
+      88,
+      88
+    ],
+    "rule": "Every live slot owns an explicit 1080x1920 logical geometry contract before any new production asset is generated or polished. Container-flow slots use bounded target boxes; full-bleed art owns the viewport; runtime VFX follows its semantic owner."
+  },
+  "geometry_profiles": {
+    "full_bleed": {
+      "min_size": [
+        1080,
+        1920
+      ],
+      "preferred_size": [
+        1080,
+        1920
+      ],
+      "placement": "viewport_fill",
+      "aspect_policy": "9:16",
+      "fit": "cover",
+      "safe_area": "bleed",
+      "source_min_size": [
+        2160,
+        3840
+      ]
+    },
+    "world_character": {
+      "min_size": [
+        280,
+        420
+      ],
+      "preferred_size": [
+        420,
+        620
+      ],
+      "placement": "owner_anchor",
+      "aspect_policy": "preserve",
+      "fit": "contain",
+      "safe_area": "content",
+      "source_min_size": [
+        840,
+        1240
+      ]
+    },
+    "world_object": {
+      "min_size": [
+        220,
+        220
+      ],
+      "preferred_size": [
+        360,
+        360
+      ],
+      "placement": "owner_anchor",
+      "aspect_policy": "preserve",
+      "fit": "contain",
+      "safe_area": "content",
+      "source_min_size": [
+        720,
+        720
+      ]
+    },
+    "curio_art": {
+      "min_size": [
+        220,
+        220
+      ],
+      "preferred_size": [
+        360,
+        360
+      ],
+      "placement": "container_flow",
+      "aspect_policy": "1:1_preserve",
+      "fit": "contain",
+      "safe_area": "content",
+      "source_min_size": [
+        720,
+        720
+      ]
+    },
+    "hero_art": {
+      "min_size": [
+        300,
+        240
+      ],
+      "preferred_size": [
+        480,
+        360
+      ],
+      "placement": "container_flow",
+      "aspect_policy": "preserve",
+      "fit": "contain",
+      "safe_area": "content",
+      "source_min_size": [
+        960,
+        720
+      ]
+    },
+    "structural_text": {
+      "min_size": [
+        320,
+        44
+      ],
+      "preferred_size": [
+        800,
+        64
+      ],
+      "placement": "container_flow",
+      "aspect_policy": "flexible",
+      "fit": "n/a",
+      "safe_area": "content"
+    },
+    "title": {
+      "min_size": [
+        520,
+        64
+      ],
+      "preferred_size": [
+        880,
+        80
+      ],
+      "placement": "container_flow",
+      "aspect_policy": "flexible",
+      "fit": "n/a",
+      "safe_area": "content"
+    },
+    "resource_chip": {
+      "min_size": [
+        180,
+        88
+      ],
+      "preferred_size": [
+        260,
+        96
+      ],
+      "placement": "header_flow",
+      "aspect_policy": "flexible",
+      "fit": "n/a",
+      "safe_area": "top"
+    },
+    "resource_group": {
+      "min_size": [
+        720,
+        96
+      ],
+      "preferred_size": [
+        1000,
+        104
+      ],
+      "placement": "header_flow",
+      "aspect_policy": "flexible",
+      "fit": "n/a",
+      "safe_area": "top"
+    },
+    "utility_touch": {
+      "min_size": [
+        88,
+        88
+      ],
+      "preferred_size": [
+        96,
+        96
+      ],
+      "placement": "owner_anchor",
+      "aspect_policy": "1:1",
+      "fit": "contain",
+      "safe_area": "content",
+      "source_min_size": [
+        192,
+        192
+      ],
+      "touch_target": [
+        88,
+        88
+      ]
+    },
+    "primary_cta": {
+      "min_size": [
+        780,
+        96
+      ],
+      "preferred_size": [
+        880,
+        104
+      ],
+      "placement": "container_flow",
+      "aspect_policy": "flexible",
+      "fit": "n/a",
+      "safe_area": "content",
+      "touch_target": [
+        88,
+        88
+      ]
+    },
+    "secondary_cta": {
+      "min_size": [
+        320,
+        88
+      ],
+      "preferred_size": [
+        760,
+        96
+      ],
+      "placement": "container_flow",
+      "aspect_policy": "flexible",
+      "fit": "n/a",
+      "safe_area": "content",
+      "touch_target": [
+        88,
+        88
+      ]
+    },
+    "nav_item": {
+      "min_size": [
+        160,
+        120
+      ],
+      "preferred_size": [
+        204,
+        120
+      ],
+      "placement": "bottom_nav_flow",
+      "aspect_policy": "flexible",
+      "fit": "contain",
+      "safe_area": "bottom",
+      "source_min_size": [
+        192,
+        192
+      ],
+      "touch_target": [
+        88,
+        88
+      ]
+    },
+    "nav_group": {
+      "min_size": [
+        640,
+        120
+      ],
+      "preferred_size": [
+        816,
+        120
+      ],
+      "placement": "bottom_nav_flow",
+      "aspect_policy": "flexible",
+      "fit": "contain",
+      "safe_area": "bottom",
+      "touch_target": [
+        88,
+        88
+      ]
+    },
+    "map_region": {
+      "min_size": [
+        880,
+        960
+      ],
+      "preferred_size": [
+        1000,
+        1320
+      ],
+      "placement": "region_fill",
+      "aspect_policy": "flexible",
+      "fit": "contain",
+      "safe_area": "content"
+    },
+    "map_marker": {
+      "min_size": [
+        88,
+        88
+      ],
+      "preferred_size": [
+        112,
+        112
+      ],
+      "placement": "owner_anchor",
+      "aspect_policy": "1:1",
+      "fit": "contain",
+      "safe_area": "content",
+      "source_min_size": [
+        224,
+        224
+      ],
+      "touch_target": [
+        88,
+        88
+      ]
+    },
+    "board_field": {
+      "min_size": [
+        960,
+        960
+      ],
+      "preferred_size": [
+        1032,
+        1040
+      ],
+      "placement": "container_flow",
+      "aspect_policy": "near_square",
+      "fit": "contain",
+      "safe_area": "content"
+    },
+    "board_token": {
+      "min_size": [
+        96,
+        96
+      ],
+      "preferred_size": [
+        116,
+        116
+      ],
+      "placement": "board_cell",
+      "aspect_policy": "1:1",
+      "fit": "contain",
+      "safe_area": "board",
+      "source_min_size": [
+        256,
+        256
+      ]
+    },
+    "booster_action": {
+      "min_size": [
+        88,
+        88
+      ],
+      "preferred_size": [
+        128,
+        142
+      ],
+      "placement": "booster_tray_flow",
+      "aspect_policy": "1:1_art_plus_label",
+      "fit": "contain",
+      "safe_area": "content",
+      "source_min_size": [
+        256,
+        256
+      ],
+      "touch_target": [
+        88,
+        88
+      ]
+    },
+    "gameplay_hud": {
+      "min_size": [
+        220,
+        88
+      ],
+      "preferred_size": [
+        520,
+        92
+      ],
+      "placement": "hud_flow",
+      "aspect_policy": "flexible",
+      "fit": "n/a",
+      "safe_area": "top"
+    },
+    "gameplay_feedback": {
+      "min_size": [
+        860,
+        64
+      ],
+      "preferred_size": [
+        1032,
+        64
+      ],
+      "placement": "container_flow",
+      "aspect_policy": "flexible",
+      "fit": "n/a",
+      "safe_area": "content"
+    },
+    "collection_cards": {
+      "min_size": [
+        960,
+        480
+      ],
+      "preferred_size": [
+        1012,
+        500
+      ],
+      "placement": "container_flow",
+      "aspect_policy": "three_column_stage",
+      "fit": "contain",
+      "safe_area": "content",
+      "source_min_size": [
+        720,
+        720
+      ]
+    },
+    "card_group": {
+      "min_size": [
+        880,
+        180
+      ],
+      "preferred_size": [
+        1000,
+        240
+      ],
+      "placement": "container_flow",
+      "aspect_policy": "flexible",
+      "fit": "contain",
+      "safe_area": "content"
+    },
+    "settings_control": {
+      "min_size": [
+        760,
+        88
+      ],
+      "preferred_size": [
+        860,
+        92
+      ],
+      "placement": "container_flow",
+      "aspect_policy": "flexible",
+      "fit": "n/a",
+      "safe_area": "content",
+      "touch_target": [
+        88,
+        88
+      ]
+    },
+    "modal_copy": {
+      "min_size": [
+        620,
+        64
+      ],
+      "preferred_size": [
+        760,
+        96
+      ],
+      "placement": "modal_flow",
+      "aspect_policy": "flexible",
+      "fit": "n/a",
+      "safe_area": "content"
+    },
+    "owner_vfx": {
+      "min_size": [
+        220,
+        220
+      ],
+      "preferred_size": [
+        480,
+        480
+      ],
+      "placement": "follow_semantic_owner",
+      "aspect_policy": "owner_bounds",
+      "fit": "owner_bounds",
+      "safe_area": "owner"
+    },
+    "state_art": {
+      "min_size": [
+        128,
+        128
+      ],
+      "preferred_size": [
+        192,
+        192
+      ],
+      "placement": "owner_anchor",
+      "aspect_policy": "1:1",
+      "fit": "contain",
+      "safe_area": "content",
+      "source_min_size": [
+        384,
+        384
+      ]
+    }
   }
 }
