@@ -14,6 +14,7 @@ var _daily_level: int = 0
 var _hero_asset_path: String = ""
 
 @onready var world_art: TextureRect = $WorldArt
+@onready var profile_surface: PanelContainer = $ProfileSurface
 @onready var meta_eyebrow: Label = $FeatureLayout/MetaEyebrow
 @onready var title: Label = $FeatureLayout/FeatureTitle
 @onready var detail: Label = $FeatureLayout/Detail
@@ -60,6 +61,7 @@ var _hero_asset_path: String = ""
 @onready var back_button: Button = $FeatureLayout/BackToHouse
 
 func _ready() -> void:
+	ProductionChrome.apply_secondary(profile_surface, "profile_surface")
 	ProductionChrome.apply_secondary(feature_hero, "meta_hero")
 	ProductionChrome.apply_compact_panel(event_card_1, "events_feature_card")
 	ProductionChrome.apply_compact_panel(event_card_2, "events_feature_card")
@@ -106,6 +108,7 @@ func configure(feature_key: String, state: Dictionary) -> bool:
 	shop_notice.add_theme_font_size_override("font_size", 16 if _feature_key == "shop" else 19)
 	profile_settings.visible = _feature_key == "profile"
 	save_health_card.visible = _feature_key == "profile"
+	profile_surface.visible = _feature_key == "profile"
 	profile_progress_label.visible = _feature_key == "profile"
 	profile_progress.visible = _feature_key == "profile"
 	feature_hero.custom_minimum_size.y = 300.0 if _feature_key == "profile" else 420.0
@@ -388,7 +391,10 @@ func screen_contract() -> Dictionary:
 		and (card_nodes[0] as PanelContainer).size_flags_stretch_ratio > (card_nodes[1] as PanelContainer).size_flags_stretch_ratio
 	)
 	var profile_identity_focus := _feature_key != "profile" or (
-		hero_panel.visible
+		profile_surface.visible
+		and profile_surface.get_theme_stylebox("panel") is StyleBoxTexture
+		and String(profile_surface.get_meta("production_chrome_kind", "")) == "secondary_profile_surface"
+		and hero_panel.visible
 		and hero_panel.custom_minimum_size.y >= 280.0
 		and hero_panel.custom_minimum_size.y <= 320.0
 		and hero_art.visible
