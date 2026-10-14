@@ -35,8 +35,9 @@ func _capture() -> void:
 	if String(app.current_route_name()) != "house":
 		return _fail(app, "returning-player House missing")
 	var banner := app.current_screen().get_node_or_null("Layout/ReturningPlayerBanner") as PanelContainer
-	if banner == null or not banner.visible:
-		return _fail(app, "returning-player banner not visible")
+	var headline := app.current_screen().get_node_or_null("Layout/Headline") as Label
+	if banner == null or banner.visible or headline == null or not headline.text.contains("WELCOME BACK") or not headline.text.contains("2 / 3 CURIOS"):
+		return _fail(app, "returning-player state must live in the primary Home title without an extra banner")
 	if not await _save(app, "returning-01-house-resume.png"):
 		return
 

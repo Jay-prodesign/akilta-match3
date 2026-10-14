@@ -122,17 +122,21 @@ func _refresh() -> void:
 	var has_started: bool = progress != null and not progress.completed_levels.is_empty()
 	var opening_complete := available_level_count > 0 and finished >= available_level_count and owned_curios.size() >= available_level_count and stage >= available_level_count
 	if _returning_banner != null:
-		_returning_banner.visible = _returning_player and has_started
+		_returning_banner.visible = false
 	if _returning_label != null:
 		if opening_complete:
 			_returning_label.text = "WELCOME BACK · FIRST CABINET RESTORED"
 		else:
 			_returning_label.text = "WELCOME BACK · %d / %d CURIOS AWAKENED" % [owned_curios.size(), available_level_count]
 	if _completion_banner != null:
-		_completion_banner.visible = opening_complete and not _returning_player
+		_completion_banner.visible = false
 	$Layout/CurioChip.visible = false
 	if _completion_label != null:
 		_completion_label.text = "OPENING CABINET SET COMPLETE · %d / %d" % [finished, available_level_count]
+	if opening_complete:
+		headline.text = "FIRST CABINET SET RESTORED"
+	elif _returning_player and has_started:
+		headline.text = "WELCOME BACK · %d / %d CURIOS" % [owned_curios.size(), available_level_count]
 
 	var first_ritual: bool = progress != null and progress.completed_levels.is_empty() and progress.curios.is_empty() and stage == 0 and not _returning_player
 	if _first_ritual_panel != null:
@@ -166,6 +170,7 @@ func north_star_home_contract() -> Dictionary:
 		"scene_authored_primary_cta": cta_scene_authored,
 		"status_strip_suppressed": not $Layout/CurioChip.visible,
 		"ftue_strip_suppressed": _first_ritual_panel != null and not _first_ritual_panel.visible,
+		"state_banners_suppressed": _returning_banner != null and not _returning_banner.visible and _completion_banner != null and not _completion_banner.visible,
 	}
 
 func _on_play_pressed() -> void:

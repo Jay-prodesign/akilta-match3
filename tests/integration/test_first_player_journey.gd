@@ -394,8 +394,10 @@ func _run() -> void:
 			var completed_house = app.current_screen()
 			var completion_banner: PanelContainer = completed_house.get_node_or_null("Layout/ChapterCompletionBanner")
 			var completion_label: Label = completed_house.get_node_or_null("Layout/ChapterCompletionBanner/Label")
-			_expect(completion_banner != null and completion_banner.visible, "completed House must show the opening cabinet completion banner")
-			_expect(completion_label != null and completion_label.text.contains("OPENING CABINET SET COMPLETE"), "completed House banner must name the opening cabinet completion")
+			var completed_house_headline: Label = completed_house.get_node_or_null("Layout/Headline")
+			_expect(completion_banner != null and not completion_banner.visible, "completed House must keep redundant completion chrome out of the Home composition")
+			_expect(completion_label != null and completion_label.text.contains("OPENING CABINET SET COMPLETE"), "completed House must retain completion truth in its authored state")
+			_expect(completed_house_headline != null and completed_house_headline.text == "FIRST CABINET SET RESTORED", "completed House must promote completion into the primary title plaque")
 			_expect(app.show_feature_preview("Events"), "completed House must open Events")
 			await process_frame
 			_expect(str(app.current_route_name()) == "events", "completed House must enter the Events route")
