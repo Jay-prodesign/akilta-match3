@@ -82,8 +82,7 @@ func _ready() -> void:
 		if id != "curio_boutique":
 			ProductionChrome.apply_interactive_button(button, false, "chapter_locked")
 			button.icon = sealed_wing_seal
-			button.icon_max_width = 34
-			button.expand_icon = true
+			button.add_theme_constant_override("icon_max_width", 34)
 			button.set_meta("sealed_status_marker", "shared_wax_seal")
 			button.tooltip_text = "%s · inspect why this future chapter remains sealed" % String(wing["name"]).capitalize()
 			button.pressed.connect(_show_sealed_wing.bind(id, String(wing["name"])))
