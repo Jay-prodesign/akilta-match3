@@ -1,4 +1,4 @@
-[gd_scene load_steps=10 format=3]
+[gd_scene load_steps=11 format=3]
 
 [ext_resource type="Script" path="res://src/ui/map/chapter_select.gd" id="1_chapters"]
 
@@ -116,6 +116,18 @@ content_margin_right = 14.0
 content_margin_bottom = 8.0
 shadow_color = Color(0, 0, 0, 0.58)
 shadow_size = 8
+
+[sub_resource type="StyleBoxFlat" id="CurrentArtFrame"]
+bg_color = Color(0, 0, 0, 0)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.949, 0.816, 0.545, 0.94)
+corner_radius_top_left = 18
+corner_radius_top_right = 18
+corner_radius_bottom_right = 18
+corner_radius_bottom_left = 18
 
 [sub_resource type="StyleBoxFlat" id="SummaryPlate"]
 bg_color = Color(0.028, 0.019, 0.039, 0.88)
@@ -280,6 +292,16 @@ text = "CURIO BOUTIQUE\nRARE FINDS · 0 / 3 AWAKENED\nBEGIN RESTORATION"
 horizontal_alignment = 1
 vertical_alignment = 1
 autowrap_mode = 2
+
+[node name="CurrentArtFrame" type="Panel" parent="Layout/ChapterGrid/CurioBoutiqueButton"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+theme_override_styles/panel = SubResource("CurrentArtFrame")
 
 [node name="Chapter_witch_atelier" type="Button" parent="Layout/ChapterGrid"]
 layout_mode = 0
