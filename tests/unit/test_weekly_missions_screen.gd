@@ -52,7 +52,7 @@ func _run() -> void:
 	var stage_spacer := screen.get_node_or_null("MissionLayout/WorldStageSpacer") as Control
 	var record := screen.get_node_or_null("MissionLayout/MissionOpeningRecord") as PanelContainer
 	var reward_seal := screen.get_node_or_null("MissionLayout/MissionOpeningRecord/Content/RewardSeal") as TextureRect
-	var reward_state := screen.get_node_or_null("MissionLayout/MissionOpeningRecord/Content/State") as Label
+	var reward_panel_state := screen.get_node_or_null("MissionLayout/MissionOpeningRecord/Content/State") as Label
 	var reward_truth := screen.get_node_or_null("MissionLayout/MissionOpeningRecord/Content/Truth") as Label
 	_expect(timer != null and timer.text.contains("OFFLINE"), "Weekly Rituals must disclose unavailable reset timing")
 	_expect(empty != null and empty.custom_minimum_size.y >= 148.0 and empty.custom_minimum_size.y <= 164.0, "Weekly intro must stay compact so the locked-board mission rows own the screen")
@@ -65,7 +65,7 @@ func _run() -> void:
 	_expect(stage_spacer != null and stage_spacer.size_flags_vertical != Control.SIZE_EXPAND_FILL and stage_spacer.custom_minimum_size.y <= 2.0, "Weekly Rituals empty world corridor returned")
 	_expect(record != null and record.visible and record.custom_minimum_size.y >= 210.0 and record.size_flags_vertical == Control.SIZE_EXPAND_FILL, "Weekly Rituals reward zone must occupy the board's lower reward stage")
 	_expect(record != null and record.get_theme_stylebox("panel") is StyleBoxFlat, "Weekly Rituals sealed reward zone must render on its seam-free authored material")
-	_expect(reward_seal != null and reward_seal.texture != null and reward_state != null and reward_state.text == "SEALED · LIVE FEED REQUIRED" and reward_truth != null and reward_truth.text == "NOTHING TO CLAIM OFFLINE", "Weekly Rituals reward zone must remain explicit and truthful")
+	_expect(reward_seal != null and reward_seal.texture != null and reward_panel_state != null and reward_panel_state.text == "SEALED · LIVE FEED REQUIRED" and reward_truth != null and reward_truth.text == "NOTHING TO CLAIM OFFLINE", "Weekly Rituals reward zone must remain explicit and truthful")
 
 	var event_signal := {"hit": false}
 	screen.return_events_requested.connect(func(): event_signal["hit"] = true)
