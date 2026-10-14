@@ -204,7 +204,7 @@ func _run() -> void:
 	await process_frame
 	_expect(str(app.current_route_name()) == "events", "Events destination must own a real route instead of masquerading as House")
 	var events_preview = app.current_screen()
-	_expect(events_preview != null and events_preview.name == "EventsScreen" and events_preview.get_node("FeatureLayout/FeatureTitle").text == "EVENT CENTER", "Events tab must open as the S10 Event Center screen")
+	_expect(events_preview != null and events_preview.name == "EventsScreen" and events_preview.get_node("FeatureLayout/FeatureTitle").text == "EVENTS", "Events tab must open as the S10 Events screen")
 	_expect(events_preview != null and events_preview.get_node_or_null("ProductNavigation") != null, "Events screen must retain shared product navigation")
 	var events_active_nav: Button = events_preview.get_node_or_null("ProductNavigation/Scroll/Items/NavEvents") as Button if events_preview != null else null
 	_expect(events_active_nav != null and events_active_nav.disabled and String(events_active_nav.get_meta("interaction_state", "")) == "selected", "active Events tab must be selected and duplicate-safe")
