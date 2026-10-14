@@ -190,13 +190,13 @@ autowrap_mode = 2
 
 [node name="MissionStatusStack" type="VBoxContainer" parent="MissionLayout"]
 layout_mode = 2
-size_flags_vertical = 0
+size_flags_vertical = 3
 theme_override_constants/separation = 10
 
 [node name="FeedStatus" type="PanelContainer" parent="MissionLayout/MissionStatusStack"]
 custom_minimum_size = Vector2(0, 128)
 layout_mode = 2
-size_flags_vertical = 0
+size_flags_vertical = 3
 
 [node name="Content" type="HBoxContainer" parent="MissionLayout/MissionStatusStack/FeedStatus"]
 layout_mode = 2
@@ -240,7 +240,7 @@ mouse_filter = 2
 [node name="ProgressStatus" type="PanelContainer" parent="MissionLayout/MissionStatusStack"]
 custom_minimum_size = Vector2(0, 128)
 layout_mode = 2
-size_flags_vertical = 0
+size_flags_vertical = 3
 
 [node name="Content" type="HBoxContainer" parent="MissionLayout/MissionStatusStack/ProgressStatus"]
 layout_mode = 2
@@ -284,7 +284,7 @@ mouse_filter = 2
 [node name="RewardStatus" type="PanelContainer" parent="MissionLayout/MissionStatusStack"]
 custom_minimum_size = Vector2(0, 128)
 layout_mode = 2
-size_flags_vertical = 0
+size_flags_vertical = 3
 
 [node name="Content" type="HBoxContainer" parent="MissionLayout/MissionStatusStack/RewardStatus"]
 layout_mode = 2
@@ -326,18 +326,18 @@ layout_mode = 2
 mouse_filter = 2
 
 [node name="WorldStageSpacer" type="Control" parent="MissionLayout"]
-custom_minimum_size = Vector2(0, 10)
+custom_minimum_size = Vector2(0, 0)
 layout_mode = 2
 size_flags_vertical = 0
 mouse_filter = 2
 
 [node name="MissionOpeningRecord" type="Label" parent="MissionLayout"]
-custom_minimum_size = Vector2(0, 58)
+custom_minimum_size = Vector2(0, 72)
 layout_mode = 2
 theme_override_colors/font_color = Color(0.82, 0.72, 0.90, 1)
 theme_override_colors/font_outline_color = Color(0.02, 0.014, 0.028, 0.92)
 theme_override_constants/outline_size = 2
-theme_override_font_sizes/font_size = 17
+theme_override_font_sizes/font_size = 18
 text = "WEEKLY REWARD · SEALED · NOTHING TO CLAIM OFFLINE"
 horizontal_alignment = 1
 vertical_alignment = 1

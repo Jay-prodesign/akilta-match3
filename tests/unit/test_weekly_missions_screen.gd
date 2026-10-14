@@ -57,8 +57,8 @@ func _run() -> void:
 	_expect(feed_row != null and feed_row.get_theme_stylebox("panel") is StyleBoxTexture and feed_state != null and feed_state.text == "NOT CONNECTED", "Weekly Rituals live-feed row must stay truthful and asset-backed")
 	_expect(progress_row != null and progress_row.get_theme_stylebox("panel") is StyleBoxTexture and progress_state != null and progress_state.text == "NOT TRACKED OFFLINE", "Weekly Rituals progress row must not fabricate offline progress")
 	_expect(reward_row != null and reward_row.get_theme_stylebox("panel") is StyleBoxTexture and reward_state != null and reward_state.text == "NOTHING TO CLAIM", "Weekly Rituals reward row must not fabricate a claim")
-	_expect(stage_spacer != null and stage_spacer.size_flags_vertical != Control.SIZE_EXPAND_FILL and stage_spacer.custom_minimum_size.y <= 16.0, "Weekly Rituals compact world gap drifted")
-	_expect(record != null and record.visible and record.custom_minimum_size.y <= 64.0 and record.text.contains("NOTHING TO CLAIM"), "Weekly Rituals footer must truthfully seal the unavailable reward area")
+	_expect(stage_spacer != null and stage_spacer.size_flags_vertical != Control.SIZE_EXPAND_FILL and stage_spacer.custom_minimum_size.y <= 2.0, "Weekly Rituals empty world corridor returned")
+	_expect(record != null and record.visible and record.custom_minimum_size.y >= 68.0 and record.custom_minimum_size.y <= 78.0 and record.text.contains("NOTHING TO CLAIM"), "Weekly Rituals footer must truthfully seal the unavailable reward area")
 	_expect(record != null and record.get_theme_stylebox("normal") is StyleBoxTexture, "Weekly Rituals sealed reward footer must render on quiet production chrome")
 
 	var event_signal := {"hit": false}

@@ -224,7 +224,7 @@ func _capture() -> void:
 		return _fail(app, "Weekly Missions compact truthful intro drifted: %.3f" % weekly_altar_ratio)
 	if weekly_feed.custom_minimum_size.y < 120.0 or weekly_feed.custom_minimum_size.y > 136.0 or weekly_progress.custom_minimum_size.y < 120.0 or weekly_progress.custom_minimum_size.y > 136.0 or weekly_rewards.custom_minimum_size.y < 120.0 or weekly_rewards.custom_minimum_size.y > 136.0:
 		return _fail(app, "Weekly Missions locked-board horizontal ritual rows drifted")
-	if weekly_spacer.size_flags_vertical == Control.SIZE_EXPAND_FILL or weekly_spacer.custom_minimum_size.y > 16.0:
+	if weekly_spacer.size_flags_vertical == Control.SIZE_EXPAND_FILL or weekly_spacer.custom_minimum_size.y > 2.0:
 		return _fail(app, "Weekly Missions large empty world corridor returned")
 	if weekly_house_return.visible:
 		return _fail(app, "Weekly Missions redundant House button returned over product navigation")
