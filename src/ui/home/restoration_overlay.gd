@@ -15,8 +15,8 @@ signal continue_requested
 @onready var continue_button: Button = $CeremonyCard/CeremonyContent/CeremonyRow/Copy/Continue
 
 func _ready() -> void:
-	ProductionChrome.apply_primary($CeremonyCard)
-	ProductionChrome.apply_action_button(continue_button, "primary", "restoration_continue")
+	$CeremonyCard.set_meta("restoration_material", "scene_authored_flat")
+	continue_button.set_meta("restoration_material", "scene_authored_flat")
 	continue_button.pressed.connect(func(): continue_requested.emit())
 
 func configure(curio_id: String, curio_name: String, restoration_copy: String, motif_texture: Texture2D, curio_texture: Texture2D, stage: int, current_curios: Array[String]) -> bool:
@@ -53,4 +53,5 @@ func restoration_contract() -> Dictionary:
 		"before_after_house_previews": int(before_contract.get("stage", -1)) >= 0 and int(after_contract.get("stage", -1)) == int(before_contract.get("stage", -1)) + 1 and bool(before_contract.get("same_camera", false)) and bool(after_contract.get("same_camera", false)),
 		"before_after_state_rail": state_rail != null and state_rail.get_node_or_null("States/Before") != null and state_rail.get_node_or_null("States/After") != null,
 		"curio_motif_subordinate": motif != null and not motif.visible and curio_art != null and curio_art.visible,
+		"scene_authored_summary_material": ($CeremonyCard as PanelContainer).get_theme_stylebox("panel") is StyleBoxFlat and continue_button.get_theme_stylebox("normal") is StyleBoxFlat and String($CeremonyCard.get_meta("restoration_material", "")) == "scene_authored_flat" and String(continue_button.get_meta("restoration_material", "")) == "scene_authored_flat",
 	}
