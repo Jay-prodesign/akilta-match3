@@ -197,7 +197,7 @@ func chapter_visual_contract() -> Dictionary:
 		"future_wings_specific_art_claimed": false,
 		"shared_sealed_status_marker": sealed_markers_authored,
 		"north_star_title_hierarchy": ($Layout/ChapterHeader/HeaderCopy/Title as Label).text == "CHAPTERS" and ($Layout/ChapterHeader/HeaderCopy/Title as Label).get_theme_font_size("font_size") >= 38,
-		"compact_header_back": _back != null and _back.custom_minimum_size.x >= 88.0 and _back.custom_minimum_size.x <= 96.0 and _back.custom_minimum_size.y >= 88.0,
+		"compact_header_back": _back != null and _back.custom_minimum_size.x >= 60.0 and _back.custom_minimum_size.x <= 72.0 and _back.custom_minimum_size.y >= 60.0 and _back.custom_minimum_size.y <= 72.0,
 		"summary_suppressed_for_board_parity": _chapter_summary != null and not _chapter_summary.visible and _lock_reason != null and not _lock_reason.visible,
 		"chapter_descriptors_present": _witch_atelier.text.contains("POTIONS & EXPERIMENTS") and _dark_vanity.text.contains("MIRRORS & SECRETS") and _archive.text.contains("LOST KNOWLEDGE") and _moon_conservatory.text.contains("CELESTIAL BOTANICALS") and _cemetery_garden.text.contains("RESTING BEAUTIES"),
 		"north_star_vertical_chapter_list": _grid != null and [_current, _witch_atelier, _dark_vanity, _archive, _moon_conservatory, _cemetery_garden].all(func(button): return button.size.x >= _grid.size.x * 0.94) and _current.position.y < _witch_atelier.position.y and _witch_atelier.position.y < _dark_vanity.position.y and _dark_vanity.position.y < _archive.position.y and _archive.position.y < _moon_conservatory.position.y and _moon_conservatory.position.y < _cemetery_garden.position.y,
