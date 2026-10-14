@@ -1,4 +1,4 @@
-[gd_scene load_steps=5 format=3]
+[gd_scene load_steps=7 format=3]
 
 [ext_resource type="Script" path="res://src/ui/missions/weekly_missions_screen.gd" id="1_screen"]
 
@@ -31,6 +31,38 @@ corner_radius_top_left = 26
 corner_radius_top_right = 26
 corner_radius_bottom_right = 26
 corner_radius_bottom_left = 26
+
+[sub_resource type="StyleBoxFlat" id="WeeklyRow"]
+bg_color = Color(0.038, 0.027, 0.050, 0.90)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.831, 0.678, 0.439, 0.54)
+corner_radius_top_left = 18
+corner_radius_top_right = 18
+corner_radius_bottom_right = 18
+corner_radius_bottom_left = 18
+content_margin_left = 12.0
+content_margin_top = 8.0
+content_margin_right = 12.0
+content_margin_bottom = 8.0
+
+[sub_resource type="StyleBoxFlat" id="WeeklyRecord"]
+bg_color = Color(0.027, 0.020, 0.038, 0.92)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.831, 0.678, 0.439, 0.46)
+corner_radius_top_left = 14
+corner_radius_top_right = 14
+corner_radius_bottom_right = 14
+corner_radius_bottom_left = 14
+content_margin_left = 8.0
+content_margin_top = 6.0
+content_margin_right = 8.0
+content_margin_bottom = 6.0
 
 [sub_resource type="StyleBoxFlat" id="Secondary"]
 bg_color = Color(0.082, 0.061, 0.103, 0.94)
@@ -124,7 +156,7 @@ text = "LIVE CHALLENGES UNAVAILABLE OFFLINE"
 horizontal_alignment = 1
 
 [node name="MissionEmptyState" type="PanelContainer" parent="MissionLayout"]
-custom_minimum_size = Vector2(0, 182)
+custom_minimum_size = Vector2(0, 156)
 layout_mode = 2
 theme_override_styles/panel = SubResource("Altar")
 
@@ -134,7 +166,7 @@ theme_override_constants/separation = 20
 alignment = 1
 
 [node name="MissionRewardArt" type="TextureRect" parent="MissionLayout/MissionEmptyState/EmptyContent"]
-custom_minimum_size = Vector2(118, 118)
+custom_minimum_size = Vector2(96, 96)
 layout_mode = 2
 size_flags_vertical = 4
 expand_mode = 1
@@ -152,7 +184,7 @@ layout_mode = 2
 theme_override_colors/font_color = Color(1, 0.941, 0.847, 1)
 theme_override_colors/font_outline_color = Color(0.02, 0.014, 0.028, 0.96)
 theme_override_constants/outline_size = 4
-theme_override_font_sizes/font_size = 28
+theme_override_font_sizes/font_size = 24
 text = "THE WEEKLY ALTAR IS QUIET"
 horizontal_alignment = 1
 autowrap_mode = 2
@@ -190,13 +222,14 @@ autowrap_mode = 2
 
 [node name="MissionStatusStack" type="VBoxContainer" parent="MissionLayout"]
 layout_mode = 2
-size_flags_vertical = 3
+size_flags_vertical = 0
 theme_override_constants/separation = 10
 
 [node name="FeedStatus" type="PanelContainer" parent="MissionLayout/MissionStatusStack"]
-custom_minimum_size = Vector2(0, 128)
+custom_minimum_size = Vector2(0, 164)
 layout_mode = 2
-size_flags_vertical = 3
+size_flags_vertical = 0
+theme_override_styles/panel = SubResource("WeeklyRow")
 
 [node name="Content" type="HBoxContainer" parent="MissionLayout/MissionStatusStack/FeedStatus"]
 layout_mode = 2
@@ -208,7 +241,7 @@ layout_mode = 2
 mouse_filter = 2
 
 [node name="SealIcon" type="TextureRect" parent="MissionLayout/MissionStatusStack/FeedStatus/Content"]
-custom_minimum_size = Vector2(64, 64)
+custom_minimum_size = Vector2(52, 52)
 layout_mode = 2
 mouse_filter = 2
 expand_mode = 1
@@ -238,9 +271,10 @@ layout_mode = 2
 mouse_filter = 2
 
 [node name="ProgressStatus" type="PanelContainer" parent="MissionLayout/MissionStatusStack"]
-custom_minimum_size = Vector2(0, 128)
+custom_minimum_size = Vector2(0, 164)
 layout_mode = 2
-size_flags_vertical = 3
+size_flags_vertical = 0
+theme_override_styles/panel = SubResource("WeeklyRow")
 
 [node name="Content" type="HBoxContainer" parent="MissionLayout/MissionStatusStack/ProgressStatus"]
 layout_mode = 2
@@ -252,7 +286,7 @@ layout_mode = 2
 mouse_filter = 2
 
 [node name="SealIcon" type="TextureRect" parent="MissionLayout/MissionStatusStack/ProgressStatus/Content"]
-custom_minimum_size = Vector2(64, 64)
+custom_minimum_size = Vector2(52, 52)
 layout_mode = 2
 mouse_filter = 2
 expand_mode = 1
@@ -282,9 +316,10 @@ layout_mode = 2
 mouse_filter = 2
 
 [node name="RewardStatus" type="PanelContainer" parent="MissionLayout/MissionStatusStack"]
-custom_minimum_size = Vector2(0, 128)
+custom_minimum_size = Vector2(0, 164)
 layout_mode = 2
-size_flags_vertical = 3
+size_flags_vertical = 0
+theme_override_styles/panel = SubResource("WeeklyRow")
 
 [node name="Content" type="HBoxContainer" parent="MissionLayout/MissionStatusStack/RewardStatus"]
 layout_mode = 2
@@ -296,7 +331,7 @@ layout_mode = 2
 mouse_filter = 2
 
 [node name="SealIcon" type="TextureRect" parent="MissionLayout/MissionStatusStack/RewardStatus/Content"]
-custom_minimum_size = Vector2(64, 64)
+custom_minimum_size = Vector2(52, 52)
 layout_mode = 2
 mouse_filter = 2
 expand_mode = 1
@@ -331,17 +366,50 @@ layout_mode = 2
 size_flags_vertical = 0
 mouse_filter = 2
 
-[node name="MissionOpeningRecord" type="Label" parent="MissionLayout"]
-custom_minimum_size = Vector2(0, 72)
+[node name="MissionOpeningRecord" type="PanelContainer" parent="MissionLayout"]
+custom_minimum_size = Vector2(0, 220)
 layout_mode = 2
-theme_override_colors/font_color = Color(0.82, 0.72, 0.90, 1)
+size_flags_vertical = 3
+theme_override_styles/panel = SubResource("WeeklyRecord")
+
+[node name="Content" type="VBoxContainer" parent="MissionLayout/MissionOpeningRecord"]
+layout_mode = 2
+alignment = 1
+theme_override_constants/separation = 6
+
+[node name="RewardSeal" type="TextureRect" parent="MissionLayout/MissionOpeningRecord/Content"]
+custom_minimum_size = Vector2(112, 112)
+layout_mode = 2
+size_flags_horizontal = 4
+mouse_filter = 2
+expand_mode = 1
+stretch_mode = 5
+modulate = Color(0.92, 0.82, 0.95, 0.94)
+
+[node name="Title" type="Label" parent="MissionLayout/MissionOpeningRecord/Content"]
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 0.941, 0.847, 1)
+theme_override_colors/font_outline_color = Color(0.02, 0.014, 0.028, 0.94)
+theme_override_constants/outline_size = 2
+theme_override_font_sizes/font_size = 24
+text = "WEEKLY REWARD"
+horizontal_alignment = 1
+
+[node name="State" type="Label" parent="MissionLayout/MissionOpeningRecord/Content"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.95, 0.80, 0.50, 1)
 theme_override_colors/font_outline_color = Color(0.02, 0.014, 0.028, 0.92)
 theme_override_constants/outline_size = 2
 theme_override_font_sizes/font_size = 18
-text = "WEEKLY REWARD · SEALED · NOTHING TO CLAIM OFFLINE"
+text = "SEALED · LIVE FEED REQUIRED"
 horizontal_alignment = 1
-vertical_alignment = 1
-autowrap_mode = 2
+
+[node name="Truth" type="Label" parent="MissionLayout/MissionOpeningRecord/Content"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.82, 0.72, 0.90, 1)
+theme_override_font_sizes/font_size = 16
+text = "NOTHING TO CLAIM OFFLINE"
+horizontal_alignment = 1
 
 [node name="ReturnToEvents" type="Button" parent="MissionLayout"]
 custom_minimum_size = Vector2(0, 58)

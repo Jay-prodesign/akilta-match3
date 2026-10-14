@@ -230,7 +230,7 @@ func _run() -> void:
 			_expect(mission_timer != null and mission_timer.text.contains("OFFLINE"), "S09 must disclose unavailable live reset timing")
 			_expect(mission_truth != null and mission_truth.text.contains("NOTHING TO CLAIM"), "S09 must not fabricate claimable weekly rewards")
 			_expect(mission_empty != null and String(mission_empty.get_meta("offline_contract", "")) == "truthful_empty_state", "S09 must identify the truthful offline empty-state contract")
-			_expect(mission_empty != null and mission_empty.custom_minimum_size.y >= 170.0 and mission_empty.custom_minimum_size.y <= 200.0, "S09 truthful offline intro must stay compact so the locked-board mission rows own the screen")
+			_expect(mission_empty != null and mission_empty.custom_minimum_size.y >= 148.0 and mission_empty.custom_minimum_size.y <= 164.0, "S09 truthful offline intro must stay compact so the locked-board mission rows own the screen")
 			_expect(mission_art != null and mission_art.texture != null and String(mission_art.get_meta("asset_path", "")).ends_with(".webp"), "S09 offline altar must use production raster Curio artwork")
 			_expect(mission_availability != null and mission_availability.text.contains("ONLY WHEN A MISSION FEED IS CONNECTED"), "S09 must explain when live rituals can appear without fabricating a schedule")
 			_expect(mission_feed_state != null and mission_feed_state.text == "NOT CONNECTED", "S09 live ritual row must stay truthful")
