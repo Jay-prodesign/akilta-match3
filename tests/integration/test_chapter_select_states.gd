@@ -43,7 +43,7 @@ func _run() -> void:
 		_expect(bool(visual_contract.get("current_wing_art_dominant", false)), "S02 current wing artwork must read as the dominant authored destination image")
 		_expect(bool(visual_contract.get("asset_backed_wing_rows", false)), "S02 current and sealed wing rows must use verified asset-backed interactive chrome")
 		_expect(bool(visual_contract.get("asset_backed_header_back", false)), "S02 back control must use verified utility action chrome")
-		_expect(bool(visual_contract.get("current_copy_clears_thumbnail", false)), "S02 current wing copy must clear the authored thumbnail instead of overlapping it")
+		_expect(bool(visual_contract.get("current_copy_art_caption", false)), "S02 current wing copy must read as a compact caption plate over the authored destination art")
 		_expect(bool(visual_contract.get("current_copy_scene_owned", false)), "S02 current wing copy must remain a scene-owned, non-intercepting child of the chapter hit target")
 		_expect(not bool(visual_contract.get("runtime_style_factory", true)), "S02 must not create StyleBox presentation resources at runtime")
 	_expect(screen.get_node_or_null("ResourceBar") != null, "S02 global resources header missing")
@@ -57,7 +57,8 @@ func _run() -> void:
 		var locked: Button = screen.get_chapter_button(id)
 		_expect(locked != null and not locked.disabled, "%s sealed card must remain inspectable" % id)
 		_expect(screen.chapter_state(id) == "future_wings_locked", "%s must expose future_wings_locked" % id)
-		_expect(locked.icon != null and String(locked.get_meta("sealed_status_marker", "")) == "shared_wax_seal", "%s must use only the shared truthful sealed-state marker" % id)
+		var wax_seal := locked.get_node_or_null("WaxSeal") as TextureRect
+		_expect(locked.icon == null and wax_seal != null and wax_seal.texture != null and String(locked.get_meta("sealed_status_marker", "")) == "shared_wax_seal", "%s must use only the authored shared truthful sealed-state marker" % id)
 	var future_wing: Button = screen.get_chapter_button("witch_atelier")
 	future_wing.emit_signal("pressed")
 	await process_frame

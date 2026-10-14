@@ -44,13 +44,10 @@ var _buttons: Dictionary = {}
 func _ready() -> void:
 	_world_art.texture = ScreenArt.texture("chapters_bg_curio_house")
 	_current_art.texture = PieceAssetLoader.ornament(CURRENT_WING_ART_PATH)
-	var sealed_wing_seal := PieceAssetLoader.ornament(SEALED_WING_SEAL_PATH)
 	if _world_art.texture == null:
 		push_error("S02 Chapters requires authored House world art.")
 	if _current_art.texture == null:
 		push_error("S02 Chapters requires raster Curio Boutique place art.")
-	if sealed_wing_seal == null:
-		push_error("S02 Chapters requires a shared sealed-state marker.")
 
 	_resource_bar = TopResourceBar.attach(self, progress)
 	_buttons = {
@@ -81,8 +78,6 @@ func _ready() -> void:
 		button.set_meta("chapter_state", "first_wing_open" if id == "curio_boutique" else "future_wings_locked")
 		if id != "curio_boutique":
 			ProductionChrome.apply_interactive_button(button, false, "chapter_locked")
-			button.icon = sealed_wing_seal
-			button.add_theme_constant_override("icon_max_width", 34)
 			button.set_meta("sealed_status_marker", "shared_wax_seal")
 			button.tooltip_text = "%s · inspect why this future chapter remains sealed" % String(wing["name"]).capitalize()
 			button.pressed.connect(_show_sealed_wing.bind(id, String(wing["name"])))
@@ -181,6 +176,10 @@ func _layout_chapter_hotspots(grid: Control, buttons: Array[Button]) -> void:
 		button.add_theme_font_size_override("font_size", 24 if current else 18)
 
 func chapter_visual_contract() -> Dictionary:
+	var sealed_markers_authored := true
+	for button in [_witch_atelier, _dark_vanity, _archive, _moon_conservatory, _cemetery_garden]:
+		var seal := button.get_node_or_null("WaxSeal") as TextureRect
+		sealed_markers_authored = sealed_markers_authored and seal != null and seal.texture != null and seal.texture.resource_path == SEALED_WING_SEAL_PATH
 	return {
 		"authored_scene_structure": _buttons.size() == WINGS.size(),
 		"current_wing_art_path": CURRENT_WING_ART_PATH,
@@ -190,16 +189,16 @@ func chapter_visual_contract() -> Dictionary:
 		"future_wings_artless_until_authored": true,
 		"future_wings_use_house_world_glass": true,
 		"future_wings_specific_art_claimed": false,
-		"shared_sealed_status_marker": [_witch_atelier, _dark_vanity, _archive, _moon_conservatory, _cemetery_garden].all(func(button): return button.icon != null and String(button.get_meta("sealed_status_marker", "")) == "shared_wax_seal"),
+		"shared_sealed_status_marker": sealed_markers_authored,
 		"north_star_title_hierarchy": ($Layout/ChapterHeader/HeaderCopy/Title as Label).get_theme_font_size("font_size") >= 50,
 		"compact_header_back": _back != null and _back.custom_minimum_size.x >= 88.0 and _back.custom_minimum_size.x <= 96.0 and _back.custom_minimum_size.y >= 88.0,
 		"summary_plate": _chapter_summary != null and _chapter_summary.get_theme_stylebox("normal") != null,
 		"chapter_descriptors_present": _witch_atelier.text.contains("POTIONS & EXPERIMENTS") and _dark_vanity.text.contains("MIRRORS & SECRETS") and _archive.text.contains("LOST KNOWLEDGE") and _moon_conservatory.text.contains("CELESTIAL BOTANICALS") and _cemetery_garden.text.contains("RESTING BEAUTIES"),
 		"north_star_wing_gallery": _grid != null and _current.size.x >= _grid.size.x * 0.90 and _current.size.y >= _witch_atelier.size.y * 1.65 and _witch_atelier.size.x >= _grid.size.x * 0.42 and _witch_atelier.size.x <= _grid.size.x * 0.50 and _dark_vanity.position.x > _witch_atelier.position.x and _archive.position.y > _witch_atelier.position.y and _moon_conservatory.position.x > _archive.position.x and _cemetery_garden.position.y > _archive.position.y,
-		"current_wing_art_dominant": _current_art != null and _current_art.anchor_right >= 0.40 and _current_art.anchor_right <= 0.48,
+		"current_wing_art_dominant": _current_art != null and _current_art.anchor_right >= 0.98 and _current_art.anchor_bottom >= 0.98,
 		"asset_backed_wing_rows": [_current, _witch_atelier, _dark_vanity, _archive, _moon_conservatory, _cemetery_garden].all(func(button): return button.get_theme_stylebox("normal") is StyleBoxTexture),
 		"asset_backed_header_back": _back != null and _back.get_theme_stylebox("normal") is StyleBoxTexture and String(_back.get_meta("production_chrome_kind", "")) == "action_utility_chapter_back",
-		"current_copy_clears_thumbnail": _current != null and _current.text == "" and _current_copy != null and _current_copy.anchor_left >= 0.30 and _current_copy.anchor_right <= 0.97 and _current_copy.get_theme_font_size("font_size") <= 24,
+		"current_copy_art_caption": _current != null and _current.text == "" and _current_copy != null and _current_copy.anchor_left <= 0.10 and _current_copy.anchor_top >= 0.55 and _current_copy.anchor_right >= 0.90 and _current_copy.get_theme_stylebox("normal") != null and _current_copy.get_theme_font_size("font_size") <= 24,
 		"current_copy_scene_owned": _current_copy != null and _current_copy.get_parent() == _current and _current_copy.mouse_filter == Control.MOUSE_FILTER_IGNORE,
 		"runtime_style_factory": false,
 	}

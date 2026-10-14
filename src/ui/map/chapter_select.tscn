@@ -1,6 +1,7 @@
-[gd_scene load_steps=9 format=3]
+[gd_scene load_steps=11 format=3]
 
 [ext_resource type="Script" path="res://src/ui/map/chapter_select.gd" id="1_chapters"]
+[ext_resource type="Texture2D" path="res://assets/blockers/ch01_blocker_wax_seal_intact_v01.webp" id="2_seal"]
 
 [sub_resource type="StyleBoxFlat" id="HeaderNormal"]
 bg_color = Color(0.082, 0.067, 0.106, 0.92)
@@ -98,6 +99,24 @@ content_margin_bottom = 14.0
 shadow_color = Color(0, 0, 0, 0.42)
 shadow_size = 10
 
+
+[sub_resource type="StyleBoxFlat" id="CurrentCopyPlate"]
+bg_color = Color(0.026, 0.018, 0.04, 0.88)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.949, 0.816, 0.545, 0.68)
+corner_radius_top_left = 14
+corner_radius_top_right = 14
+corner_radius_bottom_right = 14
+corner_radius_bottom_left = 14
+content_margin_left = 14.0
+content_margin_top = 8.0
+content_margin_right = 14.0
+content_margin_bottom = 8.0
+shadow_color = Color(0, 0, 0, 0.58)
+shadow_size = 8
 
 [sub_resource type="StyleBoxFlat" id="SummaryPlate"]
 bg_color = Color(0.028, 0.019, 0.039, 0.88)
@@ -229,28 +248,10 @@ theme_override_styles/focus = SubResource("CurrentHover")
 text = ""
 alignment = 1
 
-[node name="CurrentWingCopy" type="Label" parent="Layout/ChapterGrid/CurioBoutiqueButton"]
-layout_mode = 1
-anchor_left = 0.45
-anchor_top = 0.12
-anchor_right = 0.96
-anchor_bottom = 0.88
-grow_horizontal = 2
-grow_vertical = 2
-mouse_filter = 2
-theme_override_colors/font_color = Color(1, 0.969, 0.914, 1)
-theme_override_colors/font_outline_color = Color(0.02, 0.014, 0.028, 0.96)
-theme_override_constants/outline_size = 3
-theme_override_font_sizes/font_size = 22
-text = "CURIO BOUTIQUE\nRARE FINDS · 0 / 3 AWAKENED\nBEGIN RESTORATION"
-horizontal_alignment = 1
-vertical_alignment = 1
-autowrap_mode = 2
-
 [node name="CurrentWingArtwork" type="TextureRect" parent="Layout/ChapterGrid/CurioBoutiqueButton"]
 layout_mode = 1
 anchors_preset = 15
-anchor_right = 0.43
+anchor_right = 1.0
 anchor_bottom = 1.0
 offset_left = 12.0
 offset_top = 12.0
@@ -261,6 +262,25 @@ grow_vertical = 2
 mouse_filter = 2
 expand_mode = 1
 stretch_mode = 6
+
+[node name="CurrentWingCopy" type="Label" parent="Layout/ChapterGrid/CurioBoutiqueButton"]
+layout_mode = 1
+anchor_left = 0.08
+anchor_top = 0.60
+anchor_right = 0.92
+anchor_bottom = 0.92
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+theme_override_colors/font_color = Color(1, 0.969, 0.914, 1)
+theme_override_colors/font_outline_color = Color(0.02, 0.014, 0.028, 0.96)
+theme_override_constants/outline_size = 3
+theme_override_font_sizes/font_size = 22
+theme_override_styles/normal = SubResource("CurrentCopyPlate")
+text = "CURIO BOUTIQUE\nRARE FINDS · 0 / 3 AWAKENED\nBEGIN RESTORATION"
+horizontal_alignment = 1
+vertical_alignment = 1
+autowrap_mode = 2
 
 [node name="Chapter_witch_atelier" type="Button" parent="Layout/ChapterGrid"]
 layout_mode = 0
@@ -277,6 +297,23 @@ POTIONS & EXPERIMENTS
 SEALED"
 alignment = 1
 
+[node name="WaxSeal" type="TextureRect" parent="Layout/ChapterGrid/Chapter_witch_atelier"]
+layout_mode = 1
+anchor_left = 0.84
+anchor_top = 0.08
+anchor_right = 0.84
+anchor_bottom = 0.08
+offset_left = -15.0
+offset_top = 0.0
+offset_right = 15.0
+offset_bottom = 30.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+texture = ExtResource("2_seal")
+expand_mode = 1
+stretch_mode = 5
+
 [node name="Chapter_dark_vanity" type="Button" parent="Layout/ChapterGrid"]
 layout_mode = 0
 theme_override_colors/font_color = Color(0.97, 0.92, 0.96, 1)
@@ -291,6 +328,23 @@ text = "DARK VANITY
 MIRRORS & SECRETS
 SEALED"
 alignment = 1
+
+[node name="WaxSeal" type="TextureRect" parent="Layout/ChapterGrid/Chapter_dark_vanity"]
+layout_mode = 1
+anchor_left = 0.84
+anchor_top = 0.08
+anchor_right = 0.84
+anchor_bottom = 0.08
+offset_left = -15.0
+offset_top = 0.0
+offset_right = 15.0
+offset_bottom = 30.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+texture = ExtResource("2_seal")
+expand_mode = 1
+stretch_mode = 5
 
 [node name="Chapter_archive" type="Button" parent="Layout/ChapterGrid"]
 layout_mode = 0
@@ -307,6 +361,23 @@ LOST KNOWLEDGE
 SEALED"
 alignment = 1
 
+[node name="WaxSeal" type="TextureRect" parent="Layout/ChapterGrid/Chapter_archive"]
+layout_mode = 1
+anchor_left = 0.84
+anchor_top = 0.08
+anchor_right = 0.84
+anchor_bottom = 0.08
+offset_left = -15.0
+offset_top = 0.0
+offset_right = 15.0
+offset_bottom = 30.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+texture = ExtResource("2_seal")
+expand_mode = 1
+stretch_mode = 5
+
 [node name="Chapter_moon_conservatory" type="Button" parent="Layout/ChapterGrid"]
 layout_mode = 0
 theme_override_colors/font_color = Color(0.97, 0.92, 0.96, 1)
@@ -322,6 +393,23 @@ CELESTIAL BOTANICALS
 SEALED"
 alignment = 1
 
+[node name="WaxSeal" type="TextureRect" parent="Layout/ChapterGrid/Chapter_moon_conservatory"]
+layout_mode = 1
+anchor_left = 0.84
+anchor_top = 0.08
+anchor_right = 0.84
+anchor_bottom = 0.08
+offset_left = -15.0
+offset_top = 0.0
+offset_right = 15.0
+offset_bottom = 30.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+texture = ExtResource("2_seal")
+expand_mode = 1
+stretch_mode = 5
+
 [node name="Chapter_cemetery_garden" type="Button" parent="Layout/ChapterGrid"]
 layout_mode = 0
 theme_override_colors/font_color = Color(0.97, 0.92, 0.96, 1)
@@ -336,6 +424,23 @@ text = "CEMETERY GARDEN
 RESTING BEAUTIES
 SEALED"
 alignment = 1
+
+[node name="WaxSeal" type="TextureRect" parent="Layout/ChapterGrid/Chapter_cemetery_garden"]
+layout_mode = 1
+anchor_left = 0.84
+anchor_top = 0.08
+anchor_right = 0.84
+anchor_bottom = 0.08
+offset_left = -15.0
+offset_top = 0.0
+offset_right = 15.0
+offset_bottom = 30.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+texture = ExtResource("2_seal")
+expand_mode = 1
+stretch_mode = 5
 
 [node name="LockReason" type="Label" parent="Layout"]
 custom_minimum_size = Vector2(0, 42)
