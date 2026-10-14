@@ -505,6 +505,33 @@ theme_override_font_sizes/font_size = 18
 text = "STATUS"
 autowrap_mode = 2
 
+[node name="ShopStatePlate" type="PanelContainer" parent="FeatureLayout/CardScroll/Cards/Card1/Row"]
+visible = false
+custom_minimum_size = Vector2(154, 92)
+layout_mode = 2
+size_flags_vertical = 4
+
+[node name="Content" type="VBoxContainer" parent="FeatureLayout/CardScroll/Cards/Card1/Row/ShopStatePlate"]
+layout_mode = 2
+alignment = 1
+theme_override_constants/separation = 2
+
+[node name="State" type="Label" parent="FeatureLayout/CardScroll/Cards/Card1/Row/ShopStatePlate/Content"]
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 0.941, 0.847, 1)
+theme_override_colors/font_outline_color = Color(0.02, 0.014, 0.028, 0.95)
+theme_override_constants/outline_size = 2
+theme_override_font_sizes/font_size = 18
+text = "SEALED"
+horizontal_alignment = 1
+
+[node name="Detail" type="Label" parent="FeatureLayout/CardScroll/Cards/Card1/Row/ShopStatePlate/Content"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.86, 0.77, 0.93, 1)
+theme_override_font_sizes/font_size = 12
+text = "NO PURCHASES"
+horizontal_alignment = 1
+
 [node name="Card2" type="PanelContainer" parent="FeatureLayout/CardScroll/Cards"]
 custom_minimum_size = Vector2(0, 236)
 layout_mode = 2
@@ -558,6 +585,33 @@ theme_override_font_sizes/font_size = 18
 text = "STATUS"
 autowrap_mode = 2
 
+[node name="ShopStatePlate" type="PanelContainer" parent="FeatureLayout/CardScroll/Cards/Card2/Row"]
+visible = false
+custom_minimum_size = Vector2(154, 92)
+layout_mode = 2
+size_flags_vertical = 4
+
+[node name="Content" type="VBoxContainer" parent="FeatureLayout/CardScroll/Cards/Card2/Row/ShopStatePlate"]
+layout_mode = 2
+alignment = 1
+theme_override_constants/separation = 2
+
+[node name="State" type="Label" parent="FeatureLayout/CardScroll/Cards/Card2/Row/ShopStatePlate/Content"]
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 0.941, 0.847, 1)
+theme_override_colors/font_outline_color = Color(0.02, 0.014, 0.028, 0.95)
+theme_override_constants/outline_size = 2
+theme_override_font_sizes/font_size = 18
+text = "SEALED"
+horizontal_alignment = 1
+
+[node name="Detail" type="Label" parent="FeatureLayout/CardScroll/Cards/Card2/Row/ShopStatePlate/Content"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.86, 0.77, 0.93, 1)
+theme_override_font_sizes/font_size = 12
+text = "NO PURCHASES"
+horizontal_alignment = 1
+
 [node name="Card3" type="PanelContainer" parent="FeatureLayout/CardScroll/Cards"]
 custom_minimum_size = Vector2(0, 236)
 layout_mode = 2
@@ -610,6 +664,33 @@ theme_override_constants/outline_size = 2
 theme_override_font_sizes/font_size = 18
 text = "STATUS"
 autowrap_mode = 2
+
+[node name="ShopStatePlate" type="PanelContainer" parent="FeatureLayout/CardScroll/Cards/Card3/Row"]
+visible = false
+custom_minimum_size = Vector2(154, 92)
+layout_mode = 2
+size_flags_vertical = 4
+
+[node name="Content" type="VBoxContainer" parent="FeatureLayout/CardScroll/Cards/Card3/Row/ShopStatePlate"]
+layout_mode = 2
+alignment = 1
+theme_override_constants/separation = 2
+
+[node name="State" type="Label" parent="FeatureLayout/CardScroll/Cards/Card3/Row/ShopStatePlate/Content"]
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 0.941, 0.847, 1)
+theme_override_colors/font_outline_color = Color(0.02, 0.014, 0.028, 0.95)
+theme_override_constants/outline_size = 2
+theme_override_font_sizes/font_size = 18
+text = "SEALED"
+horizontal_alignment = 1
+
+[node name="Detail" type="Label" parent="FeatureLayout/CardScroll/Cards/Card3/Row/ShopStatePlate/Content"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.86, 0.77, 0.93, 1)
+theme_override_font_sizes/font_size = 12
+text = "NO PURCHASES"
+horizontal_alignment = 1
 
 [node name="SaveHealthCard" type="PanelContainer" parent="FeatureLayout"]
 visible = false

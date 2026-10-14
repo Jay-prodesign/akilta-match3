@@ -239,16 +239,20 @@ func _apply_cards(cards: Array[Dictionary]) -> void:
 		var card_title := card.get_node("Row/Copy/Title") as Label
 		var body := card.get_node("Row/Copy/Body") as Label
 		var status := card.get_node("Row/Copy/Status") as Label
+		var shop_state_plate := card.get_node_or_null("Row/ShopStatePlate") as PanelContainer
 		if _feature_key == "shop":
-			card.custom_minimum_size.y = 260.0 if i == 0 else 230.0
+			card.custom_minimum_size.y = 250.0 if i == 0 else 220.0
 			card.size_flags_vertical = Control.SIZE_EXPAND_FILL
-			card.size_flags_stretch_ratio = 1.28 if i == 0 else 1.0
-			row.add_theme_constant_override("separation", 22 if i == 0 else 18)
-			art.custom_minimum_size = Vector2(260, 220) if i == 0 else Vector2(224, 195)
+			card.size_flags_stretch_ratio = 1.22 if i == 0 else 1.0
+			row.add_theme_constant_override("separation", 16)
+			art.custom_minimum_size = Vector2(288, 220) if i == 0 else Vector2(250, 192)
 			art.size_flags_vertical = Control.SIZE_EXPAND_FILL
 			kicker.add_theme_font_size_override("font_size", 18 if i == 0 else 16)
-			card_title.add_theme_font_size_override("font_size", 36 if i == 0 else 32)
-			status.add_theme_font_size_override("font_size", 18)
+			card_title.add_theme_font_size_override("font_size", 34 if i == 0 else 30)
+			status.add_theme_font_size_override("font_size", 16)
+			if shop_state_plate != null:
+				shop_state_plate.visible = true
+				ProductionChrome.apply_compact_panel(shop_state_plate, "shop_sealed_state")
 		else:
 			card.custom_minimum_size.y = 236.0
 			card.size_flags_vertical = Control.SIZE_FILL
@@ -259,6 +263,8 @@ func _apply_cards(cards: Array[Dictionary]) -> void:
 			kicker.add_theme_font_size_override("font_size", 17)
 			card_title.add_theme_font_size_override("font_size", 34)
 			status.add_theme_font_size_override("font_size", 18)
+			if shop_state_plate != null:
+				shop_state_plate.visible = false
 		var art_path := String(entry.get("art", ""))
 		art.texture = PieceAssetLoader.ornament(art_path)
 		art.set_meta("asset_path", art_path)
