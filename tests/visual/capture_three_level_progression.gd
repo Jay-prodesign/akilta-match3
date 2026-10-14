@@ -220,11 +220,11 @@ func _capture() -> void:
 	if weekly_altar == null or weekly_spacer == null or weekly_feed == null or weekly_progress == null or weekly_rewards == null or weekly_house_return == null:
 		return _fail(app, "Weekly Missions visual parity geometry missing")
 	var weekly_altar_ratio := weekly_altar.custom_minimum_size.y / weekly_viewport.y
-	if weekly_altar_ratio < 0.19 or weekly_altar_ratio > 0.24:
-		return _fail(app, "Weekly Missions compact altar hierarchy drifted: %.3f" % weekly_altar_ratio)
-	if weekly_feed.custom_minimum_size.y < 110.0 or weekly_progress.custom_minimum_size.y < 110.0 or weekly_rewards.custom_minimum_size.y < 110.0:
-		return _fail(app, "Weekly Missions truthful status rows collapsed")
-	if weekly_spacer.size_flags_vertical == Control.SIZE_EXPAND_FILL or weekly_spacer.custom_minimum_size.y > 40.0:
+	if weekly_altar_ratio < 0.08 or weekly_altar_ratio > 0.11:
+		return _fail(app, "Weekly Missions compact truthful intro drifted: %.3f" % weekly_altar_ratio)
+	if weekly_feed.custom_minimum_size.y < 120.0 or weekly_feed.custom_minimum_size.y > 136.0 or weekly_progress.custom_minimum_size.y < 120.0 or weekly_progress.custom_minimum_size.y > 136.0 or weekly_rewards.custom_minimum_size.y < 120.0 or weekly_rewards.custom_minimum_size.y > 136.0:
+		return _fail(app, "Weekly Missions locked-board horizontal ritual rows drifted")
+	if weekly_spacer.size_flags_vertical == Control.SIZE_EXPAND_FILL or weekly_spacer.custom_minimum_size.y > 2.0:
 		return _fail(app, "Weekly Missions large empty world corridor returned")
 	if weekly_house_return.visible:
 		return _fail(app, "Weekly Missions redundant House button returned over product navigation")
