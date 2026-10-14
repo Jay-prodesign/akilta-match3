@@ -71,9 +71,10 @@ func configure(state: Dictionary) -> bool:
 	return true
 
 func screen_contract() -> Dictionary:
-	var altar_compact := empty_state.custom_minimum_size.y >= 390.0 and empty_state.custom_minimum_size.y <= 440.0 and reward_art.custom_minimum_size.x >= 240.0 and reward_art.custom_minimum_size.y >= 170.0
+	var altar_compact := empty_state.custom_minimum_size.y >= 230.0 and empty_state.custom_minimum_size.y <= 280.0 and reward_art.custom_minimum_size.x >= 160.0 and reward_art.custom_minimum_size.y >= 160.0
 	var status_rows := [feed_status, progress_status, reward_status]
-	var status_stack_dense := status_rows.all(func(row): return row != null and row.custom_minimum_size.y >= 110.0 and row.get_theme_stylebox("panel") is StyleBoxTexture)
+	var status_stack_dense := status_rows.all(func(row): return row != null and row.custom_minimum_size.y >= 140.0 and row.custom_minimum_size.y <= 170.0 and row.size_flags_horizontal == Control.SIZE_EXPAND_FILL and row.get_theme_stylebox("panel") is StyleBoxTexture)
+	var status_strip := ($MissionLayout/MissionStatusStack) is HBoxContainer and ($MissionLayout/MissionStatusStack as HBoxContainer).get_child_count() == 3
 	var truthful_status_copy := feed_state.text == "NOT CONNECTED" and progress_state.text == "NOT TRACKED OFFLINE" and reward_state.text == "NOTHING TO CLAIM"
 	var status_icons_loaded := [feed_icon, progress_icon, reward_icon].all(func(icon): return icon != null and icon.texture != null and String(icon.get_meta("asset_path", "")) == STATUS_SEAL_PATH)
 	var intentional_stage := stage_spacer != null and stage_spacer.size_flags_vertical != Control.SIZE_EXPAND_FILL and stage_spacer.custom_minimum_size.y <= 40.0 and ($MissionLayout as VBoxContainer).offset_bottom <= -150.0
@@ -88,9 +89,10 @@ func screen_contract() -> Dictionary:
 		"reward_asset_path": String(reward_art.get_meta("asset_path", "")),
 		"code_built_panels": false,
 		"north_star_title_hierarchy": ($MissionLayout/MissionTitle as Label).get_theme_font_size("font_size") >= 52,
-		"north_star_altar_stack": altar_compact and status_stack_dense,
+		"north_star_altar_stack": altar_compact and status_stack_dense and status_strip,
 		"asset_backed_altar_chrome": empty_state != null and empty_state.get_theme_stylebox("panel") is StyleBoxTexture and String(empty_state.get_meta("production_chrome_kind", "")) == "secondary_weekly_altar",
 		"asset_backed_status_rows": status_stack_dense,
+		"sealed_status_niche_strip": status_strip,
 		"truthful_status_rows": truthful_status_copy,
 		"sealed_status_icons": status_icons_loaded,
 		"header_readability_scrim": ($HeaderShade as ColorRect) != null and ($HeaderShade as ColorRect).color.a >= 0.34,
@@ -102,6 +104,6 @@ func screen_contract() -> Dictionary:
 		"intentional_world_stage": intentional_stage,
 		"asset_backed_opening_record": footer_record,
 		"world_art_not_overdimmed": world_visible,
-		"visual_parity_gate_v2": altar_compact and status_stack_dense and truthful_status_copy and status_icons_loaded and intentional_stage and footer_record and world_visible and return_actions,
-		"visual_parity_gate_v3": altar_compact and status_stack_dense and truthful_status_copy and status_icons_loaded and intentional_stage and footer_record and world_visible and return_actions,
+		"visual_parity_gate_v2": altar_compact and status_stack_dense and status_strip and truthful_status_copy and status_icons_loaded and intentional_stage and footer_record and world_visible and return_actions,
+		"visual_parity_gate_v3": altar_compact and status_stack_dense and status_strip and truthful_status_copy and status_icons_loaded and intentional_stage and footer_record and world_visible and return_actions,
 	}

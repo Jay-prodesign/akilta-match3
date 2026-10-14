@@ -118,30 +118,32 @@ layout_mode = 2
 theme_override_colors/font_color = Color(0.82, 0.72, 0.90, 1)
 theme_override_colors/font_outline_color = Color(0.02, 0.014, 0.028, 0.92)
 theme_override_constants/outline_size = 3
-theme_override_font_sizes/font_size = 20
+theme_override_font_sizes/font_size = 16
 text = "OFFLINE · LIVE RESET TIME UNAVAILABLE"
 horizontal_alignment = 1
 
 [node name="MissionEmptyState" type="PanelContainer" parent="MissionLayout"]
-custom_minimum_size = Vector2(0, 410)
+custom_minimum_size = Vector2(0, 252)
 layout_mode = 2
 theme_override_styles/panel = SubResource("Altar")
 
-[node name="EmptyContent" type="VBoxContainer" parent="MissionLayout/MissionEmptyState"]
+[node name="EmptyContent" type="HBoxContainer" parent="MissionLayout/MissionEmptyState"]
 layout_mode = 2
-theme_override_constants/separation = 12
+theme_override_constants/separation = 22
 alignment = 1
 
 [node name="MissionRewardArt" type="TextureRect" parent="MissionLayout/MissionEmptyState/EmptyContent"]
-custom_minimum_size = Vector2(250, 180)
+custom_minimum_size = Vector2(172, 172)
 layout_mode = 2
+size_flags_vertical = 4
 expand_mode = 1
 stretch_mode = 5
 
 [node name="AltarCopy" type="VBoxContainer" parent="MissionLayout/MissionEmptyState/EmptyContent"]
 layout_mode = 2
 size_flags_horizontal = 3
-theme_override_constants/separation = 11
+size_flags_vertical = 4
+theme_override_constants/separation = 8
 alignment = 1
 
 [node name="Headline" type="Label" parent="MissionLayout/MissionEmptyState/EmptyContent/AltarCopy"]
@@ -149,17 +151,17 @@ layout_mode = 2
 theme_override_colors/font_color = Color(1, 0.941, 0.847, 1)
 theme_override_colors/font_outline_color = Color(0.02, 0.014, 0.028, 0.96)
 theme_override_constants/outline_size = 4
-theme_override_font_sizes/font_size = 36
+theme_override_font_sizes/font_size = 29
 text = "THE WEEKLY ALTAR IS QUIET"
 horizontal_alignment = 1
 autowrap_mode = 2
 
 [node name="EmptyBody" type="Label" parent="MissionLayout/MissionEmptyState/EmptyContent/AltarCopy"]
 layout_mode = 2
-theme_override_colors/font_color = Color(0.95, 0.89, 0.92, 1)
+theme_override_colors/font_color = Color(0.89, 0.82, 0.87, 1)
 theme_override_colors/font_outline_color = Color(0.02, 0.014, 0.028, 0.94)
 theme_override_constants/outline_size = 2
-theme_override_font_sizes/font_size = 18
+theme_override_font_sizes/font_size = 16
 text = "Live mission data is not connected. No timer, progress or reward is invented."
 horizontal_alignment = 1
 autowrap_mode = 2
@@ -170,7 +172,7 @@ layout_mode = 2
 theme_override_colors/font_color = Color(0.86, 0.77, 0.93, 1)
 theme_override_colors/font_outline_color = Color(0.02, 0.014, 0.028, 0.94)
 theme_override_constants/outline_size = 2
-theme_override_font_sizes/font_size = 18
+theme_override_font_sizes/font_size = 16
 text = "LIVE RITUALS APPEAR ONLY WHEN A MISSION FEED IS CONNECTED"
 horizontal_alignment = 1
 autowrap_mode = 2
@@ -180,33 +182,30 @@ layout_mode = 2
 theme_override_colors/font_color = Color(0.95, 0.80, 0.50, 1)
 theme_override_colors/font_outline_color = Color(0.02, 0.014, 0.028, 0.94)
 theme_override_constants/outline_size = 2
-theme_override_font_sizes/font_size = 21
+theme_override_font_sizes/font_size = 17
 text = "OFFLINE · NOTHING TO CLAIM"
 horizontal_alignment = 1
 autowrap_mode = 2
 
-[node name="MissionStatusStack" type="VBoxContainer" parent="MissionLayout"]
+[node name="MissionStatusStack" type="HBoxContainer" parent="MissionLayout"]
+custom_minimum_size = Vector2(0, 154)
 layout_mode = 2
-size_flags_vertical = 3
 theme_override_constants/separation = 10
 
 [node name="FeedStatus" type="PanelContainer" parent="MissionLayout/MissionStatusStack"]
-custom_minimum_size = Vector2(0, 140)
+custom_minimum_size = Vector2(0, 154)
 layout_mode = 2
-size_flags_vertical = 3
+size_flags_horizontal = 3
 
-[node name="Content" type="HBoxContainer" parent="MissionLayout/MissionStatusStack/FeedStatus"]
+[node name="Content" type="VBoxContainer" parent="MissionLayout/MissionStatusStack/FeedStatus"]
 layout_mode = 2
-theme_override_constants/separation = 18
-
-[node name="LeftInset" type="Control" parent="MissionLayout/MissionStatusStack/FeedStatus/Content"]
-custom_minimum_size = Vector2(26, 1)
-layout_mode = 2
-mouse_filter = 2
+theme_override_constants/separation = 2
+alignment = 1
 
 [node name="SealIcon" type="TextureRect" parent="MissionLayout/MissionStatusStack/FeedStatus/Content"]
-custom_minimum_size = Vector2(78, 78)
+custom_minimum_size = Vector2(48, 48)
 layout_mode = 2
+size_flags_horizontal = 4
 mouse_filter = 2
 expand_mode = 1
 stretch_mode = 5
@@ -214,43 +213,33 @@ modulate = Color(0.92, 0.82, 0.95, 0.94)
 
 [node name="Label" type="Label" parent="MissionLayout/MissionStatusStack/FeedStatus/Content"]
 layout_mode = 2
-size_flags_horizontal = 3
 theme_override_colors/font_color = Color(1, 0.941, 0.847, 1)
-theme_override_font_sizes/font_size = 25
+theme_override_font_sizes/font_size = 17
 text = "LIVE RITUALS"
-vertical_alignment = 1
+horizontal_alignment = 1
 
 [node name="State" type="Label" parent="MissionLayout/MissionStatusStack/FeedStatus/Content"]
-custom_minimum_size = Vector2(220, 0)
 layout_mode = 2
 theme_override_colors/font_color = Color(0.86, 0.77, 0.93, 1)
-theme_override_font_sizes/font_size = 19
+theme_override_font_sizes/font_size = 12
 text = "NOT CONNECTED"
-horizontal_alignment = 2
-vertical_alignment = 1
-
-[node name="RightInset" type="Control" parent="MissionLayout/MissionStatusStack/FeedStatus/Content"]
-custom_minimum_size = Vector2(34, 1)
-layout_mode = 2
-mouse_filter = 2
+horizontal_alignment = 1
+autowrap_mode = 2
 
 [node name="ProgressStatus" type="PanelContainer" parent="MissionLayout/MissionStatusStack"]
-custom_minimum_size = Vector2(0, 140)
+custom_minimum_size = Vector2(0, 154)
 layout_mode = 2
-size_flags_vertical = 3
+size_flags_horizontal = 3
 
-[node name="Content" type="HBoxContainer" parent="MissionLayout/MissionStatusStack/ProgressStatus"]
+[node name="Content" type="VBoxContainer" parent="MissionLayout/MissionStatusStack/ProgressStatus"]
 layout_mode = 2
-theme_override_constants/separation = 18
-
-[node name="LeftInset" type="Control" parent="MissionLayout/MissionStatusStack/ProgressStatus/Content"]
-custom_minimum_size = Vector2(26, 1)
-layout_mode = 2
-mouse_filter = 2
+theme_override_constants/separation = 2
+alignment = 1
 
 [node name="SealIcon" type="TextureRect" parent="MissionLayout/MissionStatusStack/ProgressStatus/Content"]
-custom_minimum_size = Vector2(78, 78)
+custom_minimum_size = Vector2(48, 48)
 layout_mode = 2
+size_flags_horizontal = 4
 mouse_filter = 2
 expand_mode = 1
 stretch_mode = 5
@@ -258,43 +247,33 @@ modulate = Color(0.92, 0.82, 0.95, 0.94)
 
 [node name="Label" type="Label" parent="MissionLayout/MissionStatusStack/ProgressStatus/Content"]
 layout_mode = 2
-size_flags_horizontal = 3
 theme_override_colors/font_color = Color(1, 0.941, 0.847, 1)
-theme_override_font_sizes/font_size = 25
+theme_override_font_sizes/font_size = 17
 text = "PROGRESS"
-vertical_alignment = 1
+horizontal_alignment = 1
 
 [node name="State" type="Label" parent="MissionLayout/MissionStatusStack/ProgressStatus/Content"]
-custom_minimum_size = Vector2(250, 0)
 layout_mode = 2
 theme_override_colors/font_color = Color(0.86, 0.77, 0.93, 1)
-theme_override_font_sizes/font_size = 19
+theme_override_font_sizes/font_size = 12
 text = "NOT TRACKED OFFLINE"
-horizontal_alignment = 2
-vertical_alignment = 1
-
-[node name="RightInset" type="Control" parent="MissionLayout/MissionStatusStack/ProgressStatus/Content"]
-custom_minimum_size = Vector2(34, 1)
-layout_mode = 2
-mouse_filter = 2
+horizontal_alignment = 1
+autowrap_mode = 2
 
 [node name="RewardStatus" type="PanelContainer" parent="MissionLayout/MissionStatusStack"]
-custom_minimum_size = Vector2(0, 140)
+custom_minimum_size = Vector2(0, 154)
 layout_mode = 2
-size_flags_vertical = 3
+size_flags_horizontal = 3
 
-[node name="Content" type="HBoxContainer" parent="MissionLayout/MissionStatusStack/RewardStatus"]
+[node name="Content" type="VBoxContainer" parent="MissionLayout/MissionStatusStack/RewardStatus"]
 layout_mode = 2
-theme_override_constants/separation = 18
-
-[node name="LeftInset" type="Control" parent="MissionLayout/MissionStatusStack/RewardStatus/Content"]
-custom_minimum_size = Vector2(26, 1)
-layout_mode = 2
-mouse_filter = 2
+theme_override_constants/separation = 2
+alignment = 1
 
 [node name="SealIcon" type="TextureRect" parent="MissionLayout/MissionStatusStack/RewardStatus/Content"]
-custom_minimum_size = Vector2(78, 78)
+custom_minimum_size = Vector2(48, 48)
 layout_mode = 2
+size_flags_horizontal = 4
 mouse_filter = 2
 expand_mode = 1
 stretch_mode = 5
@@ -302,28 +281,21 @@ modulate = Color(0.92, 0.82, 0.95, 0.94)
 
 [node name="Label" type="Label" parent="MissionLayout/MissionStatusStack/RewardStatus/Content"]
 layout_mode = 2
-size_flags_horizontal = 3
 theme_override_colors/font_color = Color(1, 0.941, 0.847, 1)
-theme_override_font_sizes/font_size = 25
+theme_override_font_sizes/font_size = 17
 text = "REWARDS"
-vertical_alignment = 1
+horizontal_alignment = 1
 
 [node name="State" type="Label" parent="MissionLayout/MissionStatusStack/RewardStatus/Content"]
-custom_minimum_size = Vector2(250, 0)
 layout_mode = 2
 theme_override_colors/font_color = Color(0.95, 0.80, 0.50, 1)
-theme_override_font_sizes/font_size = 19
+theme_override_font_sizes/font_size = 12
 text = "NOTHING TO CLAIM"
-horizontal_alignment = 2
-vertical_alignment = 1
-
-[node name="RightInset" type="Control" parent="MissionLayout/MissionStatusStack/RewardStatus/Content"]
-custom_minimum_size = Vector2(34, 1)
-layout_mode = 2
-mouse_filter = 2
+horizontal_alignment = 1
+autowrap_mode = 2
 
 [node name="WorldStageSpacer" type="Control" parent="MissionLayout"]
-custom_minimum_size = Vector2(0, 34)
+custom_minimum_size = Vector2(0, 24)
 layout_mode = 2
 size_flags_vertical = 0
 mouse_filter = 2
