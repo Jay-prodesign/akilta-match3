@@ -14,6 +14,7 @@ var _daily_level: int = 0
 var _hero_asset_path: String = ""
 
 @onready var world_art: TextureRect = $WorldArt
+@onready var profile_surface: PanelContainer = $ProfileSurface
 @onready var meta_eyebrow: Label = $FeatureLayout/MetaEyebrow
 @onready var title: Label = $FeatureLayout/FeatureTitle
 @onready var detail: Label = $FeatureLayout/Detail
@@ -22,6 +23,26 @@ var _hero_asset_path: String = ""
 @onready var shop_currency: Label = $FeatureLayout/ShopCurrencySummary
 @onready var shop_truth: Label = $FeatureLayout/ShopCurrencyTruth
 @onready var feature_hero: PanelContainer = $FeatureLayout/FeatureHero
+@onready var profile_feature: VBoxContainer = $FeatureLayout/ProfileFeature
+@onready var profile_identity: PanelContainer = $FeatureLayout/ProfileFeature/Identity
+@onready var profile_keeper_art: TextureRect = $FeatureLayout/ProfileFeature/Identity/IdentityRow/KeeperArt
+@onready var profile_identity_kicker: Label = $FeatureLayout/ProfileFeature/Identity/IdentityRow/Copy/Kicker
+@onready var profile_identity_title: Label = $FeatureLayout/ProfileFeature/Identity/IdentityRow/Copy/Title
+@onready var profile_identity_progress_label: Label = $FeatureLayout/ProfileFeature/Identity/IdentityRow/Copy/ProgressLabel
+@onready var profile_identity_progress: ProgressBar = $FeatureLayout/ProfileFeature/Identity/IdentityRow/Copy/Progress
+@onready var profile_settings_row: Button = $FeatureLayout/ProfileFeature/Menu/Settings
+@onready var profile_chapter_row: PanelContainer = $FeatureLayout/ProfileFeature/Menu/ChapterRow
+@onready var profile_chapter_icon: TextureRect = $FeatureLayout/ProfileFeature/Menu/ChapterRow/Content/Icon
+@onready var profile_chapter_status: Label = $FeatureLayout/ProfileFeature/Menu/ChapterRow/Content/Copy/Status
+@onready var profile_reliquary_row: PanelContainer = $FeatureLayout/ProfileFeature/Menu/ReliquaryRow
+@onready var profile_reliquary_icon: TextureRect = $FeatureLayout/ProfileFeature/Menu/ReliquaryRow/Content/Icon
+@onready var profile_reliquary_status: Label = $FeatureLayout/ProfileFeature/Menu/ReliquaryRow/Content/Copy/Status
+@onready var profile_house_row: PanelContainer = $FeatureLayout/ProfileFeature/Menu/HouseRow
+@onready var profile_house_icon: TextureRect = $FeatureLayout/ProfileFeature/Menu/HouseRow/Content/Icon
+@onready var profile_house_status: Label = $FeatureLayout/ProfileFeature/Menu/HouseRow/Content/Copy/Status
+@onready var profile_save_row: PanelContainer = $FeatureLayout/ProfileFeature/Menu/SaveRow
+@onready var profile_save_local: Label = $FeatureLayout/ProfileFeature/Menu/SaveRow/Content/Local
+@onready var profile_save_cloud: Label = $FeatureLayout/ProfileFeature/Menu/SaveRow/Content/Cloud
 @onready var events_feature: VBoxContainer = $FeatureLayout/EventsFeature
 @onready var event_card_1: PanelContainer = $FeatureLayout/EventsFeature/EventCard1
 @onready var event_card_2: PanelContainer = $FeatureLayout/EventsFeature/EventCard2
@@ -38,6 +59,8 @@ var _hero_asset_path: String = ""
 @onready var hero_kicker: Label = $FeatureLayout/FeatureHero/HeroRow/HeroCopy/FeatureHeroKicker
 @onready var hero_title: Label = $FeatureLayout/FeatureHero/HeroRow/HeroCopy/FeatureHeroTitle
 @onready var hero_body: Label = $FeatureLayout/FeatureHero/HeroRow/HeroCopy/HeroBody
+@onready var profile_progress_label: Label = $FeatureLayout/FeatureHero/HeroRow/HeroCopy/ProfileProgressLabel
+@onready var profile_progress: ProgressBar = $FeatureLayout/FeatureHero/HeroRow/HeroCopy/ProfileProgress
 @onready var shop_disabled_action: Button = $FeatureLayout/FeatureHero/HeroRow/HeroCopy/ShopDisabledAction
 @onready var daily_card: PanelContainer = $FeatureLayout/DailyPracticeCard
 @onready var daily_kicker: Label = $FeatureLayout/DailyPracticeCard/DailyContent/DailyPracticeKicker
@@ -49,6 +72,7 @@ var _hero_asset_path: String = ""
 @onready var weekly_action: Button = $FeatureLayout/WeeklyMissionsAction
 @onready var profile_settings: Button = $FeatureLayout/ProfileSettings
 @onready var save_health_card: PanelContainer = $FeatureLayout/SaveHealthCard
+@onready var save_health_kicker: Label = $FeatureLayout/SaveHealthCard/SaveHealthContent/Kicker
 @onready var local_save_status: Label = $FeatureLayout/SaveHealthCard/SaveHealthContent/LocalSaveStatus
 @onready var local_save_detail: Label = $FeatureLayout/SaveHealthCard/SaveHealthContent/LocalSaveDetail
 @onready var cloud_sync_status: Label = $FeatureLayout/SaveHealthCard/SaveHealthContent/CloudSyncStatus
@@ -57,17 +81,23 @@ var _hero_asset_path: String = ""
 @onready var back_button: Button = $FeatureLayout/BackToHouse
 
 func _ready() -> void:
+	profile_surface.set_meta("profile_material", "screen_specific_flat")
+	profile_identity.set_meta("profile_material", "screen_specific_flat")
+	for row in [profile_chapter_row, profile_reliquary_row, profile_house_row, profile_save_row]:
+		row.set_meta("profile_material", "screen_specific_flat")
 	ProductionChrome.apply_secondary(feature_hero, "meta_hero")
+	ProductionChrome.apply_action_button(profile_settings_row, "utility", "profile_settings_row")
 	ProductionChrome.apply_compact_panel(event_card_1, "events_feature_card")
 	ProductionChrome.apply_compact_panel(event_card_2, "events_feature_card")
 	ProductionChrome.apply_action_button(weekly_action, "primary", "events_weekly")
-	ProductionChrome.apply_action_button(profile_settings, "primary", "profile_settings")
+	ProductionChrome.apply_action_button(profile_settings, "utility", "profile_settings")
 	ProductionChrome.apply_action_button(daily_action, "utility", "events_daily_practice")
 	ProductionChrome.apply_action_button(shop_disabled_action, "utility", "shop_sealed")
 	ProductionChrome.apply_action_button(back_button, "utility", "meta_return_house")
 	weekly_action.pressed.connect(func(): weekly_requested.emit())
 	daily_action.pressed.connect(_on_daily_pressed)
 	profile_settings.pressed.connect(func(): settings_requested.emit())
+	profile_settings_row.pressed.connect(func(): settings_requested.emit())
 	back_button.pressed.connect(func(): back_requested.emit())
 
 func configure(feature_key: String, state: Dictionary) -> bool:
@@ -85,10 +115,11 @@ func configure(feature_key: String, state: Dictionary) -> bool:
 	var cards: Array[Dictionary] = []
 
 	chapter_progress.visible = false
-	meta_eyebrow.visible = _feature_key == "profile"
+	meta_eyebrow.visible = false
 	events_feature.visible = _feature_key == "events"
-	feature_hero.visible = _feature_key == "profile"
-	card_scroll.visible = _feature_key != "events"
+	profile_feature.visible = _feature_key == "profile"
+	feature_hero.visible = false
+	card_scroll.visible = _feature_key == "shop"
 	daily_card.visible = _feature_key == "events"
 	weekly_action.visible = _feature_key == "events"
 	shop_notice.visible = _feature_key == "shop"
@@ -96,13 +127,26 @@ func configure(feature_key: String, state: Dictionary) -> bool:
 	shop_truth.visible = false
 	shop_offer_art.visible = false
 	shop_disabled_action.visible = false
-	hero_art.visible = _feature_key == "profile"
+	hero_art.visible = false
 	card_stack.size_flags_vertical = Control.SIZE_EXPAND_FILL if _feature_key == "shop" else Control.SIZE_FILL
-	title.add_theme_font_size_override("font_size", 44 if _feature_key == "shop" else 54)
-	detail.add_theme_font_size_override("font_size", 17 if _feature_key == "shop" else 21)
+	title.add_theme_font_size_override("font_size", 44 if _feature_key == "shop" else (42 if _feature_key == "profile" else 54))
+	detail.add_theme_font_size_override("font_size", 17 if _feature_key == "shop" else (16 if _feature_key == "profile" else 21))
 	shop_notice.add_theme_font_size_override("font_size", 16 if _feature_key == "shop" else 19)
-	profile_settings.visible = _feature_key == "profile"
-	save_health_card.visible = _feature_key == "profile"
+	profile_settings.visible = false
+	save_health_card.visible = false
+	profile_surface.visible = _feature_key == "profile"
+	profile_progress_label.visible = false
+	profile_progress.visible = false
+	feature_hero.custom_minimum_size.y = 300.0 if _feature_key == "profile" else 420.0
+	hero_art.custom_minimum_size = Vector2(220, 220) if _feature_key == "profile" else Vector2(360, 360)
+	hero_kicker.add_theme_font_size_override("font_size", 18 if _feature_key == "profile" else 22)
+	hero_title.add_theme_font_size_override("font_size", 30 if _feature_key == "profile" else 44)
+	profile_settings.custom_minimum_size.y = 72.0 if _feature_key == "profile" else 96.0
+	profile_settings.add_theme_font_size_override("font_size", 19 if _feature_key == "profile" else 22)
+	save_health_card.custom_minimum_size.y = 118.0 if _feature_key == "profile" else 168.0
+	save_health_kicker.add_theme_font_size_override("font_size", 14 if _feature_key == "profile" else 16)
+	local_save_status.add_theme_font_size_override("font_size", 20 if _feature_key == "profile" else 24)
+	cloud_sync_status.add_theme_font_size_override("font_size", 17 if _feature_key == "profile" else 20)
 	truth_strip.visible = false
 	back_button.visible = false
 	hero_body.visible = false
@@ -165,17 +209,21 @@ func configure(feature_key: String, state: Dictionary) -> bool:
 		"profile":
 			background_id = "profile_bg_curio_house"
 			hero_path = "res://assets/pieces/black_cat.webp"
-			title.text = "THE KEEPER"
-			detail.text = "YOUR HOUSE · CURIOS · PROGRESS · PREFERENCES"
-			hero_kicker.text = "FIRST CABINET SET RESTORED" if opening_complete else "KEEPER RECORD"
-			hero_title.text = "%d CURIOS · RESTORATION STAGE %d" % [collected_count, restored_stage]
+			title.text = "PLAYER"
+			detail.text = "THE KEEPER · DEVICE-LOCAL RECORD"
 			hero_body.text = "Your opening journey is stored locally and reflected across the House, map and Reliquary."
+			profile_identity_kicker.text = "KEEPER RECORD"
+			profile_identity_title.text = "FIRST CABINET SET RESTORED" if opening_complete else "OPENING HOUSE IN PROGRESS"
+			profile_identity_progress_label.text = "OPENING RITUALS · %d / %d" % [completed_count, opening_cap]
+			profile_identity_progress.max_value = float(opening_cap)
+			profile_identity_progress.value = float(completed_count)
+			profile_chapter_status.text = "%d / %d RITUALS · COMPLETE" % [completed_count, opening_cap] if opening_complete else "%d / %d RITUALS" % [completed_count, opening_cap]
+			profile_reliquary_status.text = "%d / %d CURIOS · AWAKENED" % [collected_count, opening_cap]
+			profile_house_status.text = "OPENING RESTORATION COMPLETE" if opening_complete else "RESTORATION STAGE %d" % restored_stage
+			profile_save_local.text = String(state.get("save_status", "LOCAL SAVE · DEVICE-LOCAL"))
+			profile_save_cloud.text = "CLOUD SYNC · NOT CONNECTED"
 			truth_strip.text = "CLOUD SYNC · NOT CONNECTED · NO REMOTE BACKUP CLAIM"
-			cards = [
-				{"art":"res://assets/pieces/moon_sigil.webp", "kicker":"KEEPER RECORD I", "title":"CHAPTER PROGRESS", "body":"Opening chapter complete · %d of %d rituals." % [completed_count, opening_cap] if opening_complete else "%d of %d opening rituals completed." % [completed_count, opening_cap], "status":"FIRST CABINET SET RESTORED" if opening_complete else "YOUR SAVED JOURNEY"},
-				{"art":"res://assets/curios/ch01_curio_moon_cameo_awakened_v01.webp", "kicker":"KEEPER RECORD II", "title":"RELIQUARY", "body":"%d of %d opening curios awakened." % [collected_count, opening_cap], "status":"OPENING SET COMPLETE" if opening_complete else "RELICS RECOVERED"},
-				{"art":"res://assets/world/ch01_curio_boutique/hub_bg_grandhall.webp", "kicker":"KEEPER RECORD III", "title":"HOUSE RESTORATION", "body":"Restoration stage %d." % restored_stage, "status":"OPENING RESTORATION COMPLETE" if opening_complete else "PROGRESS SAVED ON THIS DEVICE"}
-			]
+			cards = []
 		_:
 			return false
 
@@ -185,6 +233,13 @@ func configure(feature_key: String, state: Dictionary) -> bool:
 	if _feature_key == "shop":
 		shop_offer_art.texture = PieceAssetLoader.ornament(hero_path)
 		if shop_offer_art.texture == null:
+			return false
+	elif _feature_key == "profile":
+		profile_keeper_art.texture = PieceAssetLoader.ornament(hero_path)
+		profile_chapter_icon.texture = PieceAssetLoader.ornament("res://assets/pieces/moon_sigil.webp")
+		profile_reliquary_icon.texture = PieceAssetLoader.ornament("res://assets/curios/ch01_curio_moon_cameo_awakened_v01.webp")
+		profile_house_icon.texture = PieceAssetLoader.ornament("res://assets/world/ch01_curio_boutique/hub_bg_grandhall.webp")
+		if profile_keeper_art.texture == null or profile_chapter_icon.texture == null or profile_reliquary_icon.texture == null or profile_house_icon.texture == null:
 			return false
 	else:
 		hero_art.texture = PieceAssetLoader.ornament(hero_path)
@@ -273,13 +328,35 @@ func _apply_cards(cards: Array[Dictionary]) -> void:
 		body.text = String(entry.get("body", ""))
 		status.text = String(entry.get("status", ""))
 
+func _apply_profile_rows() -> void:
+	card_stack.add_theme_constant_override("separation", 8)
+	for card_path in ["Card1", "Card2", "Card3"]:
+		var card := card_stack.get_node(card_path) as PanelContainer
+		var row := card.get_node("Row") as HBoxContainer
+		var art := card.get_node("Row/Art") as TextureRect
+		var kicker := card.get_node("Row/Copy/Kicker") as Label
+		var card_title := card.get_node("Row/Copy/Title") as Label
+		var status := card.get_node("Row/Copy/Status") as Label
+		var shop_state_plate := card.get_node_or_null("Row/ShopStatePlate") as PanelContainer
+		ProductionChrome.apply_compact_panel(card, "profile_record_row")
+		card.custom_minimum_size.y = 112.0
+		card.size_flags_vertical = Control.SIZE_FILL
+		row.add_theme_constant_override("separation", 12)
+		art.custom_minimum_size = Vector2(88, 88)
+		art.size_flags_vertical = Control.SIZE_FILL
+		kicker.visible = false
+		card_title.add_theme_font_size_override("font_size", 22)
+		status.add_theme_font_size_override("font_size", 15)
+		if shop_state_plate != null:
+			shop_state_plate.visible = false
+
 func _on_daily_pressed() -> void:
 	if _feature_key == "events" and _daily_level > 0:
 		daily_practice_requested.emit(_daily_level)
 
 func screen_contract() -> Dictionary:
-	var hero_loaded := shop_offer_art.texture != null if _feature_key == "shop" else hero_art.texture != null
-	var active_hero_art: TextureRect = shop_offer_art if _feature_key == "shop" else hero_art
+	var hero_loaded := shop_offer_art.texture != null if _feature_key == "shop" else (profile_keeper_art.texture != null if _feature_key == "profile" else hero_art.texture != null)
+	var active_hero_art: TextureRect = shop_offer_art if _feature_key == "shop" else (profile_keeper_art if _feature_key == "profile" else hero_art)
 	var hero_panel := $FeatureLayout/FeatureHero as PanelContainer
 	var card_nodes := [
 		$FeatureLayout/CardScroll/Cards/Card1,
@@ -344,21 +421,47 @@ func screen_contract() -> Dictionary:
 		and card_nodes.all(func(card): return (card as PanelContainer).visible and (card as PanelContainer).size_flags_vertical == Control.SIZE_EXPAND_FILL)
 		and (card_nodes[0] as PanelContainer).size_flags_stretch_ratio > (card_nodes[1] as PanelContainer).size_flags_stretch_ratio
 	)
+	var profile_identity_focus := _feature_key != "profile" or (
+		profile_surface.visible
+		and profile_surface.get_theme_stylebox("panel") is StyleBoxFlat
+		and String(profile_surface.get_meta("profile_material", "")) == "screen_specific_flat"
+		and profile_feature.visible
+		and not hero_panel.visible
+		and profile_identity.visible
+		and profile_identity.custom_minimum_size.y >= 280.0
+		and profile_identity.custom_minimum_size.y <= 320.0
+		and profile_keeper_art.texture != null
+		and profile_keeper_art.custom_minimum_size.x >= 200.0
+		and profile_keeper_art.custom_minimum_size.x <= 240.0
+		and profile_identity_progress.visible
+		and profile_identity_progress.max_value >= 1.0
+	)
+	var profile_utility_rows := _feature_key != "profile" or (
+		profile_settings_row.visible
+		and profile_settings_row.custom_minimum_size.y >= 96.0
+		and profile_settings_row.custom_minimum_size.y <= 112.0
+		and [profile_chapter_row, profile_reliquary_row, profile_house_row].all(func(row): return row.visible and row.custom_minimum_size.y >= 108.0 and row.custom_minimum_size.y <= 124.0 and row.size_flags_vertical == Control.SIZE_EXPAND_FILL)
+		and profile_save_row.visible
+		and profile_save_row.custom_minimum_size.y >= 124.0
+		and profile_save_row.custom_minimum_size.y <= 140.0
+	)
 	if _feature_key == "events":
 		art_dominant_cards = events_card_focus
 		compact_copy = true
 	elif _feature_key == "shop":
 		art_dominant_cards = shop_catalog_focus
 		compact_copy = true
-	var hero_dominant := events_card_focus if _feature_key == "events" else (shop_catalog_focus if _feature_key == "shop" else (hero_panel.custom_minimum_size.y >= 400.0 and active_hero_art.custom_minimum_size.x >= 340.0 and active_hero_art.custom_minimum_size.y >= 340.0))
+	elif _feature_key == "profile":
+		art_dominant_cards = profile_utility_rows
+		compact_copy = true
+	var hero_dominant := events_card_focus if _feature_key == "events" else (shop_catalog_focus if _feature_key == "shop" else (profile_identity_focus if _feature_key == "profile" else (hero_panel.custom_minimum_size.y >= 400.0 and active_hero_art.custom_minimum_size.x >= 340.0 and active_hero_art.custom_minimum_size.y >= 340.0)))
 	var controlled_chrome := compact_copy and not truth_strip.visible and not back_button.visible and ($HeaderShade as ColorRect).color.a <= 0.38
 	var profile_status_focus := _feature_key != "profile" or (
-		save_health_card != null
-		and save_health_card.visible
-		and not local_save_detail.visible
-		and not cloud_sync_detail.visible
-		and local_save_status.get_theme_font_size("font_size") >= 24
-		and cloud_sync_status.get_theme_font_size("font_size") >= 20
+		profile_save_row.visible
+		and profile_save_local.text.begins_with("LOCAL SAVE")
+		and profile_save_cloud.text == "CLOUD SYNC · NOT CONNECTED"
+		and profile_save_local.get_theme_font_size("font_size") >= 20
+		and profile_save_cloud.get_theme_font_size("font_size") >= 16
 	)
 	return {
 		"feature": _feature_key,
@@ -366,10 +469,19 @@ func screen_contract() -> Dictionary:
 		"hero_art_loaded": hero_loaded,
 		"static_card_slots": 3,
 		"code_built_panels": false,
-		"north_star_title_hierarchy": title != null and title.get_theme_font_size("font_size") >= (42 if _feature_key == "shop" else 52),
+		"north_star_title_hierarchy": title != null and title.get_theme_font_size("font_size") >= (42 if _feature_key == "shop" else (40 if _feature_key == "profile" else 52)),
 		"north_star_hero_scale": hero_dominant,
-		"asset_backed_hero_chrome": (event_card_1.get_theme_stylebox("panel") is StyleBoxTexture and event_card_2.get_theme_stylebox("panel") is StyleBoxTexture) if _feature_key == "events" else (card_nodes.all(func(card): return (card as PanelContainer).get_theme_stylebox("panel") is StyleBoxTexture) if _feature_key == "shop" else (hero_panel.get_theme_stylebox("panel") is StyleBoxTexture and String(hero_panel.get_meta("production_chrome_kind", "")) == "secondary_meta_hero")),
+		"asset_backed_hero_chrome": (event_card_1.get_theme_stylebox("panel") is StyleBoxTexture and event_card_2.get_theme_stylebox("panel") is StyleBoxTexture) if _feature_key == "events" else (card_nodes.all(func(card): return (card as PanelContainer).get_theme_stylebox("panel") is StyleBoxTexture) if _feature_key == "shop" else (true if _feature_key == "profile" else (hero_panel.get_theme_stylebox("panel") is StyleBoxTexture and String(hero_panel.get_meta("production_chrome_kind", "")) == "secondary_meta_hero"))),
 		"shop_catalog_focus": shop_catalog_focus,
+		"profile_identity_focus": profile_identity_focus,
+		"profile_board_utility_rows": profile_utility_rows,
+		"profile_screen_specific_material": _feature_key != "profile" or (
+			profile_identity.get_theme_stylebox("panel") is StyleBoxFlat
+			and profile_chapter_row.get_theme_stylebox("panel") is StyleBoxFlat
+			and profile_reliquary_row.get_theme_stylebox("panel") is StyleBoxFlat
+			and profile_house_row.get_theme_stylebox("panel") is StyleBoxFlat
+			and profile_save_row.get_theme_stylebox("panel") is StyleBoxFlat
+		),
 		"events_board_card_composition": events_card_focus,
 		"events_actions_subordinate": events_actions_subordinate,
 		"events_truthful_status": events_truthful_status,
@@ -381,7 +493,7 @@ func screen_contract() -> Dictionary:
 		"art_dominant_cards": art_dominant_cards,
 		"header_readability_scrim": ($HeaderShade as ColorRect) != null and ($HeaderShade as ColorRect).color.a >= 0.34,
 		"secondary_header_compact": (_feature_key != "events" or not chapter_progress.visible) and (_feature_key != "shop" or (shop_notice.visible and shop_notice.get_theme_font_size("font_size") <= 16 and not shop_currency.visible and not shop_truth.visible)),
-		"profile_save_health_compact": _feature_key != "profile" or (save_health_card != null and save_health_card.custom_minimum_size.y <= 170.0),
+		"profile_save_health_compact": _feature_key != "profile" or (profile_save_row != null and profile_save_row.custom_minimum_size.y <= 140.0),
 		"profile_status_focus": profile_status_focus,
 		"redundant_house_return_suppressed": not back_button.visible,
 		"truth_footer_suppressed": not truth_strip.visible,
