@@ -44,6 +44,7 @@ var _hero_asset_path: String = ""
 @onready var daily_title: Label = $FeatureLayout/DailyPracticeCard/DailyContent/DailyPracticeTitle
 @onready var daily_truth: Label = $FeatureLayout/DailyPracticeCard/DailyContent/DailyPracticeTruth
 @onready var card_scroll: ScrollContainer = $FeatureLayout/CardScroll
+@onready var card_stack: VBoxContainer = $FeatureLayout/CardScroll/Cards
 @onready var daily_action: Button = $FeatureLayout/DailyPracticeCard/DailyContent/DailyPracticeAction
 @onready var weekly_action: Button = $FeatureLayout/WeeklyMissionsAction
 @onready var profile_settings: Button = $FeatureLayout/ProfileSettings
@@ -84,18 +85,22 @@ func configure(feature_key: String, state: Dictionary) -> bool:
 	var cards: Array[Dictionary] = []
 
 	chapter_progress.visible = false
-	meta_eyebrow.visible = _feature_key != "events"
+	meta_eyebrow.visible = _feature_key == "profile"
 	events_feature.visible = _feature_key == "events"
-	feature_hero.visible = _feature_key != "events"
+	feature_hero.visible = _feature_key == "profile"
 	card_scroll.visible = _feature_key != "events"
 	daily_card.visible = _feature_key == "events"
 	weekly_action.visible = _feature_key == "events"
-	shop_notice.visible = false
-	shop_currency.visible = _feature_key == "shop"
-	shop_truth.visible = _feature_key == "shop"
-	shop_offer_art.visible = _feature_key == "shop"
-	shop_disabled_action.visible = _feature_key == "shop"
-	hero_art.visible = _feature_key != "shop" and _feature_key != "events"
+	shop_notice.visible = _feature_key == "shop"
+	shop_currency.visible = false
+	shop_truth.visible = false
+	shop_offer_art.visible = false
+	shop_disabled_action.visible = false
+	hero_art.visible = _feature_key == "profile"
+	card_stack.size_flags_vertical = Control.SIZE_EXPAND_FILL if _feature_key == "shop" else Control.SIZE_FILL
+	title.add_theme_font_size_override("font_size", 44 if _feature_key == "shop" else 54)
+	detail.add_theme_font_size_override("font_size", 17 if _feature_key == "shop" else 21)
+	shop_notice.add_theme_font_size_override("font_size", 16 if _feature_key == "shop" else 19)
 	profile_settings.visible = _feature_key == "profile"
 	save_health_card.visible = _feature_key == "profile"
 	truth_strip.visible = false
@@ -142,20 +147,20 @@ func configure(feature_key: String, state: Dictionary) -> bool:
 		"shop":
 			background_id = "shop_bg_curio_house"
 			hero_path = "res://assets/curios/ch01_curio_moth_reliquary.png"
-			title.text = "THE CURIO EMPORIUM"
-			detail.text = "SEALED ECONOMY PREVIEW · NOTHING HERE CAN CHARGE YOU"
+			title.text = "SHOP"
+			detail.text = "SEALED PREVIEWS · COMMERCE NOT CONNECTED"
 			hero_kicker.text = "EMPORIUM PREVIEW · SEALED"
 			hero_title.text = "NO PURCHASES ENABLED"
 			hero_body.text = "These balances come only from first clears. Purchases and spending are not connected."
-			shop_notice.text = "THE EMPORIUM IS SEALED · NO PURCHASES OR PAYMENTS"
+			shop_notice.text = "NO PURCHASES OR PAYMENTS · PREVIEW ONLY"
 			shop_currency.text = "HOUSE COINS  %d  ·  MOONSTONES  %d" % [coins, gems]
 			shop_truth.text = "EARNED IN PLAY · NOT PURCHASABLE"
 			shop_disabled_action.disabled = true
 			truth_strip.text = "EARNED IN PLAY · NOT PURCHASABLE · NO REAL-MONEY COMMERCE"
 			cards = [
-				{"art":"res://assets/curios/ch01_curio_moon_cameo_awakened_v01.webp", "kicker":"SEALED CABINET I", "title":"CANDLELIGHT KIT", "body":"A future soft-currency cabinet for restoration supplies.", "status":"SEALED · ECONOMY PREVIEW ONLY"},
-				{"art":"res://assets/curios/ch01_curio_moth_reliquary.png", "kicker":"SEALED CABINET II", "title":"MOONSTONE CACHE", "body":"A future premium-currency cabinet. No price or payment flow is active.", "status":"SEALED · NO REAL-MONEY PURCHASES"},
-				{"art":"res://assets/curios/ch01_curio_thorned_locket.png", "kicker":"SEALED CABINET III", "title":"RESTORER'S RELIQUARY", "body":"A future curated bundle surface for boosters and curios.", "status":"SEALED · STORE NOT CONNECTED"}
+				{"art":"res://assets/curios/ch01_curio_moon_cameo_awakened_v01.webp", "kicker":"FEATURED PREVIEW", "title":"CANDLELIGHT KIT", "body":"", "status":"SEALED · NO PURCHASES"},
+				{"art":"res://assets/curios/ch01_curio_moth_reliquary.png", "kicker":"SEALED PREVIEW", "title":"MOONSTONE CACHE", "body":"", "status":"SEALED · NO PURCHASES"},
+				{"art":"res://assets/curios/ch01_curio_thorned_locket.png", "kicker":"SEALED PREVIEW", "title":"RESTORER'S RELIQUARY", "body":"", "status":"SEALED · NO PURCHASES"}
 			]
 		"profile":
 			background_id = "profile_bg_curio_house"
@@ -192,6 +197,9 @@ func configure(feature_key: String, state: Dictionary) -> bool:
 	else:
 		_apply_event_cards([])
 		_apply_cards(cards)
+		if _feature_key == "shop":
+			for card_path in ["Card1", "Card2", "Card3"]:
+				ProductionChrome.apply_compact_panel(card_stack.get_node(card_path) as PanelContainer, "shop_catalog_card")
 	return true
 
 func _apply_event_cards(cards: Array[Dictionary]) -> void:
@@ -225,11 +233,38 @@ func _apply_cards(cards: Array[Dictionary]) -> void:
 		card.visible = not entry.is_empty()
 		if entry.is_empty():
 			continue
+		var row := card.get_node("Row") as HBoxContainer
 		var art := card.get_node("Row/Art") as TextureRect
 		var kicker := card.get_node("Row/Copy/Kicker") as Label
 		var card_title := card.get_node("Row/Copy/Title") as Label
 		var body := card.get_node("Row/Copy/Body") as Label
 		var status := card.get_node("Row/Copy/Status") as Label
+		var shop_state_plate := card.get_node_or_null("Row/ShopStatePlate") as PanelContainer
+		if _feature_key == "shop":
+			card.custom_minimum_size.y = 250.0 if i == 0 else 230.0
+			card.size_flags_vertical = Control.SIZE_EXPAND_FILL
+			card.size_flags_stretch_ratio = 1.22 if i == 0 else 1.0
+			row.add_theme_constant_override("separation", 16)
+			art.custom_minimum_size = Vector2(340, 224) if i == 0 else Vector2(300, 204)
+			art.size_flags_vertical = Control.SIZE_EXPAND_FILL
+			kicker.add_theme_font_size_override("font_size", 18 if i == 0 else 16)
+			card_title.add_theme_font_size_override("font_size", 38 if i == 0 else 34)
+			status.add_theme_font_size_override("font_size", 17)
+			if shop_state_plate != null:
+				shop_state_plate.visible = true
+				ProductionChrome.apply_compact_panel(shop_state_plate, "shop_sealed_state")
+		else:
+			card.custom_minimum_size.y = 236.0
+			card.size_flags_vertical = Control.SIZE_FILL
+			card.size_flags_stretch_ratio = 1.0
+			row.add_theme_constant_override("separation", 18)
+			art.custom_minimum_size = Vector2(224, 204)
+			art.size_flags_vertical = Control.SIZE_FILL
+			kicker.add_theme_font_size_override("font_size", 17)
+			card_title.add_theme_font_size_override("font_size", 34)
+			status.add_theme_font_size_override("font_size", 18)
+			if shop_state_plate != null:
+				shop_state_plate.visible = false
 		var art_path := String(entry.get("art", ""))
 		art.texture = PieceAssetLoader.ornament(art_path)
 		art.set_meta("asset_path", art_path)
@@ -298,10 +333,24 @@ func screen_contract() -> Dictionary:
 		and event_status_1.text.contains("SEALED")
 		and event_status_2.text.contains("SEALED")
 	)
+	var shop_catalog_focus := _feature_key != "shop" or (
+		not hero_panel.visible
+		and card_scroll.visible
+		and card_stack.size_flags_vertical == Control.SIZE_EXPAND_FILL
+		and shop_notice.visible
+		and not shop_currency.visible
+		and not shop_truth.visible
+		and not shop_disabled_action.visible
+		and card_nodes.all(func(card): return (card as PanelContainer).visible and (card as PanelContainer).size_flags_vertical == Control.SIZE_EXPAND_FILL)
+		and (card_nodes[0] as PanelContainer).size_flags_stretch_ratio > (card_nodes[1] as PanelContainer).size_flags_stretch_ratio
+	)
 	if _feature_key == "events":
 		art_dominant_cards = events_card_focus
 		compact_copy = true
-	var hero_dominant := events_card_focus if _feature_key == "events" else (hero_panel.custom_minimum_size.y >= 400.0 and active_hero_art.custom_minimum_size.x >= 340.0 and active_hero_art.custom_minimum_size.y >= 340.0)
+	elif _feature_key == "shop":
+		art_dominant_cards = shop_catalog_focus
+		compact_copy = true
+	var hero_dominant := events_card_focus if _feature_key == "events" else (shop_catalog_focus if _feature_key == "shop" else (hero_panel.custom_minimum_size.y >= 400.0 and active_hero_art.custom_minimum_size.x >= 340.0 and active_hero_art.custom_minimum_size.y >= 340.0))
 	var controlled_chrome := compact_copy and not truth_strip.visible and not back_button.visible and ($HeaderShade as ColorRect).color.a <= 0.38
 	var profile_status_focus := _feature_key != "profile" or (
 		save_health_card != null
@@ -317,9 +366,10 @@ func screen_contract() -> Dictionary:
 		"hero_art_loaded": hero_loaded,
 		"static_card_slots": 3,
 		"code_built_panels": false,
-		"north_star_title_hierarchy": title != null and title.get_theme_font_size("font_size") >= 52,
+		"north_star_title_hierarchy": title != null and title.get_theme_font_size("font_size") >= (42 if _feature_key == "shop" else 52),
 		"north_star_hero_scale": hero_dominant,
-		"asset_backed_hero_chrome": (event_card_1.get_theme_stylebox("panel") is StyleBoxTexture and event_card_2.get_theme_stylebox("panel") is StyleBoxTexture) if _feature_key == "events" else (hero_panel.get_theme_stylebox("panel") is StyleBoxTexture and String(hero_panel.get_meta("production_chrome_kind", "")) == "secondary_meta_hero"),
+		"asset_backed_hero_chrome": (event_card_1.get_theme_stylebox("panel") is StyleBoxTexture and event_card_2.get_theme_stylebox("panel") is StyleBoxTexture) if _feature_key == "events" else (card_nodes.all(func(card): return (card as PanelContainer).get_theme_stylebox("panel") is StyleBoxTexture) if _feature_key == "shop" else (hero_panel.get_theme_stylebox("panel") is StyleBoxTexture and String(hero_panel.get_meta("production_chrome_kind", "")) == "secondary_meta_hero")),
+		"shop_catalog_focus": shop_catalog_focus,
 		"events_board_card_composition": events_card_focus,
 		"events_actions_subordinate": events_actions_subordinate,
 		"events_truthful_status": events_truthful_status,
@@ -330,7 +380,7 @@ func screen_contract() -> Dictionary:
 		"card_copy_compact": compact_copy,
 		"art_dominant_cards": art_dominant_cards,
 		"header_readability_scrim": ($HeaderShade as ColorRect) != null and ($HeaderShade as ColorRect).color.a >= 0.34,
-		"secondary_header_compact": (_feature_key != "events" or not chapter_progress.visible) and (_feature_key != "shop" or not shop_notice.visible),
+		"secondary_header_compact": (_feature_key != "events" or not chapter_progress.visible) and (_feature_key != "shop" or (shop_notice.visible and shop_notice.get_theme_font_size("font_size") <= 16 and not shop_currency.visible and not shop_truth.visible)),
 		"profile_save_health_compact": _feature_key != "profile" or (save_health_card != null and save_health_card.custom_minimum_size.y <= 170.0),
 		"profile_status_focus": profile_status_focus,
 		"redundant_house_return_suppressed": not back_button.visible,

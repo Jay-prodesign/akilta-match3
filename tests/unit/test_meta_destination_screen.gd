@@ -40,6 +40,9 @@ func _run() -> void:
 			var event_card_1 := screen.get_node_or_null("FeatureLayout/EventsFeature/EventCard1") as PanelContainer
 			var event_card_2 := screen.get_node_or_null("FeatureLayout/EventsFeature/EventCard2") as PanelContainer
 			_expect(event_feature != null and event_feature.visible and event_feature.size_flags_vertical == Control.SIZE_EXPAND_FILL and event_card_1 != null and event_card_1.visible and event_card_1.size_flags_vertical == Control.SIZE_EXPAND_FILL and event_card_1.custom_minimum_size.y >= 240.0 and event_card_2 != null and event_card_2.visible and event_card_2.size_flags_vertical == Control.SIZE_EXPAND_FILL and event_card_2.custom_minimum_size.y >= 240.0, "events must own two stage-filling North Star event cards")
+		elif feature == "shop":
+			_expect(hero_panel != null and not hero_panel.visible, "shop must use catalog composition instead of the generic meta hero")
+			_expect(bool(contract.get("shop_catalog_focus", false)), "shop must present one featured sealed preview plus two catalog previews")
 		else:
 			_expect(hero_panel != null and hero_panel.custom_minimum_size.y >= 400.0, "%s hero must occupy a true visual stage" % feature)
 			_expect(active_hero_art != null and active_hero_art.custom_minimum_size.x >= 340.0 and active_hero_art.custom_minimum_size.y >= 340.0, "%s hero art must dominate its feature card" % feature)
@@ -58,7 +61,7 @@ func _run() -> void:
 		_expect(bool(contract.get("header_readability_scrim", false)), "%s must retain a dedicated top readability scrim over authored world art" % feature)
 		_expect(bool(contract.get("secondary_header_compact", false)), "%s must avoid redundant progress/commerce lines above the hero" % feature)
 		_expect(screen.get_node_or_null("FeatureLayout/FeatureHero/HeroRow/HeroArt") != null, "%s must keep a scene-owned hero art slot" % feature)
-		var expected_title := "EVENTS" if feature == "events" else ("THE CURIO EMPORIUM" if feature == "shop" else "THE KEEPER")
+		var expected_title := "EVENTS" if feature == "events" else ("SHOP" if feature == "shop" else "THE KEEPER")
 		_expect((screen.get_node("FeatureLayout/FeatureTitle") as Label).text == expected_title, "%s must preserve its authored route title" % feature)
 		for card_name in ["Card1", "Card2", "Card3"]:
 			var card := screen.get_node_or_null("FeatureLayout/CardScroll/Cards/%s" % card_name) as PanelContainer
@@ -89,14 +92,15 @@ func _run() -> void:
 			_expect(int(daily["level"]) == 2, "events secondary action must preserve daily practice level")
 		if feature == "shop":
 			var shop_offer := screen.get_node_or_null("FeatureLayout/FeatureHero/HeroRow/ShopFeaturedOfferArt") as TextureRect
-			_expect(shop_offer != null and shop_offer.texture != null and shop_offer.texture.get_width() >= 512 and shop_offer.texture.get_height() >= 512, "shop sealed featured offer must retain production-resolution first-party Curio art")
+			_expect(shop_offer != null and shop_offer.texture != null and shop_offer.texture.get_width() >= 512 and shop_offer.texture.get_height() >= 512, "shop sealed preview source art must remain production-resolution")
 			for shop_card in ["Card1", "Card2", "Card3"]:
 				var shop_art := screen.get_node_or_null("FeatureLayout/CardScroll/Cards/%s/Row/Art" % shop_card) as TextureRect
 				_expect(shop_art != null and shop_art.texture != null and shop_art.texture.get_width() >= 512 and shop_art.texture.get_height() >= 512, "shop %s must retain production-resolution first-party Curio art" % shop_card)
 			var shop_action := screen.get_node_or_null("FeatureLayout/FeatureHero/HeroRow/HeroCopy/ShopDisabledAction") as Button
-			_expect(shop_action != null and shop_action.disabled, "shop preview action must remain disabled while commerce is sealed")
-			_expect((screen.get_node("FeatureLayout/NoPurchasesNotice") as Label).text.find("NO PURCHASES OR PAYMENTS") >= 0, "shop preview must state that purchases and payments are disabled")
-			_expect((screen.get_node("FeatureLayout/ShopCurrencyTruth") as Label).text == "EARNED IN PLAY · NOT PURCHASABLE", "shop balances must remain explicitly non-purchasable")
+			_expect(shop_action != null and shop_action.disabled and not shop_action.visible, "shop must not expose a purchase CTA while commerce is sealed")
+			var notice := screen.get_node("FeatureLayout/NoPurchasesNotice") as Label
+			_expect(notice.visible and notice.text.find("NO PURCHASES OR PAYMENTS") >= 0, "shop preview must state that purchases and payments are disabled")
+			_expect(not (screen.get_node("FeatureLayout/ShopCurrencySummary") as Label).visible and not (screen.get_node("FeatureLayout/ShopCurrencyTruth") as Label).visible, "shop must rely on the shared resource bar instead of duplicate economy rows")
 		if feature == "profile":
 			var profile_hero := screen.get_node("FeatureLayout/FeatureHero/HeroRow/HeroArt") as TextureRect
 			_expect(profile_hero != null and String(contract.get("hero_asset_path", "")).ends_with("black_cat.webp"), "profile hero must use the Keeper familiar rather than a generic Curio")

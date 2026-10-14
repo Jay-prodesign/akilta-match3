@@ -249,7 +249,7 @@ func _run() -> void:
 	await process_frame
 	_expect(str(app.current_route_name()) == "shop", "Shop destination must own a real route")
 	var shop_preview = app.current_screen()
-	_expect(shop_preview != null and shop_preview.name == "ShopScreen" and shop_preview.get_node("FeatureLayout/FeatureTitle").text == "THE CURIO EMPORIUM", "Shop must open directly from Events navigation")
+	_expect(shop_preview != null and shop_preview.name == "ShopScreen" and shop_preview.get_node("FeatureLayout/FeatureTitle").text == "SHOP", "Shop must open directly from Events navigation")
 	_expect(shop_preview != null and shop_preview.get_node_or_null("ProductNavigation") != null, "Shop screen must retain shared product navigation")
 	var shop_active_nav: Button = shop_preview.get_node_or_null("ProductNavigation/Scroll/Items/NavShop") as Button if shop_preview != null else null
 	_expect(shop_active_nav != null and shop_active_nav.disabled and String(shop_active_nav.get_meta("interaction_state", "")) == "selected", "active Shop tab must be selected and duplicate-safe")
