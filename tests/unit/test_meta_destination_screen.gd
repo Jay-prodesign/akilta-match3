@@ -39,7 +39,7 @@ func _run() -> void:
 			var event_feature := screen.get_node_or_null("FeatureLayout/EventsFeature") as VBoxContainer
 			var event_card_1 := screen.get_node_or_null("FeatureLayout/EventsFeature/EventCard1") as PanelContainer
 			var event_card_2 := screen.get_node_or_null("FeatureLayout/EventsFeature/EventCard2") as PanelContainer
-			_expect(event_feature != null and event_feature.visible and event_card_1 != null and event_card_1.visible and event_card_1.custom_minimum_size.y >= 280.0 and event_card_2 != null and event_card_2.visible and event_card_2.custom_minimum_size.y >= 280.0, "events must own two readable North Star event cards")
+			_expect(event_feature != null and event_feature.visible and event_feature.size_flags_vertical == Control.SIZE_EXPAND_FILL and event_card_1 != null and event_card_1.visible and event_card_1.size_flags_vertical == Control.SIZE_EXPAND_FILL and event_card_1.custom_minimum_size.y >= 240.0 and event_card_2 != null and event_card_2.visible and event_card_2.size_flags_vertical == Control.SIZE_EXPAND_FILL and event_card_2.custom_minimum_size.y >= 240.0, "events must own two stage-filling North Star event cards")
 		else:
 			_expect(hero_panel != null and hero_panel.custom_minimum_size.y >= 400.0, "%s hero must occupy a true visual stage" % feature)
 			_expect(active_hero_art != null and active_hero_art.custom_minimum_size.x >= 340.0 and active_hero_art.custom_minimum_size.y >= 340.0, "%s hero art must dominate its feature card" % feature)
@@ -74,6 +74,8 @@ func _run() -> void:
 			var events_world := screen.get_node_or_null("WorldArt") as TextureRect
 			_expect(events_world != null and events_world.texture != null and events_world.texture.get_width() >= 1080 and events_world.texture.get_height() >= 1500, "events world reuse must retain the verified 1080x1500 chapter-world raster")
 			_expect(bool(contract.get("events_board_card_composition", false)), "events must match the locked board's two-card composition without inventing live event truth")
+			_expect(bool(contract.get("events_actions_subordinate", false)), "events local practice and weekly navigation must remain visually subordinate to event content")
+			_expect(bool(contract.get("events_truthful_status", false)), "events cards must expose sealed truth instead of fabricated timers or rewards")
 			for event_card in ["EventCard1", "EventCard2"]:
 				var event_art := screen.get_node_or_null("FeatureLayout/EventsFeature/%s/Content/Art" % event_card) as TextureRect
 				_expect(event_art != null and event_art.texture != null and event_art.texture.get_width() >= 512 and event_art.texture.get_height() >= 512, "events %s must retain production-resolution Curio art" % event_card)

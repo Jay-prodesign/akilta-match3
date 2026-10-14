@@ -102,11 +102,12 @@ func configure(feature_key: String, state: Dictionary) -> bool:
 	back_button.visible = false
 	hero_body.visible = false
 	daily_kicker.visible = _feature_key != "events"
+	daily_title.visible = _feature_key != "events"
 	daily_truth.visible = _feature_key != "events"
 	if _feature_key == "events":
-		daily_card.custom_minimum_size.y = 104.0
+		daily_card.custom_minimum_size.y = 72.0
 		daily_action.custom_minimum_size.y = 56.0
-		weekly_action.custom_minimum_size.y = 64.0
+		weekly_action.custom_minimum_size.y = 56.0
 	else:
 		daily_card.custom_minimum_size.y = 150.0
 		daily_action.custom_minimum_size.y = 72.0
@@ -129,7 +130,7 @@ func configure(feature_key: String, state: Dictionary) -> bool:
 			chapter_progress.text = ("OPENING RITUAL COMPLETE · %d / %d DISPLAYS AWAKENED" if opening_complete else "OPENING RITUAL · %d / %d DISPLAYS AWAKENED") % [completed_count, opening_cap]
 			daily_title.text = "DAILY PRACTICE · LEVEL %d · NO BONUS" % _daily_level if _daily_level > 0 else "DAILY PRACTICE · SEALED"
 			daily_truth.text = "REPLAY ONLY · NO BONUS REWARD · NO CURRENCY SPEND" if _daily_level > 0 else "COMPLETE AN OPENING RITUAL TO UNLOCK LOCAL PRACTICE"
-			daily_action.text = "PRACTICE LEVEL %d" % _daily_level if _daily_level > 0 else "RESTORE A DISPLAY TO UNLOCK"
+			daily_action.text = "PRACTICE LEVEL %d · NO BONUS" % _daily_level if _daily_level > 0 else "DAILY PRACTICE · SEALED"
 			weekly_action.text = "WEEKLY RITUALS"
 			daily_action.disabled = _daily_level <= 0
 			daily_action.set_meta("daily_level", _daily_level)
@@ -267,16 +268,35 @@ func screen_contract() -> Dictionary:
 	var events_card_focus := _feature_key != "events" or (
 		events_feature != null
 		and events_feature.visible
+		and events_feature.size_flags_vertical == Control.SIZE_EXPAND_FILL
 		and not hero_panel.visible
 		and not card_scroll.visible
 		and event_card_1.visible
 		and event_card_2.visible
-		and event_card_1.custom_minimum_size.y >= 325.0
-		and event_card_2.custom_minimum_size.y >= 325.0
-		and event_art_1.custom_minimum_size.y >= 225.0
-		and event_art_2.custom_minimum_size.y >= 225.0
+		and event_card_1.size_flags_vertical == Control.SIZE_EXPAND_FILL
+		and event_card_2.size_flags_vertical == Control.SIZE_EXPAND_FILL
+		and event_card_1.custom_minimum_size.y >= 240.0
+		and event_card_2.custom_minimum_size.y >= 240.0
+		and event_art_1.size_flags_vertical == Control.SIZE_EXPAND_FILL
+		and event_art_2.size_flags_vertical == Control.SIZE_EXPAND_FILL
+		and event_art_1.custom_minimum_size.y >= 175.0
+		and event_art_2.custom_minimum_size.y >= 175.0
 		and event_art_1.texture != null
 		and event_art_2.texture != null
+	)
+	var events_actions_subordinate := _feature_key != "events" or (
+		daily_card.visible
+		and daily_card.custom_minimum_size.y <= 76.0
+		and not daily_title.visible
+		and daily_action.custom_minimum_size.y <= 58.0
+		and weekly_action.visible
+		and weekly_action.custom_minimum_size.y <= 58.0
+	)
+	var events_truthful_status := _feature_key != "events" or (
+		event_status_1.visible
+		and event_status_2.visible
+		and event_status_1.text.contains("SEALED")
+		and event_status_2.text.contains("SEALED")
 	)
 	if _feature_key == "events":
 		art_dominant_cards = events_card_focus
@@ -301,6 +321,8 @@ func screen_contract() -> Dictionary:
 		"north_star_hero_scale": hero_dominant,
 		"asset_backed_hero_chrome": (event_card_1.get_theme_stylebox("panel") is StyleBoxTexture and event_card_2.get_theme_stylebox("panel") is StyleBoxTexture) if _feature_key == "events" else (hero_panel.get_theme_stylebox("panel") is StyleBoxTexture and String(hero_panel.get_meta("production_chrome_kind", "")) == "secondary_meta_hero"),
 		"events_board_card_composition": events_card_focus,
+		"events_actions_subordinate": events_actions_subordinate,
+		"events_truthful_status": events_truthful_status,
 		"hero_asset_path": _hero_asset_path,
 		"raster_feature_art": _hero_asset_path.to_lower().ends_with(".webp") or _hero_asset_path.to_lower().ends_with(".png"),
 		"rounded_primary_actions": weekly_action.get_theme_stylebox("normal") is StyleBoxTexture and profile_settings.get_theme_stylebox("normal") is StyleBoxTexture,
@@ -315,6 +337,6 @@ func screen_contract() -> Dictionary:
 		"truth_footer_suppressed": not truth_strip.visible,
 		"world_art_not_overdimmed": ($WorldShade as ColorRect).color.a <= 0.32,
 		"controlled_chrome_density": controlled_chrome,
-		"visual_parity_gate_v2": hero_dominant and art_dominant_cards and controlled_chrome and hero_loaded,
-		"visual_parity_gate_v3": hero_dominant and art_dominant_cards and controlled_chrome and hero_loaded and profile_status_focus,
+		"visual_parity_gate_v2": hero_dominant and art_dominant_cards and controlled_chrome and hero_loaded and events_actions_subordinate and events_truthful_status,
+		"visual_parity_gate_v3": hero_dominant and art_dominant_cards and controlled_chrome and hero_loaded and profile_status_focus and events_actions_subordinate and events_truthful_status,
 	}
