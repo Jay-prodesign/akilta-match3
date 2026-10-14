@@ -110,7 +110,7 @@ layout_mode = 2
 theme_override_colors/font_color = Color(1, 0.941, 0.847, 1)
 theme_override_colors/font_outline_color = Color(0.02, 0.014, 0.028, 0.97)
 theme_override_constants/outline_size = 6
-theme_override_font_sizes/font_size = 50
+theme_override_font_sizes/font_size = 52
 text = "WEEKLY RITUALS"
 horizontal_alignment = 1
 
