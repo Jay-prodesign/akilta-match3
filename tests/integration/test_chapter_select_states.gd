@@ -34,6 +34,7 @@ func _run() -> void:
 		_expect(bool(visual_contract.get("future_wings_artless_until_authored", false)), "S02 future wings must remain artless rather than fabricate chapter artwork")
 		_expect(bool(visual_contract.get("future_wings_use_house_world_glass", false)), "S02 sealed wings must reveal the authored House world instead of opaque empty slabs")
 		_expect(not bool(visual_contract.get("future_wings_specific_art_claimed", true)), "S02 must not imply unauthored future-wing-specific artwork")
+		_expect(bool(visual_contract.get("shared_sealed_status_marker", false)), "S02 future wings must use one shared sealed-state marker rather than fabricated destination art")
 		_expect(bool(visual_contract.get("north_star_title_hierarchy", false)), "S02 must retain a strong North Star CHOOSE A WING title")
 		_expect(bool(visual_contract.get("compact_header_back", false)), "S02 back control must remain compact instead of consuming header width")
 		_expect(bool(visual_contract.get("summary_plate", false)), "S02 progress summary must sit on an authored plate")
@@ -56,7 +57,7 @@ func _run() -> void:
 		var locked: Button = screen.get_chapter_button(id)
 		_expect(locked != null and not locked.disabled, "%s sealed card must remain inspectable" % id)
 		_expect(screen.chapter_state(id) == "future_wings_locked", "%s must expose future_wings_locked" % id)
-		_expect(locked.icon == null, "%s must not use placeholder wing artwork" % id)
+		_expect(locked.icon != null and String(locked.get_meta("sealed_status_marker", "")) == "shared_wax_seal", "%s must use only the shared truthful sealed-state marker" % id)
 	var future_wing: Button = screen.get_chapter_button("witch_atelier")
 	future_wing.emit_signal("pressed")
 	await process_frame

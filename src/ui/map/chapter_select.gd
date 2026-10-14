@@ -11,7 +11,8 @@ const LockedExplanation = preload("res://src/ui/shared/locked_explanation.gd")
 const ProductionChrome = preload("res://src/ui/theme/production_chrome.gd")
 
 const OPENING_LEVEL_COUNT := 3
-const CURRENT_WING_ART_PATH := "res://assets/world/ch01_curio_boutique/prestart_curio_boutique_shared.webp"
+const CURRENT_WING_ART_PATH := "res://assets/world/ch01_curio_boutique/chapter_route_curio_boutique.webp"
+const SEALED_WING_SEAL_PATH := "res://assets/blockers/ch01_blocker_wax_seal_intact_v01.webp"
 
 const WINGS := [
 	{"id":"curio_boutique","name":"CURIO BOUTIQUE","x":0.03,"y":0.02,"w":0.94,"h":0.34},
@@ -43,10 +44,13 @@ var _buttons: Dictionary = {}
 func _ready() -> void:
 	_world_art.texture = ScreenArt.texture("chapters_bg_curio_house")
 	_current_art.texture = PieceAssetLoader.ornament(CURRENT_WING_ART_PATH)
+	var sealed_wing_seal := PieceAssetLoader.ornament(SEALED_WING_SEAL_PATH)
 	if _world_art.texture == null:
 		push_error("S02 Chapters requires authored House world art.")
 	if _current_art.texture == null:
 		push_error("S02 Chapters requires raster Curio Boutique place art.")
+	if sealed_wing_seal == null:
+		push_error("S02 Chapters requires a shared sealed-state marker.")
 
 	_resource_bar = TopResourceBar.attach(self, progress)
 	_buttons = {
@@ -77,6 +81,10 @@ func _ready() -> void:
 		button.set_meta("chapter_state", "first_wing_open" if id == "curio_boutique" else "future_wings_locked")
 		if id != "curio_boutique":
 			ProductionChrome.apply_interactive_button(button, false, "chapter_locked")
+			button.icon = sealed_wing_seal
+			button.icon_max_width = 34
+			button.expand_icon = true
+			button.set_meta("sealed_status_marker", "shared_wax_seal")
 			button.tooltip_text = "%s · inspect why this future chapter remains sealed" % String(wing["name"]).capitalize()
 			button.pressed.connect(_show_sealed_wing.bind(id, String(wing["name"])))
 		hotspot_buttons.append(button)
@@ -183,6 +191,7 @@ func chapter_visual_contract() -> Dictionary:
 		"future_wings_artless_until_authored": true,
 		"future_wings_use_house_world_glass": true,
 		"future_wings_specific_art_claimed": false,
+		"shared_sealed_status_marker": [_witch_atelier, _dark_vanity, _archive, _moon_conservatory, _cemetery_garden].all(func(button): return button.icon != null and String(button.get_meta("sealed_status_marker", "")) == "shared_wax_seal"),
 		"north_star_title_hierarchy": ($Layout/ChapterHeader/HeaderCopy/Title as Label).get_theme_font_size("font_size") >= 50,
 		"compact_header_back": _back != null and _back.custom_minimum_size.x >= 88.0 and _back.custom_minimum_size.x <= 96.0 and _back.custom_minimum_size.y >= 88.0,
 		"summary_plate": _chapter_summary != null and _chapter_summary.get_theme_stylebox("normal") != null,

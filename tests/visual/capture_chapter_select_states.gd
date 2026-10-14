@@ -31,8 +31,8 @@ func _capture() -> void:
 			return _fail(screen, "current Curio Boutique hotspot unavailable")
 		for id in ["witch_atelier", "dark_vanity", "archive", "moon_conservatory", "cemetery_garden"]:
 			var future: Button = screen.get_chapter_button(id)
-			if future == null or future.disabled or future.icon != null:
-				return _fail(screen, "future wing must be an inspectable sealed card: %s" % id)
+			if future == null or future.disabled or future.icon == null or String(future.get_meta("sealed_status_marker", "")) != "shared_wax_seal":
+				return _fail(screen, "future wing must be an inspectable sealed card with the shared status marker: %s" % id)
 		if not await _save(screen, String(state["name"])):
 			return
 		if int(state["wins"]) == 3:
