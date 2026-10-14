@@ -14,6 +14,7 @@ var _daily_level: int = 0
 var _hero_asset_path: String = ""
 
 @onready var world_art: TextureRect = $WorldArt
+@onready var meta_eyebrow: Label = $FeatureLayout/MetaEyebrow
 @onready var title: Label = $FeatureLayout/FeatureTitle
 @onready var detail: Label = $FeatureLayout/Detail
 @onready var chapter_progress: Label = $FeatureLayout/ChapterRitualProgress
@@ -83,6 +84,7 @@ func configure(feature_key: String, state: Dictionary) -> bool:
 	var cards: Array[Dictionary] = []
 
 	chapter_progress.visible = false
+	meta_eyebrow.visible = _feature_key != "events"
 	events_feature.visible = _feature_key == "events"
 	feature_hero.visible = _feature_key != "events"
 	card_scroll.visible = _feature_key != "events"
@@ -269,10 +271,10 @@ func screen_contract() -> Dictionary:
 		and not card_scroll.visible
 		and event_card_1.visible
 		and event_card_2.visible
-		and event_card_1.custom_minimum_size.y >= 220.0
-		and event_card_2.custom_minimum_size.y >= 220.0
-		and event_art_1.custom_minimum_size.y >= 145.0
-		and event_art_2.custom_minimum_size.y >= 145.0
+		and event_card_1.custom_minimum_size.y >= 280.0
+		and event_card_2.custom_minimum_size.y >= 280.0
+		and event_art_1.custom_minimum_size.y >= 195.0
+		and event_art_2.custom_minimum_size.y >= 195.0
 		and event_art_1.texture != null
 		and event_art_2.texture != null
 	)

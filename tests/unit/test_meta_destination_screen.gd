@@ -39,7 +39,7 @@ func _run() -> void:
 			var event_feature := screen.get_node_or_null("FeatureLayout/EventsFeature") as VBoxContainer
 			var event_card_1 := screen.get_node_or_null("FeatureLayout/EventsFeature/EventCard1") as PanelContainer
 			var event_card_2 := screen.get_node_or_null("FeatureLayout/EventsFeature/EventCard2") as PanelContainer
-			_expect(event_feature != null and event_feature.visible and event_card_1 != null and event_card_1.visible and event_card_2 != null and event_card_2.visible, "events must own two visible North Star event cards")
+			_expect(event_feature != null and event_feature.visible and event_card_1 != null and event_card_1.visible and event_card_1.custom_minimum_size.y >= 280.0 and event_card_2 != null and event_card_2.visible and event_card_2.custom_minimum_size.y >= 280.0, "events must own two readable North Star event cards")
 		else:
 			_expect(hero_panel != null and hero_panel.custom_minimum_size.y >= 400.0, "%s hero must occupy a true visual stage" % feature)
 			_expect(active_hero_art != null and active_hero_art.custom_minimum_size.x >= 340.0 and active_hero_art.custom_minimum_size.y >= 340.0, "%s hero art must dominate its feature card" % feature)
