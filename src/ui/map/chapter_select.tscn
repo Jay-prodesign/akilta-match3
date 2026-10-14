@@ -1,4 +1,4 @@
-[gd_scene load_steps=10 format=3]
+[gd_scene load_steps=11 format=3]
 
 [ext_resource type="Script" path="res://src/ui/map/chapter_select.gd" id="1_chapters"]
 
@@ -117,6 +117,18 @@ content_margin_bottom = 8.0
 shadow_color = Color(0, 0, 0, 0.58)
 shadow_size = 8
 
+[sub_resource type="StyleBoxFlat" id="CurrentArtFrame"]
+bg_color = Color(0, 0, 0, 0)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.949, 0.816, 0.545, 0.94)
+corner_radius_top_left = 18
+corner_radius_top_right = 18
+corner_radius_bottom_right = 18
+corner_radius_bottom_left = 18
+
 [sub_resource type="StyleBoxFlat" id="SummaryPlate"]
 bg_color = Color(0.028, 0.019, 0.039, 0.88)
 border_width_left = 1
@@ -161,7 +173,7 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
-color = Color(0.025, 0.02, 0.05, 0.12)
+color = Color(0.025, 0.02, 0.05, 0.34)
 
 [node name="Layout" type="VBoxContainer" parent="."]
 layout_mode = 1
@@ -181,7 +193,7 @@ layout_mode = 2
 theme_override_constants/separation = 10
 
 [node name="HeaderBack" type="Button" parent="Layout/ChapterHeader"]
-custom_minimum_size = Vector2(88, 88)
+custom_minimum_size = Vector2(64, 64)
 layout_mode = 2
 theme_override_colors/font_color = Color(0.96, 0.9, 0.83, 1)
 theme_override_font_sizes/font_size = 30
@@ -201,6 +213,7 @@ layout_mode = 2
 theme_override_colors/font_color = Color(0.831, 0.678, 0.439, 1)
 theme_override_colors/font_outline_color = Color(0.02, 0.014, 0.028, 0.94)
 theme_override_constants/outline_size = 3
+visible = false
 theme_override_font_sizes/font_size = 16
 text = "THE HOUSE AND ITS CHAPTERS"
 horizontal_alignment = 1
@@ -210,16 +223,17 @@ layout_mode = 2
 theme_override_colors/font_color = Color(1, 0.941, 0.847, 1)
 theme_override_colors/font_outline_color = Color(0.02, 0.014, 0.028, 0.96)
 theme_override_constants/outline_size = 5
-theme_override_font_sizes/font_size = 52
-text = "CHOOSE A WING"
+theme_override_font_sizes/font_size = 42
+text = "CHAPTERS"
 horizontal_alignment = 1
 
 [node name="HeaderSpacer" type="Control" parent="Layout/ChapterHeader"]
-custom_minimum_size = Vector2(88, 1)
+custom_minimum_size = Vector2(64, 1)
 layout_mode = 2
 
 [node name="ChapterSummary" type="Label" parent="Layout"]
-custom_minimum_size = Vector2(0, 50)
+visible = false
+custom_minimum_size = Vector2(0, 1)
 layout_mode = 2
 theme_override_colors/font_color = Color(0.95, 0.86, 0.80, 1)
 theme_override_colors/font_outline_color = Color(0.02, 0.014, 0.028, 0.9)
@@ -249,13 +263,12 @@ alignment = 1
 
 [node name="CurrentWingArtwork" type="TextureRect" parent="Layout/ChapterGrid/CurioBoutiqueButton"]
 layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
+anchor_right = 0.28
 anchor_bottom = 1.0
-offset_left = 12.0
-offset_top = 12.0
-offset_right = -12.0
-offset_bottom = -12.0
+offset_left = 8.0
+offset_top = 8.0
+offset_right = -6.0
+offset_bottom = -8.0
 grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
@@ -264,22 +277,31 @@ stretch_mode = 6
 
 [node name="CurrentWingCopy" type="Label" parent="Layout/ChapterGrid/CurioBoutiqueButton"]
 layout_mode = 1
-anchor_left = 0.08
-anchor_top = 0.60
-anchor_right = 0.92
-anchor_bottom = 0.92
+anchor_left = 0.30
+anchor_top = 0.10
+anchor_right = 0.96
+anchor_bottom = 0.90
 grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
 theme_override_colors/font_color = Color(1, 0.969, 0.914, 1)
 theme_override_colors/font_outline_color = Color(0.02, 0.014, 0.028, 0.96)
 theme_override_constants/outline_size = 3
-theme_override_font_sizes/font_size = 22
-theme_override_styles/normal = SubResource("CurrentCopyPlate")
+theme_override_font_sizes/font_size = 20
 text = "CURIO BOUTIQUE\nRARE FINDS · 0 / 3 AWAKENED\nBEGIN RESTORATION"
 horizontal_alignment = 1
 vertical_alignment = 1
 autowrap_mode = 2
+
+[node name="CurrentArtFrame" type="Panel" parent="Layout/ChapterGrid/CurioBoutiqueButton"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+theme_override_styles/panel = SubResource("CurrentArtFrame")
 
 [node name="Chapter_witch_atelier" type="Button" parent="Layout/ChapterGrid"]
 layout_mode = 0
@@ -298,14 +320,14 @@ alignment = 1
 
 [node name="WaxSeal" type="TextureRect" parent="Layout/ChapterGrid/Chapter_witch_atelier"]
 layout_mode = 1
-anchor_left = 0.84
-anchor_top = 0.08
-anchor_right = 0.84
-anchor_bottom = 0.08
-offset_left = -15.0
-offset_top = 0.0
-offset_right = 15.0
-offset_bottom = 30.0
+anchor_left = 0.91
+anchor_top = 0.50
+anchor_right = 0.91
+anchor_bottom = 0.50
+offset_left = -18.0
+offset_top = -18.0
+offset_right = 18.0
+offset_bottom = 18.0
 grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
@@ -329,14 +351,14 @@ alignment = 1
 
 [node name="WaxSeal" type="TextureRect" parent="Layout/ChapterGrid/Chapter_dark_vanity"]
 layout_mode = 1
-anchor_left = 0.84
-anchor_top = 0.08
-anchor_right = 0.84
-anchor_bottom = 0.08
-offset_left = -15.0
-offset_top = 0.0
-offset_right = 15.0
-offset_bottom = 30.0
+anchor_left = 0.91
+anchor_top = 0.50
+anchor_right = 0.91
+anchor_bottom = 0.50
+offset_left = -18.0
+offset_top = -18.0
+offset_right = 18.0
+offset_bottom = 18.0
 grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
@@ -360,14 +382,14 @@ alignment = 1
 
 [node name="WaxSeal" type="TextureRect" parent="Layout/ChapterGrid/Chapter_archive"]
 layout_mode = 1
-anchor_left = 0.84
-anchor_top = 0.08
-anchor_right = 0.84
-anchor_bottom = 0.08
-offset_left = -15.0
-offset_top = 0.0
-offset_right = 15.0
-offset_bottom = 30.0
+anchor_left = 0.91
+anchor_top = 0.50
+anchor_right = 0.91
+anchor_bottom = 0.50
+offset_left = -18.0
+offset_top = -18.0
+offset_right = 18.0
+offset_bottom = 18.0
 grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
@@ -391,14 +413,14 @@ alignment = 1
 
 [node name="WaxSeal" type="TextureRect" parent="Layout/ChapterGrid/Chapter_moon_conservatory"]
 layout_mode = 1
-anchor_left = 0.84
-anchor_top = 0.08
-anchor_right = 0.84
-anchor_bottom = 0.08
-offset_left = -15.0
-offset_top = 0.0
-offset_right = 15.0
-offset_bottom = 30.0
+anchor_left = 0.91
+anchor_top = 0.50
+anchor_right = 0.91
+anchor_bottom = 0.50
+offset_left = -18.0
+offset_top = -18.0
+offset_right = 18.0
+offset_bottom = 18.0
 grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
@@ -422,14 +444,14 @@ alignment = 1
 
 [node name="WaxSeal" type="TextureRect" parent="Layout/ChapterGrid/Chapter_cemetery_garden"]
 layout_mode = 1
-anchor_left = 0.84
-anchor_top = 0.08
-anchor_right = 0.84
-anchor_bottom = 0.08
-offset_left = -15.0
-offset_top = 0.0
-offset_right = 15.0
-offset_bottom = 30.0
+anchor_left = 0.91
+anchor_top = 0.50
+anchor_right = 0.91
+anchor_bottom = 0.50
+offset_left = -18.0
+offset_top = -18.0
+offset_right = 18.0
+offset_bottom = 18.0
 grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
@@ -437,7 +459,8 @@ expand_mode = 1
 stretch_mode = 5
 
 [node name="LockReason" type="Label" parent="Layout"]
-custom_minimum_size = Vector2(0, 42)
+visible = false
+custom_minimum_size = Vector2(0, 1)
 layout_mode = 2
 theme_override_colors/font_color = Color(0.82, 0.72, 0.9, 1)
 theme_override_colors/font_outline_color = Color(0.02, 0.014, 0.028, 0.88)

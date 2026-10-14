@@ -15,12 +15,12 @@ const CURRENT_WING_ART_PATH := "res://assets/world/ch01_curio_boutique/chapter_r
 const SEALED_WING_SEAL_PATH := "res://assets/blockers/ch01_blocker_wax_seal_intact_v01.webp"
 
 const WINGS := [
-	{"id":"curio_boutique","name":"CURIO BOUTIQUE","x":0.03,"y":0.02,"w":0.94,"h":0.34},
-	{"id":"witch_atelier","name":"WITCH ATELIER","x":0.03,"y":0.39,"w":0.46,"h":0.17},
-	{"id":"dark_vanity","name":"DARK VANITY","x":0.51,"y":0.39,"w":0.46,"h":0.17},
-	{"id":"archive","name":"THE ARCHIVE","x":0.03,"y":0.59,"w":0.46,"h":0.17},
-	{"id":"moon_conservatory","name":"MOON CONSERVATORY","x":0.51,"y":0.59,"w":0.46,"h":0.17},
-	{"id":"cemetery_garden","name":"CEMETERY GARDEN","x":0.27,"y":0.79,"w":0.46,"h":0.17},
+	{"id":"curio_boutique","name":"CURIO BOUTIQUE","x":0.02,"y":0.02,"w":0.96,"h":0.16},
+	{"id":"witch_atelier","name":"WITCH ATELIER","x":0.02,"y":0.19,"w":0.96,"h":0.145},
+	{"id":"dark_vanity","name":"DARK VANITY","x":0.02,"y":0.35,"w":0.96,"h":0.145},
+	{"id":"archive","name":"THE ARCHIVE","x":0.02,"y":0.51,"w":0.96,"h":0.145},
+	{"id":"moon_conservatory","name":"MOON CONSERVATORY","x":0.02,"y":0.67,"w":0.96,"h":0.145},
+	{"id":"cemetery_garden","name":"CEMETERY GARDEN","x":0.02,"y":0.83,"w":0.96,"h":0.145},
 ]
 
 var progress
@@ -168,9 +168,9 @@ func _refresh_progress_state() -> void:
 func _layout_chapter_hotspots(grid: Control, buttons: Array[Button]) -> void:
 	if grid == null or grid.size.x <= 0.0 or grid.size.y <= 0.0:
 		return
-	# The North Star chooser is a House-wing gallery: one dominant live wing,
-	# then five truthful sealed destinations. Reuse the authored House world
-	# behind the sealed glass rather than fabricating future-wing artwork.
+	# Locked North Star screen 5 is a compact six-row chapter list.
+	# Keep the authored Curio Boutique thumbnail and use only shared sealed
+	# status art for future wings whose destination artwork is not authored.
 	for button in buttons:
 		var x := float(button.get_meta("map_x", 0.0))
 		var y := float(button.get_meta("map_y", 0.0))
@@ -179,7 +179,7 @@ func _layout_chapter_hotspots(grid: Control, buttons: Array[Button]) -> void:
 		button.position = Vector2(roundf(grid.size.x * x), roundf(grid.size.y * y))
 		button.size = Vector2(roundf(grid.size.x * w), roundf(grid.size.y * h))
 		var current := String(button.get_meta("chapter_id", "")) == "curio_boutique"
-		button.add_theme_font_size_override("font_size", 24 if current else 18)
+		button.add_theme_font_size_override("font_size", 20 if current else 18)
 
 func chapter_visual_contract() -> Dictionary:
 	var sealed_markers_authored := true
@@ -196,15 +196,15 @@ func chapter_visual_contract() -> Dictionary:
 		"future_wings_use_house_world_glass": true,
 		"future_wings_specific_art_claimed": false,
 		"shared_sealed_status_marker": sealed_markers_authored,
-		"north_star_title_hierarchy": ($Layout/ChapterHeader/HeaderCopy/Title as Label).get_theme_font_size("font_size") >= 50,
-		"compact_header_back": _back != null and _back.custom_minimum_size.x >= 88.0 and _back.custom_minimum_size.x <= 96.0 and _back.custom_minimum_size.y >= 88.0,
-		"summary_plate": _chapter_summary != null and _chapter_summary.get_theme_stylebox("normal") != null,
+		"north_star_title_hierarchy": ($Layout/ChapterHeader/HeaderCopy/Title as Label).text == "CHAPTERS" and ($Layout/ChapterHeader/HeaderCopy/Title as Label).get_theme_font_size("font_size") >= 38,
+		"compact_header_back": _back != null and _back.custom_minimum_size.x >= 60.0 and _back.custom_minimum_size.x <= 72.0 and _back.custom_minimum_size.y >= 60.0 and _back.custom_minimum_size.y <= 72.0,
+		"summary_suppressed_for_board_parity": _chapter_summary != null and not _chapter_summary.visible and _lock_reason != null and not _lock_reason.visible,
 		"chapter_descriptors_present": _witch_atelier.text.contains("POTIONS & EXPERIMENTS") and _dark_vanity.text.contains("MIRRORS & SECRETS") and _archive.text.contains("LOST KNOWLEDGE") and _moon_conservatory.text.contains("CELESTIAL BOTANICALS") and _cemetery_garden.text.contains("RESTING BEAUTIES"),
-		"north_star_wing_gallery": _grid != null and _current.size.x >= _grid.size.x * 0.90 and _current.size.y >= _witch_atelier.size.y * 1.65 and _witch_atelier.size.x >= _grid.size.x * 0.42 and _witch_atelier.size.x <= _grid.size.x * 0.50 and _dark_vanity.position.x > _witch_atelier.position.x and _archive.position.y > _witch_atelier.position.y and _moon_conservatory.position.x > _archive.position.x and _cemetery_garden.position.y > _archive.position.y,
-		"current_wing_art_dominant": _current_art != null and _current_art.anchor_right >= 0.98 and _current_art.anchor_bottom >= 0.98,
+		"north_star_vertical_chapter_list": _grid != null and [_current, _witch_atelier, _dark_vanity, _archive, _moon_conservatory, _cemetery_garden].all(func(button): return button.size.x >= _grid.size.x * 0.94) and _current.position.y < _witch_atelier.position.y and _witch_atelier.position.y < _dark_vanity.position.y and _dark_vanity.position.y < _archive.position.y and _archive.position.y < _moon_conservatory.position.y and _moon_conservatory.position.y < _cemetery_garden.position.y,
+		"current_wing_art_thumbnail": _current_art != null and _current_art.anchor_right >= 0.25 and _current_art.anchor_right <= 0.31 and _current_art.anchor_bottom >= 0.98,
 		"asset_backed_wing_rows": [_current, _witch_atelier, _dark_vanity, _archive, _moon_conservatory, _cemetery_garden].all(func(button): return button.get_theme_stylebox("normal") is StyleBoxTexture),
 		"asset_backed_header_back": _back != null and _back.get_theme_stylebox("normal") is StyleBoxTexture and String(_back.get_meta("production_chrome_kind", "")) == "action_utility_chapter_back",
-		"current_copy_art_caption": _current != null and _current.text == "" and _current_copy != null and _current_copy.anchor_left <= 0.10 and _current_copy.anchor_top >= 0.55 and _current_copy.anchor_right >= 0.90 and _current_copy.get_theme_stylebox("normal") != null and _current_copy.get_theme_font_size("font_size") <= 24,
+		"current_copy_clears_thumbnail": _current != null and _current.text == "" and _current_copy != null and _current_copy.anchor_left >= 0.29 and _current_copy.anchor_right <= 0.97 and _current_copy.get_theme_font_size("font_size") <= 22,
 		"current_copy_scene_owned": _current_copy != null and _current_copy.get_parent() == _current and _current_copy.mouse_filter == Control.MOUSE_FILTER_IGNORE,
 		"runtime_style_factory": false,
 	}
