@@ -199,7 +199,7 @@ func configure(feature_key: String, state: Dictionary) -> bool:
 		_apply_cards(cards)
 		if _feature_key == "shop":
 			for card_path in ["Card1", "Card2", "Card3"]:
-				ProductionChrome.apply_compact_panel($FeatureLayout/CardScroll/Cards.get_node(card_path) as PanelContainer, "shop_catalog_card")
+				ProductionChrome.apply_compact_panel(card_stack.get_node(card_path) as PanelContainer, "shop_catalog_card")
 	return true
 
 func _apply_event_cards(cards: Array[Dictionary]) -> void:
