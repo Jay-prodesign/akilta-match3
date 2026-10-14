@@ -67,6 +67,7 @@ func _run() -> void:
 	_expect(bool(reduced_overlay_contract.get("before_after_house_previews", false)), "Restoration must compare adjacent truthful House stages from the same authored camera")
 	_expect(bool(reduced_overlay_contract.get("before_after_state_rail", false)), "Restoration must expose a truthful dormant-to-awakened state comparison")
 	_expect(bool(reduced_overlay_contract.get("curio_motif_subordinate", false)), "Restoration Curio identity must stay in the summary instead of replacing the House transformation")
+	_expect(bool(reduced_overlay_contract.get("scene_authored_summary_material", false)), "Restoration summary and Continue action must avoid stretched shared-chrome seams")
 	reduced.queue_free()
 	await _frames(2)
 
@@ -108,6 +109,7 @@ func _run() -> void:
 	var animated_overlay_contract: Dictionary = animated.get_node("RestorationOverlay").restoration_contract()
 	_expect(bool(animated_overlay_contract.get("house_first_composition", false)), "Animated restoration must preserve the House-first before/after composition")
 	_expect(bool(animated_overlay_contract.get("before_after_house_previews", false)), "Animated restoration must compare the truthful adjacent House stages")
+	_expect(bool(animated_overlay_contract.get("scene_authored_summary_material", false)), "Animated Restoration summary must retain seam-free authored chrome")
 	var animated_continue := animated.get_node_or_null("RestorationOverlay/CeremonyCard/CeremonyContent/CeremonyRow/Copy/Continue") as Button
 	_expect(animated_continue != null, "Animated restoration continue CTA missing")
 	if animated_continue != null:
