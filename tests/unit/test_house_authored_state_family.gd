@@ -26,16 +26,19 @@ func _run() -> void:
 	_expect(bool(presentation.get("keeper_role_authored", false)), "Keeper role must use an authored scene")
 	_expect(bool(presentation.get("restoration_authored", false)), "House restoration must use an authored scene")
 	_expect(not bool(presentation.get("runtime_overlay_factory", true)), "House must not rebuild player-facing overlays at runtime")
-	_expect(float(north_star.get("primary_cta_height", 0.0)) >= 96.0 and float(north_star.get("primary_cta_width", 0.0)) >= 820.0, "House primary CTA must retain the North Star hero proportion")
+	_expect(float(north_star.get("primary_cta_height", 0.0)) >= 88.0 and float(north_star.get("primary_cta_height", 0.0)) <= 98.0 and float(north_star.get("primary_cta_width", 0.0)) >= 620.0 and float(north_star.get("primary_cta_width", 0.0)) <= 660.0, "House primary CTA must match the locked-board compact hero proportion")
 	_expect(bool(north_star.get("primary_cta_centered", false)), "House primary CTA must remain centered above navigation")
 	_expect(bool(north_star.get("bottom_nav_reserved", false)), "House content must reserve vertical space for the compact bottom navigation")
 	_expect(bool(north_star.get("world_underlays_home_ui", false)), "House world must continue behind the lower Home UI instead of ending in a dead slab")
 	_expect(bool(north_star.get("direct_level_cta", false)), "House CTA must expose the direct current-level action")
-
-	var guide := house.get_node_or_null("Layout/FirstRitualGuide") as PanelContainer
+	_expect(bool(north_star.get("compact_title_plate", false)), "House must use the locked-board compact centered title plaque")
+	_expect(bool(north_star.get("scene_authored_primary_cta", false)), "House primary CTA must preserve its seam-free authored gold/plum material")
+	_expect(bool(north_star.get("status_strip_suppressed", false)), "House must not stack a redundant Curio status strip over the title/CTA hierarchy")
+	_expect(bool(north_star.get("ftue_strip_suppressed", false)), "Fresh House must not insert a tutorial strip into the locked-board Home composition")
+	var ftue: Dictionary = house.ftue_house_contract()
+	_expect(bool(ftue.get("guidance_via_keeper", false)), "Fresh House must retain truthful optional guidance through the Keeper")
 	var guide_art := house.get_node_or_null("Layout/FirstRitualGuide/GuideRow/KeeperArt") as TextureRect
-	_expect(guide != null and guide.visible, "Fresh House must expose the authored first-ritual guide")
-	_expect(guide_art != null and guide_art.texture != null, "First-ritual guide must use Keeper production art")
+	_expect(guide_art != null and guide_art.texture != null, "Optional House guidance must retain Keeper production art")
 	for hotspot_path in [
 		"RoomView/CurioHotspots/MoonHotspot",
 		"RoomView/CurioHotspots/MothHotspot",

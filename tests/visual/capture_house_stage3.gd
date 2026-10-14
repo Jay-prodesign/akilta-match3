@@ -57,7 +57,7 @@ func _capture() -> void:
 	var completion_banner: PanelContainer = screen.get_node_or_null("Layout/ChapterCompletionBanner")
 	var completion_label: Label = screen.get_node_or_null("Layout/ChapterCompletionBanner/Label")
 	if completion_banner == null or not completion_banner.visible or completion_label == null or not completion_label.text.contains("OPENING CABINET SET COMPLETE"):
-		printerr("CAPTURE_FAIL: stage 3 House must visibly celebrate opening cabinet completion")
+		printerr("CAPTURE_FAIL: stage 3 House must preserve truthful opening-cabinet completion status")
 		quit(1)
 		return
 	var life_resource: Label = screen.find_child("LifeResource", true, false) as Label
