@@ -150,7 +150,7 @@ theme_override_constants/separation = 6
 layout_mode = 2
 theme_override_colors/font_color = Color(0.72, 0.66, 0.73, 1)
 theme_override_font_sizes/font_size = 16
-text = "BEFORE"
+text = "BEFORE · DORMANT"
 horizontal_alignment = 1
 
 [node name="House" type="Control" parent="TransformationStage/PreviewRow/BeforeCard/BeforeContent"]
@@ -185,7 +185,7 @@ theme_override_constants/separation = 6
 layout_mode = 2
 theme_override_colors/font_color = Color(0.965, 0.878, 0.66, 1)
 theme_override_font_sizes/font_size = 16
-text = "AFTER"
+text = "AFTER · AWAKENED"
 horizontal_alignment = 1
 
 [node name="House" type="Control" parent="TransformationStage/PreviewRow/AfterCard/AfterContent"]
@@ -225,6 +225,7 @@ modulate = Color(1, 0.96, 0.88, 1)
 
 
 [node name="StateRail" type="PanelContainer" parent="."]
+visible = false
 layout_mode = 1
 anchor_left = 0.16
 anchor_top = 0.585
