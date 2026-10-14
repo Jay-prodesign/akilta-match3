@@ -288,10 +288,14 @@ func _capture() -> void:
 		return _fail(app, "Profile does not expose completed House restoration")
 	var profile_hero_kicker: Label = app.current_screen().get_node_or_null("FeatureLayout/FeatureHero/HeroRow/HeroCopy/FeatureHeroKicker") as Label
 	var profile_hero_title: Label = app.current_screen().get_node_or_null("FeatureLayout/FeatureHero/HeroRow/HeroCopy/FeatureHeroTitle") as Label
-	if profile_hero_kicker == null or profile_hero_kicker.text != "FIRST CABINET SET RESTORED":
-		return _fail(app, "completed Profile hero must identify the restored first cabinet set")
-	if profile_hero_title == null or not profile_hero_title.text.contains("3 CURIOS · RESTORATION STAGE 3"):
-		return _fail(app, "completed Profile hero must summarize 3 curios and stage 3")
+	var profile_progress_label: Label = app.current_screen().get_node_or_null("FeatureLayout/FeatureHero/HeroRow/HeroCopy/ProfileProgressLabel") as Label
+	var profile_progress: ProgressBar = app.current_screen().get_node_or_null("FeatureLayout/FeatureHero/HeroRow/HeroCopy/ProfileProgress") as ProgressBar
+	if profile_hero_kicker == null or profile_hero_kicker.text != "KEEPER RECORD":
+		return _fail(app, "completed Profile identity card must identify the Keeper record")
+	if profile_hero_title == null or profile_hero_title.text != "FIRST CABINET SET RESTORED":
+		return _fail(app, "completed Profile identity card must state the restored first cabinet set")
+	if profile_progress_label == null or profile_progress_label.text != "OPENING RITUALS · 3 / 3" or profile_progress == null or profile_progress.value != 3.0:
+		return _fail(app, "completed Profile must show truthful opening progress instead of fake XP")
 	var profile_local_save: Label = profile.get_node_or_null("FeatureLayout/SaveHealthCard/SaveHealthContent/LocalSaveStatus") as Label
 	var profile_cloud: Label = profile.get_node_or_null("FeatureLayout/SaveHealthCard/SaveHealthContent/CloudSyncStatus") as Label
 	if profile_local_save == null or profile_local_save.text != "LOCAL SAVE · HEALTHY":
@@ -442,15 +446,26 @@ func _verify_meta_visual_parity(app: Node, screen: Node, feature: String) -> boo
 	var hero_ratio := hero.custom_minimum_size.y / viewport_size.y
 	var hero_art_ratio := hero_art.custom_minimum_size.x / viewport_size.x
 	var card_art_ratio := card_art.custom_minimum_size.x / viewport_size.x
-	if hero_ratio < 0.20:
-		_fail(app, "%s hero stage too small: %.3f" % [feature, hero_ratio])
-		return false
-	if hero_art_ratio < 0.31:
-		_fail(app, "%s hero art too small: %.3f" % [feature, hero_art_ratio])
-		return false
-	if card_art_ratio < 0.20:
-		_fail(app, "%s card art too small: %.3f" % [feature, card_art_ratio])
-		return false
+	if feature == "profile":
+		if hero_ratio < 0.14 or hero_ratio > 0.18:
+			_fail(app, "profile identity card proportion drifted: %.3f" % hero_ratio)
+			return false
+		if hero_art_ratio < 0.18 or hero_art_ratio > 0.24:
+			_fail(app, "profile Keeper portrait proportion drifted: %.3f" % hero_art_ratio)
+			return false
+		if card_art_ratio < 0.07 or card_art_ratio > 0.10:
+			_fail(app, "profile utility-row icon proportion drifted: %.3f" % card_art_ratio)
+			return false
+	else:
+		if hero_ratio < 0.20:
+			_fail(app, "%s hero stage too small: %.3f" % [feature, hero_ratio])
+			return false
+		if hero_art_ratio < 0.31:
+			_fail(app, "%s hero art too small: %.3f" % [feature, hero_art_ratio])
+			return false
+		if card_art_ratio < 0.20:
+			_fail(app, "%s card art too small: %.3f" % [feature, card_art_ratio])
+			return false
 	return true
 
 func _play_level(app: Node, level_number: int) -> bool:

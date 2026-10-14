@@ -1,4 +1,4 @@
-[gd_scene load_steps=6 format=3]
+[gd_scene load_steps=8 format=3]
 
 [ext_resource type="Script" path="res://src/ui/meta/meta_destination_screen.gd" id="1_meta"]
 
@@ -61,6 +61,30 @@ corner_radius_top_left = 26
 corner_radius_top_right = 26
 corner_radius_bottom_right = 26
 corner_radius_bottom_left = 26
+
+[sub_resource type="StyleBoxFlat" id="ProfileProgressBack"]
+bg_color = Color(0.055, 0.038, 0.071, 0.96)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.721, 0.541, 0.721, 0.72)
+corner_radius_top_left = 10
+corner_radius_top_right = 10
+corner_radius_bottom_right = 10
+corner_radius_bottom_left = 10
+
+[sub_resource type="StyleBoxFlat" id="ProfileProgressFill"]
+bg_color = Color(0.831, 0.678, 0.439, 0.94)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.98, 0.89, 0.69, 0.92)
+corner_radius_top_left = 10
+corner_radius_top_right = 10
+corner_radius_bottom_right = 10
+corner_radius_bottom_left = 10
 
 [node name="MetaDestinationScreen" type="Control"]
 layout_mode = 3
@@ -326,6 +350,25 @@ theme_override_constants/outline_size = 3
 theme_override_font_sizes/font_size = 44
 text = "HERO TITLE"
 autowrap_mode = 2
+
+[node name="ProfileProgressLabel" type="Label" parent="FeatureLayout/FeatureHero/HeroRow/HeroCopy"]
+visible = false
+layout_mode = 2
+theme_override_colors/font_color = Color(0.95, 0.816, 0.545, 1)
+theme_override_colors/font_outline_color = Color(0.02, 0.014, 0.028, 0.94)
+theme_override_constants/outline_size = 2
+theme_override_font_sizes/font_size = 17
+text = "OPENING RITUALS · 0 / 3"
+horizontal_alignment = 1
+
+[node name="ProfileProgress" type="ProgressBar" parent="FeatureLayout/FeatureHero/HeroRow/HeroCopy"]
+visible = false
+custom_minimum_size = Vector2(0, 34)
+layout_mode = 2
+max_value = 3.0
+show_percentage = false
+theme_override_styles/background = SubResource("ProfileProgressBack")
+theme_override_styles/fill = SubResource("ProfileProgressFill")
 
 [node name="HeroBody" type="Label" parent="FeatureLayout/FeatureHero/HeroRow/HeroCopy"]
 layout_mode = 2
