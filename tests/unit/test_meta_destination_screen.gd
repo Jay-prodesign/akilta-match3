@@ -34,8 +34,15 @@ func _run() -> void:
 		_expect(bool(contract.get("north_star_hero_scale", false)), "%s must retain a hero-scale authored feature card" % feature)
 		var hero_panel := screen.get_node_or_null("FeatureLayout/FeatureHero") as PanelContainer
 		var active_hero_art := screen.get_node_or_null("FeatureLayout/FeatureHero/HeroRow/ShopFeaturedOfferArt") as TextureRect if feature == "shop" else screen.get_node_or_null("FeatureLayout/FeatureHero/HeroRow/HeroArt") as TextureRect
-		_expect(hero_panel != null and hero_panel.custom_minimum_size.y >= 400.0, "%s hero must occupy a true visual stage" % feature)
-		_expect(active_hero_art != null and active_hero_art.custom_minimum_size.x >= 340.0 and active_hero_art.custom_minimum_size.y >= 340.0, "%s hero art must dominate its feature card" % feature)
+		if feature == "events":
+			_expect(hero_panel != null and not hero_panel.visible, "events must not reuse the generic meta hero")
+			var event_feature := screen.get_node_or_null("FeatureLayout/EventsFeature") as VBoxContainer
+			var event_card_1 := screen.get_node_or_null("FeatureLayout/EventsFeature/EventCard1") as PanelContainer
+			var event_card_2 := screen.get_node_or_null("FeatureLayout/EventsFeature/EventCard2") as PanelContainer
+			_expect(event_feature != null and event_feature.visible and event_card_1 != null and event_card_1.visible and event_card_2 != null and event_card_2.visible, "events must own two visible North Star event cards")
+		else:
+			_expect(hero_panel != null and hero_panel.custom_minimum_size.y >= 400.0, "%s hero must occupy a true visual stage" % feature)
+			_expect(active_hero_art != null and active_hero_art.custom_minimum_size.x >= 340.0 and active_hero_art.custom_minimum_size.y >= 340.0, "%s hero art must dominate its feature card" % feature)
 		_expect(bool(contract.get("asset_backed_hero_chrome", false)), "%s hero card must use asset-backed production chrome" % feature)
 		_expect(bool(preload("res://src/ui/theme/production_chrome.gd").contract().get("secondary_hero_family_verified", false)), "%s hero chrome family must resolve through the verified shared asset" % feature)
 		_expect(bool(contract.get("raster_feature_art", false)), "%s hero art must use production raster assets" % feature)
@@ -51,13 +58,13 @@ func _run() -> void:
 		_expect(bool(contract.get("header_readability_scrim", false)), "%s must retain a dedicated top readability scrim over authored world art" % feature)
 		_expect(bool(contract.get("secondary_header_compact", false)), "%s must avoid redundant progress/commerce lines above the hero" % feature)
 		_expect(screen.get_node_or_null("FeatureLayout/FeatureHero/HeroRow/HeroArt") != null, "%s must keep a scene-owned hero art slot" % feature)
-		var expected_title := "EVENT CENTER" if feature == "events" else ("THE CURIO EMPORIUM" if feature == "shop" else "THE KEEPER")
+		var expected_title := "EVENTS" if feature == "events" else ("THE CURIO EMPORIUM" if feature == "shop" else "THE KEEPER")
 		_expect((screen.get_node("FeatureLayout/FeatureTitle") as Label).text == expected_title, "%s must preserve its authored route title" % feature)
 		for card_name in ["Card1", "Card2", "Card3"]:
 			var card := screen.get_node_or_null("FeatureLayout/CardScroll/Cards/%s" % card_name) as PanelContainer
 			var art := screen.get_node_or_null("FeatureLayout/CardScroll/Cards/%s/Row/Art" % card_name) as TextureRect
-			if feature == "events" and card_name == "Card3":
-				_expect(card != null and not card.visible, "events must avoid a redundant Weekly Rituals card below its dedicated CTA")
+			if feature == "events":
+				_expect(card != null and not card.visible, "events must suppress generic meta cards in favor of its dedicated event composition")
 				continue
 			_expect(card != null and card.visible and art != null and art.texture != null, "%s %s must render object art" % [feature, card_name])
 			_expect(art != null and art.custom_minimum_size.x >= 220.0 and art.custom_minimum_size.y >= 195.0, "%s %s art must not collapse into a thumbnail row" % [feature, card_name])
@@ -66,10 +73,9 @@ func _run() -> void:
 		if feature == "events":
 			var events_world := screen.get_node_or_null("WorldArt") as TextureRect
 			_expect(events_world != null and events_world.texture != null and events_world.texture.get_width() >= 1080 and events_world.texture.get_height() >= 1500, "events world reuse must retain the verified 1080x1500 chapter-world raster")
-			var events_hero := screen.get_node_or_null("FeatureLayout/FeatureHero/HeroRow/HeroArt") as TextureRect
-			_expect(events_hero != null and events_hero.texture != null and events_hero.texture.get_width() >= 512 and events_hero.texture.get_height() >= 512, "events hero must retain production-resolution Curio art")
-			for event_card in ["Card1", "Card2"]:
-				var event_art := screen.get_node_or_null("FeatureLayout/CardScroll/Cards/%s/Row/Art" % event_card) as TextureRect
+			_expect(bool(contract.get("events_board_card_composition", false)), "events must match the locked board's two-card composition without inventing live event truth")
+			for event_card in ["EventCard1", "EventCard2"]:
+				var event_art := screen.get_node_or_null("FeatureLayout/EventsFeature/%s/Content/Art" % event_card) as TextureRect
 				_expect(event_art != null and event_art.texture != null and event_art.texture.get_width() >= 512 and event_art.texture.get_height() >= 512, "events %s must retain production-resolution Curio art" % event_card)
 			var weekly := {"hit": false}
 			screen.weekly_requested.connect(func(): weekly["hit"] = true)

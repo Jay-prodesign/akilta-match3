@@ -20,6 +20,18 @@ var _hero_asset_path: String = ""
 @onready var shop_notice: Label = $FeatureLayout/NoPurchasesNotice
 @onready var shop_currency: Label = $FeatureLayout/ShopCurrencySummary
 @onready var shop_truth: Label = $FeatureLayout/ShopCurrencyTruth
+@onready var feature_hero: PanelContainer = $FeatureLayout/FeatureHero
+@onready var events_feature: VBoxContainer = $FeatureLayout/EventsFeature
+@onready var event_card_1: PanelContainer = $FeatureLayout/EventsFeature/EventCard1
+@onready var event_card_2: PanelContainer = $FeatureLayout/EventsFeature/EventCard2
+@onready var event_art_1: TextureRect = $FeatureLayout/EventsFeature/EventCard1/Content/Art
+@onready var event_art_2: TextureRect = $FeatureLayout/EventsFeature/EventCard2/Content/Art
+@onready var event_kicker_1: Label = $FeatureLayout/EventsFeature/EventCard1/Content/Copy/Kicker
+@onready var event_kicker_2: Label = $FeatureLayout/EventsFeature/EventCard2/Content/Copy/Kicker
+@onready var event_title_1: Label = $FeatureLayout/EventsFeature/EventCard1/Content/Copy/Title
+@onready var event_title_2: Label = $FeatureLayout/EventsFeature/EventCard2/Content/Copy/Title
+@onready var event_status_1: Label = $FeatureLayout/EventsFeature/EventCard1/Content/Copy/Status
+@onready var event_status_2: Label = $FeatureLayout/EventsFeature/EventCard2/Content/Copy/Status
 @onready var hero_art: TextureRect = $FeatureLayout/FeatureHero/HeroRow/HeroArt
 @onready var shop_offer_art: TextureRect = $FeatureLayout/FeatureHero/HeroRow/ShopFeaturedOfferArt
 @onready var hero_kicker: Label = $FeatureLayout/FeatureHero/HeroRow/HeroCopy/FeatureHeroKicker
@@ -27,8 +39,10 @@ var _hero_asset_path: String = ""
 @onready var hero_body: Label = $FeatureLayout/FeatureHero/HeroRow/HeroCopy/HeroBody
 @onready var shop_disabled_action: Button = $FeatureLayout/FeatureHero/HeroRow/HeroCopy/ShopDisabledAction
 @onready var daily_card: PanelContainer = $FeatureLayout/DailyPracticeCard
+@onready var daily_kicker: Label = $FeatureLayout/DailyPracticeCard/DailyContent/DailyPracticeKicker
 @onready var daily_title: Label = $FeatureLayout/DailyPracticeCard/DailyContent/DailyPracticeTitle
 @onready var daily_truth: Label = $FeatureLayout/DailyPracticeCard/DailyContent/DailyPracticeTruth
+@onready var card_scroll: ScrollContainer = $FeatureLayout/CardScroll
 @onready var daily_action: Button = $FeatureLayout/DailyPracticeCard/DailyContent/DailyPracticeAction
 @onready var weekly_action: Button = $FeatureLayout/WeeklyMissionsAction
 @onready var profile_settings: Button = $FeatureLayout/ProfileSettings
@@ -41,7 +55,9 @@ var _hero_asset_path: String = ""
 @onready var back_button: Button = $FeatureLayout/BackToHouse
 
 func _ready() -> void:
-	ProductionChrome.apply_secondary($FeatureLayout/FeatureHero, "meta_hero")
+	ProductionChrome.apply_secondary(feature_hero, "meta_hero")
+	ProductionChrome.apply_compact_panel(event_card_1, "events_feature_card")
+	ProductionChrome.apply_compact_panel(event_card_2, "events_feature_card")
 	ProductionChrome.apply_action_button(weekly_action, "primary", "events_weekly")
 	ProductionChrome.apply_action_button(profile_settings, "primary", "profile_settings")
 	ProductionChrome.apply_action_button(daily_action, "utility", "events_daily_practice")
@@ -67,6 +83,9 @@ func configure(feature_key: String, state: Dictionary) -> bool:
 	var cards: Array[Dictionary] = []
 
 	chapter_progress.visible = false
+	events_feature.visible = _feature_key == "events"
+	feature_hero.visible = _feature_key != "events"
+	card_scroll.visible = _feature_key != "events"
 	daily_card.visible = _feature_key == "events"
 	weekly_action.visible = _feature_key == "events"
 	shop_notice.visible = false
@@ -74,12 +93,22 @@ func configure(feature_key: String, state: Dictionary) -> bool:
 	shop_truth.visible = _feature_key == "shop"
 	shop_offer_art.visible = _feature_key == "shop"
 	shop_disabled_action.visible = _feature_key == "shop"
-	hero_art.visible = _feature_key != "shop"
+	hero_art.visible = _feature_key != "shop" and _feature_key != "events"
 	profile_settings.visible = _feature_key == "profile"
 	save_health_card.visible = _feature_key == "profile"
 	truth_strip.visible = false
 	back_button.visible = false
 	hero_body.visible = false
+	daily_kicker.visible = _feature_key != "events"
+	daily_truth.visible = _feature_key != "events"
+	if _feature_key == "events":
+		daily_card.custom_minimum_size.y = 104.0
+		daily_action.custom_minimum_size.y = 56.0
+		weekly_action.custom_minimum_size.y = 64.0
+	else:
+		daily_card.custom_minimum_size.y = 150.0
+		daily_action.custom_minimum_size.y = 72.0
+		weekly_action.custom_minimum_size.y = 96.0
 
 	local_save_status.text = String(state.get("save_status", "LOCAL SAVE · DEVICE-LOCAL"))
 	local_save_detail.text = String(state.get("save_detail", "Progress is stored on this device."))
@@ -90,21 +119,22 @@ func configure(feature_key: String, state: Dictionary) -> bool:
 		"events":
 			background_id = "events_bg_curio_house"
 			hero_path = "res://assets/curios/ch01_curio_moon_cameo_awakened_v01.webp"
-			title.text = "EVENT CENTER"
-			detail.text = "SEASONAL RITUALS · WEEKLY ALTAR · DAILY PRACTICE"
+			title.text = "EVENTS"
+			detail.text = "FUTURE HOUSE RITUALS · SEALED"
 			hero_kicker.text = "OPENING RITUAL COMPLETE" if opening_complete else "OPENING RITUAL IN PROGRESS"
 			hero_title.text = "%d / %d DISPLAYS AWAKENED" % [completed_count, opening_cap]
 			hero_body.text = "The House remembers every completed display; future weekly events remain sealed."
 			chapter_progress.text = ("OPENING RITUAL COMPLETE · %d / %d DISPLAYS AWAKENED" if opening_complete else "OPENING RITUAL · %d / %d DISPLAYS AWAKENED") % [completed_count, opening_cap]
-			daily_title.text = "DAILY HOUSE RITUAL · LEVEL %d" % _daily_level if _daily_level > 0 else "DAILY HOUSE RITUAL · SEALED"
+			daily_title.text = "DAILY PRACTICE · LEVEL %d · NO BONUS" % _daily_level if _daily_level > 0 else "DAILY PRACTICE · SEALED"
 			daily_truth.text = "REPLAY ONLY · NO BONUS REWARD · NO CURRENCY SPEND" if _daily_level > 0 else "COMPLETE AN OPENING RITUAL TO UNLOCK LOCAL PRACTICE"
 			daily_action.text = "PRACTICE LEVEL %d" % _daily_level if _daily_level > 0 else "RESTORE A DISPLAY TO UNLOCK"
+			weekly_action.text = "WEEKLY RITUALS"
 			daily_action.disabled = _daily_level <= 0
 			daily_action.set_meta("daily_level", _daily_level)
 			truth_strip.text = "LIVE EVENT REWARDS ARE NOT FABRICATED · DAILY PRACTICE IS DEVICE-LOCAL"
 			cards = [
-				{"art":"res://assets/curios/ch01_curio_moon_cameo_awakened_v01.webp", "kicker":"RITUAL I", "title":"MOONLIGHT MARKET", "body":"The opening cabinet set is restored. The House is ready for a future moonlit event." if opening_complete else "Awaken the three opening displays to restore the Curio House.", "status":"OPENING CHAPTER COMPLETE · FUTURE MARKET EVENT REMAINS SEALED" if opening_complete else "CHAPTER PROGRESS TRACKED · MARKET EVENT NOT YET ACTIVE"},
-				{"art":"res://assets/curios/ch01_curio_moth_reliquary.png", "kicker":"RITUAL II", "title":"THE LOST RELICS", "body":"A sealed reliquary marks a future cabinet journey.", "status":"UPPER CABINETS SEALED · FUTURE JOURNEY" if opening_complete else "LOCKED · COMPLETE THE OPENING CHAPTER"}
+				{"art":"res://assets/curios/ch01_curio_moon_cameo_awakened_v01.webp", "kicker":"SEALED RITUAL", "title":"MOONLIGHT MARKET", "body":"", "status":"FUTURE EVENT · SEALED"},
+				{"art":"res://assets/curios/ch01_curio_moth_reliquary.png", "kicker":"SEALED RITUAL", "title":"THE LOST RELICS", "body":"", "status":"FUTURE JOURNEY · SEALED"}
 			]
 		"shop":
 			background_id = "shop_bg_curio_house"
@@ -153,8 +183,32 @@ func configure(feature_key: String, state: Dictionary) -> bool:
 		if hero_art.texture == null:
 			return false
 	_hero_asset_path = hero_path
-	_apply_cards(cards)
+	if _feature_key == "events":
+		_apply_event_cards(cards)
+		_apply_cards([])
+	else:
+		_apply_event_cards([])
+		_apply_cards(cards)
 	return true
+
+func _apply_event_cards(cards: Array[Dictionary]) -> void:
+	var event_cards: Array[PanelContainer] = [event_card_1, event_card_2]
+	var event_arts: Array[TextureRect] = [event_art_1, event_art_2]
+	var event_kickers: Array[Label] = [event_kicker_1, event_kicker_2]
+	var event_titles: Array[Label] = [event_title_1, event_title_2]
+	var event_statuses: Array[Label] = [event_status_1, event_status_2]
+	for i in event_cards.size():
+		var entry: Dictionary = cards[i] if i < cards.size() else {}
+		event_cards[i].visible = not entry.is_empty()
+		if entry.is_empty():
+			event_arts[i].texture = null
+			continue
+		var art_path := String(entry.get("art", ""))
+		event_arts[i].texture = PieceAssetLoader.ornament(art_path)
+		event_arts[i].set_meta("asset_path", art_path)
+		event_kickers[i].text = String(entry.get("kicker", "SEALED RITUAL"))
+		event_titles[i].text = String(entry.get("title", ""))
+		event_statuses[i].text = String(entry.get("status", "SEALED"))
 
 func _apply_cards(cards: Array[Dictionary]) -> void:
 	var nodes: Array[PanelContainer] = [
@@ -208,7 +262,24 @@ func screen_contract() -> Dictionary:
 		func(art): return (art as TextureRect).custom_minimum_size.x >= 220.0 and (art as TextureRect).custom_minimum_size.y >= 195.0
 	)
 	var compact_copy := card_bodies.all(func(body): return not (body as Label).visible)
-	var hero_dominant := hero_panel.custom_minimum_size.y >= 400.0 and active_hero_art.custom_minimum_size.x >= 340.0 and active_hero_art.custom_minimum_size.y >= 340.0
+	var events_card_focus := _feature_key != "events" or (
+		events_feature != null
+		and events_feature.visible
+		and not hero_panel.visible
+		and not card_scroll.visible
+		and event_card_1.visible
+		and event_card_2.visible
+		and event_card_1.custom_minimum_size.y >= 220.0
+		and event_card_2.custom_minimum_size.y >= 220.0
+		and event_art_1.custom_minimum_size.y >= 145.0
+		and event_art_2.custom_minimum_size.y >= 145.0
+		and event_art_1.texture != null
+		and event_art_2.texture != null
+	)
+	if _feature_key == "events":
+		art_dominant_cards = events_card_focus
+		compact_copy = true
+	var hero_dominant := events_card_focus if _feature_key == "events" else (hero_panel.custom_minimum_size.y >= 400.0 and active_hero_art.custom_minimum_size.x >= 340.0 and active_hero_art.custom_minimum_size.y >= 340.0)
 	var controlled_chrome := compact_copy and not truth_strip.visible and not back_button.visible and ($HeaderShade as ColorRect).color.a <= 0.38
 	var profile_status_focus := _feature_key != "profile" or (
 		save_health_card != null
@@ -226,7 +297,8 @@ func screen_contract() -> Dictionary:
 		"code_built_panels": false,
 		"north_star_title_hierarchy": title != null and title.get_theme_font_size("font_size") >= 52,
 		"north_star_hero_scale": hero_dominant,
-		"asset_backed_hero_chrome": hero_panel.get_theme_stylebox("panel") is StyleBoxTexture and String(hero_panel.get_meta("production_chrome_kind", "")) == "secondary_meta_hero",
+		"asset_backed_hero_chrome": (event_card_1.get_theme_stylebox("panel") is StyleBoxTexture and event_card_2.get_theme_stylebox("panel") is StyleBoxTexture) if _feature_key == "events" else (hero_panel.get_theme_stylebox("panel") is StyleBoxTexture and String(hero_panel.get_meta("production_chrome_kind", "")) == "secondary_meta_hero"),
+		"events_board_card_composition": events_card_focus,
 		"hero_asset_path": _hero_asset_path,
 		"raster_feature_art": _hero_asset_path.to_lower().ends_with(".webp") or _hero_asset_path.to_lower().ends_with(".png"),
 		"rounded_primary_actions": weekly_action.get_theme_stylebox("normal") is StyleBoxTexture and profile_settings.get_theme_stylebox("normal") is StyleBoxTexture,
