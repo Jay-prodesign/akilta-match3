@@ -362,7 +362,7 @@ func show_restoration_ceremony(curio_id: String, stage: int) -> void:
 		play_button.visible = true
 		curio_label.get_parent().visible = false
 		headline.visible = true
-		detail.visible = true
+		detail.visible = false
 		if room_view.has_method("set_restoration_full_bleed"):
 			room_view.set_restoration_full_bleed(false)
 		room_view.offset_bottom = room_view_bottom_before_ceremony
