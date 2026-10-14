@@ -245,11 +245,11 @@ func _apply_cards(cards: Array[Dictionary]) -> void:
 			card.size_flags_vertical = Control.SIZE_EXPAND_FILL
 			card.size_flags_stretch_ratio = 1.22 if i == 0 else 1.0
 			row.add_theme_constant_override("separation", 16)
-			art.custom_minimum_size = Vector2(288, 220) if i == 0 else Vector2(250, 200)
+			art.custom_minimum_size = Vector2(340, 224) if i == 0 else Vector2(300, 204)
 			art.size_flags_vertical = Control.SIZE_EXPAND_FILL
 			kicker.add_theme_font_size_override("font_size", 18 if i == 0 else 16)
-			card_title.add_theme_font_size_override("font_size", 34 if i == 0 else 30)
-			status.add_theme_font_size_override("font_size", 16)
+			card_title.add_theme_font_size_override("font_size", 38 if i == 0 else 34)
+			status.add_theme_font_size_override("font_size", 17)
 			if shop_state_plate != null:
 				shop_state_plate.visible = true
 				ProductionChrome.apply_compact_panel(shop_state_plate, "shop_sealed_state")
@@ -346,6 +346,9 @@ func screen_contract() -> Dictionary:
 	)
 	if _feature_key == "events":
 		art_dominant_cards = events_card_focus
+		compact_copy = true
+	elif _feature_key == "shop":
+		art_dominant_cards = shop_catalog_focus
 		compact_copy = true
 	var hero_dominant := events_card_focus if _feature_key == "events" else (shop_catalog_focus if _feature_key == "shop" else (hero_panel.custom_minimum_size.y >= 400.0 and active_hero_art.custom_minimum_size.x >= 340.0 and active_hero_art.custom_minimum_size.y >= 340.0))
 	var controlled_chrome := compact_copy and not truth_strip.visible and not back_button.visible and ($HeaderShade as ColorRect).color.a <= 0.38

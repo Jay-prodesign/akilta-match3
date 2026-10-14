@@ -507,7 +507,7 @@ autowrap_mode = 2
 
 [node name="ShopStatePlate" type="PanelContainer" parent="FeatureLayout/CardScroll/Cards/Card1/Row"]
 visible = false
-custom_minimum_size = Vector2(154, 92)
+custom_minimum_size = Vector2(176, 96)
 layout_mode = 2
 size_flags_vertical = 4
 
@@ -587,7 +587,7 @@ autowrap_mode = 2
 
 [node name="ShopStatePlate" type="PanelContainer" parent="FeatureLayout/CardScroll/Cards/Card2/Row"]
 visible = false
-custom_minimum_size = Vector2(154, 92)
+custom_minimum_size = Vector2(176, 96)
 layout_mode = 2
 size_flags_vertical = 4
 
@@ -667,7 +667,7 @@ autowrap_mode = 2
 
 [node name="ShopStatePlate" type="PanelContainer" parent="FeatureLayout/CardScroll/Cards/Card3/Row"]
 visible = false
-custom_minimum_size = Vector2(154, 92)
+custom_minimum_size = Vector2(176, 96)
 layout_mode = 2
 size_flags_vertical = 4
 
