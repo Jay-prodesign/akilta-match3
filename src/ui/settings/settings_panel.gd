@@ -20,6 +20,9 @@ const ProductionChrome = preload("res://src/ui/theme/production_chrome.gd")
 @export var close_hover_style: StyleBoxFlat
 @export var close_pressed_style: StyleBoxFlat
 @export var close_high_style: StyleBoxFlat
+@export var state_on_style: StyleBoxFlat
+@export var state_off_style: StyleBoxFlat
+@export var state_high_style: StyleBoxFlat
 
 
 @onready var master_toggle: Button = $Card/Content/AudioRow/Master
@@ -121,12 +124,10 @@ func state_contract() -> Dictionary:
 func _refresh_toggle_copy() -> void:
 	if not is_node_ready():
 		return
-	master_toggle.text = "MASTER AUDIO  ·  %s" % ("ON" if master_toggle.button_pressed else "OFF")
-	music_toggle.text = "MUSIC  ·  %s" % ("ON" if music_toggle.button_pressed else "OFF")
-	sfx_toggle.text = "RITUAL SOUNDS  ·  %s" % ("ON" if sfx_toggle.button_pressed else "OFF")
-	haptics_toggle.text = "HAPTICS  ·  %s" % ("ON" if haptics_toggle.button_pressed else "OFF")
-	reduced_toggle.text = "REDUCED MOTION  ·  %s" % ("ON" if reduced_toggle.button_pressed else "OFF")
-	contrast_toggle.text = "HIGH CONTRAST  ·  %s" % ("ON" if contrast_toggle.button_pressed else "OFF")
+	for toggle in [master_toggle, music_toggle, sfx_toggle, haptics_toggle, reduced_toggle, contrast_toggle]:
+		var status := toggle.get_node_or_null("State") as Label
+		if status != null:
+			status.text = "ON" if toggle.button_pressed else "OFF"
 
 func _style_settings_overlay() -> void:
 	var card := get_node_or_null("Card") as PanelContainer
@@ -164,7 +165,18 @@ func _style_toggle(toggle: Button) -> void:
 		ProductionChrome.apply_interactive_button(toggle, toggle.button_pressed, "settings_toggle")
 	toggle.add_theme_color_override("font_color", Color("#FFFFFF") if _high_contrast else Color("#E8DCE4"))
 	toggle.add_theme_color_override("font_hover_color", Color("#FFFFFF"))
-	toggle.add_theme_font_size_override("font_size", 25)
+	toggle.add_theme_font_size_override("font_size", 20)
+	var title := toggle.get_node_or_null("Title") as Label
+	var detail := toggle.get_node_or_null("Detail") as Label
+	var status := toggle.get_node_or_null("State") as Label
+	if title != null:
+		title.add_theme_color_override("font_color", Color("#FFF7E8") if _high_contrast else Color("#F4EBE7"))
+	if detail != null:
+		detail.add_theme_color_override("font_color", Color("#FFF1B6") if _high_contrast else Color("#BBA0B9"))
+	if status != null:
+		status.text = "ON" if toggle.button_pressed else "OFF"
+		status.add_theme_stylebox_override("normal", state_high_style if _high_contrast else (state_on_style if toggle.button_pressed else state_off_style))
+		status.add_theme_color_override("font_color", Color("#FFF7D0") if (_high_contrast or toggle.button_pressed) else Color("#C6B8C9"))
 
 func _wire_tactile_controls() -> void:
 	for control in [master_toggle, music_toggle, sfx_toggle, haptics_toggle, reduced_toggle, contrast_toggle, close_button]:
@@ -206,10 +218,17 @@ func settings_authored_contract() -> Dictionary:
 	var ritual_list := audio_row.get_child_count() == 3 and experience_row.get_child_count() == 3 and [master_toggle, music_toggle, sfx_toggle, haptics_toggle, reduced_toggle, contrast_toggle].all(
 		func(control): return control.size_flags_horizontal == Control.SIZE_EXPAND_FILL and control.toggle_mode and control.custom_minimum_size.y >= 88.0
 	)
-	var sigil_stage := house_sigil != null and house_sigil.texture != null and house_sigil.custom_minimum_size.y >= 150.0
+	var sigil_stage := house_sigil != null and house_sigil.texture != null and house_sigil.custom_minimum_size.y >= 120.0
 	var world_visible := ($WorldShade as ColorRect).color.a <= 0.20 and ($Dim as ColorRect).color.a <= 0.12
 	var title_hierarchy := ($Card/Content/Title as Label).get_theme_font_size("font_size") >= 50
 	var touch_targets := [master_toggle, music_toggle, sfx_toggle, haptics_toggle, reduced_toggle, contrast_toggle, close_button].all(func(control): return control.custom_minimum_size.y >= 88.0)
+	var crafted_rows := [master_toggle, music_toggle, sfx_toggle, haptics_toggle, reduced_toggle, contrast_toggle].all(
+		func(control):
+			var title := control.get_node_or_null("Title") as Label
+			var detail := control.get_node_or_null("Detail") as Label
+			var status := control.get_node_or_null("State") as Label
+			return control.text == "" and title != null and detail != null and status != null and status.get_theme_stylebox("normal") != null
+	)
 	return {
 		"authored_house_sigil": house_sigil != null and house_sigil.texture != null,
 		"authored_world_backdrop": world_art != null and world_art.texture != null,
@@ -225,9 +244,10 @@ func settings_authored_contract() -> Dictionary:
 		"production_toggle_chrome": [master_toggle, music_toggle, sfx_toggle, haptics_toggle, reduced_toggle, contrast_toggle].all(func(control): return control.get_theme_stylebox("normal") is StyleBoxTexture and String(control.get_meta("production_chrome_kind", "")) == "interactive_settings_toggle"),
 		"production_return_chrome": close_button.get_theme_stylebox("normal") is StyleBoxTexture and String(close_button.get_meta("production_chrome_kind", "")) == "action_primary_settings_return",
 		"settings_ritual_list": ritual_list,
+		"crafted_ritual_rows": crafted_rows,
 		"house_sigil_hero_scale": sigil_stage,
 		"footer_rose_ornament": footer_rose != null and footer_rose.texture != null and footer_rose.custom_minimum_size.y >= 100.0,
 		"world_art_not_overdimmed": world_visible,
 		"tall_destination_surface": destination_surface,
-		"visual_parity_gate_v3": title_hierarchy and touch_targets and ritual_list and sigil_stage and footer_rose != null and footer_rose.texture != null and world_visible and destination_surface,
+		"visual_parity_gate_v3": title_hierarchy and touch_targets and ritual_list and crafted_rows and sigil_stage and footer_rose != null and footer_rose.texture != null and world_visible and destination_surface,
 	}

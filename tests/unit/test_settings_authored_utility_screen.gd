@@ -28,6 +28,7 @@ func _run() -> void:
 	_expect(bool(contract.get("production_toggle_chrome", false)), "Settings toggle rows must use the verified quiet interactive production chrome in normal mode")
 	_expect(bool(contract.get("production_return_chrome", false)), "Settings return CTA must use the verified primary action production chrome in normal mode")
 	_expect(bool(contract.get("settings_ritual_list", false)), "Settings controls must read as a vertical ritual list instead of a web-style grid")
+	_expect(bool(contract.get("crafted_ritual_rows", false)), "Settings ritual rows must separate setting identity, supporting copy and state medallions instead of flat developer toggle text")
 	_expect(bool(contract.get("house_sigil_hero_scale", false)), "Settings House sigil must retain a hero-scale visual anchor")
 	_expect(bool(contract.get("world_art_not_overdimmed", false)), "Settings must keep House world art visible around the control surface")
 	_expect(bool(contract.get("tall_destination_surface", false)), "Settings control card must read as a tall North Star destination while preserving the world")

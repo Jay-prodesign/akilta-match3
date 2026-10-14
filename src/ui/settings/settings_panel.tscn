@@ -1,4 +1,4 @@
-[gd_scene load_steps=14 format=3]
+[gd_scene load_steps=17 format=3]
 
 [ext_resource type="Script" path="res://src/ui/settings/settings_panel.gd" id="1_settings"]
 
@@ -158,6 +158,42 @@ corner_radius_top_right = 18
 corner_radius_bottom_right = 18
 corner_radius_bottom_left = 18
 
+[sub_resource type="StyleBoxFlat" id="StateOn"]
+bg_color = Color(0.18, 0.105, 0.205, 0.96)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.949, 0.816, 0.545, 0.9)
+corner_radius_top_left = 18
+corner_radius_top_right = 18
+corner_radius_bottom_right = 18
+corner_radius_bottom_left = 18
+
+[sub_resource type="StyleBoxFlat" id="StateOff"]
+bg_color = Color(0.042, 0.035, 0.06, 0.92)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.53, 0.45, 0.57, 0.72)
+corner_radius_top_left = 18
+corner_radius_top_right = 18
+corner_radius_bottom_right = 18
+corner_radius_bottom_left = 18
+
+[sub_resource type="StyleBoxFlat" id="StateHigh"]
+bg_color = Color(0.015, 0.016, 0.025, 1)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(1, 0.945, 0.714, 1)
+corner_radius_top_left = 18
+corner_radius_top_right = 18
+corner_radius_bottom_right = 18
+corner_radius_bottom_left = 18
+
 [sub_resource type="StyleBoxFlat" id="CloseHigh"]
 bg_color = Color(0.388, 0.208, 0.416, 1)
 border_width_left = 3
@@ -191,6 +227,9 @@ close_normal_style = SubResource("Close")
 close_hover_style = SubResource("CloseHover")
 close_pressed_style = SubResource("ClosePressed")
 close_high_style = SubResource("CloseHigh")
+state_on_style = SubResource("StateOn")
+state_off_style = SubResource("StateOff")
+state_high_style = SubResource("StateHigh")
 
 [node name="WorldArt" type="TextureRect" parent="."]
 layout_mode = 1
@@ -264,7 +303,7 @@ horizontal_alignment = 1
 autowrap_mode = 2
 
 [node name="HouseSigil" type="TextureRect" parent="Card/Content"]
-custom_minimum_size = Vector2(0, 164)
+custom_minimum_size = Vector2(0, 126)
 layout_mode = 2
 mouse_filter = 2
 expand_mode = 1
@@ -293,7 +332,52 @@ theme_override_font_sizes/font_size = 20
 theme_override_styles/normal = SubResource("Toggle")
 theme_override_styles/hover = SubResource("Toggle")
 theme_override_styles/pressed = SubResource("Toggle")
+text = ""
+alignment = 0
+
+[node name="Title" type="Label" parent="Card/Content/AudioRow/Master"]
+layout_mode = 1
+anchor_left = 0.055
+anchor_top = 0.14
+anchor_right = 0.70
+anchor_bottom = 0.50
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+theme_override_colors/font_color = Color(0.968, 0.922, 0.902, 1)
+theme_override_font_sizes/font_size = 20
 text = "MASTER AUDIO"
+vertical_alignment = 1
+
+[node name="Detail" type="Label" parent="Card/Content/AudioRow/Master"]
+layout_mode = 1
+anchor_left = 0.055
+anchor_top = 0.50
+anchor_right = 0.72
+anchor_bottom = 0.82
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+theme_override_colors/font_color = Color(0.72, 0.62, 0.72, 1)
+theme_override_font_sizes/font_size = 13
+text = "ALL HOUSE SOUND"
+vertical_alignment = 1
+
+[node name="State" type="Label" parent="Card/Content/AudioRow/Master"]
+layout_mode = 1
+anchor_left = 0.79
+anchor_top = 0.24
+anchor_right = 0.95
+anchor_bottom = 0.76
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+theme_override_colors/font_color = Color(1, 0.941, 0.847, 1)
+theme_override_font_sizes/font_size = 16
+theme_override_styles/normal = SubResource("StateOn")
+text = "ON"
+horizontal_alignment = 1
+vertical_alignment = 1
 
 [node name="Music" type="Button" parent="Card/Content/AudioRow"]
 custom_minimum_size = Vector2(0, 88)
@@ -301,11 +385,56 @@ layout_mode = 2
 size_flags_horizontal = 3
 toggle_mode = true
 theme_override_colors/font_color = Color(0.945, 0.91, 0.866, 1)
-theme_override_font_sizes/font_size = 25
+theme_override_font_sizes/font_size = 20
 theme_override_styles/normal = SubResource("Toggle")
 theme_override_styles/hover = SubResource("Toggle")
 theme_override_styles/pressed = SubResource("Toggle")
+text = ""
+alignment = 0
+
+[node name="Title" type="Label" parent="Card/Content/AudioRow/Music"]
+layout_mode = 1
+anchor_left = 0.055
+anchor_top = 0.14
+anchor_right = 0.70
+anchor_bottom = 0.50
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+theme_override_colors/font_color = Color(0.968, 0.922, 0.902, 1)
+theme_override_font_sizes/font_size = 20
 text = "MUSIC"
+vertical_alignment = 1
+
+[node name="Detail" type="Label" parent="Card/Content/AudioRow/Music"]
+layout_mode = 1
+anchor_left = 0.055
+anchor_top = 0.50
+anchor_right = 0.72
+anchor_bottom = 0.82
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+theme_override_colors/font_color = Color(0.72, 0.62, 0.72, 1)
+theme_override_font_sizes/font_size = 13
+text = "AMBIENT SCORE"
+vertical_alignment = 1
+
+[node name="State" type="Label" parent="Card/Content/AudioRow/Music"]
+layout_mode = 1
+anchor_left = 0.79
+anchor_top = 0.24
+anchor_right = 0.95
+anchor_bottom = 0.76
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+theme_override_colors/font_color = Color(1, 0.941, 0.847, 1)
+theme_override_font_sizes/font_size = 16
+theme_override_styles/normal = SubResource("StateOn")
+text = "ON"
+horizontal_alignment = 1
+vertical_alignment = 1
 
 [node name="SFX" type="Button" parent="Card/Content/AudioRow"]
 custom_minimum_size = Vector2(0, 88)
@@ -313,11 +442,56 @@ layout_mode = 2
 size_flags_horizontal = 3
 toggle_mode = true
 theme_override_colors/font_color = Color(0.945, 0.91, 0.866, 1)
-theme_override_font_sizes/font_size = 25
+theme_override_font_sizes/font_size = 20
 theme_override_styles/normal = SubResource("Toggle")
 theme_override_styles/hover = SubResource("Toggle")
 theme_override_styles/pressed = SubResource("Toggle")
+text = ""
+alignment = 0
+
+[node name="Title" type="Label" parent="Card/Content/AudioRow/SFX"]
+layout_mode = 1
+anchor_left = 0.055
+anchor_top = 0.14
+anchor_right = 0.70
+anchor_bottom = 0.50
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+theme_override_colors/font_color = Color(0.968, 0.922, 0.902, 1)
+theme_override_font_sizes/font_size = 20
 text = "RITUAL SOUNDS"
+vertical_alignment = 1
+
+[node name="Detail" type="Label" parent="Card/Content/AudioRow/SFX"]
+layout_mode = 1
+anchor_left = 0.055
+anchor_top = 0.50
+anchor_right = 0.72
+anchor_bottom = 0.82
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+theme_override_colors/font_color = Color(0.72, 0.62, 0.72, 1)
+theme_override_font_sizes/font_size = 13
+text = "MATCH & RITUAL CUES"
+vertical_alignment = 1
+
+[node name="State" type="Label" parent="Card/Content/AudioRow/SFX"]
+layout_mode = 1
+anchor_left = 0.79
+anchor_top = 0.24
+anchor_right = 0.95
+anchor_bottom = 0.76
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+theme_override_colors/font_color = Color(1, 0.941, 0.847, 1)
+theme_override_font_sizes/font_size = 16
+theme_override_styles/normal = SubResource("StateOn")
+text = "ON"
+horizontal_alignment = 1
+vertical_alignment = 1
 
 [node name="ExperienceLabel" type="Label" parent="Card/Content"]
 layout_mode = 2
@@ -337,11 +511,56 @@ layout_mode = 2
 size_flags_horizontal = 3
 toggle_mode = true
 theme_override_colors/font_color = Color(0.945, 0.91, 0.866, 1)
-theme_override_font_sizes/font_size = 25
+theme_override_font_sizes/font_size = 20
 theme_override_styles/normal = SubResource("Toggle")
 theme_override_styles/hover = SubResource("Toggle")
 theme_override_styles/pressed = SubResource("Toggle")
+text = ""
+alignment = 0
+
+[node name="Title" type="Label" parent="Card/Content/ExperienceRow/Haptics"]
+layout_mode = 1
+anchor_left = 0.055
+anchor_top = 0.14
+anchor_right = 0.70
+anchor_bottom = 0.50
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+theme_override_colors/font_color = Color(0.968, 0.922, 0.902, 1)
+theme_override_font_sizes/font_size = 20
 text = "HAPTICS"
+vertical_alignment = 1
+
+[node name="Detail" type="Label" parent="Card/Content/ExperienceRow/Haptics"]
+layout_mode = 1
+anchor_left = 0.055
+anchor_top = 0.50
+anchor_right = 0.72
+anchor_bottom = 0.82
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+theme_override_colors/font_color = Color(0.72, 0.62, 0.72, 1)
+theme_override_font_sizes/font_size = 13
+text = "TACTILE FEEDBACK"
+vertical_alignment = 1
+
+[node name="State" type="Label" parent="Card/Content/ExperienceRow/Haptics"]
+layout_mode = 1
+anchor_left = 0.79
+anchor_top = 0.24
+anchor_right = 0.95
+anchor_bottom = 0.76
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+theme_override_colors/font_color = Color(1, 0.941, 0.847, 1)
+theme_override_font_sizes/font_size = 16
+theme_override_styles/normal = SubResource("StateOn")
+text = "ON"
+horizontal_alignment = 1
+vertical_alignment = 1
 
 [node name="Reduced" type="Button" parent="Card/Content/ExperienceRow"]
 custom_minimum_size = Vector2(0, 88)
@@ -349,11 +568,56 @@ layout_mode = 2
 size_flags_horizontal = 3
 toggle_mode = true
 theme_override_colors/font_color = Color(0.945, 0.91, 0.866, 1)
-theme_override_font_sizes/font_size = 25
+theme_override_font_sizes/font_size = 20
 theme_override_styles/normal = SubResource("Toggle")
 theme_override_styles/hover = SubResource("Toggle")
 theme_override_styles/pressed = SubResource("Toggle")
+text = ""
+alignment = 0
+
+[node name="Title" type="Label" parent="Card/Content/ExperienceRow/Reduced"]
+layout_mode = 1
+anchor_left = 0.055
+anchor_top = 0.14
+anchor_right = 0.70
+anchor_bottom = 0.50
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+theme_override_colors/font_color = Color(0.968, 0.922, 0.902, 1)
+theme_override_font_sizes/font_size = 20
 text = "REDUCED MOTION"
+vertical_alignment = 1
+
+[node name="Detail" type="Label" parent="Card/Content/ExperienceRow/Reduced"]
+layout_mode = 1
+anchor_left = 0.055
+anchor_top = 0.50
+anchor_right = 0.72
+anchor_bottom = 0.82
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+theme_override_colors/font_color = Color(0.72, 0.62, 0.72, 1)
+theme_override_font_sizes/font_size = 13
+text = "QUIETER SCREEN MOTION"
+vertical_alignment = 1
+
+[node name="State" type="Label" parent="Card/Content/ExperienceRow/Reduced"]
+layout_mode = 1
+anchor_left = 0.79
+anchor_top = 0.24
+anchor_right = 0.95
+anchor_bottom = 0.76
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+theme_override_colors/font_color = Color(1, 0.941, 0.847, 1)
+theme_override_font_sizes/font_size = 16
+theme_override_styles/normal = SubResource("StateOn")
+text = "ON"
+horizontal_alignment = 1
+vertical_alignment = 1
 
 [node name="Contrast" type="Button" parent="Card/Content/ExperienceRow"]
 custom_minimum_size = Vector2(0, 88)
@@ -361,11 +625,56 @@ layout_mode = 2
 size_flags_horizontal = 3
 toggle_mode = true
 theme_override_colors/font_color = Color(0.945, 0.91, 0.866, 1)
-theme_override_font_sizes/font_size = 25
+theme_override_font_sizes/font_size = 20
 theme_override_styles/normal = SubResource("Toggle")
 theme_override_styles/hover = SubResource("Toggle")
 theme_override_styles/pressed = SubResource("Toggle")
+text = ""
+alignment = 0
+
+[node name="Title" type="Label" parent="Card/Content/ExperienceRow/Contrast"]
+layout_mode = 1
+anchor_left = 0.055
+anchor_top = 0.14
+anchor_right = 0.70
+anchor_bottom = 0.50
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+theme_override_colors/font_color = Color(0.968, 0.922, 0.902, 1)
+theme_override_font_sizes/font_size = 20
 text = "HIGH CONTRAST"
+vertical_alignment = 1
+
+[node name="Detail" type="Label" parent="Card/Content/ExperienceRow/Contrast"]
+layout_mode = 1
+anchor_left = 0.055
+anchor_top = 0.50
+anchor_right = 0.72
+anchor_bottom = 0.82
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+theme_override_colors/font_color = Color(0.72, 0.62, 0.72, 1)
+theme_override_font_sizes/font_size = 13
+text = "STRONGER UI CONTRAST"
+vertical_alignment = 1
+
+[node name="State" type="Label" parent="Card/Content/ExperienceRow/Contrast"]
+layout_mode = 1
+anchor_left = 0.79
+anchor_top = 0.24
+anchor_right = 0.95
+anchor_bottom = 0.76
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+theme_override_colors/font_color = Color(1, 0.941, 0.847, 1)
+theme_override_font_sizes/font_size = 16
+theme_override_styles/normal = SubResource("StateOn")
+text = "ON"
+horizontal_alignment = 1
+vertical_alignment = 1
 
 [node name="SavedNote" type="Label" parent="Card/Content"]
 custom_minimum_size = Vector2(0, 38)
