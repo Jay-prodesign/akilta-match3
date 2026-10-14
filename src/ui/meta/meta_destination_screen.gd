@@ -135,8 +135,8 @@ func configure(feature_key: String, state: Dictionary) -> bool:
 			daily_action.set_meta("daily_level", _daily_level)
 			truth_strip.text = "LIVE EVENT REWARDS ARE NOT FABRICATED · DAILY PRACTICE IS DEVICE-LOCAL"
 			cards = [
-				{"art":"res://assets/curios/ch01_curio_moon_cameo_awakened_v01.webp", "kicker":"SEALED RITUAL", "title":"MOONLIGHT MARKET", "body":"", "status":"FUTURE EVENT · SEALED"},
-				{"art":"res://assets/curios/ch01_curio_moth_reliquary.png", "kicker":"SEALED RITUAL", "title":"THE LOST RELICS", "body":"", "status":"FUTURE JOURNEY · SEALED"}
+				{"art":"res://assets/world/ch01_curio_boutique/chapter_route_curio_boutique.webp", "kicker":"SEALED RITUAL", "title":"MOONLIGHT MARKET", "body":"", "status":"FUTURE EVENT · SEALED"},
+				{"art":"res://assets/world/ch01_curio_boutique/prestart_level01_cabinet.webp", "kicker":"SEALED RITUAL", "title":"THE LOST RELICS", "body":"", "status":"FUTURE JOURNEY · SEALED"}
 			]
 		"shop":
 			background_id = "shop_bg_curio_house"
@@ -271,10 +271,10 @@ func screen_contract() -> Dictionary:
 		and not card_scroll.visible
 		and event_card_1.visible
 		and event_card_2.visible
-		and event_card_1.custom_minimum_size.y >= 300.0
-		and event_card_2.custom_minimum_size.y >= 300.0
-		and event_art_1.custom_minimum_size.y >= 190.0
-		and event_art_2.custom_minimum_size.y >= 190.0
+		and event_card_1.custom_minimum_size.y >= 325.0
+		and event_card_2.custom_minimum_size.y >= 325.0
+		and event_art_1.custom_minimum_size.y >= 225.0
+		and event_art_2.custom_minimum_size.y >= 225.0
 		and event_art_1.texture != null
 		and event_art_2.texture != null
 	)

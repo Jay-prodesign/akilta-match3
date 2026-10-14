@@ -148,7 +148,7 @@ layout_mode = 2
 theme_override_constants/separation = 10
 
 [node name="EventCard1" type="PanelContainer" parent="FeatureLayout/EventsFeature"]
-custom_minimum_size = Vector2(0, 306)
+custom_minimum_size = Vector2(0, 330)
 layout_mode = 2
 theme_override_styles/panel = SubResource("Card")
 
@@ -157,11 +157,11 @@ layout_mode = 2
 theme_override_constants/separation = 4
 
 [node name="Art" type="TextureRect" parent="FeatureLayout/EventsFeature/EventCard1/Content"]
-custom_minimum_size = Vector2(0, 194)
+custom_minimum_size = Vector2(0, 230)
 layout_mode = 2
 size_flags_horizontal = 3
 expand_mode = 1
-stretch_mode = 5
+stretch_mode = 6
 
 [node name="Copy" type="VBoxContainer" parent="FeatureLayout/EventsFeature/EventCard1/Content"]
 layout_mode = 2
@@ -192,7 +192,7 @@ text = "FUTURE EVENT · SEALED"
 horizontal_alignment = 1
 
 [node name="EventCard2" type="PanelContainer" parent="FeatureLayout/EventsFeature"]
-custom_minimum_size = Vector2(0, 306)
+custom_minimum_size = Vector2(0, 330)
 layout_mode = 2
 theme_override_styles/panel = SubResource("Card")
 
@@ -201,11 +201,11 @@ layout_mode = 2
 theme_override_constants/separation = 4
 
 [node name="Art" type="TextureRect" parent="FeatureLayout/EventsFeature/EventCard2/Content"]
-custom_minimum_size = Vector2(0, 194)
+custom_minimum_size = Vector2(0, 230)
 layout_mode = 2
 size_flags_horizontal = 3
 expand_mode = 1
-stretch_mode = 5
+stretch_mode = 6
 
 [node name="Copy" type="VBoxContainer" parent="FeatureLayout/EventsFeature/EventCard2/Content"]
 layout_mode = 2
