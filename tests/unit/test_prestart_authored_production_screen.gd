@@ -30,6 +30,8 @@ func _run() -> void:
 	_expect(bool(contract.get("north_star_readability", false)), "Prestart must retain a strong North Star title/objective/Play hierarchy")
 	_expect(bool(contract.get("north_star_decision_stack", false)), "Prestart must follow the locked compact Level → objective/moves → truthful aids → Play composition")
 	_expect(bool(contract.get("truthful_two_aid_row", false)), "Prestart must present only the two real aid affordances instead of fabricating a third booster")
+	_expect(bool(contract.get("hero_strip_subordinate", false)), "Prestart must not let the ritual-art/reward strip compete with the locked objective → aids → Play hierarchy")
+	_expect(bool(contract.get("reward_truth_retained", false)), "Prestart reward truth must remain bound even when visually subordinate")
 	_expect(bool(contract.get("truthful_aid_semantics", false)), "Prestart ritual aids must remain explicitly truthful and not masquerade as pre-spend boosters")
 	_expect(bool(contract.get("note_subordinate", false)), "Long explanatory copy must not compete with the primary prestart decision")
 	_expect(bool(contract.get("scene_authored_prestart_chrome", false)), "Prestart must preserve clean scene-authored gold/plum materials without stretched 9-slice nesting")
