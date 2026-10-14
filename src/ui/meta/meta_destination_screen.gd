@@ -241,7 +241,7 @@ func _apply_cards(cards: Array[Dictionary]) -> void:
 		var status := card.get_node("Row/Copy/Status") as Label
 		var shop_state_plate := card.get_node_or_null("Row/ShopStatePlate") as PanelContainer
 		if _feature_key == "shop":
-			card.custom_minimum_size.y = 250.0 if i == 0 else 220.0
+			card.custom_minimum_size.y = 250.0 if i == 0 else 230.0
 			card.size_flags_vertical = Control.SIZE_EXPAND_FILL
 			card.size_flags_stretch_ratio = 1.22 if i == 0 else 1.0
 			row.add_theme_constant_override("separation", 16)
