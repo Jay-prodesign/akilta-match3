@@ -245,7 +245,7 @@ func _apply_cards(cards: Array[Dictionary]) -> void:
 			card.size_flags_vertical = Control.SIZE_EXPAND_FILL
 			card.size_flags_stretch_ratio = 1.22 if i == 0 else 1.0
 			row.add_theme_constant_override("separation", 16)
-			art.custom_minimum_size = Vector2(288, 220) if i == 0 else Vector2(250, 192)
+			art.custom_minimum_size = Vector2(288, 220) if i == 0 else Vector2(250, 200)
 			art.size_flags_vertical = Control.SIZE_EXPAND_FILL
 			kicker.add_theme_font_size_override("font_size", 18 if i == 0 else 16)
 			card_title.add_theme_font_size_override("font_size", 34 if i == 0 else 30)
