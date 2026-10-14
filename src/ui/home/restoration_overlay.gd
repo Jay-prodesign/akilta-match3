@@ -4,6 +4,7 @@ const ProductionChrome = preload("res://src/ui/theme/production_chrome.gd")
 signal continue_requested
 
 @onready var hero_title: Label = $RestorationHeader/RestorationHeroTitle
+@onready var hero_copy: Label = $RestorationHeader/HeroCopy
 @onready var transformation_stage: PanelContainer = $TransformationStage
 @onready var before_house: Control = $TransformationStage/PreviewRow/BeforeCard/BeforeContent/House
 @onready var after_house: Control = $TransformationStage/PreviewRow/AfterCard/AfterContent/House
@@ -22,7 +23,8 @@ func _ready() -> void:
 func configure(curio_id: String, curio_name: String, restoration_copy: String, motif_texture: Texture2D, curio_texture: Texture2D, stage: int, current_curios: Array[String]) -> bool:
 	if curio_id == "" or curio_name == "" or motif_texture == null or curio_texture == null or stage <= 0:
 		return false
-	hero_title.text = curio_name
+	hero_title.text = "THE HOUSE"
+	hero_copy.text = "%s · AWAKENED" % curio_name.to_upper()
 	body.text = restoration_copy
 	motif.texture = motif_texture
 	curio_art.texture = curio_texture
@@ -51,7 +53,9 @@ func restoration_contract() -> Dictionary:
 		"curio_art_loaded": curio_art != null and curio_art.texture != null,
 		"house_first_composition": transformation_stage != null and transformation_stage.visible and before_house != null and after_house != null and not motif.visible,
 		"before_after_house_previews": int(before_contract.get("stage", -1)) >= 0 and int(after_contract.get("stage", -1)) == int(before_contract.get("stage", -1)) + 1 and bool(before_contract.get("same_camera", false)) and bool(after_contract.get("same_camera", false)),
-		"before_after_state_rail": state_rail != null and state_rail.get_node_or_null("States/Before") != null and state_rail.get_node_or_null("States/After") != null,
+		"before_after_state_rail": state_rail != null and not state_rail.visible and state_rail.get_node_or_null("States/Before") != null and state_rail.get_node_or_null("States/After") != null,
+		"before_after_labels": ($TransformationStage/PreviewRow/BeforeCard/BeforeContent/Label as Label).text == "BEFORE · DORMANT" and ($TransformationStage/PreviewRow/AfterCard/AfterContent/Label as Label).text == "AFTER · AWAKENED",
+		"house_first_header": hero_title.text == "THE HOUSE" and hero_copy.text.ends_with("· AWAKENED"),
 		"curio_motif_subordinate": motif != null and not motif.visible and curio_art != null and curio_art.visible,
 		"scene_authored_summary_material": ($CeremonyCard as PanelContainer).get_theme_stylebox("panel") is StyleBoxFlat and continue_button.get_theme_stylebox("normal") is StyleBoxFlat and String($CeremonyCard.get_meta("restoration_material", "")) == "scene_authored_flat" and String(continue_button.get_meta("restoration_material", "")) == "scene_authored_flat",
 		"summary_material_kind": String($CeremonyCard.get_meta("restoration_material", "")),
