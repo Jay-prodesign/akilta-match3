@@ -271,10 +271,10 @@ func screen_contract() -> Dictionary:
 		and not card_scroll.visible
 		and event_card_1.visible
 		and event_card_2.visible
-		and event_card_1.custom_minimum_size.y >= 280.0
-		and event_card_2.custom_minimum_size.y >= 280.0
-		and event_art_1.custom_minimum_size.y >= 195.0
-		and event_art_2.custom_minimum_size.y >= 195.0
+		and event_card_1.custom_minimum_size.y >= 300.0
+		and event_card_2.custom_minimum_size.y >= 300.0
+		and event_art_1.custom_minimum_size.y >= 190.0
+		and event_art_2.custom_minimum_size.y >= 190.0
 		and event_art_1.texture != null
 		and event_art_2.texture != null
 	)
