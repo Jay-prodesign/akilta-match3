@@ -37,8 +37,8 @@ func _ready() -> void:
 	if display_font != null:
 		brand_label.add_theme_font_override("font", display_font)
 		subtitle_label.add_theme_font_override("font", display_font)
-	ProductionChrome.apply_compact_panel(boot_state_panel, "splash_boot_state")
-	ProductionChrome.apply_action_button(enter_button, "primary", "splash_enter")
+	boot_state_panel.set_meta("splash_material", "scene_authored_flat")
+	enter_button.set_meta("splash_material", "scene_authored_flat")
 	_wire_tactile_button(enter_button)
 	enter_button.pressed.connect(func(): continue_requested.emit())
 	set_boot_state("loading")
@@ -166,7 +166,7 @@ func set_boot_state(state: String, message: String = "", can_continue: bool = tr
 		_stop_loading_pulse()
 	match state:
 		"loading":
-			boot_state_panel.custom_minimum_size.y = 116.0
+			boot_state_panel.custom_minimum_size.y = 84.0
 			progress_label.visible = true
 			progress_label.text = "WAKING THE HOUSE…"
 			load_track.visible = true
@@ -178,7 +178,7 @@ func set_boot_state(state: String, message: String = "", can_continue: bool = tr
 			enter_button.mouse_filter = Control.MOUSE_FILTER_IGNORE
 			enter_button.modulate = Color(1, 1, 1, 0)
 		"ready":
-			boot_state_panel.custom_minimum_size.y = 116.0
+			boot_state_panel.custom_minimum_size.y = 84.0
 			progress_label.visible = true
 			progress_label.text = "THE HOUSE IS READY"
 			load_track.visible = true
@@ -190,7 +190,7 @@ func set_boot_state(state: String, message: String = "", can_continue: bool = tr
 			enter_button.mouse_filter = Control.MOUSE_FILTER_STOP
 			_reveal_enter()
 		"recoverable_error":
-			boot_state_panel.custom_minimum_size.y = 190.0
+			boot_state_panel.custom_minimum_size.y = 176.0
 			progress_label.visible = true
 			progress_label.text = "THE HOUSE NEEDS ATTENTION" if not can_continue else "THE HOUSE RECOVERED SAFELY"
 			load_track.visible = false
@@ -223,10 +223,11 @@ func splash_authored_contract() -> Dictionary:
 		"dedicated_splash_master": ScreenArt.path("splash_bg_curio_boutique") != SPLASH_WORLD_BASELINE_PATH,
 		"shared_moonlit_castle_baseline": ScreenArt.path("splash_bg_curio_boutique") == SPLASH_WORLD_BASELINE_PATH,
 		"authored_brand_seal": brand_seal != null and brand_seal.texture != null,
-		"authored_boot_panel": boot_state_panel != null and boot_state_panel.get_theme_stylebox("panel") is StyleBoxTexture,
-		"authored_enter_cta": enter_button != null and enter_button.custom_minimum_size.y >= 96.0 and enter_button.get_theme_stylebox("normal") is StyleBoxTexture,
-		"north_star_brand_hierarchy": brand_label != null and brand_label.get_theme_font_size("font_size") >= 68 and brand_seal != null and brand_seal.custom_minimum_size.y >= 120.0,
-		"north_star_entry_stack": boot_state_panel != null and boot_state_panel.custom_minimum_size.y >= 100.0 and load_track != null and load_track.custom_minimum_size.y >= 16.0 and tagline_label != null,
+		"authored_boot_panel": boot_state_panel != null and boot_state_panel.get_theme_stylebox("panel") is StyleBoxFlat and String(boot_state_panel.get_meta("splash_material", "")) == "scene_authored_flat",
+		"authored_enter_cta": enter_button != null and enter_button.custom_minimum_size.y >= 84.0 and enter_button.custom_minimum_size.x >= 640.0 and enter_button.get_theme_stylebox("normal") is StyleBoxFlat and String(enter_button.get_meta("splash_material", "")) == "scene_authored_flat",
+		"north_star_brand_hierarchy": brand_label != null and brand_label.get_theme_font_size("font_size") >= 90 and brand_seal != null and brand_seal.custom_minimum_size.y >= 210.0,
+		"north_star_entry_stack": boot_state_panel != null and boot_state_panel.custom_minimum_size.y >= 80.0 and boot_state_panel.custom_minimum_size.y <= 92.0 and load_track != null and load_track.custom_minimum_size.y >= 12.0 and tagline_label != null,
+		"seam_free_splash_material": boot_state_panel.get_theme_stylebox("panel") is StyleBoxFlat and enter_button.get_theme_stylebox("normal") is StyleBoxFlat,
 		"stable_loading_geometry": enter_button != null and enter_button.visible,
 		"story_subordinate": ($Layout/Story as Label) != null and not ($Layout/Story as Label).visible,
 		"runtime_ui_factory": false,
