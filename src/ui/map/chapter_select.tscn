@@ -1,7 +1,6 @@
-[gd_scene load_steps=11 format=3]
+[gd_scene load_steps=10 format=3]
 
 [ext_resource type="Script" path="res://src/ui/map/chapter_select.gd" id="1_chapters"]
-[ext_resource type="Texture2D" path="res://assets/blockers/ch01_blocker_wax_seal_intact_v01.webp" id="2_seal"]
 
 [sub_resource type="StyleBoxFlat" id="HeaderNormal"]
 bg_color = Color(0.082, 0.067, 0.106, 0.92)
@@ -310,7 +309,6 @@ offset_bottom = 30.0
 grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
-texture = ExtResource("2_seal")
 expand_mode = 1
 stretch_mode = 5
 
@@ -342,7 +340,6 @@ offset_bottom = 30.0
 grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
-texture = ExtResource("2_seal")
 expand_mode = 1
 stretch_mode = 5
 
@@ -374,7 +371,6 @@ offset_bottom = 30.0
 grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
-texture = ExtResource("2_seal")
 expand_mode = 1
 stretch_mode = 5
 
@@ -406,7 +402,6 @@ offset_bottom = 30.0
 grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
-texture = ExtResource("2_seal")
 expand_mode = 1
 stretch_mode = 5
 
@@ -438,7 +433,6 @@ offset_bottom = 30.0
 grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
-texture = ExtResource("2_seal")
 expand_mode = 1
 stretch_mode = 5
 

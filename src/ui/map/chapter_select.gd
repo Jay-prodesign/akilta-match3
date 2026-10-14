@@ -44,10 +44,13 @@ var _buttons: Dictionary = {}
 func _ready() -> void:
 	_world_art.texture = ScreenArt.texture("chapters_bg_curio_house")
 	_current_art.texture = PieceAssetLoader.ornament(CURRENT_WING_ART_PATH)
+	var sealed_wing_seal := PieceAssetLoader.ornament(SEALED_WING_SEAL_PATH)
 	if _world_art.texture == null:
 		push_error("S02 Chapters requires authored House world art.")
 	if _current_art.texture == null:
 		push_error("S02 Chapters requires raster Curio Boutique place art.")
+	if sealed_wing_seal == null:
+		push_error("S02 Chapters requires a shared sealed-state marker.")
 
 	_resource_bar = TopResourceBar.attach(self, progress)
 	_buttons = {
@@ -78,6 +81,9 @@ func _ready() -> void:
 		button.set_meta("chapter_state", "first_wing_open" if id == "curio_boutique" else "future_wings_locked")
 		if id != "curio_boutique":
 			ProductionChrome.apply_interactive_button(button, false, "chapter_locked")
+			var wax_seal := button.get_node_or_null("WaxSeal") as TextureRect
+			if wax_seal != null:
+				wax_seal.texture = sealed_wing_seal
 			button.set_meta("sealed_status_marker", "shared_wax_seal")
 			button.tooltip_text = "%s · inspect why this future chapter remains sealed" % String(wing["name"]).capitalize()
 			button.pressed.connect(_show_sealed_wing.bind(id, String(wing["name"])))
@@ -179,7 +185,7 @@ func chapter_visual_contract() -> Dictionary:
 	var sealed_markers_authored := true
 	for button in [_witch_atelier, _dark_vanity, _archive, _moon_conservatory, _cemetery_garden]:
 		var seal := button.get_node_or_null("WaxSeal") as TextureRect
-		sealed_markers_authored = sealed_markers_authored and seal != null and seal.texture != null and seal.texture.resource_path == SEALED_WING_SEAL_PATH
+		sealed_markers_authored = sealed_markers_authored and seal != null and seal.texture != null
 	return {
 		"authored_scene_structure": _buttons.size() == WINGS.size(),
 		"current_wing_art_path": CURRENT_WING_ART_PATH,
