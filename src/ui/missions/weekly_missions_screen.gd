@@ -74,7 +74,8 @@ func screen_contract() -> Dictionary:
 	var altar_compact := empty_state.custom_minimum_size.y >= 230.0 and empty_state.custom_minimum_size.y <= 280.0 and reward_art.custom_minimum_size.x >= 160.0 and reward_art.custom_minimum_size.y >= 160.0
 	var status_rows := [feed_status, progress_status, reward_status]
 	var status_stack_dense := status_rows.all(func(row): return row != null and row.custom_minimum_size.y >= 140.0 and row.custom_minimum_size.y <= 170.0 and row.size_flags_horizontal == Control.SIZE_EXPAND_FILL and row.get_theme_stylebox("panel") is StyleBoxTexture)
-	var status_strip := ($MissionLayout/MissionStatusStack) is HBoxContainer and ($MissionLayout/MissionStatusStack as HBoxContainer).get_child_count() == 3
+	var status_strip_node := $MissionLayout/MissionStatusStack as HBoxContainer
+	var status_strip := status_strip_node != null and status_strip_node.get_child_count() == 3 and status_strip_node.size_flags_vertical == Control.SIZE_EXPAND_FILL
 	var truthful_status_copy := feed_state.text == "NOT CONNECTED" and progress_state.text == "NOT TRACKED OFFLINE" and reward_state.text == "NOTHING TO CLAIM"
 	var status_icons_loaded := [feed_icon, progress_icon, reward_icon].all(func(icon): return icon != null and icon.texture != null and String(icon.get_meta("asset_path", "")) == STATUS_SEAL_PATH)
 	var intentional_stage := stage_spacer != null and stage_spacer.size_flags_vertical != Control.SIZE_EXPAND_FILL and stage_spacer.custom_minimum_size.y <= 40.0 and ($MissionLayout as VBoxContainer).offset_bottom <= -150.0
