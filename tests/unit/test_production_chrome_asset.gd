@@ -29,7 +29,7 @@ func _run() -> void:
 	await _expect_panel(RESTORATION, "CeremonyCard")
 	await _expect_panel(CURIO_DETAIL, "CurioDetailCard")
 	await _expect_locked_panel()
-	await _expect_action(HOUSE, "Layout/PlayButton", "primary")
+	await _expect_scene_authored_house_action(HOUSE, "Layout/PlayButton")
 	await _expect_action(CHAPTER_MAP, "Layout/Back", "utility")
 	await _expect_action(PRESTART, "Layout/Card/Content/Start", "primary")
 	await _expect_action(PRESTART, "Layout/Back", "utility")
@@ -51,6 +51,19 @@ func _expect_panel(scene: PackedScene, path: String) -> void:
 	_expect(panel != null, "production chrome panel missing: %s" % path)
 	_expect(panel != null and panel.get_theme_stylebox("panel") is StyleBoxTexture, "panel must use asset-backed production chrome: %s" % path)
 	_expect(panel != null and String(panel.get_meta("production_chrome_asset", "")).ends_with(".svg"), "panel must expose authored chrome provenance: %s" % path)
+	instance.queue_free()
+	await process_frame
+
+func _expect_scene_authored_house_action(scene: PackedScene, path: String) -> void:
+	var instance := scene.instantiate()
+	root.add_child(instance)
+	await process_frame
+	var button := instance.get_node_or_null(path) as Button
+	_expect(button != null, "House action missing: %s" % path)
+	_expect(button != null and button.get_theme_stylebox("normal") is StyleBoxFlat, "House action normal state must preserve its scene-authored material: %s" % path)
+	_expect(button != null and button.get_theme_stylebox("hover") is StyleBoxFlat, "House action hover state must preserve its scene-authored material: %s" % path)
+	_expect(button != null and button.get_theme_stylebox("pressed") is StyleBoxFlat, "House action pressed state must preserve its scene-authored material: %s" % path)
+	_expect(button != null and String(button.get_meta("home_material", "")) == "scene_authored_flat", "House action material provenance mismatch: %s" % path)
 	instance.queue_free()
 	await process_frame
 
