@@ -54,7 +54,7 @@ var _keeper_overlay: Control
 const KEEPER_ART_PATH := "res://assets/pieces/black_cat.webp"
 
 func _ready() -> void:
-	ProductionChrome.apply_action_button(play_button, "primary", "house_next_level_or_map")
+	play_button.set_meta("home_material", "scene_authored_flat")
 	play_button.pressed.connect(_on_play_pressed)
 	collection_button.pressed.connect(func(): collection_requested.emit())
 	settings_button.pressed.connect(func(): settings_requested.emit())
@@ -102,7 +102,7 @@ func _refresh() -> void:
 			owned_curios.append(String(curio))
 
 	var state: Dictionary = HouseState.descriptor(stage)
-	headline.text = String(state.get("headline", "The Curio Boutique sleeps."))
+	headline.text = "THE HOUSE AWAITS" if stage == 0 else String(state.get("headline", "The House awaits."))
 	detail.text = String(state.get("detail", ""))
 	room_view.set_house_state(stage, owned_curios)
 	TopResourceBar.refresh(_resource_bar, progress)
@@ -130,12 +130,13 @@ func _refresh() -> void:
 			_returning_label.text = "WELCOME BACK · %d / %d CURIOS AWAKENED" % [owned_curios.size(), available_level_count]
 	if _completion_banner != null:
 		_completion_banner.visible = opening_complete and not _returning_player
+	$Layout/CurioChip.visible = false
 	if _completion_label != null:
 		_completion_label.text = "OPENING CABINET SET COMPLETE · %d / %d" % [finished, available_level_count]
 
 	var first_ritual: bool = progress != null and progress.completed_levels.is_empty() and progress.curios.is_empty() and stage == 0 and not _returning_player
 	if _first_ritual_panel != null:
-		_first_ritual_panel.visible = first_ritual and not _first_ritual_dismissed
+		_first_ritual_panel.visible = false
 
 	var next_level := int(progress.highest_level_unlocked) if progress != null else 1
 	var level1_completed: bool = progress != null and progress.completed_levels.has("ch01_level_001")
@@ -152,6 +153,8 @@ func _refresh() -> void:
 		play_button.text = "PLAY LEVEL 1"
 
 func north_star_home_contract() -> Dictionary:
+	var cta_scene_authored := play_button != null and play_button.get_theme_stylebox("normal") is StyleBoxFlat and play_button.get_theme_stylebox("hover") is StyleBoxFlat and play_button.get_theme_stylebox("pressed") is StyleBoxFlat and String(play_button.get_meta("home_material", "")) == "scene_authored_flat"
+	var title_plate_compact := headline != null and headline.custom_minimum_size.x >= 600.0 and headline.custom_minimum_size.x <= 680.0 and headline.custom_minimum_size.y >= 72.0 and headline.custom_minimum_size.y <= 84.0 and (headline.size_flags_horizontal & Control.SIZE_SHRINK_CENTER) != 0
 	return {
 		"primary_cta_height": play_button.custom_minimum_size.y if play_button != null else 0.0,
 		"primary_cta_width": play_button.custom_minimum_size.x if play_button != null else 0.0,
@@ -159,6 +162,10 @@ func north_star_home_contract() -> Dictionary:
 		"bottom_nav_reserved": ($Layout.offset_bottom <= -90.0),
 		"world_underlays_home_ui": room_view != null and room_view.get_parent() == self and $Layout/WorldSpacer != null,
 		"direct_level_cta": play_button != null and (play_button.text.begins_with("PLAY LEVEL") or play_button.text.begins_with("EXPLORE")),
+		"compact_title_plate": title_plate_compact,
+		"scene_authored_primary_cta": cta_scene_authored,
+		"status_strip_suppressed": not $Layout/CurioChip.visible,
+		"ftue_strip_suppressed": _first_ritual_panel != null and not _first_ritual_panel.visible,
 	}
 
 func _on_play_pressed() -> void:
@@ -202,6 +209,7 @@ func ftue_house_contract() -> Dictionary:
 		"copy": _first_ritual_copy.text if _first_ritual_copy != null else "",
 		"play_cta": play_button.text if play_button != null else "",
 		"keeper_available": _keeper_hotspot != null and not _keeper_hotspot.disabled,
+		"guidance_via_keeper": _keeper_hotspot != null and not _keeper_hotspot.disabled,
 		"first_time_truth": progress != null and progress.completed_levels.is_empty() and progress.curios.is_empty() and int(progress.house_stage) == 0,
 	}
 
@@ -352,7 +360,7 @@ func show_restoration_ceremony(curio_id: String, stage: int) -> void:
 		if is_instance_valid(overlay):
 			overlay.queue_free()
 		play_button.visible = true
-		curio_label.get_parent().visible = true
+		curio_label.get_parent().visible = false
 		headline.visible = true
 		detail.visible = true
 		if room_view.has_method("set_restoration_full_bleed"):
