@@ -14,6 +14,10 @@ static func present(owner: Control, title_text: String, reason_text: String, req
 		return null
 	var existing := owner.get_node_or_null("LockedExplanation")
 	if existing != null:
+		# A new sealed destination can be inspected before the previous exit tween
+		# has fully elapsed. Remove the old node synchronously so the authored
+		# modal keeps its canonical name and the new truth is immediately queryable.
+		owner.remove_child(existing)
 		existing.queue_free()
 
 	var overlay := LockedExplanationScene.instantiate() as Control
