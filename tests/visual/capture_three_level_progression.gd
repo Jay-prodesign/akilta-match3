@@ -222,7 +222,7 @@ func _capture() -> void:
 	var weekly_altar_ratio := weekly_altar.custom_minimum_size.y / weekly_viewport.y
 	if weekly_altar_ratio < 0.08 or weekly_altar_ratio > 0.11:
 		return _fail(app, "Weekly Missions compact truthful intro drifted: %.3f" % weekly_altar_ratio)
-	if weekly_feed.custom_minimum_size.y < 102.0 or weekly_feed.custom_minimum_size.y > 114.0 or weekly_progress.custom_minimum_size.y < 102.0 or weekly_progress.custom_minimum_size.y > 114.0 or weekly_rewards.custom_minimum_size.y < 102.0 or weekly_rewards.custom_minimum_size.y > 114.0:
+	if weekly_feed.custom_minimum_size.y < 156.0 or weekly_feed.custom_minimum_size.y > 172.0 or weekly_feed.size_flags_vertical == Control.SIZE_EXPAND_FILL or weekly_progress.custom_minimum_size.y < 156.0 or weekly_progress.custom_minimum_size.y > 172.0 or weekly_progress.size_flags_vertical == Control.SIZE_EXPAND_FILL or weekly_rewards.custom_minimum_size.y < 156.0 or weekly_rewards.custom_minimum_size.y > 172.0 or weekly_rewards.size_flags_vertical == Control.SIZE_EXPAND_FILL:
 		return _fail(app, "Weekly Missions locked-board horizontal ritual rows drifted")
 	if weekly_spacer.size_flags_vertical == Control.SIZE_EXPAND_FILL or weekly_spacer.custom_minimum_size.y > 2.0:
 		return _fail(app, "Weekly Missions large empty world corridor returned")

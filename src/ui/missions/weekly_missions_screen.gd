@@ -26,7 +26,10 @@ const STATUS_SEAL_PATH := "res://assets/ui/gameplay/booster_sealed_badge_v01.svg
 @onready var reward_icon: TextureRect = $MissionLayout/MissionStatusStack/RewardStatus/Content/SealIcon
 @onready var reward_state: Label = $MissionLayout/MissionStatusStack/RewardStatus/Content/State
 @onready var stage_spacer: Control = $MissionLayout/WorldStageSpacer
-@onready var opening_record: Label = $MissionLayout/MissionOpeningRecord
+@onready var opening_record: PanelContainer = $MissionLayout/MissionOpeningRecord
+@onready var opening_reward_seal: TextureRect = $MissionLayout/MissionOpeningRecord/Content/RewardSeal
+@onready var opening_reward_state: Label = $MissionLayout/MissionOpeningRecord/Content/State
+@onready var opening_reward_truth: Label = $MissionLayout/MissionOpeningRecord/Content/Truth
 @onready var return_events: Button = $MissionLayout/ReturnToEvents
 @onready var return_house: Button = $MissionLayout/ReturnToHouse
 
@@ -35,7 +38,7 @@ func _ready() -> void:
 	for row in [feed_status, progress_status, reward_status]:
 		row.set_meta("weekly_material", "scene_authored_flat")
 	var status_seal := PieceAssetLoader.ornament(STATUS_SEAL_PATH)
-	for icon in [feed_icon, progress_icon, reward_icon]:
+	for icon in [feed_icon, progress_icon, reward_icon, opening_reward_seal]:
 		if icon != null:
 			icon.texture = status_seal
 			icon.set_meta("asset_path", STATUS_SEAL_PATH)
@@ -61,18 +64,19 @@ func configure(state: Dictionary) -> bool:
 	feed_state.text = "NOT CONNECTED"
 	progress_state.text = "NOT TRACKED OFFLINE"
 	reward_state.text = "NOTHING TO CLAIM"
-	opening_record.text = "WEEKLY REWARD · SEALED · NOTHING TO CLAIM OFFLINE"
+	opening_reward_state.text = "SEALED · LIVE FEED REQUIRED"
+	opening_reward_truth.text = "NOTHING TO CLAIM OFFLINE"
 	return true
 
 func screen_contract() -> Dictionary:
 	var altar_compact := empty_state.custom_minimum_size.y >= 148.0 and empty_state.custom_minimum_size.y <= 164.0 and reward_art.custom_minimum_size.x >= 90.0 and reward_art.custom_minimum_size.x <= 104.0 and reward_art.custom_minimum_size.y >= 90.0 and reward_art.custom_minimum_size.y <= 104.0
 	var status_rows := [feed_status, progress_status, reward_status]
 	var status_stack := $MissionLayout/MissionStatusStack as VBoxContainer
-	var status_stack_dense := status_stack != null and status_stack.size_flags_vertical == Control.SIZE_EXPAND_FILL and status_rows.all(func(row): return row != null and row.custom_minimum_size.y >= 102.0 and row.custom_minimum_size.y <= 114.0 and row.size_flags_vertical == Control.SIZE_EXPAND_FILL and row.get_theme_stylebox("panel") is StyleBoxFlat and String(row.get_meta("weekly_material", "")) == "scene_authored_flat")
+	var status_stack_dense := status_stack != null and status_stack.size_flags_vertical != Control.SIZE_EXPAND_FILL and status_rows.all(func(row): return row != null and row.custom_minimum_size.y >= 156.0 and row.custom_minimum_size.y <= 172.0 and row.size_flags_vertical != Control.SIZE_EXPAND_FILL and row.get_theme_stylebox("panel") is StyleBoxFlat and String(row.get_meta("weekly_material", "")) == "scene_authored_flat")
 	var truthful_status_copy := feed_state.text == "NOT CONNECTED" and progress_state.text == "NOT TRACKED OFFLINE" and reward_state.text == "NOTHING TO CLAIM"
-	var status_icons_loaded := [feed_icon, progress_icon, reward_icon].all(func(icon): return icon != null and icon.texture != null and String(icon.get_meta("asset_path", "")) == STATUS_SEAL_PATH)
+	var status_icons_loaded := [feed_icon, progress_icon, reward_icon, opening_reward_seal].all(func(icon): return icon != null and icon.texture != null and String(icon.get_meta("asset_path", "")) == STATUS_SEAL_PATH)
 	var intentional_stage := stage_spacer != null and stage_spacer.size_flags_vertical != Control.SIZE_EXPAND_FILL and stage_spacer.custom_minimum_size.y <= 2.0 and ($MissionLayout as VBoxContainer).offset_bottom <= -150.0
-	var footer_record := opening_record.visible and opening_record.custom_minimum_size.y >= 52.0 and opening_record.custom_minimum_size.y <= 60.0 and opening_record.text.contains("NOTHING TO CLAIM") and opening_record.get_theme_stylebox("normal") is StyleBoxFlat and String(opening_record.get_meta("weekly_material", "")) == "scene_authored_flat" and String(opening_record.get_meta("stage_role", "")) == "anchored_footer_status"
+	var footer_record := opening_record.visible and opening_record.custom_minimum_size.y >= 210.0 and opening_record.size_flags_vertical == Control.SIZE_EXPAND_FILL and opening_reward_state.text == "SEALED · LIVE FEED REQUIRED" and opening_reward_truth.text == "NOTHING TO CLAIM OFFLINE" and opening_record.get_theme_stylebox("panel") is StyleBoxFlat and String(opening_record.get_meta("weekly_material", "")) == "scene_authored_flat" and String(opening_record.get_meta("stage_role", "")) == "anchored_footer_status"
 	var world_visible := ($WorldShade as ColorRect).color.a <= 0.20 and ($HeaderShade as ColorRect).color.a <= 0.38
 	var return_actions := return_events.get_theme_stylebox("normal") is StyleBoxTexture and return_house.get_theme_stylebox("normal") is StyleBoxTexture and String(return_events.get_meta("production_chrome_kind", "")) == "action_utility_weekly_events_return" and String(return_house.get_meta("production_chrome_kind", "")) == "action_utility_weekly_house_return" and return_events.visible and return_events.custom_minimum_size.y <= 64.0 and not return_house.visible
 	return {
@@ -85,9 +89,10 @@ func screen_contract() -> Dictionary:
 		"north_star_title_hierarchy": ($MissionLayout/MissionTitle as Label).get_theme_font_size("font_size") >= 52,
 		"north_star_altar_stack": altar_compact and status_stack_dense,
 		"north_star_horizontal_mission_rows": status_stack_dense,
+		"north_star_sealed_reward_panel": footer_record,
 		"scene_authored_altar_material": empty_state != null and empty_state.get_theme_stylebox("panel") is StyleBoxFlat and String(empty_state.get_meta("weekly_material", "")) == "scene_authored_flat",
 		"scene_authored_status_rows": status_stack_dense,
-		"seam_free_weekly_material": empty_state.get_theme_stylebox("panel") is StyleBoxFlat and status_stack_dense and opening_record.get_theme_stylebox("normal") is StyleBoxFlat,
+		"seam_free_weekly_material": empty_state.get_theme_stylebox("panel") is StyleBoxFlat and status_stack_dense and opening_record.get_theme_stylebox("panel") is StyleBoxFlat,
 		"truthful_status_rows": truthful_status_copy,
 		"sealed_status_icons": status_icons_loaded,
 		"header_readability_scrim": ($HeaderShade as ColorRect) != null and ($HeaderShade as ColorRect).color.a >= 0.34,

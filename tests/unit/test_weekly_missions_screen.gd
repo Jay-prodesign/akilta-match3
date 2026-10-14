@@ -23,6 +23,7 @@ func _run() -> void:
 	_expect(bool(contract.get("north_star_title_hierarchy", false)), "Weekly Rituals must retain a strong North Star page title")
 	_expect(bool(contract.get("north_star_altar_stack", false)), "Weekly Rituals must combine a compact truthful intro with stacked ritual rows")
 	_expect(bool(contract.get("north_star_horizontal_mission_rows", false)), "Weekly Rituals must preserve the locked board's three horizontal mission-row scan path")
+	_expect(bool(contract.get("north_star_sealed_reward_panel", false)), "Weekly Rituals must give the locked board's reward zone a truthful sealed-state treatment")
 	_expect(bool(contract.get("scene_authored_altar_material", false)), "Weekly Rituals altar must preserve its clean authored scene material")
 	_expect(bool(contract.get("header_readability_scrim", false)), "Weekly Rituals must retain a dedicated header readability scrim over world art")
 	_expect(bool(contract.get("production_return_actions", false)), "Weekly Rituals compact Events return must use verified utility chrome")
@@ -49,18 +50,22 @@ func _run() -> void:
 	var reward_row := screen.get_node_or_null("MissionLayout/MissionStatusStack/RewardStatus") as PanelContainer
 	var reward_state := screen.get_node_or_null("MissionLayout/MissionStatusStack/RewardStatus/Content/State") as Label
 	var stage_spacer := screen.get_node_or_null("MissionLayout/WorldStageSpacer") as Control
-	var record := screen.get_node_or_null("MissionLayout/MissionOpeningRecord") as Label
+	var record := screen.get_node_or_null("MissionLayout/MissionOpeningRecord") as PanelContainer
+	var reward_seal := screen.get_node_or_null("MissionLayout/MissionOpeningRecord/Content/RewardSeal") as TextureRect
+	var reward_state := screen.get_node_or_null("MissionLayout/MissionOpeningRecord/Content/State") as Label
+	var reward_truth := screen.get_node_or_null("MissionLayout/MissionOpeningRecord/Content/Truth") as Label
 	_expect(timer != null and timer.text.contains("OFFLINE"), "Weekly Rituals must disclose unavailable reset timing")
 	_expect(empty != null and empty.custom_minimum_size.y >= 148.0 and empty.custom_minimum_size.y <= 164.0, "Weekly intro must stay compact so the locked-board mission rows own the screen")
 	_expect(truth != null and truth.text.contains("NOTHING TO CLAIM"), "Weekly Rituals must not fabricate claimable rewards")
 	_expect(availability != null and availability.text.contains("ONLY WHEN A MISSION FEED IS CONNECTED") and not availability.visible, "Weekly Rituals must retain live-feed truth without duplicating it visually")
 	_expect(art != null and art.texture != null and art.custom_minimum_size.x >= 90.0 and art.custom_minimum_size.x <= 104.0 and art.custom_minimum_size.y >= 90.0 and art.custom_minimum_size.y <= 104.0 and String(art.get_meta("asset_path", "")).contains("_sealed_"), "Weekly intro must retain a compact sealed raster Curio anchor")
-	_expect(feed_row != null and feed_row.get_theme_stylebox("panel") is StyleBoxFlat and feed_state != null and feed_state.text == "NOT CONNECTED", "Weekly Rituals live-feed row must stay truthful and seam-free")
-	_expect(progress_row != null and progress_row.get_theme_stylebox("panel") is StyleBoxFlat and progress_state != null and progress_state.text == "NOT TRACKED OFFLINE", "Weekly Rituals progress row must not fabricate offline progress")
-	_expect(reward_row != null and reward_row.get_theme_stylebox("panel") is StyleBoxFlat and reward_state != null and reward_state.text == "NOTHING TO CLAIM", "Weekly Rituals reward row must not fabricate a claim")
+	_expect(feed_row != null and feed_row.custom_minimum_size.y >= 156.0 and feed_row.custom_minimum_size.y <= 172.0 and feed_row.size_flags_vertical != Control.SIZE_EXPAND_FILL and feed_row.get_theme_stylebox("panel") is StyleBoxFlat and feed_state != null and feed_state.text == "NOT CONNECTED", "Weekly Rituals live-feed row must stay dense, truthful and seam-free")
+	_expect(progress_row != null and progress_row.custom_minimum_size.y >= 156.0 and progress_row.custom_minimum_size.y <= 172.0 and progress_row.size_flags_vertical != Control.SIZE_EXPAND_FILL and progress_row.get_theme_stylebox("panel") is StyleBoxFlat and progress_state != null and progress_state.text == "NOT TRACKED OFFLINE", "Weekly Rituals progress row must stay dense without fabricating offline progress")
+	_expect(reward_row != null and reward_row.custom_minimum_size.y >= 156.0 and reward_row.custom_minimum_size.y <= 172.0 and reward_row.size_flags_vertical != Control.SIZE_EXPAND_FILL and reward_row.get_theme_stylebox("panel") is StyleBoxFlat and reward_state != null and reward_state.text == "NOTHING TO CLAIM", "Weekly Rituals reward row must stay dense without fabricating a claim")
 	_expect(stage_spacer != null and stage_spacer.size_flags_vertical != Control.SIZE_EXPAND_FILL and stage_spacer.custom_minimum_size.y <= 2.0, "Weekly Rituals empty world corridor returned")
-	_expect(record != null and record.visible and record.custom_minimum_size.y >= 52.0 and record.custom_minimum_size.y <= 60.0 and record.text.contains("NOTHING TO CLAIM"), "Weekly Rituals footer must truthfully seal the unavailable reward area")
-	_expect(record != null and record.get_theme_stylebox("normal") is StyleBoxFlat, "Weekly Rituals sealed reward footer must render on its seam-free authored material")
+	_expect(record != null and record.visible and record.custom_minimum_size.y >= 210.0 and record.size_flags_vertical == Control.SIZE_EXPAND_FILL, "Weekly Rituals reward zone must occupy the board's lower reward stage")
+	_expect(record != null and record.get_theme_stylebox("panel") is StyleBoxFlat, "Weekly Rituals sealed reward zone must render on its seam-free authored material")
+	_expect(reward_seal != null and reward_seal.texture != null and reward_state != null and reward_state.text == "SEALED · LIVE FEED REQUIRED" and reward_truth != null and reward_truth.text == "NOTHING TO CLAIM OFFLINE", "Weekly Rituals reward zone must remain explicit and truthful")
 
 	var event_signal := {"hit": false}
 	screen.return_events_requested.connect(func(): event_signal["hit"] = true)
