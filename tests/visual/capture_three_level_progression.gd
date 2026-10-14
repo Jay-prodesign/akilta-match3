@@ -278,26 +278,26 @@ func _capture() -> void:
 	if profile != null:
 		for node in profile.find_children("", "Label", true, false):
 			profile_copy += (node as Label).text + "\n"
-	if not profile_copy.contains("Opening chapter complete · 3 of 3 rituals."):
+	if not profile_copy.contains("3 / 3 RITUALS · COMPLETE"):
 		return _fail(app, "Profile does not show the completed opening chapter")
-	if not profile_copy.contains("3 of 3 opening curios awakened."):
+	if not profile_copy.contains("3 / 3 CURIOS · AWAKENED"):
 		return _fail(app, "Profile does not show 3/3 curios")
 	if not profile_copy.contains("FIRST CABINET SET RESTORED"):
 		return _fail(app, "Profile does not expose the restored first cabinet set")
 	if not profile_copy.contains("OPENING RESTORATION COMPLETE"):
 		return _fail(app, "Profile does not expose completed House restoration")
-	var profile_hero_kicker: Label = app.current_screen().get_node_or_null("FeatureLayout/FeatureHero/HeroRow/HeroCopy/FeatureHeroKicker") as Label
-	var profile_hero_title: Label = app.current_screen().get_node_or_null("FeatureLayout/FeatureHero/HeroRow/HeroCopy/FeatureHeroTitle") as Label
-	var profile_progress_label: Label = app.current_screen().get_node_or_null("FeatureLayout/FeatureHero/HeroRow/HeroCopy/ProfileProgressLabel") as Label
-	var profile_progress: ProgressBar = app.current_screen().get_node_or_null("FeatureLayout/FeatureHero/HeroRow/HeroCopy/ProfileProgress") as ProgressBar
+	var profile_hero_kicker: Label = app.current_screen().get_node_or_null("FeatureLayout/ProfileFeature/Identity/IdentityRow/Copy/Kicker") as Label
+	var profile_hero_title: Label = app.current_screen().get_node_or_null("FeatureLayout/ProfileFeature/Identity/IdentityRow/Copy/Title") as Label
+	var profile_progress_label: Label = app.current_screen().get_node_or_null("FeatureLayout/ProfileFeature/Identity/IdentityRow/Copy/ProgressLabel") as Label
+	var profile_progress: ProgressBar = app.current_screen().get_node_or_null("FeatureLayout/ProfileFeature/Identity/IdentityRow/Copy/Progress") as ProgressBar
 	if profile_hero_kicker == null or profile_hero_kicker.text != "KEEPER RECORD":
 		return _fail(app, "completed Profile identity card must identify the Keeper record")
 	if profile_hero_title == null or profile_hero_title.text != "FIRST CABINET SET RESTORED":
 		return _fail(app, "completed Profile identity card must state the restored first cabinet set")
 	if profile_progress_label == null or profile_progress_label.text != "OPENING RITUALS · 3 / 3" or profile_progress == null or profile_progress.value != 3.0:
 		return _fail(app, "completed Profile must show truthful opening progress instead of fake XP")
-	var profile_local_save: Label = profile.get_node_or_null("FeatureLayout/SaveHealthCard/SaveHealthContent/LocalSaveStatus") as Label
-	var profile_cloud: Label = profile.get_node_or_null("FeatureLayout/SaveHealthCard/SaveHealthContent/CloudSyncStatus") as Label
+	var profile_local_save: Label = profile.get_node_or_null("FeatureLayout/ProfileFeature/Menu/SaveRow/Content/Local") as Label
+	var profile_cloud: Label = profile.get_node_or_null("FeatureLayout/ProfileFeature/Menu/SaveRow/Content/Cloud") as Label
 	if profile_local_save == null or profile_local_save.text != "LOCAL SAVE · HEALTHY":
 		return _fail(app, "completed Profile local save health missing")
 	if profile_cloud == null or profile_cloud.text != "CLOUD SYNC · NOT CONNECTED":
@@ -306,7 +306,7 @@ func _capture() -> void:
 		return
 	if not await _save(app, "progression-final-profile.png"):
 		return
-	var profile_settings_button: Button = profile.get_node_or_null("FeatureLayout/ProfileSettings") as Button
+	var profile_settings_button: Button = profile.get_node_or_null("FeatureLayout/ProfileFeature/Menu/Settings") as Button
 	if profile_settings_button == null:
 		return _fail(app, "Profile must expose its Settings destination")
 	profile_settings_button.emit_signal("pressed")
@@ -437,9 +437,9 @@ func _verify_meta_visual_parity(app: Node, screen: Node, feature: String) -> boo
 			_fail(app, "%s visual parity gate failed: %s" % [feature, key])
 			return false
 	var viewport_size := screen.get_viewport().get_visible_rect().size
-	var hero := screen.get_node_or_null("FeatureLayout/FeatureHero") as Control
-	var hero_art := screen.get_node_or_null("FeatureLayout/FeatureHero/HeroRow/ShopFeaturedOfferArt") as Control if feature == "shop" else screen.get_node_or_null("FeatureLayout/FeatureHero/HeroRow/HeroArt") as Control
-	var card_art := screen.get_node_or_null("FeatureLayout/CardScroll/Cards/Card1/Row/Art") as Control
+	var hero := screen.get_node_or_null("FeatureLayout/ProfileFeature/Identity") as Control if feature == "profile" else screen.get_node_or_null("FeatureLayout/FeatureHero") as Control
+	var hero_art := screen.get_node_or_null("FeatureLayout/ProfileFeature/Identity/IdentityRow/KeeperArt") as Control if feature == "profile" else (screen.get_node_or_null("FeatureLayout/FeatureHero/HeroRow/ShopFeaturedOfferArt") as Control if feature == "shop" else screen.get_node_or_null("FeatureLayout/FeatureHero/HeroRow/HeroArt") as Control)
+	var card_art := screen.get_node_or_null("FeatureLayout/ProfileFeature/Menu/ChapterRow/Content/Icon") as Control if feature == "profile" else screen.get_node_or_null("FeatureLayout/CardScroll/Cards/Card1/Row/Art") as Control
 	if hero == null or hero_art == null or card_art == null:
 		_fail(app, "%s visual parity geometry slots missing" % feature)
 		return false

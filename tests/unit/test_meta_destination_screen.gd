@@ -44,8 +44,10 @@ func _run() -> void:
 			_expect(hero_panel != null and not hero_panel.visible, "shop must use catalog composition instead of the generic meta hero")
 			_expect(bool(contract.get("shop_catalog_focus", false)), "shop must present one featured sealed preview plus two catalog previews")
 		elif feature == "profile":
-			var profile_progress := screen.get_node_or_null("FeatureLayout/FeatureHero/HeroRow/HeroCopy/ProfileProgress") as ProgressBar
-			_expect(hero_panel != null and hero_panel.visible and hero_panel.custom_minimum_size.y >= 280.0 and hero_panel.custom_minimum_size.y <= 320.0, "profile must use a compact player-identity card")
+			var profile_identity := screen.get_node_or_null("FeatureLayout/ProfileFeature/Identity") as PanelContainer
+			var profile_progress := screen.get_node_or_null("FeatureLayout/ProfileFeature/Identity/IdentityRow/Copy/Progress") as ProgressBar
+			_expect(hero_panel != null and not hero_panel.visible, "profile must not reuse the generic meta hero")
+			_expect(profile_identity != null and profile_identity.visible and profile_identity.custom_minimum_size.y >= 280.0 and profile_identity.custom_minimum_size.y <= 320.0, "profile must use its dedicated compact player-identity card")
 			_expect(active_hero_art != null and active_hero_art.custom_minimum_size.x >= 200.0 and active_hero_art.custom_minimum_size.x <= 240.0, "profile Keeper portrait must stay compact")
 			_expect(profile_progress != null and profile_progress.visible, "profile must expose truthful opening progress instead of fake XP")
 		else:
@@ -74,11 +76,11 @@ func _run() -> void:
 			if feature == "events":
 				_expect(card != null and not card.visible, "events must suppress generic meta cards in favor of its dedicated event composition")
 				continue
-			_expect(card != null and card.visible and art != null and art.texture != null, "%s %s must render object art" % [feature, card_name])
 			if feature == "profile":
-				_expect(card.custom_minimum_size.y >= 104.0 and card.custom_minimum_size.y <= 120.0 and art.custom_minimum_size.x >= 80.0 and art.custom_minimum_size.x <= 96.0, "profile %s must read as a compact utility row" % card_name)
-			else:
-				_expect(art != null and art.custom_minimum_size.x >= 220.0 and art.custom_minimum_size.y >= 195.0, "%s %s art must not collapse into a thumbnail row" % [feature, card_name])
+				_expect(card != null and not card.visible, "profile must suppress generic meta cards in favor of its dedicated utility list")
+				continue
+			_expect(card != null and card.visible and art != null and art.texture != null, "%s %s must render object art" % [feature, card_name])
+			_expect(art != null and art.custom_minimum_size.x >= 220.0 and art.custom_minimum_size.y >= 195.0, "%s %s art must not collapse into a thumbnail row" % [feature, card_name])
 			if art != null and art.texture != null:
 				_expect(String(art.get_meta("asset_path", "")).ends_with(".webp") or String(art.get_meta("asset_path", "")).ends_with(".png"), "%s %s must use raster object art" % [feature, card_name])
 		if feature == "events":
@@ -110,22 +112,27 @@ func _run() -> void:
 			_expect(notice.visible and notice.text.find("NO PURCHASES OR PAYMENTS") >= 0, "shop preview must state that purchases and payments are disabled")
 			_expect(not (screen.get_node("FeatureLayout/ShopCurrencySummary") as Label).visible and not (screen.get_node("FeatureLayout/ShopCurrencyTruth") as Label).visible, "shop must rely on the shared resource bar instead of duplicate economy rows")
 		if feature == "profile":
-			var profile_hero := screen.get_node("FeatureLayout/FeatureHero/HeroRow/HeroArt") as TextureRect
-			_expect(profile_hero != null and String(contract.get("hero_asset_path", "")).ends_with("black_cat.webp"), "profile hero must use the Keeper familiar rather than a generic Curio")
+			var profile_hero := screen.get_node("FeatureLayout/ProfileFeature/Identity/IdentityRow/KeeperArt") as TextureRect
+			_expect(profile_hero != null and profile_hero.texture != null and String(contract.get("hero_asset_path", "")).ends_with("black_cat.webp"), "profile identity must use the Keeper familiar rather than a generic Curio")
 			_expect(bool(contract.get("profile_save_health_compact", false)), "profile save-health truth must stay compact instead of dominating the screen")
 			_expect(bool(contract.get("profile_status_focus", false)), "profile save health must prioritize readable local/cloud statuses over paragraph copy")
 			_expect(bool(contract.get("profile_identity_focus", false)), "profile must center the authored Keeper identity and truthful opening progress on its own framed utility surface")
 			var profile_surface := screen.get_node_or_null("ProfileSurface") as PanelContainer
 			_expect(profile_surface != null and profile_surface.visible and profile_surface.get_theme_stylebox("panel") is StyleBoxTexture, "profile must own a screen-specific production-chrome surface")
 			_expect(bool(contract.get("profile_board_utility_rows", false)), "profile must use board-like compact utility rows instead of oversized progress cards")
-			var profile_progress_label := screen.get_node_or_null("FeatureLayout/FeatureHero/HeroRow/HeroCopy/ProfileProgressLabel") as Label
-			var profile_progress := screen.get_node_or_null("FeatureLayout/FeatureHero/HeroRow/HeroCopy/ProfileProgress") as ProgressBar
-			var settings_button := screen.get_node_or_null("FeatureLayout/ProfileSettings") as Button
+			var profile_progress_label := screen.get_node_or_null("FeatureLayout/ProfileFeature/Identity/IdentityRow/Copy/ProgressLabel") as Label
+			var profile_progress := screen.get_node_or_null("FeatureLayout/ProfileFeature/Identity/IdentityRow/Copy/Progress") as ProgressBar
+			var settings_button := screen.get_node_or_null("FeatureLayout/ProfileFeature/Menu/Settings") as Button
+			var chapter_row := screen.get_node_or_null("FeatureLayout/ProfileFeature/Menu/ChapterRow") as PanelContainer
+			var reliquary_row := screen.get_node_or_null("FeatureLayout/ProfileFeature/Menu/ReliquaryRow") as PanelContainer
+			var house_row := screen.get_node_or_null("FeatureLayout/ProfileFeature/Menu/HouseRow") as PanelContainer
+			var save_row := screen.get_node_or_null("FeatureLayout/ProfileFeature/Menu/SaveRow") as PanelContainer
 			_expect(profile_progress_label != null and profile_progress_label.text == "OPENING RITUALS · 3 / 3" and profile_progress != null and profile_progress.value == 3.0, "profile progress bar must reflect real completed opening rituals")
-			_expect(settings_button != null and settings_button.custom_minimum_size.y <= 76.0 and settings_button.text.contains("SETTINGS"), "profile settings must read as a compact utility row")
+			_expect(settings_button != null and settings_button.custom_minimum_size.y >= 96.0 and settings_button.custom_minimum_size.y <= 112.0 and settings_button.text.contains("SETTINGS"), "profile settings must read as a dedicated utility row")
+			_expect(chapter_row != null and reliquary_row != null and house_row != null and save_row != null and chapter_row.visible and reliquary_row.visible and house_row.visible and save_row.visible, "profile dedicated utility list must expose all truthful rows")
 			var settings := {"hit": false}
 			screen.settings_requested.connect(func(): settings["hit"] = true)
-			(screen.get_node("FeatureLayout/ProfileSettings") as Button).emit_signal("pressed")
+			settings_button.emit_signal("pressed")
 			_expect(bool(settings["hit"]), "profile primary action must open settings")
 		screen.queue_free()
 		await process_frame

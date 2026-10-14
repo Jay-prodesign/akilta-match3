@@ -286,6 +286,210 @@ theme_override_font_sizes/font_size = 15
 text = "FUTURE JOURNEY · SEALED"
 horizontal_alignment = 1
 
+
+[node name="ProfileFeature" type="VBoxContainer" parent="FeatureLayout"]
+visible = false
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_constants/separation = 9
+
+[node name="Identity" type="PanelContainer" parent="FeatureLayout/ProfileFeature"]
+custom_minimum_size = Vector2(0, 300)
+layout_mode = 2
+theme_override_styles/panel = SubResource("Hero")
+
+[node name="IdentityRow" type="HBoxContainer" parent="FeatureLayout/ProfileFeature/Identity"]
+layout_mode = 2
+theme_override_constants/separation = 22
+
+[node name="KeeperArt" type="TextureRect" parent="FeatureLayout/ProfileFeature/Identity/IdentityRow"]
+custom_minimum_size = Vector2(220, 220)
+layout_mode = 2
+expand_mode = 1
+stretch_mode = 5
+
+[node name="Copy" type="VBoxContainer" parent="FeatureLayout/ProfileFeature/Identity/IdentityRow"]
+layout_mode = 2
+size_flags_horizontal = 3
+alignment = 1
+theme_override_constants/separation = 6
+
+[node name="Kicker" type="Label" parent="FeatureLayout/ProfileFeature/Identity/IdentityRow/Copy"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.831, 0.678, 0.439, 1)
+theme_override_font_sizes/font_size = 17
+text = "KEEPER RECORD"
+
+[node name="Title" type="Label" parent="FeatureLayout/ProfileFeature/Identity/IdentityRow/Copy"]
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 0.941, 0.847, 1)
+theme_override_colors/font_outline_color = Color(0.02, 0.014, 0.028, 0.92)
+theme_override_constants/outline_size = 3
+theme_override_font_sizes/font_size = 30
+text = "OPENING HOUSE IN PROGRESS"
+autowrap_mode = 2
+
+[node name="ProgressLabel" type="Label" parent="FeatureLayout/ProfileFeature/Identity/IdentityRow/Copy"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.95, 0.816, 0.545, 1)
+theme_override_font_sizes/font_size = 16
+text = "OPENING RITUALS · 0 / 3"
+horizontal_alignment = 1
+
+[node name="Progress" type="ProgressBar" parent="FeatureLayout/ProfileFeature/Identity/IdentityRow/Copy"]
+custom_minimum_size = Vector2(0, 34)
+layout_mode = 2
+max_value = 3.0
+show_percentage = false
+theme_override_styles/background = SubResource("ProfileProgressBack")
+theme_override_styles/fill = SubResource("ProfileProgressFill")
+
+[node name="Menu" type="VBoxContainer" parent="FeatureLayout/ProfileFeature"]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_constants/separation = 8
+
+[node name="Settings" type="Button" parent="FeatureLayout/ProfileFeature/Menu"]
+custom_minimum_size = Vector2(0, 104)
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 0.941, 0.847, 1)
+theme_override_font_sizes/font_size = 20
+theme_override_styles/normal = SubResource("Secondary")
+theme_override_styles/hover = SubResource("Primary")
+theme_override_styles/pressed = SubResource("Primary")
+text = "SETTINGS · AUDIO & ACCESSIBILITY"
+
+[node name="ChapterRow" type="PanelContainer" parent="FeatureLayout/ProfileFeature/Menu"]
+custom_minimum_size = Vector2(0, 116)
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_styles/panel = SubResource("Card")
+
+[node name="Content" type="HBoxContainer" parent="FeatureLayout/ProfileFeature/Menu/ChapterRow"]
+layout_mode = 2
+theme_override_constants/separation = 14
+
+[node name="Icon" type="TextureRect" parent="FeatureLayout/ProfileFeature/Menu/ChapterRow/Content"]
+custom_minimum_size = Vector2(76, 76)
+layout_mode = 2
+expand_mode = 1
+stretch_mode = 5
+
+[node name="Copy" type="VBoxContainer" parent="FeatureLayout/ProfileFeature/Menu/ChapterRow/Content"]
+layout_mode = 2
+size_flags_horizontal = 3
+alignment = 1
+
+[node name="Title" type="Label" parent="FeatureLayout/ProfileFeature/Menu/ChapterRow/Content/Copy"]
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 0.941, 0.847, 1)
+theme_override_font_sizes/font_size = 21
+text = "CHAPTER PROGRESS"
+
+[node name="Status" type="Label" parent="FeatureLayout/ProfileFeature/Menu/ChapterRow/Content/Copy"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.86, 0.77, 0.93, 1)
+theme_override_font_sizes/font_size = 15
+text = "0 / 3 RITUALS"
+
+[node name="ReliquaryRow" type="PanelContainer" parent="FeatureLayout/ProfileFeature/Menu"]
+custom_minimum_size = Vector2(0, 116)
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_styles/panel = SubResource("Card")
+
+[node name="Content" type="HBoxContainer" parent="FeatureLayout/ProfileFeature/Menu/ReliquaryRow"]
+layout_mode = 2
+theme_override_constants/separation = 14
+
+[node name="Icon" type="TextureRect" parent="FeatureLayout/ProfileFeature/Menu/ReliquaryRow/Content"]
+custom_minimum_size = Vector2(76, 76)
+layout_mode = 2
+expand_mode = 1
+stretch_mode = 5
+
+[node name="Copy" type="VBoxContainer" parent="FeatureLayout/ProfileFeature/Menu/ReliquaryRow/Content"]
+layout_mode = 2
+size_flags_horizontal = 3
+alignment = 1
+
+[node name="Title" type="Label" parent="FeatureLayout/ProfileFeature/Menu/ReliquaryRow/Content/Copy"]
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 0.941, 0.847, 1)
+theme_override_font_sizes/font_size = 21
+text = "RELIQUARY"
+
+[node name="Status" type="Label" parent="FeatureLayout/ProfileFeature/Menu/ReliquaryRow/Content/Copy"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.86, 0.77, 0.93, 1)
+theme_override_font_sizes/font_size = 15
+text = "0 / 3 CURIOS"
+
+[node name="HouseRow" type="PanelContainer" parent="FeatureLayout/ProfileFeature/Menu"]
+custom_minimum_size = Vector2(0, 116)
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_styles/panel = SubResource("Card")
+
+[node name="Content" type="HBoxContainer" parent="FeatureLayout/ProfileFeature/Menu/HouseRow"]
+layout_mode = 2
+theme_override_constants/separation = 14
+
+[node name="Icon" type="TextureRect" parent="FeatureLayout/ProfileFeature/Menu/HouseRow/Content"]
+custom_minimum_size = Vector2(76, 76)
+layout_mode = 2
+expand_mode = 1
+stretch_mode = 5
+
+[node name="Copy" type="VBoxContainer" parent="FeatureLayout/ProfileFeature/Menu/HouseRow/Content"]
+layout_mode = 2
+size_flags_horizontal = 3
+alignment = 1
+
+[node name="Title" type="Label" parent="FeatureLayout/ProfileFeature/Menu/HouseRow/Content/Copy"]
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 0.941, 0.847, 1)
+theme_override_font_sizes/font_size = 21
+text = "HOUSE RESTORATION"
+
+[node name="Status" type="Label" parent="FeatureLayout/ProfileFeature/Menu/HouseRow/Content/Copy"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.86, 0.77, 0.93, 1)
+theme_override_font_sizes/font_size = 15
+text = "RESTORATION STAGE 0"
+
+[node name="SaveRow" type="PanelContainer" parent="FeatureLayout/ProfileFeature/Menu"]
+custom_minimum_size = Vector2(0, 132)
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_styles/panel = SubResource("Card")
+
+[node name="Content" type="VBoxContainer" parent="FeatureLayout/ProfileFeature/Menu/SaveRow"]
+layout_mode = 2
+alignment = 1
+theme_override_constants/separation = 2
+
+[node name="Title" type="Label" parent="FeatureLayout/ProfileFeature/Menu/SaveRow/Content"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.831, 0.678, 0.439, 1)
+theme_override_font_sizes/font_size = 14
+text = "SAVE & ACCOUNT"
+horizontal_alignment = 1
+
+[node name="Local" type="Label" parent="FeatureLayout/ProfileFeature/Menu/SaveRow/Content"]
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 0.941, 0.847, 1)
+theme_override_font_sizes/font_size = 20
+text = "LOCAL SAVE · DEVICE-LOCAL"
+horizontal_alignment = 1
+
+[node name="Cloud" type="Label" parent="FeatureLayout/ProfileFeature/Menu/SaveRow/Content"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.86, 0.77, 0.93, 1)
+theme_override_font_sizes/font_size = 16
+text = "CLOUD SYNC · NOT CONNECTED"
+horizontal_alignment = 1
+
 [node name="ChapterRitualProgress" type="Label" parent="FeatureLayout"]
 visible = false
 layout_mode = 2
