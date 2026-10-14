@@ -63,8 +63,10 @@ func _run() -> void:
 	_expect(reduced_continue != null and reduced_continue.custom_minimum_size.y >= 88.0, "Restoration CTA must preserve the 88px touch target after chrome inset")
 	_expect(reduced_hero != null and reduced_hero.texture != null, "Restoration must render the recovered Curio motif as production hero artwork while exact item identity remains in the summary")
 	var reduced_overlay_contract: Dictionary = reduced.get_node("RestorationOverlay").restoration_contract()
-	_expect(bool(reduced_overlay_contract.get("house_first_composition", false)), "Restoration must keep the recovered Curio bounded so the House remains the visual hero")
+	_expect(bool(reduced_overlay_contract.get("house_first_composition", false)), "Restoration must make the House before/after transformation the visual hero")
+	_expect(bool(reduced_overlay_contract.get("before_after_house_previews", false)), "Restoration must compare adjacent truthful House stages from the same authored camera")
 	_expect(bool(reduced_overlay_contract.get("before_after_state_rail", false)), "Restoration must expose a truthful dormant-to-awakened state comparison")
+	_expect(bool(reduced_overlay_contract.get("curio_motif_subordinate", false)), "Restoration Curio identity must stay in the summary instead of replacing the House transformation")
 	reduced.queue_free()
 	await _frames(2)
 
@@ -104,7 +106,8 @@ func _run() -> void:
 	_expect(animated_card != null and animated_card.get_node_or_null("CeremonyContent/TopPad") != null, "Animated restoration must preserve the production-chrome top inset")
 	_expect(animated_hero != null and animated_hero.texture != null, "Animated restoration must retain the recovered Curio production motif")
 	var animated_overlay_contract: Dictionary = animated.get_node("RestorationOverlay").restoration_contract()
-	_expect(bool(animated_overlay_contract.get("house_first_composition", false)), "Animated restoration must preserve the bounded House-first Curio composition")
+	_expect(bool(animated_overlay_contract.get("house_first_composition", false)), "Animated restoration must preserve the House-first before/after composition")
+	_expect(bool(animated_overlay_contract.get("before_after_house_previews", false)), "Animated restoration must compare the truthful adjacent House stages")
 	var animated_continue := animated.get_node_or_null("RestorationOverlay/CeremonyCard/CeremonyContent/CeremonyRow/Copy/Continue") as Button
 	_expect(animated_continue != null, "Animated restoration continue CTA missing")
 	if animated_continue != null:
