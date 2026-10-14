@@ -118,7 +118,8 @@ func _run() -> void:
 			_expect(bool(contract.get("profile_status_focus", false)), "profile save health must prioritize readable local/cloud statuses over paragraph copy")
 			_expect(bool(contract.get("profile_identity_focus", false)), "profile must center the authored Keeper identity and truthful opening progress on its own framed utility surface")
 			var profile_surface := screen.get_node_or_null("ProfileSurface") as PanelContainer
-			_expect(profile_surface != null and profile_surface.visible and profile_surface.get_theme_stylebox("panel") is StyleBoxTexture, "profile must own a screen-specific production-chrome surface")
+			_expect(profile_surface != null and profile_surface.visible and profile_surface.get_theme_stylebox("panel") is StyleBoxFlat, "profile must own a clean screen-specific framed surface")
+			_expect(bool(contract.get("profile_screen_specific_material", false)), "profile screen-specific frames must avoid stretched shared 9-slice seam artifacts")
 			_expect(bool(contract.get("profile_board_utility_rows", false)), "profile must use board-like compact utility rows instead of oversized progress cards")
 			var profile_progress_label := screen.get_node_or_null("FeatureLayout/ProfileFeature/Identity/IdentityRow/Copy/ProgressLabel") as Label
 			var profile_progress := screen.get_node_or_null("FeatureLayout/ProfileFeature/Identity/IdentityRow/Copy/Progress") as ProgressBar

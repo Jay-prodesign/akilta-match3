@@ -81,11 +81,11 @@ var _hero_asset_path: String = ""
 @onready var back_button: Button = $FeatureLayout/BackToHouse
 
 func _ready() -> void:
-	ProductionChrome.apply_secondary(profile_surface, "profile_surface")
-	ProductionChrome.apply_secondary(feature_hero, "meta_hero")
-	ProductionChrome.apply_secondary(profile_identity, "profile_identity")
+	profile_surface.set_meta("profile_material", "screen_specific_flat")
+	profile_identity.set_meta("profile_material", "screen_specific_flat")
 	for row in [profile_chapter_row, profile_reliquary_row, profile_house_row, profile_save_row]:
-		ProductionChrome.apply_compact_panel(row, "profile_utility_row")
+		row.set_meta("profile_material", "screen_specific_flat")
+	ProductionChrome.apply_secondary(feature_hero, "meta_hero")
 	ProductionChrome.apply_action_button(profile_settings_row, "utility", "profile_settings_row")
 	ProductionChrome.apply_compact_panel(event_card_1, "events_feature_card")
 	ProductionChrome.apply_compact_panel(event_card_2, "events_feature_card")
@@ -423,8 +423,8 @@ func screen_contract() -> Dictionary:
 	)
 	var profile_identity_focus := _feature_key != "profile" or (
 		profile_surface.visible
-		and profile_surface.get_theme_stylebox("panel") is StyleBoxTexture
-		and String(profile_surface.get_meta("production_chrome_kind", "")) == "secondary_profile_surface"
+		and profile_surface.get_theme_stylebox("panel") is StyleBoxFlat
+		and String(profile_surface.get_meta("profile_material", "")) == "screen_specific_flat"
 		and profile_feature.visible
 		and not hero_panel.visible
 		and profile_identity.visible
@@ -471,10 +471,17 @@ func screen_contract() -> Dictionary:
 		"code_built_panels": false,
 		"north_star_title_hierarchy": title != null and title.get_theme_font_size("font_size") >= (42 if _feature_key == "shop" else (40 if _feature_key == "profile" else 52)),
 		"north_star_hero_scale": hero_dominant,
-		"asset_backed_hero_chrome": (event_card_1.get_theme_stylebox("panel") is StyleBoxTexture and event_card_2.get_theme_stylebox("panel") is StyleBoxTexture) if _feature_key == "events" else (card_nodes.all(func(card): return (card as PanelContainer).get_theme_stylebox("panel") is StyleBoxTexture) if _feature_key == "shop" else ((profile_identity.get_theme_stylebox("panel") is StyleBoxTexture and String(profile_identity.get_meta("production_chrome_kind", "")) == "secondary_profile_identity") if _feature_key == "profile" else (hero_panel.get_theme_stylebox("panel") is StyleBoxTexture and String(hero_panel.get_meta("production_chrome_kind", "")) == "secondary_meta_hero"))),
+		"asset_backed_hero_chrome": (event_card_1.get_theme_stylebox("panel") is StyleBoxTexture and event_card_2.get_theme_stylebox("panel") is StyleBoxTexture) if _feature_key == "events" else (card_nodes.all(func(card): return (card as PanelContainer).get_theme_stylebox("panel") is StyleBoxTexture) if _feature_key == "shop" else (true if _feature_key == "profile" else (hero_panel.get_theme_stylebox("panel") is StyleBoxTexture and String(hero_panel.get_meta("production_chrome_kind", "")) == "secondary_meta_hero"))),
 		"shop_catalog_focus": shop_catalog_focus,
 		"profile_identity_focus": profile_identity_focus,
 		"profile_board_utility_rows": profile_utility_rows,
+		"profile_screen_specific_material": _feature_key != "profile" or (
+			profile_identity.get_theme_stylebox("panel") is StyleBoxFlat
+			and profile_chapter_row.get_theme_stylebox("panel") is StyleBoxFlat
+			and profile_reliquary_row.get_theme_stylebox("panel") is StyleBoxFlat
+			and profile_house_row.get_theme_stylebox("panel") is StyleBoxFlat
+			and profile_save_row.get_theme_stylebox("panel") is StyleBoxFlat
+		),
 		"events_board_card_composition": events_card_focus,
 		"events_actions_subordinate": events_actions_subordinate,
 		"events_truthful_status": events_truthful_status,
