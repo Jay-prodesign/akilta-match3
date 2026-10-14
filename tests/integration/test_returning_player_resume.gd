@@ -52,10 +52,11 @@ func _run() -> void:
 		return _fail(app, "returning player must not see first-ritual guidance")
 	var return_banner := house.get_node_or_null("Layout/ReturningPlayerBanner") as PanelContainer if house != null else null
 	var return_label := house.get_node_or_null("Layout/ReturningPlayerBanner/Label") as Label if house != null else null
+	var headline := house.get_node_or_null("Layout/Headline") as Label if house != null else null
 	var curio_label := house.get_node_or_null("Layout/CurioChip/Label") as Label if house != null else null
 	var play := house.get_node_or_null("Layout/PlayButton") as Button if house != null else null
-	if return_banner == null or not return_banner.visible or return_label == null or not return_label.text.contains("WELCOME BACK") or not return_label.text.contains("2 / 3"):
-		return _fail(app, "House did not expose canonical returning_player state")
+	if return_banner == null or return_banner.visible or return_label == null or not return_label.text.contains("WELCOME BACK") or not return_label.text.contains("2 / 3") or headline == null or not headline.text.contains("WELCOME BACK") or not headline.text.contains("2 / 3 CURIOS"):
+		return _fail(app, "House did not expose canonical returning_player state in the primary Home title")
 	if curio_label == null or not curio_label.text.contains("2 / 3 CURIOS"):
 		return _fail(app, "House did not restore 2/3 Curio truth")
 	if play == null or play.text != "PLAY LEVEL 3":
