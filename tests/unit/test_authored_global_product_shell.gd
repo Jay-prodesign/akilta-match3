@@ -44,10 +44,9 @@ func _run() -> void:
 	_expect(bool(nav_contract.get("touch_targets_ok", false)), "ProductNavigation destinations must retain mobile touch targets")
 	_expect(bool(nav_contract.get("north_star_nav_zone", false)), "ProductNavigation must occupy the canonical 128–144 logical px North Star navigation zone")
 	_expect(float(nav_contract.get("nav_zone_height", 0.0)) == 136.0, "ProductNavigation authored baseline height must be 136 logical px")
-	_expect(bool(nav_contract.get("asset_backed_shell", false)), "ProductNavigation shell must use authored asset-backed production chrome")
-	_expect(bool(nav_contract.get("asset_backed_interactive_chrome", false)), "ProductNavigation destination states must use asset-backed production chrome")
-	var chrome_contract := preload("res://src/ui/theme/production_chrome.gd").contract()
-	_expect(bool(chrome_contract.get("global_shell_family_verified", false)), "Global top/bottom shell chrome family must resolve through authored texture-backed 9-slice styles")
+	_expect(bool(nav_contract.get("scene_authored_shell", false)), "ProductNavigation shell must preserve its clean authored scene material")
+	_expect(bool(nav_contract.get("scene_authored_interactive_chrome", false)), "ProductNavigation destination states must preserve authored normal/pressed/selected materials")
+	_expect(bool(nav_contract.get("seam_free_material", false)), "ProductNavigation must not stretch the shared 9-slice chrome across the global shell")
 	var global_icon_sources := [
 		"res://assets/ui/nav_house.svg",
 		"res://assets/ui/nav_curios.svg",
@@ -83,9 +82,10 @@ func _run() -> void:
 	_expect(bool(bar_contract.get("profile_touch_target_ok", false)), "Keeper profile control must retain the 88 logical px mobile touch target")
 	_expect(bool(bar_contract.get("north_star_resource_zone", false)), "TopResourceBar must occupy the canonical 96–112 logical px resource zone")
 	_expect(float(bar_contract.get("resource_zone_height", 0.0)) == 104.0, "TopResourceBar authored baseline height must be 104 logical px")
-	_expect(bool(bar_contract.get("asset_backed_shell", false)), "TopResourceBar shell must use authored asset-backed production chrome")
-	_expect(bool(bar_contract.get("asset_backed_resource_chips", false)), "TopResourceBar resource chips must use asset-backed production chrome")
-	_expect(bool(bar_contract.get("asset_backed_profile_action", false)), "TopResourceBar Keeper profile states must use asset-backed production chrome")
+	_expect(bool(bar_contract.get("scene_authored_shell", false)), "TopResourceBar shell must preserve its clean authored scene material")
+	_expect(bool(bar_contract.get("scene_authored_resource_chips", false)), "TopResourceBar resource chips must preserve their authored scene material")
+	_expect(bool(bar_contract.get("scene_authored_profile_action", false)), "TopResourceBar Keeper profile states must preserve authored normal/pressed/focus material")
+	_expect(bool(bar_contract.get("seam_free_material", false)), "TopResourceBar must not stretch the shared 9-slice chrome across resource chips")
 	_expect(layout.offset_top >= 128.0, "TopResourceBar must reserve the canonical top content start instead of covering screen titles")
 	_expect(layout.offset_bottom <= -152.0, "ProductNavigation must preserve the canonical bottom content reserve")
 	_expect(bar.find_child("LifeResource", true, false) == null, "Shared resource bar must not expose unimplemented life economy")

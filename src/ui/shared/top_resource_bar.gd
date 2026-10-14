@@ -30,11 +30,13 @@ static func attach(screen: Control, progress, profile_handler: Callable = Callab
 	panel.offset_top = 8.0 + safe_insets.y
 	panel.offset_bottom = 112.0 + safe_insets.y
 	screen.add_child(panel)
-	ProductionChrome.apply_shell(panel, "top")
+	panel.set_meta("shell_material", "scene_authored_flat")
 	var coin_chip := panel.get_node_or_null("Resources/CoinResourceChip") as PanelContainer
 	var gem_chip := panel.get_node_or_null("Resources/GemResourceChip") as PanelContainer
-	ProductionChrome.apply_compact_panel(coin_chip, "coin_resource")
-	ProductionChrome.apply_compact_panel(gem_chip, "gem_resource")
+	if coin_chip != null:
+		coin_chip.set_meta("shell_material", "scene_authored_flat")
+	if gem_chip != null:
+		gem_chip.set_meta("shell_material", "scene_authored_flat")
 
 	var coin_icon := panel.get_node_or_null("Resources/CoinResourceChip/Content/Icon") as TextureRect
 	var gem_icon := panel.get_node_or_null("Resources/GemResourceChip/Content/Icon") as TextureRect
@@ -45,7 +47,7 @@ static func attach(screen: Control, progress, profile_handler: Callable = Callab
 	var profile := panel.get_node_or_null("Resources/KeeperProfile") as Button
 	if profile != null:
 		profile.icon = PieceAssetLoader.ornament("res://assets/ui/ui_profile.svg")
-		ProductionChrome.apply_interactive_button(profile, false, "keeper_profile")
+		profile.set_meta("shell_material", "scene_authored_flat")
 	_bind_profile(panel, profile_handler)
 
 	refresh(panel, progress)
@@ -101,8 +103,8 @@ static func authored_contract(panel: PanelContainer) -> Dictionary:
 	var profile := panel.get_node_or_null("Resources/KeeperProfile") as Button
 	var coin_chip := panel.get_node_or_null("Resources/CoinResourceChip") as PanelContainer
 	var gem_chip := panel.get_node_or_null("Resources/GemResourceChip") as PanelContainer
-	var asset_backed_resource_chips := coin_chip != null and coin_chip.get_theme_stylebox("panel") is StyleBoxTexture and gem_chip != null and gem_chip.get_theme_stylebox("panel") is StyleBoxTexture
-	var asset_backed_profile_action := profile != null and profile.get_theme_stylebox("normal") is StyleBoxTexture and profile.get_theme_stylebox("hover") is StyleBoxTexture and profile.get_theme_stylebox("pressed") is StyleBoxTexture and profile.get_theme_stylebox("focus") is StyleBoxTexture
+	var scene_authored_resource_chips := coin_chip != null and coin_chip.get_theme_stylebox("panel") is StyleBoxFlat and String(coin_chip.get_meta("shell_material", "")) == "scene_authored_flat" and gem_chip != null and gem_chip.get_theme_stylebox("panel") is StyleBoxFlat and String(gem_chip.get_meta("shell_material", "")) == "scene_authored_flat"
+	var scene_authored_profile_action := profile != null and profile.get_theme_stylebox("normal") is StyleBoxFlat and profile.get_theme_stylebox("hover") is StyleBoxFlat and profile.get_theme_stylebox("pressed") is StyleBoxFlat and profile.get_theme_stylebox("focus") is StyleBoxFlat and String(profile.get_meta("shell_material", "")) == "scene_authored_flat"
 	return {
 		"authored_scene": true,
 		"resource_slots_present": coin != null and gem != null,
@@ -110,9 +112,10 @@ static func authored_contract(panel: PanelContainer) -> Dictionary:
 		"profile_touch_target_ok": profile != null and profile.custom_minimum_size.x >= 88.0 and profile.custom_minimum_size.y >= 88.0,
 		"north_star_resource_zone": (panel.offset_bottom - panel.offset_top) >= 96.0 and (panel.offset_bottom - panel.offset_top) <= 112.0 and coin_icon != null and coin_icon.custom_minimum_size.x >= 40.0 and gem_icon != null and gem_icon.custom_minimum_size.x >= 40.0,
 		"resource_zone_height": panel.offset_bottom - panel.offset_top,
-		"asset_backed_shell": panel.get_theme_stylebox("panel") is StyleBoxTexture and String(panel.get_meta("production_chrome_kind", "")) == "top",
-		"asset_backed_resource_chips": asset_backed_resource_chips,
-		"asset_backed_profile_action": asset_backed_profile_action and String(profile.get_meta("production_chrome_kind", "")) == "interactive_keeper_profile",
+		"scene_authored_shell": panel.get_theme_stylebox("panel") is StyleBoxFlat and String(panel.get_meta("shell_material", "")) == "scene_authored_flat",
+		"scene_authored_resource_chips": scene_authored_resource_chips,
+		"scene_authored_profile_action": scene_authored_profile_action,
+		"seam_free_material": panel.get_theme_stylebox("panel") is StyleBoxFlat and scene_authored_resource_chips and scene_authored_profile_action,
 		"runtime_ui_factory": false,
 	}
 

@@ -37,7 +37,7 @@ static func attach(screen: Control, active_section: String, handler: Callable, c
 	panel.offset_top = -144.0 - safe_insets.w
 	panel.offset_bottom = -8.0 - safe_insets.w
 	screen.add_child(panel)
-	ProductionChrome.apply_shell(panel, "bottom")
+	panel.set_meta("shell_material", "scene_authored_flat")
 
 	for item in ITEMS:
 		var action := String(item["id"])
@@ -48,7 +48,7 @@ static func attach(screen: Control, active_section: String, handler: Callable, c
 		var is_active := action == active_section
 		button.set_meta("interaction_state", "selected" if is_active else "normal")
 		button.disabled = is_active
-		ProductionChrome.apply_interactive_button(button, is_active, "nav_" + action)
+		button.set_meta("shell_material", "scene_authored_flat")
 		button.tooltip_text = action.capitalize()
 		var icon := button.get_node_or_null("Content/Icon") as TextureRect
 		var caption := button.get_node_or_null("Content/Label") as Label
@@ -75,7 +75,7 @@ static func authored_contract(panel: PanelContainer) -> Dictionary:
 	var icons_loaded := true
 	var touch_targets_ok := true
 	var north_star_nav_zone := true
-	var interactive_chrome := true
+	var scene_authored_interactive := true
 	for item in ITEMS:
 		var button := panel.get_node_or_null("Scroll/Items/%s" % String(item["node"])) as Button
 		all_slots_present = all_slots_present and button != null
@@ -88,7 +88,7 @@ static func authored_contract(panel: PanelContainer) -> Dictionary:
 		touch_targets_ok = touch_targets_ok and button.custom_minimum_size.y >= 88.0
 		var caption := button.get_node_or_null("Content/Label") as Label
 		north_star_nav_zone = north_star_nav_zone and button.custom_minimum_size.y >= 112.0 and button.custom_minimum_size.y <= 124.0 and icon != null and icon.custom_minimum_size.x >= 44.0 and caption != null and caption.get_theme_font_size("font_size") >= 20
-		interactive_chrome = interactive_chrome and button.get_theme_stylebox("normal") is StyleBoxTexture and button.get_theme_stylebox("hover") is StyleBoxTexture and button.get_theme_stylebox("pressed") is StyleBoxTexture and button.get_theme_stylebox("focus") is StyleBoxTexture and button.get_theme_stylebox("disabled") is StyleBoxTexture and String(button.get_meta("production_chrome_kind", "")).begins_with("interactive_nav_")
+		scene_authored_interactive = scene_authored_interactive and button.get_theme_stylebox("normal") is StyleBoxFlat and button.get_theme_stylebox("hover") is StyleBoxFlat and button.get_theme_stylebox("pressed") is StyleBoxFlat and button.get_theme_stylebox("focus") is StyleBoxFlat and button.get_theme_stylebox("disabled") is StyleBoxFlat and String(button.get_meta("shell_material", "")) == "scene_authored_flat"
 	return {
 		"authored_scene": true,
 		"all_slots_present": all_slots_present,
@@ -96,7 +96,8 @@ static func authored_contract(panel: PanelContainer) -> Dictionary:
 		"touch_targets_ok": touch_targets_ok,
 		"north_star_nav_zone": north_star_nav_zone and (panel.offset_bottom - panel.offset_top) >= 128.0 and (panel.offset_bottom - panel.offset_top) <= 144.0,
 		"nav_zone_height": panel.offset_bottom - panel.offset_top,
-		"asset_backed_shell": panel.get_theme_stylebox("panel") is StyleBoxTexture and String(panel.get_meta("production_chrome_kind", "")) == "bottom",
-		"asset_backed_interactive_chrome": interactive_chrome,
+		"scene_authored_shell": panel.get_theme_stylebox("panel") is StyleBoxFlat and String(panel.get_meta("shell_material", "")) == "scene_authored_flat",
+		"scene_authored_interactive_chrome": scene_authored_interactive,
+		"seam_free_material": panel.get_theme_stylebox("panel") is StyleBoxFlat and scene_authored_interactive,
 		"runtime_ui_factory": false,
 	}
