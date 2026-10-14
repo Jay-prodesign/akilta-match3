@@ -45,8 +45,8 @@ func _capture() -> void:
 		quit(1)
 		return
 	var headline: Label = screen.get_node("Layout/Headline")
-	if headline.text != "Three displays breathe in the moonlight.":
-		printerr("CAPTURE_FAIL: stage 3 House copy does not reflect full opening restoration")
+	if headline.text != "FIRST CABINET SET RESTORED":
+		printerr("CAPTURE_FAIL: stage 3 House primary title does not reflect full opening restoration")
 		quit(1)
 		return
 	var play_button: Button = screen.get_node("Layout/PlayButton")
@@ -56,8 +56,8 @@ func _capture() -> void:
 		return
 	var completion_banner: PanelContainer = screen.get_node_or_null("Layout/ChapterCompletionBanner")
 	var completion_label: Label = screen.get_node_or_null("Layout/ChapterCompletionBanner/Label")
-	if completion_banner == null or not completion_banner.visible or completion_label == null or not completion_label.text.contains("OPENING CABINET SET COMPLETE"):
-		printerr("CAPTURE_FAIL: stage 3 House must preserve truthful opening-cabinet completion status")
+	if completion_banner == null or completion_banner.visible or completion_label == null or not completion_label.text.contains("OPENING CABINET SET COMPLETE"):
+		printerr("CAPTURE_FAIL: stage 3 House must preserve completion truth without redundant banner chrome")
 		quit(1)
 		return
 	var life_resource: Label = screen.find_child("LifeResource", true, false) as Label
