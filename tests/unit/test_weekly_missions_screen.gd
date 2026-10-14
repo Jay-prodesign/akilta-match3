@@ -21,10 +21,11 @@ func _run() -> void:
 	_expect(bool(contract.get("sealed_offline_art", false)), "Offline Weekly Rituals must use the sealed Curio state, not awakened reward art")
 	_expect(not bool(contract.get("code_built_panels", true)), "Weekly Rituals must not return to bootstrap-built panels")
 	_expect(bool(contract.get("north_star_title_hierarchy", false)), "Weekly Rituals must retain a strong North Star page title")
-	_expect(bool(contract.get("north_star_altar_stack", false)), "Weekly Rituals empty state must use a compact vertical altar composition")
+	_expect(bool(contract.get("north_star_altar_stack", false)), "Weekly Rituals must combine a compact truthful intro with stacked ritual rows")
+	_expect(bool(contract.get("north_star_horizontal_mission_rows", false)), "Weekly Rituals must preserve the locked board's three horizontal mission-row scan path")
 	_expect(bool(contract.get("asset_backed_altar_chrome", false)), "Weekly Rituals altar must use asset-backed production chrome")
 	_expect(bool(contract.get("header_readability_scrim", false)), "Weekly Rituals must retain a dedicated header readability scrim over world art")
-	_expect(bool(contract.get("production_return_actions", false)), "Weekly Rituals visible return must use the verified production action chrome family")
+	_expect(bool(contract.get("production_return_actions", false)), "Weekly Rituals compact Events return must use verified utility chrome")
 	_expect(bool(contract.get("asset_backed_status_rows", false)), "Weekly Rituals truthful offline rows must use asset-backed compact chrome")
 	_expect(bool(contract.get("truthful_status_rows", false)), "Weekly Rituals status rows must expose only connected/offline/claim truth")
 	_expect(bool(contract.get("redundant_house_return_suppressed", false)), "Weekly Rituals must suppress redundant House return when product navigation already exposes House")
@@ -49,20 +50,22 @@ func _run() -> void:
 	var stage_spacer := screen.get_node_or_null("MissionLayout/WorldStageSpacer") as Control
 	var record := screen.get_node_or_null("MissionLayout/MissionOpeningRecord") as Label
 	_expect(timer != null and timer.text.contains("OFFLINE"), "Weekly Rituals must disclose unavailable reset timing")
-	_expect(empty != null and empty.custom_minimum_size.y >= 390.0 and empty.custom_minimum_size.y <= 440.0, "Weekly altar must stay compact enough to leave room for truthful mission-style rows")
+	_expect(empty != null and empty.custom_minimum_size.y >= 170.0 and empty.custom_minimum_size.y <= 200.0, "Weekly intro must stay compact so the locked-board mission rows own the screen")
 	_expect(truth != null and truth.text.contains("NOTHING TO CLAIM"), "Weekly Rituals must not fabricate claimable rewards")
 	_expect(availability != null and availability.text.contains("ONLY WHEN A MISSION FEED IS CONNECTED") and not availability.visible, "Weekly Rituals must retain live-feed truth without duplicating it visually")
-	_expect(art != null and art.texture != null and art.custom_minimum_size.x >= 240.0 and art.custom_minimum_size.y >= 170.0 and String(art.get_meta("asset_path", "")).contains("_sealed_"), "Weekly altar must retain compact sealed raster Curio art")
+	_expect(art != null and art.texture != null and art.custom_minimum_size.x >= 110.0 and art.custom_minimum_size.x <= 130.0 and art.custom_minimum_size.y >= 110.0 and art.custom_minimum_size.y <= 130.0 and String(art.get_meta("asset_path", "")).contains("_sealed_"), "Weekly intro must retain a compact sealed raster Curio anchor")
 	_expect(feed_row != null and feed_row.get_theme_stylebox("panel") is StyleBoxTexture and feed_state != null and feed_state.text == "NOT CONNECTED", "Weekly Rituals live-feed row must stay truthful and asset-backed")
 	_expect(progress_row != null and progress_row.get_theme_stylebox("panel") is StyleBoxTexture and progress_state != null and progress_state.text == "NOT TRACKED OFFLINE", "Weekly Rituals progress row must not fabricate offline progress")
 	_expect(reward_row != null and reward_row.get_theme_stylebox("panel") is StyleBoxTexture and reward_state != null and reward_state.text == "NOTHING TO CLAIM", "Weekly Rituals reward row must not fabricate a claim")
-	_expect(stage_spacer != null and stage_spacer.size_flags_vertical != Control.SIZE_EXPAND_FILL and stage_spacer.custom_minimum_size.y <= 40.0, "Weekly Rituals compact world gap drifted")
-	_expect(record != null and record.custom_minimum_size.y >= 70.0 and record.text.contains("3 / 3 DISPLAYS AWAKENED"), "Weekly Rituals must reflect opening cabinet record")
-	_expect(record != null and record.get_theme_stylebox("normal") is StyleBoxTexture, "Weekly Rituals opening record must render on quiet production chrome")
+	_expect(stage_spacer != null and stage_spacer.size_flags_vertical != Control.SIZE_EXPAND_FILL and stage_spacer.custom_minimum_size.y <= 16.0, "Weekly Rituals compact world gap drifted")
+	_expect(record != null and record.visible and record.custom_minimum_size.y <= 64.0 and record.text.contains("NOTHING TO CLAIM"), "Weekly Rituals footer must truthfully seal the unavailable reward area")
+	_expect(record != null and record.get_theme_stylebox("normal") is StyleBoxTexture, "Weekly Rituals sealed reward footer must render on quiet production chrome")
 
 	var event_signal := {"hit": false}
 	screen.return_events_requested.connect(func(): event_signal["hit"] = true)
-	(screen.get_node("MissionLayout/ReturnToEvents") as Button).emit_signal("pressed")
+	var events_return := screen.get_node("MissionLayout/ReturnToEvents") as Button
+	_expect(events_return.visible and events_return.custom_minimum_size.y <= 64.0, "Weekly Rituals Events return must stay compact and subordinate")
+	events_return.emit_signal("pressed")
 	_expect(bool(event_signal["hit"]), "Weekly Rituals must expose Event Center return")
 
 	var house_signal := {"hit": false}
