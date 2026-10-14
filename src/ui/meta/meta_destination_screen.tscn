@@ -167,8 +167,10 @@ expand_mode = 1
 stretch_mode = 6
 
 [node name="Copy" type="VBoxContainer" parent="FeatureLayout/EventsFeature/EventCard1/Content"]
+custom_minimum_size = Vector2(0, 88)
 layout_mode = 2
-theme_override_constants/separation = 1
+theme_override_constants/separation = 2
+alignment = 1
 
 [node name="Kicker" type="Label" parent="FeatureLayout/EventsFeature/EventCard1/Content/Copy"]
 visible = false
@@ -182,14 +184,16 @@ horizontal_alignment = 1
 layout_mode = 2
 theme_override_colors/font_color = Color(1, 0.941, 0.847, 1)
 theme_override_colors/font_outline_color = Color(0.02, 0.014, 0.028, 0.96)
-theme_override_constants/outline_size = 2
-theme_override_font_sizes/font_size = 28
+theme_override_constants/outline_size = 3
+theme_override_font_sizes/font_size = 30
 text = "MOONLIGHT MARKET"
 horizontal_alignment = 1
 
 [node name="Status" type="Label" parent="FeatureLayout/EventsFeature/EventCard1/Content/Copy"]
 layout_mode = 2
-theme_override_colors/font_color = Color(0.82, 0.72, 0.90, 1)
+theme_override_colors/font_color = Color(0.86, 0.77, 0.93, 1)
+theme_override_colors/font_outline_color = Color(0.02, 0.014, 0.028, 0.92)
+theme_override_constants/outline_size = 2
 theme_override_font_sizes/font_size = 15
 text = "FUTURE EVENT · SEALED"
 horizontal_alignment = 1
@@ -213,8 +217,10 @@ expand_mode = 1
 stretch_mode = 6
 
 [node name="Copy" type="VBoxContainer" parent="FeatureLayout/EventsFeature/EventCard2/Content"]
+custom_minimum_size = Vector2(0, 88)
 layout_mode = 2
-theme_override_constants/separation = 1
+theme_override_constants/separation = 2
+alignment = 1
 
 [node name="Kicker" type="Label" parent="FeatureLayout/EventsFeature/EventCard2/Content/Copy"]
 visible = false
@@ -228,14 +234,16 @@ horizontal_alignment = 1
 layout_mode = 2
 theme_override_colors/font_color = Color(1, 0.941, 0.847, 1)
 theme_override_colors/font_outline_color = Color(0.02, 0.014, 0.028, 0.96)
-theme_override_constants/outline_size = 2
-theme_override_font_sizes/font_size = 28
+theme_override_constants/outline_size = 3
+theme_override_font_sizes/font_size = 30
 text = "THE LOST RELICS"
 horizontal_alignment = 1
 
 [node name="Status" type="Label" parent="FeatureLayout/EventsFeature/EventCard2/Content/Copy"]
 layout_mode = 2
-theme_override_colors/font_color = Color(0.82, 0.72, 0.90, 1)
+theme_override_colors/font_color = Color(0.86, 0.77, 0.93, 1)
+theme_override_colors/font_outline_color = Color(0.02, 0.014, 0.028, 0.92)
+theme_override_constants/outline_size = 2
 theme_override_font_sizes/font_size = 15
 text = "FUTURE JOURNEY · SEALED"
 horizontal_alignment = 1
