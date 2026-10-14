@@ -23,7 +23,7 @@ func _run() -> void:
 	_expect(bool(contract.get("action_family_ready", false)), "Golden Loop action chrome must resolve primary and utility authored 9-slice variants")
 	_expect(bool(contract.get("gameplay_hud_frame_asset_backed", false)), "gameplay objective HUD must resolve the authored gothic frame")
 	_expect(String(contract.get("primary_action_runtime_path", "")).ends_with(".svg"), "primary action chrome must resolve through the authored action asset")
-	await _expect_panel(PRESTART, "Layout/Card")
+	await _expect_scene_authored_prestart()
 	await _expect_panel(GAMEPLAY, "PauseOverlay/Card")
 	await _expect_panel(GAMEPLAY, "ResultOverlay/Card")
 	await _expect_panel(RESTORATION, "CeremonyCard")
@@ -31,8 +31,6 @@ func _run() -> void:
 	await _expect_locked_panel()
 	await _expect_scene_authored_house_action(HOUSE, "Layout/PlayButton")
 	await _expect_action(CHAPTER_MAP, "Layout/Back", "utility")
-	await _expect_action(PRESTART, "Layout/Card/Content/Start", "primary")
-	await _expect_action(PRESTART, "Layout/Back", "utility")
 	await _expect_gameplay_pause()
 	await _expect_action(GAMEPLAY, "PauseOverlay/Card/Content/Resume", "primary")
 	await _expect_action(GAMEPLAY, "PauseOverlay/Card/Content/Retry", "utility")
@@ -51,6 +49,25 @@ func _expect_panel(scene: PackedScene, path: String) -> void:
 	_expect(panel != null, "production chrome panel missing: %s" % path)
 	_expect(panel != null and panel.get_theme_stylebox("panel") is StyleBoxTexture, "panel must use asset-backed production chrome: %s" % path)
 	_expect(panel != null and String(panel.get_meta("production_chrome_asset", "")).ends_with(".svg"), "panel must expose authored chrome provenance: %s" % path)
+	instance.queue_free()
+	await process_frame
+
+func _expect_scene_authored_prestart() -> void:
+	var instance := PRESTART.instantiate()
+	root.add_child(instance)
+	await process_frame
+	var card := instance.get_node_or_null("Layout/Card") as PanelContainer
+	var plaque := instance.get_node_or_null("Layout/LevelPlaque") as PanelContainer
+	var objective := instance.get_node_or_null("Layout/Card/Content/ObjectiveBand") as PanelContainer
+	var aids := instance.get_node_or_null("Layout/Card/Content/RitualAids") as PanelContainer
+	var start := instance.get_node_or_null("Layout/Card/Content/Start") as Button
+	var back := instance.get_node_or_null("Layout/Back") as Button
+	_expect(card != null and card.get_theme_stylebox("panel") is StyleBoxFlat, "Prestart card must preserve its scene-authored material")
+	_expect(plaque != null and plaque.get_theme_stylebox("panel") is StyleBoxFlat, "Prestart Level plaque must preserve its scene-authored material")
+	_expect(objective != null and objective.get_theme_stylebox("panel") is StyleBoxFlat, "Prestart objective band must preserve its scene-authored material")
+	_expect(aids != null and aids.get_theme_stylebox("panel") is StyleBoxFlat, "Prestart ritual aids must preserve their scene-authored material")
+	_expect(start != null and start.get_theme_stylebox("normal") is StyleBoxFlat and String(start.get_meta("prestart_material", "")) == "scene_authored_flat", "Prestart Play must preserve its scene-authored material")
+	_expect(back != null and back.get_theme_stylebox("normal") is StyleBoxFlat, "Prestart Back must preserve its scene-authored material")
 	instance.queue_free()
 	await process_frame
 

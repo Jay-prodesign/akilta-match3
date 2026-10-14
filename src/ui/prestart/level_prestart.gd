@@ -47,14 +47,9 @@ var _reduced_motion := false
 var _intro_tween: Tween
 
 func _ready() -> void:
-	ProductionChrome.apply_primary($Layout/Card)
-	ProductionChrome.apply_gameplay_level_plaque(level_plaque)
-	ProductionChrome.apply_gameplay_shell(objective_band, "objective")
-	ProductionChrome.apply_gameplay_booster_tray(ritual_aids)
-	ProductionChrome.apply_compact_panel(keeper_chip, "prestart_keeper_aid")
-	ProductionChrome.apply_compact_panel(recovery_chip, "prestart_recovery_aid")
-	ProductionChrome.apply_gameplay_action_button(start_button, "primary", "prestart_play")
-	ProductionChrome.apply_gameplay_action_button(back_button, "utility", "prestart_back")
+	for control in [$Layout/Card, level_plaque, objective_band, ritual_aids, keeper_chip, recovery_chip, start_button, back_button]:
+		if control != null:
+			control.set_meta("prestart_material", "scene_authored_flat")
 	var display_font := Typography.display_font()
 	if display_font != null:
 		level_label.add_theme_font_override("font", display_font)
@@ -87,11 +82,14 @@ func aid_asset_contract() -> Dictionary:
 		"authored_world_backdrop": world_backdrop != null and world_backdrop.texture != null,
 		"authored_level_artwork": level_artwork != null and level_artwork.texture != null,
 		"authored_ritual_aids": keeper_aid_art != null and keeper_aid_art.texture != null and recovery_aid_art != null and recovery_aid_art.texture != null,
-		"north_star_readability": title_label != null and title_label.get_theme_font_size("font_size") >= 44 and objective_label != null and objective_label.get_theme_font_size("font_size") >= 28 and start_button != null and start_button.custom_minimum_size.y >= 84.0,
-		"north_star_decision_stack": level_plaque != null and level_plaque.custom_minimum_size.y >= 84.0 and ritual_art != null and ritual_art.custom_minimum_size.y <= 210.0 and objective_band != null and objective_band.custom_minimum_size.y >= 150.0 and ritual_aids != null and ritual_aids.custom_minimum_size.y >= 190.0,
+		"north_star_readability": title_label != null and title_label.get_theme_font_size("font_size") >= 32 and objective_label != null and objective_label.get_theme_font_size("font_size") >= 24 and start_button != null and start_button.custom_minimum_size.y >= 84.0,
+		"north_star_decision_stack": level_plaque != null and level_plaque.custom_minimum_size.y >= 68.0 and level_plaque.custom_minimum_size.y <= 78.0 and ritual_art != null and not ritual_art.visible and objective_band != null and objective_band.custom_minimum_size.y >= 124.0 and objective_band.custom_minimum_size.y <= 140.0 and ritual_aids != null and ritual_aids.custom_minimum_size.y >= 158.0 and ritual_aids.custom_minimum_size.y <= 174.0 and start_button.custom_minimum_size.y >= 84.0 and start_button.custom_minimum_size.y <= 94.0 and back_button.custom_minimum_size.y <= 60.0,
+		"truthful_two_aid_row": keeper_chip != null and recovery_chip != null and keeper_chip.custom_minimum_size.x >= 220.0 and keeper_chip.custom_minimum_size.x <= 234.0 and recovery_chip.custom_minimum_size.x >= 220.0 and recovery_chip.custom_minimum_size.x <= 234.0,
+		"hero_strip_subordinate": ritual_art != null and not ritual_art.visible and reward_label != null and not reward_label.visible,
 		"truthful_aid_semantics": ($Layout/Card/Content/RitualAids/Column/RitualAidsHeading as Label).text == "RITUAL AIDS" and ($Layout/Card/Content/RitualAids/Column/AidRow/KeeperChip/Content/State as Label).text.contains("HINT") and ($Layout/Card/Content/RitualAids/Column/AidRow/RecoveryChip/Content/State as Label).text.contains("ON FAIL"),
 		"note_subordinate": note_label != null and not note_label.visible,
-		"asset_backed_prestart_chrome": ($Layout/Card as PanelContainer).get_theme_stylebox("panel") is StyleBoxTexture and level_plaque.get_theme_stylebox("panel") is StyleBoxTexture and objective_band.get_theme_stylebox("panel") is StyleBoxTexture and ritual_aids.get_theme_stylebox("panel") is StyleBoxTexture and keeper_chip.get_theme_stylebox("panel") is StyleBoxTexture and recovery_chip.get_theme_stylebox("panel") is StyleBoxTexture and start_button.get_theme_stylebox("normal") is StyleBoxTexture and back_button.get_theme_stylebox("normal") is StyleBoxTexture,
+		"reward_truth_retained": reward_label != null and not reward_label.text.is_empty(),
+		"scene_authored_prestart_chrome": ($Layout/Card as PanelContainer).get_theme_stylebox("panel") is StyleBoxFlat and level_plaque.get_theme_stylebox("panel") is StyleBoxFlat and objective_band.get_theme_stylebox("panel") is StyleBoxFlat and ritual_aids.get_theme_stylebox("panel") is StyleBoxFlat and keeper_chip.get_theme_stylebox("panel") is StyleBoxFlat and recovery_chip.get_theme_stylebox("panel") is StyleBoxFlat and start_button.get_theme_stylebox("normal") is StyleBoxFlat and back_button.get_theme_stylebox("normal") is StyleBoxFlat and String(start_button.get_meta("prestart_material", "")) == "scene_authored_flat",
 		"runtime_ui_factory": false
 	}
 
