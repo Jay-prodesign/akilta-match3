@@ -82,10 +82,11 @@ func north_star_map_contract() -> Dictionary:
 	var title := get_node_or_null("Layout/Title") as Label
 	return {
 		"strong_title": title != null and title.get_theme_font_size("font_size") >= 52,
-		"progress_plate": chapter_progress != null and chapter_progress.get_theme_stylebox("normal") != null and chapter_progress.get_theme_font_size("font_size") >= 26,
-		"concise_route_instruction": intro != null and intro.text.length() <= 72,
+		"progress_plate": chapter_progress != null and chapter_progress.get_theme_stylebox("normal") != null and chapter_progress.get_theme_font_size("font_size") >= 22 and chapter_progress.custom_minimum_size.x >= 700.0 and chapter_progress.custom_minimum_size.x <= 740.0,
+		"concise_route_instruction": intro != null and intro.text.length() <= 72 and intro.get_theme_font_size("font_size") <= 18,
 		"route_world_dominant": route_view != null and route_view.custom_minimum_size.y >= 1400.0,
-		"resource_header_clearance": ($Layout as VBoxContainer).offset_top >= 170.0,
+		"resource_header_clearance": ($Layout as VBoxContainer).offset_top >= 220.0,
+		"future_seal_subordinate": route_view != null and route_view.get_future_seal_button() != null and route_view.get_future_seal_button().size.x <= 520.0 and route_view.get_future_seal_button().size.y <= 200.0,
 	}
 
 
