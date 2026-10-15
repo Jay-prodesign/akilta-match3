@@ -48,6 +48,35 @@ func _run() -> void:
 		_expect(bool(visual_contract.get("current_copy_clears_thumbnail", false)), "S02 current wing copy must clear the enlarged authored thumbnail")
 		_expect(bool(visual_contract.get("current_copy_scene_owned", false)), "S02 current wing copy must remain a scene-owned, non-intercepting child of the chapter hit target")
 		_expect(not bool(visual_contract.get("runtime_style_factory", true)), "S02 must not create StyleBox presentation resources at runtime")
+	var interaction: Dictionary = screen.chapter_interaction_contract()
+	_expect(bool(interaction.get("chapter_rows_tactile", false)), "S02 all current/sealed chapter rows must own press/release depth")
+	_expect(bool(interaction.get("current_wing_press_depth", false)), "S02 current wing must use a clear pressed-depth response")
+	_expect(bool(interaction.get("sealed_wing_press_subtle", false)), "S02 sealed rows must use a subtler pressed-depth response than the active wing")
+	_expect(bool(interaction.get("back_tactile", false)), "S02 compact Back control must own tactile press/release")
+	_expect(bool(interaction.get("reduced_motion_supported", false)), "S02 tactile response must support Reduced Motion")
+	_expect(bool(interaction.get("feedback_signal", false)), "S02 tactile controls must expose semantic UI feedback for audio/haptics")
+	var feedback_hits := {"count": 0}
+	screen.interaction_feedback_requested.connect(func(_kind: String): feedback_hits["count"] = int(feedback_hits["count"]) + 1)
+	current.emit_signal("button_down")
+	await create_timer(0.08).timeout
+	_expect(current.scale.x < 0.98 and current.scale.y < 0.98, "S02 current wing must visibly compress on press")
+	_expect(int(feedback_hits["count"]) == 1, "S02 current-wing press must emit one semantic feedback request")
+	current.emit_signal("button_up")
+	await create_timer(0.20).timeout
+	_expect(absf(current.scale.x - 1.0) < 0.01 and absf(current.scale.y - 1.0) < 0.01, "S02 current wing must spring cleanly back on release")
+	var tactile_sealed: Button = screen.get_chapter_button("dark_vanity") as Button
+	tactile_sealed.emit_signal("button_down")
+	await create_timer(0.08).timeout
+	_expect(tactile_sealed.scale.x < 0.995 and tactile_sealed.scale.x > 0.97, "S02 sealed wing press must be visible but deliberately subtler")
+	tactile_sealed.emit_signal("button_up")
+	await create_timer(0.20).timeout
+	screen.apply_presentation_settings({"reduced_motion": true})
+	tactile_sealed.emit_signal("button_down")
+	await create_timer(0.08).timeout
+	_expect(absf(tactile_sealed.scale.x - 1.0) < 0.001 and absf(tactile_sealed.scale.y - 1.0) < 0.001, "Reduced Motion must suppress S02 row transform animation")
+	tactile_sealed.emit_signal("button_up")
+	screen.apply_presentation_settings({"reduced_motion": false})
+
 	_expect(screen.get_node_or_null("ResourceBar") != null, "S02 global resources header missing")
 	_expect(screen.get_node_or_null("Layout/ChapterHeader/HeaderBack") != null, "S02 header back missing")
 	var current_wing_art: TextureRect = current.get_node_or_null("CurrentWingArtwork") as TextureRect if current != null else null
