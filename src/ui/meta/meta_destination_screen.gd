@@ -447,7 +447,8 @@ func screen_contract() -> Dictionary:
 		and profile_save_row.custom_minimum_size.y <= 124.0
 		and profile_save_row.size_flags_vertical != Control.SIZE_EXPAND_FILL
 		and profile_menu_spacer != null
-		and profile_menu_spacer.size_flags_vertical == Control.SIZE_EXPAND_FILL
+		and profile_menu_spacer.size_flags_vertical != Control.SIZE_EXPAND_FILL
+		and profile_menu_spacer.custom_minimum_size.y <= 16.0
 	)
 	if _feature_key == "events":
 		art_dominant_cards = events_card_focus
@@ -479,7 +480,15 @@ func screen_contract() -> Dictionary:
 		"shop_catalog_focus": shop_catalog_focus,
 		"profile_identity_focus": profile_identity_focus,
 		"profile_board_utility_rows": profile_utility_rows,
-		"profile_intentional_negative_space": _feature_key != "profile" or (profile_menu_spacer != null and profile_menu_spacer.size_flags_vertical == Control.SIZE_EXPAND_FILL and profile_chapter_row.size_flags_vertical != Control.SIZE_EXPAND_FILL and profile_reliquary_row.size_flags_vertical != Control.SIZE_EXPAND_FILL and profile_house_row.size_flags_vertical != Control.SIZE_EXPAND_FILL),
+		"profile_compact_menu_flow": _feature_key != "profile" or (
+			profile_feature.size_flags_vertical != Control.SIZE_EXPAND_FILL
+			and ($FeatureLayout/ProfileFeature/Menu as VBoxContainer).size_flags_vertical != Control.SIZE_EXPAND_FILL
+			and profile_menu_spacer != null
+			and profile_menu_spacer.size_flags_vertical != Control.SIZE_EXPAND_FILL
+			and profile_menu_spacer.custom_minimum_size.y <= 16.0
+			and profile_save_row.size_flags_vertical != Control.SIZE_EXPAND_FILL
+			and profile_surface.offset_bottom <= -600.0
+		),
 		"profile_screen_specific_material": _feature_key != "profile" or (
 			profile_identity.get_theme_stylebox("panel") is StyleBoxFlat
 			and profile_chapter_row.get_theme_stylebox("panel") is StyleBoxFlat

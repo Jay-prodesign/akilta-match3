@@ -121,7 +121,7 @@ func _run() -> void:
 			_expect(profile_surface != null and profile_surface.visible and profile_surface.get_theme_stylebox("panel") is StyleBoxFlat, "profile must own a clean screen-specific framed surface")
 			_expect(bool(contract.get("profile_screen_specific_material", false)), "profile screen-specific frames must avoid stretched shared 9-slice seam artifacts")
 			_expect(bool(contract.get("profile_board_utility_rows", false)), "profile must use board-like compact utility rows instead of oversized progress cards")
-			_expect(bool(contract.get("profile_intentional_negative_space", false)), "profile remaining vertical space must sit between utility records and save status instead of inside giant empty cards")
+			_expect(bool(contract.get("profile_compact_menu_flow", false)), "profile truthful utility rows and save status must flow continuously instead of being split by a giant empty corridor")
 			var profile_progress_label := screen.get_node_or_null("FeatureLayout/ProfileFeature/Identity/IdentityRow/Copy/ProgressLabel") as Label
 			var profile_progress := screen.get_node_or_null("FeatureLayout/ProfileFeature/Identity/IdentityRow/Copy/Progress") as ProgressBar
 			var settings_button := screen.get_node_or_null("FeatureLayout/ProfileFeature/Menu/Settings") as Button
