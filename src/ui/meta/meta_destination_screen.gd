@@ -482,11 +482,11 @@ func screen_contract() -> Dictionary:
 		"profile_board_utility_rows": profile_utility_rows,
 		"profile_compact_menu_flow": _feature_key != "profile" or (
 			profile_feature.size_flags_vertical != Control.SIZE_EXPAND_FILL
+			and ($FeatureLayout/ProfileFeature/Menu as VBoxContainer).size_flags_vertical != Control.SIZE_EXPAND_FILL
 			and profile_menu_spacer != null
 			and profile_menu_spacer.size_flags_vertical != Control.SIZE_EXPAND_FILL
 			and profile_menu_spacer.custom_minimum_size.y <= 16.0
-			and profile_save_row.position.y > profile_house_row.position.y
-			and profile_save_row.position.y - (profile_house_row.position.y + profile_house_row.size.y) <= 32.0
+			and profile_save_row.size_flags_vertical != Control.SIZE_EXPAND_FILL
 		),
 		"profile_screen_specific_material": _feature_key != "profile" or (
 			profile_identity.get_theme_stylebox("panel") is StyleBoxFlat
