@@ -436,14 +436,18 @@ func screen_contract() -> Dictionary:
 		and profile_identity_progress.visible
 		and profile_identity_progress.max_value >= 1.0
 	)
+	var profile_menu_spacer := get_node_or_null("FeatureLayout/ProfileFeature/Menu/UtilitySpacer") as Control
 	var profile_utility_rows := _feature_key != "profile" or (
 		profile_settings_row.visible
-		and profile_settings_row.custom_minimum_size.y >= 96.0
-		and profile_settings_row.custom_minimum_size.y <= 112.0
-		and [profile_chapter_row, profile_reliquary_row, profile_house_row].all(func(row): return row.visible and row.custom_minimum_size.y >= 108.0 and row.custom_minimum_size.y <= 124.0 and row.size_flags_vertical == Control.SIZE_EXPAND_FILL)
+		and profile_settings_row.custom_minimum_size.y >= 88.0
+		and profile_settings_row.custom_minimum_size.y <= 96.0
+		and [profile_chapter_row, profile_reliquary_row, profile_house_row].all(func(row): return row.visible and row.custom_minimum_size.y >= 128.0 and row.custom_minimum_size.y <= 136.0 and row.size_flags_vertical != Control.SIZE_EXPAND_FILL)
 		and profile_save_row.visible
-		and profile_save_row.custom_minimum_size.y >= 124.0
-		and profile_save_row.custom_minimum_size.y <= 140.0
+		and profile_save_row.custom_minimum_size.y >= 116.0
+		and profile_save_row.custom_minimum_size.y <= 124.0
+		and profile_save_row.size_flags_vertical != Control.SIZE_EXPAND_FILL
+		and profile_menu_spacer != null
+		and profile_menu_spacer.size_flags_vertical == Control.SIZE_EXPAND_FILL
 	)
 	if _feature_key == "events":
 		art_dominant_cards = events_card_focus
@@ -475,6 +479,7 @@ func screen_contract() -> Dictionary:
 		"shop_catalog_focus": shop_catalog_focus,
 		"profile_identity_focus": profile_identity_focus,
 		"profile_board_utility_rows": profile_utility_rows,
+		"profile_intentional_negative_space": _feature_key != "profile" or (profile_menu_spacer != null and profile_menu_spacer.size_flags_vertical == Control.SIZE_EXPAND_FILL and profile_chapter_row.size_flags_vertical != Control.SIZE_EXPAND_FILL and profile_reliquary_row.size_flags_vertical != Control.SIZE_EXPAND_FILL and profile_house_row.size_flags_vertical != Control.SIZE_EXPAND_FILL),
 		"profile_screen_specific_material": _feature_key != "profile" or (
 			profile_identity.get_theme_stylebox("panel") is StyleBoxFlat
 			and profile_chapter_row.get_theme_stylebox("panel") is StyleBoxFlat
@@ -493,7 +498,7 @@ func screen_contract() -> Dictionary:
 		"art_dominant_cards": art_dominant_cards,
 		"header_readability_scrim": ($HeaderShade as ColorRect) != null and ($HeaderShade as ColorRect).color.a >= 0.34,
 		"secondary_header_compact": (_feature_key != "events" or not chapter_progress.visible) and (_feature_key != "shop" or (shop_notice.visible and shop_notice.get_theme_font_size("font_size") <= 16 and not shop_currency.visible and not shop_truth.visible)),
-		"profile_save_health_compact": _feature_key != "profile" or (profile_save_row != null and profile_save_row.custom_minimum_size.y <= 140.0),
+		"profile_save_health_compact": _feature_key != "profile" or (profile_save_row != null and profile_save_row.custom_minimum_size.y <= 124.0),
 		"profile_status_focus": profile_status_focus,
 		"redundant_house_return_suppressed": not back_button.visible,
 		"truth_footer_suppressed": not truth_strip.visible,
