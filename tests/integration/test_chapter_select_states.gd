@@ -64,7 +64,7 @@ func _run() -> void:
 	current.emit_signal("button_up")
 	await create_timer(0.20).timeout
 	_expect(absf(current.scale.x - 1.0) < 0.01 and absf(current.scale.y - 1.0) < 0.01, "S02 current wing must spring cleanly back on release")
-	var tactile_sealed := screen.get_chapter_button("dark_vanity")
+	var tactile_sealed: Button = screen.get_chapter_button("dark_vanity") as Button
 	tactile_sealed.emit_signal("button_down")
 	await create_timer(0.08).timeout
 	_expect(tactile_sealed.scale.x < 0.995 and tactile_sealed.scale.x > 0.97, "S02 sealed wing press must be visible but deliberately subtler")
