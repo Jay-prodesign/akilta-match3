@@ -9,6 +9,7 @@ signal events_requested
 signal shop_requested
 signal profile_requested
 signal restoration_finished
+signal interaction_feedback_requested(kind: String)
 
 const HouseState = preload("res://src/world/house_state.gd")
 const ProductNavigation = preload("res://src/ui/shared/product_navigation.gd")
@@ -51,10 +52,12 @@ var _restoration_vfx_echo_spawned: bool = false
 var _hotspot_buttons: Dictionary = {}
 var _house_curio_overlay: Control
 var _keeper_overlay: Control
+var _home_tactile_buttons: Array[Button] = []
 const KEEPER_ART_PATH := "res://assets/pieces/black_cat.webp"
 
 func _ready() -> void:
 	play_button.set_meta("home_material", "scene_authored_flat")
+	_bind_home_tactile(play_button, "primary_play", 0.96)
 	play_button.pressed.connect(_on_play_pressed)
 	collection_button.pressed.connect(func(): collection_requested.emit())
 	settings_button.pressed.connect(func(): settings_requested.emit())
@@ -71,8 +74,10 @@ func _ready() -> void:
 	for curio_id in _hotspot_buttons:
 		var hotspot := _hotspot_buttons[curio_id] as Button
 		hotspot.tooltip_text = "Inspect %s" % _curio_name(String(curio_id)).capitalize()
+		_bind_home_tactile(hotspot, "curio_hotspot", 0.90)
 		hotspot.pressed.connect(_open_house_curio_inspect.bind(String(curio_id)))
 	_keeper_hotspot.tooltip_text = "Meet the Keeper"
+	_bind_home_tactile(_keeper_hotspot, "keeper_hotspot", 0.92)
 	_keeper_hotspot.pressed.connect(_open_keeper_card)
 
 func set_available_level_count(value: int) -> void:
@@ -90,6 +95,12 @@ func set_returning_player(value: bool) -> void:
 
 func apply_presentation_settings(state: Dictionary) -> void:
 	_reduced_motion = bool(state.get("reduced_motion", false))
+	if _reduced_motion:
+		for button in _home_tactile_buttons:
+			_stop_home_tactile_tween(button)
+			button.scale = Vector2.ONE
+			button.modulate = Color.WHITE
+			button.set_meta("home_tactile_phase", "idle")
 	if room_view != null and room_view.has_method("apply_presentation_settings"):
 		room_view.apply_presentation_settings(state)
 
@@ -172,6 +183,75 @@ func north_star_home_contract() -> Dictionary:
 		"ftue_strip_suppressed": _first_ritual_panel != null and not _first_ritual_panel.visible,
 		"state_banners_suppressed": _returning_banner != null and not _returning_banner.visible and _completion_banner != null and not _completion_banner.visible,
 	}
+
+func home_interaction_contract() -> Dictionary:
+	var hotspot_tactile := _keeper_hotspot != null and bool(_keeper_hotspot.get_meta("home_tactile_bound", false))
+	for button in _hotspot_buttons.values():
+		hotspot_tactile = hotspot_tactile and button is Button and bool((button as Button).get_meta("home_tactile_bound", false))
+	return {
+		"play_tactile": play_button != null and bool(play_button.get_meta("home_tactile_bound", false)) and float(play_button.get_meta("home_tactile_press_scale", 1.0)) <= 0.96,
+		"hotspots_tactile": hotspot_tactile,
+		"reduced_motion_supported": true,
+		"feedback_signal": has_signal("interaction_feedback_requested"),
+		"hidden_action_dock_ignored": not ($Layout/ActionDock as PanelContainer).visible,
+	}
+
+func _bind_home_tactile(button: Button, role: String, press_scale: float) -> void:
+	if button == null:
+		return
+	button.set_meta("home_tactile_role", role)
+	button.set_meta("home_tactile_press_scale", press_scale)
+	if not bool(button.get_meta("home_tactile_bound", false)):
+		button.set_meta("home_tactile_bound", true)
+		_home_tactile_buttons.append(button)
+		button.button_down.connect(_press_home_tactile.bind(button))
+		button.button_up.connect(_release_home_tactile.bind(button))
+		button.mouse_exited.connect(_release_home_tactile.bind(button))
+		button.focus_exited.connect(_release_home_tactile.bind(button))
+
+func _press_home_tactile(button: Button) -> void:
+	if button == null or button.disabled:
+		return
+	_stop_home_tactile_tween(button)
+	button.pivot_offset = button.size * 0.5
+	button.set_meta("home_tactile_phase", "pressed")
+	interaction_feedback_requested.emit("ui")
+	if _reduced_motion:
+		button.scale = Vector2.ONE
+		button.modulate = Color.WHITE
+		return
+	var target_scale := clampf(float(button.get_meta("home_tactile_press_scale", 0.96)), 0.88, 0.98)
+	var tween := create_tween()
+	button.set_meta("home_tactile_tween", tween)
+	tween.set_parallel(true)
+	tween.tween_property(button, "scale", Vector2(target_scale, target_scale), 0.06).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
+	tween.tween_property(button, "modulate", Color(1.0, 0.95, 0.88, 1.0), 0.06).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
+
+func _release_home_tactile(button: Button) -> void:
+	if button == null:
+		return
+	_stop_home_tactile_tween(button)
+	button.pivot_offset = button.size * 0.5
+	button.set_meta("home_tactile_phase", "release")
+	if _reduced_motion:
+		button.scale = Vector2.ONE
+		button.modulate = Color.WHITE
+		button.set_meta("home_tactile_phase", "idle")
+		return
+	var tween := create_tween()
+	button.set_meta("home_tactile_tween", tween)
+	tween.set_parallel(true)
+	tween.tween_property(button, "scale", Vector2.ONE, 0.17).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
+	tween.tween_property(button, "modulate", Color.WHITE, 0.12).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
+	tween.finished.connect(func(): button.set_meta("home_tactile_phase", "idle"))
+
+func _stop_home_tactile_tween(button: Button) -> void:
+	if button == null or not button.has_meta("home_tactile_tween"):
+		return
+	var previous = button.get_meta("home_tactile_tween")
+	if previous is Tween and (previous as Tween).is_valid():
+		(previous as Tween).kill()
+	button.remove_meta("home_tactile_tween")
 
 func _on_play_pressed() -> void:
 	if available_level_count < 1:

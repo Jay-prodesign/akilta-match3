@@ -500,10 +500,15 @@ func _render_house(restoration_mode: bool = false, curio_id: String = "", restor
 	screen.play_requested.connect(_on_house_play_requested)
 	screen.settings_requested.connect(show_settings)
 	screen.profile_requested.connect(func(): show_feature_preview("Profile"))
+	if screen.has_signal("interaction_feedback_requested"):
+		screen.interaction_feedback_requested.connect(_on_house_interaction_feedback_requested)
 	if screen.has_signal("events_requested"):
 		screen.events_requested.connect(func(): show_feature_preview("Events"))
 	if screen.has_signal("shop_requested"):
 		screen.shop_requested.connect(func(): show_feature_preview("Shop"))
+
+func _on_house_interaction_feedback_requested(_kind: String = "ui") -> void:
+	_emit_shell_feedback()
 
 func _on_restoration_finished() -> void:
 	if navigation.current() == NavigationScript.Route.RESTORATION:
