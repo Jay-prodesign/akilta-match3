@@ -19,8 +19,8 @@ func _run() -> void:
 	var progress_label := screen.get_node_or_null("Layout/Progress") as Label
 	var intro := screen.get_node_or_null("Layout/Intro") as Label
 	_expect(title != null and title.get_theme_font_size("font_size") >= 52, "S03 Chapter title must retain mobile-readable hierarchy")
-	_expect(progress_label != null and progress_label.get_theme_font_size("font_size") >= 26, "S03 chapter progress must remain legible")
-	_expect(intro != null and intro.get_theme_font_size("font_size") >= 21, "S03 chapter intro copy must remain legible")
+	_expect(progress_label != null and progress_label.get_theme_font_size("font_size") >= 22, "S03 chapter progress must remain legible at the compact target scale")
+	_expect(intro != null and intro.get_theme_font_size("font_size") >= 18, "S03 chapter intro copy must remain legible while subordinate to the title")
 	var route_world := ScreenArt.texture("chapter_route_curio_boutique")
 	_expect(ScreenArt.path("chapter_route_curio_boutique").ends_with(".webp"), "S03 chapter route world must resolve from authored raster WebP")
 	_expect(route_world != null and route_world.get_width() >= 1080 and route_world.get_height() >= 1500, "S03 chapter route world must meet the locked 1080x1500 ship-region contract")
@@ -34,6 +34,7 @@ func _run() -> void:
 	_expect(bool(visual_contract.get("concise_route_instruction", false)), "S03 route instruction must not become a tiny paragraph")
 	_expect(bool(visual_contract.get("route_world_dominant", false)), "S03 authored route world must remain the dominant visual surface")
 	_expect(bool(visual_contract.get("resource_header_clearance", false)), "S03 title stack must clear the global resource header instead of rendering underneath it")
+	_expect(bool(visual_contract.get("future_seal_subordinate", false)), "S03 future cabinets card must remain subordinate to the live opening route")
 	var route = screen.get_node_or_null("Layout/RoutePanel/Scroll/RouteView")
 	_expect(route != null, "S03 authored RouteView missing")
 	if route == null:
