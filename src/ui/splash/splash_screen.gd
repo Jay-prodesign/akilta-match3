@@ -9,7 +9,8 @@ const ProductionChrome = preload("res://src/ui/theme/production_chrome.gd")
 const Typography = preload("res://src/ui/theme/typography.gd")
 const HapticsController = preload("res://src/feedback/haptics_controller.gd")
 
-const BRAND_SEAL_PATH := "res://assets/ui/cat_coven_launch.png"
+const BRAND_SEAL_PATH := "res://assets/pieces/moon_sigil.webp"
+const FAMILIAR_SEAL_PATH := "res://assets/ui/cat_coven_launch.png"
 const SPLASH_WORLD_BASELINE_PATH := "res://assets/world/ch01_curio_boutique/chapter_route_curio_boutique.webp"
 
 @onready var enter_button: Button = $Layout/Enter
@@ -18,7 +19,9 @@ const SPLASH_WORLD_BASELINE_PATH := "res://assets/world/ch01_curio_boutique/chap
 @onready var recovery_message: Label = $Layout/BootState/StateContent/RecoveryMessage
 @onready var boot_state_panel: PanelContainer = $Layout/BootState
 @onready var splash_world_art: TextureRect = $SplashWorldArt
-@onready var brand_seal: TextureRect = $Layout/BrandSeal
+@onready var brand_mark: Control = $Layout/BrandMark
+@onready var brand_seal: TextureRect = $Layout/BrandMark/MoonSeal
+@onready var familiar_seal: TextureRect = $Layout/BrandMark/FamiliarSeal
 @onready var brand_label: Label = $Layout/Brand
 @onready var subtitle_label: Label = $Layout/Subtitle
 @onready var tagline_label: Label = $Layout/Tagline
@@ -33,6 +36,7 @@ var haptics = HapticsController.new()
 func _ready() -> void:
 	splash_world_art.texture = ScreenArt.texture("splash_bg_curio_boutique")
 	brand_seal.texture = PieceAssetLoader.ornament(BRAND_SEAL_PATH)
+	familiar_seal.texture = PieceAssetLoader.ornament(FAMILIAR_SEAL_PATH)
 	var display_font := Typography.display_font()
 	if display_font != null:
 		brand_label.add_theme_font_override("font", display_font)
@@ -100,7 +104,7 @@ func _play_intro() -> void:
 		return
 	if _intro_tween != null and _intro_tween.is_valid():
 		_intro_tween.kill()
-	var reveal_nodes: Array[Control] = [brand_seal, brand_label, subtitle_label, boot_state_panel, enter_button, tagline_label]
+	var reveal_nodes: Array[Control] = [brand_mark, brand_label, subtitle_label, $Layout/BrandLore, boot_state_panel, enter_button, tagline_label]
 	_intro_tween = create_tween()
 	_intro_tween.set_parallel(true)
 	for index in range(reveal_nodes.size()):
@@ -222,11 +226,12 @@ func splash_authored_contract() -> Dictionary:
 		"world_art_source": ScreenArt.path("splash_bg_curio_boutique"),
 		"dedicated_splash_master": ScreenArt.path("splash_bg_curio_boutique") != SPLASH_WORLD_BASELINE_PATH,
 		"shared_moonlit_castle_baseline": ScreenArt.path("splash_bg_curio_boutique") == SPLASH_WORLD_BASELINE_PATH,
-		"authored_brand_seal": brand_seal != null and brand_seal.texture != null,
+		"authored_brand_seal": brand_seal != null and brand_seal.texture != null and familiar_seal != null and familiar_seal.texture != null,
 		"authored_boot_panel": boot_state_panel != null and boot_state_panel.get_theme_stylebox("panel") is StyleBoxFlat and String(boot_state_panel.get_meta("splash_material", "")) == "scene_authored_flat",
-		"authored_enter_cta": enter_button != null and enter_button.custom_minimum_size.y >= 84.0 and enter_button.custom_minimum_size.x >= 640.0 and enter_button.get_theme_stylebox("normal") is StyleBoxFlat and String(enter_button.get_meta("splash_material", "")) == "scene_authored_flat",
-		"north_star_brand_hierarchy": brand_label != null and brand_label.get_theme_font_size("font_size") >= 90 and brand_seal != null and brand_seal.custom_minimum_size.y >= 210.0,
-		"north_star_entry_stack": boot_state_panel != null and boot_state_panel.custom_minimum_size.y >= 80.0 and boot_state_panel.custom_minimum_size.y <= 92.0 and load_track != null and load_track.custom_minimum_size.y >= 12.0 and tagline_label != null,
+		"authored_enter_cta": enter_button != null and enter_button.custom_minimum_size.y >= 84.0 and enter_button.custom_minimum_size.x >= 540.0 and enter_button.get_theme_stylebox("normal") is StyleBoxFlat and String(enter_button.get_meta("splash_material", "")) == "scene_authored_flat",
+		"north_star_brand_hierarchy": brand_label != null and brand_label.get_theme_font_size("font_size") >= 90 and brand_mark != null and brand_mark.custom_minimum_size.y >= 230.0 and brand_seal != null and familiar_seal != null and subtitle_label.text == "MATCH-3",
+		"north_star_entry_stack": boot_state_panel != null and boot_state_panel.custom_minimum_size.x >= 540.0 and boot_state_panel.custom_minimum_size.x <= 580.0 and boot_state_panel.custom_minimum_size.y >= 80.0 and boot_state_panel.custom_minimum_size.y <= 92.0 and load_track != null and load_track.custom_minimum_size.y >= 12.0 and tagline_label != null,
+		"lunar_familiar_brand_mark": brand_seal.texture != null and familiar_seal.texture != null and brand_mark.custom_minimum_size.x >= 270.0,
 		"seam_free_splash_material": boot_state_panel.get_theme_stylebox("panel") is StyleBoxFlat and enter_button.get_theme_stylebox("normal") is StyleBoxFlat,
 		"stable_loading_geometry": enter_button != null and enter_button.visible,
 		"story_subordinate": ($Layout/Story as Label) != null and not ($Layout/Story as Label).visible,

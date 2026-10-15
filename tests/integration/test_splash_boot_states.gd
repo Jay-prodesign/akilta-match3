@@ -53,6 +53,7 @@ func _verify_clean_ready() -> void:
 		_expect(bool(authored.get("authored_boot_panel", false)), "S00 boot-state panel must be authored")
 		_expect(bool(authored.get("authored_enter_cta", false)), "S00 Enter CTA must be authored with mobile touch target")
 		_expect(bool(authored.get("north_star_brand_hierarchy", false)), "S00 must give the Cat & Coven seal and wordmark North Star brand authority")
+		_expect(bool(authored.get("lunar_familiar_brand_mark", false)), "S00 must pair the existing lunar sigil and familiar art into the locked-board brand-mark hierarchy")
 		_expect(bool(authored.get("north_star_entry_stack", false)), "S00 must retain crest → brand → boot gate → Enter hierarchy")
 		_expect(bool(authored.get("seam_free_splash_material", false)), "S00 boot gate and Enter action must avoid stretched shared-chrome seam artifacts")
 		_expect(bool(authored.get("stable_loading_geometry", false)), "S00 loading state must preserve entry geometry without layout jumping")
