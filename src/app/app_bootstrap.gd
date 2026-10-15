@@ -789,12 +789,19 @@ func show_chapters() -> bool:
 func _render_chapters() -> bool:
 	var screen: Node = ChapterSelectScene.instantiate()
 	_show_screen(screen)
+	if screen.has_method("apply_presentation_settings"):
+		screen.apply_presentation_settings(user_settings.get_presentation_state())
 	if screen.has_method("set_progress"):
 		screen.set_progress(progress)
 	_install_product_navigation(screen, "map")
+	if screen.has_signal("interaction_feedback_requested"):
+		screen.interaction_feedback_requested.connect(_on_chapter_interaction_feedback_requested)
 	screen.chapter_requested.connect(_on_chapter_selected)
 	screen.back_requested.connect(show_house)
 	return true
+
+func _on_chapter_interaction_feedback_requested(_kind: String = "ui") -> void:
+	_emit_shell_feedback()
 
 func _on_chapter_selected(chapter_id: String) -> void:
 	if chapter_id == "curio_boutique":

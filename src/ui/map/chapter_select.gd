@@ -3,6 +3,7 @@ extends Control
 
 signal back_requested
 signal chapter_requested(chapter_id: String)
+signal interaction_feedback_requested(kind: String)
 
 const PieceAssetLoader = preload("res://src/match3/presentation/piece_asset_loader.gd")
 const ScreenArt = preload("res://src/ui/shared/screen_art_registry.gd")
@@ -26,6 +27,8 @@ const WINGS := [
 var progress
 var _resource_bar: PanelContainer
 var _buttons: Dictionary = {}
+var _reduced_motion: bool = false
+var _chapter_tactile_buttons: Array[Button] = []
 
 @onready var _world_art: TextureRect = $ChapterWorldBackdrop
 @onready var _chapter_summary: Label = $Layout/ChapterSummary
@@ -64,6 +67,7 @@ func _ready() -> void:
 
 	_back.set_meta("chapter_material", "scene_authored_flat")
 	_current.set_meta("chapter_material", "scene_authored_flat")
+	_bind_chapter_tactile(_back, "back", 0.94)
 	_back.pressed.connect(func(): back_requested.emit())
 	_current.pressed.connect(func(): chapter_requested.emit("curio_boutique"))
 
@@ -79,6 +83,7 @@ func _ready() -> void:
 		button.set_meta("map_w", float(wing["w"]))
 		button.set_meta("map_h", float(wing["h"]))
 		button.set_meta("chapter_state", "first_wing_open" if id == "curio_boutique" else "future_wings_locked")
+		_bind_chapter_tactile(button, "current_wing" if id == "curio_boutique" else "sealed_wing", 0.965 if id == "curio_boutique" else 0.982)
 		if id != "curio_boutique":
 			button.set_meta("chapter_material", "scene_authored_flat")
 			var wax_seal := button.get_node_or_null("WaxSeal") as TextureRect
@@ -105,6 +110,91 @@ func set_progress(value) -> void:
 	progress = value
 	TopResourceBar.refresh(_resource_bar, progress)
 	_refresh_progress_state()
+
+func apply_presentation_settings(state: Dictionary) -> void:
+	_reduced_motion = bool(state.get("reduced_motion", false))
+	if _reduced_motion:
+		for button in _chapter_tactile_buttons:
+			_stop_chapter_tactile_tween(button)
+			button.scale = Vector2.ONE
+			button.modulate = Color.WHITE
+			button.set_meta("chapter_tactile_phase", "idle")
+
+func chapter_interaction_contract() -> Dictionary:
+	var all_rows_tactile := true
+	var sealed_press_is_subtle := true
+	for button in [_current, _witch_atelier, _dark_vanity, _archive, _moon_conservatory, _cemetery_garden]:
+		all_rows_tactile = all_rows_tactile and button != null and bool(button.get_meta("chapter_tactile_bound", false))
+	for button in [_witch_atelier, _dark_vanity, _archive, _moon_conservatory, _cemetery_garden]:
+		sealed_press_is_subtle = sealed_press_is_subtle and button != null and float(button.get_meta("chapter_tactile_press_scale", 1.0)) >= 0.98
+	return {
+		"chapter_rows_tactile": all_rows_tactile,
+		"current_wing_press_depth": _current != null and float(_current.get_meta("chapter_tactile_press_scale", 1.0)) <= 0.97,
+		"sealed_wing_press_subtle": sealed_press_is_subtle,
+		"back_tactile": _back != null and bool(_back.get_meta("chapter_tactile_bound", false)) and float(_back.get_meta("chapter_tactile_press_scale", 1.0)) <= 0.95,
+		"reduced_motion_supported": true,
+		"feedback_signal": has_signal("interaction_feedback_requested"),
+	}
+
+func _bind_chapter_tactile(button: Button, role: String, press_scale: float) -> void:
+	if button == null:
+		return
+	button.set_meta("chapter_tactile_role", role)
+	button.set_meta("chapter_tactile_press_scale", press_scale)
+	if bool(button.get_meta("chapter_tactile_bound", false)):
+		return
+	button.set_meta("chapter_tactile_bound", true)
+	_chapter_tactile_buttons.append(button)
+	button.button_down.connect(_press_chapter_tactile.bind(button))
+	button.button_up.connect(_release_chapter_tactile.bind(button))
+	button.mouse_exited.connect(_release_chapter_tactile.bind(button))
+	button.focus_exited.connect(_release_chapter_tactile.bind(button))
+
+func _press_chapter_tactile(button: Button) -> void:
+	if button == null or button.disabled:
+		return
+	_stop_chapter_tactile_tween(button)
+	button.pivot_offset = button.size * 0.5
+	button.set_meta("chapter_tactile_phase", "pressed")
+	interaction_feedback_requested.emit("ui")
+	if _reduced_motion:
+		button.scale = Vector2.ONE
+		button.modulate = Color.WHITE
+		return
+	var target_scale := clampf(float(button.get_meta("chapter_tactile_press_scale", 0.98)), 0.92, 0.99)
+	var role := String(button.get_meta("chapter_tactile_role", ""))
+	var pressed_tint := Color(1.0, 0.95, 0.84, 1.0) if role == "current_wing" else (Color(0.95, 0.90, 1.0, 1.0) if role == "sealed_wing" else Color(1.0, 0.96, 0.90, 1.0))
+	var tween := create_tween()
+	button.set_meta("chapter_tactile_tween", tween)
+	tween.set_parallel(true)
+	tween.tween_property(button, "scale", Vector2(target_scale, target_scale), 0.055).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
+	tween.tween_property(button, "modulate", pressed_tint, 0.055).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
+
+func _release_chapter_tactile(button: Button) -> void:
+	if button == null:
+		return
+	_stop_chapter_tactile_tween(button)
+	button.pivot_offset = button.size * 0.5
+	button.set_meta("chapter_tactile_phase", "release")
+	if _reduced_motion:
+		button.scale = Vector2.ONE
+		button.modulate = Color.WHITE
+		button.set_meta("chapter_tactile_phase", "idle")
+		return
+	var tween := create_tween()
+	button.set_meta("chapter_tactile_tween", tween)
+	tween.set_parallel(true)
+	tween.tween_property(button, "scale", Vector2.ONE, 0.16).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
+	tween.tween_property(button, "modulate", Color.WHITE, 0.11).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
+	tween.finished.connect(func(): button.set_meta("chapter_tactile_phase", "idle"))
+
+func _stop_chapter_tactile_tween(button: Button) -> void:
+	if button == null or not button.has_meta("chapter_tactile_tween"):
+		return
+	var previous = button.get_meta("chapter_tactile_tween")
+	if previous is Tween and (previous as Tween).is_valid():
+		(previous as Tween).kill()
+	button.remove_meta("chapter_tactile_tween")
 
 func get_chapter_button(chapter_id: String) -> Button:
 	return _buttons.get(chapter_id) as Button
