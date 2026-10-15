@@ -333,9 +333,13 @@ func show_restoration_ceremony(curio_id: String, stage: int) -> void:
 	var curio_texture := _curio_texture(curio_id)
 	if motif_texture == null or curio_texture == null:
 		return
+	var current_curios: Array[String] = []
+	if progress != null:
+		for item in progress.curios:
+			current_curios.append(String(item))
 	var overlay := RestorationOverlayScene.instantiate()
 	add_child(overlay)
-	if not bool(overlay.configure(_curio_name(curio_id), _restoration_copy(stage), motif_texture, curio_texture)):
+	if not bool(overlay.configure(curio_id, _curio_name(curio_id), _restoration_copy(stage), motif_texture, curio_texture, stage, current_curios)):
 		overlay.queue_free()
 		return
 
@@ -353,10 +357,6 @@ func show_restoration_ceremony(curio_id: String, stage: int) -> void:
 	if _completion_banner != null:
 		_completion_banner.visible = false
 
-	var current_curios: Array[String] = []
-	if progress != null:
-		for item in progress.curios:
-			current_curios.append(String(item))
 	var previous_curios := current_curios.duplicate()
 	previous_curios.erase(curio_id)
 	room_view.set_house_state(maxi(0, stage - 1), previous_curios)

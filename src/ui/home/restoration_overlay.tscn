@@ -1,6 +1,7 @@
-[gd_scene load_steps=6 format=3]
+[gd_scene load_steps=7 format=3]
 
 [ext_resource type="Script" path="res://src/ui/home/restoration_overlay.gd" id="1_restoration"]
+[ext_resource type="Script" path="res://src/world/curio_boutique.gd" id="2_room"]
 
 
 [sub_resource type="StyleBoxFlat" id="Card"]
@@ -87,9 +88,9 @@ color = Color(0.02, 0.015, 0.03, 0.18)
 [node name="RestorationHeader" type="VBoxContainer" parent="."]
 layout_mode = 1
 anchor_left = 0.08
-anchor_top = 0.08
+anchor_top = 0.07
 anchor_right = 0.92
-anchor_bottom = 0.23
+anchor_bottom = 0.205
 grow_horizontal = 2
 grow_vertical = 2
 theme_override_constants/separation = 4
@@ -120,7 +121,84 @@ text = "THE HOUSE REMEMBERS"
 horizontal_alignment = 1
 
 
+[node name="TransformationStage" type="PanelContainer" parent="."]
+layout_mode = 1
+anchor_left = 0.08
+anchor_top = 0.235
+anchor_right = 0.92
+anchor_bottom = 0.565
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_styles/panel = SubResource("Card")
+
+[node name="PreviewRow" type="HBoxContainer" parent="TransformationStage"]
+layout_mode = 2
+theme_override_constants/separation = 12
+alignment = 1
+
+[node name="BeforeCard" type="PanelContainer" parent="TransformationStage/PreviewRow"]
+custom_minimum_size = Vector2(0, 300)
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_styles/panel = SubResource("StateRail")
+
+[node name="BeforeContent" type="VBoxContainer" parent="TransformationStage/PreviewRow/BeforeCard"]
+layout_mode = 2
+theme_override_constants/separation = 6
+
+[node name="Label" type="Label" parent="TransformationStage/PreviewRow/BeforeCard/BeforeContent"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.72, 0.66, 0.73, 1)
+theme_override_font_sizes/font_size = 16
+text = "BEFORE · DORMANT"
+horizontal_alignment = 1
+
+[node name="House" type="Control" parent="TransformationStage/PreviewRow/BeforeCard/BeforeContent"]
+custom_minimum_size = Vector2(260, 252)
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+mouse_filter = 2
+clip_contents = true
+script = ExtResource("2_room")
+
+[node name="Arrow" type="Label" parent="TransformationStage/PreviewRow"]
+custom_minimum_size = Vector2(54, 0)
+layout_mode = 2
+theme_override_colors/font_color = Color(0.878, 0.714, 0.455, 1)
+theme_override_font_sizes/font_size = 28
+text = "→"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="AfterCard" type="PanelContainer" parent="TransformationStage/PreviewRow"]
+custom_minimum_size = Vector2(0, 300)
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_styles/panel = SubResource("StateRail")
+
+[node name="AfterContent" type="VBoxContainer" parent="TransformationStage/PreviewRow/AfterCard"]
+layout_mode = 2
+theme_override_constants/separation = 6
+
+[node name="Label" type="Label" parent="TransformationStage/PreviewRow/AfterCard/AfterContent"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.965, 0.878, 0.66, 1)
+theme_override_font_sizes/font_size = 16
+text = "AFTER · AWAKENED"
+horizontal_alignment = 1
+
+[node name="House" type="Control" parent="TransformationStage/PreviewRow/AfterCard/AfterContent"]
+custom_minimum_size = Vector2(260, 252)
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+mouse_filter = 2
+clip_contents = true
+script = ExtResource("2_room")
+
 [node name="RecoveredDisplayFrame" type="Panel" parent="."]
+visible = false
 layout_mode = 1
 anchor_left = 0.34
 anchor_top = 0.265
@@ -132,6 +210,7 @@ mouse_filter = 2
 theme_override_styles/panel = SubResource("MotifFrame")
 
 [node name="AwakeningMotif" type="TextureRect" parent="."]
+visible = false
 layout_mode = 1
 anchor_left = 0.385
 anchor_top = 0.305
@@ -146,11 +225,12 @@ modulate = Color(1, 0.96, 0.88, 1)
 
 
 [node name="StateRail" type="PanelContainer" parent="."]
+visible = false
 layout_mode = 1
-anchor_left = 0.18
-anchor_top = 0.56
-anchor_right = 0.82
-anchor_bottom = 0.64
+anchor_left = 0.16
+anchor_top = 0.585
+anchor_right = 0.84
+anchor_bottom = 0.65
 grow_horizontal = 2
 grow_vertical = 2
 theme_override_styles/panel = SubResource("StateRail")

@@ -26,7 +26,7 @@ func _run() -> void:
 	await _expect_scene_authored_prestart()
 	await _expect_panel(GAMEPLAY, "PauseOverlay/Card")
 	await _expect_panel(GAMEPLAY, "ResultOverlay/Card")
-	await _expect_panel(RESTORATION, "CeremonyCard")
+	await _expect_scene_authored_restoration()
 	await _expect_panel(CURIO_DETAIL, "CurioDetailCard")
 	await _expect_locked_panel()
 	await _expect_scene_authored_house_action(HOUSE, "Layout/PlayButton")
@@ -38,7 +38,6 @@ func _run() -> void:
 	await _expect_action(GAMEPLAY, "PauseOverlay/Card/Content/Exit", "utility")
 	await _expect_action(GAMEPLAY, "ResultOverlay/Card/Content/RecoveryAction", "primary")
 	await _expect_action(GAMEPLAY, "ResultOverlay/Card/Content/Action", "primary")
-	await _expect_action(RESTORATION, "CeremonyCard/CeremonyContent/CeremonyRow/Copy/Continue", "primary")
 	_finish()
 
 func _expect_panel(scene: PackedScene, path: String) -> void:
@@ -49,6 +48,19 @@ func _expect_panel(scene: PackedScene, path: String) -> void:
 	_expect(panel != null, "production chrome panel missing: %s" % path)
 	_expect(panel != null and panel.get_theme_stylebox("panel") is StyleBoxTexture, "panel must use asset-backed production chrome: %s" % path)
 	_expect(panel != null and String(panel.get_meta("production_chrome_asset", "")).ends_with(".svg"), "panel must expose authored chrome provenance: %s" % path)
+	instance.queue_free()
+	await process_frame
+
+func _expect_scene_authored_restoration() -> void:
+	var instance := RESTORATION.instantiate()
+	root.add_child(instance)
+	await process_frame
+	var card := instance.get_node_or_null("CeremonyCard") as PanelContainer
+	var action := instance.get_node_or_null("CeremonyCard/CeremonyContent/CeremonyRow/Copy/Continue") as Button
+	_expect(card != null and card.get_theme_stylebox("panel") is StyleBoxFlat, "Restoration summary must preserve its scene-authored panel material")
+	_expect(action != null and action.get_theme_stylebox("normal") is StyleBoxFlat, "Restoration Continue must preserve its scene-authored action material")
+	_expect(card != null and String(card.get_meta("restoration_material", "")) == "scene_authored_flat", "Restoration summary material provenance mismatch")
+	_expect(action != null and String(action.get_meta("restoration_material", "")) == "scene_authored_flat", "Restoration action material provenance mismatch")
 	instance.queue_free()
 	await process_frame
 
