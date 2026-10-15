@@ -37,10 +37,10 @@ corner_radius_top_left = 22
 corner_radius_top_right = 22
 corner_radius_bottom_right = 22
 corner_radius_bottom_left = 22
-content_margin_left = 244.0
-content_margin_top = 14.0
-content_margin_right = 18.0
-content_margin_bottom = 14.0
+content_margin_left = 188.0
+content_margin_top = 10.0
+content_margin_right = 16.0
+content_margin_bottom = 10.0
 shadow_color = Color(0, 0, 0, 0.62)
 shadow_size = 14
 
@@ -55,10 +55,10 @@ corner_radius_top_left = 22
 corner_radius_top_right = 22
 corner_radius_bottom_right = 22
 corner_radius_bottom_left = 22
-content_margin_left = 244.0
-content_margin_top = 14.0
-content_margin_right = 18.0
-content_margin_bottom = 14.0
+content_margin_left = 188.0
+content_margin_top = 10.0
+content_margin_right = 16.0
+content_margin_bottom = 10.0
 shadow_color = Color(0, 0, 0, 0.68)
 shadow_size = 16
 
@@ -73,10 +73,10 @@ corner_radius_top_left = 20
 corner_radius_top_right = 20
 corner_radius_bottom_right = 20
 corner_radius_bottom_left = 20
-content_margin_left = 18.0
-content_margin_top = 14.0
-content_margin_right = 18.0
-content_margin_bottom = 14.0
+content_margin_left = 92.0
+content_margin_top = 8.0
+content_margin_right = 58.0
+content_margin_bottom = 8.0
 shadow_color = Color(0, 0, 0, 0.34)
 shadow_size = 8
 
@@ -91,10 +91,10 @@ corner_radius_top_left = 20
 corner_radius_top_right = 20
 corner_radius_bottom_right = 20
 corner_radius_bottom_left = 20
-content_margin_left = 18.0
-content_margin_top = 14.0
-content_margin_right = 18.0
-content_margin_bottom = 14.0
+content_margin_left = 92.0
+content_margin_top = 8.0
+content_margin_right = 58.0
+content_margin_bottom = 8.0
 shadow_color = Color(0, 0, 0, 0.42)
 shadow_size = 10
 
@@ -263,7 +263,7 @@ alignment = 1
 
 [node name="CurrentWingArtwork" type="TextureRect" parent="Layout/ChapterGrid/CurioBoutiqueButton"]
 layout_mode = 1
-anchor_right = 0.38
+anchor_right = 0.31
 anchor_bottom = 1.0
 offset_left = 8.0
 offset_top = 8.0
@@ -277,17 +277,17 @@ stretch_mode = 6
 
 [node name="CurrentWingCopy" type="Label" parent="Layout/ChapterGrid/CurioBoutiqueButton"]
 layout_mode = 1
-anchor_left = 0.40
-anchor_top = 0.10
+anchor_left = 0.33
+anchor_top = 0.08
 anchor_right = 0.96
-anchor_bottom = 0.90
+anchor_bottom = 0.92
 grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
 theme_override_colors/font_color = Color(1, 0.969, 0.914, 1)
 theme_override_colors/font_outline_color = Color(0.02, 0.014, 0.028, 0.96)
 theme_override_constants/outline_size = 3
-theme_override_font_sizes/font_size = 20
+theme_override_font_sizes/font_size = 22
 text = "CURIO BOUTIQUE\nRARE FINDS · 0 / 3 AWAKENED\nBEGIN RESTORATION"
 horizontal_alignment = 1
 vertical_alignment = 1
@@ -308,7 +308,7 @@ layout_mode = 0
 theme_override_colors/font_color = Color(0.97, 0.92, 0.96, 1)
 theme_override_colors/font_outline_color = Color(0.02, 0.014, 0.028, 0.96)
 theme_override_constants/outline_size = 3
-theme_override_font_sizes/font_size = 17
+theme_override_font_sizes/font_size = 19
 theme_override_styles/normal = SubResource("LockedNormal")
 theme_override_styles/hover = SubResource("LockedHover")
 theme_override_styles/pressed = SubResource("LockedHover")
@@ -316,7 +316,7 @@ theme_override_styles/focus = SubResource("LockedHover")
 text = "WITCH ATELIER
 POTIONS & EXPERIMENTS
 SEALED"
-alignment = 1
+alignment = 0
 
 [node name="WaxSeal" type="TextureRect" parent="Layout/ChapterGrid/Chapter_witch_atelier"]
 layout_mode = 1
@@ -339,7 +339,7 @@ layout_mode = 0
 theme_override_colors/font_color = Color(0.97, 0.92, 0.96, 1)
 theme_override_colors/font_outline_color = Color(0.02, 0.014, 0.028, 0.96)
 theme_override_constants/outline_size = 3
-theme_override_font_sizes/font_size = 17
+theme_override_font_sizes/font_size = 19
 theme_override_styles/normal = SubResource("LockedNormal")
 theme_override_styles/hover = SubResource("LockedHover")
 theme_override_styles/pressed = SubResource("LockedHover")
@@ -347,7 +347,7 @@ theme_override_styles/focus = SubResource("LockedHover")
 text = "DARK VANITY
 MIRRORS & SECRETS
 SEALED"
-alignment = 1
+alignment = 0
 
 [node name="WaxSeal" type="TextureRect" parent="Layout/ChapterGrid/Chapter_dark_vanity"]
 layout_mode = 1
@@ -370,7 +370,7 @@ layout_mode = 0
 theme_override_colors/font_color = Color(0.97, 0.92, 0.96, 1)
 theme_override_colors/font_outline_color = Color(0.02, 0.014, 0.028, 0.96)
 theme_override_constants/outline_size = 3
-theme_override_font_sizes/font_size = 17
+theme_override_font_sizes/font_size = 19
 theme_override_styles/normal = SubResource("LockedNormal")
 theme_override_styles/hover = SubResource("LockedHover")
 theme_override_styles/pressed = SubResource("LockedHover")
@@ -378,7 +378,7 @@ theme_override_styles/focus = SubResource("LockedHover")
 text = "THE ARCHIVE
 LOST KNOWLEDGE
 SEALED"
-alignment = 1
+alignment = 0
 
 [node name="WaxSeal" type="TextureRect" parent="Layout/ChapterGrid/Chapter_archive"]
 layout_mode = 1
@@ -401,7 +401,7 @@ layout_mode = 0
 theme_override_colors/font_color = Color(0.97, 0.92, 0.96, 1)
 theme_override_colors/font_outline_color = Color(0.02, 0.014, 0.028, 0.96)
 theme_override_constants/outline_size = 3
-theme_override_font_sizes/font_size = 17
+theme_override_font_sizes/font_size = 19
 theme_override_styles/normal = SubResource("LockedNormal")
 theme_override_styles/hover = SubResource("LockedHover")
 theme_override_styles/pressed = SubResource("LockedHover")
@@ -409,7 +409,7 @@ theme_override_styles/focus = SubResource("LockedHover")
 text = "MOON CONSERVATORY
 CELESTIAL BOTANICALS
 SEALED"
-alignment = 1
+alignment = 0
 
 [node name="WaxSeal" type="TextureRect" parent="Layout/ChapterGrid/Chapter_moon_conservatory"]
 layout_mode = 1
@@ -432,7 +432,7 @@ layout_mode = 0
 theme_override_colors/font_color = Color(0.97, 0.92, 0.96, 1)
 theme_override_colors/font_outline_color = Color(0.02, 0.014, 0.028, 0.96)
 theme_override_constants/outline_size = 3
-theme_override_font_sizes/font_size = 17
+theme_override_font_sizes/font_size = 19
 theme_override_styles/normal = SubResource("LockedNormal")
 theme_override_styles/hover = SubResource("LockedHover")
 theme_override_styles/pressed = SubResource("LockedHover")
@@ -440,7 +440,7 @@ theme_override_styles/focus = SubResource("LockedHover")
 text = "CEMETERY GARDEN
 RESTING BEAUTIES
 SEALED"
-alignment = 1
+alignment = 0
 
 [node name="WaxSeal" type="TextureRect" parent="Layout/ChapterGrid/Chapter_cemetery_garden"]
 layout_mode = 1
