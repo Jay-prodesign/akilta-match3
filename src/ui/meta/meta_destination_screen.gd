@@ -487,6 +487,7 @@ func screen_contract() -> Dictionary:
 			and profile_menu_spacer.size_flags_vertical != Control.SIZE_EXPAND_FILL
 			and profile_menu_spacer.custom_minimum_size.y <= 16.0
 			and profile_save_row.size_flags_vertical != Control.SIZE_EXPAND_FILL
+			and profile_surface.offset_bottom <= -600.0
 		),
 		"profile_screen_specific_material": _feature_key != "profile" or (
 			profile_identity.get_theme_stylebox("panel") is StyleBoxFlat
