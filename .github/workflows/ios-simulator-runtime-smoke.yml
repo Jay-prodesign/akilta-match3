@@ -5,6 +5,7 @@ on:
     branches:
       - "main"
       - "feat/ios-simulator-runtime-smoke"
+      - "feat/ios-simulator-render-readiness"
     paths:
       - ".github/workflows/ios-simulator-runtime-smoke.yml"
       - ".github/release-proof.trigger"
@@ -133,11 +134,30 @@ jobs:
             exit 1
           fi
           grep -F "$BUNDLE_ID" artifacts/ios-launchctl-list.txt | tee artifacts/ios-process-alive.txt
-          xcrun simctl io "$SIM_UDID" screenshot artifacts/ios-01-cold-launch.png
-          test -s artifacts/ios-01-cold-launch.png
-          BYTES="$(stat -f%z artifacts/ios-01-cold-launch.png)"
-          echo "ios-01-cold-launch.png=$BYTES" | tee artifacts/ios-frame-sizes.txt
-          test "$BYTES" -ge 200000
+          RENDERED=0
+          : > artifacts/ios-frame-sizes.txt
+          for ATTEMPT in $(seq 1 12); do
+            xcrun simctl io "$SIM_UDID" screenshot artifacts/ios-01-cold-launch.png
+            test -s artifacts/ios-01-cold-launch.png
+            BYTES="$(stat -f%z artifacts/ios-01-cold-launch.png)"
+            echo "ios-01-cold-launch.png attempt=$ATTEMPT bytes=$BYTES" | tee -a artifacts/ios-frame-sizes.txt
+            if [ "$BYTES" -ge 200000 ]; then
+              RENDERED=1
+              break
+            fi
+            sleep 5
+          done
+          if [ "$RENDERED" -ne 1 ]; then
+            xcrun simctl spawn "$SIM_UDID" log show --last 2m --style compact --predicate 'process == "CatAndCoven"' > artifacts/ios-cold-render-timeout-log.txt || true
+            echo "::error::Cat & Coven stayed on the lightweight native launch frame instead of reaching the rendered Godot splash."
+            tail -200 artifacts/ios-cold-render-timeout-log.txt || true
+            exit 1
+          fi
+          WIDTH="$(sips -g pixelWidth artifacts/ios-01-cold-launch.png | awk '/pixelWidth:/ {print $2}')"
+          HEIGHT="$(sips -g pixelHeight artifacts/ios-01-cold-launch.png | awk '/pixelHeight:/ {print $2}')"
+          echo "ios-01-cold-launch.png dimensions=${WIDTH}x${HEIGHT}" | tee -a artifacts/ios-frame-sizes.txt
+          test "${WIDTH:-0}" -ge 640
+          test "${HEIGHT:-0}" -ge 1100
 
       - name: Verify terminate and relaunch
         shell: bash
@@ -154,11 +174,29 @@ jobs:
           sleep 5
           xcrun simctl spawn "$SIM_UDID" launchctl list > artifacts/ios-relaunch-launchctl-list.txt 2>&1 || true
           grep -F "$BUNDLE_ID" artifacts/ios-relaunch-launchctl-list.txt | tee artifacts/ios-process-relaunch-alive.txt
-          xcrun simctl io "$SIM_UDID" screenshot artifacts/ios-02-relaunch.png
-          test -s artifacts/ios-02-relaunch.png
-          BYTES="$(stat -f%z artifacts/ios-02-relaunch.png)"
-          echo "ios-02-relaunch.png=$BYTES" | tee -a artifacts/ios-frame-sizes.txt
-          test "$BYTES" -ge 200000
+          RENDERED=0
+          for ATTEMPT in $(seq 1 8); do
+            xcrun simctl io "$SIM_UDID" screenshot artifacts/ios-02-relaunch.png
+            test -s artifacts/ios-02-relaunch.png
+            BYTES="$(stat -f%z artifacts/ios-02-relaunch.png)"
+            echo "ios-02-relaunch.png attempt=$ATTEMPT bytes=$BYTES" | tee -a artifacts/ios-frame-sizes.txt
+            if [ "$BYTES" -ge 200000 ]; then
+              RENDERED=1
+              break
+            fi
+            sleep 5
+          done
+          if [ "$RENDERED" -ne 1 ]; then
+            xcrun simctl spawn "$SIM_UDID" log show --last 2m --style compact --predicate 'process == "CatAndCoven"' > artifacts/ios-relaunch-render-timeout-log.txt || true
+            echo "::error::Cat & Coven relaunch stayed on the lightweight native launch frame instead of reaching the rendered Godot splash."
+            tail -200 artifacts/ios-relaunch-render-timeout-log.txt || true
+            exit 1
+          fi
+          WIDTH="$(sips -g pixelWidth artifacts/ios-02-relaunch.png | awk '/pixelWidth:/ {print $2}')"
+          HEIGHT="$(sips -g pixelHeight artifacts/ios-02-relaunch.png | awk '/pixelHeight:/ {print $2}')"
+          echo "ios-02-relaunch.png dimensions=${WIDTH}x${HEIGHT}" | tee -a artifacts/ios-frame-sizes.txt
+          test "${WIDTH:-0}" -ge 640
+          test "${HEIGHT:-0}" -ge 1100
 
       - name: Check iOS runtime log for Cat & Coven failures
         shell: bash
@@ -169,7 +207,7 @@ jobs:
             grep -E "Missing required production screen art|Failed to decode production screen art|Missing required gameplay asset|SCRIPT ERROR:|Terminating app due to uncaught exception|EXC_CRASH|SIGABRT" artifacts/ios-runtime-log.txt
             exit 1
           fi
-          echo "IOS_SIMULATOR_RUNTIME_PASS: build, install, cold launch, terminate, relaunch"
+          echo "IOS_SIMULATOR_RUNTIME_PASS: build, install, rendered cold launch, terminate, rendered relaunch"
 
       - uses: actions/upload-artifact@v4
         if: always()
