@@ -585,8 +585,14 @@ func _on_presentation_settings_changed(state: Dictionary) -> void:
 	})
 	if ui_haptics != null:
 		ui_haptics.apply_settings(state)
-	if _current_screen != null and is_instance_valid(_current_screen) and _current_screen.has_method("apply_presentation_settings"):
-		_current_screen.apply_presentation_settings(state)
+	if _current_screen != null and is_instance_valid(_current_screen):
+		if _current_screen is Control:
+			var reduced_motion := bool(state.get("reduced_motion", false))
+			(_current_screen as Control).set_meta("reduced_motion", reduced_motion)
+			ProductNavigation.set_reduced_motion(_current_screen.get_node_or_null("ProductNavigation") as PanelContainer, reduced_motion)
+			TopResourceBar.set_reduced_motion(_current_screen.get_node_or_null("ResourceBar") as PanelContainer, reduced_motion)
+		if _current_screen.has_method("apply_presentation_settings"):
+			_current_screen.apply_presentation_settings(state)
 	if _settings_screen != null and is_instance_valid(_settings_screen) and _settings_screen.has_method("apply_presentation_settings"):
 		_settings_screen.apply_presentation_settings(state)
 
@@ -629,6 +635,10 @@ func _show_screen(screen: Node) -> void:
 	_current_screen = screen
 	screen_host.add_child(screen)
 	if screen is Control:
+		var reduced_motion := false
+		if user_settings != null:
+			reduced_motion = bool(user_settings.get_presentation_state().get("reduced_motion", false))
+		(screen as Control).set_meta("reduced_motion", reduced_motion)
 		MobileSafeArea.apply_content(screen as Control)
 	_install_north_star_backdrop(screen)
 	Typography.apply(screen)

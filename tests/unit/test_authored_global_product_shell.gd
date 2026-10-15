@@ -47,6 +47,8 @@ func _run() -> void:
 	_expect(bool(nav_contract.get("scene_authored_shell", false)), "ProductNavigation shell must preserve its clean authored scene material")
 	_expect(bool(nav_contract.get("scene_authored_interactive_chrome", false)), "ProductNavigation destination states must preserve authored normal/pressed/selected materials")
 	_expect(bool(nav_contract.get("seam_free_material", false)), "ProductNavigation must not stretch the shared 9-slice chrome across the global shell")
+	_expect(bool(nav_contract.get("tactile_press_release", false)), "ProductNavigation destinations must own a visible press/release scale response")
+	_expect(bool(nav_contract.get("reduced_motion_aware", false)), "ProductNavigation tactile response must respect Reduced Motion")
 	var global_icon_sources := [
 		"res://assets/ui/nav_house.svg",
 		"res://assets/ui/nav_curios.svg",
@@ -71,6 +73,18 @@ func _run() -> void:
 	_expect(house != null and house.disabled and String(house.get_meta("interaction_state", "")) == "selected", "Active House destination must be selected and non-reentrant")
 	_expect(curios != null and not curios.disabled, "Inactive Curios destination must remain actionable")
 	if curios != null:
+		curios.emit_signal("button_down")
+		await create_timer(0.08).timeout
+		_expect(curios.scale.x < 0.98 and curios.scale.y < 0.98, "Inactive shell destination must visibly compress on press")
+		curios.emit_signal("button_up")
+		await create_timer(0.20).timeout
+		_expect(absf(curios.scale.x - 1.0) < 0.01 and absf(curios.scale.y - 1.0) < 0.01, "Shell destination must spring cleanly back on release")
+		ProductNavigation.set_reduced_motion(nav, true)
+		curios.emit_signal("button_down")
+		await create_timer(0.08).timeout
+		_expect(absf(curios.scale.x - 1.0) < 0.001 and absf(curios.scale.y - 1.0) < 0.001, "Reduced Motion must suppress ProductNavigation transform animation")
+		curios.emit_signal("button_up")
+		ProductNavigation.set_reduced_motion(nav, false)
 		curios.emit_signal("pressed")
 		await process_frame
 	_expect(nav_action == "curios", "Authored ProductNavigation must preserve navigation handler semantics")
@@ -86,6 +100,8 @@ func _run() -> void:
 	_expect(bool(bar_contract.get("scene_authored_resource_chips", false)), "TopResourceBar resource chips must preserve their authored scene material")
 	_expect(bool(bar_contract.get("scene_authored_profile_action", false)), "TopResourceBar Keeper profile states must preserve authored normal/pressed/focus material")
 	_expect(bool(bar_contract.get("seam_free_material", false)), "TopResourceBar must not stretch the shared 9-slice chrome across resource chips")
+	_expect(bool(bar_contract.get("tactile_profile_press_release", false)), "Keeper profile action must own a visible press/release response")
+	_expect(bool(bar_contract.get("reduced_motion_aware", false)), "Keeper profile tactile response must respect Reduced Motion")
 	_expect(layout.offset_top >= 128.0, "TopResourceBar must reserve the canonical top content start instead of covering screen titles")
 	_expect(layout.offset_bottom <= -152.0, "ProductNavigation must preserve the canonical bottom content reserve")
 	_expect(bar.find_child("LifeResource", true, false) == null, "Shared resource bar must not expose unimplemented life economy")
@@ -99,6 +115,18 @@ func _run() -> void:
 	var profile := bar.get_node_or_null("Resources/KeeperProfile") as Button
 	_expect(profile != null and profile.visible, "Keeper profile action must be visible when a handler exists")
 	if profile != null:
+		profile.emit_signal("button_down")
+		await create_timer(0.08).timeout
+		_expect(profile.scale.x < 0.98 and profile.scale.y < 0.98, "Keeper profile must visibly compress on press")
+		profile.emit_signal("button_up")
+		await create_timer(0.20).timeout
+		_expect(absf(profile.scale.x - 1.0) < 0.01 and absf(profile.scale.y - 1.0) < 0.01, "Keeper profile must spring cleanly back on release")
+		TopResourceBar.set_reduced_motion(bar, true)
+		profile.emit_signal("button_down")
+		await create_timer(0.08).timeout
+		_expect(absf(profile.scale.x - 1.0) < 0.001 and absf(profile.scale.y - 1.0) < 0.001, "Reduced Motion must suppress Keeper profile transform animation")
+		profile.emit_signal("button_up")
+		TopResourceBar.set_reduced_motion(bar, false)
 		profile.emit_signal("pressed")
 		await process_frame
 	_expect(profile_pressed, "Keeper profile authored shell must preserve handler semantics")
