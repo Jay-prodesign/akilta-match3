@@ -210,6 +210,7 @@ jobs:
           fi
           echo "IOS_SIMULATOR_RUNTIME_PASS: build, install, rendered cold launch, terminate, rendered relaunch"
 
+      # Exact native frame evidence is emitted on every runtime-verification checkpoint.
       - name: Emit compact native frames for visual inspection
         if: always()
         shell: bash

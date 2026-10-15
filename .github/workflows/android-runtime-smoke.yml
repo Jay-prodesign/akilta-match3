@@ -151,18 +151,35 @@ jobs:
           done
           test -n "$PID"
           echo "COLD_PID=$PID" | tee artifacts/lifecycle.txt
+          # Release builds do not reliably emit OnGodotMainLoopStarted into
+          # logcat on every runner. Treat that marker as telemetry; runtime
+          # acceptance is the foreground Cat & Coven process reaching a rendered
+          # product frame, followed by the crash/script-log gate below.
           COLD_MAIN_LOOP_COUNT=0
-          for i in $(seq 1 60); do
+          RENDERED=0
+          : > artifacts/native-frame-sizes.txt
+          for ATTEMPT in $(seq 1 24); do
             COLD_MAIN_LOOP_COUNT="$(adb logcat -d | grep -Fc "OnGodotMainLoopStarted" || true)"
-            [ "$COLD_MAIN_LOOP_COUNT" -ge 1 ] && break
-            sleep 1
+            adb shell dumpsys activity activities | grep -E "mResumedActivity|topResumedActivity" > artifacts/cold-foreground.txt || true
+            if grep -Fq "$PACKAGE" artifacts/cold-foreground.txt; then
+              adb exec-out screencap -p > artifacts/android-01-cold-launch.png
+              BYTES="$(stat -c%s artifacts/android-01-cold-launch.png)"
+              echo "android-01-cold-launch.png attempt=$ATTEMPT bytes=$BYTES main_loop_markers=$COLD_MAIN_LOOP_COUNT" | tee -a artifacts/native-frame-sizes.txt
+              if [ "$BYTES" -ge 500000 ]; then
+                RENDERED=1
+                break
+              fi
+            fi
+            sleep 3
           done
-          test "$COLD_MAIN_LOOP_COUNT" -ge 1
           echo "COLD_MAIN_LOOP_COUNT=$COLD_MAIN_LOOP_COUNT" | tee -a artifacts/lifecycle.txt
-          sleep 2
-          adb shell dumpsys activity activities | grep -E "mResumedActivity|topResumedActivity" | tee artifacts/cold-foreground.txt
-          grep -Fq "$PACKAGE" artifacts/cold-foreground.txt
-          adb exec-out screencap -p > artifacts/android-01-cold-launch.png
+          cat artifacts/cold-foreground.txt | tee /dev/stderr
+          if [ "$RENDERED" -ne 1 ]; then
+            adb logcat -d > artifacts/android-cold-render-timeout-log.txt || true
+            echo "::error::Cat & Coven did not reach a rendered foreground product frame after cold launch."
+            tail -200 artifacts/android-cold-render-timeout-log.txt || true
+            exit 1
+          fi
           test -s artifacts/android-01-cold-launch.png
           adb shell uiautomator dump /sdcard/window.xml >/dev/null || true
           adb pull /sdcard/window.xml artifacts/android-window.xml >/dev/null 2>&1 || true
@@ -181,16 +198,34 @@ jobs:
           sleep 3
           test -n "$(adb shell pidof "$PACKAGE" 2>/dev/null | tr -d '\r' || true)"
           adb shell monkey -p "$PACKAGE" -c android.intent.category.LAUNCHER 1 >/dev/null
-          sleep 4
-          AFTER="$(adb shell pidof "$PACKAGE" | tr -d '\r')"
+          AFTER=""
+          RENDERED=0
+          for ATTEMPT in $(seq 1 16); do
+            AFTER="$(adb shell pidof "$PACKAGE" 2>/dev/null | tr -d '\r' || true)"
+            adb shell dumpsys activity activities | grep -E "mResumedActivity|topResumedActivity" > artifacts/resume-foreground.txt || true
+            if [ -n "$AFTER" ] && grep -Fq "$PACKAGE" artifacts/resume-foreground.txt; then
+              adb exec-out screencap -p > artifacts/android-02-resumed.png
+              BYTES="$(stat -c%s artifacts/android-02-resumed.png)"
+              echo "android-02-resumed.png attempt=$ATTEMPT bytes=$BYTES" | tee -a artifacts/native-frame-sizes.txt
+              if [ "$BYTES" -ge 500000 ]; then
+                RENDERED=1
+                break
+              fi
+            fi
+            sleep 3
+          done
           test -n "$AFTER"
           {
             echo "BACKGROUND_PID=$BEFORE"
             echo "RESUME_PID=$AFTER"
           } | tee -a artifacts/lifecycle.txt
-          adb shell dumpsys activity activities | grep -E "mResumedActivity|topResumedActivity" | tee artifacts/resume-foreground.txt
-          grep -Fq "$PACKAGE" artifacts/resume-foreground.txt
-          adb exec-out screencap -p > artifacts/android-02-resumed.png
+          cat artifacts/resume-foreground.txt | tee /dev/stderr
+          if [ "$RENDERED" -ne 1 ]; then
+            adb logcat -d > artifacts/android-resume-render-timeout-log.txt || true
+            echo "::error::Cat & Coven did not return to a rendered foreground product frame after resume."
+            tail -200 artifacts/android-resume-render-timeout-log.txt || true
+            exit 1
+          fi
           test -s artifacts/android-02-resumed.png
 
       - name: Verify force-stop and relaunch
@@ -213,21 +248,34 @@ jobs:
           done
           test -n "$AFTER"
           RELAUNCH_MAIN_LOOP_COUNT="$MAIN_LOOPS_BEFORE"
-          for i in $(seq 1 60); do
+          RENDERED=0
+          for ATTEMPT in $(seq 1 24); do
             RELAUNCH_MAIN_LOOP_COUNT="$(adb logcat -d | grep -Fc "OnGodotMainLoopStarted" || true)"
-            [ "$RELAUNCH_MAIN_LOOP_COUNT" -gt "$MAIN_LOOPS_BEFORE" ] && break
-            sleep 1
+            adb shell dumpsys activity activities | grep -E "mResumedActivity|topResumedActivity" > artifacts/relaunch-foreground.txt || true
+            if grep -Fq "$PACKAGE" artifacts/relaunch-foreground.txt; then
+              adb exec-out screencap -p > artifacts/android-03-force-stop-relaunch.png
+              BYTES="$(stat -c%s artifacts/android-03-force-stop-relaunch.png)"
+              echo "android-03-force-stop-relaunch.png attempt=$ATTEMPT bytes=$BYTES main_loop_markers=$RELAUNCH_MAIN_LOOP_COUNT" | tee -a artifacts/native-frame-sizes.txt
+              if [ "$BYTES" -ge 500000 ]; then
+                RENDERED=1
+                break
+              fi
+            fi
+            sleep 3
           done
-          test "$RELAUNCH_MAIN_LOOP_COUNT" -gt "$MAIN_LOOPS_BEFORE"
           {
             echo "FORCE_STOP_PREVIOUS_PID=$BEFORE"
             echo "RELAUNCH_PID=$AFTER"
             echo "RELAUNCH_MAIN_LOOP_COUNT=$RELAUNCH_MAIN_LOOP_COUNT"
           } | tee -a artifacts/lifecycle.txt
-          sleep 2
-          adb shell dumpsys activity activities | grep -E "mResumedActivity|topResumedActivity" | tee artifacts/relaunch-foreground.txt
-          grep -Fq "$PACKAGE" artifacts/relaunch-foreground.txt
-          adb exec-out screencap -p > artifacts/android-03-force-stop-relaunch.png
+          cat artifacts/relaunch-foreground.txt | tee /dev/stderr
+          if [ "$RENDERED" -ne 1 ]; then
+            adb logcat -d > artifacts/android-relaunch-render-timeout-log.txt || true
+            echo "::error::Cat & Coven did not reach a rendered foreground product frame after force-stop relaunch."
+            tail -200 artifacts/android-relaunch-render-timeout-log.txt || true
+            exit 1
+          fi
+          test -s artifacts/android-03-force-stop-relaunch.png
           test -s artifacts/android-03-force-stop-relaunch.png
 
       - name: Check native crash buffer
@@ -239,7 +287,7 @@ jobs:
           adb logcat -d > artifacts/logcat.txt || true
 
           {
-            echo "NATIVE_FRAME_BYTES"
+            echo "NATIVE_FRAME_FINAL_BYTES"
             for frame in artifacts/android-01-cold-launch.png artifacts/android-02-resumed.png artifacts/android-03-force-stop-relaunch.png; do
               bytes="$(stat -c%s "$frame")"
               echo "$(basename "$frame")=$bytes"
@@ -248,7 +296,7 @@ jobs:
                 exit 1
               fi
             done
-          } | tee artifacts/native-frame-sizes.txt
+          } | tee -a artifacts/native-frame-sizes.txt
           if grep -Fq "$PACKAGE" artifacts/crash-buffer.txt; then
             cat artifacts/crash-buffer.txt
             exit 1
