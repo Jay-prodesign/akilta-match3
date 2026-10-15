@@ -330,20 +330,20 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          for FRAME in android-01-cold-launch android-02-resumed android-03-force-stop-relaunch; do
+          for FRAME in android-01-cold-launch android-03-force-stop-relaunch; do
             SRC="artifacts/${FRAME}.png"
             [ -s "$SRC" ] || continue
             REVIEW="$SRC"
             OUT="artifacts/${FRAME}-review.jpg"
             if command -v magick >/dev/null 2>&1; then
-              magick "$SRC" -resize '540x>' -quality 58 "$OUT"
+              magick "$SRC" -resize '320x>' -quality 38 "$OUT"
               REVIEW="$OUT"
             elif command -v convert >/dev/null 2>&1; then
-              convert "$SRC" -resize '540x>' -quality 58 "$OUT"
+              convert "$SRC" -resize '320x>' -quality 38 "$OUT"
               REVIEW="$OUT"
             fi
             echo "CAT_COVEN_NATIVE_FRAME_BEGIN:${FRAME}"
-            base64 -w 0 "$REVIEW" | fold -w 60000
+            base64 -w 0 "$REVIEW"
             echo
             echo "CAT_COVEN_NATIVE_FRAME_END:${FRAME}"
           done

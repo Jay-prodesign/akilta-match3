@@ -220,9 +220,9 @@ jobs:
             SRC="artifacts/${FRAME}.png"
             [ -s "$SRC" ] || continue
             OUT="artifacts/${FRAME}-review.jpg"
-            sips -Z 640 -s format jpeg -s formatOptions 58 "$SRC" --out "$OUT" >/dev/null
+            sips -Z 320 -s format jpeg -s formatOptions 40 "$SRC" --out "$OUT" >/dev/null
             echo "CAT_COVEN_NATIVE_FRAME_BEGIN:${FRAME}"
-            base64 < "$OUT" | tr -d '\n' | fold -w 60000
+            base64 < "$OUT" | tr -d '\n'
             echo
             echo "CAT_COVEN_NATIVE_FRAME_END:${FRAME}"
           done
