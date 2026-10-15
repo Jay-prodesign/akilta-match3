@@ -14,6 +14,7 @@ static func attach(screen: Control, progress, profile_handler: Callable = Callab
 	if existing != null:
 		_reserve_content(screen, content_path)
 		_bind_profile(existing, profile_handler)
+		set_reduced_motion(existing, bool(screen.get_meta("reduced_motion", false)))
 		refresh(existing, progress)
 		return existing
 
@@ -49,6 +50,7 @@ static func attach(screen: Control, progress, profile_handler: Callable = Callab
 		profile.icon = PieceAssetLoader.ornament("res://assets/ui/ui_profile.svg")
 		profile.set_meta("shell_material", "scene_authored_flat")
 	_bind_profile(panel, profile_handler)
+	set_reduced_motion(panel, bool(screen.get_meta("reduced_motion", false)))
 
 	refresh(panel, progress)
 	return panel
@@ -105,6 +107,8 @@ static func authored_contract(panel: PanelContainer) -> Dictionary:
 	var gem_chip := panel.get_node_or_null("Resources/GemResourceChip") as PanelContainer
 	var scene_authored_resource_chips := coin_chip != null and coin_chip.get_theme_stylebox("panel") is StyleBoxFlat and String(coin_chip.get_meta("shell_material", "")) == "scene_authored_flat" and gem_chip != null and gem_chip.get_theme_stylebox("panel") is StyleBoxFlat and String(gem_chip.get_meta("shell_material", "")) == "scene_authored_flat"
 	var scene_authored_profile_action := profile != null and profile.get_theme_stylebox("normal") is StyleBoxFlat and profile.get_theme_stylebox("hover") is StyleBoxFlat and profile.get_theme_stylebox("pressed") is StyleBoxFlat and profile.get_theme_stylebox("focus") is StyleBoxFlat and String(profile.get_meta("shell_material", "")) == "scene_authored_flat"
+	var tactile_profile := profile != null and bool(profile.get_meta("tactile_bound", false)) and float(profile.get_meta("tactile_press_scale", 1.0)) <= 0.96
+	var reduced_motion_aware := profile != null and profile.has_meta("tactile_reduced_motion")
 	return {
 		"authored_scene": true,
 		"resource_slots_present": coin != null and gem != null,
@@ -116,8 +120,76 @@ static func authored_contract(panel: PanelContainer) -> Dictionary:
 		"scene_authored_resource_chips": scene_authored_resource_chips,
 		"scene_authored_profile_action": scene_authored_profile_action,
 		"seam_free_material": panel.get_theme_stylebox("panel") is StyleBoxFlat and scene_authored_resource_chips and scene_authored_profile_action,
+		"tactile_profile_press_release": tactile_profile,
+		"reduced_motion_aware": reduced_motion_aware,
 		"runtime_ui_factory": false,
 	}
+
+static func set_reduced_motion(panel: PanelContainer, reduced_motion: bool) -> void:
+	if panel == null:
+		return
+	var profile := panel.get_node_or_null("Resources/KeeperProfile") as Button
+	if profile != null:
+		_bind_tactile_profile(profile, reduced_motion)
+
+static func _bind_tactile_profile(button: Button, reduced_motion: bool) -> void:
+	if button == null:
+		return
+	button.set_meta("tactile_reduced_motion", reduced_motion)
+	button.set_meta("tactile_press_scale", 0.955)
+	if not bool(button.get_meta("tactile_bound", false)):
+		button.set_meta("tactile_bound", true)
+		button.button_down.connect(_tactile_press.bind(button))
+		button.button_up.connect(_tactile_release.bind(button))
+		button.mouse_exited.connect(_tactile_release.bind(button))
+		button.focus_exited.connect(_tactile_release.bind(button))
+	if reduced_motion:
+		_stop_tactile_tween(button)
+		button.scale = Vector2.ONE
+		button.modulate = Color.WHITE
+		button.set_meta("tactile_phase", "idle")
+
+static func _tactile_press(button: Button) -> void:
+	if button == null or button.disabled:
+		return
+	_stop_tactile_tween(button)
+	button.pivot_offset = button.size * 0.5
+	button.set_meta("tactile_phase", "pressed")
+	if bool(button.get_meta("tactile_reduced_motion", false)):
+		button.scale = Vector2.ONE
+		button.modulate = Color.WHITE
+		return
+	var tween := button.create_tween()
+	button.set_meta("tactile_tween", tween)
+	tween.set_parallel(true)
+	tween.tween_property(button, "scale", Vector2(0.955, 0.955), 0.055).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
+	tween.tween_property(button, "modulate", Color(1.0, 0.96, 1.0, 1.0), 0.055).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
+
+static func _tactile_release(button: Button) -> void:
+	if button == null:
+		return
+	_stop_tactile_tween(button)
+	button.pivot_offset = button.size * 0.5
+	button.set_meta("tactile_phase", "release")
+	if bool(button.get_meta("tactile_reduced_motion", false)):
+		button.scale = Vector2.ONE
+		button.modulate = Color.WHITE
+		button.set_meta("tactile_phase", "idle")
+		return
+	var tween := button.create_tween()
+	button.set_meta("tactile_tween", tween)
+	tween.set_parallel(true)
+	tween.tween_property(button, "scale", Vector2.ONE, 0.15).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
+	tween.tween_property(button, "modulate", Color.WHITE, 0.11).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
+	tween.finished.connect(func(): button.set_meta("tactile_phase", "idle"))
+
+static func _stop_tactile_tween(button: Button) -> void:
+	if button == null or not button.has_meta("tactile_tween"):
+		return
+	var previous = button.get_meta("tactile_tween")
+	if previous is Tween and (previous as Tween).is_valid():
+		(previous as Tween).kill()
+	button.remove_meta("tactile_tween")
 
 static func _format_number(value: int) -> String:
 	var digits := str(maxi(0, value))
