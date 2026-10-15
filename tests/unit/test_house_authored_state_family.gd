@@ -35,6 +35,29 @@ func _run() -> void:
 	_expect(bool(north_star.get("scene_authored_primary_cta", false)), "House primary CTA must preserve its seam-free authored gold/plum material")
 	_expect(bool(north_star.get("status_strip_suppressed", false)), "House must not stack a redundant Curio status strip over the title/CTA hierarchy")
 	_expect(bool(north_star.get("ftue_strip_suppressed", false)), "Fresh House must not insert a tutorial strip into the locked-board Home composition")
+	var interaction: Dictionary = house.home_interaction_contract()
+	_expect(bool(interaction.get("play_tactile", false)), "House Play CTA must own a visible press/release depth response")
+	_expect(bool(interaction.get("hotspots_tactile", false)), "House Keeper and Curio hotspots must own tactile press/release response")
+	_expect(bool(interaction.get("reduced_motion_supported", false)), "House tactile motion must support Reduced Motion")
+	_expect(bool(interaction.get("hidden_action_dock_ignored", false)), "House tactile craft must target real player-facing controls, not the hidden legacy ActionDock")
+	var feedback_hits := {"count": 0}
+	house.interaction_feedback_requested.connect(func(_kind: String): feedback_hits["count"] = int(feedback_hits["count"]) + 1)
+	var play_button := house.get_node_or_null("Layout/PlayButton") as Button
+	_expect(play_button != null and not play_button.disabled, "Fresh House Play CTA must be actionable")
+	if play_button != null:
+		play_button.emit_signal("button_down")
+		await create_timer(0.09).timeout
+		_expect(play_button.scale.x < 0.98 and play_button.scale.y < 0.98, "House Play CTA must visibly compress on button-down")
+		_expect(int(feedback_hits["count"]) == 1, "House Play button-down must emit exactly one semantic UI feedback request")
+		play_button.emit_signal("button_up")
+		await create_timer(0.22).timeout
+		_expect(absf(play_button.scale.x - 1.0) < 0.01 and absf(play_button.scale.y - 1.0) < 0.01, "House Play CTA must spring cleanly back on release")
+		house.apply_presentation_settings({"reduced_motion": true})
+		play_button.emit_signal("button_down")
+		await create_timer(0.09).timeout
+		_expect(absf(play_button.scale.x - 1.0) < 0.001 and absf(play_button.scale.y - 1.0) < 0.001, "Reduced Motion must suppress House Play transform animation")
+		play_button.emit_signal("button_up")
+		house.apply_presentation_settings({"reduced_motion": false})
 	var ftue: Dictionary = house.ftue_house_contract()
 	_expect(bool(ftue.get("guidance_via_keeper", false)), "Fresh House must retain truthful optional guidance through the Keeper")
 	var guide_art := house.get_node_or_null("Layout/FirstRitualGuide/GuideRow/KeeperArt") as TextureRect
@@ -48,6 +71,12 @@ func _run() -> void:
 		_expect(house.get_node_or_null(hotspot_path) is Button, "Authored House hotspot missing: %s" % hotspot_path)
 
 	var keeper_hotspot := house.get_node("RoomView/CurioHotspots/KeeperHotspot") as Button
+	keeper_hotspot.emit_signal("button_down")
+	await create_timer(0.09).timeout
+	_expect(keeper_hotspot.scale.x < 0.96 and keeper_hotspot.scale.y < 0.96, "Keeper hotspot must visibly compress when touched")
+	keeper_hotspot.emit_signal("button_up")
+	await create_timer(0.22).timeout
+	_expect(absf(keeper_hotspot.scale.x - 1.0) < 0.01, "Keeper hotspot must spring back after release")
 	keeper_hotspot.emit_signal("pressed")
 	await process_frame
 	var keeper_overlay = house.get_node_or_null("KeeperRoleOverlay")
