@@ -45,9 +45,24 @@ func _capture() -> void:
 	var board_view = gameplay.get_node_or_null("Layout/BoardView")
 	if board_view != null and board_view.is_motion_active():
 		await board_view.trace_motion_finished
-	await _frames(2)
+	var settle_deadline := Time.get_ticks_msec() + 1200
+	var transition: Dictionary = gameplay.terminal_transition_contract()
+	while bool(transition.get("active", true)) and Time.get_ticks_msec() < settle_deadline:
+		await process_frame
+		transition = gameplay.terminal_transition_contract()
 	if not gameplay.result_overlay.visible:
 		return _fail(app, "failure overlay missing")
+	if bool(transition.get("active", true)) or String(transition.get("mode", "")) != "readable_failure_settle":
+		return _fail(app, "failure result transition did not settle into its readable terminal state")
+	var polish: Dictionary = gameplay.terminal_result_polish_contract()
+	if not bool(polish.get("critical_result_copy_visible", false)):
+		return _fail(app, "failure result critical copy is not visibly settled")
+	if not bool(polish.get("failure_stars_hidden", false)):
+		return _fail(app, "failure result must not render celebratory win stars")
+	if not bool(polish.get("failure_compact_layout", false)):
+		return _fail(app, "failure result must settle into the compact recovery composition")
+	if gameplay.result_objective_summary.visible:
+		return _fail(app, "failure result must not duplicate the objective gap in a second summary row")
 	var booster_tray: PanelContainer = gameplay.get_node_or_null("BoosterTray") as PanelContainer
 	if booster_tray != null and booster_tray.visible:
 		return _fail(app, "failure result must hide gameplay-only boosters")
@@ -57,10 +72,12 @@ func _capture() -> void:
 	var recovery_action: Button = gameplay.get_node_or_null("ResultOverlay/Card/Content/RecoveryAction") as Button
 	if recovery_action == null or not recovery_action.visible or recovery_action.disabled:
 		return _fail(app, "failure must expose the free +3 Moves recovery action")
-	if not recovery_action.text.contains("FREE"):
-		return _fail(app, "failure recovery must truthfully label its free state")
+	if recovery_action.text != "FREE +3 MOVES":
+		return _fail(app, "failure recovery must use the concise truthful +3 Moves label")
 	if failure_eyebrow.text != "RITUAL UNFINISHED":
 		return _fail(app, "failed Level 1 must not claim a recovered Curio")
+	if not gameplay.result_detail.text.contains("\n"):
+		return _fail(app, "failure result must use a compact two-line recovery message")
 	if failure_reward.text != "MOON CAMEO · STILL SEALED":
 		return _fail(app, "failed Level 1 must keep the Moon Cameo sealed")
 	if not failure_house_change.text.begins_with("No Curio is added"):

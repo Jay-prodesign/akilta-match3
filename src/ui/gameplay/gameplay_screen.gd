@@ -132,6 +132,7 @@ const LAST_MOVE_THRESHOLD := 1
 @onready var awakening_view: Control = $Layout/Awakening/Content/ProgressView
 @onready var awakening_copy: Label = $Layout/Awakening/Content/ProgressCopy
 @onready var result_overlay: Control = $ResultOverlay
+@onready var _result_top_pad: Control = $ResultOverlay/Card/Content/ResultTopPad
 @onready var result_title: Label = $ResultOverlay/Card/Content/Title
 @onready var result_detail: Label = $ResultOverlay/Card/Content/Detail
 @onready var result_objective_summary: Label = $ResultOverlay/Card/Content/ObjectiveSummary
@@ -161,8 +162,10 @@ const LAST_MOVE_THRESHOLD := 1
 @onready var _result_reward_values: Control = $ResultOverlay/Card/Content/ResultRewardValues
 @onready var _result_coin_icon: TextureRect = $ResultOverlay/Card/Content/ResultRewardValues/CoinReward/Content/Icon
 @onready var _result_gem_icon: TextureRect = $ResultOverlay/Card/Content/ResultRewardValues/GemReward/Content/Icon
+@onready var _result_proclamation_row: HBoxContainer = $ResultOverlay/Card/Content/ResultProclamation
 @onready var _result_proclamation: Label = $ResultOverlay/Card/Content/ResultProclamation/Copy/ResultProclamationCopy
 @onready var _result_keeper_cat: TextureRect = $ResultOverlay/Card/Content/ResultProclamation/KeeperCat
+@onready var _result_star_row: HBoxContainer = $ResultOverlay/Card/Content/StarRow
 @onready var _result_star_a: TextureRect = $ResultOverlay/Card/Content/StarRow/StarA
 @onready var _result_star_b: TextureRect = $ResultOverlay/Card/Content/StarRow/StarB
 @onready var _result_star_c: TextureRect = $ResultOverlay/Card/Content/StarRow/StarC
@@ -965,6 +968,8 @@ func _show_result_if_terminal(result: String) -> void:
 		result_detail.text = "This Curio already belongs to the House. Replaying does not grant the persistent reward again." if replay_mode else current_win_detail
 		result_detail.visible = replay_mode
 		_configure_result_reward_copy(true)
+		if _result_star_row != null:
+			_result_star_row.visible = true
 		if result_ritual != null:
 			result_ritual.set("mode", "result")
 			result_ritual.set("relic_id", current_reward_curio)
@@ -993,12 +998,15 @@ func _show_result_if_terminal(result: String) -> void:
 		result_detail.text = _failure_recovery_copy()
 		result_detail.visible = true
 		_configure_result_reward_copy(false)
+		if _result_star_row != null:
+			_result_star_row.visible = false
 		if result_ritual != null:
 			result_ritual.set("mode", "fail")
 			result_ritual.set("relic_id", current_reward_curio)
 			result_ritual.set("glow_strength", 0.12)
 			result_ritual.queue_redraw()
 		result_action.text = "TRY AGAIN"
+		result_recovery_action.text = "FREE +3 MOVES"
 		result_recovery_action.visible = not _potion_used_for_attempt
 		result_recovery_action.disabled = _potion_used_for_attempt
 		if _result_reward_values != null:
@@ -1025,13 +1033,12 @@ func _failure_gap_copy() -> String:
 	return "The ritual remains unfinished."
 
 func _failure_recovery_copy() -> String:
-	var authored := current_retry_hint if current_retry_hint != "" else "Try another arrangement."
-	var base := "%s %s" % [_failure_gap_copy(), authored]
+	var gap := _failure_gap_copy()
 	if _consecutive_failures <= 1:
-		return base
+		return "%s\nTry another arrangement." % gap
 	if _consecutive_failures == 2:
-		return "%s On retry, the House will mark a legal opening." % base
-	return "%s Guided retry is active: the first legal opening is marked and hints return sooner." % base
+		return "%s\nOn retry, the House will mark a legal opening." % gap
+	return "%s\nGuided retry is active. The first legal opening is marked and hints return sooner." % gap
 
 func difficulty_recovery_contract() -> Dictionary:
 	var tier := "standard"
@@ -1103,9 +1110,42 @@ func _style_terminal_result(kind: String) -> void:
 	var won := kind == "won"
 	ProductionChrome.apply_gameplay_reward_modal(card)
 	card.set_meta("production_result_chrome", "verified_gameplay_reward")
+	card.offset_top = -395.0 if won else -325.0
+	card.offset_bottom = 395.0 if won else 325.0
+	var content := card.get_node_or_null("Content") as VBoxContainer
+	if content != null:
+		content.add_theme_constant_override("separation", 10 if won else 8)
+	if _result_top_pad != null:
+		_result_top_pad.visible = won
+	if _result_proclamation_row != null:
+		_result_proclamation_row.visible = won
+	if result_objective_summary != null:
+		result_objective_summary.visible = won
+	if result_eyebrow != null:
+		result_eyebrow.add_theme_font_size_override("font_size", 24 if won else 20)
+		result_eyebrow.add_theme_color_override("font_color", Color("#D8B56A") if not won else Color("#D9B56A"))
+	if result_title != null:
+		result_title.add_theme_font_size_override("font_size", 56 if won else 48)
+	if result_detail != null:
+		result_detail.custom_minimum_size = Vector2(0, 0 if won else 84)
+		result_detail.add_theme_font_size_override("font_size", 22 if won else 20)
+		result_detail.add_theme_color_override("font_color", Color("#E7D9E2") if not won else Color("#D9CDD5"))
+		result_detail.add_theme_color_override("font_outline_color", Color("#160E1B"))
+		result_detail.add_theme_constant_override("outline_size", 2 if not won else 1)
+	if result_ritual != null:
+		result_ritual.custom_minimum_size = Vector2(0, 188 if won else 118)
+	if result_reward_name != null:
+		result_reward_name.add_theme_font_size_override("font_size", 29 if won else 25)
+		result_reward_name.add_theme_color_override("font_color", Color("#E6C37A") if not won else Color("#D8B56A"))
+	if result_recovery_action != null:
+		result_recovery_action.custom_minimum_size = Vector2(500, 70 if not won else 88)
+		result_recovery_action.add_theme_font_size_override("font_size", 23 if won else 20)
+	if result_action != null:
+		result_action.custom_minimum_size = Vector2(500, 94 if won else 74)
+		result_action.add_theme_font_size_override("font_size", 27 if won else 24)
 	var dim := result_overlay.get_node_or_null("Dim") as ColorRect
 	if dim != null:
-		dim.color = Color(0.0314, 0.0235, 0.0353, 0.70 if won else 0.84)
+		dim.color = Color(0.0314, 0.0235, 0.0353, 0.70 if won else 0.78)
 	result_title.add_theme_color_override("font_color", Color("#FFF1B6") if won else Color("#F2D6DE"))
 	result_objective_summary.add_theme_color_override("font_color", Color("#F0CE8A") if won else Color("#E5B2C1"))
 
@@ -1120,6 +1160,18 @@ func terminal_result_polish_contract() -> Dictionary:
 		"result_dim_alpha": (result_overlay.get_node_or_null("Dim") as ColorRect).color.a if result_overlay != null and result_overlay.get_node_or_null("Dim") != null else 1.0,
 		"failure_gap": _failure_gap_copy() if result_overlay != null and result_overlay.visible and String(terminal_transition_contract().get("kind", "")) == "failed" else "",
 		"plus_three_recovery_available": result_recovery_action != null and result_recovery_action.visible and not result_recovery_action.disabled,
+		"critical_result_copy_visible": result_title != null and result_title.modulate.a >= 0.90 and result_action != null and result_action.modulate.a >= 0.90,
+		"failure_stars_hidden": _result_transition_kind != "failed" or (_result_star_row != null and not _result_star_row.visible),
+		"failure_card_span": ((result_overlay.get_node_or_null("Card") as Control).offset_bottom - (result_overlay.get_node_or_null("Card") as Control).offset_top) if result_overlay != null and result_overlay.get_node_or_null("Card") != null else 0.0,
+		"failure_compact_layout": _result_transition_kind != "failed" or (
+			result_ritual.custom_minimum_size.y <= 120.0
+			and result_detail.custom_minimum_size.y >= 80.0
+			and result_recovery_action.custom_minimum_size.y <= 72.0
+			and result_action.custom_minimum_size.y <= 76.0
+			and (_result_top_pad == null or not _result_top_pad.visible)
+			and not result_objective_summary.visible
+			and (_result_proclamation_row == null or not _result_proclamation_row.visible)
+		),
 	}
 
 func _present_result_overlay(kind: String) -> void:
@@ -1144,33 +1196,35 @@ func _present_result_overlay(kind: String) -> void:
 		_result_transition_active = false
 		return
 	_result_transition_active = true
-	card.position = rest_position + Vector2(0, 42)
-	card.scale = Vector2(0.86, 0.86)
-	card.modulate = Color(1, 1, 1, 0)
+	var failure_settle := kind == "failed"
+	card.position = rest_position + Vector2(0, 18 if failure_settle else 42)
+	card.scale = Vector2(0.96, 0.96) if failure_settle else Vector2(0.86, 0.86)
+	card.modulate = Color(1, 1, 1, 0.94) if failure_settle else Color(1, 1, 1, 0)
 	if dim != null:
-		dim.modulate = Color(1, 1, 1, 0)
+		dim.modulate = Color(1, 1, 1, 0.90) if failure_settle else Color(1, 1, 1, 0)
 	var content := card.get_node_or_null("Content") as Control
 	var reveal_items: Array[CanvasItem] = []
 	if content != null:
 		for child in content.get_children():
 			if child is CanvasItem:
-				(child as CanvasItem).modulate = Color(1, 1, 1, 0)
+				(child as CanvasItem).modulate = Color.WHITE if failure_settle else Color(1, 1, 1, 0)
 				reveal_items.append(child as CanvasItem)
 	_result_transition_tween = create_tween()
 	_result_transition_tween.set_parallel(true)
 	if dim != null:
-		_result_transition_tween.tween_property(dim, "modulate", Color.WHITE, 0.24).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
-	_result_transition_tween.tween_property(card, "position", rest_position, 0.36).set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_OUT)
-	_result_transition_tween.tween_property(card, "scale", Vector2.ONE, 0.42).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
-	_result_transition_tween.tween_property(card, "modulate", Color.WHITE, 0.22)
-	for index in range(reveal_items.size()):
-		_result_transition_tween.tween_property(reveal_items[index], "modulate", Color.WHITE, 0.17).set_delay(0.07 + float(index) * 0.032)
-	for index in range(3):
-		var star: TextureRect = [_result_star_a, _result_star_b, _result_star_c][index]
-		if star == null:
-			continue
-		_result_transition_tween.tween_property(star, "modulate", Color.WHITE, 0.20).set_delay(0.16 + float(index) * 0.10)
-		_result_transition_tween.tween_property(star, "scale", Vector2.ONE, 0.34).set_delay(0.16 + float(index) * 0.10).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
+		_result_transition_tween.tween_property(dim, "modulate", Color.WHITE, 0.18 if failure_settle else 0.24).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
+	_result_transition_tween.tween_property(card, "position", rest_position, 0.22 if failure_settle else 0.36).set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_OUT)
+	_result_transition_tween.tween_property(card, "scale", Vector2.ONE, 0.24 if failure_settle else 0.42).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
+	_result_transition_tween.tween_property(card, "modulate", Color.WHITE, 0.14 if failure_settle else 0.22)
+	if not failure_settle:
+		for index in range(reveal_items.size()):
+			_result_transition_tween.tween_property(reveal_items[index], "modulate", Color.WHITE, 0.17).set_delay(0.07 + float(index) * 0.032)
+		for index in range(3):
+			var star: TextureRect = [_result_star_a, _result_star_b, _result_star_c][index]
+			if star == null:
+				continue
+			_result_transition_tween.tween_property(star, "modulate", Color.WHITE, 0.20).set_delay(0.16 + float(index) * 0.10)
+			_result_transition_tween.tween_property(star, "scale", Vector2.ONE, 0.34).set_delay(0.16 + float(index) * 0.10).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
 	_result_transition_tween.finished.connect(func(): _result_transition_active = false)
 
 func _reset_terminal_transition() -> void:
@@ -1197,7 +1251,7 @@ func terminal_transition_contract() -> Dictionary:
 	return {
 		"kind": _result_transition_kind,
 		"active": _result_transition_active,
-		"mode": "subtle_card_settle",
+		"mode": "readable_failure_settle" if _result_transition_kind == "failed" else "subtle_card_settle",
 		"reduced_motion": _reduced_motion,
 		"overlay_visible": result_overlay.visible if result_overlay != null else false,
 	}
