@@ -106,7 +106,7 @@ func _capture() -> void:
 	if moth_detail_button == null:
 		return _fail(app, "Moth Reliquary detail action missing")
 	moth_detail_button.emit_signal("pressed")
-	await _frames(2)
+	await _frames(30)
 	var moth_detail_art: TextureRect = collection.get_node_or_null("CurioDetailOverlay/CurioDetailCard/Content/HeroArt") as TextureRect
 	var moth_detail_name: Label = collection.get_node_or_null("CurioDetailOverlay/CurioDetailCard/Content/Name") as Label
 	if moth_detail_art == null or moth_detail_art.texture == null or moth_detail_name == null or moth_detail_name.text != "MOTH RELIQUARY":
@@ -117,13 +117,13 @@ func _capture() -> void:
 	if moth_close == null:
 		return _fail(app, "Moth Reliquary detail close action missing")
 	moth_close.emit_signal("pressed")
-	await _frames(2)
+	await _frames(16)
 
 	var locket_detail_button: Button = collection.get_node_or_null("Layout/Cards/Slot3/DetailActionLayer/InspectAction") as Button
 	if locket_detail_button == null:
 		return _fail(app, "Thorned Locket detail action missing")
 	locket_detail_button.emit_signal("pressed")
-	await _frames(2)
+	await _frames(30)
 	var locket_detail_art: TextureRect = collection.get_node_or_null("CurioDetailOverlay/CurioDetailCard/Content/HeroArt") as TextureRect
 	var locket_detail_name: Label = collection.get_node_or_null("CurioDetailOverlay/CurioDetailCard/Content/Name") as Label
 	if locket_detail_art == null or locket_detail_art.texture == null or locket_detail_name == null or locket_detail_name.text != "THORNED LOCKET":
