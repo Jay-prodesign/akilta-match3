@@ -353,7 +353,7 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          for FRAME in android-01-cold-launch android-01b-house-after-enter android-03-force-stop-relaunch; do
+          for FRAME in android-01-cold-launch android-01b-house-after-enter android-02-resumed android-03-force-stop-relaunch; do
             SRC="artifacts/${FRAME}.png"
             [ -s "$SRC" ] || continue
             REVIEW="$SRC"

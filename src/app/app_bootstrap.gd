@@ -53,12 +53,23 @@ const INTERNAL_REVIEW_LEVEL_COUNT := 3
 @onready var screen_host: Node = $ScreenHost
 
 func _ready() -> void:
+	_ensure_android_immersive_mode()
 	# S00 must be a real boot state, not a decorative gate shown after loading.
 	# Navigation exists immediately so the player is truthfully on BOOT while the
 	# first rendered frame exposes the canonical loading state.
 	navigation = NavigationScript.new()
 	_render_splash()
 	call_deferred("_complete_bootstrap")
+
+func _notification(what: int) -> void:
+	if what == NOTIFICATION_APPLICATION_RESUMED:
+		call_deferred("_ensure_android_immersive_mode")
+
+func _ensure_android_immersive_mode() -> void:
+	if OS.get_name() != "Android":
+		return
+	if DisplayServer.window_get_mode() != DisplayServer.WINDOW_MODE_FULLSCREEN:
+		DisplayServer.window_set_mode(DisplayServer.WINDOW_MODE_FULLSCREEN)
 
 func _complete_bootstrap() -> void:
 	var path: String = save_path_override if save_path_override != "" else SaveStoreScript.DEFAULT_PATH
