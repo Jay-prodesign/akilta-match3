@@ -24,7 +24,7 @@ var _detail_tactile_buttons: Array[Button] = []
 @onready var close: Button = $CurioDetailCard/Content/Close
 
 func _ready() -> void:
-	ProductionChrome.apply_primary(card)
+	card.set_meta("detail_material", "scene_authored_flat")
 	ProductionChrome.apply_action_button(view_house, "primary", "curio_view_house")
 	ProductionChrome.apply_action_button(close, "utility", "curio_return_reliquary")
 	_bind_detail_tactile(view_house, "view_house", 0.955)
@@ -199,6 +199,7 @@ func detail_contract() -> Dictionary:
 		"asset_backed_actions": view_house != null and view_house.get_theme_stylebox("normal") is StyleBoxTexture and close != null and close.get_theme_stylebox("normal") is StyleBoxTexture and String(view_house.get_meta("production_chrome_kind", "")) == "action_primary_curio_view_house" and String(close.get_meta("production_chrome_kind", "")) == "action_utility_curio_return_reliquary",
 		"content_bounded_card": card != null and card.anchor_bottom - card.anchor_top <= 0.57,
 		"modal_veil_strength": ($Veil as ColorRect).color.a >= 0.74,
+		"seam_free_card_material": card != null and card.get_theme_stylebox("panel") is StyleBoxFlat and String(card.get_meta("detail_material", "")) == "scene_authored_flat",
 		"modal_choreography": has_meta("modal_phase") and _presented,
 		"tactile_actions": close != null and bool(close.get_meta("detail_tactile_bound", false)) and view_house != null and bool(view_house.get_meta("detail_tactile_bound", false)),
 		"reduced_motion_supported": true,

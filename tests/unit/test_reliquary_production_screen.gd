@@ -91,6 +91,7 @@ func _run() -> void:
 		_expect(bool(detail_contract.get("asset_backed_actions", false)), "Curio detail actions must use verified primary/utility production chrome")
 		_expect(bool(detail_contract.get("content_bounded_card", false)), "Curio detail card must fit its content instead of leaving oversized dead vertical space")
 		_expect(bool(detail_contract.get("modal_veil_strength", false)), "Curio detail modal must sufficiently suppress the collection UI behind it")
+		_expect(bool(detail_contract.get("seam_free_card_material", false)), "Curio detail card must preserve its clean scene-authored frame instead of stretching shared 9-slice chrome")
 		_expect(bool(detail_contract.get("modal_choreography", false)), "Curio detail must own authored backdrop/card reveal choreography")
 		_expect(bool(detail_contract.get("tactile_actions", false)), "Curio detail View in House/Return actions must own tactile press/release")
 		_expect(bool(detail_contract.get("reduced_motion_supported", false)), "Curio detail choreography must support Reduced Motion")
