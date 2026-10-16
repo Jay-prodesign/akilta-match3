@@ -266,6 +266,34 @@ func _capture() -> void:
 		return _fail(app, "Shop hero must remain an admitted unavailable state")
 	if shop_art == null or shop_art.texture == null or shop_disabled_action == null or not shop_disabled_action.disabled:
 		return _fail(app, "Shop featured offer must provide art with a disabled commerce CTA")
+	var shop_contract: Dictionary = app.current_screen().screen_contract() if app.current_screen().has_method("screen_contract") else {}
+	if not bool(shop_contract.get("shop_compact_catalog_density", false)):
+		return _fail(app, "Shop compact North Star catalog density gate failed")
+	var shop_detail := app.current_screen().get_node_or_null("FeatureLayout/Detail") as Label
+	if shop_detail == null or shop_detail.visible:
+		return _fail(app, "Shop redundant subtitle returned above the catalog")
+	for card_name in ["Card1", "Card2", "Card3"]:
+		var shop_card := app.current_screen().get_node_or_null("FeatureLayout/CardScroll/Cards/%s" % card_name) as PanelContainer
+		var shop_card_art := app.current_screen().get_node_or_null("FeatureLayout/CardScroll/Cards/%s/Row/Art" % card_name) as TextureRect
+		var shop_plate := app.current_screen().get_node_or_null("FeatureLayout/CardScroll/Cards/%s/Row/ShopStatePlate" % card_name) as PanelContainer
+		var shop_status := app.current_screen().get_node_or_null("FeatureLayout/CardScroll/Cards/%s/Row/Copy/Status" % card_name) as Label
+		var is_first: bool = String(card_name) == "Card1"
+		var min_card := 204.0 if is_first else 146.0
+		var max_card := 220.0 if is_first else 160.0
+		var min_art := 170.0 if is_first else 102.0
+		var max_art := 186.0 if is_first else 114.0
+		if shop_card == null or shop_card.custom_minimum_size.y < min_card or shop_card.custom_minimum_size.y > max_card or shop_card.size_flags_vertical == Control.SIZE_EXPAND_FILL:
+			return _fail(app, "Shop %s compact card geometry drifted" % card_name)
+		if shop_card_art == null or shop_card_art.custom_minimum_size.x < min_art or shop_card_art.custom_minimum_size.x > max_art:
+			return _fail(app, "Shop %s compact art scale drifted" % card_name)
+		if shop_plate == null or not shop_plate.visible or shop_plate.custom_minimum_size.y > 58.0 or not (shop_plate.get_theme_stylebox("panel") is StyleBoxFlat):
+			return _fail(app, "Shop %s sealed-state badge drifted" % card_name)
+		var shop_plate_detail := app.current_screen().get_node_or_null("FeatureLayout/CardScroll/Cards/%s/Row/ShopStatePlate/Content/Detail" % card_name) as Label
+		var shop_plate_mode := app.current_screen().get_node_or_null("FeatureLayout/CardScroll/Cards/%s/Row/ShopStatePlate/Content/Mode" % card_name) as Label
+		if shop_plate_detail == null or shop_plate_detail.visible or shop_plate_mode == null or shop_plate_mode.visible:
+			return _fail(app, "Shop %s sealed badge microcopy returned" % card_name)
+		if shop_status == null or shop_status.visible:
+			return _fail(app, "Shop %s duplicate sealed status returned" % card_name)
 	if not _verify_meta_visual_parity(app, app.current_screen(), "shop"):
 		return
 	if not await _save(app, "progression-final-shop.png"):
@@ -468,7 +496,11 @@ func _verify_meta_visual_parity(app: Node, screen: Node, feature: String) -> boo
 		if hero_art_ratio < 0.31:
 			_fail(app, "%s hero art too small: %.3f" % [feature, hero_art_ratio])
 			return false
-		if card_art_ratio < 0.20:
+		if feature == "shop":
+			if card_art_ratio < 0.15 or card_art_ratio > 0.18:
+				_fail(app, "shop featured catalog art density drifted: %.3f" % card_art_ratio)
+				return false
+		elif card_art_ratio < 0.20:
 			_fail(app, "%s card art too small: %.3f" % [feature, card_art_ratio])
 			return false
 	return true
