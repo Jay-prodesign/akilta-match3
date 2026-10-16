@@ -8,6 +8,7 @@ on:
       - "feat/native-main-lifecycle-gate"
       - "feat/native-android-runtime-smoke"
       - "feat/native-ios-runtime-visual-evidence"
+      - "feat/native-house-runtime-evidence"
     paths:
       - ".github/workflows/android-runtime-smoke.yml"
       - ".github/release-proof.trigger"
@@ -188,6 +189,24 @@ jobs:
             exit 1
           fi
 
+      - name: Enter the House and capture native product UI
+        shell: bash
+        run: |
+          set -euo pipefail
+          PACKAGE="com.akilta.catandcoven"
+          # 1080x2400 emulator: real pointer input against the ready Enter CTA.
+          sleep 3
+          adb shell input tap 540 2170
+          sleep 4
+          test -n "$(adb shell pidof "$PACKAGE" 2>/dev/null | tr -d '\r' || true)"
+          adb shell dumpsys activity activities | grep -E "mResumedActivity|topResumedActivity" > artifacts/house-foreground.txt || true
+          grep -Fq "$PACKAGE" artifacts/house-foreground.txt
+          adb exec-out screencap -p > artifacts/android-01b-house-after-enter.png
+          test -s artifacts/android-01b-house-after-enter.png
+          HOUSE_BYTES="$(stat -c%s artifacts/android-01b-house-after-enter.png)"
+          echo "android-01b-house-after-enter.png bytes=$HOUSE_BYTES" | tee -a artifacts/native-frame-sizes.txt
+          test "$HOUSE_BYTES" -ge 500000
+
       - name: Verify background and resume
         shell: bash
         run: |
@@ -288,7 +307,7 @@ jobs:
 
           {
             echo "NATIVE_FRAME_FINAL_BYTES"
-            for frame in artifacts/android-01-cold-launch.png artifacts/android-02-resumed.png artifacts/android-03-force-stop-relaunch.png; do
+            for frame in artifacts/android-01-cold-launch.png artifacts/android-01b-house-after-enter.png artifacts/android-02-resumed.png artifacts/android-03-force-stop-relaunch.png; do
               bytes="$(stat -c%s "$frame")"
               echo "$(basename "$frame")=$bytes"
               if [ "$bytes" -lt 500000 ]; then
@@ -330,7 +349,7 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          for FRAME in android-01-cold-launch android-03-force-stop-relaunch; do
+          for FRAME in android-01-cold-launch android-01b-house-after-enter android-03-force-stop-relaunch; do
             SRC="artifacts/${FRAME}.png"
             [ -s "$SRC" ] || continue
             REVIEW="$SRC"

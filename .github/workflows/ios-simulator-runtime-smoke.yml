@@ -7,6 +7,7 @@ on:
       - "feat/ios-simulator-runtime-smoke"
       - "feat/ios-simulator-render-readiness"
       - "feat/native-ios-runtime-visual-evidence"
+      - "feat/native-house-runtime-evidence"
     paths:
       - ".github/workflows/ios-simulator-runtime-smoke.yml"
       - ".github/release-proof.trigger"
@@ -167,8 +168,8 @@ jobs:
           BUNDLE_ID="com.akilta.catandcoven"
           xcrun simctl terminate "$SIM_UDID" "$BUNDLE_ID"
           sleep 2
-          LAUNCH_OUTPUT="$(xcrun simctl launch "$SIM_UDID" "$BUNDLE_ID" 2>&1)"
-          printf '%s\n' "$LAUNCH_OUTPUT" | tee artifacts/ios-relaunch.txt
+          LAUNCH_OUTPUT="$(xcrun simctl launch "$SIM_UDID" "$BUNDLE_ID" --cat-coven-native-review-auto-enter 2>&1)"
+          printf '%s\n' "$LAUNCH_OUTPUT" | tee artifacts/ios-house-relaunch.txt
           APP_PID="$(printf '%s\n' "$LAUNCH_OUTPUT" | sed -n 's/.*: \([0-9][0-9]*\)$/\1/p' | tail -1)"
           test -n "$APP_PID"
           echo "IOS_RELAUNCH_PID=$APP_PID" | tee -a artifacts/ios-lifecycle.txt
@@ -177,10 +178,10 @@ jobs:
           grep -F "$BUNDLE_ID" artifacts/ios-relaunch-launchctl-list.txt | tee artifacts/ios-process-relaunch-alive.txt
           RENDERED=0
           for ATTEMPT in $(seq 1 8); do
-            xcrun simctl io "$SIM_UDID" screenshot artifacts/ios-02-relaunch.png
-            test -s artifacts/ios-02-relaunch.png
-            BYTES="$(stat -f%z artifacts/ios-02-relaunch.png)"
-            echo "ios-02-relaunch.png attempt=$ATTEMPT bytes=$BYTES" | tee -a artifacts/ios-frame-sizes.txt
+            xcrun simctl io "$SIM_UDID" screenshot artifacts/ios-02-house-relaunch.png
+            test -s artifacts/ios-02-house-relaunch.png
+            BYTES="$(stat -f%z artifacts/ios-02-house-relaunch.png)"
+            echo "ios-02-house-relaunch.png attempt=$ATTEMPT bytes=$BYTES" | tee -a artifacts/ios-frame-sizes.txt
             if [ "$BYTES" -ge 200000 ]; then
               RENDERED=1
               break
@@ -189,13 +190,13 @@ jobs:
           done
           if [ "$RENDERED" -ne 1 ]; then
             xcrun simctl spawn "$SIM_UDID" log show --last 2m --style compact --predicate 'process == "CatAndCoven"' > artifacts/ios-relaunch-render-timeout-log.txt || true
-            echo "::error::Cat & Coven relaunch stayed on the lightweight native launch frame instead of reaching the rendered Godot splash."
+            echo "::error::Cat & Coven review relaunch did not reach a rendered post-splash product frame."
             tail -200 artifacts/ios-relaunch-render-timeout-log.txt || true
             exit 1
           fi
-          WIDTH="$(sips -g pixelWidth artifacts/ios-02-relaunch.png | awk '/pixelWidth:/ {print $2}')"
-          HEIGHT="$(sips -g pixelHeight artifacts/ios-02-relaunch.png | awk '/pixelHeight:/ {print $2}')"
-          echo "ios-02-relaunch.png dimensions=${WIDTH}x${HEIGHT}" | tee -a artifacts/ios-frame-sizes.txt
+          WIDTH="$(sips -g pixelWidth artifacts/ios-02-house-relaunch.png | awk '/pixelWidth:/ {print $2}')"
+          HEIGHT="$(sips -g pixelHeight artifacts/ios-02-house-relaunch.png | awk '/pixelHeight:/ {print $2}')"
+          echo "ios-02-house-relaunch.png dimensions=${WIDTH}x${HEIGHT}" | tee -a artifacts/ios-frame-sizes.txt
           test "${WIDTH:-0}" -ge 640
           test "${HEIGHT:-0}" -ge 1100
 
@@ -208,7 +209,7 @@ jobs:
             grep -E "Missing required production screen art|Failed to decode production screen art|Missing required gameplay asset|SCRIPT ERROR:|Terminating app due to uncaught exception|EXC_CRASH|SIGABRT" artifacts/ios-runtime-log.txt
             exit 1
           fi
-          echo "IOS_SIMULATOR_RUNTIME_PASS: build, install, rendered cold launch, terminate, rendered relaunch"
+          echo "IOS_SIMULATOR_RUNTIME_PASS: build, rendered Splash cold launch, terminate, post-splash House relaunch"
 
       # Exact native frame evidence is emitted on every runtime-verification checkpoint.
       - name: Emit compact native frames for visual inspection
@@ -216,7 +217,7 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          for FRAME in ios-01-cold-launch ios-02-relaunch; do
+          for FRAME in ios-01-cold-launch ios-02-house-relaunch; do
             SRC="artifacts/${FRAME}.png"
             [ -s "$SRC" ] || continue
             OUT="artifacts/${FRAME}-review.jpg"
