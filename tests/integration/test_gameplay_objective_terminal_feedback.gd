@@ -79,9 +79,19 @@ func _verify_reduced_motion_fail_transition() -> void:
 	await process_frame
 	var transition: Dictionary = screen.terminal_transition_contract()
 	_expect(String(transition.get("kind", "")) == "failed", "fail must own terminal transition kind")
+	_expect(String(transition.get("mode", "")) == "readable_failure_settle", "fail transition must use the readable compact terminal mode")
 	_expect(bool(transition.get("reduced_motion", false)), "fail transition must preserve Reduced Motion state")
 	_expect(not bool(transition.get("active", true)), "Reduced Motion must skip decorative terminal tween")
 	_expect(screen.result_action.text == "TRY AGAIN", "fail transition must preserve recovery CTA")
+	_expect(screen.result_recovery_action.text == "FREE +3 MOVES", "failure rescue CTA must stay concise and truthful")
+	var star_row := screen.get_node_or_null("ResultOverlay/Card/Content/StarRow") as HBoxContainer
+	_expect(star_row != null and not star_row.visible, "failure result must not show win stars")
+	var polish: Dictionary = screen.terminal_result_polish_contract()
+	_expect(bool(polish.get("critical_result_copy_visible", false)), "failure title and retry action must remain readable at terminal state")
+	_expect(screen.result_detail.text.contains("\n"), "failure guidance must use a compact two-line recovery hierarchy")
+	_expect(bool(polish.get("failure_stars_hidden", false)), "failure polish contract must preserve semantic win/fail separation")
+	_expect(bool(polish.get("failure_compact_layout", false)), "failure result must use the compact recovery composition instead of the tall win ceremony")
+	_expect(not screen.result_objective_summary.visible, "failure result must avoid duplicating the objective gap below its recovery copy")
 	screen.queue_free()
 	await process_frame
 
