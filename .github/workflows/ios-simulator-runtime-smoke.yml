@@ -45,12 +45,13 @@ jobs:
           unzip -q templates.tpz -d /tmp/godot-templates
           cp -R /tmp/godot-templates/templates/. "$HOME/Library/Application Support/Godot/export_templates/4.7.2.stable/"
 
-      - name: Verify native mobile contracts
+      - name: Verify native mobile and Splash entry contracts
         shell: bash
         run: |
           set -euo pipefail
           ./Godot.app/Contents/MacOS/Godot --headless --path . -s res://tests/unit/test_mobile_release_contract.gd
           ./Godot.app/Contents/MacOS/Godot --headless --path . -s res://tests/unit/test_mobile_safe_area.gd
+          ./Godot.app/Contents/MacOS/Godot --headless --path . -s res://tests/integration/test_splash_boot_states.gd
 
       - name: Export iOS Xcode project with simulator library
         shell: bash

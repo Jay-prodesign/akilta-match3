@@ -83,10 +83,11 @@ jobs:
           EOF
           keytool -genkeypair -noprompt             -keystore /tmp/cat-coven-runtime-ci.keystore             -storepass changeit -keypass changeit -alias catcoven             -keyalg RSA -keysize 2048 -validity 3650             -dname "CN=Cat Coven Runtime CI,O=AKILTA,C=US"
 
-      - name: Verify mobile configuration contracts
+      - name: Verify mobile configuration and Splash entry contracts
         run: |
           ./godot --headless --path . -s res://tests/unit/test_mobile_release_contract.gd
           ./godot --headless --path . -s res://tests/unit/test_mobile_safe_area.gd
+          ./godot --headless --path . -s res://tests/integration/test_splash_boot_states.gd
 
       - name: Export x86_64 emulator APK
         shell: bash
