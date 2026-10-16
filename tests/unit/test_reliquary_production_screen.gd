@@ -86,6 +86,7 @@ func _run() -> void:
 		var detail_contract: Dictionary = detail.detail_contract()
 		_expect(bool(detail_contract.get("authored_scene", false)), "Curio detail contract must identify authored presentation")
 		_expect(bool(detail_contract.get("art_loaded", false)), "Curio detail hero art must load")
+		_expect(bool(detail_contract.get("hero_art_dominant", false)), "Curio detail must let the owned relic artwork dominate the inspection card")
 		_expect(bool(detail_contract.get("view_in_house_visible", false)), "Owned Curio detail must expose View in House")
 		_expect(bool(detail_contract.get("north_star_actions", false)), "Curio detail actions must retain the rounded North Star mobile CTA scale")
 		_expect(bool(detail_contract.get("asset_backed_actions", false)), "Curio detail actions must use verified primary/utility production chrome")
