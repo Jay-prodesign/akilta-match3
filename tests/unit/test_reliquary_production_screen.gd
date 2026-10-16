@@ -97,7 +97,7 @@ func _run() -> void:
 		_expect(bool(detail_contract.get("feedback_signal", false)), "Curio detail actions must expose semantic UI feedback")
 		await create_timer(0.05).timeout
 		_expect(String(detail.get_meta("modal_phase", "")) == "opening", "Curio detail must visibly remain in its entrance phase instead of appearing instantly")
-		await create_timer(0.34).timeout
+		await create_timer(0.48).timeout
 		_expect(String(detail.get_meta("modal_phase", "")) == "idle", "Curio detail entrance choreography must settle cleanly")
 		var close := detail.get_node_or_null("CurioDetailCard/Content/Close") as Button
 		_expect(close != null, "Curio detail close action missing")
