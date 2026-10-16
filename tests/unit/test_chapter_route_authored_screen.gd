@@ -46,6 +46,12 @@ func _run() -> void:
 	await process_frame
 
 	var contract: Dictionary = route.route_authored_contract()
+	var interaction: Dictionary = route.route_interaction_contract()
+	_expect(bool(interaction.get("opening_nodes_tactile", false)), "S03 opening route nodes must own visible press/release craft")
+	_expect(bool(interaction.get("current_press_depth", false)), "S03 current ritual must have stronger press depth than sealed nodes")
+	_expect(bool(interaction.get("future_seal_tactile", false)), "S03 future cabinets seal must remain inspectable with tactile feedback")
+	_expect(bool(interaction.get("reduced_motion_supported", false)), "S03 route interaction craft must support Reduced Motion")
+	_expect(bool(interaction.get("feedback_signal", false)), "S03 route interactions must expose semantic feedback")
 	_expect(bool(contract.get("authored_level_slots", false)), "S03 must author all visible route level and label slots")
 	_expect(bool(contract.get("authored_frontier_slots", false)), "S03 frontier focus and label slots must be authored")
 	_expect(bool(contract.get("frontier_raster_loaded", false)), "S03 frontier marker must use production raster art")
@@ -68,6 +74,16 @@ func _run() -> void:
 	_expect(future_seal != null and future_seal.visible and future_seal.size.x >= 280.0 and future_seal.size.y >= 120.0, "Future upper-cabinets seal must be a clear mobile interaction")
 
 	_expect(route.get_frontier_level() == 1, "Fresh route frontier must point to Level 1")
+	var current_button := route.get_level_button(1) as Button
+	var route_feedback := {"count": 0}
+	route.interaction_feedback_requested.connect(func(_kind: String): route_feedback["count"] = int(route_feedback["count"]) + 1)
+	current_button.emit_signal("button_down")
+	await create_timer(0.08).timeout
+	_expect(current_button.scale.x < 0.96, "S03 current ritual must visibly compress on press")
+	_expect(int(route_feedback["count"]) == 1, "S03 current ritual press must emit one semantic feedback request")
+	current_button.emit_signal("button_up")
+	await create_timer(0.18).timeout
+	_expect(absf(current_button.scale.x - 1.0) < 0.01, "S03 current ritual must spring cleanly back on release")
 	var frontier_focus := route.get_node_or_null("FrontierFocus") as TextureRect
 	var frontier_label := route.get_node_or_null("FrontierFocusLabel") as Label
 	_expect(frontier_focus != null and frontier_focus.visible and frontier_focus.texture != null, "Fresh route must expose authored frontier marker")

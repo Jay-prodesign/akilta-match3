@@ -160,8 +160,12 @@ func show_map() -> bool:
 	var screen: Node = MapScene.instantiate()
 	screen.set("canonical_level_cap", INTERNAL_REVIEW_LEVEL_COUNT)
 	_show_screen(screen)
+	if screen.has_method("apply_presentation_settings"):
+		screen.apply_presentation_settings(user_settings.get_presentation_state())
 	screen.set_progress(progress)
 	_install_product_navigation(screen, "map")
+	if screen.has_signal("interaction_feedback_requested"):
+		screen.interaction_feedback_requested.connect(_on_chapter_interaction_feedback_requested)
 	screen.back_requested.connect(_on_map_back)
 	screen.level_requested.connect(show_prestart)
 	return true
@@ -572,8 +576,12 @@ func _render_map_from_prestart() -> void:
 	var screen: Node = MapScene.instantiate()
 	screen.set("canonical_level_cap", INTERNAL_REVIEW_LEVEL_COUNT)
 	_show_screen(screen)
+	if screen.has_method("apply_presentation_settings"):
+		screen.apply_presentation_settings(user_settings.get_presentation_state())
 	screen.set_progress(progress)
 	_install_product_navigation(screen, "map")
+	if screen.has_signal("interaction_feedback_requested"):
+		screen.interaction_feedback_requested.connect(_on_chapter_interaction_feedback_requested)
 	screen.back_requested.connect(_on_map_back)
 	screen.level_requested.connect(show_prestart)
 
