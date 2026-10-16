@@ -221,12 +221,16 @@ func _capture() -> void:
 	if weekly_altar == null or weekly_spacer == null or weekly_feed == null or weekly_progress == null or weekly_rewards == null or weekly_house_return == null:
 		return _fail(app, "Weekly Missions visual parity geometry missing")
 	var weekly_altar_ratio := weekly_altar.custom_minimum_size.y / weekly_viewport.y
-	if weekly_altar_ratio < 0.08 or weekly_altar_ratio > 0.11:
+	if weekly_altar_ratio < 0.06 or weekly_altar_ratio > 0.08:
 		return _fail(app, "Weekly Missions compact truthful intro drifted: %.3f" % weekly_altar_ratio)
-	if weekly_feed.custom_minimum_size.y < 156.0 or weekly_feed.custom_minimum_size.y > 172.0 or weekly_feed.size_flags_vertical == Control.SIZE_EXPAND_FILL or weekly_progress.custom_minimum_size.y < 156.0 or weekly_progress.custom_minimum_size.y > 172.0 or weekly_progress.size_flags_vertical == Control.SIZE_EXPAND_FILL or weekly_rewards.custom_minimum_size.y < 156.0 or weekly_rewards.custom_minimum_size.y > 172.0 or weekly_rewards.size_flags_vertical == Control.SIZE_EXPAND_FILL:
+	if weekly_feed.custom_minimum_size.y < 100.0 or weekly_feed.custom_minimum_size.y > 116.0 or weekly_feed.size_flags_vertical == Control.SIZE_EXPAND_FILL or weekly_progress.custom_minimum_size.y < 100.0 or weekly_progress.custom_minimum_size.y > 116.0 or weekly_progress.size_flags_vertical == Control.SIZE_EXPAND_FILL or weekly_rewards.custom_minimum_size.y < 100.0 or weekly_rewards.custom_minimum_size.y > 116.0 or weekly_rewards.size_flags_vertical == Control.SIZE_EXPAND_FILL:
 		return _fail(app, "Weekly Missions locked-board horizontal ritual rows drifted")
 	if weekly_spacer.size_flags_vertical == Control.SIZE_EXPAND_FILL or weekly_spacer.custom_minimum_size.y > 2.0:
 		return _fail(app, "Weekly Missions large empty world corridor returned")
+	var weekly_reward_stage := app.current_screen().get_node_or_null("MissionLayout/MissionOpeningRecord") as Control
+	var weekly_reward_seal := app.current_screen().get_node_or_null("MissionLayout/MissionOpeningRecord/Content/RewardSeal") as TextureRect
+	if weekly_reward_stage == null or weekly_reward_stage.custom_minimum_size.y < 176.0 or weekly_reward_stage.custom_minimum_size.y > 190.0 or weekly_reward_stage.size_flags_vertical == Control.SIZE_EXPAND_FILL or weekly_reward_seal == null or weekly_reward_seal.custom_minimum_size.y > 86.0:
+		return _fail(app, "Weekly Missions compact sealed reward stage drifted")
 	if weekly_house_return.visible:
 		return _fail(app, "Weekly Missions redundant House button returned over product navigation")
 	if not await _save(app, "progression-final-weekly-missions.png"):
