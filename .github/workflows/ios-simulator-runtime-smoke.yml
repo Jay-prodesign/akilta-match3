@@ -112,8 +112,28 @@ jobs:
           cat artifacts/simulator-choice.env >> "$GITHUB_ENV"
           SIM_UDID="$(grep '^SIM_UDID=' artifacts/simulator-choice.env | cut -d= -f2-)"
           test -n "$SIM_UDID"
+          export SIM_UDID
           xcrun simctl boot "$SIM_UDID" 2>/dev/null || true
-          xcrun simctl bootstatus "$SIM_UDID" -b
+          if ! python3 - <<'PY'
+          import os, subprocess, sys
+          udid = os.environ["SIM_UDID"]
+          try:
+              subprocess.run(["xcrun", "simctl", "bootstatus", udid, "-b"], check=True, timeout=180)
+          except (subprocess.TimeoutExpired, subprocess.CalledProcessError) as exc:
+              print(f"initial simulator boot readiness failed: {exc}", file=sys.stderr)
+              raise SystemExit(1)
+          PY
+          then
+            echo "Initial simulator boot readiness failed; erase and retry once."
+            xcrun simctl shutdown "$SIM_UDID" >/dev/null 2>&1 || true
+            xcrun simctl erase "$SIM_UDID"
+            xcrun simctl boot "$SIM_UDID"
+            python3 - <<'PY'
+          import os, subprocess
+          udid = os.environ["SIM_UDID"]
+          subprocess.run(["xcrun", "simctl", "bootstatus", udid, "-b"], check=True, timeout=180)
+          PY
+          fi
 
       - name: Install and cold-launch Cat & Coven on iOS Simulator
         shell: bash
