@@ -4,6 +4,7 @@ signal back_requested
 signal settings_requested
 signal weekly_requested
 signal daily_practice_requested(level_number: int)
+signal interaction_feedback_requested(kind: String)
 
 const ScreenArt = preload("res://src/ui/shared/screen_art_registry.gd")
 const PieceAssetLoader = preload("res://src/match3/presentation/piece_asset_loader.gd")
@@ -12,6 +13,8 @@ const ProductionChrome = preload("res://src/ui/theme/production_chrome.gd")
 var _feature_key: String = ""
 var _daily_level: int = 0
 var _hero_asset_path: String = ""
+var _reduced_motion: bool = false
+var _meta_tactile_buttons: Array[Button] = []
 
 @onready var world_art: TextureRect = $WorldArt
 @onready var profile_surface: PanelContainer = $ProfileSurface
@@ -94,11 +97,99 @@ func _ready() -> void:
 	ProductionChrome.apply_action_button(daily_action, "utility", "events_daily_practice")
 	ProductionChrome.apply_action_button(shop_disabled_action, "utility", "shop_sealed")
 	ProductionChrome.apply_action_button(back_button, "utility", "meta_return_house")
+	_bind_meta_tactile(weekly_action, "events_weekly", 0.955)
+	_bind_meta_tactile(daily_action, "events_daily", 0.97)
+	_bind_meta_tactile(profile_settings_row, "profile_settings", 0.965)
 	weekly_action.pressed.connect(func(): weekly_requested.emit())
 	daily_action.pressed.connect(_on_daily_pressed)
 	profile_settings.pressed.connect(func(): settings_requested.emit())
 	profile_settings_row.pressed.connect(func(): settings_requested.emit())
 	back_button.pressed.connect(func(): back_requested.emit())
+
+func apply_presentation_settings(state: Dictionary) -> void:
+	_reduced_motion = bool(state.get("reduced_motion", false))
+	for button in _meta_tactile_buttons:
+		button.set_meta("meta_tactile_reduced_motion", _reduced_motion)
+		if _reduced_motion:
+			_stop_meta_tactile_tween(button)
+			button.scale = Vector2.ONE
+			button.modulate = Color.WHITE
+			button.set_meta("meta_tactile_phase", "idle")
+
+func meta_interaction_contract() -> Dictionary:
+	var weekly_tactile := weekly_action != null and bool(weekly_action.get_meta("meta_tactile_bound", false)) and float(weekly_action.get_meta("meta_tactile_press_scale", 1.0)) <= 0.96
+	var daily_tactile := daily_action != null and bool(daily_action.get_meta("meta_tactile_bound", false)) and float(daily_action.get_meta("meta_tactile_press_scale", 1.0)) <= 0.975
+	var profile_settings_tactile := profile_settings_row != null and bool(profile_settings_row.get_meta("meta_tactile_bound", false)) and float(profile_settings_row.get_meta("meta_tactile_press_scale", 1.0)) <= 0.97
+	return {
+		"feature": _feature_key,
+		"events_real_actions_tactile": _feature_key != "events" or (weekly_action.visible and weekly_tactile and daily_action.visible and daily_tactile),
+		"profile_real_action_tactile": _feature_key != "profile" or (profile_settings_row.visible and profile_settings_tactile),
+		"shop_sealed_inert": _feature_key != "shop" or (not shop_disabled_action.visible and shop_disabled_action.disabled),
+		"reduced_motion_supported": true,
+		"feedback_signal": has_signal("interaction_feedback_requested"),
+		"hidden_legacy_actions_ignored": not profile_settings.visible and not back_button.visible,
+	}
+
+func _bind_meta_tactile(button: Button, role: String, press_scale: float) -> void:
+	if button == null:
+		return
+	button.set_meta("meta_tactile_role", role)
+	button.set_meta("meta_tactile_press_scale", press_scale)
+	button.set_meta("meta_tactile_reduced_motion", _reduced_motion)
+	if bool(button.get_meta("meta_tactile_bound", false)):
+		return
+	button.set_meta("meta_tactile_bound", true)
+	_meta_tactile_buttons.append(button)
+	button.button_down.connect(_press_meta_tactile.bind(button))
+	button.button_up.connect(_release_meta_tactile.bind(button))
+	button.mouse_exited.connect(_release_meta_tactile.bind(button))
+	button.focus_exited.connect(_release_meta_tactile.bind(button))
+
+func _press_meta_tactile(button: Button) -> void:
+	if button == null or button.disabled or not button.visible:
+		return
+	_stop_meta_tactile_tween(button)
+	button.pivot_offset = button.size * 0.5
+	button.set_meta("meta_tactile_phase", "pressed")
+	interaction_feedback_requested.emit("ui")
+	if bool(button.get_meta("meta_tactile_reduced_motion", false)):
+		button.scale = Vector2.ONE
+		button.modulate = Color.WHITE
+		return
+	var target_scale := clampf(float(button.get_meta("meta_tactile_press_scale", 0.97)), 0.94, 0.985)
+	var role := String(button.get_meta("meta_tactile_role", ""))
+	var pressed_tint := Color(1.0, 0.95, 0.84, 1.0) if role == "events_weekly" else (Color(0.96, 0.92, 1.0, 1.0) if role == "events_daily" else Color(1.0, 0.96, 0.89, 1.0))
+	var tween := create_tween()
+	button.set_meta("meta_tactile_tween", tween)
+	tween.set_parallel(true)
+	tween.tween_property(button, "scale", Vector2(target_scale, target_scale), 0.06).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
+	tween.tween_property(button, "modulate", pressed_tint, 0.06).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
+
+func _release_meta_tactile(button: Button) -> void:
+	if button == null:
+		return
+	_stop_meta_tactile_tween(button)
+	button.pivot_offset = button.size * 0.5
+	button.set_meta("meta_tactile_phase", "release")
+	if bool(button.get_meta("meta_tactile_reduced_motion", false)):
+		button.scale = Vector2.ONE
+		button.modulate = Color.WHITE
+		button.set_meta("meta_tactile_phase", "idle")
+		return
+	var tween := create_tween()
+	button.set_meta("meta_tactile_tween", tween)
+	tween.set_parallel(true)
+	tween.tween_property(button, "scale", Vector2.ONE, 0.16).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
+	tween.tween_property(button, "modulate", Color.WHITE, 0.11).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
+	tween.finished.connect(func(): button.set_meta("meta_tactile_phase", "idle"))
+
+func _stop_meta_tactile_tween(button: Button) -> void:
+	if button == null or not button.has_meta("meta_tactile_tween"):
+		return
+	var previous = button.get_meta("meta_tactile_tween")
+	if previous is Tween and (previous as Tween).is_valid():
+		(previous as Tween).kill()
+	button.remove_meta("meta_tactile_tween")
 
 func configure(feature_key: String, state: Dictionary) -> bool:
 	_feature_key = feature_key.to_lower()

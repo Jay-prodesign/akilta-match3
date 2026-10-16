@@ -388,6 +388,8 @@ func show_feature_preview(feature: String) -> bool:
 	var screen: Node = MetaDestinationScene.instantiate()
 	screen.name = screen_name
 	_show_screen(screen)
+	if screen.has_method("apply_presentation_settings"):
+		screen.apply_presentation_settings(user_settings.get_presentation_state())
 	if not bool(screen.configure(feature_key, state)):
 		_ensure_house_route()
 		return false
@@ -400,7 +402,12 @@ func show_feature_preview(feature: String) -> bool:
 		screen.weekly_requested.connect(show_weekly_missions)
 	if screen.has_signal("daily_practice_requested"):
 		screen.daily_practice_requested.connect(_open_daily_practice)
+	if screen.has_signal("interaction_feedback_requested"):
+		screen.interaction_feedback_requested.connect(_on_meta_interaction_feedback_requested)
 	return true
+
+func _on_meta_interaction_feedback_requested(_kind: String = "ui") -> void:
+	_emit_shell_feedback()
 
 
 func _local_save_status_copy() -> String:

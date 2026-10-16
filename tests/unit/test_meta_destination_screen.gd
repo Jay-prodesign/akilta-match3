@@ -26,6 +26,11 @@ func _run() -> void:
 		await process_frame
 		_expect(screen.configure(feature, state), "%s destination must configure" % feature)
 		var contract: Dictionary = screen.screen_contract()
+		var interaction: Dictionary = screen.meta_interaction_contract()
+		_expect(bool(interaction.get("reduced_motion_supported", false)), "%s meta actions must respect Reduced Motion" % feature)
+		_expect(bool(interaction.get("feedback_signal", false)), "%s meta actions must expose semantic UI feedback" % feature)
+		_expect(bool(interaction.get("hidden_legacy_actions_ignored", false)), "%s interaction craft must ignore hidden legacy actions" % feature)
+		_expect(bool(interaction.get("shop_sealed_inert", false)), "%s must keep sealed Shop commerce inert" % feature)
 		_expect(bool(contract.get("world_art_loaded", false)), "%s must load authored raster world art" % feature)
 		_expect(bool(contract.get("hero_art_loaded", false)), "%s must load hero object art" % feature)
 		_expect(int(contract.get("static_card_slots", 0)) == 3, "%s must own three authored card slots" % feature)
@@ -92,14 +97,44 @@ func _run() -> void:
 			for event_card in ["EventCard1", "EventCard2"]:
 				var event_art := screen.get_node_or_null("FeatureLayout/EventsFeature/%s/Content/Art" % event_card) as TextureRect
 				_expect(event_art != null and event_art.texture != null and event_art.texture.get_width() >= 512 and event_art.texture.get_height() >= 512, "events %s must retain production-resolution Curio art" % event_card)
+			_expect(bool(interaction.get("events_real_actions_tactile", false)), "events Weekly and Daily actions must own visible press/release depth")
+			var feedback_hits := {"count": 0}
+			screen.interaction_feedback_requested.connect(func(_kind: String): feedback_hits["count"] = int(feedback_hits["count"]) + 1)
+			var weekly_button := screen.get_node("FeatureLayout/WeeklyMissionsAction") as Button
+			var daily_button := screen.get_node("FeatureLayout/DailyPracticeCard/DailyContent/DailyPracticeAction") as Button
+			weekly_button.emit_signal("button_down")
+			await create_timer(0.09).timeout
+			_expect(weekly_button.scale.x < 0.98 and weekly_button.scale.y < 0.98, "events Weekly action must visibly compress on press")
+			_expect(int(feedback_hits["count"]) == 1, "events Weekly press must emit exactly one semantic feedback request")
+			weekly_button.emit_signal("button_up")
+			await create_timer(0.21).timeout
+			_expect(absf(weekly_button.scale.x - 1.0) < 0.01 and absf(weekly_button.scale.y - 1.0) < 0.01, "events Weekly action must spring cleanly back on release")
+			daily_button.emit_signal("button_down")
+			await create_timer(0.09).timeout
+			_expect(daily_button.scale.x < 0.99 and daily_button.scale.x > 0.94, "events Daily action must own a subtler press response")
+			daily_button.emit_signal("button_up")
+			await create_timer(0.21).timeout
+			screen.apply_presentation_settings({"reduced_motion": true})
+			weekly_button.emit_signal("button_down")
+			await create_timer(0.09).timeout
+			_expect(absf(weekly_button.scale.x - 1.0) < 0.001 and absf(weekly_button.scale.y - 1.0) < 0.001, "Reduced Motion must suppress Events transform animation")
+			weekly_button.emit_signal("button_up")
+			screen.apply_presentation_settings({"reduced_motion": false})
 			var weekly := {"hit": false}
 			screen.weekly_requested.connect(func(): weekly["hit"] = true)
-			(screen.get_node("FeatureLayout/WeeklyMissionsAction") as Button).emit_signal("pressed")
+			weekly_button.emit_signal("pressed")
 			_expect(bool(weekly["hit"]), "events primary action must open weekly rituals")
 			var daily := {"level": 0}
 			screen.daily_practice_requested.connect(func(level_number: int): daily["level"] = level_number)
-			(screen.get_node("FeatureLayout/DailyPracticeCard/DailyContent/DailyPracticeAction") as Button).emit_signal("pressed")
+			daily_button.emit_signal("pressed")
 			_expect(int(daily["level"]) == 2, "events secondary action must preserve daily practice level")
+			var sealed_state := state.duplicate(true)
+			sealed_state["daily_level"] = 0
+			_expect(screen.configure("events", sealed_state), "events sealed daily state must reconfigure")
+			var before_disabled_press := int(feedback_hits["count"])
+			daily_button.emit_signal("button_down")
+			await create_timer(0.08).timeout
+			_expect(daily_button.disabled and int(feedback_hits["count"]) == before_disabled_press and absf(daily_button.scale.x - 1.0) < 0.001, "sealed Daily action must stay inert and emit no fake feedback")
 		if feature == "shop":
 			var shop_offer := screen.get_node_or_null("FeatureLayout/FeatureHero/HeroRow/ShopFeaturedOfferArt") as TextureRect
 			_expect(shop_offer != null and shop_offer.texture != null and shop_offer.texture.get_width() >= 512 and shop_offer.texture.get_height() >= 512, "shop sealed preview source art must remain production-resolution")
@@ -131,6 +166,22 @@ func _run() -> void:
 			var save_row := screen.get_node_or_null("FeatureLayout/ProfileFeature/Menu/SaveRow") as PanelContainer
 			_expect(profile_progress_label != null and profile_progress_label.text == "OPENING RITUALS · 3 / 3" and profile_progress != null and profile_progress.value == 3.0, "profile progress bar must reflect real completed opening rituals")
 			_expect(settings_button != null and settings_button.custom_minimum_size.y >= 88.0 and settings_button.custom_minimum_size.y <= 96.0 and settings_button.text.contains("SETTINGS"), "profile settings must read as a compact dedicated utility row")
+			_expect(bool(interaction.get("profile_real_action_tactile", false)), "profile Settings row must own visible press/release depth")
+			var profile_feedback_hits := {"count": 0}
+			screen.interaction_feedback_requested.connect(func(_kind: String): profile_feedback_hits["count"] = int(profile_feedback_hits["count"]) + 1)
+			settings_button.emit_signal("button_down")
+			await create_timer(0.09).timeout
+			_expect(settings_button.scale.x < 0.98 and settings_button.scale.y < 0.98, "profile Settings must visibly compress on press")
+			_expect(int(profile_feedback_hits["count"]) == 1, "profile Settings press must emit exactly one semantic feedback request")
+			settings_button.emit_signal("button_up")
+			await create_timer(0.21).timeout
+			_expect(absf(settings_button.scale.x - 1.0) < 0.01 and absf(settings_button.scale.y - 1.0) < 0.01, "profile Settings must spring cleanly back on release")
+			screen.apply_presentation_settings({"reduced_motion": true})
+			settings_button.emit_signal("button_down")
+			await create_timer(0.09).timeout
+			_expect(absf(settings_button.scale.x - 1.0) < 0.001 and absf(settings_button.scale.y - 1.0) < 0.001, "Reduced Motion must suppress Profile Settings transform animation")
+			settings_button.emit_signal("button_up")
+			screen.apply_presentation_settings({"reduced_motion": false})
 			_expect(chapter_row != null and reliquary_row != null and house_row != null and save_row != null and chapter_row.visible and reliquary_row.visible and house_row.visible and save_row.visible, "profile dedicated utility list must expose all truthful rows")
 			_expect(chapter_row.size_flags_vertical != Control.SIZE_EXPAND_FILL and reliquary_row.size_flags_vertical != Control.SIZE_EXPAND_FILL and house_row.size_flags_vertical != Control.SIZE_EXPAND_FILL and save_row.size_flags_vertical != Control.SIZE_EXPAND_FILL, "profile utility rows must not absorb arbitrary empty vertical space")
 			var settings := {"hit": false}
