@@ -42,6 +42,7 @@ func _run() -> void:
 	_expect(not bool(reduced_vfx.get("echo_spawned", true)), "Reduced Motion must not spawn the transient Curio awakening echo")
 	_expect(bool(reduced_vfx.get("world_fills_hidden_nav_region", false)), "Restoration world must fill the hidden navigation region instead of exposing a black footer")
 	_expect(bool(reduced_vfx.get("world_art_full_bleed", false)), "Restoration authored world rect must extend to the bottom edge while navigation is hidden")
+	_expect(bool(reduced_vfx.get("resource_bar_hidden", false)), "Restoration must hide the global resource bar so the House payoff owns the full stage")
 	var reduced_room = reduced.get_node_or_null("RoomView")
 	var reduced_card: PanelContainer = reduced.get_node_or_null("RestorationOverlay/CeremonyCard") as PanelContainer
 	var reduced_hero: TextureRect = reduced.get_node_or_null("RestorationOverlay/AwakeningMotif") as TextureRect
@@ -64,6 +65,7 @@ func _run() -> void:
 	_expect(reduced_hero != null and reduced_hero.texture != null, "Restoration must render the recovered Curio motif as production hero artwork while exact item identity remains in the summary")
 	var reduced_overlay_contract: Dictionary = reduced.get_node("RestorationOverlay").restoration_contract()
 	_expect(bool(reduced_overlay_contract.get("house_first_composition", false)), "Restoration must make the House before/after transformation the visual hero")
+	_expect(bool(reduced_overlay_contract.get("locked_board_compact_stage", false)), "Restoration before/after comparison must keep the locked board's compact payoff proportions")
 	_expect(bool(reduced_overlay_contract.get("before_after_house_previews", false)), "Restoration must compare adjacent truthful House stages from the same authored camera")
 	_expect(bool(reduced_overlay_contract.get("before_after_state_rail", false)), "Restoration must preserve dormant-to-awakened state semantics without rendering a duplicate rail")
 	_expect(bool(reduced_overlay_contract.get("before_after_labels", false)), "Restoration before/after preview labels must carry the visible state comparison")
@@ -95,6 +97,7 @@ func _run() -> void:
 	_expect(bool(animated_vfx.get("echo_spawned", false)), "Stage 3 House awaken must spawn the contract-owned Curio echo")
 	_expect(bool(animated_vfx.get("world_fills_hidden_nav_region", false)), "Animated restoration world must fill the hidden navigation region")
 	_expect(bool(animated_vfx.get("world_art_full_bleed", false)), "Animated restoration authored world rect must use the ceremony full-bleed state")
+	_expect(bool(animated_vfx.get("resource_bar_hidden", false)), "Animated restoration must hide the global resource bar while the payoff is active")
 	var animated_room = animated.get_node_or_null("RoomView")
 	var animated_card: PanelContainer = animated.get_node_or_null("RestorationOverlay/CeremonyCard") as PanelContainer
 	var animated_hero: TextureRect = animated.get_node_or_null("RestorationOverlay/AwakeningMotif") as TextureRect
@@ -118,6 +121,7 @@ func _run() -> void:
 	_expect(bool(animated_overlay_contract.get("reveal_choreography", false)), "Animated restoration must own staged overlay reveal choreography")
 	_expect(String(animated_overlay_contract.get("reveal_phase", "")) == "opening", "Animated restoration must still be visibly entering during the early transition window")
 	_expect(bool(animated_overlay_contract.get("house_first_composition", false)), "Animated restoration must preserve the House-first before/after composition")
+	_expect(bool(animated_overlay_contract.get("locked_board_compact_stage", false)), "Animated restoration must preserve compact locked-board before/after proportions")
 	_expect(bool(animated_overlay_contract.get("before_after_house_previews", false)), "Animated restoration must compare the truthful adjacent House stages")
 	_expect(bool(animated_overlay_contract.get("before_after_labels", false)), "Animated restoration must carry state in the preview labels without duplicate chrome")
 	_expect(bool(animated_overlay_contract.get("house_first_header", false)), "Animated restoration must keep the House as header identity")

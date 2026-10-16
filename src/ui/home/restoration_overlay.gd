@@ -206,6 +206,7 @@ func restoration_contract() -> Dictionary:
 		"motif_loaded": motif != null and motif.texture != null,
 		"curio_art_loaded": curio_art != null and curio_art.texture != null,
 		"house_first_composition": transformation_stage != null and transformation_stage.visible and before_house != null and after_house != null and not motif.visible,
+		"locked_board_compact_stage": transformation_stage != null and transformation_stage.size.y <= size.y * 0.31 and before_card.custom_minimum_size.y >= 224.0 and before_card.custom_minimum_size.y <= 240.0 and after_card.custom_minimum_size.y >= 224.0 and after_card.custom_minimum_size.y <= 240.0 and ceremony_card != null and ceremony_card.size.y <= size.y * 0.18,
 		"before_after_house_previews": int(before_contract.get("stage", -1)) >= 0 and int(after_contract.get("stage", -1)) == int(before_contract.get("stage", -1)) + 1 and bool(before_contract.get("same_camera", false)) and bool(after_contract.get("same_camera", false)),
 		"before_after_state_rail": state_rail != null and not state_rail.visible and state_rail.get_node_or_null("States/Before") != null and state_rail.get_node_or_null("States/After") != null,
 		"before_after_labels": ($TransformationStage/PreviewRow/BeforeCard/BeforeContent/Label as Label).text == "BEFORE · DORMANT" and ($TransformationStage/PreviewRow/AfterCard/AfterContent/Label as Label).text == "AFTER · AWAKENED",
