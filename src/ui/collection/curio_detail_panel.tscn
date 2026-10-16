@@ -82,6 +82,7 @@ horizontal_alignment = 1
 [node name="HeroArt" type="TextureRect" parent="CurioDetailCard/Content"]
 custom_minimum_size = Vector2(0, 360)
 layout_mode = 2
+size_flags_vertical = 3
 expand_mode = 1
 stretch_mode = 5
 
