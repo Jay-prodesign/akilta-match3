@@ -7,6 +7,7 @@ on:
       - "feat/ios-simulator-runtime-smoke"
       - "feat/ios-simulator-render-readiness"
       - "feat/native-ios-runtime-visual-evidence"
+      - "feat/native-house-runtime-evidence"
     paths:
       - ".github/workflows/ios-simulator-runtime-smoke.yml"
       - ".github/release-proof.trigger"
@@ -44,12 +45,13 @@ jobs:
           unzip -q templates.tpz -d /tmp/godot-templates
           cp -R /tmp/godot-templates/templates/. "$HOME/Library/Application Support/Godot/export_templates/4.7.2.stable/"
 
-      - name: Verify native mobile contracts
+      - name: Verify native mobile and Splash entry contracts
         shell: bash
         run: |
           set -euo pipefail
           ./Godot.app/Contents/MacOS/Godot --headless --path . -s res://tests/unit/test_mobile_release_contract.gd
           ./Godot.app/Contents/MacOS/Godot --headless --path . -s res://tests/unit/test_mobile_safe_area.gd
+          ./Godot.app/Contents/MacOS/Godot --headless --path . -s res://tests/integration/test_splash_boot_states.gd
 
       - name: Export iOS Xcode project with simulator library
         shell: bash
@@ -84,35 +86,73 @@ jobs:
           test -x "$APP_PATH/CatAndCoven"
           echo "IOS_SIM_APP_PATH=$APP_PATH" >> "$GITHUB_ENV"
 
-      - name: Select and boot available iPhone simulator
+      - name: Select and boot SDK-matched iPhone simulator
         shell: bash
         run: |
           set -euo pipefail
           xcrun simctl list devices available -j > artifacts/simulator-devices.json
+          xcrun --sdk iphonesimulator --show-sdk-version | tee artifacts/ios-simulator-sdk-version.txt
           python3 - <<'PY' > artifacts/simulator-choice.env
-          import json, re
+          import json, re, subprocess
           data = json.load(open("artifacts/simulator-devices.json"))
+          sdk_version = subprocess.check_output(
+              ["xcrun", "--sdk", "iphonesimulator", "--show-sdk-version"],
+              text=True,
+          ).strip()
+          sdk_nums = tuple(int(x) for x in re.findall(r"\d+", sdk_version)[:2])
+          preferred_names = {
+              "iPhone SE (3rd generation)": 0,
+              "iPhone 16e": 1,
+              "iPhone 16": 2,
+              "iPhone 16 Pro": 3,
+          }
           candidates = []
           for runtime, devices in data.get("devices", {}).items():
               if ".SimRuntime.iOS-" not in runtime:
                   continue
-              nums = tuple(int(x) for x in re.findall(r"\d+", runtime))
+              nums = tuple(int(x) for x in re.findall(r"\d+", runtime)[:2])
               for device in devices:
-                  if device.get("isAvailable") and str(device.get("name", "")).startswith("iPhone"):
-                      candidates.append((nums, device["name"], device["udid"], runtime))
+                  name = str(device.get("name", ""))
+                  if device.get("isAvailable") and name.startswith("iPhone"):
+                      candidates.append((nums, preferred_names.get(name, 99), name, device["udid"], runtime))
           if not candidates:
               raise SystemExit("No available iPhone simulator")
-          nums, name, udid, runtime = sorted(candidates, reverse=True)[0]
+          exact = [c for c in candidates if c[0] == sdk_nums]
+          pool = exact if exact else [c for c in candidates if c[0] <= sdk_nums]
+          if not pool:
+              pool = candidates
+          nums, _, name, udid, runtime = sorted(pool, key=lambda c: (-c[0][0], -c[0][1], c[1], c[2]))[0]
           print(f"SIM_UDID={udid}")
           print(f"SIM_NAME={name}")
           print(f"SIM_RUNTIME={runtime}")
+          print(f"SIM_SDK_VERSION={sdk_version}")
           PY
           cat artifacts/simulator-choice.env
           cat artifacts/simulator-choice.env >> "$GITHUB_ENV"
           SIM_UDID="$(grep '^SIM_UDID=' artifacts/simulator-choice.env | cut -d= -f2-)"
           test -n "$SIM_UDID"
-          xcrun simctl boot "$SIM_UDID" 2>/dev/null || true
-          xcrun simctl bootstatus "$SIM_UDID" -b
+          export SIM_UDID
+
+          # Reusing the newest installed runtime caused multi-minute migration stalls
+          # on hosted runners even though the app was built with an older active SDK.
+          # Start from a clean simulator that matches the active iphonesimulator SDK.
+          xcrun simctl shutdown "$SIM_UDID" >/dev/null 2>&1 || true
+          xcrun simctl erase "$SIM_UDID" >/dev/null 2>&1 || true
+          xcrun simctl boot "$SIM_UDID"
+          if ! python3 - <<'PY'
+          import os, subprocess, sys
+          udid = os.environ["SIM_UDID"]
+          try:
+              subprocess.run(["xcrun", "simctl", "bootstatus", udid, "-b"], check=True, timeout=300)
+          except (subprocess.TimeoutExpired, subprocess.CalledProcessError) as exc:
+              print(f"SDK-matched simulator boot readiness failed: {exc}", file=sys.stderr)
+              raise SystemExit(1)
+          PY
+          then
+            echo "::error::SDK-matched simulator failed to become ready."
+            xcrun simctl list devices | tee artifacts/simulator-devices-after-failure.txt
+            exit 1
+          fi
 
       - name: Install and cold-launch Cat & Coven on iOS Simulator
         shell: bash
@@ -167,8 +207,8 @@ jobs:
           BUNDLE_ID="com.akilta.catandcoven"
           xcrun simctl terminate "$SIM_UDID" "$BUNDLE_ID"
           sleep 2
-          LAUNCH_OUTPUT="$(xcrun simctl launch "$SIM_UDID" "$BUNDLE_ID" 2>&1)"
-          printf '%s\n' "$LAUNCH_OUTPUT" | tee artifacts/ios-relaunch.txt
+          LAUNCH_OUTPUT="$(xcrun simctl launch "$SIM_UDID" "$BUNDLE_ID" --cat-coven-native-review-auto-enter 2>&1)"
+          printf '%s\n' "$LAUNCH_OUTPUT" | tee artifacts/ios-house-relaunch.txt
           APP_PID="$(printf '%s\n' "$LAUNCH_OUTPUT" | sed -n 's/.*: \([0-9][0-9]*\)$/\1/p' | tail -1)"
           test -n "$APP_PID"
           echo "IOS_RELAUNCH_PID=$APP_PID" | tee -a artifacts/ios-lifecycle.txt
@@ -177,10 +217,10 @@ jobs:
           grep -F "$BUNDLE_ID" artifacts/ios-relaunch-launchctl-list.txt | tee artifacts/ios-process-relaunch-alive.txt
           RENDERED=0
           for ATTEMPT in $(seq 1 8); do
-            xcrun simctl io "$SIM_UDID" screenshot artifacts/ios-02-relaunch.png
-            test -s artifacts/ios-02-relaunch.png
-            BYTES="$(stat -f%z artifacts/ios-02-relaunch.png)"
-            echo "ios-02-relaunch.png attempt=$ATTEMPT bytes=$BYTES" | tee -a artifacts/ios-frame-sizes.txt
+            xcrun simctl io "$SIM_UDID" screenshot artifacts/ios-02-house-relaunch.png
+            test -s artifacts/ios-02-house-relaunch.png
+            BYTES="$(stat -f%z artifacts/ios-02-house-relaunch.png)"
+            echo "ios-02-house-relaunch.png attempt=$ATTEMPT bytes=$BYTES" | tee -a artifacts/ios-frame-sizes.txt
             if [ "$BYTES" -ge 200000 ]; then
               RENDERED=1
               break
@@ -189,13 +229,13 @@ jobs:
           done
           if [ "$RENDERED" -ne 1 ]; then
             xcrun simctl spawn "$SIM_UDID" log show --last 2m --style compact --predicate 'process == "CatAndCoven"' > artifacts/ios-relaunch-render-timeout-log.txt || true
-            echo "::error::Cat & Coven relaunch stayed on the lightweight native launch frame instead of reaching the rendered Godot splash."
+            echo "::error::Cat & Coven review relaunch did not reach a rendered post-splash product frame."
             tail -200 artifacts/ios-relaunch-render-timeout-log.txt || true
             exit 1
           fi
-          WIDTH="$(sips -g pixelWidth artifacts/ios-02-relaunch.png | awk '/pixelWidth:/ {print $2}')"
-          HEIGHT="$(sips -g pixelHeight artifacts/ios-02-relaunch.png | awk '/pixelHeight:/ {print $2}')"
-          echo "ios-02-relaunch.png dimensions=${WIDTH}x${HEIGHT}" | tee -a artifacts/ios-frame-sizes.txt
+          WIDTH="$(sips -g pixelWidth artifacts/ios-02-house-relaunch.png | awk '/pixelWidth:/ {print $2}')"
+          HEIGHT="$(sips -g pixelHeight artifacts/ios-02-house-relaunch.png | awk '/pixelHeight:/ {print $2}')"
+          echo "ios-02-house-relaunch.png dimensions=${WIDTH}x${HEIGHT}" | tee -a artifacts/ios-frame-sizes.txt
           test "${WIDTH:-0}" -ge 640
           test "${HEIGHT:-0}" -ge 1100
 
@@ -208,7 +248,7 @@ jobs:
             grep -E "Missing required production screen art|Failed to decode production screen art|Missing required gameplay asset|SCRIPT ERROR:|Terminating app due to uncaught exception|EXC_CRASH|SIGABRT" artifacts/ios-runtime-log.txt
             exit 1
           fi
-          echo "IOS_SIMULATOR_RUNTIME_PASS: build, install, rendered cold launch, terminate, rendered relaunch"
+          echo "IOS_SIMULATOR_RUNTIME_PASS: build, rendered Splash cold launch, terminate, post-splash House relaunch"
 
       # Exact native frame evidence is emitted on every runtime-verification checkpoint.
       - name: Emit compact native frames for visual inspection
@@ -216,7 +256,7 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          for FRAME in ios-01-cold-launch ios-02-relaunch; do
+          for FRAME in ios-01-cold-launch ios-02-house-relaunch; do
             SRC="artifacts/${FRAME}.png"
             [ -s "$SRC" ] || continue
             OUT="artifacts/${FRAME}-review.jpg"

@@ -8,6 +8,7 @@ on:
       - "feat/native-main-lifecycle-gate"
       - "feat/native-android-runtime-smoke"
       - "feat/native-ios-runtime-visual-evidence"
+      - "feat/native-house-runtime-evidence"
     paths:
       - ".github/workflows/android-runtime-smoke.yml"
       - ".github/release-proof.trigger"
@@ -82,10 +83,11 @@ jobs:
           EOF
           keytool -genkeypair -noprompt             -keystore /tmp/cat-coven-runtime-ci.keystore             -storepass changeit -keypass changeit -alias catcoven             -keyalg RSA -keysize 2048 -validity 3650             -dname "CN=Cat Coven Runtime CI,O=AKILTA,C=US"
 
-      - name: Verify mobile configuration contracts
+      - name: Verify mobile configuration and Splash entry contracts
         run: |
           ./godot --headless --path . -s res://tests/unit/test_mobile_release_contract.gd
           ./godot --headless --path . -s res://tests/unit/test_mobile_safe_area.gd
+          ./godot --headless --path . -s res://tests/integration/test_splash_boot_states.gd
 
       - name: Export x86_64 emulator APK
         shell: bash
@@ -188,6 +190,59 @@ jobs:
             exit 1
           fi
 
+      - name: Enter the House and capture native product UI
+        shell: bash
+        run: |
+          set -euo pipefail
+          PACKAGE="com.akilta.catandcoven"
+          # 1080x2400 emulator. The Godot canvas expands vertically on this
+          # device class, so avoid a single brittle physical Y coordinate.
+          # Probe only points visibly inside the authored Enter CTA and stop as
+          # soon as the settled product frame is no longer the ready Splash.
+          sleep 3
+          ENTERED=0
+          COLD_BYTES="$(stat -c%s artifacts/android-01-cold-launch.png)"
+          # Ambient splash motion and tactile button animation change PNG bytes
+          # without changing routes. Require a material compressed-frame delta
+          # before calling the frame House; the real House composition differs
+          # by hundreds of KB on this fixed Pixel-class emulator.
+          MIN_ROUTE_DELTA=$((COLD_BYTES / 16))
+          : > artifacts/android-enter-attempts.txt
+          echo "cold_bytes=$COLD_BYTES min_route_delta=$MIN_ROUTE_DELTA" | tee -a artifacts/android-enter-attempts.txt
+          for TAP_Y in 2205 2255 2188 2230; do
+            echo "touchscreen press x=540 y=$TAP_Y" | tee -a artifacts/android-enter-attempts.txt
+            adb shell input touchscreen swipe 540 "$TAP_Y" 540 "$TAP_Y" 120
+            for POLL in $(seq 1 8); do
+              sleep 1
+              test -n "$(adb shell pidof "$PACKAGE" 2>/dev/null | tr -d '\r' || true)"
+              adb shell dumpsys activity activities | grep -E "mResumedActivity|topResumedActivity" > artifacts/house-foreground.txt || true
+              grep -Fq "$PACKAGE" artifacts/house-foreground.txt
+              PROBE="artifacts/android-enter-probe-$TAP_Y-$POLL.png"
+              adb exec-out screencap -p > "$PROBE"
+              test -s "$PROBE"
+              PROBE_BYTES="$(stat -c%s "$PROBE")"
+              DELTA=$((PROBE_BYTES - COLD_BYTES))
+              if [ "$DELTA" -lt 0 ]; then DELTA=$((-DELTA)); fi
+              echo "probe y=$TAP_Y poll=$POLL bytes=$PROBE_BYTES delta=$DELTA" | tee -a artifacts/android-enter-attempts.txt
+              test "$PROBE_BYTES" -ge 500000
+              if [ "$DELTA" -ge "$MIN_ROUTE_DELTA" ]; then
+                mv "$PROBE" artifacts/android-01b-house-after-enter.png
+                ENTERED=1
+                echo "Material House transition observed after native touch y=$TAP_Y poll=$POLL" | tee -a artifacts/android-enter-attempts.txt
+                break 2
+              fi
+            done
+          done
+          if [ "$ENTERED" -ne 1 ]; then
+            cp artifacts/android-01-cold-launch.png artifacts/android-01b-house-after-enter.png
+            echo "::error::Native Enter touches never produced a material post-Splash product frame."
+            cat artifacts/android-enter-attempts.txt
+            exit 1
+          fi
+          HOUSE_BYTES="$(stat -c%s artifacts/android-01b-house-after-enter.png)"
+          echo "android-01b-house-after-enter.png bytes=$HOUSE_BYTES" | tee -a artifacts/native-frame-sizes.txt
+          test "$HOUSE_BYTES" -ge 500000
+
       - name: Verify background and resume
         shell: bash
         run: |
@@ -288,7 +343,7 @@ jobs:
 
           {
             echo "NATIVE_FRAME_FINAL_BYTES"
-            for frame in artifacts/android-01-cold-launch.png artifacts/android-02-resumed.png artifacts/android-03-force-stop-relaunch.png; do
+            for frame in artifacts/android-01-cold-launch.png artifacts/android-01b-house-after-enter.png artifacts/android-02-resumed.png artifacts/android-03-force-stop-relaunch.png; do
               bytes="$(stat -c%s "$frame")"
               echo "$(basename "$frame")=$bytes"
               if [ "$bytes" -lt 500000 ]; then
@@ -330,7 +385,7 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          for FRAME in android-01-cold-launch android-03-force-stop-relaunch; do
+          for FRAME in android-01-cold-launch android-01b-house-after-enter android-02-resumed android-03-force-stop-relaunch; do
             SRC="artifacts/${FRAME}.png"
             [ -s "$SRC" ] || continue
             REVIEW="$SRC"

@@ -23,6 +23,7 @@ const CurioMaterials = preload("res://src/ui/theme/curio_materials.gd")
 const ProductNavigation = preload("res://src/ui/shared/product_navigation.gd")
 const TopResourceBar = preload("res://src/ui/shared/top_resource_bar.gd")
 const MobileSafeArea = preload("res://src/ui/shared/mobile_safe_area.gd")
+const NATIVE_RUNTIME_REVIEW_AUTO_ENTER_ARG := "--cat-coven-native-review-auto-enter"
 
 @export var environment: String = "development"
 @export var save_path_override: String = ""
@@ -52,12 +53,23 @@ const INTERNAL_REVIEW_LEVEL_COUNT := 3
 @onready var screen_host: Node = $ScreenHost
 
 func _ready() -> void:
+	_ensure_android_immersive_mode()
 	# S00 must be a real boot state, not a decorative gate shown after loading.
 	# Navigation exists immediately so the player is truthfully on BOOT while the
 	# first rendered frame exposes the canonical loading state.
 	navigation = NavigationScript.new()
 	_render_splash()
 	call_deferred("_complete_bootstrap")
+
+func _notification(what: int) -> void:
+	if what == NOTIFICATION_APPLICATION_RESUMED:
+		call_deferred("_ensure_android_immersive_mode")
+
+func _ensure_android_immersive_mode() -> void:
+	if OS.get_name() != "Android":
+		return
+	if DisplayServer.window_get_mode() != DisplayServer.WINDOW_MODE_FULLSCREEN:
+		DisplayServer.window_set_mode(DisplayServer.WINDOW_MODE_FULLSCREEN)
 
 func _complete_bootstrap() -> void:
 	var path: String = save_path_override if save_path_override != "" else SaveStoreScript.DEFAULT_PATH
@@ -103,6 +115,12 @@ func _complete_bootstrap() -> void:
 			splash.set_boot_state("recoverable_error", "This House record was created by a newer build. Update the game before entering so that record is not overwritten.", false)
 		_:
 			splash.set_boot_state("ready")
+	if String(splash.boot_state()) == "ready" and _native_runtime_review_auto_enter_requested():
+		call_deferred("_on_splash_continue")
+
+func _native_runtime_review_auto_enter_requested() -> bool:
+	# Workflow-only proof hook. Normal player launches never receive this arg.
+	return OS.get_cmdline_args().has(NATIVE_RUNTIME_REVIEW_AUTO_ENTER_ARG) or OS.get_cmdline_user_args().has(NATIVE_RUNTIME_REVIEW_AUTO_ENTER_ARG)
 
 func current_route_name() -> String:
 	return navigation.route_name().to_lower() if navigation != null else ""
