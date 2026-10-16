@@ -158,6 +158,7 @@ horizontal_alignment = 1
 [node name="MissionEmptyState" type="PanelContainer" parent="MissionLayout"]
 custom_minimum_size = Vector2(0, 156)
 layout_mode = 2
+mouse_filter = 2
 theme_override_styles/panel = SubResource("Altar")
 
 [node name="EmptyContent" type="HBoxContainer" parent="MissionLayout/MissionEmptyState"]
@@ -228,6 +229,7 @@ theme_override_constants/separation = 10
 [node name="FeedStatus" type="PanelContainer" parent="MissionLayout/MissionStatusStack"]
 custom_minimum_size = Vector2(0, 164)
 layout_mode = 2
+mouse_filter = 2
 size_flags_vertical = 0
 theme_override_styles/panel = SubResource("WeeklyRow")
 
@@ -273,6 +275,7 @@ mouse_filter = 2
 [node name="ProgressStatus" type="PanelContainer" parent="MissionLayout/MissionStatusStack"]
 custom_minimum_size = Vector2(0, 164)
 layout_mode = 2
+mouse_filter = 2
 size_flags_vertical = 0
 theme_override_styles/panel = SubResource("WeeklyRow")
 
@@ -318,6 +321,7 @@ mouse_filter = 2
 [node name="RewardStatus" type="PanelContainer" parent="MissionLayout/MissionStatusStack"]
 custom_minimum_size = Vector2(0, 164)
 layout_mode = 2
+mouse_filter = 2
 size_flags_vertical = 0
 theme_override_styles/panel = SubResource("WeeklyRow")
 
@@ -369,6 +373,7 @@ mouse_filter = 2
 [node name="MissionOpeningRecord" type="PanelContainer" parent="MissionLayout"]
 custom_minimum_size = Vector2(0, 220)
 layout_mode = 2
+mouse_filter = 2
 size_flags_vertical = 3
 theme_override_styles/panel = SubResource("WeeklyRecord")
 
