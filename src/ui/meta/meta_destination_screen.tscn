@@ -1,4 +1,4 @@
-[gd_scene load_steps=9 format=3]
+[gd_scene load_steps=10 format=3]
 
 [ext_resource type="Script" path="res://src/ui/meta/meta_destination_screen.gd" id="1_meta"]
 
@@ -61,6 +61,25 @@ corner_radius_top_left = 26
 corner_radius_top_right = 26
 corner_radius_bottom_right = 26
 corner_radius_bottom_left = 26
+
+
+[sub_resource type="StyleBoxFlat" id="ShopSealBadge"]
+bg_color = Color(0.12, 0.064, 0.139, 0.96)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.941, 0.808, 0.541, 0.88)
+corner_radius_top_left = 20
+corner_radius_top_right = 20
+corner_radius_bottom_right = 20
+corner_radius_bottom_left = 20
+content_margin_left = 8.0
+content_margin_top = 5.0
+content_margin_right = 8.0
+content_margin_bottom = 5.0
+shadow_color = Color(0, 0, 0, 0.42)
+shadow_size = 5
 
 [sub_resource type="StyleBoxFlat" id="ProfileProgressBack"]
 bg_color = Color(0.055, 0.038, 0.071, 0.96)
@@ -793,9 +812,10 @@ autowrap_mode = 2
 
 [node name="ShopStatePlate" type="PanelContainer" parent="FeatureLayout/CardScroll/Cards/Card1/Row"]
 visible = false
-custom_minimum_size = Vector2(220, 126)
+custom_minimum_size = Vector2(120, 54)
 layout_mode = 2
 size_flags_vertical = 4
+theme_override_styles/panel = SubResource("ShopSealBadge")
 
 [node name="Content" type="VBoxContainer" parent="FeatureLayout/CardScroll/Cards/Card1/Row/ShopStatePlate"]
 layout_mode = 2
@@ -807,11 +827,12 @@ layout_mode = 2
 theme_override_colors/font_color = Color(1, 0.941, 0.847, 1)
 theme_override_colors/font_outline_color = Color(0.02, 0.014, 0.028, 0.95)
 theme_override_constants/outline_size = 2
-theme_override_font_sizes/font_size = 22
+theme_override_font_sizes/font_size = 15
 text = "SEALED"
 horizontal_alignment = 1
 
 [node name="Detail" type="Label" parent="FeatureLayout/CardScroll/Cards/Card1/Row/ShopStatePlate/Content"]
+visible = false
 layout_mode = 2
 theme_override_colors/font_color = Color(0.86, 0.77, 0.93, 1)
 theme_override_font_sizes/font_size = 14
@@ -819,6 +840,7 @@ text = "NO PURCHASES"
 horizontal_alignment = 1
 
 [node name="Mode" type="Label" parent="FeatureLayout/CardScroll/Cards/Card1/Row/ShopStatePlate/Content"]
+visible = false
 layout_mode = 2
 theme_override_colors/font_color = Color(0.831, 0.678, 0.439, 1)
 theme_override_font_sizes/font_size = 12
@@ -880,9 +902,10 @@ autowrap_mode = 2
 
 [node name="ShopStatePlate" type="PanelContainer" parent="FeatureLayout/CardScroll/Cards/Card2/Row"]
 visible = false
-custom_minimum_size = Vector2(220, 126)
+custom_minimum_size = Vector2(120, 54)
 layout_mode = 2
 size_flags_vertical = 4
+theme_override_styles/panel = SubResource("ShopSealBadge")
 
 [node name="Content" type="VBoxContainer" parent="FeatureLayout/CardScroll/Cards/Card2/Row/ShopStatePlate"]
 layout_mode = 2
@@ -894,11 +917,12 @@ layout_mode = 2
 theme_override_colors/font_color = Color(1, 0.941, 0.847, 1)
 theme_override_colors/font_outline_color = Color(0.02, 0.014, 0.028, 0.95)
 theme_override_constants/outline_size = 2
-theme_override_font_sizes/font_size = 22
+theme_override_font_sizes/font_size = 15
 text = "SEALED"
 horizontal_alignment = 1
 
 [node name="Detail" type="Label" parent="FeatureLayout/CardScroll/Cards/Card2/Row/ShopStatePlate/Content"]
+visible = false
 layout_mode = 2
 theme_override_colors/font_color = Color(0.86, 0.77, 0.93, 1)
 theme_override_font_sizes/font_size = 14
@@ -906,6 +930,7 @@ text = "NO PURCHASES"
 horizontal_alignment = 1
 
 [node name="Mode" type="Label" parent="FeatureLayout/CardScroll/Cards/Card2/Row/ShopStatePlate/Content"]
+visible = false
 layout_mode = 2
 theme_override_colors/font_color = Color(0.831, 0.678, 0.439, 1)
 theme_override_font_sizes/font_size = 12
@@ -967,9 +992,10 @@ autowrap_mode = 2
 
 [node name="ShopStatePlate" type="PanelContainer" parent="FeatureLayout/CardScroll/Cards/Card3/Row"]
 visible = false
-custom_minimum_size = Vector2(220, 126)
+custom_minimum_size = Vector2(120, 54)
 layout_mode = 2
 size_flags_vertical = 4
+theme_override_styles/panel = SubResource("ShopSealBadge")
 
 [node name="Content" type="VBoxContainer" parent="FeatureLayout/CardScroll/Cards/Card3/Row/ShopStatePlate"]
 layout_mode = 2
@@ -981,11 +1007,12 @@ layout_mode = 2
 theme_override_colors/font_color = Color(1, 0.941, 0.847, 1)
 theme_override_colors/font_outline_color = Color(0.02, 0.014, 0.028, 0.95)
 theme_override_constants/outline_size = 2
-theme_override_font_sizes/font_size = 22
+theme_override_font_sizes/font_size = 15
 text = "SEALED"
 horizontal_alignment = 1
 
 [node name="Detail" type="Label" parent="FeatureLayout/CardScroll/Cards/Card3/Row/ShopStatePlate/Content"]
+visible = false
 layout_mode = 2
 theme_override_colors/font_color = Color(0.86, 0.77, 0.93, 1)
 theme_override_font_sizes/font_size = 14
@@ -993,6 +1020,7 @@ text = "NO PURCHASES"
 horizontal_alignment = 1
 
 [node name="Mode" type="Label" parent="FeatureLayout/CardScroll/Cards/Card3/Row/ShopStatePlate/Content"]
+visible = false
 layout_mode = 2
 theme_override_colors/font_color = Color(0.831, 0.678, 0.439, 1)
 theme_override_font_sizes/font_size = 12
