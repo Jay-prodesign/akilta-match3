@@ -48,6 +48,10 @@ func _run() -> void:
 		elif feature == "shop":
 			_expect(hero_panel != null and not hero_panel.visible, "shop must use catalog composition instead of the generic meta hero")
 			_expect(bool(contract.get("shop_catalog_focus", false)), "shop must present one featured sealed preview plus two catalog previews")
+			_expect(bool(contract.get("shop_compact_catalog_density", false)), "shop must keep the sealed catalog compact instead of stretching cards into slabs")
+			_expect(bool(contract.get("shop_clean_sealed_badges", false)), "shop sealed states must use compact readable badges instead of squeezed multi-line chrome")
+			var shop_detail := screen.get_node_or_null("FeatureLayout/Detail") as Label
+			_expect(shop_detail != null and not shop_detail.visible, "shop must suppress redundant subtitle copy above the sealed catalog")
 		elif feature == "profile":
 			var profile_identity := screen.get_node_or_null("FeatureLayout/ProfileFeature/Identity") as PanelContainer
 			var profile_progress := screen.get_node_or_null("FeatureLayout/ProfileFeature/Identity/IdentityRow/Copy/Progress") as ProgressBar
@@ -85,7 +89,23 @@ func _run() -> void:
 				_expect(card != null and not card.visible, "profile must suppress generic meta cards in favor of its dedicated utility list")
 				continue
 			_expect(card != null and card.visible and art != null and art.texture != null, "%s %s must render object art" % [feature, card_name])
-			_expect(art != null and art.custom_minimum_size.x >= 220.0 and art.custom_minimum_size.y >= 195.0, "%s %s art must not collapse into a thumbnail row" % [feature, card_name])
+			if feature == "shop":
+				var card_index := ["Card1", "Card2", "Card3"].find(card_name)
+				var min_art := 170.0 if card_index == 0 else 102.0
+				var max_art := 186.0 if card_index == 0 else 114.0
+				var min_card := 204.0 if card_index == 0 else 146.0
+				var max_card := 220.0 if card_index == 0 else 160.0
+				var state_plate := screen.get_node_or_null("FeatureLayout/CardScroll/Cards/%s/Row/ShopStatePlate" % card_name) as PanelContainer
+				var status_label := screen.get_node_or_null("FeatureLayout/CardScroll/Cards/%s/Row/Copy/Status" % card_name) as Label
+				_expect(card.custom_minimum_size.y >= min_card and card.custom_minimum_size.y <= max_card and card.size_flags_vertical != Control.SIZE_EXPAND_FILL, "shop %s must retain compact fixed-height catalog density" % card_name)
+				_expect(art.custom_minimum_size.x >= min_art and art.custom_minimum_size.x <= max_art and art.custom_minimum_size.y >= min_art and art.custom_minimum_size.y <= max_art, "shop %s art must match compact catalog scale" % card_name)
+				_expect(state_plate != null and state_plate.visible and state_plate.custom_minimum_size.y <= 58.0 and state_plate.get_theme_stylebox("panel") is StyleBoxFlat, "shop %s must expose one compact sealed-state plate" % card_name)
+				_expect(status_label != null and not status_label.visible, "shop %s must not duplicate sealed truth in a second status line" % card_name)
+				var plate_detail := screen.get_node_or_null("FeatureLayout/CardScroll/Cards/%s/Row/ShopStatePlate/Content/Detail" % card_name) as Label
+				var plate_mode := screen.get_node_or_null("FeatureLayout/CardScroll/Cards/%s/Row/ShopStatePlate/Content/Mode" % card_name) as Label
+				_expect(plate_detail != null and not plate_detail.visible and plate_mode != null and not plate_mode.visible, "shop %s sealed badge must avoid unreadable duplicate microcopy" % card_name)
+			else:
+				_expect(art != null and art.custom_minimum_size.x >= 220.0 and art.custom_minimum_size.y >= 195.0, "%s %s art must not collapse into a thumbnail row" % [feature, card_name])
 			if art != null and art.texture != null:
 				_expect(String(art.get_meta("asset_path", "")).ends_with(".webp") or String(art.get_meta("asset_path", "")).ends_with(".png"), "%s %s must use raster object art" % [feature, card_name])
 		if feature == "events":

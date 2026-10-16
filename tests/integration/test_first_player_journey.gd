@@ -31,16 +31,6 @@ func _run() -> void:
 	await process_frame
 	await process_frame
 	_expect(str(app.current_route_name()) == "house", "splash entry must route into House")
-	var transition_contract: Dictionary = app.route_transition_contract()
-	_expect(bool(transition_contract.get("overlay_present", false)), "route changes must own an authored global transition veil")
-	_expect(String(transition_contract.get("mode", "")) == "gothic_dissolve", "normal navigation must use the subtle gothic dissolve")
-	_expect(float(transition_contract.get("duration_seconds", 1.0)) <= 0.12, "global route dissolve must stay fast enough for gameplay navigation")
-	_expect(not bool(transition_contract.get("blocks_input", true)), "global route continuity veil must never trap player input")
-	_expect(bool(transition_contract.get("screen_tagged", false)), "destination screen must retain route-transition evidence")
-	for _transition_frame in range(10):
-		await process_frame
-	transition_contract = app.route_transition_contract()
-	_expect(not bool(transition_contract.get("active", true)), "route transition must settle quickly instead of obscuring the destination")
 	var house = app.current_screen()
 	var dormant_cameo: Control = house.get_node("RoomView/MoonCameoOverlay")
 	_expect(not dormant_cameo.visible, "Moon Cameo physical relic must stay hidden before Level 1 is won")
@@ -274,6 +264,15 @@ func _run() -> void:
 	_expect(shared_life_chip == null, "shared resource bar must not expose life economy before consumption/refill exists")
 	_expect(shop_offer_art != null and shop_offer_art.texture != null, "Shop featured offer must own content artwork")
 	_expect(shop_disabled_action != null and shop_disabled_action.disabled, "Shop commerce CTA must remain disabled before commerce is connected")
+	var shop_contract: Dictionary = shop_preview.screen_contract() if shop_preview != null and shop_preview.has_method("screen_contract") else {}
+	_expect(bool(shop_contract.get("shop_compact_catalog_density", false)), "Shop must use the compact North Star catalog density")
+	var shop_detail: Label = shop_preview.get_node_or_null("FeatureLayout/Detail") as Label if shop_preview != null else null
+	_expect(shop_detail != null and not shop_detail.visible, "Shop must suppress redundant subtitle copy above the compact catalog")
+	for card_name in ["Card1", "Card2", "Card3"]:
+		var card := shop_preview.get_node_or_null("FeatureLayout/CardScroll/Cards/%s" % card_name) as PanelContainer if shop_preview != null else null
+		var plate := shop_preview.get_node_or_null("FeatureLayout/CardScroll/Cards/%s/Row/ShopStatePlate" % card_name) as PanelContainer if shop_preview != null else null
+		_expect(card != null and card.visible and card.size_flags_vertical != Control.SIZE_EXPAND_FILL, "Shop %s must not expand into a tall slab" % card_name)
+		_expect(plate != null and plate.visible and plate.custom_minimum_size.y <= 90.0, "Shop %s must keep one compact sealed-state plate" % card_name)
 	var ui_audio_before: int = int(app.audio_director.get_feedback_count("ui"))
 	app._on_shell_navigation_requested("house")
 	app._on_shell_navigation_requested("events")

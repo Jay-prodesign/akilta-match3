@@ -219,8 +219,9 @@ func configure(feature_key: String, state: Dictionary) -> bool:
 	shop_offer_art.visible = false
 	shop_disabled_action.visible = false
 	hero_art.visible = false
-	card_stack.size_flags_vertical = Control.SIZE_EXPAND_FILL if _feature_key == "shop" else Control.SIZE_FILL
+	card_stack.size_flags_vertical = Control.SIZE_FILL
 	title.add_theme_font_size_override("font_size", 44 if _feature_key == "shop" else (42 if _feature_key == "profile" else 54))
+	detail.visible = _feature_key != "shop"
 	detail.add_theme_font_size_override("font_size", 17 if _feature_key == "shop" else (16 if _feature_key == "profile" else 21))
 	shop_notice.add_theme_font_size_override("font_size", 16 if _feature_key == "shop" else 19)
 	profile_settings.visible = false
@@ -387,18 +388,26 @@ func _apply_cards(cards: Array[Dictionary]) -> void:
 		var status := card.get_node("Row/Copy/Status") as Label
 		var shop_state_plate := card.get_node_or_null("Row/ShopStatePlate") as PanelContainer
 		if _feature_key == "shop":
-			card.custom_minimum_size.y = 250.0 if i == 0 else 230.0
-			card.size_flags_vertical = Control.SIZE_EXPAND_FILL
-			card.size_flags_stretch_ratio = 1.22 if i == 0 else 1.0
-			row.add_theme_constant_override("separation", 16)
-			art.custom_minimum_size = Vector2(340, 224) if i == 0 else Vector2(300, 204)
-			art.size_flags_vertical = Control.SIZE_EXPAND_FILL
-			kicker.add_theme_font_size_override("font_size", 18 if i == 0 else 16)
-			card_title.add_theme_font_size_override("font_size", 38 if i == 0 else 34)
-			status.add_theme_font_size_override("font_size", 17)
+			card_stack.add_theme_constant_override("separation", 10)
+			card.custom_minimum_size.y = 214.0 if i == 0 else 154.0
+			card.size_flags_vertical = Control.SIZE_FILL
+			card.size_flags_stretch_ratio = 1.0
+			row.add_theme_constant_override("separation", 12)
+			art.custom_minimum_size = Vector2(178, 178) if i == 0 else Vector2(108, 108)
+			art.size_flags_vertical = Control.SIZE_FILL
+			kicker.add_theme_font_size_override("font_size", 16 if i == 0 else 14)
+			card_title.add_theme_font_size_override("font_size", 30 if i == 0 else 25)
+			status.visible = false
+			status.add_theme_font_size_override("font_size", 14 if i == 0 else 13)
 			if shop_state_plate != null:
 				shop_state_plate.visible = true
-				ProductionChrome.apply_compact_panel(shop_state_plate, "shop_sealed_state")
+				shop_state_plate.custom_minimum_size = Vector2(120, 54)
+				var state_label := shop_state_plate.get_node("Content/State") as Label
+				var detail_label := shop_state_plate.get_node("Content/Detail") as Label
+				var mode_label := shop_state_plate.get_node("Content/Mode") as Label
+				state_label.add_theme_font_size_override("font_size", 15)
+				detail_label.visible = false
+				mode_label.visible = false
 		else:
 			card.custom_minimum_size.y = 236.0
 			card.size_flags_vertical = Control.SIZE_FILL
@@ -408,6 +417,7 @@ func _apply_cards(cards: Array[Dictionary]) -> void:
 			art.size_flags_vertical = Control.SIZE_FILL
 			kicker.add_theme_font_size_override("font_size", 17)
 			card_title.add_theme_font_size_override("font_size", 34)
+			status.visible = true
 			status.add_theme_font_size_override("font_size", 18)
 			if shop_state_plate != null:
 				shop_state_plate.visible = false
@@ -501,16 +511,34 @@ func screen_contract() -> Dictionary:
 		and event_status_1.text.contains("SEALED")
 		and event_status_2.text.contains("SEALED")
 	)
+	var shop_state_plates := [
+		$FeatureLayout/CardScroll/Cards/Card1/Row/ShopStatePlate,
+		$FeatureLayout/CardScroll/Cards/Card2/Row/ShopStatePlate,
+		$FeatureLayout/CardScroll/Cards/Card3/Row/ShopStatePlate,
+	]
+	var shop_status_labels := [
+		$FeatureLayout/CardScroll/Cards/Card1/Row/Copy/Status,
+		$FeatureLayout/CardScroll/Cards/Card2/Row/Copy/Status,
+		$FeatureLayout/CardScroll/Cards/Card3/Row/Copy/Status,
+	]
 	var shop_catalog_focus := _feature_key != "shop" or (
 		not hero_panel.visible
 		and card_scroll.visible
-		and card_stack.size_flags_vertical == Control.SIZE_EXPAND_FILL
+		and card_stack.size_flags_vertical != Control.SIZE_EXPAND_FILL
 		and shop_notice.visible
+		and not detail.visible
 		and not shop_currency.visible
 		and not shop_truth.visible
 		and not shop_disabled_action.visible
-		and card_nodes.all(func(card): return (card as PanelContainer).visible and (card as PanelContainer).size_flags_vertical == Control.SIZE_EXPAND_FILL)
-		and (card_nodes[0] as PanelContainer).size_flags_stretch_ratio > (card_nodes[1] as PanelContainer).size_flags_stretch_ratio
+		and card_nodes.all(func(card): return (card as PanelContainer).visible and (card as PanelContainer).size_flags_vertical != Control.SIZE_EXPAND_FILL)
+		and (card_nodes[0] as PanelContainer).custom_minimum_size.y >= 204.0
+		and (card_nodes[0] as PanelContainer).custom_minimum_size.y <= 220.0
+		and [card_nodes[1], card_nodes[2]].all(func(card): return (card as PanelContainer).custom_minimum_size.y >= 146.0 and (card as PanelContainer).custom_minimum_size.y <= 160.0)
+		and (card_art_nodes[0] as TextureRect).custom_minimum_size.x >= 170.0
+		and (card_art_nodes[0] as TextureRect).custom_minimum_size.x <= 186.0
+		and [card_art_nodes[1], card_art_nodes[2]].all(func(art): return (art as TextureRect).custom_minimum_size.x >= 102.0 and (art as TextureRect).custom_minimum_size.x <= 114.0)
+		and shop_state_plates.all(func(plate): return (plate as PanelContainer).visible and (plate as PanelContainer).custom_minimum_size.y <= 58.0 and (plate as PanelContainer).get_theme_stylebox("panel") is StyleBoxFlat)
+		and shop_status_labels.all(func(label): return not (label as Label).visible)
 	)
 	var profile_identity_focus := _feature_key != "profile" or (
 		profile_surface.visible
@@ -569,6 +597,8 @@ func screen_contract() -> Dictionary:
 		"north_star_hero_scale": hero_dominant,
 		"asset_backed_hero_chrome": (event_card_1.get_theme_stylebox("panel") is StyleBoxTexture and event_card_2.get_theme_stylebox("panel") is StyleBoxTexture) if _feature_key == "events" else (card_nodes.all(func(card): return (card as PanelContainer).get_theme_stylebox("panel") is StyleBoxTexture) if _feature_key == "shop" else (true if _feature_key == "profile" else (hero_panel.get_theme_stylebox("panel") is StyleBoxTexture and String(hero_panel.get_meta("production_chrome_kind", "")) == "secondary_meta_hero"))),
 		"shop_catalog_focus": shop_catalog_focus,
+		"shop_compact_catalog_density": shop_catalog_focus,
+		"shop_clean_sealed_badges": _feature_key != "shop" or shop_state_plates.all(func(plate): return (plate as PanelContainer).get_theme_stylebox("panel") is StyleBoxFlat and (plate as PanelContainer).custom_minimum_size.y <= 58.0),
 		"profile_identity_focus": profile_identity_focus,
 		"profile_board_utility_rows": profile_utility_rows,
 		"profile_compact_menu_flow": _feature_key != "profile" or (
