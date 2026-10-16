@@ -221,13 +221,13 @@ autowrap_mode = 2
 [node name="EventsFeature" type="VBoxContainer" parent="FeatureLayout"]
 visible = false
 layout_mode = 2
-size_flags_vertical = 3
+size_flags_vertical = 0
 theme_override_constants/separation = 12
 
 [node name="EventCard1" type="PanelContainer" parent="FeatureLayout/EventsFeature"]
-custom_minimum_size = Vector2(0, 250)
+custom_minimum_size = Vector2(0, 340)
 layout_mode = 2
-size_flags_vertical = 3
+size_flags_vertical = 0
 theme_override_styles/panel = SubResource("Card")
 
 [node name="Content" type="VBoxContainer" parent="FeatureLayout/EventsFeature/EventCard1"]
@@ -235,15 +235,15 @@ layout_mode = 2
 theme_override_constants/separation = 4
 
 [node name="Art" type="TextureRect" parent="FeatureLayout/EventsFeature/EventCard1/Content"]
-custom_minimum_size = Vector2(0, 180)
+custom_minimum_size = Vector2(0, 244)
 layout_mode = 2
 size_flags_horizontal = 3
-size_flags_vertical = 3
+size_flags_vertical = 0
 expand_mode = 1
 stretch_mode = 6
 
 [node name="Copy" type="VBoxContainer" parent="FeatureLayout/EventsFeature/EventCard1/Content"]
-custom_minimum_size = Vector2(0, 88)
+custom_minimum_size = Vector2(0, 80)
 layout_mode = 2
 theme_override_constants/separation = 2
 alignment = 1
@@ -261,7 +261,7 @@ layout_mode = 2
 theme_override_colors/font_color = Color(1, 0.941, 0.847, 1)
 theme_override_colors/font_outline_color = Color(0.02, 0.014, 0.028, 0.96)
 theme_override_constants/outline_size = 3
-theme_override_font_sizes/font_size = 30
+theme_override_font_sizes/font_size = 28
 text = "MOONLIGHT MARKET"
 horizontal_alignment = 1
 
@@ -275,9 +275,9 @@ text = "FUTURE EVENT · SEALED"
 horizontal_alignment = 1
 
 [node name="EventCard2" type="PanelContainer" parent="FeatureLayout/EventsFeature"]
-custom_minimum_size = Vector2(0, 250)
+custom_minimum_size = Vector2(0, 340)
 layout_mode = 2
-size_flags_vertical = 3
+size_flags_vertical = 0
 theme_override_styles/panel = SubResource("Card")
 
 [node name="Content" type="VBoxContainer" parent="FeatureLayout/EventsFeature/EventCard2"]
@@ -285,15 +285,15 @@ layout_mode = 2
 theme_override_constants/separation = 4
 
 [node name="Art" type="TextureRect" parent="FeatureLayout/EventsFeature/EventCard2/Content"]
-custom_minimum_size = Vector2(0, 180)
+custom_minimum_size = Vector2(0, 244)
 layout_mode = 2
 size_flags_horizontal = 3
-size_flags_vertical = 3
+size_flags_vertical = 0
 expand_mode = 1
 stretch_mode = 6
 
 [node name="Copy" type="VBoxContainer" parent="FeatureLayout/EventsFeature/EventCard2/Content"]
-custom_minimum_size = Vector2(0, 88)
+custom_minimum_size = Vector2(0, 80)
 layout_mode = 2
 theme_override_constants/separation = 2
 alignment = 1
@@ -311,7 +311,7 @@ layout_mode = 2
 theme_override_colors/font_color = Color(1, 0.941, 0.847, 1)
 theme_override_colors/font_outline_color = Color(0.02, 0.014, 0.028, 0.96)
 theme_override_constants/outline_size = 3
-theme_override_font_sizes/font_size = 30
+theme_override_font_sizes/font_size = 28
 text = "THE LOST RELICS"
 horizontal_alignment = 1
 
@@ -668,7 +668,7 @@ theme_override_styles/pressed = SubResource("Primary")
 text = "PRIMARY"
 
 [node name="Secondary" type="Button" parent="FeatureLayout/Actions"]
-custom_minimum_size = Vector2(0, 88)
+custom_minimum_size = Vector2(0, 80)
 layout_mode = 2
 size_flags_horizontal = 3
 theme_override_colors/font_color = Color(0.93, 0.86, 0.91, 1)
@@ -1091,7 +1091,7 @@ autowrap_mode = 2
 
 [node name="BackToHouse" type="Button" parent="FeatureLayout"]
 visible = false
-custom_minimum_size = Vector2(0, 88)
+custom_minimum_size = Vector2(0, 80)
 layout_mode = 2
 theme_override_colors/font_color = Color(0.96, 0.9, 0.84, 1)
 theme_override_font_sizes/font_size = 22

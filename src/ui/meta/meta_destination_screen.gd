@@ -246,9 +246,10 @@ func configure(feature_key: String, state: Dictionary) -> bool:
 	daily_title.visible = _feature_key != "events"
 	daily_truth.visible = _feature_key != "events"
 	if _feature_key == "events":
-		daily_card.custom_minimum_size.y = 72.0
-		daily_action.custom_minimum_size.y = 56.0
-		weekly_action.custom_minimum_size.y = 56.0
+		daily_card.custom_minimum_size.y = 86.0
+		daily_card.size_flags_vertical = Control.SIZE_FILL
+		daily_action.custom_minimum_size.y = 66.0
+		weekly_action.custom_minimum_size.y = 72.0
 	else:
 		daily_card.custom_minimum_size.y = 150.0
 		daily_action.custom_minimum_size.y = 72.0
@@ -481,29 +482,37 @@ func screen_contract() -> Dictionary:
 	var events_card_focus := _feature_key != "events" or (
 		events_feature != null
 		and events_feature.visible
-		and events_feature.size_flags_vertical == Control.SIZE_EXPAND_FILL
+		and events_feature.size_flags_vertical != Control.SIZE_EXPAND_FILL
 		and not hero_panel.visible
 		and not card_scroll.visible
 		and event_card_1.visible
 		and event_card_2.visible
-		and event_card_1.size_flags_vertical == Control.SIZE_EXPAND_FILL
-		and event_card_2.size_flags_vertical == Control.SIZE_EXPAND_FILL
-		and event_card_1.custom_minimum_size.y >= 240.0
-		and event_card_2.custom_minimum_size.y >= 240.0
-		and event_art_1.size_flags_vertical == Control.SIZE_EXPAND_FILL
-		and event_art_2.size_flags_vertical == Control.SIZE_EXPAND_FILL
-		and event_art_1.custom_minimum_size.y >= 175.0
-		and event_art_2.custom_minimum_size.y >= 175.0
+		and event_card_1.size_flags_vertical != Control.SIZE_EXPAND_FILL
+		and event_card_2.size_flags_vertical != Control.SIZE_EXPAND_FILL
+		and event_card_1.custom_minimum_size.y >= 330.0
+		and event_card_1.custom_minimum_size.y <= 350.0
+		and event_card_2.custom_minimum_size.y >= 330.0
+		and event_card_2.custom_minimum_size.y <= 350.0
+		and event_art_1.size_flags_vertical != Control.SIZE_EXPAND_FILL
+		and event_art_2.size_flags_vertical != Control.SIZE_EXPAND_FILL
+		and event_art_1.custom_minimum_size.y >= 236.0
+		and event_art_1.custom_minimum_size.y <= 252.0
+		and event_art_2.custom_minimum_size.y >= 236.0
+		and event_art_2.custom_minimum_size.y <= 252.0
 		and event_art_1.texture != null
 		and event_art_2.texture != null
 	)
 	var events_actions_subordinate := _feature_key != "events" or (
 		daily_card.visible
-		and daily_card.custom_minimum_size.y <= 76.0
+		and daily_card.custom_minimum_size.y >= 82.0
+		and daily_card.custom_minimum_size.y <= 90.0
+		and daily_card.size_flags_vertical != Control.SIZE_EXPAND_FILL
 		and not daily_title.visible
-		and daily_action.custom_minimum_size.y <= 58.0
+		and daily_action.custom_minimum_size.y >= 62.0
+		and daily_action.custom_minimum_size.y <= 70.0
 		and weekly_action.visible
-		and weekly_action.custom_minimum_size.y <= 58.0
+		and weekly_action.custom_minimum_size.y >= 68.0
+		and weekly_action.custom_minimum_size.y <= 76.0
 	)
 	var events_truthful_status := _feature_key != "events" or (
 		event_status_1.visible
@@ -618,6 +627,7 @@ func screen_contract() -> Dictionary:
 			and profile_save_row.get_theme_stylebox("panel") is StyleBoxFlat
 		),
 		"events_board_card_composition": events_card_focus,
+		"events_compact_card_density": events_card_focus and events_actions_subordinate,
 		"events_actions_subordinate": events_actions_subordinate,
 		"events_truthful_status": events_truthful_status,
 		"hero_asset_path": _hero_asset_path,
