@@ -58,16 +58,16 @@ color = Color(0.015, 0.01, 0.025, 0.76)
 layout_mode = 1
 anchors_preset = 0
 anchor_left = 0.10
-anchor_top = 0.16
+anchor_top = 0.20
 anchor_right = 0.90
-anchor_bottom = 0.76
+anchor_bottom = 0.72
 grow_horizontal = 2
 grow_vertical = 2
 theme_override_styles/panel = SubResource("DetailCard")
 
 [node name="Content" type="VBoxContainer" parent="CurioDetailCard"]
 layout_mode = 2
-theme_override_constants/separation = 10
+theme_override_constants/separation = 6
 alignment = 1
 
 [node name="Kicker" type="Label" parent="CurioDetailCard/Content"]
@@ -80,7 +80,7 @@ text = "RELIQUARY · CURIO DETAIL"
 horizontal_alignment = 1
 
 [node name="HeroArt" type="TextureRect" parent="CurioDetailCard/Content"]
-custom_minimum_size = Vector2(0, 420)
+custom_minimum_size = Vector2(0, 360)
 layout_mode = 2
 expand_mode = 1
 stretch_mode = 5
@@ -90,7 +90,7 @@ layout_mode = 2
 theme_override_colors/font_color = Color(0.96, 0.9, 0.84, 1)
 theme_override_colors/font_outline_color = Color(0.02, 0.014, 0.028, 0.96)
 theme_override_constants/outline_size = 4
-theme_override_font_sizes/font_size = 36
+theme_override_font_sizes/font_size = 34
 text = "CURIO"
 horizontal_alignment = 1
 
@@ -118,7 +118,7 @@ horizontal_alignment = 1
 autowrap_mode = 2
 
 [node name="ViewInHouse" type="Button" parent="CurioDetailCard/Content"]
-custom_minimum_size = Vector2(0, 76)
+custom_minimum_size = Vector2(0, 68)
 layout_mode = 2
 theme_override_colors/font_color = Color(1, 0.941, 0.847, 1)
 theme_override_font_sizes/font_size = 20
@@ -128,7 +128,7 @@ theme_override_styles/pressed = SubResource("Action")
 text = "VIEW IN HOUSE"
 
 [node name="Close" type="Button" parent="CurioDetailCard/Content"]
-custom_minimum_size = Vector2(0, 60)
+custom_minimum_size = Vector2(0, 54)
 layout_mode = 2
 theme_override_colors/font_color = Color(1, 0.941, 0.847, 1)
 theme_override_font_sizes/font_size = 18
