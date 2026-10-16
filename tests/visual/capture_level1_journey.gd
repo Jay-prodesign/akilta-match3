@@ -293,7 +293,7 @@ func _capture() -> void:
 	if inspect == null:
 		return _fail(app, "S08 awakened Curio must expose O04 detail")
 	inspect.emit_signal("pressed")
-	await _frames(3)
+	await _frames(30)
 	var detail_state: Label = collection.get_node_or_null("CurioDetailOverlay/CurioDetailCard/Content/State") as Label
 	var detail_origin: Label = collection.get_node_or_null("CurioDetailOverlay/CurioDetailCard/Content/Origin") as Label
 	if detail_state == null or not detail_state.text.contains("AWAKENED") or detail_origin == null or not detail_origin.text.contains("LEVEL 1"):

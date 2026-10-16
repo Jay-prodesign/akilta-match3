@@ -27,7 +27,7 @@ func _run() -> void:
 	await _expect_panel(GAMEPLAY, "PauseOverlay/Card")
 	await _expect_panel(GAMEPLAY, "ResultOverlay/Card")
 	await _expect_scene_authored_restoration()
-	await _expect_panel(CURIO_DETAIL, "CurioDetailCard")
+	await _expect_scene_authored_curio_detail()
 	await _expect_locked_panel()
 	await _expect_scene_authored_house_action(HOUSE, "Layout/PlayButton")
 	await _expect_action(CHAPTER_MAP, "Layout/Back", "utility")
@@ -48,6 +48,16 @@ func _expect_panel(scene: PackedScene, path: String) -> void:
 	_expect(panel != null, "production chrome panel missing: %s" % path)
 	_expect(panel != null and panel.get_theme_stylebox("panel") is StyleBoxTexture, "panel must use asset-backed production chrome: %s" % path)
 	_expect(panel != null and String(panel.get_meta("production_chrome_asset", "")).ends_with(".svg"), "panel must expose authored chrome provenance: %s" % path)
+	instance.queue_free()
+	await process_frame
+
+func _expect_scene_authored_curio_detail() -> void:
+	var instance := CURIO_DETAIL.instantiate()
+	root.add_child(instance)
+	await process_frame
+	var card := instance.get_node_or_null("CurioDetailCard") as PanelContainer
+	_expect(card != null and card.get_theme_stylebox("panel") is StyleBoxFlat, "Curio Detail must preserve its seam-free scene-authored panel material")
+	_expect(card != null and String(card.get_meta("detail_material", "")) == "scene_authored_flat", "Curio Detail scene-authored material provenance mismatch")
 	instance.queue_free()
 	await process_frame
 

@@ -194,8 +194,8 @@ func _run() -> void:
 		_expect(detail_close != null, "Curio Detail must be dismissible")
 		if detail_close != null:
 			detail_close.emit_signal("pressed")
-			await process_frame
-		_expect(collection.get_node_or_null("CurioDetailOverlay") == null, "closing Curio Detail must return to the Reliquary")
+			await create_timer(0.22).timeout
+		_expect(collection.get_node_or_null("CurioDetailOverlay") == null, "closing Curio Detail must return to the Reliquary after its authored exit choreography")
 	var collection_nav = collection.get_node_or_null("ProductNavigation")
 	_expect(collection_nav != null, "Curio Collection must retain the shared product navigation")
 	if collection_nav != null:

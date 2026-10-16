@@ -140,12 +140,19 @@ func show_collection() -> bool:
 		return false
 	var screen: Node = CollectionScene.instantiate()
 	_show_screen(screen)
+	if screen.has_method("apply_presentation_settings"):
+		screen.apply_presentation_settings(user_settings.get_presentation_state())
 	screen.set_progress(progress)
 	_install_product_navigation(screen, "curios")
 	screen.back_requested.connect(_on_collection_back)
 	if screen.has_signal("house_inspect_requested"):
 		screen.house_inspect_requested.connect(_on_collection_house_inspect_requested)
+	if screen.has_signal("interaction_feedback_requested"):
+		screen.interaction_feedback_requested.connect(_on_collection_interaction_feedback_requested)
 	return true
+
+func _on_collection_interaction_feedback_requested(_kind: String = "ui") -> void:
+	_emit_shell_feedback()
 
 func show_map() -> bool:
 	if not navigation.go(NavigationScript.Route.MAP):
