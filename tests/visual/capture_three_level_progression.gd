@@ -196,7 +196,7 @@ func _capture() -> void:
 		return _fail(app, "Event Center must expose the S09 Weekly Rituals destination")
 	weekly_button.emit_signal("pressed")
 	await _frames(3)
-	await create_timer(0.44).timeout
+	await create_timer(0.52).timeout
 	if String(app.current_route_name()) != "missions" or app.current_screen() == null or app.current_screen().name != "WeeklyMissionsScreen":
 		return _fail(app, "Weekly Missions must render as its own S09 route-backed screen")
 	var mission_timer: Label = app.current_screen().get_node_or_null("MissionLayout/MissionTimer") as Label

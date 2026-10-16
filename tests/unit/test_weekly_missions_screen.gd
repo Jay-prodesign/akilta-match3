@@ -21,7 +21,7 @@ func _run() -> void:
 	_expect(bool(interaction.get("reduced_motion_supported", false)), "Weekly Rituals interaction craft must support Reduced Motion")
 	_expect(bool(interaction.get("feedback_signal", false)), "Weekly Rituals interactions must expose semantic feedback")
 	_expect(bool(interaction.get("static_rows_noninteractive", false)), "Weekly Rituals offline status rows must remain static truth rather than fake actions")
-	await create_timer(0.44).timeout
+	await create_timer(0.52).timeout
 	interaction = screen.weekly_interaction_contract()
 	_expect(String(interaction.get("reveal_phase", "")) == "idle", "Weekly Rituals staged reveal must settle cleanly")
 	_expect(String(contract.get("route", "")) == "missions", "Weekly Rituals must own the missions route contract")
