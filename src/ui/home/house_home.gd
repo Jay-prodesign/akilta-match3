@@ -419,6 +419,10 @@ func show_restoration_ceremony(curio_id: String, stage: int) -> void:
 			current_curios.append(String(item))
 	var overlay := RestorationOverlayScene.instantiate()
 	add_child(overlay)
+	if overlay.has_method("apply_presentation_settings"):
+		overlay.apply_presentation_settings({"reduced_motion": _reduced_motion})
+	if overlay.has_signal("interaction_feedback_requested"):
+		overlay.interaction_feedback_requested.connect(func(kind: String): interaction_feedback_requested.emit(kind))
 	if not bool(overlay.configure(curio_id, _curio_name(curio_id), _restoration_copy(stage), motif_texture, curio_texture, stage, current_curios)):
 		overlay.queue_free()
 		return

@@ -573,6 +573,7 @@ func _play_level(app: Node, level_number: int) -> bool:
 	gameplay.result_action.emit_signal("pressed")
 	await _frames(4)
 	if String(app.current_route_name()) == "restoration":
+		await create_timer(0.42).timeout
 		var restoration = app.current_screen()
 		var restoration_card: PanelContainer = restoration.get_node_or_null("RestorationOverlay/CeremonyCard") as PanelContainer if restoration != null else null
 		var restoration_continue: Button = restoration.get_node_or_null("RestorationOverlay/CeremonyCard/CeremonyContent/CeremonyRow/Copy/Continue") as Button if restoration != null else null
@@ -591,7 +592,7 @@ func _play_level(app: Node, level_number: int) -> bool:
 		if not await _save(app, "progression-level%d-restoration.png" % level_number):
 			return false
 		restoration_continue.emit_signal("pressed")
-		await _frames(4)
+		await create_timer(0.20).timeout
 	if String(app.current_route_name()) != "house":
 		_fail(app, "Level %d did not complete S07 Restoration -> S01 House" % level_number)
 		return false

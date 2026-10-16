@@ -70,6 +70,11 @@ func _run() -> void:
 	_expect(bool(reduced_overlay_contract.get("house_first_header", false)), "Restoration header must prioritize the House while retaining exact Curio identity below")
 	_expect(bool(reduced_overlay_contract.get("curio_motif_subordinate", false)), "Restoration Curio identity must stay in the summary instead of replacing the House transformation")
 	_expect(bool(reduced_overlay_contract.get("scene_authored_summary_material", false)), "Restoration summary and Continue action must avoid stretched shared-chrome seams")
+	_expect(bool(reduced_overlay_contract.get("reveal_choreography", false)), "Restoration overlay must own an authored staged reveal lifecycle")
+	_expect(String(reduced_overlay_contract.get("reveal_phase", "")) == "idle", "Reduced Motion restoration must settle immediately without decorative reveal movement")
+	_expect(bool(reduced_overlay_contract.get("staged_house_payoff", false)), "Restoration reveal must stage the truthful before/after House payoff")
+	_expect(bool(reduced_overlay_contract.get("continue_tactile", false)), "Restoration Continue must retain tactile interaction semantics under Reduced Motion")
+	_expect(bool(reduced_overlay_contract.get("reduced_motion_supported", false)), "Restoration overlay choreography must explicitly support Reduced Motion")
 	reduced.queue_free()
 	await _frames(2)
 
@@ -108,17 +113,35 @@ func _run() -> void:
 	_expect(animated_card != null and animated_card.size.y <= animated.size.y * 0.13, "Animated ceremony summary must stay compact over the House world")
 	_expect(animated_card != null and animated_card.get_node_or_null("CeremonyContent/TopPad") != null, "Animated restoration must preserve the production-chrome top inset")
 	_expect(animated_hero != null and animated_hero.texture != null, "Animated restoration must retain the recovered Curio production motif")
-	var animated_overlay_contract: Dictionary = animated.get_node("RestorationOverlay").restoration_contract()
+	var animated_overlay = animated.get_node("RestorationOverlay")
+	var animated_overlay_contract: Dictionary = animated_overlay.restoration_contract()
+	_expect(bool(animated_overlay_contract.get("reveal_choreography", false)), "Animated restoration must own staged overlay reveal choreography")
+	_expect(String(animated_overlay_contract.get("reveal_phase", "")) == "opening", "Animated restoration must still be visibly entering during the early transition window")
 	_expect(bool(animated_overlay_contract.get("house_first_composition", false)), "Animated restoration must preserve the House-first before/after composition")
 	_expect(bool(animated_overlay_contract.get("before_after_house_previews", false)), "Animated restoration must compare the truthful adjacent House stages")
 	_expect(bool(animated_overlay_contract.get("before_after_labels", false)), "Animated restoration must carry state in the preview labels without duplicate chrome")
 	_expect(bool(animated_overlay_contract.get("house_first_header", false)), "Animated restoration must keep the House as header identity")
 	_expect(bool(animated_overlay_contract.get("scene_authored_summary_material", false)), "Animated Restoration summary must retain seam-free authored chrome")
+	await create_timer(0.42).timeout
+	if animated_overlay != null and is_instance_valid(animated_overlay):
+		var settled_contract: Dictionary = animated_overlay.restoration_contract()
+		_expect(String(settled_contract.get("reveal_phase", "")) == "idle", "Animated restoration reveal choreography must settle before player input")
 	var animated_continue := animated.get_node_or_null("RestorationOverlay/CeremonyCard/CeremonyContent/CeremonyRow/Copy/Continue") as Button
 	_expect(animated_continue != null, "Animated restoration continue CTA missing")
 	if animated_continue != null:
+		var feedback := {"count": 0}
+		animated.interaction_feedback_requested.connect(func(_kind: String): feedback["count"] = int(feedback["count"]) + 1)
+		animated_continue.emit_signal("button_down")
+		await create_timer(0.08).timeout
+		_expect(animated_continue.scale.x < 0.98, "Restoration Continue must visibly compress on press")
+		_expect(int(feedback["count"]) == 1, "Restoration Continue press must emit one semantic UI feedback request")
+		animated_continue.emit_signal("button_up")
+		await create_timer(0.18).timeout
 		animated_continue.emit_signal("pressed")
-		await _frames(3)
+		await create_timer(0.04).timeout
+		_expect(animated.get_node_or_null("RestorationOverlay") != null and String(animated_overlay.get_meta("restoration_reveal_phase", "")) == "closing", "Restoration Continue must play an exit phase instead of disappearing instantly")
+		await create_timer(0.18).timeout
+		_expect(animated.get_node_or_null("RestorationOverlay") == null, "Restoration overlay must close after its authored exit choreography")
 		_expect(animated_room.offset_bottom <= -90.0, "House world must restore the bottom navigation reserve after restoration closes")
 		var returned_living: Dictionary = animated_room.living_house_contract()
 		_expect(not bool(returned_living.get("restoration_full_bleed", true)), "House world must leave full-bleed mode after restoration closes")
