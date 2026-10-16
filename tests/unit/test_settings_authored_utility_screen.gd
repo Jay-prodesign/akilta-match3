@@ -24,9 +24,9 @@ func _run() -> void:
 	_expect(bool(contract.get("north_star_toggle_height", false)), "Settings controls must read as deliberate mobile rows rather than tiny switches")
 	_expect(bool(contract.get("intro_subordinate", false)), "Settings explanatory prose must not compete with controls")
 	_expect(not bool(contract.get("runtime_style_factory", true)), "Settings must not create StyleBox presentation resources at runtime")
-	_expect(bool(contract.get("production_card_chrome", false)), "Settings card must use the verified secondary production chrome in normal mode")
-	_expect(bool(contract.get("production_toggle_chrome", false)), "Settings toggle rows must use the verified quiet interactive production chrome in normal mode")
-	_expect(bool(contract.get("production_return_chrome", false)), "Settings return CTA must use the verified primary action production chrome in normal mode")
+	_expect(bool(contract.get("scene_authored_card_chrome", false)), "Settings card must preserve its clean scene-authored dark/gold material")
+	_expect(bool(contract.get("scene_authored_toggle_chrome", false)), "Settings rows must preserve screen-specific normal/hover/pressed materials")
+	_expect(bool(contract.get("scene_authored_return_chrome", false)), "Settings return CTA must stay subordinate on its authored material")
 	_expect(bool(contract.get("settings_ritual_list", false)), "Settings controls must read as a vertical ritual list instead of a web-style grid")
 	_expect(bool(contract.get("crafted_ritual_rows", false)), "Settings ritual rows must separate setting identity, supporting copy and state medallions instead of flat developer toggle text")
 	_expect(bool(contract.get("house_sigil_hero_scale", false)), "Settings House sigil must retain a hero-scale visual anchor")
@@ -39,24 +39,24 @@ func _run() -> void:
 	var world_art := screen.get_node_or_null("WorldArt") as TextureRect
 	var close := screen.get_node_or_null("Card/Content/Close") as Button
 	_expect(card != null, "Settings authored Card missing")
-	_expect(sigil != null and sigil.texture != null and sigil.custom_minimum_size.y >= 120.0, "Settings authored raster sigil must anchor the control surface")
+	_expect(sigil != null and sigil.texture != null and sigil.custom_minimum_size.y >= 80.0 and sigil.custom_minimum_size.y <= 92.0, "Settings authored raster sigil must anchor the compact utility surface")
 	_expect(world_art != null and world_art.texture != null, "Settings authored world backdrop slot missing")
-	_expect(close != null and close.custom_minimum_size.y >= 88.0, "Settings close CTA must retain mobile touch target")
-	_expect(card.get_theme_stylebox("panel") is StyleBoxTexture, "Default Settings card must use asset-backed production chrome")
+	_expect(close != null and close.custom_minimum_size.y >= 68.0, "Settings return CTA must retain a deliberate mobile touch target")
+	_expect(card.get_theme_stylebox("panel") is StyleBoxFlat, "Default Settings card must preserve screen-specific authored material")
 
 	screen.apply_presentation_settings({"high_contrast": true})
 	await process_frame
 	_expect(card.get_theme_stylebox("panel") == screen.card_high_style, "High contrast Settings card must switch to authored high-contrast resource")
 	for path in ["AudioRow/Master", "AudioRow/Music", "AudioRow/SFX", "ExperienceRow/Haptics", "ExperienceRow/Reduced", "ExperienceRow/Contrast"]:
 		var toggle := screen.get_node_or_null("Card/Content/%s" % path) as Button
-		_expect(toggle != null and toggle.custom_minimum_size.y >= 88.0, "Settings toggle touch target missing: %s" % path)
+		_expect(toggle != null and toggle.custom_minimum_size.y >= 76.0, "Settings toggle touch target missing: %s" % path)
 		if toggle != null:
 			_expect(toggle.get_theme_stylebox("normal") == screen.toggle_high_style, "High contrast toggle must use authored style: %s" % path)
 
 	screen.apply_presentation_settings({"high_contrast": false})
 	await process_frame
-	_expect(card.get_theme_stylebox("panel") is StyleBoxTexture, "Settings must return to asset-backed production chrome")
-	_expect(close.get_theme_stylebox("normal") is StyleBoxTexture, "Settings return CTA must restore asset-backed primary action chrome")
+	_expect(card.get_theme_stylebox("panel") is StyleBoxFlat, "Settings must return to its scene-authored normal material")
+	_expect(close.get_theme_stylebox("normal") is StyleBoxFlat, "Settings return CTA must restore its scene-authored material")
 
 	screen.queue_free()
 	await process_frame
