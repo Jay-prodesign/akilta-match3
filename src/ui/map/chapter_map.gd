@@ -3,6 +3,7 @@ extends Control
 
 signal back_requested
 signal level_requested(level_number: int)
+signal interaction_feedback_requested(kind: String)
 
 const LockedExplanation = preload("res://src/ui/shared/locked_explanation.gd")
 const ProductionChrome = preload("res://src/ui/theme/production_chrome.gd")
@@ -17,11 +18,16 @@ const ProductionChrome = preload("res://src/ui/theme/production_chrome.gd")
 @onready var back_button: Button = $Layout/Back
 
 var progress
+var _reduced_motion := false
+var _back_tactile_tween: Tween
 
 func _ready() -> void:
 	ProductionChrome.apply_action_button(back_button, "utility", "chapter_back")
+	_bind_back_tactile()
 	back_button.pressed.connect(func(): back_requested.emit())
 	route_view.level_requested.connect(func(level_number: int): level_requested.emit(level_number))
+	if route_view.has_signal("interaction_feedback_requested"):
+		route_view.interaction_feedback_requested.connect(func(kind: String): interaction_feedback_requested.emit(kind))
 	if route_view.has_signal("sealed_level_requested"):
 		route_view.sealed_level_requested.connect(_on_sealed_level_requested)
 	route_view.visible_route_levels = visible_route_levels
@@ -33,6 +39,76 @@ func set_progress(value) -> void:
 	progress = value
 	_refresh()
 	call_deferred("_focus_frontier")
+
+func apply_presentation_settings(state: Dictionary) -> void:
+	_reduced_motion = bool(state.get("reduced_motion", false))
+	if route_view != null and route_view.has_method("apply_presentation_settings"):
+		route_view.apply_presentation_settings(state)
+	if _reduced_motion and back_button != null:
+		_stop_back_tactile()
+		back_button.scale = Vector2.ONE
+		back_button.modulate = Color.WHITE
+		back_button.set_meta("map_tactile_phase", "idle")
+
+func map_interaction_contract() -> Dictionary:
+	var route_contract: Dictionary = route_view.route_interaction_contract() if route_view != null and route_view.has_method("route_interaction_contract") else {}
+	return {
+		"back_tactile": back_button != null and bool(back_button.get_meta("map_tactile_bound", false)) and float(back_button.get_meta("map_tactile_press_scale", 1.0)) <= 0.95,
+		"route_nodes_tactile": bool(route_contract.get("opening_nodes_tactile", false)),
+		"current_press_depth": bool(route_contract.get("current_press_depth", false)),
+		"sealed_press_subtle": bool(route_contract.get("sealed_press_subtle", false)),
+		"future_seal_tactile": bool(route_contract.get("future_seal_tactile", false)),
+		"reduced_motion_supported": bool(route_contract.get("reduced_motion_supported", false)),
+		"feedback_signal": has_signal("interaction_feedback_requested") and bool(route_contract.get("feedback_signal", false)),
+	}
+
+func _bind_back_tactile() -> void:
+	if back_button == null:
+		return
+	back_button.set_meta("map_tactile_bound", true)
+	back_button.set_meta("map_tactile_press_scale", 0.95)
+	back_button.button_down.connect(_press_back_tactile)
+	back_button.button_up.connect(_release_back_tactile)
+	back_button.mouse_exited.connect(_release_back_tactile)
+	back_button.focus_exited.connect(_release_back_tactile)
+
+func _press_back_tactile() -> void:
+	if back_button == null or back_button.disabled:
+		return
+	_stop_back_tactile()
+	back_button.pivot_offset = back_button.size * 0.5
+	back_button.set_meta("map_tactile_phase", "pressed")
+	interaction_feedback_requested.emit("ui")
+	if _reduced_motion:
+		back_button.scale = Vector2.ONE
+		back_button.modulate = Color.WHITE
+		return
+	_back_tactile_tween = create_tween()
+	_back_tactile_tween.set_parallel(true)
+	_back_tactile_tween.tween_property(back_button, "scale", Vector2(0.95, 0.95), 0.055).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
+	_back_tactile_tween.tween_property(back_button, "modulate", Color(1.0, 0.96, 0.90, 1.0), 0.055).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
+
+func _release_back_tactile() -> void:
+	if back_button == null:
+		return
+	_stop_back_tactile()
+	back_button.pivot_offset = back_button.size * 0.5
+	back_button.set_meta("map_tactile_phase", "release")
+	if _reduced_motion:
+		back_button.scale = Vector2.ONE
+		back_button.modulate = Color.WHITE
+		back_button.set_meta("map_tactile_phase", "idle")
+		return
+	_back_tactile_tween = create_tween()
+	_back_tactile_tween.set_parallel(true)
+	_back_tactile_tween.tween_property(back_button, "scale", Vector2.ONE, 0.15).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
+	_back_tactile_tween.tween_property(back_button, "modulate", Color.WHITE, 0.11).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
+	_back_tactile_tween.finished.connect(func(): back_button.set_meta("map_tactile_phase", "idle"))
+
+func _stop_back_tactile() -> void:
+	if _back_tactile_tween != null and _back_tactile_tween.is_valid():
+		_back_tactile_tween.kill()
+	_back_tactile_tween = null
 
 func get_level_button(level_number: int) -> Button:
 	if route_view == null or not route_view.has_method("get_level_button"):

@@ -3,6 +3,7 @@ extends Control
 
 signal level_requested(level_number: int)
 signal sealed_level_requested(level_number: int, kind: String)
+signal interaction_feedback_requested(kind: String)
 
 const GOLD := Color("#D8B56A")
 const LILAC := Color("#BFA5D8")
@@ -37,6 +38,8 @@ var _frontier_focus: TextureRect
 var _frontier_label: Label
 var _future_seal_button: Button
 var _future_seal_art: TextureRect
+var _reduced_motion := false
+var _tactile_buttons: Array[Button] = []
 
 func _ready() -> void:
 	_bind_authored_route()
@@ -49,6 +52,93 @@ func set_progress(value) -> void:
 func set_canonical_level_cap(value: int) -> void:
 	canonical_level_cap = max(1, value)
 	_refresh()
+
+func apply_presentation_settings(state: Dictionary) -> void:
+	_reduced_motion = bool(state.get("reduced_motion", false))
+	if _reduced_motion:
+		for button in _tactile_buttons:
+			_stop_route_tactile(button)
+			button.scale = Vector2.ONE
+			button.modulate = Color.WHITE
+			button.set_meta("route_tactile_phase", "idle")
+
+func route_interaction_contract() -> Dictionary:
+	var opening_nodes_tactile := true
+	var sealed_press_subtle := true
+	for level_number in [1, 2, 3]:
+		var button := get_level_button(level_number)
+		opening_nodes_tactile = opening_nodes_tactile and button != null and bool(button.get_meta("route_tactile_bound", false))
+		if button != null and String(button.get_meta("level_state", "locked")) == "locked":
+			sealed_press_subtle = sealed_press_subtle and float(button.get_meta("route_tactile_press_scale", 1.0)) >= 0.98
+	return {
+		"opening_nodes_tactile": opening_nodes_tactile,
+		"current_press_depth": _frontier_level <= 0 or (get_level_button(_frontier_level) != null and float(get_level_button(_frontier_level).get_meta("route_tactile_press_scale", 1.0)) <= 0.95),
+		"sealed_press_subtle": sealed_press_subtle,
+		"future_seal_tactile": _future_seal_button != null and bool(_future_seal_button.get_meta("route_tactile_bound", false)) and float(_future_seal_button.get_meta("route_tactile_press_scale", 1.0)) >= 0.98,
+		"reduced_motion_supported": true,
+		"feedback_signal": has_signal("interaction_feedback_requested"),
+	}
+
+func _bind_route_tactile(button: Button, role: String, press_scale: float) -> void:
+	if button == null:
+		return
+	button.set_meta("route_tactile_role", role)
+	button.set_meta("route_tactile_press_scale", press_scale)
+	if bool(button.get_meta("route_tactile_bound", false)):
+		return
+	button.set_meta("route_tactile_bound", true)
+	_tactile_buttons.append(button)
+	button.button_down.connect(_press_route_tactile.bind(button))
+	button.button_up.connect(_release_route_tactile.bind(button))
+	button.mouse_exited.connect(_release_route_tactile.bind(button))
+	button.focus_exited.connect(_release_route_tactile.bind(button))
+
+func _press_route_tactile(button: Button) -> void:
+	if button == null or button.disabled:
+		return
+	_stop_route_tactile(button)
+	button.pivot_offset = button.size * 0.5
+	button.set_meta("route_tactile_phase", "pressed")
+	interaction_feedback_requested.emit("ui")
+	if _reduced_motion:
+		button.scale = Vector2.ONE
+		button.modulate = Color.WHITE
+		return
+	var target_scale := clampf(float(button.get_meta("route_tactile_press_scale", 0.98)), 0.92, 0.99)
+	var state := String(button.get_meta("level_state", "locked"))
+	var role := String(button.get_meta("route_tactile_role", ""))
+	var tint := Color(1.0, 0.94, 0.80, 1.0) if state in ["current", "available"] else (Color(0.94, 0.90, 1.0, 1.0) if state == "locked" or role == "future_seal" else Color(1.0, 0.97, 0.90, 1.0))
+	var tween := create_tween()
+	button.set_meta("route_tactile_tween", tween)
+	tween.set_parallel(true)
+	tween.tween_property(button, "scale", Vector2(target_scale, target_scale), 0.055).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
+	tween.tween_property(button, "modulate", tint, 0.055).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
+
+func _release_route_tactile(button: Button) -> void:
+	if button == null:
+		return
+	_stop_route_tactile(button)
+	button.pivot_offset = button.size * 0.5
+	button.set_meta("route_tactile_phase", "release")
+	if _reduced_motion:
+		button.scale = Vector2.ONE
+		button.modulate = Color.WHITE
+		button.set_meta("route_tactile_phase", "idle")
+		return
+	var tween := create_tween()
+	button.set_meta("route_tactile_tween", tween)
+	tween.set_parallel(true)
+	tween.tween_property(button, "scale", Vector2.ONE, 0.16).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
+	tween.tween_property(button, "modulate", Color.WHITE, 0.11).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
+	tween.finished.connect(func(): button.set_meta("route_tactile_phase", "idle"))
+
+func _stop_route_tactile(button: Button) -> void:
+	if button == null or not button.has_meta("route_tactile_tween"):
+		return
+	var previous = button.get_meta("route_tactile_tween")
+	if previous is Tween and (previous as Tween).is_valid():
+		(previous as Tween).kill()
+	button.remove_meta("route_tactile_tween")
 
 func get_level_button(level_number: int) -> Button:
 	return _level_buttons.get(level_number) as Button
@@ -84,6 +174,7 @@ func _bind_authored_route() -> void:
 	if _future_seal_button != null:
 		ProductionChrome.apply_interactive_button(_future_seal_button, false, "chapter_future_seal")
 		_future_seal_button.tooltip_text = "Upper cabinets · future journey · no active unlock"
+		_bind_route_tactile(_future_seal_button, "future_seal", 0.982)
 		_future_seal_button.pressed.connect(_request_future_cabinets)
 
 	for level_number in range(1, visible_route_levels + 1):
@@ -93,6 +184,7 @@ func _bind_authored_route() -> void:
 			push_error("S03 authored route slot missing for level %d." % level_number)
 			continue
 		button.tooltip_text = _tooltip_for(level_number)
+		_bind_route_tactile(button, "route_level", 0.965)
 		button.pressed.connect(_request.bind(level_number))
 		button.visible = level_number <= 3
 		label.visible = level_number <= 3
@@ -170,6 +262,8 @@ func _refresh() -> void:
 		_level_states[level_number] = state
 		button.set_meta("level_state", state)
 		button.set_meta("sealed_kind", "" if open else ("future_content" if level_number > canonical_level_cap else "progression_locked"))
+		button.set_meta("route_tactile_role", "current_level" if state == "current" else ("sealed_level" if state == "locked" else state))
+		button.set_meta("route_tactile_press_scale", 0.94 if state == "current" else (0.982 if state == "locked" else 0.965))
 		button.visible = level_number <= 3
 		label.visible = level_number <= 3
 		button.disabled = false
