@@ -161,6 +161,20 @@ func _capture() -> void:
 		return _fail(app, "Events does not expose the completed opening ritual state")
 	if event_hero_kicker == null or event_hero_kicker.text != "OPENING RITUAL COMPLETE" or event_hero_title == null or not event_hero_title.text.contains("3 / 3 DISPLAYS AWAKENED"):
 		return _fail(app, "completed Events hero does not resolve to the 3/3 ritual state")
+	var events_contract: Dictionary = app.current_screen().screen_contract() if app.current_screen().has_method("screen_contract") else {}
+	if not bool(events_contract.get("events_compact_card_density", false)):
+		return _fail(app, "Events compact North Star card density gate failed")
+	for event_name in ["EventCard1", "EventCard2"]:
+		var event_card := app.current_screen().get_node_or_null("FeatureLayout/EventsFeature/%s" % event_name) as PanelContainer
+		var event_art := app.current_screen().get_node_or_null("FeatureLayout/EventsFeature/%s/Content/Art" % event_name) as TextureRect
+		if event_card == null or event_card.size_flags_vertical == Control.SIZE_EXPAND_FILL or event_card.custom_minimum_size.y < 330.0 or event_card.custom_minimum_size.y > 350.0:
+			return _fail(app, "Events %s card density drifted" % event_name)
+		if event_art == null or event_art.size_flags_vertical == Control.SIZE_EXPAND_FILL or event_art.custom_minimum_size.y < 236.0 or event_art.custom_minimum_size.y > 252.0:
+			return _fail(app, "Events %s artwork stage density drifted" % event_name)
+	var events_daily_card := app.current_screen().get_node_or_null("FeatureLayout/DailyPracticeCard") as PanelContainer
+	var events_weekly_button := app.current_screen().get_node_or_null("FeatureLayout/WeeklyMissionsAction") as Button
+	if events_daily_card == null or events_daily_card.custom_minimum_size.y < 82.0 or events_daily_card.custom_minimum_size.y > 90.0 or events_weekly_button == null or events_weekly_button.custom_minimum_size.y < 68.0 or events_weekly_button.custom_minimum_size.y > 76.0:
+		return _fail(app, "Events real action rows lost their readable compact hierarchy")
 	var daily_action: Button = app.current_screen().get_node_or_null("FeatureLayout/DailyPracticeCard/DailyContent/DailyPracticeAction") as Button
 	var daily_truth: Label = app.current_screen().get_node_or_null("FeatureLayout/DailyPracticeCard/DailyContent/DailyPracticeTruth") as Label
 	if daily_action == null or daily_action.disabled or daily_truth == null or not daily_truth.text.contains("NO BONUS REWARD"):
