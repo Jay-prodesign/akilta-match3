@@ -26,11 +26,24 @@ func _run() -> void:
 	var fresh = ProgressScript.new()
 	screen.set_progress(fresh)
 	await process_frame
+	var map_interaction: Dictionary = screen.map_interaction_contract()
+	_expect(bool(map_interaction.get("back_tactile", false)), "S03 map Back must own tactile press/release craft")
+	_expect(bool(map_interaction.get("route_nodes_tactile", false)), "S03 map must expose tactile route nodes")
+	_expect(bool(map_interaction.get("current_press_depth", false)), "S03 current ritual must own the strongest press depth")
+	_expect(bool(map_interaction.get("sealed_press_subtle", false)), "S03 sealed route nodes must use restrained press depth")
+	_expect(bool(map_interaction.get("future_seal_tactile", false)), "S03 future seal must own tactile inspection feedback")
+	_expect(bool(map_interaction.get("reduced_motion_supported", false)), "S03 map interaction craft must support Reduced Motion")
 	_expect(route.get_frontier_level() == 1, "0/3 frontier must be Level 1")
 	_expect(route.get_level_state(1) == "current", "Level 1 must be current at 0/3")
 	_expect(route.get_level_state(2) == "locked" and route.get_level_state(3) == "locked", "Levels 2–3 must be locked at 0/3")
 	_expect(route.get_level_button(2) != null and not route.get_level_button(2).disabled, "progression-locked Level 2 must remain inspectable")
-	route.get_level_button(2).emit_signal("pressed")
+	var sealed_button := route.get_level_button(2) as Button
+	sealed_button.emit_signal("button_down")
+	await create_timer(0.07).timeout
+	_expect(sealed_button.scale.x > 0.97 and sealed_button.scale.x < 1.0, "progression-locked Level 2 press must stay subtle but visible")
+	sealed_button.emit_signal("button_up")
+	await create_timer(0.17).timeout
+	sealed_button.emit_signal("pressed")
 	await process_frame
 	var progression_sealed: Dictionary = screen.sealed_explanation_contract()
 	_expect(bool(progression_sealed.get("open", false)), "progression-locked cabinet must open sealed explanation")
