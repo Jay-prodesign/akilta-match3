@@ -24,6 +24,7 @@ const ProductNavigation = preload("res://src/ui/shared/product_navigation.gd")
 const TopResourceBar = preload("res://src/ui/shared/top_resource_bar.gd")
 const MobileSafeArea = preload("res://src/ui/shared/mobile_safe_area.gd")
 const NATIVE_RUNTIME_REVIEW_AUTO_ENTER_ARG := "--cat-coven-native-review-auto-enter"
+const ROUTE_TRANSITION_DURATION := 0.10
 
 @export var environment: String = "development"
 @export var save_path_override: String = ""
@@ -46,11 +47,15 @@ var _settings_suspended_process_mode: int = Node.PROCESS_MODE_INHERIT
 var _pending_level_number: int = 0
 var _returning_player_entry: bool = false
 var _shell_navigation_locked: bool = false
+var _route_transition_tween: Tween
+var _route_transition_count: int = 0
+var _last_route_transition_mode: String = "none"
 ## Founder-authorized internal review exposes three provisional levels.
 ## This does not confer D-024B/D-027 shipping or final-art approval.
 const INTERNAL_REVIEW_LEVEL_COUNT := 3
 
 @onready var screen_host: Node = $ScreenHost
+@onready var route_transition_veil: ColorRect = $RouteTransitionVeil
 
 func _ready() -> void:
 	_ensure_android_immersive_mode()
@@ -678,13 +683,14 @@ func analytics_events_snapshot() -> Array[Dictionary]:
 	return analytics.events_snapshot() if analytics != null else []
 
 func _show_screen(screen: Node) -> void:
-	if _current_screen != null and is_instance_valid(_current_screen):
+	var had_previous := _current_screen != null and is_instance_valid(_current_screen)
+	if had_previous:
 		screen_host.remove_child(_current_screen)
 		_current_screen.queue_free()
 	_current_screen = screen
 	screen_host.add_child(screen)
+	var reduced_motion := false
 	if screen is Control:
-		var reduced_motion := false
 		if user_settings != null:
 			reduced_motion = bool(user_settings.get_presentation_state().get("reduced_motion", false))
 		(screen as Control).set_meta("reduced_motion", reduced_motion)
@@ -692,6 +698,43 @@ func _show_screen(screen: Node) -> void:
 	_install_north_star_backdrop(screen)
 	Typography.apply(screen)
 	CurioMaterials.apply(screen)
+	if had_previous:
+		_play_route_entry_transition(screen, reduced_motion)
+
+func _play_route_entry_transition(screen: Node, reduced_motion: bool) -> void:
+	_route_transition_count += 1
+	_last_route_transition_mode = "instant_reduced_motion" if reduced_motion else "gothic_dissolve"
+	if screen != null:
+		screen.set_meta("route_transition_id", _route_transition_count)
+		screen.set_meta("route_transition_mode", _last_route_transition_mode)
+	if route_transition_veil == null:
+		return
+	if _route_transition_tween != null and _route_transition_tween.is_valid():
+		_route_transition_tween.kill()
+	route_transition_veil.visible = not reduced_motion
+	route_transition_veil.modulate = Color.WHITE
+	if reduced_motion:
+		route_transition_veil.visible = false
+		return
+	_route_transition_tween = create_tween()
+	_route_transition_tween.tween_property(route_transition_veil, "modulate:a", 0.0, ROUTE_TRANSITION_DURATION).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
+	_route_transition_tween.finished.connect(func():
+		if route_transition_veil != null:
+			route_transition_veil.visible = false
+			route_transition_veil.modulate = Color.WHITE
+	)
+
+func route_transition_contract() -> Dictionary:
+	return {
+		"overlay_present": route_transition_veil != null,
+		"mode": _last_route_transition_mode,
+		"count": _route_transition_count,
+		"active": route_transition_veil != null and route_transition_veil.visible,
+		"duration_seconds": ROUTE_TRANSITION_DURATION,
+		"blocks_input": route_transition_veil != null and route_transition_veil.mouse_filter != Control.MOUSE_FILTER_IGNORE,
+		"screen_tagged": _current_screen != null and _current_screen.has_meta("route_transition_id"),
+		"screen_mode": String(_current_screen.get_meta("route_transition_mode", "")) if _current_screen != null else "",
+	}
 
 func _install_product_navigation(screen: Node, active_section: String, content_path: NodePath = NodePath("Layout")) -> void:
 	if screen is Control:

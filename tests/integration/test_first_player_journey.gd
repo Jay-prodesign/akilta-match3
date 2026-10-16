@@ -31,6 +31,16 @@ func _run() -> void:
 	await process_frame
 	await process_frame
 	_expect(str(app.current_route_name()) == "house", "splash entry must route into House")
+	var transition_contract: Dictionary = app.route_transition_contract()
+	_expect(bool(transition_contract.get("overlay_present", false)), "route changes must own an authored global transition veil")
+	_expect(String(transition_contract.get("mode", "")) == "gothic_dissolve", "normal navigation must use the subtle gothic dissolve")
+	_expect(float(transition_contract.get("duration_seconds", 1.0)) <= 0.12, "global route dissolve must stay fast enough for gameplay navigation")
+	_expect(not bool(transition_contract.get("blocks_input", true)), "global route continuity veil must never trap player input")
+	_expect(bool(transition_contract.get("screen_tagged", false)), "destination screen must retain route-transition evidence")
+	for _transition_frame in range(10):
+		await process_frame
+	transition_contract = app.route_transition_contract()
+	_expect(not bool(transition_contract.get("active", true)), "route transition must settle quickly instead of obscuring the destination")
 	var house = app.current_screen()
 	var dormant_cameo: Control = house.get_node("RoomView/MoonCameoOverlay")
 	_expect(not dormant_cameo.visible, "Moon Cameo physical relic must stay hidden before Level 1 is won")
