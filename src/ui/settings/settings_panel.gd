@@ -136,7 +136,8 @@ func _style_settings_overlay() -> void:
 			card.add_theme_stylebox_override("panel", card_high_style)
 			card.set_meta("production_chrome_kind", "settings_high_contrast")
 		else:
-			ProductionChrome.apply_primary(card)
+			card.add_theme_stylebox_override("panel", card_normal_style)
+			card.set_meta("settings_material", "scene_authored_flat")
 		card.set_meta("production_chrome_kind", "settings_ritual_card")
 	for toggle in [master_toggle, music_toggle, sfx_toggle, haptics_toggle, reduced_toggle, contrast_toggle]:
 		_style_toggle(toggle)
@@ -147,10 +148,14 @@ func _style_settings_overlay() -> void:
 		close_button.add_theme_stylebox_override("focus", close_hover_style)
 		close_button.set_meta("production_chrome_kind", "settings_high_contrast_return")
 	else:
-		ProductionChrome.apply_action_button(close_button, "primary", "settings_return")
+		close_button.add_theme_stylebox_override("normal", close_normal_style)
+		close_button.add_theme_stylebox_override("hover", close_hover_style)
+		close_button.add_theme_stylebox_override("pressed", close_pressed_style)
+		close_button.add_theme_stylebox_override("focus", close_hover_style)
+		close_button.set_meta("settings_material", "scene_authored_flat")
 	close_button.add_theme_color_override("font_color", Color("#FFF7E8"))
 	close_button.add_theme_color_override("font_hover_color", Color("#FFFFFF"))
-	close_button.add_theme_font_size_override("font_size", 24)
+	close_button.add_theme_font_size_override("font_size", 20)
 
 func _style_toggle(toggle: Button) -> void:
 	if toggle == null:
@@ -162,10 +167,14 @@ func _style_toggle(toggle: Button) -> void:
 		toggle.add_theme_stylebox_override("focus", toggle_high_hover_style)
 		toggle.set_meta("production_chrome_kind", "settings_high_contrast_toggle")
 	else:
-		ProductionChrome.apply_interactive_button(toggle, toggle.button_pressed, "settings_toggle")
+		toggle.add_theme_stylebox_override("normal", toggle_normal_style)
+		toggle.add_theme_stylebox_override("hover", toggle_hover_style)
+		toggle.add_theme_stylebox_override("pressed", toggle_pressed_style)
+		toggle.add_theme_stylebox_override("focus", toggle_hover_style)
+		toggle.set_meta("settings_material", "scene_authored_flat")
 	toggle.add_theme_color_override("font_color", Color("#FFFFFF") if _high_contrast else Color("#E8DCE4"))
 	toggle.add_theme_color_override("font_hover_color", Color("#FFFFFF"))
-	toggle.add_theme_font_size_override("font_size", 20)
+	toggle.add_theme_font_size_override("font_size", 18)
 	var title := toggle.get_node_or_null("Title") as Label
 	var detail := toggle.get_node_or_null("Detail") as Label
 	var status := toggle.get_node_or_null("State") as Label
@@ -214,14 +223,14 @@ func settings_authored_contract() -> Dictionary:
 	var card := $Card as PanelContainer
 	var audio_row := $Card/Content/AudioRow as VBoxContainer
 	var experience_row := $Card/Content/ExperienceRow as VBoxContainer
-	var destination_surface := card.anchor_left >= 0.075 and card.anchor_right <= 0.925 and (card.anchor_bottom - card.anchor_top) >= 0.70 and (card.anchor_bottom - card.anchor_top) <= 0.77
+	var destination_surface := card.anchor_left >= 0.095 and card.anchor_right <= 0.905 and (card.anchor_bottom - card.anchor_top) >= 0.60 and (card.anchor_bottom - card.anchor_top) <= 0.64
 	var ritual_list := audio_row.get_child_count() == 3 and experience_row.get_child_count() == 3 and [master_toggle, music_toggle, sfx_toggle, haptics_toggle, reduced_toggle, contrast_toggle].all(
-		func(control): return control.size_flags_horizontal == Control.SIZE_EXPAND_FILL and control.toggle_mode and control.custom_minimum_size.y >= 88.0
+		func(control): return control.size_flags_horizontal == Control.SIZE_EXPAND_FILL and control.toggle_mode and control.custom_minimum_size.y >= 76.0
 	)
-	var sigil_stage := house_sigil != null and house_sigil.texture != null and house_sigil.custom_minimum_size.y >= 120.0
+	var sigil_stage := house_sigil != null and house_sigil.texture != null and house_sigil.custom_minimum_size.y >= 80.0 and house_sigil.custom_minimum_size.y <= 92.0
 	var world_visible := ($WorldShade as ColorRect).color.a <= 0.20 and ($Dim as ColorRect).color.a <= 0.12
-	var title_hierarchy := ($Card/Content/Title as Label).get_theme_font_size("font_size") >= 50
-	var touch_targets := [master_toggle, music_toggle, sfx_toggle, haptics_toggle, reduced_toggle, contrast_toggle, close_button].all(func(control): return control.custom_minimum_size.y >= 88.0)
+	var title_hierarchy := ($Card/Content/Title as Label).get_theme_font_size("font_size") >= 46
+	var touch_targets := [master_toggle, music_toggle, sfx_toggle, haptics_toggle, reduced_toggle, contrast_toggle].all(func(control): return control.custom_minimum_size.y >= 76.0) and close_button.custom_minimum_size.y >= 68.0
 	var crafted_rows := [master_toggle, music_toggle, sfx_toggle, haptics_toggle, reduced_toggle, contrast_toggle].all(
 		func(control):
 			var title := control.get_node_or_null("Title") as Label
@@ -240,14 +249,14 @@ func settings_authored_contract() -> Dictionary:
 		"north_star_toggle_height": touch_targets,
 		"intro_subordinate": ($Card/Content/Intro as Label) != null and not ($Card/Content/Intro as Label).visible,
 		"runtime_style_factory": false,
-		"production_card_chrome": card.get_theme_stylebox("panel") is StyleBoxTexture and String(card.get_meta("production_chrome_kind", "")) == "settings_ritual_card",
-		"production_toggle_chrome": [master_toggle, music_toggle, sfx_toggle, haptics_toggle, reduced_toggle, contrast_toggle].all(func(control): return control.get_theme_stylebox("normal") is StyleBoxTexture and String(control.get_meta("production_chrome_kind", "")) == "interactive_settings_toggle"),
-		"production_return_chrome": close_button.get_theme_stylebox("normal") is StyleBoxTexture and String(close_button.get_meta("production_chrome_kind", "")) == "action_primary_settings_return",
+		"scene_authored_card_chrome": card.get_theme_stylebox("panel") is StyleBoxFlat and String(card.get_meta("settings_material", "")) == "scene_authored_flat",
+		"scene_authored_toggle_chrome": [master_toggle, music_toggle, sfx_toggle, haptics_toggle, reduced_toggle, contrast_toggle].all(func(control): return control.get_theme_stylebox("normal") is StyleBoxFlat and String(control.get_meta("settings_material", "")) == "scene_authored_flat"),
+		"scene_authored_return_chrome": close_button.get_theme_stylebox("normal") is StyleBoxFlat and String(close_button.get_meta("settings_material", "")) == "scene_authored_flat",
 		"settings_ritual_list": ritual_list,
 		"crafted_ritual_rows": crafted_rows,
 		"house_sigil_hero_scale": sigil_stage,
-		"footer_rose_ornament": footer_rose != null and footer_rose.texture != null and footer_rose.custom_minimum_size.y >= 100.0,
+		"footer_rose_subordinate": footer_rose != null and footer_rose.texture != null and not footer_rose.visible,
 		"world_art_not_overdimmed": world_visible,
 		"tall_destination_surface": destination_surface,
-		"visual_parity_gate_v3": title_hierarchy and touch_targets and ritual_list and crafted_rows and sigil_stage and footer_rose != null and footer_rose.texture != null and world_visible and destination_surface,
+		"visual_parity_gate_v3": title_hierarchy and touch_targets and ritual_list and crafted_rows and sigil_stage and footer_rose != null and not footer_rose.visible and world_visible and destination_surface,
 	}
