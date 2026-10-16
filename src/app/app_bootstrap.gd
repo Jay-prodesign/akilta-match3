@@ -23,6 +23,7 @@ const CurioMaterials = preload("res://src/ui/theme/curio_materials.gd")
 const ProductNavigation = preload("res://src/ui/shared/product_navigation.gd")
 const TopResourceBar = preload("res://src/ui/shared/top_resource_bar.gd")
 const MobileSafeArea = preload("res://src/ui/shared/mobile_safe_area.gd")
+const NATIVE_RUNTIME_REVIEW_AUTO_ENTER_ARG := "--cat-coven-native-review-auto-enter"
 
 @export var environment: String = "development"
 @export var save_path_override: String = ""
@@ -103,6 +104,12 @@ func _complete_bootstrap() -> void:
 			splash.set_boot_state("recoverable_error", "This House record was created by a newer build. Update the game before entering so that record is not overwritten.", false)
 		_:
 			splash.set_boot_state("ready")
+	if String(splash.boot_state()) == "ready" and _native_runtime_review_auto_enter_requested():
+		call_deferred("_on_splash_continue")
+
+func _native_runtime_review_auto_enter_requested() -> bool:
+	# Workflow-only proof hook. Normal player launches never receive this arg.
+	return OS.get_cmdline_args().has(NATIVE_RUNTIME_REVIEW_AUTO_ENTER_ARG) or OS.get_cmdline_user_args().has(NATIVE_RUNTIME_REVIEW_AUTO_ENTER_ARG)
 
 func current_route_name() -> String:
 	return navigation.route_name().to_lower() if navigation != null else ""

@@ -104,7 +104,7 @@ func _play_intro() -> void:
 		return
 	if _intro_tween != null and _intro_tween.is_valid():
 		_intro_tween.kill()
-	var reveal_nodes: Array[Control] = [brand_mark, brand_label, subtitle_label, $Layout/BrandLore, boot_state_panel, enter_button, tagline_label]
+	var reveal_nodes: Array[Control] = [brand_mark, brand_label, subtitle_label, $Layout/BrandLore, boot_state_panel, tagline_label]
 	_intro_tween = create_tween()
 	_intro_tween.set_parallel(true)
 	for index in range(reveal_nodes.size()):
@@ -115,12 +115,10 @@ func _play_intro() -> void:
 		var rest_position := node.position
 		node.set_meta("splash_rest_position", rest_position)
 		node.position = rest_position + Vector2(0, 18 if index < 3 else 12)
-		node.modulate.a = 0.0 if node != enter_button or _boot_state != "loading" else 0.0
+		node.modulate.a = 0.0
 		node.scale = Vector2(0.96, 0.96)
 		var delay := float(index) * 0.045
 		var target_modulate := Color.WHITE
-		if node == enter_button and _boot_state == "loading":
-			target_modulate.a = 0.0
 		_intro_tween.tween_property(node, "position", rest_position, 0.30).set_delay(delay).set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_OUT)
 		_intro_tween.tween_property(node, "scale", Vector2.ONE, 0.34).set_delay(delay).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
 		_intro_tween.tween_property(node, "modulate", target_modulate, 0.22).set_delay(delay)

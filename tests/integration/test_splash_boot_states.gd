@@ -63,6 +63,11 @@ func _verify_clean_ready() -> void:
 	await _frames(3)
 	_expect(splash.boot_state() == "ready", "Clean boot must resolve S00 to ready")
 	_expect(enter.visible and not enter.disabled and enter.text == "ENTER THE HOUSE", "Ready S00 must expose Enter the House")
+	await _frames(30)
+	_expect(enter.modulate.a >= 0.95 and enter.scale.distance_to(Vector2.ONE) < 0.02, "Ready S00 Enter CTA must remain visibly settled after intro choreography")
+	enter.emit_signal("pressed")
+	await _frames(3)
+	_expect(String(app.current_route_name()) == "house", "Clean ready S00 must enter the House")
 	app.queue_free()
 	await _frames(2)
 
