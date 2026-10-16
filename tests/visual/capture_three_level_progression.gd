@@ -579,11 +579,22 @@ func _play_level(app: Node, level_number: int) -> bool:
 		var restoration_card: PanelContainer = restoration.get_node_or_null("RestorationOverlay/CeremonyCard") as PanelContainer if restoration != null else null
 		var restoration_continue: Button = restoration.get_node_or_null("RestorationOverlay/CeremonyCard/CeremonyContent/CeremonyRow/Copy/Continue") as Button if restoration != null else null
 		var restoration_room = restoration.get_node_or_null("RoomView") if restoration != null else null
-		if restoration_continue == null or restoration_card == null or restoration_room == null:
+		var restoration_resource_bar := restoration.get_node_or_null("ResourceBar") as Control if restoration != null else null
+		var restoration_stage := restoration.get_node_or_null("RestorationOverlay/TransformationStage") as Control if restoration != null else null
+		if restoration_continue == null or restoration_card == null or restoration_room == null or restoration_stage == null:
 			_fail(app, "Level %d restoration ceremony surface is incomplete" % level_number)
 			return false
 		if restoration_card.size.y > restoration.size.y * 0.18:
 			_fail(app, "Level %d restoration ceremony card is taller than its content contract" % level_number)
+			return false
+		if restoration_stage.size.y > restoration.size.y * 0.31:
+			_fail(app, "Level %d restoration before/after stage is too tall for the locked-board payoff composition" % level_number)
+			return false
+		if restoration_resource_bar == null or restoration_resource_bar.visible:
+			_fail(app, "Level %d restoration must hide the global resource bar during the House payoff" % level_number)
+			return false
+		if restoration_room.offset_top > 1.0:
+			_fail(app, "Level %d restoration must fill the hidden resource-bar region with the House world" % level_number)
 			return false
 		if level_number >= 2:
 			var awakening_echo: TextureRect = restoration_room.get_node_or_null("RestorationAwakeningEcho") as TextureRect

@@ -88,9 +88,9 @@ color = Color(0.02, 0.015, 0.03, 0.18)
 [node name="RestorationHeader" type="VBoxContainer" parent="."]
 layout_mode = 1
 anchor_left = 0.08
-anchor_top = 0.07
+anchor_top = 0.055
 anchor_right = 0.92
-anchor_bottom = 0.205
+anchor_bottom = 0.175
 grow_horizontal = 2
 grow_vertical = 2
 theme_override_constants/separation = 4
@@ -109,7 +109,7 @@ layout_mode = 2
 theme_override_colors/font_color = Color(1, 0.941, 0.847, 1)
 theme_override_colors/font_outline_color = Color(0.02, 0.01, 0.03, 0.96)
 theme_override_constants/outline_size = 5
-theme_override_font_sizes/font_size = 42
+theme_override_font_sizes/font_size = 38
 text = "CURIO"
 horizontal_alignment = 1
 
@@ -124,9 +124,9 @@ horizontal_alignment = 1
 [node name="TransformationStage" type="PanelContainer" parent="."]
 layout_mode = 1
 anchor_left = 0.08
-anchor_top = 0.235
+anchor_top = 0.205
 anchor_right = 0.92
-anchor_bottom = 0.565
+anchor_bottom = 0.495
 grow_horizontal = 2
 grow_vertical = 2
 theme_override_styles/panel = SubResource("Card")
@@ -137,7 +137,7 @@ theme_override_constants/separation = 12
 alignment = 1
 
 [node name="BeforeCard" type="PanelContainer" parent="TransformationStage/PreviewRow"]
-custom_minimum_size = Vector2(0, 300)
+custom_minimum_size = Vector2(0, 232)
 layout_mode = 2
 size_flags_horizontal = 3
 theme_override_styles/panel = SubResource("StateRail")
@@ -154,7 +154,7 @@ text = "BEFORE · DORMANT"
 horizontal_alignment = 1
 
 [node name="House" type="Control" parent="TransformationStage/PreviewRow/BeforeCard/BeforeContent"]
-custom_minimum_size = Vector2(260, 252)
+custom_minimum_size = Vector2(220, 190)
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
@@ -172,7 +172,7 @@ horizontal_alignment = 1
 vertical_alignment = 1
 
 [node name="AfterCard" type="PanelContainer" parent="TransformationStage/PreviewRow"]
-custom_minimum_size = Vector2(0, 300)
+custom_minimum_size = Vector2(0, 232)
 layout_mode = 2
 size_flags_horizontal = 3
 theme_override_styles/panel = SubResource("StateRail")
@@ -189,7 +189,7 @@ text = "AFTER · AWAKENED"
 horizontal_alignment = 1
 
 [node name="House" type="Control" parent="TransformationStage/PreviewRow/AfterCard/AfterContent"]
-custom_minimum_size = Vector2(260, 252)
+custom_minimum_size = Vector2(220, 190)
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
@@ -269,9 +269,9 @@ vertical_alignment = 1
 [node name="CeremonyCard" type="PanelContainer" parent="."]
 layout_mode = 1
 anchor_left = 0.06
-anchor_top = 0.68
+anchor_top = 0.57
 anchor_right = 0.94
-anchor_bottom = 0.81
+anchor_bottom = 0.70
 grow_horizontal = 2
 grow_vertical = 2
 theme_override_styles/panel = SubResource("Card")
@@ -290,7 +290,7 @@ layout_mode = 2
 theme_override_constants/separation = 12
 
 [node name="RestoredCurioArt" type="TextureRect" parent="CeremonyCard/CeremonyContent/CeremonyRow"]
-custom_minimum_size = Vector2(82, 82)
+custom_minimum_size = Vector2(72, 72)
 layout_mode = 2
 expand_mode = 1
 stretch_mode = 5
@@ -303,7 +303,7 @@ theme_override_constants/separation = 6
 [node name="Body" type="Label" parent="CeremonyCard/CeremonyContent/CeremonyRow/Copy"]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.9, 0.84, 0.88, 1)
-theme_override_font_sizes/font_size = 21
+theme_override_font_sizes/font_size = 18
 text = "A recovered Curio takes its place in the House."
 autowrap_mode = 2
 
