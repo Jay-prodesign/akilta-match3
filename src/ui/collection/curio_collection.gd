@@ -3,6 +3,7 @@ extends Control
 
 signal back_requested
 signal house_inspect_requested(curio_id: String)
+signal interaction_feedback_requested(kind: String)
 
 const PieceAssetLoader = preload("res://src/match3/presentation/piece_asset_loader.gd")
 const ScreenArt = preload("res://src/ui/shared/screen_art_registry.gd")
@@ -17,6 +18,8 @@ const THORNED_LOCKET_PATH := "res://assets/curios/ch01_curio_thorned_locket.png"
 var progress
 var _detail_overlay: Control
 var _moon_textures: Dictionary = {}
+var _reduced_motion: bool = false
+var _reliquary_tactile_buttons: Array[Button] = []
 
 @onready var backdrop: TextureRect = $ReliquaryMoonlitBackdrop
 @onready var count_label: Label = $Layout/Count
@@ -57,6 +60,9 @@ func _ready() -> void:
 	ProductionChrome.apply_action_button(slot3_action, "utility", "reliquary_detail")
 	ProductionChrome.apply_compact_panel(set_summary, "reliquary_set_summary")
 	ProductionChrome.apply_action_button(back_button, "utility", "reliquary_back")
+	_bind_reliquary_tactile(moon_action, "moon_details", 0.965)
+	_bind_reliquary_tactile(slot2_action, "moth_details", 0.965)
+	_bind_reliquary_tactile(slot3_action, "thorned_details", 0.965)
 	back_button.pressed.connect(func(): back_requested.emit())
 	moon_action.pressed.connect(func(): _open_curio_detail("moon_cameo"))
 	slot2_action.pressed.connect(func(): _open_curio_detail("moth_reliquary"))
@@ -66,6 +72,85 @@ func _ready() -> void:
 func set_progress(value) -> void:
 	progress = value
 	_refresh()
+
+func apply_presentation_settings(state: Dictionary) -> void:
+	_reduced_motion = bool(state.get("reduced_motion", false))
+	for button in _reliquary_tactile_buttons:
+		button.set_meta("reliquary_tactile_reduced_motion", _reduced_motion)
+		if _reduced_motion:
+			_stop_reliquary_tactile_tween(button)
+			button.scale = Vector2.ONE
+			button.modulate = Color.WHITE
+			button.set_meta("reliquary_tactile_phase", "idle")
+	if _detail_overlay != null and is_instance_valid(_detail_overlay) and _detail_overlay.has_method("apply_presentation_settings"):
+		_detail_overlay.apply_presentation_settings(state)
+
+func curio_interaction_contract() -> Dictionary:
+	return {
+		"details_tactile": [moon_action, slot2_action, slot3_action].all(func(button): return button != null and bool(button.get_meta("reliquary_tactile_bound", false)) and float(button.get_meta("reliquary_tactile_press_scale", 1.0)) <= 0.97),
+		"feedback_signal": has_signal("interaction_feedback_requested"),
+		"reduced_motion_supported": true,
+		"hidden_back_ignored": back_button != null and not back_button.visible and not bool(back_button.get_meta("reliquary_tactile_bound", false)),
+	}
+
+func _bind_reliquary_tactile(button: Button, role: String, press_scale: float) -> void:
+	if button == null:
+		return
+	button.set_meta("reliquary_tactile_role", role)
+	button.set_meta("reliquary_tactile_press_scale", press_scale)
+	button.set_meta("reliquary_tactile_reduced_motion", _reduced_motion)
+	if bool(button.get_meta("reliquary_tactile_bound", false)):
+		return
+	button.set_meta("reliquary_tactile_bound", true)
+	_reliquary_tactile_buttons.append(button)
+	button.button_down.connect(_press_reliquary_tactile.bind(button))
+	button.button_up.connect(_release_reliquary_tactile.bind(button))
+	button.mouse_exited.connect(_release_reliquary_tactile.bind(button))
+	button.focus_exited.connect(_release_reliquary_tactile.bind(button))
+
+func _press_reliquary_tactile(button: Button) -> void:
+	if button == null or button.disabled or not button.visible:
+		return
+	_stop_reliquary_tactile_tween(button)
+	button.pivot_offset = button.size * 0.5
+	button.set_meta("reliquary_tactile_phase", "pressed")
+	interaction_feedback_requested.emit("ui")
+	if bool(button.get_meta("reliquary_tactile_reduced_motion", false)):
+		button.scale = Vector2.ONE
+		button.modulate = Color.WHITE
+		return
+	var target_scale := clampf(float(button.get_meta("reliquary_tactile_press_scale", 0.965)), 0.94, 0.98)
+	var tween := create_tween()
+	button.set_meta("reliquary_tactile_tween", tween)
+	tween.set_parallel(true)
+	tween.tween_property(button, "scale", Vector2(target_scale, target_scale), 0.06).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
+	tween.tween_property(button, "modulate", Color(1.0, 0.95, 0.87, 1.0), 0.06).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
+
+func _release_reliquary_tactile(button: Button) -> void:
+	if button == null:
+		return
+	_stop_reliquary_tactile_tween(button)
+	button.pivot_offset = button.size * 0.5
+	button.set_meta("reliquary_tactile_phase", "release")
+	if bool(button.get_meta("reliquary_tactile_reduced_motion", false)):
+		button.scale = Vector2.ONE
+		button.modulate = Color.WHITE
+		button.set_meta("reliquary_tactile_phase", "idle")
+		return
+	var tween := create_tween()
+	button.set_meta("reliquary_tactile_tween", tween)
+	tween.set_parallel(true)
+	tween.tween_property(button, "scale", Vector2.ONE, 0.16).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
+	tween.tween_property(button, "modulate", Color.WHITE, 0.11).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
+	tween.finished.connect(func(): button.set_meta("reliquary_tactile_phase", "idle"))
+
+func _stop_reliquary_tactile_tween(button: Button) -> void:
+	if button == null or not button.has_meta("reliquary_tactile_tween"):
+		return
+	var previous = button.get_meta("reliquary_tactile_tween")
+	if previous is Tween and (previous as Tween).is_valid():
+		(previous as Tween).kill()
+	button.remove_meta("reliquary_tactile_tween")
 
 func _refresh() -> void:
 	if not is_node_ready():
@@ -179,11 +264,15 @@ func _open_curio_detail(curio_id: String) -> void:
 	overlay.name = "CurioDetailOverlay"
 	add_child(overlay)
 	_detail_overlay = overlay
+	if overlay.has_method("apply_presentation_settings"):
+		overlay.apply_presentation_settings({"reduced_motion": _reduced_motion})
 	if not bool(overlay.configure(curio_id, data, awakened, texture)):
 		overlay.queue_free()
 		_detail_overlay = null
 		return
 	overlay.close_requested.connect(_close_curio_detail)
+	if overlay.has_signal("interaction_feedback_requested"):
+		overlay.interaction_feedback_requested.connect(func(kind: String): interaction_feedback_requested.emit(kind))
 	overlay.view_house_requested.connect(func(id: String): house_inspect_requested.emit(id))
 
 func _close_curio_detail() -> void:
