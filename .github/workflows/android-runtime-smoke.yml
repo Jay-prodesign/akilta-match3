@@ -200,30 +200,41 @@ jobs:
           # soon as the settled product frame is no longer the ready Splash.
           sleep 3
           ENTERED=0
+          COLD_BYTES="$(stat -c%s artifacts/android-01-cold-launch.png)"
+          # Ambient splash motion and tactile button animation change PNG bytes
+          # without changing routes. Require a material compressed-frame delta
+          # before calling the frame House; the real House composition differs
+          # by hundreds of KB on this fixed Pixel-class emulator.
+          MIN_ROUTE_DELTA=$((COLD_BYTES / 16))
           : > artifacts/android-enter-attempts.txt
+          echo "cold_bytes=$COLD_BYTES min_route_delta=$MIN_ROUTE_DELTA" | tee -a artifacts/android-enter-attempts.txt
           for TAP_Y in 2205 2255 2188 2230; do
             echo "touchscreen press x=540 y=$TAP_Y" | tee -a artifacts/android-enter-attempts.txt
             adb shell input touchscreen swipe 540 "$TAP_Y" 540 "$TAP_Y" 120
-            sleep 2
-            test -n "$(adb shell pidof "$PACKAGE" 2>/dev/null | tr -d '\r' || true)"
-            adb shell dumpsys activity activities | grep -E "mResumedActivity|topResumedActivity" > artifacts/house-foreground.txt || true
-            grep -Fq "$PACKAGE" artifacts/house-foreground.txt
-            PROBE="artifacts/android-enter-probe-$TAP_Y.png"
-            adb exec-out screencap -p > "$PROBE"
-            test -s "$PROBE"
-            PROBE_BYTES="$(stat -c%s "$PROBE")"
-            echo "probe y=$TAP_Y bytes=$PROBE_BYTES" | tee -a artifacts/android-enter-attempts.txt
-            test "$PROBE_BYTES" -ge 500000
-            if ! cmp -s artifacts/android-01-cold-launch.png "$PROBE"; then
-              mv "$PROBE" artifacts/android-01b-house-after-enter.png
-              ENTERED=1
-              echo "House transition observed after native touch y=$TAP_Y" | tee -a artifacts/android-enter-attempts.txt
-              break
-            fi
+            for POLL in $(seq 1 8); do
+              sleep 1
+              test -n "$(adb shell pidof "$PACKAGE" 2>/dev/null | tr -d '\r' || true)"
+              adb shell dumpsys activity activities | grep -E "mResumedActivity|topResumedActivity" > artifacts/house-foreground.txt || true
+              grep -Fq "$PACKAGE" artifacts/house-foreground.txt
+              PROBE="artifacts/android-enter-probe-$TAP_Y-$POLL.png"
+              adb exec-out screencap -p > "$PROBE"
+              test -s "$PROBE"
+              PROBE_BYTES="$(stat -c%s "$PROBE")"
+              DELTA=$((PROBE_BYTES - COLD_BYTES))
+              if [ "$DELTA" -lt 0 ]; then DELTA=$((-DELTA)); fi
+              echo "probe y=$TAP_Y poll=$POLL bytes=$PROBE_BYTES delta=$DELTA" | tee -a artifacts/android-enter-attempts.txt
+              test "$PROBE_BYTES" -ge 500000
+              if [ "$DELTA" -ge "$MIN_ROUTE_DELTA" ]; then
+                mv "$PROBE" artifacts/android-01b-house-after-enter.png
+                ENTERED=1
+                echo "Material House transition observed after native touch y=$TAP_Y poll=$POLL" | tee -a artifacts/android-enter-attempts.txt
+                break 2
+              fi
+            done
           done
           if [ "$ENTERED" -ne 1 ]; then
             cp artifacts/android-01-cold-launch.png artifacts/android-01b-house-after-enter.png
-            echo "::error::Native Enter touches did not leave the ready Splash."
+            echo "::error::Native Enter touches never produced a material post-Splash product frame."
             cat artifacts/android-enter-attempts.txt
             exit 1
           fi
