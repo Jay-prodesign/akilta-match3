@@ -593,6 +593,9 @@ func _play_level(app: Node, level_number: int) -> bool:
 		if restoration_resource_bar == null or restoration_resource_bar.visible:
 			_fail(app, "Level %d restoration must hide the global resource bar during the House payoff" % level_number)
 			return false
+		if restoration_room.offset_top > 1.0:
+			_fail(app, "Level %d restoration must fill the hidden resource-bar region with the House world" % level_number)
+			return false
 		if level_number >= 2:
 			var awakening_echo: TextureRect = restoration_room.get_node_or_null("RestorationAwakeningEcho") as TextureRect
 			if awakening_echo == null or awakening_echo.texture == null:
