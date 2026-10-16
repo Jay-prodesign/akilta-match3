@@ -196,7 +196,7 @@ jobs:
           PACKAGE="com.akilta.catandcoven"
           # 1080x2400 emulator: real pointer input against the ready Enter CTA.
           sleep 3
-          adb shell input tap 540 2170
+          adb shell input tap 540 2230
           sleep 4
           test -n "$(adb shell pidof "$PACKAGE" 2>/dev/null | tr -d '\r' || true)"
           adb shell dumpsys activity activities | grep -E "mResumedActivity|topResumedActivity" > artifacts/house-foreground.txt || true
@@ -206,6 +206,10 @@ jobs:
           HOUSE_BYTES="$(stat -c%s artifacts/android-01b-house-after-enter.png)"
           echo "android-01b-house-after-enter.png bytes=$HOUSE_BYTES" | tee -a artifacts/native-frame-sizes.txt
           test "$HOUSE_BYTES" -ge 500000
+          if cmp -s artifacts/android-01-cold-launch.png artifacts/android-01b-house-after-enter.png; then
+            echo "::error::Enter tap did not leave the Splash; House frame is byte-identical to the ready Splash."
+            exit 1
+          fi
 
       - name: Verify background and resume
         shell: bash
