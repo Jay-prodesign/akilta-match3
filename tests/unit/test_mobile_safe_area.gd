@@ -12,6 +12,9 @@ func _init() -> void:
 	var full := SafeArea.insets_for_geometry(Vector2(1080, 1920), Vector2i(1080, 1920), Rect2i(0, 0, 1080, 1920))
 	_expect(full == Vector4.ZERO, "full safe rect must produce zero insets")
 
+	var tall_full := SafeArea.insets_for_geometry(Vector2(1080, 2400), Vector2i(1080, 2400), Rect2i(0, 0, 1080, 2400))
+	_expect(tall_full == Vector4.ZERO, "expanded tall-phone canvas must not invent safe-area padding")
+
 	var invalid := SafeArea.insets_for_geometry(Vector2(1080, 1920), Vector2i.ZERO, Rect2i())
 	_expect(invalid == Vector4.ZERO, "invalid display geometry must fail safe")
 	_expect(SafeArea.TOP_RESOURCE_CONTENT_START == 128.0, "meta content must start below the 104 logical px resource bar")

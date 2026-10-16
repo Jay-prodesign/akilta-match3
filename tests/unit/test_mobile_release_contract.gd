@@ -13,6 +13,7 @@ func _run() -> void:
 	_expect(bool(project.get_value("application", "boot_splash/show_image", false)), "native launch artwork must be enabled")
 	_expect(String(project.get_value("application", "boot_splash/image", "")) == "res://assets/mobile/black_cat_launch.png", "native launch must use the valid first-party Cat PNG")
 	_expect(int(project.get_value("display", "window/handheld/orientation", 0)) == 1, "mobile release must remain portrait")
+	_expect(String(project.get_value("display", "window/stretch/aspect", "")) == "expand", "mobile canvas must expand to tall-device aspect ratios instead of letterboxing")
 	_expect(String(project.get_value("rendering", "renderer/rendering_method.mobile", "")) == "gl_compatibility", "mobile renderer must be explicit")
 	_expect(bool(project.get_value("rendering", "textures/vram_compression/import_etc2_astc", false)), "mobile texture compression import must be enabled for native export")
 

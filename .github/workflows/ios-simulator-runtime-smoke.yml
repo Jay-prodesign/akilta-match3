@@ -6,6 +6,7 @@ on:
       - "main"
       - "feat/ios-simulator-runtime-smoke"
       - "feat/ios-simulator-render-readiness"
+      - "feat/native-ios-runtime-visual-evidence"
     paths:
       - ".github/workflows/ios-simulator-runtime-smoke.yml"
       - ".github/release-proof.trigger"
@@ -208,6 +209,23 @@ jobs:
             exit 1
           fi
           echo "IOS_SIMULATOR_RUNTIME_PASS: build, install, rendered cold launch, terminate, rendered relaunch"
+
+      # Exact native frame evidence is emitted on every runtime-verification checkpoint.
+      - name: Emit compact native frames for visual inspection
+        if: always()
+        shell: bash
+        run: |
+          set -euo pipefail
+          for FRAME in ios-01-cold-launch ios-02-relaunch; do
+            SRC="artifacts/${FRAME}.png"
+            [ -s "$SRC" ] || continue
+            OUT="artifacts/${FRAME}-review.jpg"
+            sips -Z 320 -s format jpeg -s formatOptions 40 "$SRC" --out "$OUT" >/dev/null
+            echo "CAT_COVEN_NATIVE_FRAME_BEGIN:${FRAME}"
+            base64 < "$OUT" | tr -d '\n'
+            echo
+            echo "CAT_COVEN_NATIVE_FRAME_END:${FRAME}"
+          done
 
       - uses: actions/upload-artifact@v4
         if: always()
