@@ -126,14 +126,14 @@ func _play_reveal() -> void:
 		return
 	_presented = true
 	set_meta("restoration_reveal_phase", "opening")
-	_store_rest_positions()
 	if _reduced_motion:
 		_settle_reveal()
 		return
 
 	veil.modulate = Color(1, 1, 1, 0)
+	restoration_header.pivot_offset = restoration_header.size * 0.5
+	restoration_header.scale = Vector2(0.985, 0.985)
 	restoration_header.modulate = Color(1, 1, 1, 0)
-	restoration_header.position = _rest_position(restoration_header) + Vector2(0, -14)
 	transformation_stage.pivot_offset = transformation_stage.size * 0.5
 	transformation_stage.scale = Vector2(0.965, 0.965)
 	transformation_stage.modulate = Color(1, 1, 1, 0)
@@ -141,21 +141,22 @@ func _play_reveal() -> void:
 	after_card.scale = Vector2(0.94, 0.94)
 	after_card.modulate = Color(1, 1, 1, 0)
 	stage_arrow.modulate = Color(1, 0.90, 0.72, 0)
+	ceremony_card.pivot_offset = ceremony_card.size * 0.5
+	ceremony_card.scale = Vector2(0.97, 0.97)
 	ceremony_card.modulate = Color(1, 1, 1, 0)
-	ceremony_card.position = _rest_position(ceremony_card) + Vector2(0, 18)
 
 	_reveal_tween = create_tween()
 	_reveal_tween.set_parallel(true)
 	_reveal_tween.tween_property(veil, "modulate", Color.WHITE, 0.16).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
 	_reveal_tween.tween_property(restoration_header, "modulate", Color.WHITE, 0.18).set_delay(0.02).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
-	_reveal_tween.tween_property(restoration_header, "position", _rest_position(restoration_header), 0.18).set_delay(0.02).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
+	_reveal_tween.tween_property(restoration_header, "scale", Vector2.ONE, 0.18).set_delay(0.02).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
 	_reveal_tween.tween_property(transformation_stage, "modulate", Color.WHITE, 0.20).set_delay(0.05).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
 	_reveal_tween.tween_property(transformation_stage, "scale", Vector2.ONE, 0.22).set_delay(0.05).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
 	_reveal_tween.tween_property(stage_arrow, "modulate", Color.WHITE, 0.16).set_delay(0.12).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
 	_reveal_tween.tween_property(after_card, "modulate", Color.WHITE, 0.18).set_delay(0.12).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
 	_reveal_tween.tween_property(after_card, "scale", Vector2.ONE, 0.20).set_delay(0.12).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
 	_reveal_tween.tween_property(ceremony_card, "modulate", Color.WHITE, 0.20).set_delay(0.18).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
-	_reveal_tween.tween_property(ceremony_card, "position", _rest_position(ceremony_card), 0.20).set_delay(0.18).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
+	_reveal_tween.tween_property(ceremony_card, "scale", Vector2.ONE, 0.20).set_delay(0.18).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
 	_reveal_tween.finished.connect(func(): set_meta("restoration_reveal_phase", "idle"))
 
 func _request_continue() -> void:
@@ -172,34 +173,26 @@ func _request_continue() -> void:
 	_exit_tween = create_tween()
 	_exit_tween.set_parallel(true)
 	_exit_tween.tween_property(ceremony_card, "modulate", Color(1, 1, 1, 0), 0.13).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_IN)
-	_exit_tween.tween_property(ceremony_card, "position", _rest_position(ceremony_card) + Vector2(0, 14), 0.15).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_IN)
+	_exit_tween.tween_property(ceremony_card, "scale", Vector2(0.97, 0.97), 0.15).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_IN)
 	_exit_tween.tween_property(transformation_stage, "scale", Vector2(0.985, 0.985), 0.15).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_IN)
 	_exit_tween.tween_property(transformation_stage, "modulate", Color(1, 1, 1, 0.72), 0.15).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_IN)
 	_exit_tween.tween_property(restoration_header, "modulate", Color(1, 1, 1, 0), 0.14).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_IN)
 	_exit_tween.tween_property(veil, "modulate", Color(1, 1, 1, 0), 0.16).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_IN)
 	_exit_tween.finished.connect(func(): continue_requested.emit())
 
-func _store_rest_positions() -> void:
-	for control in [restoration_header, ceremony_card]:
-		if control != null and not control.has_meta("restoration_rest_position"):
-			control.set_meta("restoration_rest_position", control.position)
-
-func _rest_position(control: Control) -> Vector2:
-	return control.get_meta("restoration_rest_position", control.position)
-
 func _settle_reveal() -> void:
 	if _reveal_tween != null and _reveal_tween.is_valid():
 		_reveal_tween.kill()
 	veil.modulate = Color.WHITE
 	restoration_header.modulate = Color.WHITE
-	restoration_header.position = _rest_position(restoration_header)
+	restoration_header.scale = Vector2.ONE
 	transformation_stage.modulate = Color.WHITE
 	transformation_stage.scale = Vector2.ONE
 	after_card.modulate = Color.WHITE
 	after_card.scale = Vector2.ONE
 	stage_arrow.modulate = Color.WHITE
 	ceremony_card.modulate = Color.WHITE
-	ceremony_card.position = _rest_position(ceremony_card)
+	ceremony_card.scale = Vector2.ONE
 	continue_button.scale = Vector2.ONE
 	continue_button.modulate = Color.WHITE
 	if not _closing:
