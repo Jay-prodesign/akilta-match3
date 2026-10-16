@@ -24,6 +24,8 @@ var _detail_tactile_buttons: Array[Button] = []
 @onready var close: Button = $CurioDetailCard/Content/Close
 
 func _ready() -> void:
+	# The shared 9-slice ritual frame visibly seams at this modal aspect ratio.
+	# Keep the authored flat gold frame as the detail surface material.
 	card.set_meta("detail_material", "scene_authored_flat")
 	ProductionChrome.apply_action_button(view_house, "primary", "curio_view_house")
 	ProductionChrome.apply_action_button(close, "utility", "curio_return_reliquary")
