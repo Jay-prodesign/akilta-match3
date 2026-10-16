@@ -161,8 +161,8 @@ func _run() -> void:
 	_expect(restoration_continue != null, "House restoration must expose a focused Continue CTA")
 	if restoration_continue != null:
 		restoration_continue.emit_signal("pressed")
-	await process_frame
-	_expect(str(app.current_route_name()) == "house", "restoration Continue must return to House")
+	await create_timer(0.20).timeout
+	_expect(str(app.current_route_name()) == "house", "restoration Continue must return to House after authored exit choreography")
 	var house_curios_nav: Button = awakened_house.get_node_or_null("ProductNavigation/Scroll/Items/NavCurios") as Button
 	_expect(house_curios_nav != null and house_curios_nav.visible, "House navigation must return after restoration completes")
 	var house_active_nav: Button = awakened_house.get_node_or_null("ProductNavigation/Scroll/Items/NavHouse") as Button
@@ -331,8 +331,8 @@ func _run() -> void:
 		_expect(level2_restoration != null, "Level 2 restoration must expose Continue")
 		if level2_restoration != null:
 			level2_restoration.emit_signal("pressed")
-		await process_frame
-		_expect(str(app.current_route_name()) == "house", "Level 2 restoration Continue must return to S01 House")
+		await create_timer(0.20).timeout
+		_expect(str(app.current_route_name()) == "house", "Level 2 restoration Continue must return to S01 House after authored exit choreography")
 		_expect(int(app.progress.highest_level_unlocked) == 3, "Level 2 win must unlock Level 3")
 		_expect(app.progress.curios.has("moth_reliquary"), "Level 2 reward must persist")
 		_expect(app.show_chapters(), "House must reopen chapter selection after Level 2 restoration")
@@ -372,8 +372,8 @@ func _run() -> void:
 			_expect(level3_restoration != null, "Level 3 restoration must expose Continue")
 			if level3_restoration != null:
 				level3_restoration.emit_signal("pressed")
-			await process_frame
-			_expect(str(app.current_route_name()) == "house", "Level 3 restoration Continue must return to S01 House")
+			await create_timer(0.20).timeout
+			_expect(str(app.current_route_name()) == "house", "Level 3 restoration Continue must return to S01 House after authored exit choreography")
 			_expect(app.progress.curios.has("thorned_locket"), "Level 3 must grant Thorned Locket")
 			_expect(int(app.progress.house_stage) >= 3, "Level 3 must restore House stage 3")
 			_expect(not app.show_prestart(4), "Level 4 must remain inaccessible after Level 3 win")

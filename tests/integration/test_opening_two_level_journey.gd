@@ -71,8 +71,8 @@ func _run() -> void:
 	_expect(restoration_continue != null, "Level 1 completion must enter the House restoration screen state")
 	if restoration_continue != null:
 		restoration_continue.emit_signal("pressed")
-	await process_frame
-	_expect(str(app.current_route_name()) == "house", "restoration Continue must return to House")
+	await create_timer(0.20).timeout
+	_expect(str(app.current_route_name()) == "house", "restoration Continue must return to House after authored exit choreography")
 	var replay_button: Button = app.current_screen().get_node("Layout/PlayButton")
 	_expect(not replay_button.disabled and replay_button.text == "PLAY LEVEL 2", "House must offer the next provisional review level after restoration completes")
 	_expect(app.show_chapters(), "House must reopen chapter selection after Level 1 restoration")
