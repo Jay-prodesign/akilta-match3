@@ -2,6 +2,7 @@ extends Control
 
 signal return_events_requested
 signal return_house_requested
+signal interaction_feedback_requested(kind: String)
 
 const ScreenArt = preload("res://src/ui/shared/screen_art_registry.gd")
 const PieceAssetLoader = preload("res://src/match3/presentation/piece_asset_loader.gd")
@@ -11,6 +12,7 @@ const WEEKLY_ART_PATH := "res://assets/curios/ch01_curio_moon_cameo_sealed_v01.w
 const STATUS_SEAL_PATH := "res://assets/ui/gameplay/booster_sealed_badge_v01.svg"
 
 @onready var world_art: TextureRect = $MissionWorldArt
+@onready var mission_title: Label = $MissionLayout/MissionTitle
 @onready var mission_timer: Label = $MissionLayout/MissionTimer
 @onready var empty_state: PanelContainer = $MissionLayout/MissionEmptyState
 @onready var reward_art: TextureRect = $MissionLayout/MissionEmptyState/EmptyContent/MissionRewardArt
@@ -33,6 +35,11 @@ const STATUS_SEAL_PATH := "res://assets/ui/gameplay/booster_sealed_badge_v01.svg
 @onready var return_events: Button = $MissionLayout/ReturnToEvents
 @onready var return_house: Button = $MissionLayout/ReturnToHouse
 
+var _reduced_motion := false
+var _intro_started := false
+var _intro_tween: Tween
+var _return_tactile_tween: Tween
+
 func _ready() -> void:
 	empty_state.set_meta("weekly_material", "scene_authored_flat")
 	for row in [feed_status, progress_status, reward_status]:
@@ -46,6 +53,7 @@ func _ready() -> void:
 	ProductionChrome.apply_action_button(return_house, "utility", "weekly_house_return")
 	opening_record.set_meta("weekly_material", "scene_authored_flat")
 	opening_record.set_meta("stage_role", "anchored_footer_status")
+	_bind_return_tactile()
 	return_events.pressed.connect(func(): return_events_requested.emit())
 	return_house.pressed.connect(func(): return_house_requested.emit())
 
@@ -66,7 +74,111 @@ func configure(state: Dictionary) -> bool:
 	reward_state.text = "NOTHING TO CLAIM"
 	opening_reward_state.text = "SEALED · LIVE FEED REQUIRED"
 	opening_reward_truth.text = "NOTHING TO CLAIM OFFLINE"
+	call_deferred("_play_intro")
 	return true
+
+
+func apply_presentation_settings(state: Dictionary) -> void:
+	_reduced_motion = bool(state.get("reduced_motion", false))
+	return_events.set_meta("weekly_tactile_reduced_motion", _reduced_motion)
+	if _reduced_motion:
+		_stop_return_tactile()
+		return_events.scale = Vector2.ONE
+		return_events.modulate = Color.WHITE
+		return_events.set_meta("weekly_tactile_phase", "idle")
+		if _intro_started:
+			_settle_intro()
+
+func weekly_interaction_contract() -> Dictionary:
+	var static_rows := [empty_state, feed_status, progress_status, reward_status, opening_record]
+	return {
+		"reveal_choreography": _intro_started and has_meta("weekly_reveal_phase"),
+		"reveal_phase": String(get_meta("weekly_reveal_phase", "not_started")),
+		"return_events_tactile": return_events != null and bool(return_events.get_meta("weekly_tactile_bound", false)) and float(return_events.get_meta("weekly_tactile_press_scale", 1.0)) <= 0.96,
+		"reduced_motion_supported": true,
+		"feedback_signal": has_signal("interaction_feedback_requested"),
+		"static_rows_noninteractive": static_rows.all(func(row): return row != null and row.mouse_filter == Control.MOUSE_FILTER_IGNORE),
+	}
+
+func _bind_return_tactile() -> void:
+	if return_events == null:
+		return
+	return_events.set_meta("weekly_tactile_bound", true)
+	return_events.set_meta("weekly_tactile_press_scale", 0.96)
+	return_events.set_meta("weekly_tactile_phase", "idle")
+	return_events.button_down.connect(_press_return_tactile)
+	return_events.button_up.connect(_release_return_tactile)
+	return_events.mouse_exited.connect(_release_return_tactile)
+	return_events.focus_exited.connect(_release_return_tactile)
+
+func _press_return_tactile() -> void:
+	if return_events == null or return_events.disabled:
+		return
+	_stop_return_tactile()
+	return_events.pivot_offset = return_events.size * 0.5
+	return_events.set_meta("weekly_tactile_phase", "pressed")
+	interaction_feedback_requested.emit("ui")
+	if _reduced_motion:
+		return_events.scale = Vector2.ONE
+		return_events.modulate = Color.WHITE
+		return
+	_return_tactile_tween = create_tween()
+	_return_tactile_tween.set_parallel(true)
+	_return_tactile_tween.tween_property(return_events, "scale", Vector2(0.96, 0.96), 0.055).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
+	_return_tactile_tween.tween_property(return_events, "modulate", Color(1.0, 0.96, 0.90, 1.0), 0.055).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
+
+func _release_return_tactile() -> void:
+	if return_events == null:
+		return
+	_stop_return_tactile()
+	return_events.pivot_offset = return_events.size * 0.5
+	return_events.set_meta("weekly_tactile_phase", "release")
+	if _reduced_motion:
+		return_events.scale = Vector2.ONE
+		return_events.modulate = Color.WHITE
+		return_events.set_meta("weekly_tactile_phase", "idle")
+		return
+	_return_tactile_tween = create_tween()
+	_return_tactile_tween.set_parallel(true)
+	_return_tactile_tween.tween_property(return_events, "scale", Vector2.ONE, 0.15).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
+	_return_tactile_tween.tween_property(return_events, "modulate", Color.WHITE, 0.11).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
+	_return_tactile_tween.finished.connect(func(): return_events.set_meta("weekly_tactile_phase", "idle"))
+
+func _stop_return_tactile() -> void:
+	if _return_tactile_tween != null and _return_tactile_tween.is_valid():
+		_return_tactile_tween.kill()
+	_return_tactile_tween = null
+
+func _play_intro() -> void:
+	if _intro_started:
+		return
+	_intro_started = true
+	set_meta("weekly_reveal_phase", "opening")
+	if _reduced_motion:
+		_settle_intro()
+		return
+	var reveal_nodes: Array[Control] = [mission_title, mission_timer, empty_state, feed_status, progress_status, reward_status, opening_record, return_events]
+	for node in reveal_nodes:
+		node.pivot_offset = node.size * 0.5
+		node.modulate = Color(1, 1, 1, 0)
+		node.scale = Vector2(0.985, 0.985)
+	_intro_tween = create_tween()
+	_intro_tween.set_parallel(true)
+	for index in range(reveal_nodes.size()):
+		var node := reveal_nodes[index]
+		var delay := float(index) * 0.035
+		_intro_tween.tween_property(node, "modulate", Color.WHITE, 0.15).set_delay(delay).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
+		_intro_tween.tween_property(node, "scale", Vector2.ONE, 0.21).set_delay(delay).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
+	_intro_tween.finished.connect(func(): set_meta("weekly_reveal_phase", "idle"))
+
+func _settle_intro() -> void:
+	if _intro_tween != null and _intro_tween.is_valid():
+		_intro_tween.kill()
+	for node in [mission_title, mission_timer, empty_state, feed_status, progress_status, reward_status, opening_record, return_events]:
+		if node != null:
+			node.modulate = Color.WHITE
+			node.scale = Vector2.ONE
+	set_meta("weekly_reveal_phase", "idle")
 
 func screen_contract() -> Dictionary:
 	var altar_compact := empty_state.custom_minimum_size.y >= 148.0 and empty_state.custom_minimum_size.y <= 164.0 and reward_art.custom_minimum_size.x >= 90.0 and reward_art.custom_minimum_size.x <= 104.0 and reward_art.custom_minimum_size.y >= 90.0 and reward_art.custom_minimum_size.y <= 104.0
@@ -106,4 +218,5 @@ func screen_contract() -> Dictionary:
 		"world_art_not_overdimmed": world_visible,
 		"visual_parity_gate_v2": altar_compact and status_stack_dense and truthful_status_copy and status_icons_loaded and intentional_stage and footer_record and world_visible and return_actions,
 		"visual_parity_gate_v3": altar_compact and status_stack_dense and truthful_status_copy and status_icons_loaded and intentional_stage and footer_record and world_visible and return_actions,
+		"interaction_choreography": weekly_interaction_contract(),
 	}

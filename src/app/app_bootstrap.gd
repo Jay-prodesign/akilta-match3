@@ -301,7 +301,11 @@ func show_weekly_missions() -> bool:
 	var completed_count := mini(int(progress.completed_levels.size()) if progress != null else 0, INTERNAL_REVIEW_LEVEL_COUNT)
 	var screen: Node = WeeklyMissionsScene.instantiate()
 	_show_screen(screen)
+	if screen.has_method("apply_presentation_settings"):
+		screen.apply_presentation_settings(user_settings.get_presentation_state())
 	TopResourceBar.attach(screen as Control, progress, Callable(self, "_on_shell_profile_requested"), NodePath("MissionLayout"))
+	if screen.has_signal("interaction_feedback_requested"):
+		screen.interaction_feedback_requested.connect(_on_meta_interaction_feedback_requested)
 	if not bool(screen.configure({
 		"completed_count": completed_count,
 		"opening_cap": INTERNAL_REVIEW_LEVEL_COUNT,

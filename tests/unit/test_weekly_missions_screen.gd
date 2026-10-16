@@ -12,7 +12,18 @@ func _run() -> void:
 	root.add_child(screen)
 	await process_frame
 	_expect(screen.configure({"completed_count": 3, "opening_cap": 3}), "Weekly Rituals must configure from progression state")
+	await process_frame
 	var contract: Dictionary = screen.screen_contract()
+	var interaction: Dictionary = screen.weekly_interaction_contract()
+	_expect(bool(interaction.get("reveal_choreography", false)), "Weekly Rituals must own staged destination reveal choreography")
+	_expect(String(interaction.get("reveal_phase", "")) == "opening", "Weekly Rituals reveal must visibly enter before settling")
+	_expect(bool(interaction.get("return_events_tactile", false)), "Weekly Rituals Events return must own tactile press/release craft")
+	_expect(bool(interaction.get("reduced_motion_supported", false)), "Weekly Rituals interaction craft must support Reduced Motion")
+	_expect(bool(interaction.get("feedback_signal", false)), "Weekly Rituals interactions must expose semantic feedback")
+	_expect(bool(interaction.get("static_rows_noninteractive", false)), "Weekly Rituals offline status rows must remain static truth rather than fake actions")
+	await create_timer(0.52).timeout
+	interaction = screen.weekly_interaction_contract()
+	_expect(String(interaction.get("reveal_phase", "")) == "idle", "Weekly Rituals staged reveal must settle cleanly")
 	_expect(String(contract.get("route", "")) == "missions", "Weekly Rituals must own the missions route contract")
 	_expect(bool(contract.get("world_art_loaded", false)), "Weekly Rituals must load authored world art")
 	_expect(bool(contract.get("reward_art_loaded", false)), "Weekly Rituals must load production reward art")
@@ -68,9 +79,23 @@ func _run() -> void:
 	_expect(reward_seal != null and reward_seal.texture != null and reward_panel_state != null and reward_panel_state.text == "SEALED · LIVE FEED REQUIRED" and reward_truth != null and reward_truth.text == "NOTHING TO CLAIM OFFLINE", "Weekly Rituals reward zone must remain explicit and truthful")
 
 	var event_signal := {"hit": false}
+	var feedback := {"count": 0}
 	screen.return_events_requested.connect(func(): event_signal["hit"] = true)
+	screen.interaction_feedback_requested.connect(func(_kind: String): feedback["count"] = int(feedback["count"]) + 1)
 	var events_return := screen.get_node("MissionLayout/ReturnToEvents") as Button
 	_expect(events_return.visible and events_return.custom_minimum_size.y <= 64.0, "Weekly Rituals Events return must stay compact and subordinate")
+	events_return.emit_signal("button_down")
+	await create_timer(0.08).timeout
+	_expect(events_return.scale.x < 0.98, "Weekly Rituals Events return must visibly compress on press")
+	_expect(int(feedback["count"]) == 1, "Weekly Rituals Events return press must emit one semantic feedback request")
+	events_return.emit_signal("button_up")
+	await create_timer(0.18).timeout
+	_expect(absf(events_return.scale.x - 1.0) < 0.01, "Weekly Rituals Events return must spring cleanly back on release")
+	screen.apply_presentation_settings({"reduced_motion": true})
+	events_return.emit_signal("button_down")
+	await process_frame
+	_expect(absf(events_return.scale.x - 1.0) < 0.01, "Reduced Motion must suppress decorative Weekly Rituals press scaling")
+	events_return.emit_signal("button_up")
 	events_return.emit_signal("pressed")
 	_expect(bool(event_signal["hit"]), "Weekly Rituals must expose Event Center return")
 
