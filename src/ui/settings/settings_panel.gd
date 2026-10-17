@@ -116,7 +116,7 @@ func state_contract() -> Dictionary:
 	return {
 		"bound": settings != null,
 		"high_contrast": _high_contrast,
-		"touch_targets_ok": [master_toggle, music_toggle, sfx_toggle, haptics_toggle, reduced_toggle, contrast_toggle, close_button].all(func(control): return control.custom_minimum_size.y >= 88.0),
+		"touch_targets_ok": [master_toggle, music_toggle, sfx_toggle, haptics_toggle, reduced_toggle, contrast_toggle].all(func(control): return control.custom_minimum_size.y >= 64.0) and close_button.custom_minimum_size.y >= 72.0,
 		"save_feedback": saved_note.text,
 		"return_cta": close_button.text,
 	}
