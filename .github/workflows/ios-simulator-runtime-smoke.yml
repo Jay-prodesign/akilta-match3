@@ -8,6 +8,7 @@ on:
       - "feat/ios-simulator-render-readiness"
       - "feat/native-ios-runtime-visual-evidence"
       - "feat/native-house-runtime-evidence"
+      - "feat/native-gameplay-runtime-visual-proof"
     paths:
       - ".github/workflows/ios-simulator-runtime-smoke.yml"
       - ".github/release-proof.trigger"
