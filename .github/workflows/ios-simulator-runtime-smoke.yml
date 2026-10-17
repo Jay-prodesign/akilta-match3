@@ -278,6 +278,14 @@ jobs:
           echo "ios-03-gameplay.png dimensions=${WIDTH}x${HEIGHT}" | tee -a artifacts/ios-gameplay-frame-sizes.txt
           test "${WIDTH:-0}" -ge 640
           test "${HEIGHT:-0}" -ge 1100
+
+          DATA_PATH="$(xcrun simctl get_app_container "$SIM_UDID" "$BUNDLE_ID" data)"
+          test -d "$DATA_PATH"
+          MARKER_PATH="$(find "$DATA_PATH" -type f -name native-runtime-review-route.txt -print -quit)"
+          test -n "$MARKER_PATH"
+          cp "$MARKER_PATH" artifacts/ios-native-review-route.txt
+          grep -Fxq "gameplay" artifacts/ios-native-review-route.txt
+          echo "IOS_NATIVE_GAMEPLAY_ROUTE_PASS: real Splash → House → Map → Prestart → Gameplay traversal"
       - name: Check iOS runtime log for Cat & Coven failures
         shell: bash
         run: |
