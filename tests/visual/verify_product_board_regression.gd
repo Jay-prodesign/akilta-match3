@@ -23,6 +23,7 @@ const BASELINES := {
 	"progression-final-events.png": {"hash": "08011a0d284b71738d065e351e6a520941046554d495249656833544270c048d", "max_distance": 10},
 	"progression-final-shop.png": {"hash": "88015ea7342375a545326c230e621819b12e3075551aaba1890690c327ab0481", "max_distance": 8},
 	"progression-final-profile.png": {"hash": "8801480010012001001348010801000120290001451aaba1890690c327ab0481", "max_distance": 8},
+	"progression-final-settings.png": {"hash": "39e74001c2804001800180034002181180220001551aaba1890690c327ab62aa", "max_distance": 8},
 	"chapters-00-first-wing.png": {"hash": "09019a0d495ba80dad463571166250ad51a43514d485a49656833544270c04c1", "max_distance": 8},
 }
 
