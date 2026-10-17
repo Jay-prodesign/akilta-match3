@@ -156,6 +156,7 @@ func _run_native_runtime_review_route(route: String) -> void:
 		return
 	match route:
 		"house":
+			_write_native_runtime_review_marker("house")
 			print("NATIVE_RUNTIME_REVIEW_ROUTE_PASS: house")
 		"gameplay":
 			if not show_map():
@@ -164,7 +165,15 @@ func _run_native_runtime_review_route(route: String) -> void:
 				return
 			if not start_level(1):
 				return
+			_write_native_runtime_review_marker("gameplay")
 			print("NATIVE_RUNTIME_REVIEW_ROUTE_PASS: gameplay")
+
+func _write_native_runtime_review_marker(route: String) -> void:
+	var marker := FileAccess.open("user://native-runtime-review-route.txt", FileAccess.WRITE)
+	if marker == null:
+		return
+	marker.store_string(route)
+	marker.close()
 
 func current_route_name() -> String:
 	return navigation.route_name().to_lower() if navigation != null else ""
