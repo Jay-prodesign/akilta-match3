@@ -18,6 +18,24 @@ func _init() -> void:
 			var bootstrap = bootstrap_script.new()
 			if str(bootstrap.get("environment")) != "development":
 				failures.append("AppBootstrap must default to development environment")
+			var gameplay_args := PackedStringArray(["--cat-coven-native-review-route=gameplay"])
+			if bootstrap.native_runtime_review_route_from_args(gameplay_args) != "gameplay":
+				failures.append("Native review route parser must accept the workflow-only gameplay route")
+			var house_args := PackedStringArray(["--other-flag", "--cat-coven-native-review-route=HOUSE"])
+			if bootstrap.native_runtime_review_route_from_args(house_args) != "house":
+				failures.append("Native review route parser must normalize the workflow-only House route")
+			var map_args := PackedStringArray(["--cat-coven-native-review-route=map"])
+			if bootstrap.native_runtime_review_route_from_args(map_args) != "map":
+				failures.append("Native review route parser must accept the real chapter map route")
+			var prestart_args := PackedStringArray(["--cat-coven-native-review-route=prestart"])
+			if bootstrap.native_runtime_review_route_from_args(prestart_args) != "prestart":
+				failures.append("Native review route parser must accept the real prestart route")
+			var unsupported_args := PackedStringArray(["--cat-coven-native-review-route=shop"])
+			if bootstrap.native_runtime_review_route_from_args(unsupported_args) != "":
+				failures.append("Native review route parser must reject unsupported deep routes")
+			var normal_args := PackedStringArray(["--some-player-argument"])
+			if bootstrap.native_runtime_review_route_from_args(normal_args) != "":
+				failures.append("Normal launches must not opt into native review routing")
 			bootstrap.free()
 
 	if failures.is_empty():
