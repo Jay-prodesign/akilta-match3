@@ -28,6 +28,7 @@ on:
       - "tests/visual/capture_chapter_route_frontier.gd"
       - "tests/visual/capture_level3_special.gd"
       - "tests/visual/capture_returning_player_resume.gd"
+      - "tests/visual/verify_product_board_regression.gd"
       - "src/app/**"
       - "src/ui/home/**"
       - "src/ui/splash/**"
@@ -306,6 +307,19 @@ jobs:
           test -s artifacts/chapter-route-02-frontier3.png
           test -s artifacts/chapter-route-03-complete.png
           test -s artifacts/chapter-route-04-sealed-cabinet.png
+
+      - name: Enforce product-board composition regression
+        shell: bash
+        run: |
+          set -uo pipefail
+          set +e
+          output=$(./godot --headless --path . -s res://tests/visual/verify_product_board_regression.gd 2>&1)
+          status=$?
+          set -e
+          printf '%s\n' "$output"
+          if [ "$status" -ne 0 ]; then exit "$status"; fi
+          if grep -Eq "SCRIPT ERROR:|(^| )ERROR:|VISUAL_PARITY_FAIL:" <<<"$output"; then exit 1; fi
+          grep -Fq "VISUAL_PARITY_PASS: product-board composition regression gate" <<<"$output"
 
       - name: Upload Golden Loop render evidence
         uses: actions/upload-artifact@v4
