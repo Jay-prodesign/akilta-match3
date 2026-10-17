@@ -389,9 +389,9 @@ func _capture() -> void:
 	if settings_card == null or settings_sigil == null:
 		return _fail(app, "Settings visual parity geometry missing")
 	var settings_height_ratio := settings_card.size.y / settings_viewport.y
-	if settings_card.size.x / settings_viewport.x > 0.82 or settings_height_ratio < 0.58 or settings_height_ratio > 0.66:
+	if settings_card.size.x / settings_viewport.x > 0.80 or settings_height_ratio < 0.55 or settings_height_ratio > 0.60:
 		return _fail(app, "Settings card lost its compact Player-utility proportion: %.3f" % settings_height_ratio)
-	if settings_sigil.custom_minimum_size.y < 80.0 or settings_sigil.custom_minimum_size.y > 92.0:
+	if settings_sigil.custom_minimum_size.y < 68.0 or settings_sigil.custom_minimum_size.y > 80.0:
 		return _fail(app, "Settings House sigil visual anchor drifted")
 	var reduced_toggle: Button = settings_panel.get_node_or_null("Card/Content/ExperienceRow/Reduced") as Button
 	var contrast_toggle: Button = settings_panel.get_node_or_null("Card/Content/ExperienceRow/Contrast") as Button
