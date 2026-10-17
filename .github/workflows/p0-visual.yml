@@ -322,6 +322,7 @@ jobs:
           grep -Fq "VISUAL_PARITY_PASS: product-board composition regression gate" <<<"$output"
 
       - name: Upload Golden Loop render evidence
+        if: always()
         uses: actions/upload-artifact@v4
         with:
           name: golden-playable-loop-evidence
@@ -394,5 +395,5 @@ jobs:
             artifacts/chapter-route-03-complete.png
             artifacts/chapter-route-04-sealed-cabinet.png
             artifacts/progression-final-map.png
-          if-no-files-found: error
+          if-no-files-found: warn
           retention-days: 14
