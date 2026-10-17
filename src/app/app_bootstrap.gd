@@ -24,6 +24,7 @@ const ProductNavigation = preload("res://src/ui/shared/product_navigation.gd")
 const TopResourceBar = preload("res://src/ui/shared/top_resource_bar.gd")
 const MobileSafeArea = preload("res://src/ui/shared/mobile_safe_area.gd")
 const NATIVE_RUNTIME_REVIEW_AUTO_ENTER_ARG := "--cat-coven-native-review-auto-enter"
+const NATIVE_RUNTIME_REVIEW_ROUTE_PREFIX := "--cat-coven-native-review-route="
 const ROUTE_TRANSITION_DURATION := 0.10
 
 @export var environment: String = "development"
@@ -120,12 +121,50 @@ func _complete_bootstrap() -> void:
 			splash.set_boot_state("recoverable_error", "This House record was created by a newer build. Update the game before entering so that record is not overwritten.", false)
 		_:
 			splash.set_boot_state("ready")
-	if String(splash.boot_state()) == "ready" and _native_runtime_review_auto_enter_requested():
-		call_deferred("_on_splash_continue")
+	if String(splash.boot_state()) == "ready":
+		var native_review_route := _native_runtime_review_route_requested()
+		if native_review_route != "":
+			call_deferred("_run_native_runtime_review_route", native_review_route)
+		elif _native_runtime_review_auto_enter_requested():
+			call_deferred("_on_splash_continue")
+
+func native_runtime_review_route_from_args(args: PackedStringArray) -> String:
+	for raw_arg in args:
+		var arg := String(raw_arg)
+		if not arg.begins_with(NATIVE_RUNTIME_REVIEW_ROUTE_PREFIX):
+			continue
+		var route := arg.trim_prefix(NATIVE_RUNTIME_REVIEW_ROUTE_PREFIX).strip_edges().to_lower()
+		if route in ["house", "gameplay"]:
+			return route
+	return ""
+
+func _native_runtime_review_route_requested() -> String:
+	var route := native_runtime_review_route_from_args(OS.get_cmdline_args())
+	if route != "":
+		return route
+	return native_runtime_review_route_from_args(OS.get_cmdline_user_args())
 
 func _native_runtime_review_auto_enter_requested() -> bool:
 	# Workflow-only proof hook. Normal player launches never receive this arg.
 	return OS.get_cmdline_args().has(NATIVE_RUNTIME_REVIEW_AUTO_ENTER_ARG) or OS.get_cmdline_user_args().has(NATIVE_RUNTIME_REVIEW_AUTO_ENTER_ARG)
+
+func _run_native_runtime_review_route(route: String) -> void:
+	# Workflow-only deep review path. It deliberately traverses the same real
+	# navigation methods a player uses; it never instantiates a fake review UI.
+	_on_splash_continue()
+	if navigation == null or navigation.current() != NavigationScript.Route.HOUSE:
+		return
+	match route:
+		"house":
+			print("NATIVE_RUNTIME_REVIEW_ROUTE_PASS: house")
+		"gameplay":
+			if not show_map():
+				return
+			if not show_prestart(1):
+				return
+			if not start_level(1):
+				return
+			print("NATIVE_RUNTIME_REVIEW_ROUTE_PASS: gameplay")
 
 func current_route_name() -> String:
 	return navigation.route_name().to_lower() if navigation != null else ""
