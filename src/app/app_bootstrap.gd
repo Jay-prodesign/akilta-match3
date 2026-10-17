@@ -134,7 +134,7 @@ func native_runtime_review_route_from_args(args: PackedStringArray) -> String:
 		if not arg.begins_with(NATIVE_RUNTIME_REVIEW_ROUTE_PREFIX):
 			continue
 		var route := arg.trim_prefix(NATIVE_RUNTIME_REVIEW_ROUTE_PREFIX).strip_edges().to_lower()
-		if route in ["house", "gameplay"]:
+		if route in ["house", "map", "prestart", "gameplay"]:
 			return route
 	return ""
 
@@ -158,6 +158,18 @@ func _run_native_runtime_review_route(route: String) -> void:
 		"house":
 			_write_native_runtime_review_marker("house")
 			print("NATIVE_RUNTIME_REVIEW_ROUTE_PASS: house")
+		"map":
+			if not show_map():
+				return
+			_write_native_runtime_review_marker("map")
+			print("NATIVE_RUNTIME_REVIEW_ROUTE_PASS: map")
+		"prestart":
+			if not show_map():
+				return
+			if not show_prestart(1):
+				return
+			_write_native_runtime_review_marker("prestart")
+			print("NATIVE_RUNTIME_REVIEW_ROUTE_PASS: prestart")
 		"gameplay":
 			if not show_map():
 				return
