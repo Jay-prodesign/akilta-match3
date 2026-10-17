@@ -239,6 +239,44 @@ jobs:
           test "${WIDTH:-0}" -ge 640
           test "${HEIGHT:-0}" -ge 1100
 
+      - name: Deep-link through real product flow and capture native Gameplay
+        shell: bash
+        run: |
+          set -euo pipefail
+          BUNDLE_ID="com.akilta.catandcoven"
+          xcrun simctl terminate "$SIM_UDID" "$BUNDLE_ID" >/dev/null 2>&1 || true
+          LAUNCH_OUTPUT="$(xcrun simctl launch "$SIM_UDID" "$BUNDLE_ID" --cat-coven-native-review-route=gameplay 2>&1)"
+          printf '%s\n' "$LAUNCH_OUTPUT" | tee artifacts/ios-gameplay-launch.txt
+          APP_PID="$(printf '%s\n' "$LAUNCH_OUTPUT" | sed -n 's/.*: \([0-9][0-9]*\)$/\1/p' | tail -1)"
+          test -n "$APP_PID"
+          echo "IOS_GAMEPLAY_PID=$APP_PID" | tee -a artifacts/ios-lifecycle.txt
+
+          RENDERED=0
+          : > artifacts/ios-gameplay-frame-sizes.txt
+          for ATTEMPT in $(seq 1 12); do
+            sleep 2
+            xcrun simctl spawn "$SIM_UDID" launchctl list > artifacts/ios-gameplay-launchctl-list.txt 2>&1 || true
+            grep -Fq "$BUNDLE_ID" artifacts/ios-gameplay-launchctl-list.txt
+            xcrun simctl io "$SIM_UDID" screenshot artifacts/ios-03-gameplay.png
+            test -s artifacts/ios-03-gameplay.png
+            BYTES="$(stat -f%z artifacts/ios-03-gameplay.png)"
+            echo "ios-03-gameplay.png attempt=$ATTEMPT bytes=$BYTES" | tee -a artifacts/ios-gameplay-frame-sizes.txt
+            if [ "$BYTES" -ge 200000 ]; then
+              RENDERED=1
+              break
+            fi
+          done
+          if [ "$RENDERED" -ne 1 ]; then
+            xcrun simctl spawn "$SIM_UDID" log show --last 2m --style compact --predicate 'process == "CatAndCoven"' > artifacts/ios-gameplay-render-timeout-log.txt || true
+            echo "::error::Cat & Coven native review route did not reach a rendered Gameplay frame."
+            tail -200 artifacts/ios-gameplay-render-timeout-log.txt || true
+            exit 1
+          fi
+          WIDTH="$(sips -g pixelWidth artifacts/ios-03-gameplay.png | awk '/pixelWidth:/ {print $2}')"
+          HEIGHT="$(sips -g pixelHeight artifacts/ios-03-gameplay.png | awk '/pixelHeight:/ {print $2}')"
+          echo "ios-03-gameplay.png dimensions=${WIDTH}x${HEIGHT}" | tee -a artifacts/ios-gameplay-frame-sizes.txt
+          test "${WIDTH:-0}" -ge 640
+          test "${HEIGHT:-0}" -ge 1100
       - name: Check iOS runtime log for Cat & Coven failures
         shell: bash
         run: |
@@ -256,7 +294,7 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          for FRAME in ios-01-cold-launch ios-02-house-relaunch; do
+          for FRAME in ios-01-cold-launch ios-02-house-relaunch ios-03-gameplay; do
             SRC="artifacts/${FRAME}.png"
             [ -s "$SRC" ] || continue
             OUT="artifacts/${FRAME}-review.jpg"
