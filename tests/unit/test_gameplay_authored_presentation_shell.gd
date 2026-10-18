@@ -14,7 +14,7 @@ func _run() -> void:
 	var contract: Dictionary = screen.gameplay_presentation_contract()
 	for key in [
 		"authored_hud_plate", "authored_resource_bar", "authored_booster_menu",
-		"north_star_resource_strip", "north_star_objective_strip", "north_star_booster_tray",
+		"north_star_resource_strip", "north_star_objective_strip", "north_star_booster_tray", "tall_viewport_booster_attachment",
 		"truthful_sealed_slots", "authored_target_moves_hierarchy", "authored_board_frame",
 		"asset_backed_gameplay_chrome", "board_frame_asset_owner", "north_star_gameplay_geometry",
 		"gameplay_header_clearance", "compact_resource_chips", "asset_backed_resource_chips",
@@ -30,6 +30,8 @@ func _run() -> void:
 	_expect(float(contract.get("resource_bar_height", 0.0)) == 80.0, "Resource strip height drifted")
 	_expect(float(contract.get("hud_plate_height", 0.0)) >= 184.0 and float(contract.get("hud_plate_height", 0.0)) <= 200.0, "Target/moves HUD depth drifted from North Star composition")
 	_expect(float(contract.get("booster_tray_height", 0.0)) >= 210.0 and float(contract.get("booster_tray_height", 0.0)) <= 230.0, "Booster tray depth drifted")
+	_expect(is_equal_approx(float(screen.booster_tray_target_top_for_board_bottom(1452.0)), 1488.0), "Baseline board-to-booster authored gap drifted")
+	_expect(float(contract.get("board_to_booster_gap", -1.0)) >= 34.0 and float(contract.get("board_to_booster_gap", -1.0)) <= 38.0, "Gameplay boosters must stay attached to the rendered board across viewport expansion")
 
 	var level_plaque := screen.get_node_or_null("Layout/LevelPlaque") as PanelContainer
 	var eyebrow := screen.get_node_or_null("Layout/LevelPlaque/Eyebrow") as Label
