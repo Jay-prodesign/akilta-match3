@@ -16,12 +16,12 @@ const CURRENT_WING_ART_PATH := "res://assets/world/ch01_curio_boutique/chapter_r
 const SEALED_WING_SEAL_PATH := "res://assets/blockers/ch01_blocker_wax_seal_intact_v01.webp"
 
 const WINGS := [
-	{"id":"curio_boutique","name":"CURIO BOUTIQUE","x":0.04,"y":0.025,"w":0.92,"h":0.145},
-	{"id":"witch_atelier","name":"WITCH ATELIER","x":0.06,"y":0.19,"w":0.88,"h":0.115},
-	{"id":"dark_vanity","name":"DARK VANITY","x":0.06,"y":0.325,"w":0.88,"h":0.115},
-	{"id":"archive","name":"THE ARCHIVE","x":0.06,"y":0.46,"w":0.88,"h":0.115},
-	{"id":"moon_conservatory","name":"MOON CONSERVATORY","x":0.06,"y":0.595,"w":0.88,"h":0.115},
-	{"id":"cemetery_garden","name":"CEMETERY GARDEN","x":0.06,"y":0.73,"w":0.88,"h":0.115},
+	{"id":"curio_boutique","name":"CURIO BOUTIQUE","x":0.04,"y":0.02,"w":0.92,"h":0.205},
+	{"id":"witch_atelier","name":"WITCH ATELIER","x":0.08,"y":0.255,"w":0.84,"h":0.095},
+	{"id":"dark_vanity","name":"DARK VANITY","x":0.08,"y":0.375,"w":0.84,"h":0.095},
+	{"id":"archive","name":"THE ARCHIVE","x":0.08,"y":0.495,"w":0.84,"h":0.095},
+	{"id":"moon_conservatory","name":"MOON CONSERVATORY","x":0.08,"y":0.615,"w":0.84,"h":0.095},
+	{"id":"cemetery_garden","name":"CEMETERY GARDEN","x":0.08,"y":0.735,"w":0.84,"h":0.095},
 ]
 
 var progress
@@ -89,14 +89,14 @@ func _ready() -> void:
 			var wax_seal := button.get_node_or_null("WaxSeal") as TextureRect
 			if wax_seal != null:
 				wax_seal.texture = sealed_wing_seal
-				wax_seal.anchor_left = 0.10
-				wax_seal.anchor_right = 0.10
+				wax_seal.anchor_left = 0.90
+				wax_seal.anchor_right = 0.90
 				wax_seal.anchor_top = 0.50
 				wax_seal.anchor_bottom = 0.50
-				wax_seal.offset_left = -30.0
-				wax_seal.offset_top = -30.0
-				wax_seal.offset_right = 30.0
-				wax_seal.offset_bottom = 30.0
+				wax_seal.offset_left = -32.0
+				wax_seal.offset_top = -32.0
+				wax_seal.offset_right = 32.0
+				wax_seal.offset_bottom = 32.0
 			button.set_meta("sealed_status_marker", "shared_wax_seal")
 			button.tooltip_text = "%s · inspect why this future chapter remains sealed" % String(wing["name"]).capitalize()
 			button.pressed.connect(_show_sealed_wing.bind(id, String(wing["name"])))
@@ -277,7 +277,7 @@ func _layout_chapter_hotspots(grid: Control, buttons: Array[Button]) -> void:
 		button.position = Vector2(roundf(grid.size.x * x), roundf(grid.size.y * y))
 		button.size = Vector2(roundf(grid.size.x * w), roundf(grid.size.y * h))
 		var current := String(button.get_meta("chapter_id", "")) == "curio_boutique"
-		button.add_theme_font_size_override("font_size", 22 if current else 19)
+		button.add_theme_font_size_override("font_size", 24 if current else 20)
 
 func chapter_visual_contract() -> Dictionary:
 	var sealed_markers_authored := true
@@ -298,13 +298,17 @@ func chapter_visual_contract() -> Dictionary:
 		"compact_header_back": _back != null and _back.custom_minimum_size.x >= 60.0 and _back.custom_minimum_size.x <= 72.0 and _back.custom_minimum_size.y >= 60.0 and _back.custom_minimum_size.y <= 72.0,
 		"summary_suppressed_for_board_parity": _chapter_summary != null and not _chapter_summary.visible and _lock_reason != null and not _lock_reason.visible,
 		"chapter_descriptors_present": _witch_atelier.text.contains("POTIONS & EXPERIMENTS") and _dark_vanity.text.contains("MIRRORS & SECRETS") and _archive.text.contains("LOST KNOWLEDGE") and _moon_conservatory.text.contains("CELESTIAL BOTANICALS") and _cemetery_garden.text.contains("RESTING BEAUTIES"),
-		"north_star_vertical_chapter_list": _grid != null and _current.size.x >= _grid.size.x * 0.90 and _current.size.x <= _grid.size.x * 0.94 and _current.size.y <= _grid.size.y * 0.15 and [_witch_atelier, _dark_vanity, _archive, _moon_conservatory, _cemetery_garden].all(func(button): return button.size.x >= _grid.size.x * 0.86 and button.size.x <= _grid.size.x * 0.90 and button.size.y <= _grid.size.y * 0.12) and _current.position.y < _witch_atelier.position.y and _witch_atelier.position.y < _dark_vanity.position.y and _dark_vanity.position.y < _archive.position.y and _archive.position.y < _moon_conservatory.position.y and _moon_conservatory.position.y < _cemetery_garden.position.y,
-		"current_wing_art_thumbnail": _current_art != null and _current_art.anchor_right >= 0.29 and _current_art.anchor_right <= 0.33 and _current_art.anchor_bottom >= 0.98,
+		"north_star_vertical_chapter_list": _grid != null and _current.size.x >= _grid.size.x * 0.90 and _current.size.x <= _grid.size.x * 0.94 and _current.size.y >= _grid.size.y * 0.19 and _current.size.y <= _grid.size.y * 0.22 and [_witch_atelier, _dark_vanity, _archive, _moon_conservatory, _cemetery_garden].all(func(button): return button.size.x >= _grid.size.x * 0.82 and button.size.x <= _grid.size.x * 0.86 and button.size.y >= _grid.size.y * 0.085 and button.size.y <= _grid.size.y * 0.105) and _current.position.y < _witch_atelier.position.y and _witch_atelier.position.y < _dark_vanity.position.y and _dark_vanity.position.y < _archive.position.y and _archive.position.y < _moon_conservatory.position.y and _moon_conservatory.position.y < _cemetery_garden.position.y,
+		"current_wing_art_thumbnail": _current_art != null and _current_art.anchor_right >= 0.41 and _current_art.anchor_right <= 0.45 and _current_art.anchor_bottom >= 0.98,
+		"current_wing_hero_dominance": _current.size.y >= _witch_atelier.size.y * 1.9 and _current_art.anchor_right >= 0.40,
+		"compact_sealed_door_rows": [_witch_atelier, _dark_vanity, _archive, _moon_conservatory, _cemetery_garden].all(func(button): return button.size.y <= _grid.size.y * 0.105 and button.size.x <= _grid.size.x * 0.86),
+		"sealed_copy_two_line": [_witch_atelier, _dark_vanity, _archive, _moon_conservatory, _cemetery_garden].all(func(button): return button.text.count("\n") == 1 and button.text.contains("SEALED")),
 		"locked_row_readability": [_witch_atelier, _dark_vanity, _archive, _moon_conservatory, _cemetery_garden].all(func(button): return button.get_theme_font_size("font_size") >= 19 and button.alignment == HORIZONTAL_ALIGNMENT_LEFT),
 		"scene_authored_wing_rows": [_current, _witch_atelier, _dark_vanity, _archive, _moon_conservatory, _cemetery_garden].all(func(button): return button.get_theme_stylebox("normal") is StyleBoxFlat and String(button.get_meta("chapter_material", "")) == "scene_authored_flat"),
 		"scene_authored_header_back": _back != null and _back.get_theme_stylebox("normal") is StyleBoxFlat and String(_back.get_meta("chapter_material", "")) == "scene_authored_flat",
-		"sealed_marker_scale": [_witch_atelier, _dark_vanity, _archive, _moon_conservatory, _cemetery_garden].all(func(button): var seal = button.get_node_or_null("WaxSeal") as TextureRect; return seal != null and seal.texture != null and seal.offset_right - seal.offset_left >= 58.0),
-		"current_copy_clears_thumbnail": _current != null and _current.text == "" and _current_copy != null and _current_copy.anchor_left >= 0.32 and _current_copy.anchor_right <= 0.97 and _current_copy.get_theme_font_size("font_size") >= 21 and _current_copy.get_theme_font_size("font_size") <= 23,
+		"sealed_marker_scale": [_witch_atelier, _dark_vanity, _archive, _moon_conservatory, _cemetery_garden].all(func(button): var seal = button.get_node_or_null("WaxSeal") as TextureRect; return seal != null and seal.texture != null and seal.offset_right - seal.offset_left >= 64.0),
+		"sealed_marker_right_rail": [_witch_atelier, _dark_vanity, _archive, _moon_conservatory, _cemetery_garden].all(func(button): var seal = button.get_node_or_null("WaxSeal") as TextureRect; return seal != null and seal.anchor_left >= 0.88),
+		"current_copy_clears_thumbnail": _current != null and _current.text == "" and _current_copy != null and _current_copy.anchor_left >= 0.44 and _current_copy.anchor_right <= 0.97 and _current_copy.get_theme_font_size("font_size") >= 23 and _current_copy.get_theme_font_size("font_size") <= 25,
 		"current_copy_scene_owned": _current_copy != null and _current_copy.get_parent() == _current and _current_copy.mouse_filter == Control.MOUSE_FILTER_IGNORE,
 		"runtime_style_factory": false,
 	}

@@ -27,7 +27,7 @@ corner_radius_bottom_right = 10
 corner_radius_bottom_left = 10
 
 [sub_resource type="StyleBoxFlat" id="CurrentNormal"]
-bg_color = Color(0.145, 0.09, 0.173, 0.84)
+bg_color = Color(0.112, 0.055, 0.137, 0.94)
 border_width_left = 2
 border_width_top = 2
 border_width_right = 2
@@ -37,15 +37,15 @@ corner_radius_top_left = 22
 corner_radius_top_right = 22
 corner_radius_bottom_right = 22
 corner_radius_bottom_left = 22
-content_margin_left = 188.0
+content_margin_left = 238.0
 content_margin_top = 10.0
 content_margin_right = 16.0
 content_margin_bottom = 10.0
 shadow_color = Color(0, 0, 0, 0.62)
-shadow_size = 14
+shadow_size = 18
 
 [sub_resource type="StyleBoxFlat" id="CurrentHover"]
-bg_color = Color(0.215, 0.139, 0.251, 0.92)
+bg_color = Color(0.19, 0.09, 0.225, 0.97)
 border_width_left = 2
 border_width_top = 2
 border_width_right = 2
@@ -55,48 +55,48 @@ corner_radius_top_left = 22
 corner_radius_top_right = 22
 corner_radius_bottom_right = 22
 corner_radius_bottom_left = 22
-content_margin_left = 188.0
+content_margin_left = 238.0
 content_margin_top = 10.0
 content_margin_right = 16.0
 content_margin_bottom = 10.0
 shadow_color = Color(0, 0, 0, 0.68)
-shadow_size = 16
+shadow_size = 20
 
 [sub_resource type="StyleBoxFlat" id="LockedNormal"]
-bg_color = Color(0.055, 0.045, 0.075, 0.56)
-border_width_left = 2
-border_width_top = 2
-border_width_right = 2
-border_width_bottom = 2
-border_color = Color(0.72, 0.62, 0.75, 0.72)
-corner_radius_top_left = 20
-corner_radius_top_right = 20
-corner_radius_bottom_right = 20
-corner_radius_bottom_left = 20
-content_margin_left = 92.0
-content_margin_top = 8.0
-content_margin_right = 58.0
-content_margin_bottom = 8.0
-shadow_color = Color(0, 0, 0, 0.34)
-shadow_size = 8
+bg_color = Color(0.035, 0.025, 0.052, 0.84)
+border_width_left = 4
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.64, 0.51, 0.69, 0.74)
+corner_radius_top_left = 14
+corner_radius_top_right = 14
+corner_radius_bottom_right = 14
+corner_radius_bottom_left = 14
+content_margin_left = 26.0
+content_margin_top = 6.0
+content_margin_right = 96.0
+content_margin_bottom = 6.0
+shadow_color = Color(0, 0, 0, 0.48)
+shadow_size = 10
 
 [sub_resource type="StyleBoxFlat" id="LockedHover"]
-bg_color = Color(0.12, 0.09, 0.15, 0.64)
-border_width_left = 2
-border_width_top = 2
-border_width_right = 2
-border_width_bottom = 2
-border_color = Color(0.831, 0.678, 0.439, 0.78)
-corner_radius_top_left = 20
-corner_radius_top_right = 20
-corner_radius_bottom_right = 20
-corner_radius_bottom_left = 20
-content_margin_left = 92.0
-content_margin_top = 8.0
-content_margin_right = 58.0
-content_margin_bottom = 8.0
-shadow_color = Color(0, 0, 0, 0.42)
-shadow_size = 10
+bg_color = Color(0.09, 0.055, 0.115, 0.92)
+border_width_left = 4
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.831, 0.678, 0.439, 0.84)
+corner_radius_top_left = 14
+corner_radius_top_right = 14
+corner_radius_bottom_right = 14
+corner_radius_bottom_left = 14
+content_margin_left = 26.0
+content_margin_top = 6.0
+content_margin_right = 96.0
+content_margin_bottom = 6.0
+shadow_color = Color(0, 0, 0, 0.54)
+shadow_size = 12
 
 
 [sub_resource type="StyleBoxFlat" id="CurrentCopyPlate"]
@@ -173,7 +173,7 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
-color = Color(0.025, 0.02, 0.05, 0.34)
+color = Color(0.025, 0.02, 0.05, 0.26)
 
 [node name="Layout" type="VBoxContainer" parent="."]
 layout_mode = 1
@@ -223,7 +223,7 @@ layout_mode = 2
 theme_override_colors/font_color = Color(1, 0.941, 0.847, 1)
 theme_override_colors/font_outline_color = Color(0.02, 0.014, 0.028, 0.96)
 theme_override_constants/outline_size = 5
-theme_override_font_sizes/font_size = 42
+theme_override_font_sizes/font_size = 46
 text = "CHAPTERS"
 horizontal_alignment = 1
 
@@ -263,7 +263,7 @@ alignment = 1
 
 [node name="CurrentWingArtwork" type="TextureRect" parent="Layout/ChapterGrid/CurioBoutiqueButton"]
 layout_mode = 1
-anchor_right = 0.31
+anchor_right = 0.43
 anchor_bottom = 1.0
 offset_left = 8.0
 offset_top = 8.0
@@ -277,9 +277,9 @@ stretch_mode = 6
 
 [node name="CurrentWingCopy" type="Label" parent="Layout/ChapterGrid/CurioBoutiqueButton"]
 layout_mode = 1
-anchor_left = 0.33
+anchor_left = 0.45
 anchor_top = 0.08
-anchor_right = 0.96
+anchor_right = 0.965
 anchor_bottom = 0.92
 grow_horizontal = 2
 grow_vertical = 2
@@ -287,7 +287,7 @@ mouse_filter = 2
 theme_override_colors/font_color = Color(1, 0.969, 0.914, 1)
 theme_override_colors/font_outline_color = Color(0.02, 0.014, 0.028, 0.96)
 theme_override_constants/outline_size = 3
-theme_override_font_sizes/font_size = 22
+theme_override_font_sizes/font_size = 24
 text = "CURIO BOUTIQUE\nRARE FINDS · 0 / 3 AWAKENED\nBEGIN RESTORATION"
 horizontal_alignment = 1
 vertical_alignment = 1
@@ -313,9 +313,7 @@ theme_override_styles/normal = SubResource("LockedNormal")
 theme_override_styles/hover = SubResource("LockedHover")
 theme_override_styles/pressed = SubResource("LockedHover")
 theme_override_styles/focus = SubResource("LockedHover")
-text = "WITCH ATELIER
-POTIONS & EXPERIMENTS
-SEALED"
+text = "WITCH ATELIER\nPOTIONS & EXPERIMENTS · SEALED"
 alignment = 0
 
 [node name="WaxSeal" type="TextureRect" parent="Layout/ChapterGrid/Chapter_witch_atelier"]
@@ -344,9 +342,7 @@ theme_override_styles/normal = SubResource("LockedNormal")
 theme_override_styles/hover = SubResource("LockedHover")
 theme_override_styles/pressed = SubResource("LockedHover")
 theme_override_styles/focus = SubResource("LockedHover")
-text = "DARK VANITY
-MIRRORS & SECRETS
-SEALED"
+text = "DARK VANITY\nMIRRORS & SECRETS · SEALED"
 alignment = 0
 
 [node name="WaxSeal" type="TextureRect" parent="Layout/ChapterGrid/Chapter_dark_vanity"]
@@ -375,9 +371,7 @@ theme_override_styles/normal = SubResource("LockedNormal")
 theme_override_styles/hover = SubResource("LockedHover")
 theme_override_styles/pressed = SubResource("LockedHover")
 theme_override_styles/focus = SubResource("LockedHover")
-text = "THE ARCHIVE
-LOST KNOWLEDGE
-SEALED"
+text = "THE ARCHIVE\nLOST KNOWLEDGE · SEALED"
 alignment = 0
 
 [node name="WaxSeal" type="TextureRect" parent="Layout/ChapterGrid/Chapter_archive"]
@@ -406,9 +400,7 @@ theme_override_styles/normal = SubResource("LockedNormal")
 theme_override_styles/hover = SubResource("LockedHover")
 theme_override_styles/pressed = SubResource("LockedHover")
 theme_override_styles/focus = SubResource("LockedHover")
-text = "MOON CONSERVATORY
-CELESTIAL BOTANICALS
-SEALED"
+text = "MOON CONSERVATORY\nCELESTIAL BOTANICALS · SEALED"
 alignment = 0
 
 [node name="WaxSeal" type="TextureRect" parent="Layout/ChapterGrid/Chapter_moon_conservatory"]
@@ -437,9 +429,7 @@ theme_override_styles/normal = SubResource("LockedNormal")
 theme_override_styles/hover = SubResource("LockedHover")
 theme_override_styles/pressed = SubResource("LockedHover")
 theme_override_styles/focus = SubResource("LockedHover")
-text = "CEMETERY GARDEN
-RESTING BEAUTIES
-SEALED"
+text = "CEMETERY GARDEN\nRESTING BEAUTIES · SEALED"
 alignment = 0
 
 [node name="WaxSeal" type="TextureRect" parent="Layout/ChapterGrid/Chapter_cemetery_garden"]
