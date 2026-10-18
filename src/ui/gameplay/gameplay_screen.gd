@@ -1528,6 +1528,8 @@ func gameplay_presentation_contract() -> Dictionary:
 		"resource_bar_height": ($ResourceBar as PanelContainer).offset_bottom - ($ResourceBar as PanelContainer).offset_top,
 		"hud_plate_height": ($Layout/HUDPlate as PanelContainer).custom_minimum_size.y,
 		"booster_tray_height": _booster_tray.offset_bottom - _booster_tray.offset_top,
+		"booster_tray_baseline_top": BOOSTER_TRAY_BASELINE_TOP,
+		"booster_tray_tall_offset_2400": booster_tray_offset_for_viewport_height(2400.0),
 		"visible_booster_count": 3,
 		"authored_result_values": _result_reward_values != null,
 		"authored_result_proclamation": _result_proclamation != null and _result_keeper_cat != null,
