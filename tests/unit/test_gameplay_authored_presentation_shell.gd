@@ -30,8 +30,8 @@ func _run() -> void:
 	_expect(float(contract.get("resource_bar_height", 0.0)) == 80.0, "Resource strip height drifted")
 	_expect(float(contract.get("hud_plate_height", 0.0)) >= 184.0 and float(contract.get("hud_plate_height", 0.0)) <= 200.0, "Target/moves HUD depth drifted from North Star composition")
 	_expect(float(contract.get("booster_tray_height", 0.0)) >= 210.0 and float(contract.get("booster_tray_height", 0.0)) <= 230.0, "Booster tray depth drifted")
-	_expect(is_equal_approx(float(screen.booster_tray_offset_for_viewport_height(1920.0)), 0.0), "Baseline gameplay height must preserve the reviewed booster band")
-	_expect(is_equal_approx(float(screen.booster_tray_offset_for_viewport_height(2400.0)), -372.0), "Tall phone gameplay must compensate expanded viewport height instead of detaching boosters from the board")
+	_expect(is_equal_approx(float(screen.booster_tray_target_top_for_board_bottom(1452.0)), 1488.0), "Baseline board-to-booster authored gap drifted")
+	_expect(float(contract.get("board_to_booster_gap", -1.0)) >= 34.0 and float(contract.get("board_to_booster_gap", -1.0)) <= 38.0, "Gameplay boosters must stay attached to the rendered board across viewport expansion")
 
 	var level_plaque := screen.get_node_or_null("Layout/LevelPlaque") as PanelContainer
 	var eyebrow := screen.get_node_or_null("Layout/LevelPlaque/Eyebrow") as Label
