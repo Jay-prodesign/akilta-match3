@@ -89,7 +89,7 @@ jobs:
           ./godot --headless --path . -s res://tests/unit/test_mobile_safe_area.gd
           ./godot --headless --path . -s res://tests/integration/test_splash_boot_states.gd
 
-      - name: Export x86_64 emulator APK
+      - name: Export x86_64 emulator APKs
         shell: bash
         env:
           GODOT_ANDROID_KEYSTORE_RELEASE_PATH: /tmp/cat-coven-runtime-ci.keystore
@@ -100,6 +100,23 @@ jobs:
           ./godot --headless --path . --export-release "Android CI Emulator APK" build/android/cat-and-coven-emulator.apk
           test -s build/android/cat-and-coven-emulator.apk
           apksigner verify --verbose --print-certs build/android/cat-and-coven-emulator.apk
+
+          cp export_presets.cfg /tmp/export_presets.cfg
+          python3 - <<'PY'
+          from pathlib import Path
+
+          path = Path("export_presets.cfg")
+          text = path.read_text()
+          normal = 'command_line/extra_args="--rendering-method gl_compatibility --rendering-driver opengl3"'
+          review = 'command_line/extra_args="--rendering-method gl_compatibility --rendering-driver opengl3 --cat-coven-native-review-route=gameplay"'
+          if text.count(normal) != 1:
+              raise SystemExit("Expected exactly one Android CI Emulator command_line/extra_args entry")
+          path.write_text(text.replace(normal, review, 1))
+          PY
+          ./godot --headless --path . --export-release "Android CI Emulator APK" build/android/cat-and-coven-gameplay-review.apk
+          cp /tmp/export_presets.cfg export_presets.cfg
+          test -s build/android/cat-and-coven-gameplay-review.apk
+          apksigner verify --verbose --print-certs build/android/cat-and-coven-gameplay-review.apk
 
       - name: Boot Pixel-class Android emulator
         shell: bash
@@ -333,6 +350,63 @@ jobs:
           test -s artifacts/android-03-force-stop-relaunch.png
           test -s artifacts/android-03-force-stop-relaunch.png
 
+      - name: Capture real Gameplay on Android native runtime
+        shell: bash
+        run: |
+          set -euo pipefail
+          PACKAGE="com.akilta.catandcoven"
+          adb shell am force-stop "$PACKAGE" || true
+          adb install -r build/android/cat-and-coven-gameplay-review.apk | tee artifacts/gameplay-review-install.txt
+          grep -Fq "Success" artifacts/gameplay-review-install.txt
+          adb logcat -c
+          adb shell monkey -p "$PACKAGE" -c android.intent.category.LAUNCHER 1 >/dev/null
+
+          GAMEPLAY_PID=""
+          RENDERED=0
+          : > artifacts/android-gameplay-review-attempts.txt
+          for ATTEMPT in $(seq 1 30); do
+            sleep 2
+            GAMEPLAY_PID="$(adb shell pidof "$PACKAGE" 2>/dev/null | tr -d '\r' || true)"
+            [ -n "$GAMEPLAY_PID" ] || continue
+            adb shell dumpsys activity activities | grep -E "mResumedActivity|topResumedActivity" > artifacts/gameplay-foreground.txt || true
+            grep -Fq "$PACKAGE" artifacts/gameplay-foreground.txt || continue
+            adb logcat -d > artifacts/gameplay-review-logcat.txt || true
+            MARKER=0
+            if grep -Fq "NATIVE_RUNTIME_REVIEW_ROUTE_PASS: gameplay" artifacts/gameplay-review-logcat.txt; then
+              MARKER=1
+            fi
+            adb exec-out screencap -p > artifacts/android-04-gameplay.png
+            test -s artifacts/android-04-gameplay.png
+            BYTES="$(stat -c%s artifacts/android-04-gameplay.png)"
+            echo "android-04-gameplay.png attempt=$ATTEMPT bytes=$BYTES marker=$MARKER pid=$GAMEPLAY_PID" | tee -a artifacts/android-gameplay-review-attempts.txt
+            if [ "$BYTES" -ge 500000 ] && [ "$MARKER" -eq 1 ]; then
+              RENDERED=1
+              break
+            fi
+          done
+
+          if [ "$RENDERED" -ne 1 ]; then
+            echo "::error::Android native runtime did not reach the real Gameplay review route."
+            tail -200 artifacts/gameplay-review-logcat.txt || true
+            exit 1
+          fi
+
+          python3 - <<'PY'
+          import struct
+          from pathlib import Path
+
+          path = Path("artifacts/android-04-gameplay.png")
+          data = path.read_bytes()
+          if data[:8] != b"\x89PNG\r\n\x1a\n":
+              raise SystemExit("Gameplay evidence is not a PNG")
+          width, height = struct.unpack(">II", data[16:24])
+          print(f"android-04-gameplay.png dimensions={width}x{height}")
+          if width < 1000 or height < 2200:
+              raise SystemExit(f"Gameplay evidence is below native Pixel-class geometry: {width}x{height}")
+          PY
+
+          echo "ANDROID_NATIVE_GAMEPLAY_PASS: real Splash → House → Map → Prestart → Gameplay route rendered"
+
       - name: Check native crash buffer
         shell: bash
         run: |
@@ -343,7 +417,7 @@ jobs:
 
           {
             echo "NATIVE_FRAME_FINAL_BYTES"
-            for frame in artifacts/android-01-cold-launch.png artifacts/android-01b-house-after-enter.png artifacts/android-02-resumed.png artifacts/android-03-force-stop-relaunch.png; do
+            for frame in artifacts/android-01-cold-launch.png artifacts/android-01b-house-after-enter.png artifacts/android-02-resumed.png artifacts/android-03-force-stop-relaunch.png artifacts/android-04-gameplay.png; do
               bytes="$(stat -c%s "$frame")"
               echo "$(basename "$frame")=$bytes"
               if [ "$bytes" -lt 500000 ]; then
@@ -385,7 +459,7 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          for FRAME in android-01-cold-launch android-01b-house-after-enter android-02-resumed android-03-force-stop-relaunch; do
+          for FRAME in android-01-cold-launch android-01b-house-after-enter android-02-resumed android-03-force-stop-relaunch android-04-gameplay; do
             SRC="artifacts/${FRAME}.png"
             [ -s "$SRC" ] || continue
             REVIEW="$SRC"
