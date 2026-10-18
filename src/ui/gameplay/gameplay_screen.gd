@@ -298,7 +298,7 @@ func _schedule_booster_tray_alignment() -> void:
 func _align_booster_tray_to_board_band() -> void:
 	if _booster_tray == null or board_view == null:
 		return
-	var board_bottom := board_view.global_position.y + board_view.size.y
+	var board_bottom: float = float(board_view.global_position.y + board_view.size.y)
 	var desired_top := booster_tray_target_top_for_board_bottom(board_bottom)
 	var delta := desired_top - _booster_tray.global_position.y
 	_booster_tray.offset_top += delta
@@ -1402,7 +1402,7 @@ func gameplay_presentation_contract() -> Dictionary:
 			func(button): return button.disabled and button.custom_minimum_size.y >= 108.0 and button.icon != null
 		)
 	)
-	var board_to_booster_gap := _booster_tray.global_position.y - (board_view.global_position.y + board_view.size.y)
+	var board_to_booster_gap: float = float(_booster_tray.global_position.y - (board_view.global_position.y + board_view.size.y))
 	var composition_locked: bool = (
 		_booster_tray != null
 		and is_equal_approx(_booster_tray.anchor_top, BOOSTER_TRAY_ANCHOR_TOP)
