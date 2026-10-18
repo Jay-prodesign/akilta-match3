@@ -409,9 +409,44 @@ jobs:
           test -s "$REVIEW_APK"
           apksigner verify --verbose --print-certs "$REVIEW_APK"
 
+          # Export work can occasionally make the hosted runner's adb server
+          # drop its emulator transport. Re-establish the existing Pixel-class
+          # device before installing the CI-only review APK.
+          adb start-server || true
+          DEVICE_READY=0
+          for ATTEMPT in $(seq 1 30); do
+            STATE="$(adb get-state 2>/dev/null | tr -d '\r' || true)"
+            echo "review transport attempt=$ATTEMPT state=$STATE" | tee -a artifacts/android-gameplay-route-attempts.txt
+            if [ "$STATE" = "device" ]; then
+              DEVICE_READY=1
+              break
+            fi
+            adb reconnect offline >/dev/null 2>&1 || true
+            sleep 2
+          done
+          if [ "$DEVICE_READY" -ne 1 ]; then
+            echo "::error::Android emulator transport did not recover for Gameplay review."
+            adb devices -l || true
+            tail -160 artifacts/emulator.log || true
+            exit 1
+          fi
+
           adb shell am force-stop "$PACKAGE"
-          adb install -r "$REVIEW_APK" | tee artifacts/android-gameplay-review-install.txt
-          grep -Fq "Success" artifacts/android-gameplay-review-install.txt
+          INSTALL_OK=0
+          : > artifacts/android-gameplay-review-install.txt
+          for ATTEMPT in $(seq 1 6); do
+            if adb install -r "$REVIEW_APK" | tee -a artifacts/android-gameplay-review-install.txt | grep -Fq "Success"; then
+              INSTALL_OK=1
+              break
+            fi
+            adb reconnect offline >/dev/null 2>&1 || true
+            sleep 3
+          done
+          if [ "$INSTALL_OK" -ne 1 ]; then
+            echo "::error::Gameplay review APK could not be installed after transport recovery."
+            cat artifacts/android-gameplay-review-install.txt
+            exit 1
+          fi
           adb logcat -c
           adb shell monkey -p "$PACKAGE" -c android.intent.category.LAUNCHER 1 >/dev/null
 
