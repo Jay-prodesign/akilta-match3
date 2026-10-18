@@ -494,13 +494,13 @@ func _verify_meta_visual_parity(app: Node, screen: Node, feature: String) -> boo
 	var hero_art_ratio := hero_art.custom_minimum_size.x / viewport_size.x
 	var card_art_ratio := card_art.custom_minimum_size.x / viewport_size.x
 	if feature == "profile":
-		if hero_ratio < 0.14 or hero_ratio > 0.18:
+		if hero_ratio < 0.18 or hero_ratio > 0.20:
 			_fail(app, "profile identity card proportion drifted: %.3f" % hero_ratio)
 			return false
-		if hero_art_ratio < 0.18 or hero_art_ratio > 0.24:
+		if hero_art_ratio < 0.25 or hero_art_ratio > 0.28:
 			_fail(app, "profile Keeper portrait proportion drifted: %.3f" % hero_art_ratio)
 			return false
-		if card_art_ratio < 0.07 or card_art_ratio > 0.10:
+		if card_art_ratio < 0.065 or card_art_ratio > 0.085:
 			_fail(app, "profile utility-row icon proportion drifted: %.3f" % card_art_ratio)
 			return false
 	else:
