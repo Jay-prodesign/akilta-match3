@@ -374,6 +374,11 @@ jobs:
             MARKER=0
             if grep -Fq "NATIVE_RUNTIME_REVIEW_ROUTE_PASS: gameplay" artifacts/gameplay-review-logcat.txt; then
               MARKER=1
+              # The review route marker is emitted as soon as the real Gameplay
+              # route is reached. Let the authored entrance choreography settle
+              # before accepting visual evidence so the delayed booster tray is
+              # actually reviewable instead of captured near alpha zero.
+              sleep 1
             fi
             adb exec-out screencap -p > artifacts/android-04-gameplay.png
             test -s artifacts/android-04-gameplay.png
