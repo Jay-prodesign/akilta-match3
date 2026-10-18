@@ -1,4 +1,4 @@
-[gd_scene load_steps=10 format=3]
+[gd_scene load_steps=11 format=3]
 
 [ext_resource type="Script" path="res://src/ui/meta/meta_destination_screen.gd" id="1_meta"]
 
@@ -106,7 +106,7 @@ corner_radius_bottom_right = 10
 corner_radius_bottom_left = 10
 
 [sub_resource type="StyleBoxFlat" id="ProfileSurfaceFrame"]
-bg_color = Color(0.025, 0.018, 0.034, 0.86)
+bg_color = Color(0.025, 0.018, 0.034, 0.74)
 border_width_left = 2
 border_width_top = 2
 border_width_right = 2
@@ -121,6 +121,21 @@ content_margin_top = 10.0
 content_margin_right = 10.0
 content_margin_bottom = 10.0
 shadow_color = Color(0, 0, 0, 0.48)
+shadow_size = 14
+
+
+[sub_resource type="StyleBoxFlat" id="KeeperPortraitFrame"]
+bg_color = Color(0.075, 0.038, 0.09, 0.62)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.949, 0.816, 0.545, 0.88)
+corner_radius_top_left = 86
+corner_radius_top_right = 86
+corner_radius_bottom_right = 86
+corner_radius_bottom_left = 86
+shadow_color = Color(0.12, 0.02, 0.16, 0.62)
 shadow_size = 14
 
 [node name="MetaDestinationScreen" type="Control"]
@@ -332,7 +347,7 @@ size_flags_vertical = 0
 theme_override_constants/separation = 9
 
 [node name="Identity" type="PanelContainer" parent="FeatureLayout/ProfileFeature"]
-custom_minimum_size = Vector2(0, 300)
+custom_minimum_size = Vector2(0, 360)
 layout_mode = 2
 theme_override_styles/panel = SubResource("Hero")
 
@@ -341,10 +356,25 @@ layout_mode = 2
 theme_override_constants/separation = 22
 
 [node name="KeeperArt" type="TextureRect" parent="FeatureLayout/ProfileFeature/Identity/IdentityRow"]
-custom_minimum_size = Vector2(220, 220)
+custom_minimum_size = Vector2(280, 280)
 layout_mode = 2
 expand_mode = 1
 stretch_mode = 5
+
+[node name="PortraitFrame" type="Panel" parent="FeatureLayout/ProfileFeature/Identity/IdentityRow/KeeperArt"]
+show_behind_parent = true
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 10.0
+offset_top = 10.0
+offset_right = -10.0
+offset_bottom = -10.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+theme_override_styles/panel = SubResource("KeeperPortraitFrame")
 
 [node name="Copy" type="VBoxContainer" parent="FeatureLayout/ProfileFeature/Identity/IdentityRow"]
 layout_mode = 2
@@ -355,15 +385,15 @@ theme_override_constants/separation = 6
 [node name="Kicker" type="Label" parent="FeatureLayout/ProfileFeature/Identity/IdentityRow/Copy"]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.831, 0.678, 0.439, 1)
-theme_override_font_sizes/font_size = 17
-text = "KEEPER RECORD"
+theme_override_font_sizes/font_size = 20
+text = "THE KEEPER"
 
 [node name="Title" type="Label" parent="FeatureLayout/ProfileFeature/Identity/IdentityRow/Copy"]
 layout_mode = 2
 theme_override_colors/font_color = Color(1, 0.941, 0.847, 1)
 theme_override_colors/font_outline_color = Color(0.02, 0.014, 0.028, 0.92)
 theme_override_constants/outline_size = 3
-theme_override_font_sizes/font_size = 30
+theme_override_font_sizes/font_size = 34
 text = "OPENING HOUSE IN PROGRESS"
 autowrap_mode = 2
 
@@ -388,7 +418,7 @@ size_flags_vertical = 0
 theme_override_constants/separation = 8
 
 [node name="Settings" type="Button" parent="FeatureLayout/ProfileFeature/Menu"]
-custom_minimum_size = Vector2(0, 92)
+custom_minimum_size = Vector2(0, 80)
 layout_mode = 2
 theme_override_colors/font_color = Color(1, 0.941, 0.847, 1)
 theme_override_font_sizes/font_size = 22
@@ -398,7 +428,7 @@ theme_override_styles/pressed = SubResource("Primary")
 text = "SETTINGS · AUDIO & ACCESSIBILITY"
 
 [node name="ChapterRow" type="PanelContainer" parent="FeatureLayout/ProfileFeature/Menu"]
-custom_minimum_size = Vector2(0, 132)
+custom_minimum_size = Vector2(0, 112)
 layout_mode = 2
 size_flags_vertical = 0
 theme_override_styles/panel = SubResource("Card")
@@ -408,7 +438,7 @@ layout_mode = 2
 theme_override_constants/separation = 14
 
 [node name="Icon" type="TextureRect" parent="FeatureLayout/ProfileFeature/Menu/ChapterRow/Content"]
-custom_minimum_size = Vector2(84, 84)
+custom_minimum_size = Vector2(76, 76)
 layout_mode = 2
 expand_mode = 1
 stretch_mode = 5
@@ -431,7 +461,7 @@ theme_override_font_sizes/font_size = 17
 text = "0 / 3 RITUALS"
 
 [node name="ReliquaryRow" type="PanelContainer" parent="FeatureLayout/ProfileFeature/Menu"]
-custom_minimum_size = Vector2(0, 132)
+custom_minimum_size = Vector2(0, 112)
 layout_mode = 2
 size_flags_vertical = 0
 theme_override_styles/panel = SubResource("Card")
@@ -441,7 +471,7 @@ layout_mode = 2
 theme_override_constants/separation = 14
 
 [node name="Icon" type="TextureRect" parent="FeatureLayout/ProfileFeature/Menu/ReliquaryRow/Content"]
-custom_minimum_size = Vector2(84, 84)
+custom_minimum_size = Vector2(76, 76)
 layout_mode = 2
 expand_mode = 1
 stretch_mode = 5
@@ -464,7 +494,7 @@ theme_override_font_sizes/font_size = 17
 text = "0 / 3 CURIOS"
 
 [node name="HouseRow" type="PanelContainer" parent="FeatureLayout/ProfileFeature/Menu"]
-custom_minimum_size = Vector2(0, 132)
+custom_minimum_size = Vector2(0, 112)
 layout_mode = 2
 size_flags_vertical = 0
 theme_override_styles/panel = SubResource("Card")
@@ -474,7 +504,7 @@ layout_mode = 2
 theme_override_constants/separation = 14
 
 [node name="Icon" type="TextureRect" parent="FeatureLayout/ProfileFeature/Menu/HouseRow/Content"]
-custom_minimum_size = Vector2(84, 84)
+custom_minimum_size = Vector2(76, 76)
 layout_mode = 2
 expand_mode = 1
 stretch_mode = 5
@@ -497,13 +527,13 @@ theme_override_font_sizes/font_size = 17
 text = "RESTORATION STAGE 0"
 
 [node name="UtilitySpacer" type="Control" parent="FeatureLayout/ProfileFeature/Menu"]
-custom_minimum_size = Vector2(0, 12)
+custom_minimum_size = Vector2(0, 8)
 layout_mode = 2
 size_flags_vertical = 0
 mouse_filter = 2
 
 [node name="SaveRow" type="PanelContainer" parent="FeatureLayout/ProfileFeature/Menu"]
-custom_minimum_size = Vector2(0, 120)
+custom_minimum_size = Vector2(0, 100)
 layout_mode = 2
 size_flags_vertical = 0
 theme_override_styles/panel = SubResource("Card")
