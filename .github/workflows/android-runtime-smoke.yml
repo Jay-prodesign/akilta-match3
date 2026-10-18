@@ -380,12 +380,125 @@ jobs:
           fi
           echo "VIRTUAL_DEVICE_RUNTIME_PASS: cold launch, resume, force-stop relaunch"
 
+      - name: Capture real Gameplay through workflow-only native review route
+        shell: bash
+        env:
+          GODOT_ANDROID_KEYSTORE_RELEASE_PATH: /tmp/cat-coven-runtime-ci.keystore
+          GODOT_ANDROID_KEYSTORE_RELEASE_USER: catcoven
+          GODOT_ANDROID_KEYSTORE_RELEASE_PASSWORD: changeit
+        run: |
+          set -euo pipefail
+          PACKAGE="com.akilta.catandcoven"
+          REVIEW_APK="build/android/cat-and-coven-gameplay-review.apk"
+
+          # Build a second CI-only APK from the exact same product code. The
+          # committed preset remains clean; only this ephemeral runner copy gets
+          # the workflow-only route argument.
+          python3 - <<'PY'
+          from pathlib import Path
+          path = Path("export_presets.cfg")
+          text = path.read_text()
+          old = 'command_line/extra_args="--rendering-method gl_compatibility --rendering-driver opengl3"'
+          new = 'command_line/extra_args="--rendering-method gl_compatibility --rendering-driver opengl3 --cat-coven-native-review-route=gameplay"'
+          if text.count(old) != 1:
+              raise SystemExit("Android CI emulator command-line contract changed")
+          path.write_text(text.replace(old, new))
+          PY
+
+          ./godot --headless --path . --export-release "Android CI Emulator APK" "$REVIEW_APK"
+          test -s "$REVIEW_APK"
+          apksigner verify --verbose --print-certs "$REVIEW_APK"
+
+          # Export work can occasionally make the hosted runner's adb server
+          # drop its emulator transport. Re-establish the existing Pixel-class
+          # device before installing the CI-only review APK.
+          adb start-server || true
+          DEVICE_READY=0
+          for ATTEMPT in $(seq 1 30); do
+            STATE="$(adb get-state 2>/dev/null | tr -d '\r' || true)"
+            echo "review transport attempt=$ATTEMPT state=$STATE" | tee -a artifacts/android-gameplay-route-attempts.txt
+            if [ "$STATE" = "device" ]; then
+              DEVICE_READY=1
+              break
+            fi
+            adb reconnect offline >/dev/null 2>&1 || true
+            sleep 2
+          done
+          if [ "$DEVICE_READY" -ne 1 ]; then
+            echo "::error::Android emulator transport did not recover for Gameplay review."
+            adb devices -l || true
+            tail -160 artifacts/emulator.log || true
+            exit 1
+          fi
+
+          adb shell am force-stop "$PACKAGE"
+          INSTALL_OK=0
+          : > artifacts/android-gameplay-review-install.txt
+          for ATTEMPT in $(seq 1 6); do
+            if adb install -r "$REVIEW_APK" | tee -a artifacts/android-gameplay-review-install.txt | grep -Fq "Success"; then
+              INSTALL_OK=1
+              break
+            fi
+            adb reconnect offline >/dev/null 2>&1 || true
+            sleep 3
+          done
+          if [ "$INSTALL_OK" -ne 1 ]; then
+            echo "::error::Gameplay review APK could not be installed after transport recovery."
+            cat artifacts/android-gameplay-review-install.txt
+            exit 1
+          fi
+          adb logcat -c
+          adb shell monkey -p "$PACKAGE" -c android.intent.category.LAUNCHER 1 >/dev/null
+
+          PID=""
+          ROUTE_SEEN=0
+          RENDERED=0
+          : > artifacts/android-gameplay-route-attempts.txt
+          for ATTEMPT in $(seq 1 30); do
+            sleep 2
+            PID="$(adb shell pidof "$PACKAGE" 2>/dev/null | tr -d '\r' || true)"
+            adb shell dumpsys activity activities | grep -E "mResumedActivity|topResumedActivity" > artifacts/gameplay-foreground.txt || true
+            adb logcat -d > artifacts/android-gameplay-route-log.txt || true
+            if grep -Fq "NATIVE_RUNTIME_REVIEW_ROUTE_PASS: gameplay" artifacts/android-gameplay-route-log.txt; then
+              ROUTE_SEEN=1
+            fi
+            if [ -n "$PID" ] && [ "$ROUTE_SEEN" -eq 1 ] && grep -Fq "$PACKAGE" artifacts/gameplay-foreground.txt; then
+              adb exec-out screencap -p > artifacts/android-04-gameplay.png
+              BYTES="$(stat -c%s artifacts/android-04-gameplay.png)"
+              echo "android-04-gameplay.png attempt=$ATTEMPT bytes=$BYTES pid=$PID route_seen=$ROUTE_SEEN" | tee -a artifacts/android-gameplay-route-attempts.txt
+              if [ "$BYTES" -ge 500000 ]; then
+                RENDERED=1
+                break
+              fi
+            else
+              PID_DISPLAY="$PID"
+              if [ -z "$PID_DISPLAY" ]; then PID_DISPLAY="none"; fi
+              echo "attempt=$ATTEMPT pid=$PID_DISPLAY route_seen=$ROUTE_SEEN" | tee -a artifacts/android-gameplay-route-attempts.txt
+            fi
+          done
+
+          test -n "$PID"
+          if [ "$ROUTE_SEEN" -ne 1 ] || [ "$RENDERED" -ne 1 ]; then
+            echo "::error::Cat & Coven native Android review route did not reach rendered Gameplay."
+            tail -240 artifacts/android-gameplay-route-log.txt || true
+            exit 1
+          fi
+
+          GAMEPLAY_BYTES="$(stat -c%s artifacts/android-04-gameplay.png)"
+          echo "android-04-gameplay.png bytes=$GAMEPLAY_BYTES route=gameplay" | tee -a artifacts/native-frame-sizes.txt
+          echo "ANDROID_NATIVE_GAMEPLAY_PASS: real Splash → House → Map → Prestart → Gameplay route rendered"
+
+          if grep -Eq "Missing required production screen art|Failed to decode production screen art|Missing required gameplay asset|SCRIPT ERROR:" artifacts/android-gameplay-route-log.txt; then
+            grep -E "Missing required production screen art|Failed to decode production screen art|Missing required gameplay asset|SCRIPT ERROR:" artifacts/android-gameplay-route-log.txt
+            exit 1
+          fi
+
       - name: Emit compact native frames for visual inspection
         if: always()
         shell: bash
         run: |
           set -euo pipefail
-          for FRAME in android-01-cold-launch android-01b-house-after-enter android-02-resumed android-03-force-stop-relaunch; do
+          for FRAME in android-01-cold-launch android-01b-house-after-enter android-02-resumed android-03-force-stop-relaunch android-04-gameplay; do
             SRC="artifacts/${FRAME}.png"
             [ -s "$SRC" ] || continue
             REVIEW="$SRC"
@@ -410,4 +523,5 @@ jobs:
           path: |
             artifacts/
             build/android/cat-and-coven-emulator.apk
+            build/android/cat-and-coven-gameplay-review.apk
           if-no-files-found: error
