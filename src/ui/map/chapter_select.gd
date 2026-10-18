@@ -302,6 +302,7 @@ func chapter_visual_contract() -> Dictionary:
 		"current_wing_art_thumbnail": _current_art != null and _current_art.anchor_right >= 0.41 and _current_art.anchor_right <= 0.45 and _current_art.anchor_bottom >= 0.98,
 		"current_wing_hero_dominance": _current.size.y >= _witch_atelier.size.y * 1.9 and _current_art.anchor_right >= 0.40,
 		"compact_sealed_door_rows": [_witch_atelier, _dark_vanity, _archive, _moon_conservatory, _cemetery_garden].all(func(button): return button.size.y <= _grid.size.y * 0.105 and button.size.x <= _grid.size.x * 0.86),
+		"sealed_copy_two_line": [_witch_atelier, _dark_vanity, _archive, _moon_conservatory, _cemetery_garden].all(func(button): return button.text.count("\n") == 1 and button.text.contains("SEALED")),
 		"locked_row_readability": [_witch_atelier, _dark_vanity, _archive, _moon_conservatory, _cemetery_garden].all(func(button): return button.get_theme_font_size("font_size") >= 19 and button.alignment == HORIZONTAL_ALIGNMENT_LEFT),
 		"scene_authored_wing_rows": [_current, _witch_atelier, _dark_vanity, _archive, _moon_conservatory, _cemetery_garden].all(func(button): return button.get_theme_stylebox("normal") is StyleBoxFlat and String(button.get_meta("chapter_material", "")) == "scene_authored_flat"),
 		"scene_authored_header_back": _back != null and _back.get_theme_stylebox("normal") is StyleBoxFlat and String(_back.get_meta("chapter_material", "")) == "scene_authored_flat",
