@@ -56,7 +56,7 @@ func _run() -> void:
 			var profile_identity := screen.get_node_or_null("FeatureLayout/ProfileFeature/Identity") as PanelContainer
 			var profile_progress := screen.get_node_or_null("FeatureLayout/ProfileFeature/Identity/IdentityRow/Copy/Progress") as ProgressBar
 			_expect(hero_panel != null and not hero_panel.visible, "profile must not reuse the generic meta hero")
-			_expect(profile_identity != null and profile_identity.visible and profile_identity.custom_minimum_size.y >= 280.0 and profile_identity.custom_minimum_size.y <= 320.0, "profile must use its dedicated compact player-identity card")
+			_expect(profile_identity != null and profile_identity.visible and profile_identity.custom_minimum_size.y >= 340.0 and profile_identity.custom_minimum_size.y <= 380.0, "profile must use its dedicated compact player-identity card")
 			_expect(active_hero_art != null and active_hero_art.custom_minimum_size.x >= 200.0 and active_hero_art.custom_minimum_size.x <= 240.0, "profile Keeper portrait must stay compact")
 			_expect(profile_progress != null and profile_progress.visible, "profile must expose truthful opening progress instead of fake XP")
 		else:
@@ -77,7 +77,7 @@ func _run() -> void:
 		_expect(bool(contract.get("header_readability_scrim", false)), "%s must retain a dedicated top readability scrim over authored world art" % feature)
 		_expect(bool(contract.get("secondary_header_compact", false)), "%s must avoid redundant progress/commerce lines above the hero" % feature)
 		_expect(screen.get_node_or_null("FeatureLayout/FeatureHero/HeroRow/HeroArt") != null, "%s must keep a scene-owned hero art slot" % feature)
-		var expected_title := "EVENTS" if feature == "events" else ("SHOP" if feature == "shop" else "PLAYER")
+		var expected_title := "EVENTS" if feature == "events" else ("SHOP" if feature == "shop" else "PROFILE")
 		_expect((screen.get_node("FeatureLayout/FeatureTitle") as Label).text == expected_title, "%s must preserve its authored route title" % feature)
 		for card_name in ["Card1", "Card2", "Card3"]:
 			var card := screen.get_node_or_null("FeatureLayout/CardScroll/Cards/%s" % card_name) as PanelContainer
@@ -169,7 +169,9 @@ func _run() -> void:
 			_expect(not (screen.get_node("FeatureLayout/ShopCurrencySummary") as Label).visible and not (screen.get_node("FeatureLayout/ShopCurrencyTruth") as Label).visible, "shop must rely on the shared resource bar instead of duplicate economy rows")
 		if feature == "profile":
 			var profile_hero := screen.get_node("FeatureLayout/ProfileFeature/Identity/IdentityRow/KeeperArt") as TextureRect
-			_expect(profile_hero != null and profile_hero.texture != null and String(contract.get("hero_asset_path", "")).ends_with("black_cat.webp"), "profile identity must use the Keeper familiar rather than a generic Curio")
+			var portrait_frame := profile_hero.get_node_or_null("PortraitFrame") as Panel
+			_expect(profile_hero != null and profile_hero.texture != null and profile_hero.custom_minimum_size.x >= 260.0 and String(contract.get("hero_asset_path", "")).ends_with("black_cat.webp"), "profile identity must use the Keeper familiar as a hero portrait rather than a generic Curio")
+			_expect(portrait_frame != null and portrait_frame.get_theme_stylebox("panel") is StyleBoxFlat and bool(contract.get("profile_keeper_portrait_frame", false)), "profile Keeper must sit in a dedicated authored portrait frame")
 			_expect(bool(contract.get("profile_save_health_compact", false)), "profile save-health truth must stay compact instead of dominating the screen")
 			_expect(bool(contract.get("profile_status_focus", false)), "profile save health must prioritize readable local/cloud statuses over paragraph copy")
 			_expect(bool(contract.get("profile_identity_focus", false)), "profile must center the authored Keeper identity and truthful opening progress on its own framed utility surface")
@@ -186,7 +188,7 @@ func _run() -> void:
 			var house_row := screen.get_node_or_null("FeatureLayout/ProfileFeature/Menu/HouseRow") as PanelContainer
 			var save_row := screen.get_node_or_null("FeatureLayout/ProfileFeature/Menu/SaveRow") as PanelContainer
 			_expect(profile_progress_label != null and profile_progress_label.text == "OPENING RITUALS · 3 / 3" and profile_progress != null and profile_progress.value == 3.0, "profile progress bar must reflect real completed opening rituals")
-			_expect(settings_button != null and settings_button.custom_minimum_size.y >= 88.0 and settings_button.custom_minimum_size.y <= 96.0 and settings_button.text.contains("SETTINGS"), "profile settings must read as a compact dedicated utility row")
+			_expect(settings_button != null and settings_button.custom_minimum_size.y >= 76.0 and settings_button.custom_minimum_size.y <= 84.0 and settings_button.text.contains("SETTINGS"), "profile settings must read as a compact dedicated utility row")
 			_expect(bool(interaction.get("profile_real_action_tactile", false)), "profile Settings row must own visible press/release depth")
 			var profile_feedback_hits := {"count": 0}
 			screen.interaction_feedback_requested.connect(func(_kind: String): profile_feedback_hits["count"] = int(profile_feedback_hits["count"]) + 1)
