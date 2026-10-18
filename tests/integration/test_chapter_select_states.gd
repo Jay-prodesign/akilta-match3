@@ -43,6 +43,7 @@ func _run() -> void:
 		_expect(bool(visual_contract.get("current_wing_art_thumbnail", false)), "S02 current wing must use its authored art at the enlarged North Star hero proportion")
 		_expect(bool(visual_contract.get("current_wing_hero_dominance", false)), "S02 current Curio Boutique wing must visually dominate the sealed future doors")
 		_expect(bool(visual_contract.get("compact_sealed_door_rows", false)), "S02 future wings must read as compact sealed doors rather than oversized empty slabs")
+		_expect(bool(visual_contract.get("sealed_copy_two_line", false)), "S02 sealed doors must keep chapter identity and SEALED truth in a compact two-line scan")
 		_expect(bool(visual_contract.get("locked_row_readability", false)), "S02 sealed chapter rows must use readable left-aligned chapter copy instead of tiny centered text in oversized rows")
 		_expect(bool(visual_contract.get("scene_authored_wing_rows", false)), "S02 chapter cards must preserve their clean scene-authored normal/hover materials")
 		_expect(bool(visual_contract.get("scene_authored_header_back", false)), "S02 back control must preserve its scene-authored utility material")
