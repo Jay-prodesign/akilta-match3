@@ -463,6 +463,10 @@ jobs:
               ROUTE_SEEN=1
             fi
             if [ -n "$PID" ] && [ "$ROUTE_SEEN" -eq 1 ] && grep -Fq "$PACKAGE" artifacts/gameplay-foreground.txt; then
+              # Route arrival precedes the authored Gameplay reveal tween. Wait
+              # for the full composition—including the delayed booster tray—to
+              # settle before accepting the native screenshot as visual proof.
+              sleep 1
               adb exec-out screencap -p > artifacts/android-04-gameplay.png
               BYTES="$(stat -c%s artifacts/android-04-gameplay.png)"
               echo "android-04-gameplay.png attempt=$ATTEMPT bytes=$BYTES pid=$PID route_seen=$ROUTE_SEEN" | tee -a artifacts/android-gameplay-route-attempts.txt
