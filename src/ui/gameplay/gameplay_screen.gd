@@ -54,6 +54,10 @@ var _keeper_last_move: Dictionary = {}
 const KEEPER_ART_PATH := "res://assets/pieces/black_cat.webp"
 const AUTO_HINT_DELAY_SECONDS := 9.0
 const GUIDED_HINT_DELAY_SECONDS := 4.0
+const GAMEPLAY_BASE_VIEWPORT_HEIGHT := 1920.0
+const BOOSTER_TRAY_ANCHOR_TOP := 0.775
+const BOOSTER_TRAY_BASELINE_TOP := GAMEPLAY_BASE_VIEWPORT_HEIGHT * BOOSTER_TRAY_ANCHOR_TOP
+const BOOSTER_TRAY_HEIGHT := 220.0
 const BOOSTER_ART_PATHS := {
 	"hint": KEEPER_ART_PATH,
 	"plus_moves": "res://assets/pieces/potion.webp",
@@ -281,7 +285,21 @@ func _ready() -> void:
 	result_overlay.visible = false
 	if FileAccess.file_exists(default_level_path):
 		load_level_path(default_level_path, default_seed)
+	if not get_viewport().size_changed.is_connected(_align_booster_tray_to_baseline_band):
+		get_viewport().size_changed.connect(_align_booster_tray_to_baseline_band)
+	call_deferred("_align_booster_tray_to_baseline_band")
 	call_deferred("_play_gameplay_intro")
+
+func booster_tray_offset_for_viewport_height(viewport_height: float) -> float:
+	return BOOSTER_TRAY_BASELINE_TOP - maxf(GAMEPLAY_BASE_VIEWPORT_HEIGHT, viewport_height) * BOOSTER_TRAY_ANCHOR_TOP
+
+func _align_booster_tray_to_baseline_band() -> void:
+	if _booster_tray == null:
+		return
+	var viewport_height := get_viewport().get_visible_rect().size.y
+	var top_offset := booster_tray_offset_for_viewport_height(viewport_height)
+	_booster_tray.offset_top = top_offset
+	_booster_tray.offset_bottom = top_offset + BOOSTER_TRAY_HEIGHT
 
 func _install_direct_action_frame(button: Button, frame_art: TextureRect, asset_path: String) -> void:
 	if button == null or frame_art == null:
@@ -1383,7 +1401,9 @@ func gameplay_presentation_contract() -> Dictionary:
 	)
 	var composition_locked: bool = (
 		_booster_tray != null
-		and is_equal_approx(_booster_tray.anchor_top, 0.775)
+		and is_equal_approx(_booster_tray.anchor_top, BOOSTER_TRAY_ANCHOR_TOP)
+		and is_equal_approx(booster_tray_offset_for_viewport_height(GAMEPLAY_BASE_VIEWPORT_HEIGHT), 0.0)
+		and is_equal_approx(booster_tray_offset_for_viewport_height(2400.0), -372.0)
 		and (_booster_tray.offset_bottom - _booster_tray.offset_top) >= 210.0
 		and (_booster_tray.offset_bottom - _booster_tray.offset_top) <= 230.0
 		and hint_label != null
@@ -1425,7 +1445,7 @@ func gameplay_presentation_contract() -> Dictionary:
 	var compact_geometry_locked: bool = (
 		is_equal_approx(_booster_tray.anchor_left, 0.045)
 		and is_equal_approx(_booster_tray.anchor_right, 0.955)
-		and is_equal_approx(_booster_tray.anchor_top, 0.775)
+		and is_equal_approx(_booster_tray.anchor_top, BOOSTER_TRAY_ANCHOR_TOP)
 		and ($Layout/BoardView as Control).custom_minimum_size.y >= 1020.0
 		and ($Layout/BoardView as Control).custom_minimum_size.y <= 1080.0
 	)
@@ -1462,6 +1482,7 @@ func gameplay_presentation_contract() -> Dictionary:
 		"north_star_resource_strip": not $ResourceBar.visible,
 		"north_star_objective_strip": hierarchy_locked,
 		"north_star_booster_tray": booster_family_locked and composition_locked,
+		"tall_viewport_booster_attachment": is_equal_approx(booster_tray_offset_for_viewport_height(2400.0), -372.0),
 		"deterministic_gameplay_geometry": true,
 		"truthful_sealed_slots": _sealed_boost_a.disabled and _sealed_boost_b.disabled and _sealed_boost_c.disabled,
 		"authored_target_moves_hierarchy": objective_icon.texture != null and integrated_hud_surface,
