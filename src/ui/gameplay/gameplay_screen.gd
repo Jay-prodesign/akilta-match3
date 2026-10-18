@@ -54,9 +54,8 @@ var _keeper_last_move: Dictionary = {}
 const KEEPER_ART_PATH := "res://assets/pieces/black_cat.webp"
 const AUTO_HINT_DELAY_SECONDS := 9.0
 const GUIDED_HINT_DELAY_SECONDS := 4.0
-const GAMEPLAY_BASE_VIEWPORT_HEIGHT := 1920.0
 const BOOSTER_TRAY_ANCHOR_TOP := 0.775
-const BOOSTER_TRAY_BASELINE_TOP := GAMEPLAY_BASE_VIEWPORT_HEIGHT * BOOSTER_TRAY_ANCHOR_TOP
+const BOOSTER_TRAY_BOARD_GAP := 36.0
 const BOOSTER_TRAY_HEIGHT := 220.0
 const BOOSTER_ART_PATHS := {
 	"hint": KEEPER_ART_PATH,
@@ -285,21 +284,25 @@ func _ready() -> void:
 	result_overlay.visible = false
 	if FileAccess.file_exists(default_level_path):
 		load_level_path(default_level_path, default_seed)
-	if not get_viewport().size_changed.is_connected(_align_booster_tray_to_baseline_band):
-		get_viewport().size_changed.connect(_align_booster_tray_to_baseline_band)
-	call_deferred("_align_booster_tray_to_baseline_band")
+	if not get_viewport().size_changed.is_connected(_schedule_booster_tray_alignment):
+		get_viewport().size_changed.connect(_schedule_booster_tray_alignment)
+	_schedule_booster_tray_alignment()
 	call_deferred("_play_gameplay_intro")
 
-func booster_tray_offset_for_viewport_height(viewport_height: float) -> float:
-	return BOOSTER_TRAY_BASELINE_TOP - maxf(GAMEPLAY_BASE_VIEWPORT_HEIGHT, viewport_height) * BOOSTER_TRAY_ANCHOR_TOP
+func booster_tray_target_top_for_board_bottom(board_bottom: float) -> float:
+	return board_bottom + BOOSTER_TRAY_BOARD_GAP
 
-func _align_booster_tray_to_baseline_band() -> void:
-	if _booster_tray == null:
+func _schedule_booster_tray_alignment() -> void:
+	call_deferred("_align_booster_tray_to_board_band")
+
+func _align_booster_tray_to_board_band() -> void:
+	if _booster_tray == null or board_view == null:
 		return
-	var viewport_height := get_viewport().get_visible_rect().size.y
-	var top_offset := booster_tray_offset_for_viewport_height(viewport_height)
-	_booster_tray.offset_top = top_offset
-	_booster_tray.offset_bottom = top_offset + BOOSTER_TRAY_HEIGHT
+	var board_bottom := board_view.global_position.y + board_view.size.y
+	var desired_top := booster_tray_target_top_for_board_bottom(board_bottom)
+	var delta := desired_top - _booster_tray.global_position.y
+	_booster_tray.offset_top += delta
+	_booster_tray.offset_bottom += delta
 
 func _install_direct_action_frame(button: Button, frame_art: TextureRect, asset_path: String) -> void:
 	if button == null or frame_art == null:
@@ -1399,11 +1402,12 @@ func gameplay_presentation_contract() -> Dictionary:
 			func(button): return button.disabled and button.custom_minimum_size.y >= 108.0 and button.icon != null
 		)
 	)
+	var board_to_booster_gap := _booster_tray.global_position.y - (board_view.global_position.y + board_view.size.y)
 	var composition_locked: bool = (
 		_booster_tray != null
 		and is_equal_approx(_booster_tray.anchor_top, BOOSTER_TRAY_ANCHOR_TOP)
-		and is_equal_approx(booster_tray_offset_for_viewport_height(GAMEPLAY_BASE_VIEWPORT_HEIGHT), 0.0)
-		and is_equal_approx(booster_tray_offset_for_viewport_height(2400.0), -372.0)
+		and board_to_booster_gap >= BOOSTER_TRAY_BOARD_GAP - 2.0
+		and board_to_booster_gap <= BOOSTER_TRAY_BOARD_GAP + 2.0
 		and (_booster_tray.offset_bottom - _booster_tray.offset_top) >= 210.0
 		and (_booster_tray.offset_bottom - _booster_tray.offset_top) <= 230.0
 		and hint_label != null
@@ -1482,7 +1486,7 @@ func gameplay_presentation_contract() -> Dictionary:
 		"north_star_resource_strip": not $ResourceBar.visible,
 		"north_star_objective_strip": hierarchy_locked,
 		"north_star_booster_tray": booster_family_locked and composition_locked,
-		"tall_viewport_booster_attachment": is_equal_approx(booster_tray_offset_for_viewport_height(2400.0), -372.0),
+		"tall_viewport_booster_attachment": board_to_booster_gap >= BOOSTER_TRAY_BOARD_GAP - 2.0 and board_to_booster_gap <= BOOSTER_TRAY_BOARD_GAP + 2.0,
 		"deterministic_gameplay_geometry": true,
 		"truthful_sealed_slots": _sealed_boost_a.disabled and _sealed_boost_b.disabled and _sealed_boost_c.disabled,
 		"authored_target_moves_hierarchy": objective_icon.texture != null and integrated_hud_surface,
@@ -1528,8 +1532,8 @@ func gameplay_presentation_contract() -> Dictionary:
 		"resource_bar_height": ($ResourceBar as PanelContainer).offset_bottom - ($ResourceBar as PanelContainer).offset_top,
 		"hud_plate_height": ($Layout/HUDPlate as PanelContainer).custom_minimum_size.y,
 		"booster_tray_height": _booster_tray.offset_bottom - _booster_tray.offset_top,
-		"booster_tray_baseline_top": BOOSTER_TRAY_BASELINE_TOP,
-		"booster_tray_tall_offset_2400": booster_tray_offset_for_viewport_height(2400.0),
+		"board_to_booster_gap": board_to_booster_gap,
+		"booster_tray_target_top_1452": booster_tray_target_top_for_board_bottom(1452.0),
 		"visible_booster_count": 3,
 		"authored_result_values": _result_reward_values != null,
 		"authored_result_proclamation": _result_proclamation != null and _result_keeper_cat != null,
