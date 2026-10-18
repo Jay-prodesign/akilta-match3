@@ -337,8 +337,8 @@ func _capture() -> void:
 	var profile_hero_title: Label = app.current_screen().get_node_or_null("FeatureLayout/ProfileFeature/Identity/IdentityRow/Copy/Title") as Label
 	var profile_progress_label: Label = app.current_screen().get_node_or_null("FeatureLayout/ProfileFeature/Identity/IdentityRow/Copy/ProgressLabel") as Label
 	var profile_progress: ProgressBar = app.current_screen().get_node_or_null("FeatureLayout/ProfileFeature/Identity/IdentityRow/Copy/Progress") as ProgressBar
-	if profile_hero_kicker == null or profile_hero_kicker.text != "KEEPER RECORD":
-		return _fail(app, "completed Profile identity card must identify the Keeper record")
+	if profile_hero_kicker == null or profile_hero_kicker.text != "THE KEEPER":
+		return _fail(app, "completed Profile identity card must identify the Keeper familiar")
 	if profile_hero_title == null or profile_hero_title.text != "FIRST CABINET SET RESTORED":
 		return _fail(app, "completed Profile identity card must state the restored first cabinet set")
 	if profile_progress_label == null or profile_progress_label.text != "OPENING RITUALS · 3 / 3" or profile_progress == null or profile_progress.value != 3.0:
