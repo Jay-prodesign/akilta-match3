@@ -243,8 +243,10 @@ func _capture() -> void:
 		return _fail(app, "Weekly Missions large empty world corridor returned")
 	var weekly_reward_stage := app.current_screen().get_node_or_null("MissionLayout/MissionOpeningRecord") as Control
 	var weekly_reward_seal := app.current_screen().get_node_or_null("MissionLayout/MissionOpeningRecord/Content/RewardSeal") as TextureRect
-	if weekly_reward_stage == null or weekly_reward_stage.custom_minimum_size.y < 490.0 or weekly_reward_stage.custom_minimum_size.y > 510.0 or weekly_reward_stage.size_flags_vertical == Control.SIZE_EXPAND_FILL or weekly_reward_seal == null or weekly_reward_seal.custom_minimum_size.y > 230.0:
-		return _fail(app, "Weekly Missions compact sealed reward stage drifted")
+	if weekly_reward_stage == null or weekly_reward_stage.custom_minimum_size.y < 350.0 or weekly_reward_stage.custom_minimum_size.y > 370.0 or weekly_reward_stage.size_flags_vertical != Control.SIZE_EXPAND_FILL or weekly_reward_seal == null or weekly_reward_seal.custom_minimum_size.y < 290.0 or weekly_reward_seal.custom_minimum_size.y > 310.0:
+		return _fail(app, "Weekly Missions raster reward stage drifted")
+	if not (weekly_reward_stage.get_theme_stylebox("panel") is StyleBoxTexture) or not String(weekly_reward_seal.get_meta("asset_path", "")).ends_with(".webp"):
+		return _fail(app, "Weekly Missions reward stage lost ornate production chrome or raster Curio art")
 	if weekly_house_return.visible:
 		return _fail(app, "Weekly Missions redundant House button returned over product navigation")
 	if not await _save(app, "progression-final-weekly-missions.png"):
