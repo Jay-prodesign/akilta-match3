@@ -57,7 +57,8 @@ func _run() -> void:
 			var profile_progress := screen.get_node_or_null("FeatureLayout/ProfileFeature/Identity/IdentityRow/Copy/Progress") as ProgressBar
 			_expect(hero_panel != null and not hero_panel.visible, "profile must not reuse the generic meta hero")
 			_expect(profile_identity != null and profile_identity.visible and profile_identity.custom_minimum_size.y >= 360.0 and profile_identity.custom_minimum_size.y <= 400.0, "profile must use its dedicated compact player-identity card")
-			_expect(active_hero_art != null and active_hero_art.custom_minimum_size.x >= 270.0 and active_hero_art.custom_minimum_size.x <= 290.0, "profile Keeper portrait must stay compact")
+			var profile_keeper_art := screen.get_node_or_null("FeatureLayout/ProfileFeature/Identity/IdentityRow/KeeperArt") as TextureRect
+			_expect(profile_keeper_art != null and profile_keeper_art.custom_minimum_size.x >= 270.0 and profile_keeper_art.custom_minimum_size.x <= 290.0, "profile Keeper portrait must own the enlarged identity stage")
 			_expect(profile_progress != null and profile_progress.visible, "profile must expose truthful opening progress instead of fake XP")
 		else:
 			_expect(hero_panel != null and hero_panel.custom_minimum_size.y >= 400.0, "%s hero must occupy a true visual stage" % feature)
