@@ -356,7 +356,7 @@ func _apply_tall_phone_content_fill(viewport_height_override: float = -1.0) -> v
 	# product shell expands vertically; keep Events/Shop visually attached to
 	# the bottom navigation instead of leaving a developer-like empty corridor.
 	var viewport_height := viewport_height_override if viewport_height_override > 0.0 else get_viewport_rect().size.y
-	var extra_height := clampf(viewport_height - 960.0, 0.0, 320.0)
+	var extra_height := clampf(viewport_height - 1920.0, 0.0, 640.0)
 	if extra_height <= 0.0:
 		return
 	if _feature_key == "events":
@@ -622,7 +622,7 @@ func screen_contract() -> Dictionary:
 		art_dominant_cards = profile_utility_rows
 		compact_copy = true
 	var viewport_height := get_viewport_rect().size.y
-	var tall_extra := clampf(viewport_height - 960.0, 0.0, 320.0)
+	var tall_extra := clampf(viewport_height - 1920.0, 0.0, 640.0)
 	var tall_phone_content_fill := true
 	if tall_extra > 0.0 and _feature_key == "events":
 		tall_phone_content_fill = event_card_1.custom_minimum_size.y >= 440.0 + tall_extra * 0.44 and event_card_2.custom_minimum_size.y >= 440.0 + tall_extra * 0.44
