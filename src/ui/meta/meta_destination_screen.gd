@@ -348,7 +348,41 @@ func configure(feature_key: String, state: Dictionary) -> bool:
 		if _feature_key == "shop":
 			for card_path in ["Card1", "Card2", "Card3"]:
 				ProductionChrome.apply_compact_panel(card_stack.get_node(card_path) as PanelContainer, "shop_catalog_card")
+	_apply_tall_phone_content_fill()
 	return true
+
+func _apply_tall_phone_content_fill() -> void:
+	# The locked board is authored around a 9:16 phone. On taller devices the
+	# product shell expands vertically; keep Events/Shop visually attached to
+	# the bottom navigation instead of leaving a developer-like empty corridor.
+	var viewport_height := get_viewport_rect().size.y
+	var extra_height := clampf(viewport_height - 960.0, 0.0, 320.0)
+	if extra_height <= 0.0:
+		return
+	if _feature_key == "events":
+		var card_growth := extra_height * 0.45
+		var art_growth := extra_height * 0.40
+		for card in [event_card_1, event_card_2]:
+			card.custom_minimum_size.y = 440.0 + card_growth
+		for art in [event_art_1, event_art_2]:
+			art.custom_minimum_size.y = 330.0 + art_growth
+	elif _feature_key == "shop":
+		var cards := [
+			$FeatureLayout/CardScroll/Cards/Card1 as PanelContainer,
+			$FeatureLayout/CardScroll/Cards/Card2 as PanelContainer,
+			$FeatureLayout/CardScroll/Cards/Card3 as PanelContainer,
+		]
+		var arts := [
+			$FeatureLayout/CardScroll/Cards/Card1/Row/Art as TextureRect,
+			$FeatureLayout/CardScroll/Cards/Card2/Row/Art as TextureRect,
+			$FeatureLayout/CardScroll/Cards/Card3/Row/Art as TextureRect,
+		]
+		cards[0].custom_minimum_size.y = 340.0 + extra_height * 0.40
+		cards[1].custom_minimum_size.y = 240.0 + extra_height * 0.30
+		cards[2].custom_minimum_size.y = 240.0 + extra_height * 0.30
+		arts[0].custom_minimum_size.y = 286.0 + extra_height * 0.34
+		arts[1].custom_minimum_size.y = 190.0 + extra_height * 0.24
+		arts[2].custom_minimum_size.y = 190.0 + extra_height * 0.24
 
 func _apply_event_cards(cards: Array[Dictionary]) -> void:
 	var event_cards: Array[PanelContainer] = [event_card_1, event_card_2]
@@ -587,6 +621,13 @@ func screen_contract() -> Dictionary:
 	elif _feature_key == "profile":
 		art_dominant_cards = profile_utility_rows
 		compact_copy = true
+	var viewport_height := get_viewport_rect().size.y
+	var tall_extra := clampf(viewport_height - 960.0, 0.0, 320.0)
+	var tall_phone_content_fill := true
+	if tall_extra > 0.0 and _feature_key == "events":
+		tall_phone_content_fill = event_card_1.custom_minimum_size.y >= 440.0 + tall_extra * 0.44 and event_card_2.custom_minimum_size.y >= 440.0 + tall_extra * 0.44
+	elif tall_extra > 0.0 and _feature_key == "shop":
+		tall_phone_content_fill = (card_nodes[0] as PanelContainer).custom_minimum_size.y >= 340.0 + tall_extra * 0.39 and (card_nodes[1] as PanelContainer).custom_minimum_size.y >= 240.0 + tall_extra * 0.29 and (card_nodes[2] as PanelContainer).custom_minimum_size.y >= 240.0 + tall_extra * 0.29
 	var hero_dominant := events_card_focus if _feature_key == "events" else (shop_catalog_focus if _feature_key == "shop" else (profile_identity_focus if _feature_key == "profile" else (hero_panel.custom_minimum_size.y >= 400.0 and active_hero_art.custom_minimum_size.x >= 340.0 and active_hero_art.custom_minimum_size.y >= 340.0)))
 	var controlled_chrome := compact_copy and not truth_strip.visible and not back_button.visible and ($HeaderShade as ColorRect).color.a <= 0.38
 	var profile_status_focus := _feature_key != "profile" or (
@@ -643,6 +684,7 @@ func screen_contract() -> Dictionary:
 		"redundant_house_return_suppressed": not back_button.visible,
 		"truth_footer_suppressed": not truth_strip.visible,
 		"world_art_not_overdimmed": ($WorldShade as ColorRect).color.a <= 0.32,
+		"tall_phone_content_fill": tall_phone_content_fill,
 		"controlled_chrome_density": controlled_chrome,
 		"visual_parity_gate_v2": hero_dominant and art_dominant_cards and controlled_chrome and hero_loaded and events_actions_subordinate and events_truthful_status,
 		"visual_parity_gate_v3": hero_dominant and art_dominant_cards and controlled_chrome and hero_loaded and profile_status_focus and events_actions_subordinate and events_truthful_status,
