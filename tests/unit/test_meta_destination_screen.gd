@@ -154,7 +154,9 @@ func _run() -> void:
 			sealed_state["daily_level"] = 0
 			_expect(screen.configure("events", sealed_state), "events sealed daily state must reconfigure")
 			screen._apply_tall_phone_content_fill(2400.0)
-			_expect(event_card_1.custom_minimum_size.y >= 656.0 and event_card_2.custom_minimum_size.y >= 656.0, "20:9 Events must expand its real feature cards instead of leaving a bottom world corridor")
+			var event_card_1 := screen.get_node_or_null("FeatureLayout/EventsFeature/EventCard1") as PanelContainer
+			var event_card_2 := screen.get_node_or_null("FeatureLayout/EventsFeature/EventCard2") as PanelContainer
+			_expect(event_card_1 != null and event_card_2 != null and event_card_1.custom_minimum_size.y >= 656.0 and event_card_2.custom_minimum_size.y >= 656.0, "20:9 Events must expand its real feature cards instead of leaving a bottom world corridor")
 			var event_art_1 := screen.get_node_or_null("FeatureLayout/EventsFeature/EventCard1/Content/Art") as TextureRect
 			var event_art_2 := screen.get_node_or_null("FeatureLayout/EventsFeature/EventCard2/Content/Art") as TextureRect
 			_expect(event_art_1 != null and event_art_1.custom_minimum_size.y >= 522.0 and event_art_2 != null and event_art_2.custom_minimum_size.y >= 522.0, "20:9 Events must give the added height to raster feature art")
