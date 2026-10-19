@@ -351,11 +351,11 @@ func configure(feature_key: String, state: Dictionary) -> bool:
 	_apply_tall_phone_content_fill()
 	return true
 
-func _apply_tall_phone_content_fill() -> void:
+func _apply_tall_phone_content_fill(viewport_height_override: float = -1.0) -> void:
 	# The locked board is authored around a 9:16 phone. On taller devices the
 	# product shell expands vertically; keep Events/Shop visually attached to
 	# the bottom navigation instead of leaving a developer-like empty corridor.
-	var viewport_height := get_viewport_rect().size.y
+	var viewport_height := viewport_height_override if viewport_height_override > 0.0 else get_viewport_rect().size.y
 	var extra_height := clampf(viewport_height - 960.0, 0.0, 320.0)
 	if extra_height <= 0.0:
 		return
