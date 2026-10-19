@@ -44,7 +44,7 @@ func _run() -> void:
 			var event_feature := screen.get_node_or_null("FeatureLayout/EventsFeature") as VBoxContainer
 			var event_card_1 := screen.get_node_or_null("FeatureLayout/EventsFeature/EventCard1") as PanelContainer
 			var event_card_2 := screen.get_node_or_null("FeatureLayout/EventsFeature/EventCard2") as PanelContainer
-			_expect(event_feature != null and event_feature.visible and event_feature.size_flags_vertical != Control.SIZE_EXPAND_FILL and event_card_1 != null and event_card_1.visible and event_card_1.size_flags_vertical != Control.SIZE_EXPAND_FILL and event_card_1.custom_minimum_size.y >= 430.0 and event_card_1.custom_minimum_size.y <= 450.0 and event_card_2 != null and event_card_2.visible and event_card_2.size_flags_vertical != Control.SIZE_EXPAND_FILL and event_card_2.custom_minimum_size.y >= 430.0 and event_card_2.custom_minimum_size.y <= 450.0, "events must own two bounded North Star event cards instead of stretching into full-height slabs")
+			_expect(event_feature != null and event_feature.visible and event_feature.size_flags_vertical != Control.SIZE_EXPAND_FILL and event_card_1 != null and event_card_1.visible and event_card_1.size_flags_vertical != Control.SIZE_EXPAND_FILL and event_card_1.custom_minimum_size.y >= 490.0 and event_card_1.custom_minimum_size.y <= 510.0 and event_card_2 != null and event_card_2.visible and event_card_2.size_flags_vertical != Control.SIZE_EXPAND_FILL and event_card_2.custom_minimum_size.y >= 490.0 and event_card_2.custom_minimum_size.y <= 510.0, "events must own two bounded North Star event cards instead of stretching into full-height slabs")
 		elif feature == "shop":
 			_expect(hero_panel != null and not hero_panel.visible, "shop must use catalog composition instead of the generic meta hero")
 			_expect(bool(contract.get("shop_catalog_focus", false)), "shop must present one featured sealed preview plus two catalog previews")
@@ -56,9 +56,9 @@ func _run() -> void:
 			var profile_identity := screen.get_node_or_null("FeatureLayout/ProfileFeature/Identity") as PanelContainer
 			var profile_progress := screen.get_node_or_null("FeatureLayout/ProfileFeature/Identity/IdentityRow/Copy/Progress") as ProgressBar
 			_expect(hero_panel != null and not hero_panel.visible, "profile must not reuse the generic meta hero")
-			_expect(profile_identity != null and profile_identity.visible and profile_identity.custom_minimum_size.y >= 360.0 and profile_identity.custom_minimum_size.y <= 400.0, "profile must use its dedicated compact player-identity card")
+			_expect(profile_identity != null and profile_identity.visible and profile_identity.custom_minimum_size.y >= 400.0 and profile_identity.custom_minimum_size.y <= 440.0, "profile must use its dedicated compact player-identity card")
 			var profile_keeper_art := screen.get_node_or_null("FeatureLayout/ProfileFeature/Identity/IdentityRow/KeeperArt") as TextureRect
-			_expect(profile_keeper_art != null and profile_keeper_art.custom_minimum_size.x >= 270.0 and profile_keeper_art.custom_minimum_size.x <= 290.0, "profile Keeper portrait must own the enlarged identity stage")
+			_expect(profile_keeper_art != null and profile_keeper_art.custom_minimum_size.x >= 290.0 and profile_keeper_art.custom_minimum_size.x <= 310.0, "profile Keeper portrait must own the enlarged identity stage")
 			_expect(profile_progress != null and profile_progress.visible, "profile must expose truthful opening progress instead of fake XP")
 		else:
 			_expect(hero_panel != null and hero_panel.custom_minimum_size.y >= 400.0, "%s hero must occupy a true visual stage" % feature)
@@ -92,15 +92,15 @@ func _run() -> void:
 			_expect(card != null and card.visible and art != null and art.texture != null, "%s %s must render object art" % [feature, card_name])
 			if feature == "shop":
 				var card_index := ["Card1", "Card2", "Card3"].find(card_name)
-				var min_art := 278.0 if card_index == 0 else 182.0
-				var max_art := 294.0 if card_index == 0 else 198.0
-				var min_card := 330.0 if card_index == 0 else 232.0
-				var max_card := 350.0 if card_index == 0 else 248.0
+				var min_art := 340.0 if card_index == 0 else 240.0
+				var max_art := 360.0 if card_index == 0 else 260.0
+				var min_card := 430.0 if card_index == 0 else 310.0
+				var max_card := 450.0 if card_index == 0 else 330.0
 				var state_plate := screen.get_node_or_null("FeatureLayout/CardScroll/Cards/%s/Row/ShopStatePlate" % card_name) as PanelContainer
 				var status_label := screen.get_node_or_null("FeatureLayout/CardScroll/Cards/%s/Row/Copy/Status" % card_name) as Label
 				_expect(card.custom_minimum_size.y >= min_card and card.custom_minimum_size.y <= max_card and card.size_flags_vertical != Control.SIZE_EXPAND_FILL, "shop %s must retain compact fixed-height catalog density" % card_name)
 				_expect(art.custom_minimum_size.x >= min_art and art.custom_minimum_size.x <= max_art and art.custom_minimum_size.y >= min_art and art.custom_minimum_size.y <= max_art, "shop %s art must match compact catalog scale" % card_name)
-				_expect(state_plate != null and state_plate.visible and state_plate.custom_minimum_size.y <= 58.0 and state_plate.get_theme_stylebox("panel") is StyleBoxFlat, "shop %s must expose one compact sealed-state plate" % card_name)
+				_expect(state_plate != null and state_plate.visible and state_plate.custom_minimum_size.y <= 62.0 and state_plate.get_theme_stylebox("panel") is StyleBoxFlat, "shop %s must expose one compact sealed-state plate" % card_name)
 				_expect(status_label != null and not status_label.visible, "shop %s must not duplicate sealed truth in a second status line" % card_name)
 				var plate_detail := screen.get_node_or_null("FeatureLayout/CardScroll/Cards/%s/Row/ShopStatePlate/Content/Detail" % card_name) as Label
 				var plate_mode := screen.get_node_or_null("FeatureLayout/CardScroll/Cards/%s/Row/ShopStatePlate/Content/Mode" % card_name) as Label
@@ -187,7 +187,7 @@ func _run() -> void:
 			var house_row := screen.get_node_or_null("FeatureLayout/ProfileFeature/Menu/HouseRow") as PanelContainer
 			var save_row := screen.get_node_or_null("FeatureLayout/ProfileFeature/Menu/SaveRow") as PanelContainer
 			_expect(profile_progress_label != null and profile_progress_label.text == "OPENING RITUALS · 3 / 3" and profile_progress != null and profile_progress.value == 3.0, "profile progress bar must reflect real completed opening rituals")
-			_expect(settings_button != null and settings_button.custom_minimum_size.y >= 104.0 and settings_button.custom_minimum_size.y <= 112.0 and settings_button.text.contains("SETTINGS"), "profile settings must read as a compact dedicated utility row")
+			_expect(settings_button != null and settings_button.custom_minimum_size.y >= 116.0 and settings_button.custom_minimum_size.y <= 124.0 and settings_button.text.contains("SETTINGS"), "profile settings must read as a compact dedicated utility row")
 			_expect(bool(interaction.get("profile_real_action_tactile", false)), "profile Settings row must own visible press/release depth")
 			var profile_feedback_hits := {"count": 0}
 			screen.interaction_feedback_requested.connect(func(_kind: String): profile_feedback_hits["count"] = int(profile_feedback_hits["count"]) + 1)

@@ -225,7 +225,7 @@ size_flags_vertical = 0
 theme_override_constants/separation = 12
 
 [node name="EventCard1" type="PanelContainer" parent="FeatureLayout/EventsFeature"]
-custom_minimum_size = Vector2(0, 440)
+custom_minimum_size = Vector2(0, 500)
 layout_mode = 2
 size_flags_vertical = 0
 theme_override_styles/panel = SubResource("Card")
@@ -235,7 +235,7 @@ layout_mode = 2
 theme_override_constants/separation = 4
 
 [node name="Art" type="TextureRect" parent="FeatureLayout/EventsFeature/EventCard1/Content"]
-custom_minimum_size = Vector2(0, 330)
+custom_minimum_size = Vector2(0, 390)
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 0
@@ -261,7 +261,7 @@ layout_mode = 2
 theme_override_colors/font_color = Color(1, 0.941, 0.847, 1)
 theme_override_colors/font_outline_color = Color(0.02, 0.014, 0.028, 0.96)
 theme_override_constants/outline_size = 3
-theme_override_font_sizes/font_size = 28
+theme_override_font_sizes/font_size = 32
 text = "MOONLIGHT MARKET"
 horizontal_alignment = 1
 
@@ -270,12 +270,12 @@ layout_mode = 2
 theme_override_colors/font_color = Color(0.86, 0.77, 0.93, 1)
 theme_override_colors/font_outline_color = Color(0.02, 0.014, 0.028, 0.92)
 theme_override_constants/outline_size = 2
-theme_override_font_sizes/font_size = 15
+theme_override_font_sizes/font_size = 18
 text = "FUTURE EVENT · SEALED"
 horizontal_alignment = 1
 
 [node name="EventCard2" type="PanelContainer" parent="FeatureLayout/EventsFeature"]
-custom_minimum_size = Vector2(0, 440)
+custom_minimum_size = Vector2(0, 500)
 layout_mode = 2
 size_flags_vertical = 0
 theme_override_styles/panel = SubResource("Card")
@@ -285,7 +285,7 @@ layout_mode = 2
 theme_override_constants/separation = 4
 
 [node name="Art" type="TextureRect" parent="FeatureLayout/EventsFeature/EventCard2/Content"]
-custom_minimum_size = Vector2(0, 330)
+custom_minimum_size = Vector2(0, 390)
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 0
@@ -311,7 +311,7 @@ layout_mode = 2
 theme_override_colors/font_color = Color(1, 0.941, 0.847, 1)
 theme_override_colors/font_outline_color = Color(0.02, 0.014, 0.028, 0.96)
 theme_override_constants/outline_size = 3
-theme_override_font_sizes/font_size = 28
+theme_override_font_sizes/font_size = 32
 text = "THE LOST RELICS"
 horizontal_alignment = 1
 
@@ -320,7 +320,7 @@ layout_mode = 2
 theme_override_colors/font_color = Color(0.86, 0.77, 0.93, 1)
 theme_override_colors/font_outline_color = Color(0.02, 0.014, 0.028, 0.92)
 theme_override_constants/outline_size = 2
-theme_override_font_sizes/font_size = 15
+theme_override_font_sizes/font_size = 18
 text = "FUTURE JOURNEY · SEALED"
 horizontal_alignment = 1
 
@@ -332,7 +332,7 @@ size_flags_vertical = 0
 theme_override_constants/separation = 9
 
 [node name="Identity" type="PanelContainer" parent="FeatureLayout/ProfileFeature"]
-custom_minimum_size = Vector2(0, 380)
+custom_minimum_size = Vector2(0, 420)
 layout_mode = 2
 theme_override_styles/panel = SubResource("Hero")
 
@@ -341,7 +341,7 @@ layout_mode = 2
 theme_override_constants/separation = 22
 
 [node name="KeeperArt" type="TextureRect" parent="FeatureLayout/ProfileFeature/Identity/IdentityRow"]
-custom_minimum_size = Vector2(280, 280)
+custom_minimum_size = Vector2(300, 300)
 layout_mode = 2
 expand_mode = 1
 stretch_mode = 5
@@ -363,14 +363,14 @@ layout_mode = 2
 theme_override_colors/font_color = Color(1, 0.941, 0.847, 1)
 theme_override_colors/font_outline_color = Color(0.02, 0.014, 0.028, 0.92)
 theme_override_constants/outline_size = 3
-theme_override_font_sizes/font_size = 30
+theme_override_font_sizes/font_size = 34
 text = "OPENING HOUSE IN PROGRESS"
 autowrap_mode = 2
 
 [node name="ProgressLabel" type="Label" parent="FeatureLayout/ProfileFeature/Identity/IdentityRow/Copy"]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.95, 0.816, 0.545, 1)
-theme_override_font_sizes/font_size = 16
+theme_override_font_sizes/font_size = 20
 text = "OPENING RITUALS · 0 / 3"
 horizontal_alignment = 1
 
@@ -388,17 +388,17 @@ size_flags_vertical = 0
 theme_override_constants/separation = 8
 
 [node name="Settings" type="Button" parent="FeatureLayout/ProfileFeature/Menu"]
-custom_minimum_size = Vector2(0, 108)
+custom_minimum_size = Vector2(0, 120)
 layout_mode = 2
 theme_override_colors/font_color = Color(1, 0.941, 0.847, 1)
-theme_override_font_sizes/font_size = 22
+theme_override_font_sizes/font_size = 26
 theme_override_styles/normal = SubResource("Secondary")
 theme_override_styles/hover = SubResource("Primary")
 theme_override_styles/pressed = SubResource("Primary")
 text = "SETTINGS · AUDIO & ACCESSIBILITY"
 
 [node name="ChapterRow" type="PanelContainer" parent="FeatureLayout/ProfileFeature/Menu"]
-custom_minimum_size = Vector2(0, 154)
+custom_minimum_size = Vector2(0, 170)
 layout_mode = 2
 size_flags_vertical = 0
 theme_override_styles/panel = SubResource("Card")
@@ -408,7 +408,7 @@ layout_mode = 2
 theme_override_constants/separation = 14
 
 [node name="Icon" type="TextureRect" parent="FeatureLayout/ProfileFeature/Menu/ChapterRow/Content"]
-custom_minimum_size = Vector2(96, 96)
+custom_minimum_size = Vector2(108, 108)
 layout_mode = 2
 expand_mode = 1
 stretch_mode = 5
@@ -421,17 +421,17 @@ alignment = 1
 [node name="Title" type="Label" parent="FeatureLayout/ProfileFeature/Menu/ChapterRow/Content/Copy"]
 layout_mode = 2
 theme_override_colors/font_color = Color(1, 0.941, 0.847, 1)
-theme_override_font_sizes/font_size = 24
+theme_override_font_sizes/font_size = 28
 text = "CHAPTER PROGRESS"
 
 [node name="Status" type="Label" parent="FeatureLayout/ProfileFeature/Menu/ChapterRow/Content/Copy"]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.86, 0.77, 0.93, 1)
-theme_override_font_sizes/font_size = 17
+theme_override_font_sizes/font_size = 20
 text = "0 / 3 RITUALS"
 
 [node name="ReliquaryRow" type="PanelContainer" parent="FeatureLayout/ProfileFeature/Menu"]
-custom_minimum_size = Vector2(0, 154)
+custom_minimum_size = Vector2(0, 170)
 layout_mode = 2
 size_flags_vertical = 0
 theme_override_styles/panel = SubResource("Card")
@@ -441,7 +441,7 @@ layout_mode = 2
 theme_override_constants/separation = 14
 
 [node name="Icon" type="TextureRect" parent="FeatureLayout/ProfileFeature/Menu/ReliquaryRow/Content"]
-custom_minimum_size = Vector2(96, 96)
+custom_minimum_size = Vector2(108, 108)
 layout_mode = 2
 expand_mode = 1
 stretch_mode = 5
@@ -454,17 +454,17 @@ alignment = 1
 [node name="Title" type="Label" parent="FeatureLayout/ProfileFeature/Menu/ReliquaryRow/Content/Copy"]
 layout_mode = 2
 theme_override_colors/font_color = Color(1, 0.941, 0.847, 1)
-theme_override_font_sizes/font_size = 24
+theme_override_font_sizes/font_size = 28
 text = "RELIQUARY"
 
 [node name="Status" type="Label" parent="FeatureLayout/ProfileFeature/Menu/ReliquaryRow/Content/Copy"]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.86, 0.77, 0.93, 1)
-theme_override_font_sizes/font_size = 17
+theme_override_font_sizes/font_size = 20
 text = "0 / 3 CURIOS"
 
 [node name="HouseRow" type="PanelContainer" parent="FeatureLayout/ProfileFeature/Menu"]
-custom_minimum_size = Vector2(0, 154)
+custom_minimum_size = Vector2(0, 170)
 layout_mode = 2
 size_flags_vertical = 0
 theme_override_styles/panel = SubResource("Card")
@@ -474,7 +474,7 @@ layout_mode = 2
 theme_override_constants/separation = 14
 
 [node name="Icon" type="TextureRect" parent="FeatureLayout/ProfileFeature/Menu/HouseRow/Content"]
-custom_minimum_size = Vector2(96, 96)
+custom_minimum_size = Vector2(108, 108)
 layout_mode = 2
 expand_mode = 1
 stretch_mode = 5
@@ -487,13 +487,13 @@ alignment = 1
 [node name="Title" type="Label" parent="FeatureLayout/ProfileFeature/Menu/HouseRow/Content/Copy"]
 layout_mode = 2
 theme_override_colors/font_color = Color(1, 0.941, 0.847, 1)
-theme_override_font_sizes/font_size = 24
+theme_override_font_sizes/font_size = 28
 text = "HOUSE RESTORATION"
 
 [node name="Status" type="Label" parent="FeatureLayout/ProfileFeature/Menu/HouseRow/Content/Copy"]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.86, 0.77, 0.93, 1)
-theme_override_font_sizes/font_size = 17
+theme_override_font_sizes/font_size = 20
 text = "RESTORATION STAGE 0"
 
 [node name="UtilitySpacer" type="Control" parent="FeatureLayout/ProfileFeature/Menu"]
@@ -503,7 +503,7 @@ size_flags_vertical = 0
 mouse_filter = 2
 
 [node name="SaveRow" type="PanelContainer" parent="FeatureLayout/ProfileFeature/Menu"]
-custom_minimum_size = Vector2(0, 150)
+custom_minimum_size = Vector2(0, 170)
 layout_mode = 2
 size_flags_vertical = 0
 theme_override_styles/panel = SubResource("Card")
@@ -516,21 +516,21 @@ theme_override_constants/separation = 2
 [node name="Title" type="Label" parent="FeatureLayout/ProfileFeature/Menu/SaveRow/Content"]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.831, 0.678, 0.439, 1)
-theme_override_font_sizes/font_size = 14
+theme_override_font_sizes/font_size = 16
 text = "SAVE & ACCOUNT"
 horizontal_alignment = 1
 
 [node name="Local" type="Label" parent="FeatureLayout/ProfileFeature/Menu/SaveRow/Content"]
 layout_mode = 2
 theme_override_colors/font_color = Color(1, 0.941, 0.847, 1)
-theme_override_font_sizes/font_size = 22
+theme_override_font_sizes/font_size = 24
 text = "LOCAL SAVE · DEVICE-LOCAL"
 horizontal_alignment = 1
 
 [node name="Cloud" type="Label" parent="FeatureLayout/ProfileFeature/Menu/SaveRow/Content"]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.86, 0.77, 0.93, 1)
-theme_override_font_sizes/font_size = 17
+theme_override_font_sizes/font_size = 20
 text = "CLOUD SYNC · NOT CONNECTED"
 horizontal_alignment = 1
 
@@ -812,7 +812,7 @@ autowrap_mode = 2
 
 [node name="ShopStatePlate" type="PanelContainer" parent="FeatureLayout/CardScroll/Cards/Card1/Row"]
 visible = false
-custom_minimum_size = Vector2(120, 54)
+custom_minimum_size = Vector2(132, 60)
 layout_mode = 2
 size_flags_vertical = 4
 theme_override_styles/panel = SubResource("ShopSealBadge")
@@ -902,7 +902,7 @@ autowrap_mode = 2
 
 [node name="ShopStatePlate" type="PanelContainer" parent="FeatureLayout/CardScroll/Cards/Card2/Row"]
 visible = false
-custom_minimum_size = Vector2(120, 54)
+custom_minimum_size = Vector2(132, 60)
 layout_mode = 2
 size_flags_vertical = 4
 theme_override_styles/panel = SubResource("ShopSealBadge")
@@ -992,7 +992,7 @@ autowrap_mode = 2
 
 [node name="ShopStatePlate" type="PanelContainer" parent="FeatureLayout/CardScroll/Cards/Card3/Row"]
 visible = false
-custom_minimum_size = Vector2(120, 54)
+custom_minimum_size = Vector2(132, 60)
 layout_mode = 2
 size_flags_vertical = 4
 theme_override_styles/panel = SubResource("ShopSealBadge")

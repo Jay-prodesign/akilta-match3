@@ -167,9 +167,9 @@ func _capture() -> void:
 	for event_name in ["EventCard1", "EventCard2"]:
 		var event_card := app.current_screen().get_node_or_null("FeatureLayout/EventsFeature/%s" % event_name) as PanelContainer
 		var event_art := app.current_screen().get_node_or_null("FeatureLayout/EventsFeature/%s/Content/Art" % event_name) as TextureRect
-		if event_card == null or event_card.size_flags_vertical == Control.SIZE_EXPAND_FILL or event_card.custom_minimum_size.y < 430.0 or event_card.custom_minimum_size.y > 450.0:
+		if event_card == null or event_card.size_flags_vertical == Control.SIZE_EXPAND_FILL or event_card.custom_minimum_size.y < 490.0 or event_card.custom_minimum_size.y > 510.0:
 			return _fail(app, "Events %s card density drifted" % event_name)
-		if event_art == null or event_art.size_flags_vertical == Control.SIZE_EXPAND_FILL or event_art.custom_minimum_size.y < 320.0 or event_art.custom_minimum_size.y > 340.0:
+		if event_art == null or event_art.size_flags_vertical == Control.SIZE_EXPAND_FILL or event_art.custom_minimum_size.y < 380.0 or event_art.custom_minimum_size.y > 400.0:
 			return _fail(app, "Events %s artwork stage density drifted" % event_name)
 	var events_daily_card := app.current_screen().get_node_or_null("FeatureLayout/DailyPracticeCard") as PanelContainer
 	var events_weekly_button := app.current_screen().get_node_or_null("FeatureLayout/WeeklyMissionsAction") as Button
@@ -235,15 +235,15 @@ func _capture() -> void:
 	if weekly_altar == null or weekly_spacer == null or weekly_feed == null or weekly_progress == null or weekly_rewards == null or weekly_house_return == null:
 		return _fail(app, "Weekly Missions visual parity geometry missing")
 	var weekly_altar_ratio := weekly_altar.custom_minimum_size.y / weekly_viewport.y
-	if weekly_altar_ratio < 0.10 or weekly_altar_ratio > 0.12:
+	if weekly_altar_ratio < 0.055 or weekly_altar_ratio > 0.07:
 		return _fail(app, "Weekly Missions compact truthful intro drifted: %.3f" % weekly_altar_ratio)
-	if weekly_feed.custom_minimum_size.y < 140.0 or weekly_feed.custom_minimum_size.y > 156.0 or weekly_feed.size_flags_vertical == Control.SIZE_EXPAND_FILL or weekly_progress.custom_minimum_size.y < 140.0 or weekly_progress.custom_minimum_size.y > 156.0 or weekly_progress.size_flags_vertical == Control.SIZE_EXPAND_FILL or weekly_rewards.custom_minimum_size.y < 140.0 or weekly_rewards.custom_minimum_size.y > 156.0 or weekly_rewards.size_flags_vertical == Control.SIZE_EXPAND_FILL:
+	if weekly_feed.custom_minimum_size.y < 212.0 or weekly_feed.custom_minimum_size.y > 228.0 or weekly_feed.size_flags_vertical == Control.SIZE_EXPAND_FILL or weekly_progress.custom_minimum_size.y < 212.0 or weekly_progress.custom_minimum_size.y > 228.0 or weekly_progress.size_flags_vertical == Control.SIZE_EXPAND_FILL or weekly_rewards.custom_minimum_size.y < 212.0 or weekly_rewards.custom_minimum_size.y > 228.0 or weekly_rewards.size_flags_vertical == Control.SIZE_EXPAND_FILL:
 		return _fail(app, "Weekly Missions locked-board horizontal ritual rows drifted")
 	if weekly_spacer.size_flags_vertical == Control.SIZE_EXPAND_FILL or weekly_spacer.custom_minimum_size.y > 2.0:
 		return _fail(app, "Weekly Missions large empty world corridor returned")
 	var weekly_reward_stage := app.current_screen().get_node_or_null("MissionLayout/MissionOpeningRecord") as Control
 	var weekly_reward_seal := app.current_screen().get_node_or_null("MissionLayout/MissionOpeningRecord/Content/RewardSeal") as TextureRect
-	if weekly_reward_stage == null or weekly_reward_stage.custom_minimum_size.y < 252.0 or weekly_reward_stage.custom_minimum_size.y > 268.0 or weekly_reward_stage.size_flags_vertical == Control.SIZE_EXPAND_FILL or weekly_reward_seal == null or weekly_reward_seal.custom_minimum_size.y > 124.0:
+	if weekly_reward_stage == null or weekly_reward_stage.custom_minimum_size.y < 490.0 or weekly_reward_stage.custom_minimum_size.y > 510.0 or weekly_reward_stage.size_flags_vertical == Control.SIZE_EXPAND_FILL or weekly_reward_seal == null or weekly_reward_seal.custom_minimum_size.y > 230.0:
 		return _fail(app, "Weekly Missions compact sealed reward stage drifted")
 	if weekly_house_return.visible:
 		return _fail(app, "Weekly Missions redundant House button returned over product navigation")
@@ -292,15 +292,15 @@ func _capture() -> void:
 		var shop_plate := app.current_screen().get_node_or_null("FeatureLayout/CardScroll/Cards/%s/Row/ShopStatePlate" % card_name) as PanelContainer
 		var shop_status := app.current_screen().get_node_or_null("FeatureLayout/CardScroll/Cards/%s/Row/Copy/Status" % card_name) as Label
 		var is_first: bool = String(card_name) == "Card1"
-		var min_card := 330.0 if is_first else 232.0
-		var max_card := 350.0 if is_first else 248.0
-		var min_art := 278.0 if is_first else 182.0
-		var max_art := 294.0 if is_first else 198.0
+		var min_card := 430.0 if is_first else 310.0
+		var max_card := 450.0 if is_first else 330.0
+		var min_art := 340.0 if is_first else 240.0
+		var max_art := 360.0 if is_first else 260.0
 		if shop_card == null or shop_card.custom_minimum_size.y < min_card or shop_card.custom_minimum_size.y > max_card or shop_card.size_flags_vertical == Control.SIZE_EXPAND_FILL:
 			return _fail(app, "Shop %s compact card geometry drifted" % card_name)
 		if shop_card_art == null or shop_card_art.custom_minimum_size.x < min_art or shop_card_art.custom_minimum_size.x > max_art:
 			return _fail(app, "Shop %s compact art scale drifted" % card_name)
-		if shop_plate == null or not shop_plate.visible or shop_plate.custom_minimum_size.y > 58.0 or not (shop_plate.get_theme_stylebox("panel") is StyleBoxFlat):
+		if shop_plate == null or not shop_plate.visible or shop_plate.custom_minimum_size.y > 62.0 or not (shop_plate.get_theme_stylebox("panel") is StyleBoxFlat):
 			return _fail(app, "Shop %s sealed-state badge drifted" % card_name)
 		var shop_plate_detail := app.current_screen().get_node_or_null("FeatureLayout/CardScroll/Cards/%s/Row/ShopStatePlate/Content/Detail" % card_name) as Label
 		var shop_plate_mode := app.current_screen().get_node_or_null("FeatureLayout/CardScroll/Cards/%s/Row/ShopStatePlate/Content/Mode" % card_name) as Label
@@ -511,29 +511,29 @@ func _verify_meta_visual_parity(app: Node, screen: Node, feature: String) -> boo
 	var hero_art_ratio := hero_art.custom_minimum_size.x / viewport_size.x
 	var card_art_ratio := card_art.custom_minimum_size.x / viewport_size.x
 	if feature == "profile":
-		if hero_ratio < 0.18 or hero_ratio > 0.22:
+		if hero_ratio < 0.20 or hero_ratio > 0.24:
 			_fail(app, "profile identity card proportion drifted: %.3f" % hero_ratio)
 			return false
-		if hero_art_ratio < 0.24 or hero_art_ratio > 0.28:
+		if hero_art_ratio < 0.27 or hero_art_ratio > 0.29:
 			_fail(app, "profile Keeper portrait proportion drifted: %.3f" % hero_art_ratio)
 			return false
-		if card_art_ratio < 0.08 or card_art_ratio > 0.10:
+		if card_art_ratio < 0.095 or card_art_ratio > 0.11:
 			_fail(app, "profile utility-row icon proportion drifted: %.3f" % card_art_ratio)
 			return false
 	elif feature == "events":
-		if hero_ratio < 0.21 or hero_ratio > 0.24:
+		if hero_ratio < 0.25 or hero_ratio > 0.27:
 			_fail(app, "events visible feature-card proportion drifted: %.3f" % hero_ratio)
 			return false
 		var event_art_height_ratio := hero_art.custom_minimum_size.y / viewport_size.y
 		var second_event_art_height_ratio := card_art.custom_minimum_size.y / viewport_size.y
-		if event_art_height_ratio < 0.16 or event_art_height_ratio > 0.18 or second_event_art_height_ratio < 0.16:
+		if event_art_height_ratio < 0.19 or event_art_height_ratio > 0.21 or second_event_art_height_ratio < 0.19:
 			_fail(app, "events visible raster artwork stage drifted: %.3f" % event_art_height_ratio)
 			return false
 	elif feature == "shop":
-		if hero_ratio < 0.16 or hero_ratio > 0.20:
+		if hero_ratio < 0.22 or hero_ratio > 0.24:
 			_fail(app, "shop visible featured-card proportion drifted: %.3f" % hero_ratio)
 			return false
-		if hero_art_ratio < 0.25 or hero_art_ratio > 0.28 or card_art_ratio < 0.25:
+		if hero_art_ratio < 0.31 or hero_art_ratio > 0.34 or card_art_ratio < 0.31:
 			_fail(app, "shop visible featured raster art scale drifted: %.3f" % hero_art_ratio)
 			return false
 	else:

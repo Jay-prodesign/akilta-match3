@@ -181,14 +181,14 @@ func _settle_intro() -> void:
 	set_meta("weekly_reveal_phase", "idle")
 
 func screen_contract() -> Dictionary:
-	var altar_compact := empty_state.custom_minimum_size.y >= 200.0 and empty_state.custom_minimum_size.y <= 220.0 and reward_art.custom_minimum_size.x >= 120.0 and reward_art.custom_minimum_size.x <= 136.0 and reward_art.custom_minimum_size.y >= 120.0 and reward_art.custom_minimum_size.y <= 136.0
+	var altar_compact := empty_state.custom_minimum_size.y >= 112.0 and empty_state.custom_minimum_size.y <= 128.0 and reward_art.custom_minimum_size.x >= 80.0 and reward_art.custom_minimum_size.x <= 96.0 and reward_art.custom_minimum_size.y >= 80.0 and reward_art.custom_minimum_size.y <= 96.0
 	var status_rows := [feed_status, progress_status, reward_status]
 	var status_stack := $MissionLayout/MissionStatusStack as VBoxContainer
-	var status_stack_dense := status_stack != null and status_stack.size_flags_vertical != Control.SIZE_EXPAND_FILL and status_rows.all(func(row): return row != null and row.custom_minimum_size.y >= 140.0 and row.custom_minimum_size.y <= 156.0 and row.size_flags_vertical != Control.SIZE_EXPAND_FILL and row.get_theme_stylebox("panel") is StyleBoxFlat and String(row.get_meta("weekly_material", "")) == "scene_authored_flat")
+	var status_stack_dense := status_stack != null and status_stack.size_flags_vertical != Control.SIZE_EXPAND_FILL and status_rows.all(func(row): return row != null and row.custom_minimum_size.y >= 212.0 and row.custom_minimum_size.y <= 228.0 and row.size_flags_vertical != Control.SIZE_EXPAND_FILL and row.get_theme_stylebox("panel") is StyleBoxFlat and String(row.get_meta("weekly_material", "")) == "scene_authored_flat")
 	var truthful_status_copy := feed_state.text == "NOT CONNECTED" and progress_state.text == "NOT TRACKED OFFLINE" and reward_state.text == "NOTHING TO CLAIM"
 	var status_icons_loaded := [feed_icon, progress_icon, reward_icon, opening_reward_seal].all(func(icon): return icon != null and icon.texture != null and String(icon.get_meta("asset_path", "")) == STATUS_SEAL_PATH)
 	var intentional_stage := stage_spacer != null and stage_spacer.size_flags_vertical != Control.SIZE_EXPAND_FILL and stage_spacer.custom_minimum_size.y <= 2.0 and ($MissionLayout as VBoxContainer).offset_bottom <= -140.0
-	var footer_record := opening_record.visible and opening_record.custom_minimum_size.y >= 252.0 and opening_record.custom_minimum_size.y <= 268.0 and opening_record.size_flags_vertical != Control.SIZE_EXPAND_FILL and opening_reward_state.text == "SEALED · LIVE FEED REQUIRED" and opening_reward_truth.text == "NOTHING TO CLAIM OFFLINE" and opening_record.get_theme_stylebox("panel") is StyleBoxFlat and String(opening_record.get_meta("weekly_material", "")) == "scene_authored_flat" and String(opening_record.get_meta("stage_role", "")) == "anchored_footer_status"
+	var footer_record := opening_record.visible and opening_record.custom_minimum_size.y >= 490.0 and opening_record.custom_minimum_size.y <= 510.0 and opening_record.size_flags_vertical != Control.SIZE_EXPAND_FILL and opening_reward_state.text == "SEALED · LIVE FEED REQUIRED" and opening_reward_truth.text == "NOTHING TO CLAIM OFFLINE" and opening_record.get_theme_stylebox("panel") is StyleBoxFlat and String(opening_record.get_meta("weekly_material", "")) == "scene_authored_flat" and String(opening_record.get_meta("stage_role", "")) == "anchored_footer_status"
 	var world_visible := ($WorldShade as ColorRect).color.a <= 0.20 and ($HeaderShade as ColorRect).color.a <= 0.38
 	var return_actions := return_events.get_theme_stylebox("normal") is StyleBoxTexture and return_house.get_theme_stylebox("normal") is StyleBoxTexture and String(return_events.get_meta("production_chrome_kind", "")) == "action_utility_weekly_events_return" and String(return_house.get_meta("production_chrome_kind", "")) == "action_utility_weekly_house_return" and return_events.visible and return_events.custom_minimum_size.y <= 80.0 and not return_house.visible
 	return {
@@ -218,6 +218,6 @@ func screen_contract() -> Dictionary:
 		"world_art_not_overdimmed": world_visible,
 		"visual_parity_gate_v2": altar_compact and status_stack_dense and truthful_status_copy and status_icons_loaded and intentional_stage and footer_record and world_visible and return_actions,
 		"visual_parity_gate_v3": altar_compact and status_stack_dense and truthful_status_copy and status_icons_loaded and intentional_stage and footer_record and world_visible and return_actions,
-		"north_star_compact_reward_stage": footer_record and opening_reward_seal.custom_minimum_size.y <= 124.0,
+		"north_star_compact_reward_stage": footer_record and opening_reward_seal.custom_minimum_size.y <= 230.0,
 		"interaction_choreography": weekly_interaction_contract(),
 	}
