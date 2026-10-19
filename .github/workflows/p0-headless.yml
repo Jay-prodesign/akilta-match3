@@ -16,6 +16,7 @@ on:
       - "assets/mobile/**"
       - "tests/unit/test_mobile_release_contract.gd"
       - "tests/unit/test_mobile_safe_area.gd"
+      - "tests/unit/test_bootstrap.gd"
       - "src/app/**"
       - "src/analytics/**"
       - "src/ui/home/**"
