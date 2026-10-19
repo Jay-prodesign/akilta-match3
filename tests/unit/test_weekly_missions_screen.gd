@@ -41,6 +41,8 @@ func _run() -> void:
 	_expect(bool(contract.get("scene_authored_status_rows", false)), "Weekly Rituals truthful offline rows must preserve seam-free scene-authored material")
 	_expect(bool(contract.get("seam_free_weekly_material", false)), "Weekly Rituals must not stretch shared 9-slice chrome across its altar and mission rows")
 	_expect(bool(contract.get("truthful_status_rows", false)), "Weekly Rituals status rows must expose only connected/offline/claim truth")
+	_expect(bool(contract.get("raster_reward_stage", false)), "Weekly Rituals lower reward stage must use real raster Curio art")
+	_expect(bool(contract.get("asset_backed_reward_stage", false)), "Weekly Rituals lower reward stage must use ornate production chrome")
 	_expect(bool(contract.get("redundant_house_return_suppressed", false)), "Weekly Rituals must suppress redundant House return when product navigation already exposes House")
 	_expect(bool(contract.get("compact_offline_copy", false)), "Weekly Rituals offline state must hide redundant live-feed copy from the visual stack")
 	_expect(bool(contract.get("intentional_world_stage", false)), "Weekly Rituals must use only a compact authored gap rather than a large empty world corridor")
@@ -75,9 +77,9 @@ func _run() -> void:
 	_expect(progress_row != null and progress_row.custom_minimum_size.y >= 212.0 and progress_row.custom_minimum_size.y <= 228.0 and progress_row.size_flags_vertical != Control.SIZE_EXPAND_FILL and progress_row.get_theme_stylebox("panel") is StyleBoxFlat and progress_state != null and progress_state.text == "NOT TRACKED OFFLINE", "Weekly Rituals progress row must stay dense without fabricating offline progress")
 	_expect(reward_row != null and reward_row.custom_minimum_size.y >= 212.0 and reward_row.custom_minimum_size.y <= 228.0 and reward_row.size_flags_vertical != Control.SIZE_EXPAND_FILL and reward_row.get_theme_stylebox("panel") is StyleBoxFlat and reward_state != null and reward_state.text == "NOTHING TO CLAIM", "Weekly Rituals reward row must stay dense without fabricating a claim")
 	_expect(stage_spacer != null and stage_spacer.size_flags_vertical != Control.SIZE_EXPAND_FILL and stage_spacer.custom_minimum_size.y <= 2.0, "Weekly Rituals empty world corridor returned")
-	_expect(record != null and record.visible and record.custom_minimum_size.y >= 490.0 and record.custom_minimum_size.y <= 510.0 and record.size_flags_vertical != Control.SIZE_EXPAND_FILL, "Weekly Rituals reward zone must occupy the board's lower reward stage")
-	_expect(record != null and record.get_theme_stylebox("panel") is StyleBoxFlat, "Weekly Rituals sealed reward zone must render on its seam-free authored material")
-	_expect(reward_seal != null and reward_seal.texture != null and reward_panel_state != null and reward_panel_state.text == "SEALED · LIVE FEED REQUIRED" and reward_truth != null and reward_truth.text == "NOTHING TO CLAIM OFFLINE", "Weekly Rituals reward zone must remain explicit and truthful")
+	_expect(record != null and record.visible and record.custom_minimum_size.y >= 350.0 and record.custom_minimum_size.y <= 370.0 and record.size_flags_vertical == Control.SIZE_EXPAND_FILL, "Weekly Rituals reward zone must occupy the board's lower reward stage")
+	_expect(record != null and record.get_theme_stylebox("panel") is StyleBoxTexture, "Weekly Rituals sealed reward zone must render with ornate production chrome")
+	_expect(reward_seal != null and reward_seal.texture != null and String(reward_seal.get_meta("asset_path", "")).ends_with(".webp") and reward_panel_state != null and reward_panel_state.text == "SEALED · LIVE FEED REQUIRED" and reward_truth != null and reward_truth.text == "NOTHING TO CLAIM OFFLINE", "Weekly Rituals reward zone must remain explicit, raster-backed and truthful")
 
 	var event_signal := {"hit": false}
 	var feedback := {"count": 0}
