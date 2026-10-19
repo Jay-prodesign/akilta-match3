@@ -134,7 +134,7 @@ func native_runtime_review_route_from_args(args: PackedStringArray) -> String:
 		if not arg.begins_with(NATIVE_RUNTIME_REVIEW_ROUTE_PREFIX):
 			continue
 		var route := arg.trim_prefix(NATIVE_RUNTIME_REVIEW_ROUTE_PREFIX).strip_edges().to_lower()
-		if route in ["house", "map", "prestart", "gameplay"]:
+		if route in ["house", "map", "prestart", "gameplay", "reliquary", "events", "weekly", "shop", "profile", "settings", "secondary"]:
 			return route
 	return ""
 
@@ -179,6 +179,77 @@ func _run_native_runtime_review_route(route: String) -> void:
 				return
 			_write_native_runtime_review_marker("gameplay")
 			print("NATIVE_RUNTIME_REVIEW_ROUTE_PASS: gameplay")
+		"reliquary":
+			if not show_collection():
+				return
+			await _settle_native_runtime_review_route("reliquary")
+		"events":
+			if not show_feature_preview("Events"):
+				return
+			await _settle_native_runtime_review_route("events")
+		"weekly":
+			if not show_weekly_missions():
+				return
+			await _settle_native_runtime_review_route("weekly")
+		"shop":
+			if not show_feature_preview("Shop"):
+				return
+			await _settle_native_runtime_review_route("shop")
+		"profile":
+			if not show_feature_preview("Profile"):
+				return
+			await _settle_native_runtime_review_route("profile")
+		"settings":
+			if not show_feature_preview("Profile"):
+				return
+			if not show_settings():
+				return
+			await _settle_native_runtime_review_route("settings")
+		"secondary":
+			await _run_native_secondary_review_sequence()
+
+func _settle_native_runtime_review_route(route: String, hold_seconds: float = 0.0) -> void:
+	# Review markers are emitted only after the real scene has had time to lay out
+	# and its short authored route transition has completed.
+	await get_tree().process_frame
+	await get_tree().process_frame
+	await get_tree().create_timer(0.35).timeout
+	_write_native_runtime_review_marker(route)
+	print("NATIVE_RUNTIME_REVIEW_ROUTE_PASS: %s" % route)
+	if hold_seconds > 0.0:
+		await get_tree().create_timer(hold_seconds).timeout
+
+func _run_native_secondary_review_sequence() -> void:
+	# One native launch walks the real secondary product destinations in player
+	# navigation order. Each state is held long enough for CI to capture the
+	# settled device frame; no review-only UI is created.
+	if not show_collection():
+		return
+	await _settle_native_runtime_review_route("reliquary", 3.0)
+
+	if not show_house():
+		return
+	if not show_feature_preview("Events"):
+		return
+	await _settle_native_runtime_review_route("events", 3.0)
+
+	if not show_weekly_missions():
+		return
+	await _settle_native_runtime_review_route("weekly", 3.0)
+
+	if not _ensure_house_route():
+		return
+	if not show_feature_preview("Shop"):
+		return
+	await _settle_native_runtime_review_route("shop", 3.0)
+
+	if not show_feature_preview("Profile"):
+		return
+	await _settle_native_runtime_review_route("profile", 3.0)
+
+	if not show_settings():
+		return
+	await _settle_native_runtime_review_route("settings")
 
 func _write_native_runtime_review_marker(route: String) -> void:
 	var marker := FileAccess.open("user://native-runtime-review-route.txt", FileAccess.WRITE)
