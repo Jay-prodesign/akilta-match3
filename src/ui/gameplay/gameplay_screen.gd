@@ -819,7 +819,7 @@ func _refresh_hud() -> void:
 	if objective_name_label != null:
 		if _objective_name_tween != null and _objective_name_tween.is_valid():
 			_objective_name_tween.kill()
-		objective_name_label.modulate = Color(1, 1, 1, 0)
+		objective_name_label.modulate = Color.WHITE
 	if objective_icon != null:
 		objective_icon.texture = PieceAssetLoader.ornament(_objective_art_path())
 	if board_state == null:
@@ -901,6 +901,17 @@ func _objective_target_value() -> int:
 		return maxi(1, current_initial_blocker_hp)
 	return maxi(1, int(board_state.objective_target))
 
+func _restore_objective_identity() -> void:
+	if objective_name_label == null or board_state == null:
+		return
+	if String(board_state.objective_type) == "collect_family":
+		objective_name_label.text = "%s SIGILS" % String(board_state.objective_family).to_upper()
+	elif String(board_state.objective_type) == "clear_blockers":
+		objective_name_label.text = "WAX SEAL LAYERS"
+	else:
+		objective_name_label.text = "OBJECTIVE"
+
+
 func _present_objective_progress() -> void:
 	if objective_label == null or board_state == null or _last_objective_delta <= 0:
 		return
@@ -920,7 +931,9 @@ func _present_objective_progress() -> void:
 	if not _reduced_motion and not complete:
 		_objective_name_tween = create_tween()
 		_objective_name_tween.tween_interval(0.85)
-		_objective_name_tween.tween_property(objective_name_label, "modulate", Color(1, 1, 1, 0), 0.24).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
+		_objective_name_tween.tween_property(objective_name_label, "modulate", Color(1, 1, 1, 0), 0.18).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
+		_objective_name_tween.tween_callback(_restore_objective_identity)
+		_objective_name_tween.tween_property(objective_name_label, "modulate", Color.WHITE, 0.18).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
 	if _objective_pulse_tween != null and _objective_pulse_tween.is_valid():
 		_objective_pulse_tween.kill()
 	objective_label.scale = Vector2.ONE
