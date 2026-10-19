@@ -838,13 +838,13 @@ func _board_geometry() -> Dictionary:
 	return {"origin": Vector2(origin_x, origin_y), "cell_size": cell_size}
 
 func _draw_board_frame(rect: Rect2) -> void:
-	var framed_rect := rect.grow(20.0)
-	var shadow := framed_rect.grow(12.0)
-	draw_rect(shadow, Color(0.012, 0.008, 0.018, 0.80), true)
+	var framed_rect := rect.grow(16.0)
+	var shadow := framed_rect.grow(10.0)
+	draw_rect(shadow, Color(0.012, 0.008, 0.018, 0.72), true)
 	if _board_frame_style != null:
 		draw_style_box(_board_frame_style, framed_rect)
-		draw_rect(rect.grow(5.0), Color(GOLD, 0.24), false, 2.0)
-		draw_rect(rect.grow(-5.0), Color("#6E4A77", 0.24), false, 2.0)
+		draw_rect(rect.grow(4.0), Color(GOLD, 0.14), false, 1.5)
+		draw_rect(rect.grow(-4.0), Color("#6E4A77", 0.12), false, 1.5)
 	else:
 		draw_rect(rect, Color("#100B15"), true)
 		draw_rect(rect, Color(GOLD, 0.74), false, 3.0)
@@ -894,17 +894,17 @@ func _draw_cell(rect: Rect2, pos: Vector2i) -> void:
 
 func _cell_box(radius: float) -> StyleBoxFlat:
 	var box := StyleBoxFlat.new()
-	var fill := Color("#100C14", 0.58)
+	var fill := Color("#100C14", 0.50)
 	if _visual_profile == "sealed_display":
-		fill = Color("#0D141C", 0.60)
+		fill = Color("#0D141C", 0.52)
 	elif _visual_profile == "thornlight_arrangement":
-		fill = Color("#160D14", 0.60)
+		fill = Color("#160D14", 0.52)
 	box.bg_color = fill
-	box.border_color = Color(GOLD, 0.28) if _high_contrast else Color("#76517D", 0.16)
+	box.border_color = Color(GOLD, 0.28) if _high_contrast else Color("#76517D", 0.10)
 	box.set_border_width_all(1)
 	box.set_corner_radius_all(int(maxf(5.0, radius * 0.28)))
-	box.shadow_color = Color(0, 0, 0, 0.24)
-	box.shadow_size = 2
+	box.shadow_color = Color(0, 0, 0, 0.18)
+	box.shadow_size = 1
 	return box
 
 func _draw_piece(rect: Rect2, family: String, descriptor: Dictionary) -> void:
@@ -927,7 +927,7 @@ func _draw_piece(rect: Rect2, family: String, descriptor: Dictionary) -> void:
 			_:
 				render_scale = 1.08
 		var glow := Color(descriptor.get("color", GOLD))
-		glow.a = 0.10 if not _high_contrast else 0.16
+		glow.a = 0.07 if not _high_contrast else 0.16
 		draw_circle(rect.get_center(), minf(rect.size.x, rect.size.y) * 0.40, glow)
 		var asset_size := rect.size * render_scale
 		var asset_rect := Rect2(rect.get_center() - asset_size * 0.5, asset_size)
@@ -1125,7 +1125,7 @@ func _cell_center(pos: Vector2i) -> Vector2:
 
 func _piece_rect(center: Vector2, scale_factor: float = 1.0) -> Rect2:
 	var cell_size: float = float(_board_geometry()["cell_size"])
-	var piece_size := cell_size * 0.74 * scale_factor
+	var piece_size := cell_size * 0.78 * scale_factor
 	return Rect2(center - Vector2.ONE * piece_size * 0.5, Vector2.ONE * piece_size)
 
 func _draw_motion() -> void:
