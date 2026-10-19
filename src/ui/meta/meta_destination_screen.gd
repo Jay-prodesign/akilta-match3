@@ -246,10 +246,10 @@ func configure(feature_key: String, state: Dictionary) -> bool:
 	daily_title.visible = _feature_key != "events"
 	daily_truth.visible = _feature_key != "events"
 	if _feature_key == "events":
-		daily_card.custom_minimum_size.y = 86.0
+		daily_card.custom_minimum_size.y = 100.0
 		daily_card.size_flags_vertical = Control.SIZE_FILL
-		daily_action.custom_minimum_size.y = 66.0
-		weekly_action.custom_minimum_size.y = 72.0
+		daily_action.custom_minimum_size.y = 72.0
+		weekly_action.custom_minimum_size.y = 80.0
 	else:
 		daily_card.custom_minimum_size.y = 150.0
 		daily_action.custom_minimum_size.y = 72.0
@@ -390,23 +390,23 @@ func _apply_cards(cards: Array[Dictionary]) -> void:
 		var shop_state_plate := card.get_node_or_null("Row/ShopStatePlate") as PanelContainer
 		if _feature_key == "shop":
 			card_stack.add_theme_constant_override("separation", 10)
-			card.custom_minimum_size.y = 214.0 if i == 0 else 154.0
+			card.custom_minimum_size.y = 440.0 if i == 0 else 320.0
 			card.size_flags_vertical = Control.SIZE_FILL
 			card.size_flags_stretch_ratio = 1.0
 			row.add_theme_constant_override("separation", 12)
-			art.custom_minimum_size = Vector2(178, 178) if i == 0 else Vector2(108, 108)
+			art.custom_minimum_size = Vector2(350, 350) if i == 0 else Vector2(250, 250)
 			art.size_flags_vertical = Control.SIZE_FILL
-			kicker.add_theme_font_size_override("font_size", 16 if i == 0 else 14)
-			card_title.add_theme_font_size_override("font_size", 30 if i == 0 else 25)
+			kicker.add_theme_font_size_override("font_size", 18 if i == 0 else 16)
+			card_title.add_theme_font_size_override("font_size", 34 if i == 0 else 30)
 			status.visible = false
 			status.add_theme_font_size_override("font_size", 14 if i == 0 else 13)
 			if shop_state_plate != null:
 				shop_state_plate.visible = true
-				shop_state_plate.custom_minimum_size = Vector2(120, 54)
+				shop_state_plate.custom_minimum_size = Vector2(132, 60)
 				var state_label := shop_state_plate.get_node("Content/State") as Label
 				var detail_label := shop_state_plate.get_node("Content/Detail") as Label
 				var mode_label := shop_state_plate.get_node("Content/Mode") as Label
-				state_label.add_theme_font_size_override("font_size", 15)
+				state_label.add_theme_font_size_override("font_size", 18)
 				detail_label.visible = false
 				mode_label.visible = false
 		else:
@@ -489,30 +489,30 @@ func screen_contract() -> Dictionary:
 		and event_card_2.visible
 		and event_card_1.size_flags_vertical != Control.SIZE_EXPAND_FILL
 		and event_card_2.size_flags_vertical != Control.SIZE_EXPAND_FILL
-		and event_card_1.custom_minimum_size.y >= 330.0
-		and event_card_1.custom_minimum_size.y <= 350.0
-		and event_card_2.custom_minimum_size.y >= 330.0
-		and event_card_2.custom_minimum_size.y <= 350.0
+		and event_card_1.custom_minimum_size.y >= 490.0
+		and event_card_1.custom_minimum_size.y <= 510.0
+		and event_card_2.custom_minimum_size.y >= 490.0
+		and event_card_2.custom_minimum_size.y <= 510.0
 		and event_art_1.size_flags_vertical != Control.SIZE_EXPAND_FILL
 		and event_art_2.size_flags_vertical != Control.SIZE_EXPAND_FILL
-		and event_art_1.custom_minimum_size.y >= 236.0
-		and event_art_1.custom_minimum_size.y <= 252.0
-		and event_art_2.custom_minimum_size.y >= 236.0
-		and event_art_2.custom_minimum_size.y <= 252.0
+		and event_art_1.custom_minimum_size.y >= 380.0
+		and event_art_1.custom_minimum_size.y <= 400.0
+		and event_art_2.custom_minimum_size.y >= 380.0
+		and event_art_2.custom_minimum_size.y <= 400.0
 		and event_art_1.texture != null
 		and event_art_2.texture != null
 	)
 	var events_actions_subordinate := _feature_key != "events" or (
 		daily_card.visible
-		and daily_card.custom_minimum_size.y >= 82.0
-		and daily_card.custom_minimum_size.y <= 90.0
+		and daily_card.custom_minimum_size.y >= 96.0
+		and daily_card.custom_minimum_size.y <= 104.0
 		and daily_card.size_flags_vertical != Control.SIZE_EXPAND_FILL
 		and not daily_title.visible
-		and daily_action.custom_minimum_size.y >= 62.0
-		and daily_action.custom_minimum_size.y <= 70.0
+		and daily_action.custom_minimum_size.y >= 68.0
+		and daily_action.custom_minimum_size.y <= 76.0
 		and weekly_action.visible
-		and weekly_action.custom_minimum_size.y >= 68.0
-		and weekly_action.custom_minimum_size.y <= 76.0
+		and weekly_action.custom_minimum_size.y >= 76.0
+		and weekly_action.custom_minimum_size.y <= 84.0
 	)
 	var events_truthful_status := _feature_key != "events" or (
 		event_status_1.visible
@@ -540,13 +540,13 @@ func screen_contract() -> Dictionary:
 		and not shop_truth.visible
 		and not shop_disabled_action.visible
 		and card_nodes.all(func(card): return (card as PanelContainer).visible and (card as PanelContainer).size_flags_vertical != Control.SIZE_EXPAND_FILL)
-		and (card_nodes[0] as PanelContainer).custom_minimum_size.y >= 204.0
-		and (card_nodes[0] as PanelContainer).custom_minimum_size.y <= 220.0
-		and [card_nodes[1], card_nodes[2]].all(func(card): return (card as PanelContainer).custom_minimum_size.y >= 146.0 and (card as PanelContainer).custom_minimum_size.y <= 160.0)
-		and (card_art_nodes[0] as TextureRect).custom_minimum_size.x >= 170.0
-		and (card_art_nodes[0] as TextureRect).custom_minimum_size.x <= 186.0
-		and [card_art_nodes[1], card_art_nodes[2]].all(func(art): return (art as TextureRect).custom_minimum_size.x >= 102.0 and (art as TextureRect).custom_minimum_size.x <= 114.0)
-		and shop_state_plates.all(func(plate): return (plate as PanelContainer).visible and (plate as PanelContainer).custom_minimum_size.y <= 58.0 and (plate as PanelContainer).get_theme_stylebox("panel") is StyleBoxFlat)
+		and (card_nodes[0] as PanelContainer).custom_minimum_size.y >= 430.0
+		and (card_nodes[0] as PanelContainer).custom_minimum_size.y <= 450.0
+		and [card_nodes[1], card_nodes[2]].all(func(card): return (card as PanelContainer).custom_minimum_size.y >= 310.0 and (card as PanelContainer).custom_minimum_size.y <= 330.0)
+		and (card_art_nodes[0] as TextureRect).custom_minimum_size.x >= 340.0
+		and (card_art_nodes[0] as TextureRect).custom_minimum_size.x <= 360.0
+		and [card_art_nodes[1], card_art_nodes[2]].all(func(art): return (art as TextureRect).custom_minimum_size.x >= 240.0 and (art as TextureRect).custom_minimum_size.x <= 260.0)
+		and shop_state_plates.all(func(plate): return (plate as PanelContainer).visible and (plate as PanelContainer).custom_minimum_size.y <= 62.0 and (plate as PanelContainer).get_theme_stylebox("panel") is StyleBoxFlat)
 		and shop_status_labels.all(func(label): return not (label as Label).visible)
 	)
 	var profile_identity_focus := _feature_key != "profile" or (
@@ -556,23 +556,23 @@ func screen_contract() -> Dictionary:
 		and profile_feature.visible
 		and not hero_panel.visible
 		and profile_identity.visible
-		and profile_identity.custom_minimum_size.y >= 280.0
-		and profile_identity.custom_minimum_size.y <= 320.0
+		and profile_identity.custom_minimum_size.y >= 400.0
+		and profile_identity.custom_minimum_size.y <= 440.0
 		and profile_keeper_art.texture != null
-		and profile_keeper_art.custom_minimum_size.x >= 200.0
-		and profile_keeper_art.custom_minimum_size.x <= 240.0
+		and profile_keeper_art.custom_minimum_size.x >= 290.0
+		and profile_keeper_art.custom_minimum_size.x <= 310.0
 		and profile_identity_progress.visible
 		and profile_identity_progress.max_value >= 1.0
 	)
 	var profile_menu_spacer := get_node_or_null("FeatureLayout/ProfileFeature/Menu/UtilitySpacer") as Control
 	var profile_utility_rows := _feature_key != "profile" or (
 		profile_settings_row.visible
-		and profile_settings_row.custom_minimum_size.y >= 88.0
-		and profile_settings_row.custom_minimum_size.y <= 96.0
-		and [profile_chapter_row, profile_reliquary_row, profile_house_row].all(func(row): return row.visible and row.custom_minimum_size.y >= 128.0 and row.custom_minimum_size.y <= 136.0 and row.size_flags_vertical != Control.SIZE_EXPAND_FILL)
+		and profile_settings_row.custom_minimum_size.y >= 116.0
+		and profile_settings_row.custom_minimum_size.y <= 124.0
+		and [profile_chapter_row, profile_reliquary_row, profile_house_row].all(func(row): return row.visible and row.custom_minimum_size.y >= 166.0 and row.custom_minimum_size.y <= 174.0 and row.size_flags_vertical != Control.SIZE_EXPAND_FILL)
 		and profile_save_row.visible
-		and profile_save_row.custom_minimum_size.y >= 116.0
-		and profile_save_row.custom_minimum_size.y <= 124.0
+		and profile_save_row.custom_minimum_size.y >= 166.0
+		and profile_save_row.custom_minimum_size.y <= 174.0
 		and profile_save_row.size_flags_vertical != Control.SIZE_EXPAND_FILL
 		and profile_menu_spacer != null
 		and profile_menu_spacer.size_flags_vertical != Control.SIZE_EXPAND_FILL
@@ -607,7 +607,7 @@ func screen_contract() -> Dictionary:
 		"asset_backed_hero_chrome": (event_card_1.get_theme_stylebox("panel") is StyleBoxTexture and event_card_2.get_theme_stylebox("panel") is StyleBoxTexture) if _feature_key == "events" else (card_nodes.all(func(card): return (card as PanelContainer).get_theme_stylebox("panel") is StyleBoxTexture) if _feature_key == "shop" else (true if _feature_key == "profile" else (hero_panel.get_theme_stylebox("panel") is StyleBoxTexture and String(hero_panel.get_meta("production_chrome_kind", "")) == "secondary_meta_hero"))),
 		"shop_catalog_focus": shop_catalog_focus,
 		"shop_compact_catalog_density": shop_catalog_focus,
-		"shop_clean_sealed_badges": _feature_key != "shop" or shop_state_plates.all(func(plate): return (plate as PanelContainer).get_theme_stylebox("panel") is StyleBoxFlat and (plate as PanelContainer).custom_minimum_size.y <= 58.0),
+		"shop_clean_sealed_badges": _feature_key != "shop" or shop_state_plates.all(func(plate): return (plate as PanelContainer).get_theme_stylebox("panel") is StyleBoxFlat and (plate as PanelContainer).custom_minimum_size.y <= 62.0),
 		"profile_identity_focus": profile_identity_focus,
 		"profile_board_utility_rows": profile_utility_rows,
 		"profile_compact_menu_flow": _feature_key != "profile" or (
@@ -638,7 +638,7 @@ func screen_contract() -> Dictionary:
 		"art_dominant_cards": art_dominant_cards,
 		"header_readability_scrim": ($HeaderShade as ColorRect) != null and ($HeaderShade as ColorRect).color.a >= 0.34,
 		"secondary_header_compact": (_feature_key != "events" or not chapter_progress.visible) and (_feature_key != "shop" or (shop_notice.visible and shop_notice.get_theme_font_size("font_size") <= 16 and not shop_currency.visible and not shop_truth.visible)),
-		"profile_save_health_compact": _feature_key != "profile" or (profile_save_row != null and profile_save_row.custom_minimum_size.y <= 124.0),
+		"profile_save_health_compact": _feature_key != "profile" or (profile_save_row != null and profile_save_row.custom_minimum_size.y <= 174.0),
 		"profile_status_focus": profile_status_focus,
 		"redundant_house_return_suppressed": not back_button.visible,
 		"truth_footer_suppressed": not truth_strip.visible,
