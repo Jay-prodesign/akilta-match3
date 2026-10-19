@@ -116,7 +116,7 @@ func state_contract() -> Dictionary:
 	return {
 		"bound": settings != null,
 		"high_contrast": _high_contrast,
-		"touch_targets_ok": [master_toggle, music_toggle, sfx_toggle, haptics_toggle, reduced_toggle, contrast_toggle].all(func(control): return control.custom_minimum_size.y >= 64.0) and close_button.custom_minimum_size.y >= 72.0,
+		"touch_targets_ok": [master_toggle, music_toggle, sfx_toggle, haptics_toggle, reduced_toggle, contrast_toggle].all(func(control): return control.custom_minimum_size.y >= 72.0) and close_button.custom_minimum_size.y >= 84.0,
 		"save_feedback": saved_note.text,
 		"return_cta": close_button.text,
 	}
@@ -223,14 +223,14 @@ func settings_authored_contract() -> Dictionary:
 	var card := $Card as PanelContainer
 	var audio_row := $Card/Content/AudioRow as VBoxContainer
 	var experience_row := $Card/Content/ExperienceRow as VBoxContainer
-	var destination_surface := card.anchor_left >= 0.105 and card.anchor_right <= 0.895 and (card.anchor_bottom - card.anchor_top) >= 0.55 and (card.anchor_bottom - card.anchor_top) <= 0.59
+	var destination_surface := card.anchor_left >= 0.065 and card.anchor_right <= 0.935 and (card.anchor_bottom - card.anchor_top) >= 0.50 and (card.anchor_bottom - card.anchor_top) <= 0.54
 	var ritual_list := audio_row.get_child_count() == 3 and experience_row.get_child_count() == 3 and [master_toggle, music_toggle, sfx_toggle, haptics_toggle, reduced_toggle, contrast_toggle].all(
-		func(control): return control.size_flags_horizontal == Control.SIZE_EXPAND_FILL and control.toggle_mode and control.custom_minimum_size.y >= 64.0
+		func(control): return control.size_flags_horizontal == Control.SIZE_EXPAND_FILL and control.toggle_mode and control.custom_minimum_size.y >= 72.0
 	)
-	var sigil_stage := house_sigil != null and house_sigil.texture != null and house_sigil.custom_minimum_size.y >= 68.0 and house_sigil.custom_minimum_size.y <= 80.0
+	var sigil_stage := house_sigil != null and house_sigil.texture != null and house_sigil.custom_minimum_size.y >= 80.0 and house_sigil.custom_minimum_size.y <= 90.0
 	var world_visible := ($WorldShade as ColorRect).color.a <= 0.20 and ($Dim as ColorRect).color.a <= 0.12
-	var title_hierarchy := ($Card/Content/Title as Label).get_theme_font_size("font_size") >= 44
-	var touch_targets := [master_toggle, music_toggle, sfx_toggle, haptics_toggle, reduced_toggle, contrast_toggle].all(func(control): return control.custom_minimum_size.y >= 64.0) and close_button.custom_minimum_size.y >= 72.0
+	var title_hierarchy := ($Card/Content/Title as Label).get_theme_font_size("font_size") >= 48
+	var touch_targets := [master_toggle, music_toggle, sfx_toggle, haptics_toggle, reduced_toggle, contrast_toggle].all(func(control): return control.custom_minimum_size.y >= 72.0) and close_button.custom_minimum_size.y >= 84.0
 	var crafted_rows := [master_toggle, music_toggle, sfx_toggle, haptics_toggle, reduced_toggle, contrast_toggle].all(
 		func(control):
 			var title := control.get_node_or_null("Title") as Label

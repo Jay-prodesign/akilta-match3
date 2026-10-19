@@ -3,22 +3,22 @@
 [ext_resource type="Script" path="res://src/ui/settings/settings_panel.gd" id="1_settings"]
 
 [sub_resource type="StyleBoxFlat" id="Card"]
-bg_color = Color(0.071, 0.075, 0.133, 1)
+bg_color = Color(0.05, 0.032, 0.064, 0.96)
 border_width_left = 2
 border_width_top = 2
 border_width_right = 2
 border_width_bottom = 2
-border_color = Color(0.835, 0.678, 0.439, 0.82)
-corner_radius_top_left = 18
-corner_radius_top_right = 18
-corner_radius_bottom_right = 18
-corner_radius_bottom_left = 18
+border_color = Color(0.835, 0.678, 0.439, 0.92)
+corner_radius_top_left = 22
+corner_radius_top_right = 22
+corner_radius_bottom_right = 22
+corner_radius_bottom_left = 22
 content_margin_left = 24.0
 content_margin_top = 20.0
 content_margin_right = 24.0
 content_margin_bottom = 20.0
 shadow_color = Color(0, 0, 0, 0.72)
-shadow_size = 24
+shadow_size = 30
 
 [sub_resource type="StyleBoxFlat" id="Toggle"]
 bg_color = Color(0.082, 0.067, 0.106, 0.96)
@@ -53,16 +53,16 @@ border_width_top = 3
 border_width_right = 3
 border_width_bottom = 3
 border_color = Color(1, 0.945, 0.714, 1)
-corner_radius_top_left = 18
-corner_radius_top_right = 18
-corner_radius_bottom_right = 18
-corner_radius_bottom_left = 18
+corner_radius_top_left = 22
+corner_radius_top_right = 22
+corner_radius_bottom_right = 22
+corner_radius_bottom_left = 22
 content_margin_left = 24.0
 content_margin_top = 20.0
 content_margin_right = 24.0
 content_margin_bottom = 20.0
 shadow_color = Color(0, 0, 0, 0.72)
-shadow_size = 24
+shadow_size = 30
 
 [sub_resource type="StyleBoxFlat" id="ToggleHover"]
 bg_color = Color(0.165, 0.129, 0.188, 1)
@@ -264,17 +264,17 @@ color = Color(0.02, 0.015, 0.025, 0.04)
 [node name="Card" type="PanelContainer" parent="."]
 layout_mode = 1
 anchors_preset = 15
-anchor_left = 0.11
-anchor_top = 0.07
-anchor_right = 0.89
-anchor_bottom = 0.64
+anchor_left = 0.07
+anchor_top = 0.08
+anchor_right = 0.93
+anchor_bottom = 0.60
 grow_horizontal = 2
 grow_vertical = 2
 theme_override_styles/panel = SubResource("Card")
 
 [node name="Content" type="VBoxContainer" parent="Card"]
 layout_mode = 2
-theme_override_constants/separation = 6
+theme_override_constants/separation = 8
 alignment = 1
 
 [node name="Eyebrow" type="Label" parent="Card/Content"]
@@ -290,7 +290,7 @@ layout_mode = 2
 theme_override_colors/font_color = Color(1, 0.941, 0.847, 1)
 theme_override_colors/font_outline_color = Color(0.02, 0.014, 0.028, 0.96)
 theme_override_constants/outline_size = 4
-theme_override_font_sizes/font_size = 44
+theme_override_font_sizes/font_size = 48
 text = "SETTINGS"
 horizontal_alignment = 1
 
@@ -304,7 +304,7 @@ horizontal_alignment = 1
 autowrap_mode = 2
 
 [node name="HouseSigil" type="TextureRect" parent="Card/Content"]
-custom_minimum_size = Vector2(0, 72)
+custom_minimum_size = Vector2(0, 84)
 layout_mode = 2
 mouse_filter = 2
 expand_mode = 1
@@ -319,12 +319,12 @@ text = "AUDIO"
 horizontal_alignment = 1
 
 [node name="AudioRow" type="VBoxContainer" parent="Card/Content"]
-custom_minimum_size = Vector2(0, 218)
+custom_minimum_size = Vector2(0, 250)
 layout_mode = 2
 theme_override_constants/separation = 6
 
 [node name="Master" type="Button" parent="Card/Content/AudioRow"]
-custom_minimum_size = Vector2(0, 68)
+custom_minimum_size = Vector2(0, 76)
 layout_mode = 2
 size_flags_horizontal = 3
 toggle_mode = true
@@ -381,7 +381,7 @@ horizontal_alignment = 1
 vertical_alignment = 1
 
 [node name="Music" type="Button" parent="Card/Content/AudioRow"]
-custom_minimum_size = Vector2(0, 68)
+custom_minimum_size = Vector2(0, 76)
 layout_mode = 2
 size_flags_horizontal = 3
 toggle_mode = true
@@ -438,7 +438,7 @@ horizontal_alignment = 1
 vertical_alignment = 1
 
 [node name="SFX" type="Button" parent="Card/Content/AudioRow"]
-custom_minimum_size = Vector2(0, 68)
+custom_minimum_size = Vector2(0, 76)
 layout_mode = 2
 size_flags_horizontal = 3
 toggle_mode = true
@@ -502,12 +502,12 @@ text = "EXPERIENCE"
 horizontal_alignment = 1
 
 [node name="ExperienceRow" type="VBoxContainer" parent="Card/Content"]
-custom_minimum_size = Vector2(0, 248)
+custom_minimum_size = Vector2(0, 250)
 layout_mode = 2
 theme_override_constants/separation = 6
 
 [node name="Haptics" type="Button" parent="Card/Content/ExperienceRow"]
-custom_minimum_size = Vector2(0, 68)
+custom_minimum_size = Vector2(0, 76)
 layout_mode = 2
 size_flags_horizontal = 3
 toggle_mode = true
@@ -564,7 +564,7 @@ horizontal_alignment = 1
 vertical_alignment = 1
 
 [node name="Reduced" type="Button" parent="Card/Content/ExperienceRow"]
-custom_minimum_size = Vector2(0, 68)
+custom_minimum_size = Vector2(0, 76)
 layout_mode = 2
 size_flags_horizontal = 3
 toggle_mode = true
@@ -621,7 +621,7 @@ horizontal_alignment = 1
 vertical_alignment = 1
 
 [node name="Contrast" type="Button" parent="Card/Content/ExperienceRow"]
-custom_minimum_size = Vector2(0, 68)
+custom_minimum_size = Vector2(0, 76)
 layout_mode = 2
 size_flags_horizontal = 3
 toggle_mode = true
@@ -687,11 +687,11 @@ horizontal_alignment = 1
 vertical_alignment = 1
 
 [node name="Close" type="Button" parent="Card/Content"]
-custom_minimum_size = Vector2(320, 76)
+custom_minimum_size = Vector2(360, 88)
 layout_mode = 2
 size_flags_horizontal = 4
 theme_override_colors/font_color = Color(0.0627, 0.051, 0.0706, 1)
-theme_override_font_sizes/font_size = 20
+theme_override_font_sizes/font_size = 22
 theme_override_styles/normal = SubResource("Close")
 theme_override_styles/hover = SubResource("Close")
 theme_override_styles/pressed = SubResource("Close")

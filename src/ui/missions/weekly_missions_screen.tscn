@@ -156,7 +156,7 @@ text = "LIVE CHALLENGES UNAVAILABLE OFFLINE"
 horizontal_alignment = 1
 
 [node name="MissionEmptyState" type="PanelContainer" parent="MissionLayout"]
-custom_minimum_size = Vector2(0, 132)
+custom_minimum_size = Vector2(0, 210)
 layout_mode = 2
 mouse_filter = 2
 theme_override_styles/panel = SubResource("Altar")
@@ -167,7 +167,7 @@ theme_override_constants/separation = 20
 alignment = 1
 
 [node name="MissionRewardArt" type="TextureRect" parent="MissionLayout/MissionEmptyState/EmptyContent"]
-custom_minimum_size = Vector2(84, 84)
+custom_minimum_size = Vector2(128, 128)
 layout_mode = 2
 size_flags_vertical = 4
 expand_mode = 1
@@ -227,7 +227,7 @@ size_flags_vertical = 0
 theme_override_constants/separation = 10
 
 [node name="FeedStatus" type="PanelContainer" parent="MissionLayout/MissionStatusStack"]
-custom_minimum_size = Vector2(0, 108)
+custom_minimum_size = Vector2(0, 148)
 layout_mode = 2
 mouse_filter = 2
 size_flags_vertical = 0
@@ -243,7 +243,7 @@ layout_mode = 2
 mouse_filter = 2
 
 [node name="SealIcon" type="TextureRect" parent="MissionLayout/MissionStatusStack/FeedStatus/Content"]
-custom_minimum_size = Vector2(42, 42)
+custom_minimum_size = Vector2(52, 52)
 layout_mode = 2
 mouse_filter = 2
 expand_mode = 1
@@ -273,7 +273,7 @@ layout_mode = 2
 mouse_filter = 2
 
 [node name="ProgressStatus" type="PanelContainer" parent="MissionLayout/MissionStatusStack"]
-custom_minimum_size = Vector2(0, 108)
+custom_minimum_size = Vector2(0, 148)
 layout_mode = 2
 mouse_filter = 2
 size_flags_vertical = 0
@@ -289,7 +289,7 @@ layout_mode = 2
 mouse_filter = 2
 
 [node name="SealIcon" type="TextureRect" parent="MissionLayout/MissionStatusStack/ProgressStatus/Content"]
-custom_minimum_size = Vector2(42, 42)
+custom_minimum_size = Vector2(52, 52)
 layout_mode = 2
 mouse_filter = 2
 expand_mode = 1
@@ -319,7 +319,7 @@ layout_mode = 2
 mouse_filter = 2
 
 [node name="RewardStatus" type="PanelContainer" parent="MissionLayout/MissionStatusStack"]
-custom_minimum_size = Vector2(0, 108)
+custom_minimum_size = Vector2(0, 148)
 layout_mode = 2
 mouse_filter = 2
 size_flags_vertical = 0
@@ -335,7 +335,7 @@ layout_mode = 2
 mouse_filter = 2
 
 [node name="SealIcon" type="TextureRect" parent="MissionLayout/MissionStatusStack/RewardStatus/Content"]
-custom_minimum_size = Vector2(42, 42)
+custom_minimum_size = Vector2(52, 52)
 layout_mode = 2
 mouse_filter = 2
 expand_mode = 1
@@ -371,7 +371,7 @@ size_flags_vertical = 0
 mouse_filter = 2
 
 [node name="MissionOpeningRecord" type="PanelContainer" parent="MissionLayout"]
-custom_minimum_size = Vector2(0, 182)
+custom_minimum_size = Vector2(0, 260)
 layout_mode = 2
 mouse_filter = 2
 size_flags_vertical = 0
@@ -383,7 +383,7 @@ alignment = 1
 theme_override_constants/separation = 6
 
 [node name="RewardSeal" type="TextureRect" parent="MissionLayout/MissionOpeningRecord/Content"]
-custom_minimum_size = Vector2(82, 82)
+custom_minimum_size = Vector2(120, 120)
 layout_mode = 2
 size_flags_horizontal = 4
 mouse_filter = 2
@@ -417,7 +417,7 @@ text = "NOTHING TO CLAIM OFFLINE"
 horizontal_alignment = 1
 
 [node name="ReturnToEvents" type="Button" parent="MissionLayout"]
-custom_minimum_size = Vector2(0, 58)
+custom_minimum_size = Vector2(0, 76)
 layout_mode = 2
 theme_override_colors/font_color = Color(1, 0.941, 0.847, 1)
 theme_override_font_sizes/font_size = 18
