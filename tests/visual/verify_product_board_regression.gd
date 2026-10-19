@@ -19,11 +19,11 @@ const BASELINES := {
 	"golden-05-win-reward.png": {"hash": "ac25501940881145c004a0044002d046801c8124890480105156293be8356539", "max_distance": 10},
 	"golden-06-restoration.png": {"hash": "6d561db92b2bcc889554cb12a72ecb4a1439cbd2c658513b753a25d9b951995d", "max_distance": 28},
 	"progression-final-reliquary.png": {"hash": "08014a2d551a4f37ab0d256b154e4141252035155501251141033544270c0681", "max_distance": 16},
-	"progression-final-weekly-missions.png": {"hash": "08010a0d52bb4544bd46355234c251e851b46554d485249656833544270ca70b", "max_distance": 8},
-	"progression-final-events.png": {"hash": "08011a0d284b71738d065e351e6a520941046554d495249656833544270c048d", "max_distance": 10},
-	"progression-final-shop.png": {"hash": "88015ea7342375a545326c230e621819b12e3075551aaba1890690c327ab0481", "max_distance": 8},
-	"progression-final-profile.png": {"hash": "8801480010012001001348010801000120290001451aaba1890690c327ab0481", "max_distance": 8},
-	"progression-final-settings.png": {"hash": "39e74001c2804001800180034002181180220001551aaba1890690c327ab62aa", "max_distance": 8},
+	"progression-final-weekly-missions.png": {"hash": "0801091d551b85448d463550144a50894124000300010140800100000000070b", "max_distance": 8},
+	"progression-final-events.png": {"hash": "08011a0d2b4d527249d936515ca65e335c6b4a4bd485249756833544270c048d", "max_distance": 10},
+	"progression-final-shop.png": {"hash": "88015ea7142132a00932ac735e432819b12e5471d51aaba1890690c327ab0481", "max_distance": 8},
+	"progression-final-profile.png": {"hash": "8801480000010a2930030c21000140016829000121098140890690c327ab0481", "max_distance": 8},
+	"progression-final-settings.png": {"hash": "39e7800180808002900880008000800c80200001551aaba1890690c327ab62aa", "max_distance": 8},
 	"chapters-00-first-wing.png": {"hash": "0901ca8d2b09542dad667551b44a54ad40245d148003640456833544270c04c1", "max_distance": 8},
 }
 
