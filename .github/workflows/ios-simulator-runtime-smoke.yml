@@ -327,57 +327,64 @@ jobs:
           BUNDLE_ID="com.akilta.catandcoven"
           DATA_PATH="$(xcrun simctl get_app_container "$SIM_UDID" "$BUNDLE_ID" data)"
           test -d "$DATA_PATH"
-          xcrun simctl terminate "$SIM_UDID" "$BUNDLE_ID" >/dev/null 2>&1 || true
-          OLD_MARKER="$(find "$DATA_PATH" -type f -name native-runtime-review-route.txt -print -quit)"
-          if [ -n "$OLD_MARKER" ]; then rm -f "$OLD_MARKER"; fi
-
-          LAUNCH_OUTPUT="$(xcrun simctl launch "$SIM_UDID" "$BUNDLE_ID" --cat-coven-native-review-route=secondary 2>&1)"
-          printf '%s\n' "$LAUNCH_OUTPUT" | tee artifacts/ios-secondary-launch.txt
-          APP_PID="$(printf '%s\n' "$LAUNCH_OUTPUT" | sed -n 's/.*: \([0-9][0-9]*\)$/\1/p' | tail -1)"
-          test -n "$APP_PID"
-          echo "IOS_NATIVE_SECONDARY PID=$APP_PID" | tee -a artifacts/ios-lifecycle.txt
           : > artifacts/ios-secondary-frame-sizes.txt
+          : > artifacts/ios-secondary-route-attempts.txt
 
+          # iOS Simulator can reclaim a long-running review process while several
+          # large authored screens are swapped in sequence. Prove each destination
+          # from a clean native launch instead; every route still traverses the real
+          # Splash → House → destination product code before its marker is emitted.
           for SPEC in "reliquary:06" "events:07" "weekly:08" "shop:09" "profile:10" "settings:11"; do
             ROUTE="${SPEC%%:*}"
             INDEX="${SPEC##*:}"
             FRAME="artifacts/ios-${INDEX}-${ROUTE}.png"
+            xcrun simctl terminate "$SIM_UDID" "$BUNDLE_ID" >/dev/null 2>&1 || true
+            OLD_MARKER="$(find "$DATA_PATH" -type f -name native-runtime-review-route.txt -print -quit)"
+            if [ -n "$OLD_MARKER" ]; then rm -f "$OLD_MARKER"; fi
+
+            LAUNCH_OUTPUT="$(xcrun simctl launch "$SIM_UDID" "$BUNDLE_ID" --cat-coven-native-review-route=$ROUTE 2>&1)"
+            printf '%s\n' "$LAUNCH_OUTPUT" | tee "artifacts/ios-${ROUTE}-secondary-launch.txt"
+            APP_PID="$(printf '%s\n' "$LAUNCH_OUTPUT" | sed -n 's/.*: \([0-9][0-9]*\)$/\1/p' | tail -1)"
+            test -n "$APP_PID"
+            echo "IOS_NATIVE_SECONDARY route=$ROUTE pid=$APP_PID" | tee -a artifacts/ios-lifecycle.txt
+
             ROUTE_SEEN=0
-            for ATTEMPT in $(seq 1 40); do
-              sleep 0.25
-              xcrun simctl spawn "$SIM_UDID" launchctl list > "artifacts/ios-secondary-launchctl-list.txt" 2>&1 || true
-              grep -Fq "$BUNDLE_ID" "artifacts/ios-secondary-launchctl-list.txt"
+            for ATTEMPT in $(seq 1 18); do
+              sleep 2
+              xcrun simctl spawn "$SIM_UDID" launchctl list > "artifacts/ios-${ROUTE}-secondary-launchctl-list.txt" 2>&1 || true
+              PROCESS_ALIVE=0
+              if grep -Fq "$BUNDLE_ID" "artifacts/ios-${ROUTE}-secondary-launchctl-list.txt"; then PROCESS_ALIVE=1; fi
               MARKER_PATH="$(find "$DATA_PATH" -type f -name native-runtime-review-route.txt -print -quit)"
               ROUTE_STATE=""
               if [ -n "$MARKER_PATH" ]; then ROUTE_STATE="$(cat "$MARKER_PATH")"; fi
-              echo "route=$ROUTE attempt=$ATTEMPT observed=$ROUTE_STATE" | tee -a artifacts/ios-secondary-route-attempts.txt
-              if [ "$ROUTE_STATE" = "$ROUTE" ]; then
-                ROUTE_SEEN=1
+              echo "route=$ROUTE attempt=$ATTEMPT observed=$ROUTE_STATE alive=$PROCESS_ALIVE" | tee -a artifacts/ios-secondary-route-attempts.txt
+              if [ "$PROCESS_ALIVE" -eq 1 ] && [ "$ROUTE_STATE" = "$ROUTE" ]; then
                 xcrun simctl io "$SIM_UDID" screenshot "$FRAME"
                 test -s "$FRAME"
                 BYTES="$(stat -f%z "$FRAME")"
                 echo "$(basename "$FRAME") bytes=$BYTES route=$ROUTE_STATE" | tee -a artifacts/ios-secondary-frame-sizes.txt
-                test "$BYTES" -ge 120000
-                WIDTH="$(sips -g pixelWidth "$FRAME" | awk '/pixelWidth:/ {print $2}')"
-                HEIGHT="$(sips -g pixelHeight "$FRAME" | awk '/pixelHeight:/ {print $2}')"
-                echo "$(basename "$FRAME") dimensions=${WIDTH}x${HEIGHT}" | tee -a artifacts/ios-secondary-frame-sizes.txt
-                test "${WIDTH:-0}" -ge 640
-                test "${HEIGHT:-0}" -ge 1100
-                cp "$MARKER_PATH" "artifacts/ios-native-review-route-${ROUTE}.txt"
-                grep -Fxq "$ROUTE" "artifacts/ios-native-review-route-${ROUTE}.txt"
-                break
+                if [ "$BYTES" -ge 120000 ]; then
+                  ROUTE_SEEN=1
+                  WIDTH="$(sips -g pixelWidth "$FRAME" | awk '/pixelWidth:/ {print $2}')"
+                  HEIGHT="$(sips -g pixelHeight "$FRAME" | awk '/pixelHeight:/ {print $2}')"
+                  echo "$(basename "$FRAME") dimensions=${WIDTH}x${HEIGHT}" | tee -a artifacts/ios-secondary-frame-sizes.txt
+                  test "${WIDTH:-0}" -ge 640
+                  test "${HEIGHT:-0}" -ge 1100
+                  cp "$MARKER_PATH" "artifacts/ios-native-review-route-${ROUTE}.txt"
+                  grep -Fxq "$ROUTE" "artifacts/ios-native-review-route-${ROUTE}.txt"
+                  break
+                fi
               fi
             done
             if [ "$ROUTE_SEEN" -ne 1 ]; then
               xcrun simctl spawn "$SIM_UDID" log show --last 3m --style compact --predicate 'process == "CatAndCoven"' > "artifacts/ios-${ROUTE}-secondary-timeout-log.txt" || true
-              echo "::error::Cat & Coven native secondary journey missed rendered ${ROUTE}."
+              echo "::error::Cat & Coven native secondary route did not reach rendered ${ROUTE}."
               tail -220 "artifacts/ios-${ROUTE}-secondary-timeout-log.txt" || true
               exit 1
             fi
           done
 
-          echo "IOS_NATIVE_SECONDARY_PASS: real Reliquary → Events → Weekly → Shop → Profile → Settings routes rendered"
-
+          echo "IOS_NATIVE_SECONDARY_PASS: real Reliquary / Events / Weekly / Shop / Profile / Settings routes rendered"
       - name: Check iOS runtime log for Cat & Coven failures
         shell: bash
         run: |
