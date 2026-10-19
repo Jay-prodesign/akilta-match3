@@ -142,7 +142,7 @@ layout_mode = 2
 theme_override_colors/font_color = Color(1, 0.941, 0.847, 1)
 theme_override_colors/font_outline_color = Color(0.02, 0.014, 0.028, 0.97)
 theme_override_constants/outline_size = 6
-theme_override_font_sizes/font_size = 52
+theme_override_font_sizes/font_size = 58
 text = "WEEKLY RITUALS"
 horizontal_alignment = 1
 
@@ -151,7 +151,7 @@ layout_mode = 2
 theme_override_colors/font_color = Color(0.82, 0.72, 0.90, 1)
 theme_override_colors/font_outline_color = Color(0.02, 0.014, 0.028, 0.92)
 theme_override_constants/outline_size = 3
-theme_override_font_sizes/font_size = 18
+theme_override_font_sizes/font_size = 20
 text = "LIVE CHALLENGES UNAVAILABLE OFFLINE"
 horizontal_alignment = 1
 
@@ -243,7 +243,7 @@ layout_mode = 2
 mouse_filter = 2
 
 [node name="SealIcon" type="TextureRect" parent="MissionLayout/MissionStatusStack/FeedStatus/Content"]
-custom_minimum_size = Vector2(72, 72)
+custom_minimum_size = Vector2(84, 84)
 layout_mode = 2
 mouse_filter = 2
 expand_mode = 1
@@ -254,7 +254,7 @@ modulate = Color(0.92, 0.82, 0.95, 0.94)
 layout_mode = 2
 size_flags_horizontal = 3
 theme_override_colors/font_color = Color(1, 0.941, 0.847, 1)
-theme_override_font_sizes/font_size = 26
+theme_override_font_sizes/font_size = 30
 text = "LIVE RITUALS"
 vertical_alignment = 1
 
@@ -262,7 +262,7 @@ vertical_alignment = 1
 custom_minimum_size = Vector2(220, 0)
 layout_mode = 2
 theme_override_colors/font_color = Color(0.86, 0.77, 0.93, 1)
-theme_override_font_sizes/font_size = 20
+theme_override_font_sizes/font_size = 24
 text = "NOT CONNECTED"
 horizontal_alignment = 2
 vertical_alignment = 1
@@ -289,7 +289,7 @@ layout_mode = 2
 mouse_filter = 2
 
 [node name="SealIcon" type="TextureRect" parent="MissionLayout/MissionStatusStack/ProgressStatus/Content"]
-custom_minimum_size = Vector2(72, 72)
+custom_minimum_size = Vector2(84, 84)
 layout_mode = 2
 mouse_filter = 2
 expand_mode = 1
@@ -300,7 +300,7 @@ modulate = Color(0.92, 0.82, 0.95, 0.94)
 layout_mode = 2
 size_flags_horizontal = 3
 theme_override_colors/font_color = Color(1, 0.941, 0.847, 1)
-theme_override_font_sizes/font_size = 26
+theme_override_font_sizes/font_size = 30
 text = "PROGRESS"
 vertical_alignment = 1
 
@@ -308,7 +308,7 @@ vertical_alignment = 1
 custom_minimum_size = Vector2(250, 0)
 layout_mode = 2
 theme_override_colors/font_color = Color(0.86, 0.77, 0.93, 1)
-theme_override_font_sizes/font_size = 20
+theme_override_font_sizes/font_size = 24
 text = "NOT TRACKED OFFLINE"
 horizontal_alignment = 2
 vertical_alignment = 1
@@ -335,7 +335,7 @@ layout_mode = 2
 mouse_filter = 2
 
 [node name="SealIcon" type="TextureRect" parent="MissionLayout/MissionStatusStack/RewardStatus/Content"]
-custom_minimum_size = Vector2(72, 72)
+custom_minimum_size = Vector2(84, 84)
 layout_mode = 2
 mouse_filter = 2
 expand_mode = 1
@@ -346,7 +346,7 @@ modulate = Color(0.92, 0.82, 0.95, 0.94)
 layout_mode = 2
 size_flags_horizontal = 3
 theme_override_colors/font_color = Color(1, 0.941, 0.847, 1)
-theme_override_font_sizes/font_size = 26
+theme_override_font_sizes/font_size = 30
 text = "REWARDS"
 vertical_alignment = 1
 
@@ -354,7 +354,7 @@ vertical_alignment = 1
 custom_minimum_size = Vector2(250, 0)
 layout_mode = 2
 theme_override_colors/font_color = Color(0.95, 0.80, 0.50, 1)
-theme_override_font_sizes/font_size = 20
+theme_override_font_sizes/font_size = 24
 text = "NOTHING TO CLAIM"
 horizontal_alignment = 2
 vertical_alignment = 1
@@ -371,10 +371,10 @@ size_flags_vertical = 0
 mouse_filter = 2
 
 [node name="MissionOpeningRecord" type="PanelContainer" parent="MissionLayout"]
-custom_minimum_size = Vector2(0, 500)
+custom_minimum_size = Vector2(0, 360)
 layout_mode = 2
 mouse_filter = 2
-size_flags_vertical = 0
+size_flags_vertical = 3
 theme_override_styles/panel = SubResource("WeeklyRecord")
 
 [node name="Content" type="VBoxContainer" parent="MissionLayout/MissionOpeningRecord"]
@@ -383,7 +383,7 @@ alignment = 1
 theme_override_constants/separation = 6
 
 [node name="RewardSeal" type="TextureRect" parent="MissionLayout/MissionOpeningRecord/Content"]
-custom_minimum_size = Vector2(220, 220)
+custom_minimum_size = Vector2(300, 300)
 layout_mode = 2
 size_flags_horizontal = 4
 mouse_filter = 2
@@ -396,7 +396,7 @@ layout_mode = 2
 theme_override_colors/font_color = Color(1, 0.941, 0.847, 1)
 theme_override_colors/font_outline_color = Color(0.02, 0.014, 0.028, 0.94)
 theme_override_constants/outline_size = 2
-theme_override_font_sizes/font_size = 30
+theme_override_font_sizes/font_size = 36
 text = "WEEKLY REWARD"
 horizontal_alignment = 1
 
@@ -405,14 +405,14 @@ layout_mode = 2
 theme_override_colors/font_color = Color(0.95, 0.80, 0.50, 1)
 theme_override_colors/font_outline_color = Color(0.02, 0.014, 0.028, 0.92)
 theme_override_constants/outline_size = 2
-theme_override_font_sizes/font_size = 22
+theme_override_font_sizes/font_size = 26
 text = "SEALED · LIVE FEED REQUIRED"
 horizontal_alignment = 1
 
 [node name="Truth" type="Label" parent="MissionLayout/MissionOpeningRecord/Content"]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.82, 0.72, 0.90, 1)
-theme_override_font_sizes/font_size = 18
+theme_override_font_sizes/font_size = 20
 text = "NOTHING TO CLAIM OFFLINE"
 horizontal_alignment = 1
 
