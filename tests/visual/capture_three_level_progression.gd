@@ -167,13 +167,13 @@ func _capture() -> void:
 	for event_name in ["EventCard1", "EventCard2"]:
 		var event_card := app.current_screen().get_node_or_null("FeatureLayout/EventsFeature/%s" % event_name) as PanelContainer
 		var event_art := app.current_screen().get_node_or_null("FeatureLayout/EventsFeature/%s/Content/Art" % event_name) as TextureRect
-		if event_card == null or event_card.size_flags_vertical == Control.SIZE_EXPAND_FILL or event_card.custom_minimum_size.y < 330.0 or event_card.custom_minimum_size.y > 350.0:
+		if event_card == null or event_card.size_flags_vertical == Control.SIZE_EXPAND_FILL or event_card.custom_minimum_size.y < 430.0 or event_card.custom_minimum_size.y > 450.0:
 			return _fail(app, "Events %s card density drifted" % event_name)
-		if event_art == null or event_art.size_flags_vertical == Control.SIZE_EXPAND_FILL or event_art.custom_minimum_size.y < 236.0 or event_art.custom_minimum_size.y > 252.0:
+		if event_art == null or event_art.size_flags_vertical == Control.SIZE_EXPAND_FILL or event_art.custom_minimum_size.y < 320.0 or event_art.custom_minimum_size.y > 340.0:
 			return _fail(app, "Events %s artwork stage density drifted" % event_name)
 	var events_daily_card := app.current_screen().get_node_or_null("FeatureLayout/DailyPracticeCard") as PanelContainer
 	var events_weekly_button := app.current_screen().get_node_or_null("FeatureLayout/WeeklyMissionsAction") as Button
-	if events_daily_card == null or events_daily_card.custom_minimum_size.y < 82.0 or events_daily_card.custom_minimum_size.y > 90.0 or events_weekly_button == null or events_weekly_button.custom_minimum_size.y < 68.0 or events_weekly_button.custom_minimum_size.y > 76.0:
+	if events_daily_card == null or events_daily_card.custom_minimum_size.y < 96.0 or events_daily_card.custom_minimum_size.y > 104.0 or events_weekly_button == null or events_weekly_button.custom_minimum_size.y < 76.0 or events_weekly_button.custom_minimum_size.y > 84.0:
 		return _fail(app, "Events real action rows lost their readable compact hierarchy")
 	var daily_action: Button = app.current_screen().get_node_or_null("FeatureLayout/DailyPracticeCard/DailyContent/DailyPracticeAction") as Button
 	var daily_truth: Label = app.current_screen().get_node_or_null("FeatureLayout/DailyPracticeCard/DailyContent/DailyPracticeTruth") as Label
@@ -235,15 +235,15 @@ func _capture() -> void:
 	if weekly_altar == null or weekly_spacer == null or weekly_feed == null or weekly_progress == null or weekly_rewards == null or weekly_house_return == null:
 		return _fail(app, "Weekly Missions visual parity geometry missing")
 	var weekly_altar_ratio := weekly_altar.custom_minimum_size.y / weekly_viewport.y
-	if weekly_altar_ratio < 0.06 or weekly_altar_ratio > 0.08:
+	if weekly_altar_ratio < 0.10 or weekly_altar_ratio > 0.12:
 		return _fail(app, "Weekly Missions compact truthful intro drifted: %.3f" % weekly_altar_ratio)
-	if weekly_feed.custom_minimum_size.y < 100.0 or weekly_feed.custom_minimum_size.y > 116.0 or weekly_feed.size_flags_vertical == Control.SIZE_EXPAND_FILL or weekly_progress.custom_minimum_size.y < 100.0 or weekly_progress.custom_minimum_size.y > 116.0 or weekly_progress.size_flags_vertical == Control.SIZE_EXPAND_FILL or weekly_rewards.custom_minimum_size.y < 100.0 or weekly_rewards.custom_minimum_size.y > 116.0 or weekly_rewards.size_flags_vertical == Control.SIZE_EXPAND_FILL:
+	if weekly_feed.custom_minimum_size.y < 140.0 or weekly_feed.custom_minimum_size.y > 156.0 or weekly_feed.size_flags_vertical == Control.SIZE_EXPAND_FILL or weekly_progress.custom_minimum_size.y < 140.0 or weekly_progress.custom_minimum_size.y > 156.0 or weekly_progress.size_flags_vertical == Control.SIZE_EXPAND_FILL or weekly_rewards.custom_minimum_size.y < 140.0 or weekly_rewards.custom_minimum_size.y > 156.0 or weekly_rewards.size_flags_vertical == Control.SIZE_EXPAND_FILL:
 		return _fail(app, "Weekly Missions locked-board horizontal ritual rows drifted")
 	if weekly_spacer.size_flags_vertical == Control.SIZE_EXPAND_FILL or weekly_spacer.custom_minimum_size.y > 2.0:
 		return _fail(app, "Weekly Missions large empty world corridor returned")
 	var weekly_reward_stage := app.current_screen().get_node_or_null("MissionLayout/MissionOpeningRecord") as Control
 	var weekly_reward_seal := app.current_screen().get_node_or_null("MissionLayout/MissionOpeningRecord/Content/RewardSeal") as TextureRect
-	if weekly_reward_stage == null or weekly_reward_stage.custom_minimum_size.y < 176.0 or weekly_reward_stage.custom_minimum_size.y > 190.0 or weekly_reward_stage.size_flags_vertical == Control.SIZE_EXPAND_FILL or weekly_reward_seal == null or weekly_reward_seal.custom_minimum_size.y > 86.0:
+	if weekly_reward_stage == null or weekly_reward_stage.custom_minimum_size.y < 252.0 or weekly_reward_stage.custom_minimum_size.y > 268.0 or weekly_reward_stage.size_flags_vertical == Control.SIZE_EXPAND_FILL or weekly_reward_seal == null or weekly_reward_seal.custom_minimum_size.y > 124.0:
 		return _fail(app, "Weekly Missions compact sealed reward stage drifted")
 	if weekly_house_return.visible:
 		return _fail(app, "Weekly Missions redundant House button returned over product navigation")
@@ -292,10 +292,10 @@ func _capture() -> void:
 		var shop_plate := app.current_screen().get_node_or_null("FeatureLayout/CardScroll/Cards/%s/Row/ShopStatePlate" % card_name) as PanelContainer
 		var shop_status := app.current_screen().get_node_or_null("FeatureLayout/CardScroll/Cards/%s/Row/Copy/Status" % card_name) as Label
 		var is_first: bool = String(card_name) == "Card1"
-		var min_card := 204.0 if is_first else 146.0
-		var max_card := 220.0 if is_first else 160.0
-		var min_art := 170.0 if is_first else 102.0
-		var max_art := 186.0 if is_first else 114.0
+		var min_card := 330.0 if is_first else 232.0
+		var max_card := 350.0 if is_first else 248.0
+		var min_art := 278.0 if is_first else 182.0
+		var max_art := 294.0 if is_first else 198.0
 		if shop_card == null or shop_card.custom_minimum_size.y < min_card or shop_card.custom_minimum_size.y > max_card or shop_card.size_flags_vertical == Control.SIZE_EXPAND_FILL:
 			return _fail(app, "Shop %s compact card geometry drifted" % card_name)
 		if shop_card_art == null or shop_card_art.custom_minimum_size.x < min_art or shop_card_art.custom_minimum_size.x > max_art:
@@ -389,9 +389,9 @@ func _capture() -> void:
 	if settings_card == null or settings_sigil == null:
 		return _fail(app, "Settings visual parity geometry missing")
 	var settings_height_ratio := settings_card.size.y / settings_viewport.y
-	if settings_card.size.x / settings_viewport.x > 0.80 or settings_height_ratio < 0.55 or settings_height_ratio > 0.60:
+	if settings_card.size.x / settings_viewport.x < 0.84 or settings_card.size.x / settings_viewport.x > 0.88 or settings_height_ratio < 0.50 or settings_height_ratio > 0.54:
 		return _fail(app, "Settings card lost its compact Player-utility proportion: %.3f" % settings_height_ratio)
-	if settings_sigil.custom_minimum_size.y < 68.0 or settings_sigil.custom_minimum_size.y > 80.0:
+	if settings_sigil.custom_minimum_size.y < 80.0 or settings_sigil.custom_minimum_size.y > 90.0:
 		return _fail(app, "Settings House sigil visual anchor drifted")
 	var reduced_toggle: Button = settings_panel.get_node_or_null("Card/Content/ExperienceRow/Reduced") as Button
 	var contrast_toggle: Button = settings_panel.get_node_or_null("Card/Content/ExperienceRow/Contrast") as Button
@@ -484,9 +484,26 @@ func _verify_meta_visual_parity(app: Node, screen: Node, feature: String) -> boo
 			_fail(app, "%s visual parity gate failed: %s" % [feature, key])
 			return false
 	var viewport_size := screen.get_viewport().get_visible_rect().size
-	var hero := screen.get_node_or_null("FeatureLayout/ProfileFeature/Identity") as Control if feature == "profile" else screen.get_node_or_null("FeatureLayout/FeatureHero") as Control
-	var hero_art := screen.get_node_or_null("FeatureLayout/ProfileFeature/Identity/IdentityRow/KeeperArt") as Control if feature == "profile" else (screen.get_node_or_null("FeatureLayout/FeatureHero/HeroRow/ShopFeaturedOfferArt") as Control if feature == "shop" else screen.get_node_or_null("FeatureLayout/FeatureHero/HeroRow/HeroArt") as Control)
-	var card_art := screen.get_node_or_null("FeatureLayout/ProfileFeature/Menu/ChapterRow/Content/Icon") as Control if feature == "profile" else screen.get_node_or_null("FeatureLayout/CardScroll/Cards/Card1/Row/Art") as Control
+	var hero: Control
+	var hero_art: Control
+	var card_art: Control
+	match feature:
+		"profile":
+			hero = screen.get_node_or_null("FeatureLayout/ProfileFeature/Identity") as Control
+			hero_art = screen.get_node_or_null("FeatureLayout/ProfileFeature/Identity/IdentityRow/KeeperArt") as Control
+			card_art = screen.get_node_or_null("FeatureLayout/ProfileFeature/Menu/ChapterRow/Content/Icon") as Control
+		"events":
+			hero = screen.get_node_or_null("FeatureLayout/EventsFeature/EventCard1") as Control
+			hero_art = screen.get_node_or_null("FeatureLayout/EventsFeature/EventCard1/Content/Art") as Control
+			card_art = screen.get_node_or_null("FeatureLayout/EventsFeature/EventCard2/Content/Art") as Control
+		"shop":
+			hero = screen.get_node_or_null("FeatureLayout/CardScroll/Cards/Card1") as Control
+			hero_art = screen.get_node_or_null("FeatureLayout/CardScroll/Cards/Card1/Row/Art") as Control
+			card_art = hero_art
+		_:
+			hero = screen.get_node_or_null("FeatureLayout/FeatureHero") as Control
+			hero_art = screen.get_node_or_null("FeatureLayout/FeatureHero/HeroRow/HeroArt") as Control
+			card_art = screen.get_node_or_null("FeatureLayout/CardScroll/Cards/Card1/Row/Art") as Control
 	if hero == null or hero_art == null or card_art == null:
 		_fail(app, "%s visual parity geometry slots missing" % feature)
 		return false
@@ -494,28 +511,35 @@ func _verify_meta_visual_parity(app: Node, screen: Node, feature: String) -> boo
 	var hero_art_ratio := hero_art.custom_minimum_size.x / viewport_size.x
 	var card_art_ratio := card_art.custom_minimum_size.x / viewport_size.x
 	if feature == "profile":
-		if hero_ratio < 0.14 or hero_ratio > 0.18:
+		if hero_ratio < 0.18 or hero_ratio > 0.22:
 			_fail(app, "profile identity card proportion drifted: %.3f" % hero_ratio)
 			return false
-		if hero_art_ratio < 0.18 or hero_art_ratio > 0.24:
+		if hero_art_ratio < 0.24 or hero_art_ratio > 0.28:
 			_fail(app, "profile Keeper portrait proportion drifted: %.3f" % hero_art_ratio)
 			return false
-		if card_art_ratio < 0.07 or card_art_ratio > 0.10:
+		if card_art_ratio < 0.08 or card_art_ratio > 0.10:
 			_fail(app, "profile utility-row icon proportion drifted: %.3f" % card_art_ratio)
+			return false
+	elif feature == "events":
+		if hero_ratio < 0.21 or hero_ratio > 0.24:
+			_fail(app, "events visible feature-card proportion drifted: %.3f" % hero_ratio)
+			return false
+		if hero_art_ratio < 0.29 or hero_art_ratio > 0.32 or card_art_ratio < 0.29:
+			_fail(app, "events visible raster artwork scale drifted: %.3f" % hero_art_ratio)
+			return false
+	elif feature == "shop":
+		if hero_ratio < 0.16 or hero_ratio > 0.20:
+			_fail(app, "shop visible featured-card proportion drifted: %.3f" % hero_ratio)
+			return false
+		if hero_art_ratio < 0.25 or hero_art_ratio > 0.28 or card_art_ratio < 0.25:
+			_fail(app, "shop visible featured raster art scale drifted: %.3f" % hero_art_ratio)
 			return false
 	else:
 		if hero_ratio < 0.20:
 			_fail(app, "%s hero stage too small: %.3f" % [feature, hero_ratio])
 			return false
-		if hero_art_ratio < 0.31:
-			_fail(app, "%s hero art too small: %.3f" % [feature, hero_art_ratio])
-			return false
-		if feature == "shop":
-			if card_art_ratio < 0.15 or card_art_ratio > 0.18:
-				_fail(app, "shop featured catalog art density drifted: %.3f" % card_art_ratio)
-				return false
-		elif card_art_ratio < 0.20:
-			_fail(app, "%s card art too small: %.3f" % [feature, card_art_ratio])
+		if hero_art_ratio < 0.31 or card_art_ratio < 0.20:
+			_fail(app, "%s visible art scale too small" % feature)
 			return false
 	return true
 
