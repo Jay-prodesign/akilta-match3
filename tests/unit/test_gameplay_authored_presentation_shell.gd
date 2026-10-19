@@ -55,7 +55,7 @@ func _run() -> void:
 
 	_expect(title != null and not title.visible, "Room title must not compete with the compact Level identity")
 	_expect(level_plaque != null and level_plaque.custom_minimum_size.x >= 580.0 and level_plaque.get_theme_stylebox("panel") is StyleBoxTexture and eyebrow != null and eyebrow.text.begins_with("LEVEL ") and not eyebrow.text.contains("·") and eyebrow.get_theme_font_size("font_size") >= 40, "Authored Level plaque must anchor the gameplay header")
-	_expect(objective_name != null and objective_name.text.contains("SIGILS") and objective != null and objective.text.contains("/"), "Objective must remain explicit")
+	_expect(objective_name != null and objective_name.text.contains("SIGILS") and objective_name.modulate.a > 0.95 and objective != null and objective.text.contains("/"), "Objective identity must remain explicit and visibly persistent")
 	_expect(objective_icon != null and objective_icon.texture != null and objective_icon.custom_minimum_size.x >= 80.0, "Objective art must remain visually legible")
 	_expect(moves != null and moves.custom_minimum_size.x >= 136.0 and moves.get_theme_font_size("font_size") >= 38 and moves.get_theme_font_size("font_size") <= 42, "Moves must remain a dominant counter")
 	_expect(objective != null and objective.get_theme_font_size("font_size") >= 28 and objective.horizontal_alignment == HORIZONTAL_ALIGNMENT_CENTER, "Objective counter must remain readable and centered under its icon")
