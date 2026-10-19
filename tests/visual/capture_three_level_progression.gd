@@ -524,8 +524,10 @@ func _verify_meta_visual_parity(app: Node, screen: Node, feature: String) -> boo
 		if hero_ratio < 0.21 or hero_ratio > 0.24:
 			_fail(app, "events visible feature-card proportion drifted: %.3f" % hero_ratio)
 			return false
-		if hero_art_ratio < 0.29 or hero_art_ratio > 0.32 or card_art_ratio < 0.29:
-			_fail(app, "events visible raster artwork scale drifted: %.3f" % hero_art_ratio)
+		var event_art_height_ratio := hero_art.custom_minimum_size.y / viewport_size.y
+		var second_event_art_height_ratio := card_art.custom_minimum_size.y / viewport_size.y
+		if event_art_height_ratio < 0.16 or event_art_height_ratio > 0.18 or second_event_art_height_ratio < 0.16:
+			_fail(app, "events visible raster artwork stage drifted: %.3f" % event_art_height_ratio)
 			return false
 	elif feature == "shop":
 		if hero_ratio < 0.16 or hero_ratio > 0.20:
