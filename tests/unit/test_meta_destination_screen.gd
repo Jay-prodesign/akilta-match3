@@ -153,6 +153,11 @@ func _run() -> void:
 			var sealed_state := state.duplicate(true)
 			sealed_state["daily_level"] = 0
 			_expect(screen.configure("events", sealed_state), "events sealed daily state must reconfigure")
+			screen._apply_tall_phone_content_fill(1200.0)
+			_expect(event_card_1.custom_minimum_size.y >= 548.0 and event_card_2.custom_minimum_size.y >= 548.0, "20:9 Events must expand its real feature cards instead of leaving a bottom world corridor")
+			var event_art_1 := screen.get_node_or_null("FeatureLayout/EventsFeature/EventCard1/Content/Art") as TextureRect
+			var event_art_2 := screen.get_node_or_null("FeatureLayout/EventsFeature/EventCard2/Content/Art") as TextureRect
+			_expect(event_art_1 != null and event_art_1.custom_minimum_size.y >= 426.0 and event_art_2 != null and event_art_2.custom_minimum_size.y >= 426.0, "20:9 Events must give the added height to raster feature art")
 			var before_disabled_press := int(feedback_hits["count"])
 			daily_button.emit_signal("button_down")
 			await create_timer(0.08).timeout
@@ -168,6 +173,13 @@ func _run() -> void:
 			var notice := screen.get_node("FeatureLayout/NoPurchasesNotice") as Label
 			_expect(notice.visible and notice.text.find("NO PURCHASES OR PAYMENTS") >= 0, "shop preview must state that purchases and payments are disabled")
 			_expect(not (screen.get_node("FeatureLayout/ShopCurrencySummary") as Label).visible and not (screen.get_node("FeatureLayout/ShopCurrencyTruth") as Label).visible, "shop must rely on the shared resource bar instead of duplicate economy rows")
+			screen._apply_tall_phone_content_fill(1200.0)
+			var tall_shop_cards := [
+				screen.get_node("FeatureLayout/CardScroll/Cards/Card1") as PanelContainer,
+				screen.get_node("FeatureLayout/CardScroll/Cards/Card2") as PanelContainer,
+				screen.get_node("FeatureLayout/CardScroll/Cards/Card3") as PanelContainer,
+			]
+			_expect(tall_shop_cards[0].custom_minimum_size.y >= 436.0 and tall_shop_cards[1].custom_minimum_size.y >= 312.0 and tall_shop_cards[2].custom_minimum_size.y >= 312.0, "20:9 Shop must expand its catalog footprint toward bottom navigation")
 		if feature == "profile":
 			var profile_hero := screen.get_node("FeatureLayout/ProfileFeature/Identity/IdentityRow/KeeperArt") as TextureRect
 			_expect(profile_hero != null and profile_hero.texture != null and String(contract.get("hero_asset_path", "")).ends_with("black_cat.webp"), "profile identity must use the Keeper familiar rather than a generic Curio")
