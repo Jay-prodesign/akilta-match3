@@ -30,9 +30,13 @@ func _init() -> void:
 			var prestart_args := PackedStringArray(["--cat-coven-native-review-route=prestart"])
 			if bootstrap.native_runtime_review_route_from_args(prestart_args) != "prestart":
 				failures.append("Native review route parser must accept the real prestart route")
-			var unsupported_args := PackedStringArray(["--cat-coven-native-review-route=shop"])
+			for secondary_route in ["reliquary", "events", "weekly", "shop", "profile", "settings", "secondary"]:
+				var secondary_args := PackedStringArray(["--cat-coven-native-review-route=%s" % secondary_route])
+				if bootstrap.native_runtime_review_route_from_args(secondary_args) != secondary_route:
+					failures.append("Native review route parser must accept secondary route: %s" % secondary_route)
+			var unsupported_args := PackedStringArray(["--cat-coven-native-review-route=store"])
 			if bootstrap.native_runtime_review_route_from_args(unsupported_args) != "":
-				failures.append("Native review route parser must reject unsupported deep routes")
+				failures.append("Native review route parser must still reject unknown deep routes")
 			var normal_args := PackedStringArray(["--some-player-argument"])
 			if bootstrap.native_runtime_review_route_from_args(normal_args) != "":
 				failures.append("Normal launches must not opt into native review routing")
