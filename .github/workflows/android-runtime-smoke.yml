@@ -9,6 +9,7 @@ on:
       - "feat/native-android-runtime-smoke"
       - "feat/native-ios-runtime-visual-evidence"
       - "feat/native-house-runtime-evidence"
+      - "feat/native-secondary-runtime-proof"
     paths:
       - ".github/workflows/android-runtime-smoke.yml"
       - ".github/release-proof.trigger"
@@ -497,12 +498,113 @@ jobs:
             exit 1
           fi
 
+      - name: Capture native secondary-screen journey on real product routes
+        shell: bash
+        env:
+          GODOT_ANDROID_KEYSTORE_RELEASE_PATH: /tmp/cat-coven-runtime-ci.keystore
+          GODOT_ANDROID_KEYSTORE_RELEASE_USER: catcoven
+          GODOT_ANDROID_KEYSTORE_RELEASE_PASSWORD: changeit
+        run: |
+          set -euo pipefail
+          PACKAGE="com.akilta.catandcoven"
+          REVIEW_APK="build/android/cat-and-coven-secondary-review.apk"
+
+          python3 - <<'PY'
+          from pathlib import Path
+          path = Path("export_presets.cfg")
+          text = path.read_text()
+          old = 'command_line/extra_args="--rendering-method gl_compatibility --rendering-driver opengl3 --cat-coven-native-review-route=gameplay"'
+          new = 'command_line/extra_args="--rendering-method gl_compatibility --rendering-driver opengl3 --cat-coven-native-review-route=secondary"'
+          if text.count(old) != 1:
+              raise SystemExit("Android Gameplay review command-line contract changed before secondary export")
+          path.write_text(text.replace(old, new))
+          PY
+
+          ./godot --headless --path . --export-release "Android CI Emulator APK" "$REVIEW_APK"
+          test -s "$REVIEW_APK"
+          apksigner verify --verbose --print-certs "$REVIEW_APK"
+
+          adb start-server || true
+          DEVICE_READY=0
+          for ATTEMPT in $(seq 1 30); do
+            STATE="$(adb get-state 2>/dev/null | tr -d '\r' || true)"
+            echo "secondary transport attempt=$ATTEMPT state=$STATE" | tee -a artifacts/android-secondary-route-attempts.txt
+            if [ "$STATE" = "device" ]; then
+              DEVICE_READY=1
+              break
+            fi
+            adb reconnect offline >/dev/null 2>&1 || true
+            sleep 2
+          done
+          if [ "$DEVICE_READY" -ne 1 ]; then
+            echo "::error::Android emulator transport did not recover for secondary review."
+            adb devices -l || true
+            tail -160 artifacts/emulator.log || true
+            exit 1
+          fi
+
+          adb shell am force-stop "$PACKAGE"
+          INSTALL_OK=0
+          : > artifacts/android-secondary-review-install.txt
+          for ATTEMPT in $(seq 1 6); do
+            if adb install -r "$REVIEW_APK" | tee -a artifacts/android-secondary-review-install.txt | grep -Fq "Success"; then
+              INSTALL_OK=1
+              break
+            fi
+            adb reconnect offline >/dev/null 2>&1 || true
+            sleep 3
+          done
+          if [ "$INSTALL_OK" -ne 1 ]; then
+            echo "::error::Secondary review APK could not be installed after transport recovery."
+            cat artifacts/android-secondary-review-install.txt
+            exit 1
+          fi
+
+          adb logcat -c
+          adb shell monkey -p "$PACKAGE" -c android.intent.category.LAUNCHER 1 >/dev/null
+          : > artifacts/android-secondary-frame-sizes.txt
+
+          for SPEC in "reliquary:05" "events:06" "weekly:07" "shop:08" "profile:09" "settings:10"; do
+            ROUTE="${SPEC%%:*}"
+            INDEX="${SPEC##*:}"
+            FRAME="artifacts/android-${INDEX}-${ROUTE}.png"
+            ROUTE_SEEN=0
+            for ATTEMPT in $(seq 1 40); do
+              sleep 0.25
+              PID="$(adb shell pidof "$PACKAGE" 2>/dev/null | tr -d '\r' || true)"
+              adb shell dumpsys activity activities | grep -E "mResumedActivity|topResumedActivity" > artifacts/secondary-foreground.txt || true
+              adb logcat -d > artifacts/android-secondary-route-log.txt || true
+              ROUTE_STATE="$(grep -F "NATIVE_RUNTIME_REVIEW_ROUTE_PASS:" artifacts/android-secondary-route-log.txt | tail -1 | sed 's/.*NATIVE_RUNTIME_REVIEW_ROUTE_PASS: //' | tr -d '\r' || true)"
+              echo "route=$ROUTE attempt=$ATTEMPT observed=$ROUTE_STATE pid=${PID:-none}" | tee -a artifacts/android-secondary-route-attempts.txt
+              if [ -n "$PID" ] && [ "$ROUTE_STATE" = "$ROUTE" ] && grep -Fq "$PACKAGE" artifacts/secondary-foreground.txt; then
+                adb exec-out screencap -p > "$FRAME"
+                test -s "$FRAME"
+                BYTES="$(stat -c%s "$FRAME")"
+                echo "$(basename "$FRAME") bytes=$BYTES route=$ROUTE_STATE" | tee -a artifacts/android-secondary-frame-sizes.txt
+                test "$BYTES" -ge 500000
+                ROUTE_SEEN=1
+                break
+              fi
+            done
+            if [ "$ROUTE_SEEN" -ne 1 ]; then
+              echo "::error::Cat & Coven native Android secondary journey missed rendered ${ROUTE}."
+              tail -240 artifacts/android-secondary-route-log.txt || true
+              exit 1
+            fi
+          done
+
+          echo "ANDROID_NATIVE_SECONDARY_PASS: real Reliquary → Events → Weekly → Shop → Profile → Settings routes rendered"
+          if grep -Eq "Missing required production screen art|Failed to decode production screen art|Missing required gameplay asset|SCRIPT ERROR:|FATAL EXCEPTION" artifacts/android-secondary-route-log.txt; then
+            grep -E "Missing required production screen art|Failed to decode production screen art|Missing required gameplay asset|SCRIPT ERROR:|FATAL EXCEPTION" artifacts/android-secondary-route-log.txt
+            exit 1
+          fi
+
       - name: Emit compact native frames for visual inspection
         if: always()
         shell: bash
         run: |
           set -euo pipefail
-          for FRAME in android-01-cold-launch android-01b-house-after-enter android-02-resumed android-03-force-stop-relaunch android-04-gameplay; do
+          for FRAME in android-01-cold-launch android-01b-house-after-enter android-02-resumed android-03-force-stop-relaunch android-04-gameplay android-05-reliquary android-06-events android-07-weekly android-08-shop android-09-profile android-10-settings; do
             SRC="artifacts/${FRAME}.png"
             [ -s "$SRC" ] || continue
             REVIEW="$SRC"
@@ -528,4 +630,5 @@ jobs:
             artifacts/
             build/android/cat-and-coven-emulator.apk
             build/android/cat-and-coven-gameplay-review.apk
+            build/android/cat-and-coven-secondary-review.apk
           if-no-files-found: error
