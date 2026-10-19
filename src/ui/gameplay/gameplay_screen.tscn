@@ -380,7 +380,7 @@ grow_vertical = 2
 theme_override_constants/separation = 8
 
 [node name="LevelPlaque" type="PanelContainer" parent="Layout"]
-custom_minimum_size = Vector2(620, 104)
+custom_minimum_size = Vector2(600, 96)
 layout_mode = 2
 size_flags_horizontal = 4
 
@@ -391,7 +391,7 @@ theme_override_colors/font_outline_color = Color(0.03, 0.012, 0.04, 1)
 theme_override_colors/font_shadow_color = Color(0, 0, 0, 0.9)
 theme_override_constants/shadow_offset_y = 2
 theme_override_constants/outline_size = 3
-theme_override_font_sizes/font_size = 58
+theme_override_font_sizes/font_size = 52
 text = "LEVEL 1"
 horizontal_alignment = 1
 vertical_alignment = 1
@@ -407,7 +407,7 @@ text = "Moonlit Cabinet"
 horizontal_alignment = 1
 
 [node name="HUDPlate" type="PanelContainer" parent="Layout"]
-custom_minimum_size = Vector2(0, 192)
+custom_minimum_size = Vector2(0, 184)
 layout_mode = 2
 theme_override_styles/panel = SubResource("GameplayHUDPlate")
 
@@ -425,7 +425,7 @@ layout_mode = 2
 size_flags_horizontal = 3
 
 [node name="ObjectiveSlot" type="VBoxContainer" parent="Layout/HUDPlate/HUD"]
-custom_minimum_size = Vector2(230, 154)
+custom_minimum_size = Vector2(250, 148)
 layout_mode = 2
 size_flags_vertical = 4
 theme_override_constants/separation = -3
@@ -433,18 +433,18 @@ alignment = 1
 tooltip_text = "Current level objective"
 
 [node name="ObjectiveName" type="Label" parent="Layout/HUDPlate/HUD/ObjectiveSlot"]
-custom_minimum_size = Vector2(0, 12)
+custom_minimum_size = Vector2(0, 24)
 layout_mode = 2
 theme_override_colors/font_color = Color(0.92, 0.79, 0.62, 1)
 theme_override_colors/font_outline_color = Color(0.03, 0.02, 0.04, 0.94)
 theme_override_constants/outline_size = 3
-theme_override_font_sizes/font_size = 20
+theme_override_font_sizes/font_size = 24
 text = "MOON SIGILS"
 horizontal_alignment = 1
 vertical_alignment = 1
 
 [node name="ObjectiveIcon" type="TextureRect" parent="Layout/HUDPlate/HUD/ObjectiveSlot"]
-custom_minimum_size = Vector2(114, 114)
+custom_minimum_size = Vector2(96, 96)
 layout_mode = 2
 size_flags_horizontal = 4
 mouse_filter = 2
@@ -459,10 +459,10 @@ anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-offset_left = -130.0
-offset_top = -65.0
-offset_right = 130.0
-offset_bottom = 65.0
+offset_left = -116.0
+offset_top = -58.0
+offset_right = 116.0
+offset_bottom = 58.0
 grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
@@ -470,12 +470,12 @@ expand_mode = 1
 stretch_mode = 5
 
 [node name="Objective" type="Label" parent="Layout/HUDPlate/HUD/ObjectiveSlot"]
-custom_minimum_size = Vector2(0, 34)
+custom_minimum_size = Vector2(0, 32)
 layout_mode = 2
 theme_override_colors/font_color = Color(1, 0.94, 0.82, 1)
 theme_override_colors/font_outline_color = Color(0.03, 0.02, 0.04, 0.96)
 theme_override_constants/outline_size = 5
-theme_override_font_sizes/font_size = 34
+theme_override_font_sizes/font_size = 32
 text = "0 / 6"
 horizontal_alignment = 1
 vertical_alignment = 1
@@ -485,19 +485,19 @@ layout_mode = 2
 size_flags_horizontal = 3
 
 [node name="Moves" type="Label" parent="Layout/HUDPlate/HUD"]
-custom_minimum_size = Vector2(142, 144)
+custom_minimum_size = Vector2(136, 132)
 layout_mode = 2
 theme_override_colors/font_color = Color(0.97, 0.82, 0.52, 1)
 theme_override_colors/font_outline_color = Color(0.03, 0.02, 0.04, 0.94)
 theme_override_constants/outline_size = 4
-theme_override_font_sizes/font_size = 40
+theme_override_font_sizes/font_size = 38
 theme_override_styles/normal = SubResource("MovesBlockStyle")
 text = "20\nMOVES"
 horizontal_alignment = 1
 vertical_alignment = 1
 
 [node name="Pause" type="Button" parent="Layout/HUDPlate/HUD"]
-custom_minimum_size = Vector2(94, 94)
+custom_minimum_size = Vector2(86, 86)
 layout_mode = 2
 size_flags_vertical = 4
 theme_override_colors/font_color = Color(0.945, 0.91, 0.866, 1)
@@ -507,7 +507,7 @@ theme_override_styles/hover = SubResource("PauseUtility")
 theme_override_styles/pressed = SubResource("PauseUtility")
 text = ""
 expand_icon = true
-theme_override_constants/icon_max_width = 54
+theme_override_constants/icon_max_width = 48
 tooltip_text = "Pause"
 
 [node name="BoardView" type="Control" parent="Layout"]
