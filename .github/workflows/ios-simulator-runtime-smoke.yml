@@ -8,6 +8,7 @@ on:
       - "feat/ios-simulator-render-readiness"
       - "feat/native-ios-runtime-visual-evidence"
       - "feat/native-house-runtime-evidence"
+      - "feat/ios-simulator-runtime-relaunch-proof"
     paths:
       - ".github/workflows/ios-simulator-runtime-smoke.yml"
       - ".github/release-proof.trigger"
@@ -205,34 +206,53 @@ jobs:
         run: |
           set -euo pipefail
           BUNDLE_ID="com.akilta.catandcoven"
+          DATA_PATH="$(xcrun simctl get_app_container "$SIM_UDID" "$BUNDLE_ID" data)"
+          test -d "$DATA_PATH"
+          OLD_MARKER="$(find "$DATA_PATH" -type f -name native-runtime-review-route.txt -print -quit)"
+          if [ -n "$OLD_MARKER" ]; then rm -f "$OLD_MARKER"; fi
+
           xcrun simctl terminate "$SIM_UDID" "$BUNDLE_ID"
           sleep 2
-          LAUNCH_OUTPUT="$(xcrun simctl launch "$SIM_UDID" "$BUNDLE_ID" --cat-coven-native-review-auto-enter 2>&1)"
+          LAUNCH_OUTPUT="$(xcrun simctl launch "$SIM_UDID" "$BUNDLE_ID" --cat-coven-native-review-route=house 2>&1)"
           printf '%s\n' "$LAUNCH_OUTPUT" | tee artifacts/ios-house-relaunch.txt
           APP_PID="$(printf '%s\n' "$LAUNCH_OUTPUT" | sed -n 's/.*: \([0-9][0-9]*\)$/\1/p' | tail -1)"
           test -n "$APP_PID"
           echo "IOS_RELAUNCH_PID=$APP_PID" | tee -a artifacts/ios-lifecycle.txt
-          sleep 5
-          xcrun simctl spawn "$SIM_UDID" launchctl list > artifacts/ios-relaunch-launchctl-list.txt 2>&1 || true
-          grep -F "$BUNDLE_ID" artifacts/ios-relaunch-launchctl-list.txt | tee artifacts/ios-process-relaunch-alive.txt
+
           RENDERED=0
-          for ATTEMPT in $(seq 1 8); do
+          for ATTEMPT in $(seq 1 18); do
+            sleep 3
+            xcrun simctl spawn "$SIM_UDID" launchctl list > artifacts/ios-relaunch-launchctl-list.txt 2>&1 || true
+            grep -Fq "$BUNDLE_ID" artifacts/ios-relaunch-launchctl-list.txt
+
+            MARKER_PATH="$(find "$DATA_PATH" -type f -name native-runtime-review-route.txt -print -quit)"
+            ROUTE_STATE=""
+            if [ -n "$MARKER_PATH" ]; then ROUTE_STATE="$(cat "$MARKER_PATH")"; fi
+
             xcrun simctl io "$SIM_UDID" screenshot artifacts/ios-02-house-relaunch.png
             test -s artifacts/ios-02-house-relaunch.png
             BYTES="$(stat -f%z artifacts/ios-02-house-relaunch.png)"
-            echo "ios-02-house-relaunch.png attempt=$ATTEMPT bytes=$BYTES" | tee -a artifacts/ios-frame-sizes.txt
-            if [ "$BYTES" -ge 200000 ]; then
+            echo "ios-02-house-relaunch.png attempt=$ATTEMPT bytes=$BYTES route=$ROUTE_STATE" | tee -a artifacts/ios-frame-sizes.txt
+
+            if [ "$ROUTE_STATE" = "house" ] && [ "$BYTES" -ge 120000 ]; then
               RENDERED=1
               break
             fi
-            sleep 5
           done
+
+          grep -F "$BUNDLE_ID" artifacts/ios-relaunch-launchctl-list.txt | tee artifacts/ios-process-relaunch-alive.txt
           if [ "$RENDERED" -ne 1 ]; then
-            xcrun simctl spawn "$SIM_UDID" log show --last 2m --style compact --predicate 'process == "CatAndCoven"' > artifacts/ios-relaunch-render-timeout-log.txt || true
-            echo "::error::Cat & Coven review relaunch did not reach a rendered post-splash product frame."
+            xcrun simctl spawn "$SIM_UDID" log show --last 3m --style compact --predicate 'process == "CatAndCoven"' > artifacts/ios-relaunch-render-timeout-log.txt || true
+            echo "::error::Cat & Coven review relaunch did not reach the real House route."
             tail -200 artifacts/ios-relaunch-render-timeout-log.txt || true
             exit 1
           fi
+
+          MARKER_PATH="$(find "$DATA_PATH" -type f -name native-runtime-review-route.txt -print -quit)"
+          test -n "$MARKER_PATH"
+          cp "$MARKER_PATH" artifacts/ios-native-review-route-house.txt
+          grep -Fxq "house" artifacts/ios-native-review-route-house.txt
+
           WIDTH="$(sips -g pixelWidth artifacts/ios-02-house-relaunch.png | awk '/pixelWidth:/ {print $2}')"
           HEIGHT="$(sips -g pixelHeight artifacts/ios-02-house-relaunch.png | awk '/pixelHeight:/ {print $2}')"
           echo "ios-02-house-relaunch.png dimensions=${WIDTH}x${HEIGHT}" | tee -a artifacts/ios-frame-sizes.txt
