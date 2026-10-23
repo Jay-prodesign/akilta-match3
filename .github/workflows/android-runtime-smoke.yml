@@ -10,6 +10,7 @@ on:
       - "feat/native-ios-runtime-visual-evidence"
       - "feat/native-house-runtime-evidence"
       - "feat/native-secondary-runtime-proof"
+      - "feat/gameplay-booster-affordance-polish"
       - "feat/gameplay-native-responsive-polish"
     paths:
       - ".github/workflows/android-runtime-smoke.yml"
