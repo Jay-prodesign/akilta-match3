@@ -286,8 +286,8 @@ func _ready() -> void:
 		load_level_path(default_level_path, default_seed)
 	if not get_viewport().size_changed.is_connected(_schedule_booster_tray_alignment):
 		get_viewport().size_changed.connect(_schedule_booster_tray_alignment)
-	if board_view != null and not board_view.resized.is_connected(_schedule_booster_tray_alignment):
-		board_view.resized.connect(_schedule_booster_tray_alignment)
+	if board_view != null and not board_view.resized.is_connected(_align_booster_tray_to_board_band):
+		board_view.resized.connect(_align_booster_tray_to_board_band)
 	_schedule_booster_tray_alignment()
 	call_deferred("_play_gameplay_intro")
 
@@ -562,7 +562,7 @@ func load_level_path(path: String, seed_value: int = 1001) -> bool:
 		result_ritual.set("glow_strength", 0.75)
 		result_ritual.queue_redraw()
 	_refresh_hud()
-	_schedule_booster_tray_alignment()
+	_align_booster_tray_to_board_band()
 	return true
 
 func _update_level_badge() -> void:
