@@ -82,7 +82,7 @@ func _run() -> void:
 	var prestart_back: Button = prestart.get_node_or_null("Layout/Back") as Button
 	_expect(prestart_back != null, "pre-start must own a focused back affordance")
 	var objective: Label = prestart.get_node("Layout/Card/Content/ObjectiveBand/Row/ObjectiveCluster/Copy/Objective")
-	_expect(objective.text.replace("\n", " ") == "GATHER 6 MOON SIGILS", "prestart must reflect the canonical Level 1 collect-family objective")
+	_expect(objective.text.replace("\n", " ") == "GATHER 12 MOON SIGILS", "prestart must reflect the canonical Level 1 collect-family objective")
 	_expect(prestart.has_method("aid_asset_contract"), "prestart must expose its contract-owned aid artwork")
 	if prestart.has_method("aid_asset_contract"):
 		var prestart_aids: Dictionary = prestart.aid_asset_contract()
