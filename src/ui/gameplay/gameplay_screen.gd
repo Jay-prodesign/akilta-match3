@@ -317,11 +317,11 @@ func gameplay_native_layout_contract() -> Dictionary:
 			"booster_inside_viewport": false,
 			"board_to_booster_gap": -1.0,
 		}
-	var viewport_size := get_viewport().get_visible_rect().size
-	var viewport_rect := Rect2(Vector2.ZERO, viewport_size)
-	var board_rect := board_view.get_global_rect()
-	var tray_rect := _booster_tray.get_global_rect()
-	var board_to_booster_gap := tray_rect.position.y - board_rect.end.y
+	var viewport_size: Vector2 = get_viewport().get_visible_rect().size
+	var viewport_rect: Rect2 = Rect2(Vector2.ZERO, viewport_size)
+	var board_rect: Rect2 = (board_view as Control).get_global_rect()
+	var tray_rect: Rect2 = _booster_tray.get_global_rect()
+	var board_to_booster_gap: float = tray_rect.position.y - board_rect.end.y
 	var booster_visible := _booster_tray.visible and _booster_tray.modulate.a >= 0.95
 	var booster_inside_viewport := (
 		booster_visible
