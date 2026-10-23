@@ -1414,6 +1414,17 @@ func gameplay_presentation_contract() -> Dictionary:
 		and _sealed_boost_b.text == "HAND"
 		and _sealed_boost_c.text == "MAGIC"
 	)
+	var canonical_booster_labels: bool = (
+		shuffle_label.visible
+		and hand_label.visible
+		and magic_label.visible
+		and shuffle_label.text == "SHUFFLE"
+		and hand_label.text == "HAND"
+		and magic_label.text == "MAGIC"
+		and shuffle_label.get_theme_font_size("font_size") >= 18
+		and hand_label.get_theme_font_size("font_size") >= 18
+		and magic_label.get_theme_font_size("font_size") >= 18
+	)
 	var settings_slot := $BoosterTray/BoosterActions/SettingsSlot as VBoxContainer
 	var utilities_separated: bool = (
 		not $BoosterTray/BoosterActions/HintSlot.visible
@@ -1446,6 +1457,7 @@ func gameplay_presentation_contract() -> Dictionary:
 		and $BoosterTray/BoosterActions/SealedSlotB.visible
 		and $BoosterTray/BoosterActions/SealedSlotC.visible
 		and canonical_booster_names
+		and canonical_booster_labels
 		and [_sealed_boost_a, _sealed_boost_b, _sealed_boost_c].all(
 			func(button): return button.disabled and button.custom_minimum_size.y >= 108.0 and button.icon != null
 		)
@@ -1547,7 +1559,8 @@ func gameplay_presentation_contract() -> Dictionary:
 		"asset_backed_resource_chips": [$ResourceBar/Resources/CoinChip, $ResourceBar/Resources/GemChip, $ResourceBar/Resources/LevelBadgePlate].all(func(panel): return panel is PanelContainer and (panel as PanelContainer).get_theme_stylebox("panel") is StyleBoxTexture),
 		"level_badge_separated": ($ResourceBar/Resources/ResourceSpacer as Control).size_flags_horizontal == Control.SIZE_EXPAND_FILL,
 		"hint_booster_clearance": composition_locked,
-		"booster_label_readability": canonical_booster_names and _sealed_boost_a.tooltip_text != "" and _sealed_boost_b.tooltip_text != "" and _sealed_boost_c.tooltip_text != "",
+		"booster_label_readability": canonical_booster_labels and _sealed_boost_a.tooltip_text != "" and _sealed_boost_b.tooltip_text != "" and _sealed_boost_c.tooltip_text != "",
+		"booster_labels_visible": canonical_booster_labels,
 		"north_star_booster_family": canonical_booster_names,
 		"booster_frame_family": String(_booster_tray.get_meta("production_chrome_kind", "")) == "gameplay_booster_tray",
 		"utility_separated_from_boosters": utilities_separated,
@@ -1560,7 +1573,7 @@ func gameplay_presentation_contract() -> Dictionary:
 		"integrated_hint_surface": integrated_hint_surface,
 		"integrated_hud_surface": integrated_hud_surface,
 		"final_hint_readability": hint_readable and hint_label.size_flags_horizontal == Control.SIZE_SHRINK_CENTER,
-		"final_booster_readability": booster_family_locked and canonical_booster_names,
+		"final_booster_readability": booster_family_locked and canonical_booster_names and canonical_booster_labels,
 		"visual_parity_gate_v2": hierarchy_locked and booster_family_locked and composition_locked and board_locked and utilities_separated and String(_booster_tray.get_meta("production_chrome_kind", "")) == "gameplay_booster_tray",
 		"visual_parity_gate_v3": hierarchy_locked and integrated_hud_surface and hint_readable and booster_family_locked and composition_locked and board_locked and utilities_separated,
 		"visual_parity_gate_v4": hierarchy_locked and integrated_hud_surface and hint_readable and booster_family_locked and composition_locked and board_locked and utilities_separated and north_star_gameplay_hud_frame and $ResourceBar.get_theme_stylebox("panel") is StyleBoxEmpty and String(_booster_tray.get_meta("production_chrome_kind", "")) == "gameplay_booster_tray",
