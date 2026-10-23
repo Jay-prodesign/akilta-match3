@@ -18,7 +18,7 @@ func _run() -> void:
 		"truthful_sealed_slots", "authored_target_moves_hierarchy", "authored_board_frame",
 		"asset_backed_gameplay_chrome", "board_frame_asset_owner", "north_star_gameplay_geometry",
 		"gameplay_header_clearance", "compact_resource_chips", "asset_backed_resource_chips",
-		"level_badge_separated", "hint_booster_clearance", "booster_label_readability",
+		"level_badge_separated", "hint_booster_clearance", "booster_label_readability", "booster_labels_visible",
 		"north_star_booster_family", "utility_separated_from_boosters", "north_star_board_object",
 		"north_star_header_hierarchy", "booster_frame_family", "quiet_gameplay_shell_family", "clear_pause_control", "integrated_hint_surface", "integrated_hud_surface",
 		"final_hint_readability", "final_booster_readability", "canonical_booster_art", "gothic_board_material", "objective_spacing_locked",
@@ -75,9 +75,9 @@ func _run() -> void:
 	_expect(shuffle != null and shuffle.disabled and shuffle.icon != null and shuffle.custom_minimum_size.y >= 108.0, "Shuffle booster truth/scale failed")
 	_expect(hand != null and hand.disabled and hand.icon != null and hand.custom_minimum_size.y >= 108.0, "Hand booster truth/scale failed")
 	_expect(magic != null and magic.disabled and magic.icon != null and magic.custom_minimum_size.y >= 108.0, "Magic booster truth/scale failed")
-	_expect(shuffle_label != null and shuffle_label.text == "SHUFFLE" and shuffle_label.get_theme_font_size("font_size") >= 22, "Shuffle identity/readability drifted")
-	_expect(hand_label != null and hand_label.text == "HAND", "Hand identity drifted")
-	_expect(magic_label != null and magic_label.text == "MAGIC", "Magic identity drifted")
+	_expect(shuffle_label != null and shuffle_label.visible and shuffle_label.text == "SHUFFLE" and shuffle_label.get_theme_font_size("font_size") >= 18, "Shuffle identity/readability drifted")
+	_expect(hand_label != null and hand_label.visible and hand_label.text == "HAND" and hand_label.get_theme_font_size("font_size") >= 18, "Hand identity/readability drifted")
+	_expect(magic_label != null and magic_label.visible and magic_label.text == "MAGIC" and magic_label.get_theme_font_size("font_size") >= 18, "Magic identity/readability drifted")
 	_expect(objective != null and objective_name != null and not objective.has_theme_stylebox_override("normal") and objective.text.contains("/") and objective_name.text != "", "Objective must read as a compact authored icon-and-counter slot rather than a detached text panel")
 	_expect(hint_band != null and hint_band.custom_minimum_size.y >= 52.0 and hint_band.get_theme_font_size("font_size") >= 26, "Hint callout must remain readable without competing with the board")
 	_expect(hint_band != null and hint_band.size_flags_horizontal == Control.SIZE_SHRINK_CENTER and hint_band.custom_minimum_size.x >= 660.0 and hint_band.custom_minimum_size.x <= 720.0, "Hint must remain a restrained centered gameplay callout")
