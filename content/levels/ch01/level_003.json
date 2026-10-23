@@ -164,5 +164,10 @@
     1003,
     1020,
     1104
-  ]
+  ],
+  "quality_expect": {
+    "accepted_moves_min": 4,
+    "spare_moves_min": 2,
+    "spare_moves_max": 3
+  }
 }
