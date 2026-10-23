@@ -286,6 +286,8 @@ func _ready() -> void:
 		load_level_path(default_level_path, default_seed)
 	if not get_viewport().size_changed.is_connected(_schedule_booster_tray_alignment):
 		get_viewport().size_changed.connect(_schedule_booster_tray_alignment)
+	if board_view != null and not board_view.resized.is_connected(_schedule_booster_tray_alignment):
+		board_view.resized.connect(_schedule_booster_tray_alignment)
 	_schedule_booster_tray_alignment()
 	call_deferred("_play_gameplay_intro")
 
@@ -300,9 +302,43 @@ func _align_booster_tray_to_board_band() -> void:
 		return
 	var board_bottom: float = float(board_view.global_position.y + board_view.size.y)
 	var desired_top := booster_tray_target_top_for_board_bottom(board_bottom)
+	var viewport_height := float(get_viewport().get_visible_rect().size.y)
+	var tray_height := maxf(float(_booster_tray.size.y), BOOSTER_TRAY_HEIGHT)
+	var max_top := maxf(0.0, viewport_height - tray_height - 24.0)
+	desired_top = minf(desired_top, max_top)
 	var delta := desired_top - _booster_tray.global_position.y
 	_booster_tray.offset_top += delta
 	_booster_tray.offset_bottom += delta
+
+func gameplay_native_layout_contract() -> Dictionary:
+	if _booster_tray == null or board_view == null:
+		return {
+			"booster_visible": false,
+			"booster_inside_viewport": false,
+			"board_to_booster_gap": -1.0,
+		}
+	var viewport_size := get_viewport().get_visible_rect().size
+	var viewport_rect := Rect2(Vector2.ZERO, viewport_size)
+	var board_rect := board_view.get_global_rect()
+	var tray_rect := _booster_tray.get_global_rect()
+	var board_to_booster_gap := tray_rect.position.y - board_rect.end.y
+	var booster_visible := _booster_tray.visible and _booster_tray.modulate.a >= 0.95
+	var booster_inside_viewport := (
+		booster_visible
+		and tray_rect.position.y >= -1.0
+		and tray_rect.end.y <= viewport_size.y + 1.0
+		and viewport_rect.intersects(tray_rect)
+	)
+	return {
+		"booster_visible": booster_visible,
+		"booster_inside_viewport": booster_inside_viewport,
+		"board_to_booster_gap": board_to_booster_gap,
+		"board_bottom": board_rect.end.y,
+		"booster_top": tray_rect.position.y,
+		"booster_bottom": tray_rect.end.y,
+		"viewport_height": viewport_size.y,
+		"booster_alpha": _booster_tray.modulate.a,
+	}
 
 func _install_direct_action_frame(button: Button, frame_art: TextureRect, asset_path: String) -> void:
 	if button == null or frame_art == null:
@@ -530,6 +566,7 @@ func load_level_path(path: String, seed_value: int = 1001) -> bool:
 		result_ritual.set("glow_strength", 0.75)
 		result_ritual.queue_redraw()
 	_refresh_hud()
+	_schedule_booster_tray_alignment()
 	return true
 
 func _update_level_badge() -> void:
