@@ -302,10 +302,6 @@ func _align_booster_tray_to_board_band() -> void:
 		return
 	var board_bottom: float = float(board_view.global_position.y + board_view.size.y)
 	var desired_top := booster_tray_target_top_for_board_bottom(board_bottom)
-	var viewport_height := float(get_viewport().get_visible_rect().size.y)
-	var tray_height := maxf(float(_booster_tray.size.y), BOOSTER_TRAY_HEIGHT)
-	var max_top := maxf(0.0, viewport_height - tray_height - 24.0)
-	desired_top = minf(desired_top, max_top)
 	var delta := desired_top - _booster_tray.global_position.y
 	_booster_tray.offset_top += delta
 	_booster_tray.offset_bottom += delta
