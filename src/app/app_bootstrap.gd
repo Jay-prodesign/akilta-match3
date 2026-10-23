@@ -184,8 +184,8 @@ func _run_native_runtime_review_route(route: String) -> void:
 				push_error("Native gameplay review is missing its runtime layout contract.")
 				return
 			var gameplay_layout: Dictionary = _current_screen.gameplay_native_layout_contract()
-			if not bool(gameplay_layout.get("booster_visible", false)) or not bool(gameplay_layout.get("booster_inside_viewport", false)):
-				push_error("Native gameplay booster tray is outside the rendered viewport: %s" % gameplay_layout)
+			if not bool(gameplay_layout.get("booster_visible", false)) or not bool(gameplay_layout.get("booster_settled", false)) or not bool(gameplay_layout.get("booster_inside_viewport", false)):
+				push_error("Native gameplay booster tray is not settled inside the rendered viewport: %s" % gameplay_layout)
 				return
 			var native_gap := float(gameplay_layout.get("board_to_booster_gap", -1.0))
 			if native_gap < 30.0 or native_gap > 42.0:
