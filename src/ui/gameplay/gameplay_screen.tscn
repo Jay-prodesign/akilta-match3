@@ -667,13 +667,12 @@ expand_mode = 1
 stretch_mode = 5
 
 [node name="Label" type="Label" parent="BoosterTray/BoosterActions/SealedSlotA"]
-visible = false
-custom_minimum_size = Vector2(0, 20)
+custom_minimum_size = Vector2(0, 24)
 layout_mode = 2
 theme_override_colors/font_color = Color(0.965, 0.87, 0.69, 1)
 theme_override_colors/font_outline_color = Color(0.02, 0.014, 0.028, 0.98)
-theme_override_constants/outline_size = 5
-theme_override_font_sizes/font_size = 22
+theme_override_constants/outline_size = 3
+theme_override_font_sizes/font_size = 18
 text = "SHUFFLE"
 horizontal_alignment = 1
 vertical_alignment = 1
@@ -715,13 +714,12 @@ expand_mode = 1
 stretch_mode = 5
 
 [node name="Label" type="Label" parent="BoosterTray/BoosterActions/SealedSlotB"]
-visible = false
-custom_minimum_size = Vector2(0, 20)
+custom_minimum_size = Vector2(0, 24)
 layout_mode = 2
 theme_override_colors/font_color = Color(0.965, 0.87, 0.69, 1)
 theme_override_colors/font_outline_color = Color(0.02, 0.014, 0.028, 0.98)
-theme_override_constants/outline_size = 5
-theme_override_font_sizes/font_size = 22
+theme_override_constants/outline_size = 3
+theme_override_font_sizes/font_size = 18
 text = "HAND"
 horizontal_alignment = 1
 vertical_alignment = 1
@@ -763,13 +761,12 @@ expand_mode = 1
 stretch_mode = 5
 
 [node name="Label" type="Label" parent="BoosterTray/BoosterActions/SealedSlotC"]
-visible = false
-custom_minimum_size = Vector2(0, 20)
+custom_minimum_size = Vector2(0, 24)
 layout_mode = 2
 theme_override_colors/font_color = Color(0.965, 0.87, 0.69, 1)
 theme_override_colors/font_outline_color = Color(0.02, 0.014, 0.028, 0.98)
-theme_override_constants/outline_size = 5
-theme_override_font_sizes/font_size = 22
+theme_override_constants/outline_size = 3
+theme_override_font_sizes/font_size = 18
 text = "MAGIC"
 horizontal_alignment = 1
 vertical_alignment = 1

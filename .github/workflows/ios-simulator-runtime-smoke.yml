@@ -10,6 +10,7 @@ on:
       - "feat/native-house-runtime-evidence"
       - "feat/ios-simulator-runtime-relaunch-proof"
       - "feat/native-secondary-runtime-proof"
+      - "feat/gameplay-booster-affordance-polish"
       - "feat/gameplay-native-responsive-polish"
     paths:
       - ".github/workflows/ios-simulator-runtime-smoke.yml"
