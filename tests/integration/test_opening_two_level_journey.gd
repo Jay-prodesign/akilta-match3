@@ -55,9 +55,19 @@ func _run() -> void:
 	var level1 = app.current_screen()
 	_expect(str(app.current_route_name()) == "gameplay", "Level 1 prestart must enter gameplay")
 	_expect(level1 != null and str(level1.current_level_id) == "ch01_level_001", "founder gate must test the authored Level 1")
-	var trace = level1.attempt_swap(Vector2i(1, 4), Vector2i(2, 4))
-	_expect(trace != null and trace.accepted and str(trace.result) == "won", "Level 1 teaching move must produce the first win")
-	await _await_board_motion(level1)
+	var trace
+	for move_index in range(4):
+		var raw_move: Array = [[2, 0, 3, 0], [2, 2, 3, 2], [2, 4, 3, 4], [2, 6, 3, 6]][move_index]
+		trace = level1.attempt_swap(
+			Vector2i(int(raw_move[0]), int(raw_move[1])),
+			Vector2i(int(raw_move[2]), int(raw_move[3]))
+		)
+		_expect(trace != null and trace.accepted, "Level 1 authored move %d must resolve" % (move_index + 1))
+		if move_index < 3:
+			_expect(str(trace.result) == "playing", "Level 1 must remain unresolved before its fourth authored match")
+		await _await_board_motion(level1)
+		await process_frame
+	_expect(trace != null and str(trace.result) == "won", "Level 1 fourth authored match must produce the first win")
 	_expect(level1.result_overlay.visible, "Level 1 must show the win beat before routing away")
 	_expect(level1.continue_after_win(), "Level 1 win must save progression")
 	await process_frame
@@ -139,9 +149,17 @@ func _run() -> void:
 	await process_frame
 	var replay = relaunched.current_screen()
 	_expect(bool(replay.replay_mode), "completed Level 1 gameplay must enter explicit replay mode")
-	var replay_trace = replay.attempt_swap(Vector2i(1, 4), Vector2i(2, 4))
-	_expect(replay_trace != null and replay_trace.accepted and str(replay_trace.result) == "won", "Level 1 replay must remain fully playable")
-	await _await_board_motion(replay)
+	var replay_trace
+	for move_index in range(4):
+		var raw_move: Array = [[2, 0, 3, 0], [2, 2, 3, 2], [2, 4, 3, 4], [2, 6, 3, 6]][move_index]
+		replay_trace = replay.attempt_swap(
+			Vector2i(int(raw_move[0]), int(raw_move[1])),
+			Vector2i(int(raw_move[2]), int(raw_move[3]))
+		)
+		_expect(replay_trace != null and replay_trace.accepted, "Level 1 replay authored move %d must resolve" % (move_index + 1))
+		await _await_board_motion(replay)
+		await process_frame
+	_expect(replay_trace != null and str(replay_trace.result) == "won", "Level 1 replay must remain fully playable through the complete session")
 	_expect(replay.result_overlay.visible, "replay win must still present an explicit result state")
 	_expect(replay.result_eyebrow.text.begins_with("REPLAY"), "replay result must not masquerade as a first-time reward")
 	var replay_values = replay.get_node_or_null("ResultOverlay/Card/Content/ResultRewardValues")
