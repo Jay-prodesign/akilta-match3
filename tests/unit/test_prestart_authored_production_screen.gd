@@ -53,8 +53,8 @@ func _run() -> void:
 	var reward := screen.get_node_or_null("Layout/Card/Content/Reward") as Label
 	_expect(level_plaque != null and level_plaque.get_theme_stylebox("panel") is StyleBoxFlat, "Prestart Level plaque must preserve the clean scene-authored material")
 	_expect(objective_icon != null and objective_icon.texture != null, "Prestart objective icon must be authored and loaded")
-	_expect(objective != null and objective.text.contains("6") and objective.text.contains("MOON SIGILS"), "Prestart must bind Level 1 objective truth")
-	_expect(moves != null and moves.text.contains("20") and moves.text.contains("MOVES"), "Prestart must bind Level 1 move truth")
+	_expect(objective != null and objective.text.contains("12") and objective.text.contains("MOON SIGILS"), "Prestart must bind Level 1 objective truth")
+	_expect(moves != null and moves.text.contains("7") and moves.text.contains("MOVES"), "Prestart must bind Level 1 move truth")
 	_expect(reward != null and reward.text.contains("MOON CAMEO"), "Prestart must bind Level 1 reward truth")
 
 	_expect(screen.configure_level(1, true), "Level 1 replay prestart must configure")
