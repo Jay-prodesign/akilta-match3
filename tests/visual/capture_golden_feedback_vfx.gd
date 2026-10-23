@@ -11,11 +11,23 @@ func _capture() -> void:
 	await _frames(2)
 	screen.apply_presentation_settings({"reduced_motion": false, "high_contrast": false, "haptics_enabled": false})
 
-	var trace = screen.attempt_swap(Vector2i(1, 4), Vector2i(2, 4))
-	if trace == null or not bool(trace.accepted) or String(trace.result) != "won":
-		return _fail(screen, "authored Level 1 move did not reach win")
-
 	var board_view = screen.get_node_or_null("Layout/BoardView")
+	var trace
+	for raw_move in [[2, 0, 3, 0], [2, 2, 3, 2], [2, 4, 3, 4]]:
+		var setup_trace = screen.attempt_swap(
+			Vector2i(int(raw_move[0]), int(raw_move[1])),
+			Vector2i(int(raw_move[2]), int(raw_move[3]))
+		)
+		if setup_trace == null or not bool(setup_trace.accepted) or String(setup_trace.result) != "playing":
+			return _fail(screen, "Level 1 feedback setup move failed")
+		if board_view != null and board_view.has_method("is_motion_active") and bool(board_view.is_motion_active()):
+			await board_view.trace_motion_finished
+		await process_frame
+	trace = screen.attempt_swap(Vector2i(2, 6), Vector2i(3, 6))
+	if trace == null or not bool(trace.accepted) or String(trace.result) != "won":
+		return _fail(screen, "authored Level 1 fourth move did not reach win")
+
+
 	if board_view == null or not board_view.has_method("feedback_vfx_contract"):
 		return _fail(screen, "S05 board feedback VFX contract missing")
 	var clear_contract: Dictionary = board_view.feedback_vfx_contract()
