@@ -55,12 +55,19 @@ func _run_level(entry: Dictionary) -> void:
 		failures.append("Level %d top resource bar must identify the active level" % number)
 
 	var moves: Array = level_data.get("teaching_moves", [])
+	if number == 2:
+		if int(level_data.get("width", 0)) != 7 or int(level_data.get("height", 0)) != 7:
+			failures.append("Level 2 must use the full 7x7 board so Wax Seal play has room to breathe")
+		if (level_data.get("blockers", []) as Array).size() != 4:
+			failures.append("Level 2 must require four separate Wax Seal clears")
 	if number == 3:
 		if String(level_data.get("objective", "")) != "clear_blockers":
 			failures.append("Level 3 puzzle-depth objective must be clear_blockers")
 		if (level_data.get("holes", []) as Array).size() < 3:
 			failures.append("Level 3 must use a shaped board with at least three holes")
-		var initial_seal: Dictionary = screen.board_state.get_blocker(Vector2i(4, 4))
+		if (level_data.get("blockers", []) as Array).size() != 3:
+			failures.append("Level 3 must combine one deep seal with two follow-up seals")
+		var initial_seal: Dictionary = screen.board_state.get_blocker(Vector2i(1, 1))
 		if int(initial_seal.get("hp", 0)) != 2:
 			failures.append("Level 3 deep Wax Seal must begin at 2 HP")
 	for move_index in range(moves.size()):
@@ -75,12 +82,22 @@ func _run_level(entry: Dictionary) -> void:
 		if trace == null or not bool(trace.accepted):
 			failures.append("Level %d authored teaching move must be accepted by runtime" % number)
 			break
+		if number == 2:
+			if not trace.event_types().has("blocker_cleared"):
+				failures.append("Level 2 move %d must visibly crack one Wax Seal" % (move_index + 1))
+			var expected_remaining := 3 - move_index
+			if int(screen.board_state.remaining_blockers()) != expected_remaining:
+				failures.append("Level 2 move %d must leave %d Wax Seals, got %d" % [move_index + 1, expected_remaining, int(screen.board_state.remaining_blockers())])
+			if move_index < moves.size() - 1 and String(trace.result) != "playing":
+				failures.append("Level 2 must not finish before all four authored seal interactions")
+			if move_index == moves.size() - 1 and String(trace.result) != "won":
+				failures.append("Level 2 fourth authored seal interaction must complete the display")
 		if number == 3 and move_index == 0:
 			if not trace.event_types().has("special_created"):
 				failures.append("Level 3 first move must form the Moon Beam")
 			if not trace.event_types().has("blocker_damaged") or trace.event_types().has("blocker_cleared"):
 				failures.append("Level 3 first move must crack but not clear the deep Wax Seal")
-			if int(screen.board_state.get_blocker(Vector2i(4, 4)).get("hp", 0)) != 1:
+			if int(screen.board_state.get_blocker(Vector2i(1, 1)).get("hp", 0)) != 1:
 				failures.append("Level 3 first move must reduce deep Wax Seal from 2 HP to 1 HP")
 			if String(trace.result) != "playing":
 				failures.append("Level 3 first move must leave the puzzle unresolved")
@@ -89,8 +106,17 @@ func _run_level(entry: Dictionary) -> void:
 				failures.append("Level 3 second move must trigger the Moon Beam")
 			if not trace.event_types().has("blocker_cleared"):
 				failures.append("Level 3 second move must shatter the deep Wax Seal")
-			if String(trace.result) != "won":
-				failures.append("Level 3 second move must complete the shaped-board puzzle")
+			if screen.board_state.get_blocker(Vector2i(1, 1)).size() != 0:
+				failures.append("Level 3 Moon Beam must remove the deep Wax Seal")
+			if String(trace.result) != "playing":
+				failures.append("Level 3 Moon Beam must open the puzzle rather than end it immediately")
+		if number == 3 and move_index >= 2:
+			if not trace.event_types().has("blocker_cleared"):
+				failures.append("Level 3 follow-up move %d must clear a lower Wax Seal" % (move_index + 1))
+			if move_index < moves.size() - 1 and String(trace.result) != "playing":
+				failures.append("Level 3 must retain one final lower seal after the third move")
+			if move_index == moves.size() - 1 and String(trace.result) != "won":
+				failures.append("Level 3 fourth authored interaction must complete the shaped-board ritual")
 		var board_view = screen.get_node_or_null("Layout/BoardView")
 		if board_view != null and board_view.has_method("is_motion_active") and bool(board_view.is_motion_active()):
 			if board_view.has_signal("trace_motion_finished"):
