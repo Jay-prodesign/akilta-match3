@@ -619,6 +619,9 @@ func _play_level(app: Node, level_number: int) -> bool:
 	if String(gameplay.current_level_id) != "ch01_level_%03d" % level_number:
 		_fail(app, "wrong authored gameplay loaded for Level %d" % level_number)
 		return false
+	# Review the settled player-visible board, not the authored entry dissolve.
+	await _frames(24)
+	await create_timer(0.36).timeout
 	if not await _save(app, "progression-level%d-gameplay.png" % level_number):
 		return false
 	var file := FileAccess.open("res://content/levels/ch01/level_%03d.json" % level_number, FileAccess.READ)
@@ -647,6 +650,14 @@ func _play_level(app: Node, level_number: int) -> bool:
 	if not gameplay.result_overlay.visible:
 		_fail(app, "Level %d did not reach its reward result" % level_number)
 		return false
+	# Observe the finished terminal card rather than its first settle frame.
+	if gameplay.has_method("terminal_transition_contract"):
+		var result_deadline := Time.get_ticks_msec() + 1800
+		var transition: Dictionary = gameplay.terminal_transition_contract()
+		while bool(transition.get("active", false)) and Time.get_ticks_msec() < result_deadline:
+			await process_frame
+			transition = gameplay.terminal_transition_contract()
+	await _frames(8)
 	if not await _save(app, "progression-level%d-result.png" % level_number):
 		return false
 	gameplay.result_action.emit_signal("pressed")
