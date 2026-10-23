@@ -66,6 +66,7 @@ func _run() -> void:
 	_expect(hint_band != null and not hint_band.visible, "Initial teaching must stay board-led instead of inserting a persistent hint band")
 	_expect(tray != null and board != null and tray.global_position.y >= board.global_position.y + board.size.y - 4.0, "Booster tray must not cover the board")
 	_expect(tray != null and is_equal_approx(tray.anchor_left, 0.045) and is_equal_approx(tray.anchor_right, 0.955), "Booster tray width drifted from the final gameplay family")
+	await create_timer(0.35).timeout
 	var native_layout: Dictionary = screen.gameplay_native_layout_contract()
 	_expect(bool(native_layout.get("booster_visible", false)), "Gameplay booster tray must remain visible after layout")
 	_expect(bool(native_layout.get("booster_inside_viewport", false)), "Gameplay booster tray must stay fully inside the rendered viewport")
