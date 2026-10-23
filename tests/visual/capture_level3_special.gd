@@ -21,7 +21,7 @@ func _capture() -> void:
 		printerr("CAPTURE_FAIL: Level 3 shaped-board cutout missing")
 		quit(1)
 		return
-	var trace = screen.attempt_swap(Vector2i(2, 3), Vector2i(2, 4))
+	var trace = screen.attempt_swap(Vector2i(2, 1), Vector2i(2, 0))
 	if trace == null or not trace.accepted or not trace.event_types().has("special_created"):
 		printerr("CAPTURE_FAIL: Level 3 teaching move did not create special")
 		quit(1)
@@ -30,7 +30,7 @@ func _capture() -> void:
 		printerr("CAPTURE_FAIL: Level 3 first move must crack but not clear deep Wax Seal")
 		quit(1)
 		return
-	var cracked_seal: Dictionary = screen.board_state.get_blocker(Vector2i(4, 4))
+	var cracked_seal: Dictionary = screen.board_state.get_blocker(Vector2i(1, 1))
 	if int(cracked_seal.get("hp", 0)) != 1:
 		printerr("CAPTURE_FAIL: Level 3 deep Wax Seal must settle at 1 HP after first move")
 		quit(1)
