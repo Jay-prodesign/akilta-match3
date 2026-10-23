@@ -6,36 +6,49 @@
   "teaching_moves": [
     [
       2,
-      3,
+      1,
       2,
+      0
+    ],
+    [
+      2,
+      0,
+      3,
+      0
+    ],
+    [
+      2,
+      4,
+      3,
       4
     ],
     [
-      3,
-      3,
-      3,
-      4
+      5,
+      6,
+      6,
+      6
     ]
   ],
   "validation_expect": {
     "special_created_min": 1,
     "special_triggered_min": 1,
     "blocker_damaged_min": 1,
-    "blocker_cleared_min": 1
+    "blocker_cleared_min": 3,
+    "match_found_min": 3
   },
   "id": "ch01_level_003",
   "chapter": "curio_boutique",
   "title": "Thornlight Arrangement",
   "eyebrow": "CURIO BOUTIQUE · MOON BEAM / DEEP SEAL",
-  "hint": "Form the Moon Beam to crack the deep wax seal, then trigger it to break the seal completely.",
-  "retry_hint": "Build the four-Moon line, then trigger the Moon Beam again to finish the two-layer wax seal.",
+  "hint": "Forge a Moon Beam, shatter the deep seal, then clear the two lower seals.",
+  "retry_hint": "Form the four-Moon line at the top, trigger its Moon Beam, then finish the two lower wax seals.",
   "win_title": "THE BEAM FINDS A KEY",
   "win_detail": "A Thorned Locket slips free from the velvet lining.",
   "reward_curio": "thorned_locket",
   "house_stage_reward": 3,
-  "width": 5,
-  "height": 5,
-  "moves": 6,
+  "width": 7,
+  "height": 7,
+  "moves": 7,
   "objective": "clear_blockers",
   "families": [
     "moon",
@@ -46,6 +59,26 @@
   ],
   "initial_rows": [
     [
+      "moon",
+      "moon",
+      "rose",
+      "moon",
+      "leaf",
+      "key",
+      "rose"
+    ],
+    [
+      "moth",
+      "key",
+      "moon",
+      "leaf",
+      "rose",
+      "moth",
+      "key"
+    ],
+    [
+      "key",
+      "leaf",
       "rose",
       "moth",
       "key",
@@ -53,6 +86,8 @@
       "rose"
     ],
     [
+      "leaf",
+      "rose",
       "moth",
       "key",
       "leaf",
@@ -60,51 +95,69 @@
       "moth"
     ],
     [
+      "rose",
+      "rose",
       "key",
-      "leaf",
       "rose",
-      "moon",
-      "key"
-    ],
-    [
-      "rose",
-      "moon",
-      "moon",
+      "moth",
       "key",
       "leaf"
     ],
     [
-      "moon",
-      "moon",
+      "moth",
+      "key",
+      "leaf",
+      "moth",
       "rose",
-      "moon",
+      "leaf",
       "key"
+    ],
+    [
+      "key",
+      "leaf",
+      "rose",
+      "moth",
+      "moth",
+      "key",
+      "moth"
     ]
   ],
   "visual_status": "north_star_candidate_v3",
   "piece_set": "north_star_five_family_candidate_v3",
   "visual_profile": "thornlight_arrangement",
-  "prestart_note": "Crack the deep wax seal with the Moon Beam, then shatter it to free the Thorned Locket.",
+  "prestart_note": "Forge and trigger the Moon Beam to open the deep seal, then finish the lower seals to free the Thorned Locket.",
   "holes": [
     [
-      4,
+      6,
       0
     ],
     [
-      4,
+      6,
       1
     ],
     [
-      4,
+      6,
       2
     ]
   ],
   "blockers": [
     {
-      "x": 4,
-      "y": 4,
+      "x": 1,
+      "y": 1,
       "type": "wax_seal",
       "hp": 2
+    },
+    {
+      "x": 1,
+      "y": 5,
+      "type": "wax_seal",
+      "hp": 1
+    },
+    {
+      "x": 4,
+      "y": 5,
+      "type": "wax_seal",
+      "hp": 1
     }
   ],
   "validation_seeds": [
