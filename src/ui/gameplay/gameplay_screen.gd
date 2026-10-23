@@ -318,7 +318,8 @@ func gameplay_native_layout_contract() -> Dictionary:
 	var board_rect: Rect2 = (board_view as Control).get_global_rect()
 	var tray_rect: Rect2 = _booster_tray.get_global_rect()
 	var board_to_booster_gap: float = tray_rect.position.y - board_rect.end.y
-	var booster_visible := _booster_tray.visible and _booster_tray.modulate.a >= 0.95
+	var booster_visible := _booster_tray.visible
+	var booster_settled := booster_visible and _booster_tray.modulate.a >= 0.95
 	var booster_inside_viewport := (
 		booster_visible
 		and tray_rect.position.y >= -1.0
@@ -327,6 +328,7 @@ func gameplay_native_layout_contract() -> Dictionary:
 	)
 	return {
 		"booster_visible": booster_visible,
+		"booster_settled": booster_settled,
 		"booster_inside_viewport": booster_inside_viewport,
 		"board_to_booster_gap": board_to_booster_gap,
 		"board_bottom": board_rect.end.y,
