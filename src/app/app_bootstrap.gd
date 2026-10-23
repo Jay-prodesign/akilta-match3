@@ -177,7 +177,22 @@ func _run_native_runtime_review_route(route: String) -> void:
 				return
 			if not start_level(1):
 				return
+			await get_tree().process_frame
+			await get_tree().process_frame
+			await get_tree().create_timer(0.55).timeout
+			if _current_screen == null or not _current_screen.has_method("gameplay_native_layout_contract"):
+				push_error("Native gameplay review is missing its runtime layout contract.")
+				return
+			var gameplay_layout: Dictionary = _current_screen.gameplay_native_layout_contract()
+			if not bool(gameplay_layout.get("booster_visible", false)) or not bool(gameplay_layout.get("booster_inside_viewport", false)):
+				push_error("Native gameplay booster tray is outside the rendered viewport: %s" % gameplay_layout)
+				return
+			var native_gap := float(gameplay_layout.get("board_to_booster_gap", -1.0))
+			if native_gap < 30.0 or native_gap > 42.0:
+				push_error("Native gameplay board-to-booster gap drifted: %s" % gameplay_layout)
+				return
 			_write_native_runtime_review_marker("gameplay")
+			print("NATIVE_RUNTIME_REVIEW_LAYOUT_PASS: %s" % gameplay_layout)
 			print("NATIVE_RUNTIME_REVIEW_ROUTE_PASS: gameplay")
 		"reliquary":
 			if not show_collection():
