@@ -66,6 +66,11 @@ func _run() -> void:
 	_expect(hint_band != null and not hint_band.visible, "Initial teaching must stay board-led instead of inserting a persistent hint band")
 	_expect(tray != null and board != null and tray.global_position.y >= board.global_position.y + board.size.y - 4.0, "Booster tray must not cover the board")
 	_expect(tray != null and is_equal_approx(tray.anchor_left, 0.045) and is_equal_approx(tray.anchor_right, 0.955), "Booster tray width drifted from the final gameplay family")
+	await create_timer(0.35).timeout
+	var native_layout: Dictionary = screen.gameplay_native_layout_contract()
+	_expect(bool(native_layout.get("booster_visible", false)), "Gameplay booster tray must remain visible after layout")
+	_expect(bool(native_layout.get("booster_inside_viewport", false)), "Gameplay booster tray must stay fully inside the rendered viewport")
+	_expect(float(native_layout.get("board_to_booster_gap", -1.0)) >= 30.0 and float(native_layout.get("board_to_booster_gap", -1.0)) <= 42.0, "Native gameplay board-to-booster gap drifted")
 	_expect(keeper_slot != null and not keeper_slot.visible and settings_slot != null and settings_slot.visible and settings_slot.custom_minimum_size.x < 100.0, "Gameplay utility must remain visually subordinate to the booster family")
 	_expect(shuffle != null and shuffle.disabled and shuffle.icon != null and shuffle.custom_minimum_size.y >= 108.0, "Shuffle booster truth/scale failed")
 	_expect(hand != null and hand.disabled and hand.icon != null and hand.custom_minimum_size.y >= 108.0, "Hand booster truth/scale failed")
