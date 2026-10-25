@@ -845,20 +845,20 @@ func _style_impact_hint(mode: String) -> void:
 		return
 	hint_label.visible = true
 	var color := Color("#F4E5D3")
-	var size_px := 23
+	var size_px := 26
 	match mode:
 		"blocker":
 			color = Color("#F0CE8A")
-			size_px = 24
+			size_px = 26
 		"special":
 			color = Color("#E8C987")
-			size_px = 29
+			size_px = 26
 		"combo":
 			color = Color("#E7C8FF")
-			size_px = 25
+			size_px = 27
 		"cascade":
 			color = Color("#DDB7F5")
-			size_px = 29
+			size_px = 26
 		"invalid":
 			color = Color("#D8C5D2")
 		_:
@@ -1464,7 +1464,7 @@ func gameplay_presentation_contract() -> Dictionary:
 	)
 	var hint_readable: bool = (
 		hint_label.custom_minimum_size.y >= 40.0
-		and hint_label.get_theme_font_size("font_size") >= 23
+		and hint_label.get_theme_font_size("font_size") >= 26
 	)
 	var booster_family_locked: bool = (
 		$BoosterTray/BoosterActions/SealedSlotA.visible
