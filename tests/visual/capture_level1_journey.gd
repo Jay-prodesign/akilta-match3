@@ -173,11 +173,10 @@ func _capture() -> void:
 	if hud_rect.end.y > board_rect.position.y + 2.0:
 		return _fail(app, "S05 objective HUD collides with board")
 	if gameplay_hint.visible:
-		var hint_board_overlap := maxf(0.0, board_rect.end.y - hint_rect.position.y)
-		if hint_board_overlap > hint_rect.size.y * 0.85:
-			return _fail(app, "S05 impact toast obscures too much of the playable board")
-		if hint_rect.end.y + 8.0 > tray_rect.position.y:
-			return _fail(app, "S05 impact toast collides with booster tray")
+		if hint_rect.position.y < board_rect.end.y + 6.0:
+			return _fail(app, "S05 impact band overlaps the playable board")
+		if hint_rect.end.y + 6.0 > tray_rect.position.y:
+			return _fail(app, "S05 impact band collides with booster tray")
 	else:
 		if tray_rect.position.y < board_rect.end.y - 4.0 or tray_rect.position.y - board_rect.end.y > 120.0:
 			return _fail(app, "S05 board-to-booster gap drifted from locked composition")
