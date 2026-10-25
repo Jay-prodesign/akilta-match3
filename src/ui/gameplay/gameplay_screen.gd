@@ -55,7 +55,7 @@ const KEEPER_ART_PATH := "res://assets/pieces/black_cat.webp"
 const AUTO_HINT_DELAY_SECONDS := 9.0
 const GUIDED_HINT_DELAY_SECONDS := 4.0
 const BOOSTER_TRAY_ANCHOR_TOP := 0.775
-const BOOSTER_TRAY_BOARD_GAP := 36.0
+const BOOSTER_TRAY_BOARD_GAP := 64.0
 const BOOSTER_TRAY_HEIGHT := 220.0
 const BOOSTER_ART_PATHS := {
 	"hint": KEEPER_ART_PATH,
@@ -300,6 +300,18 @@ func _align_booster_tray_to_board_band() -> void:
 	var delta := desired_top - _booster_tray.global_position.y
 	_booster_tray.offset_top += delta
 	_booster_tray.offset_bottom += delta
+	_align_impact_feedback_band(board_bottom)
+
+func _align_impact_feedback_band(board_bottom: float) -> void:
+	if hint_label == null or _booster_tray == null:
+		return
+	var viewport_height := float(get_viewport().get_visible_rect().size.y)
+	var desired_top := board_bottom + 8.0
+	var available_height := maxf(0.0, float(_booster_tray.global_position.y) - desired_top - 8.0)
+	var desired_height := minf(44.0, available_height)
+	var anchor_origin := hint_label.anchor_top * viewport_height
+	hint_label.offset_top = desired_top - anchor_origin
+	hint_label.offset_bottom = hint_label.offset_top + desired_height
 
 func gameplay_native_layout_contract() -> Dictionary:
 	if _booster_tray == null or board_view == null:
@@ -313,6 +325,12 @@ func gameplay_native_layout_contract() -> Dictionary:
 	var board_rect: Rect2 = (board_view as Control).get_global_rect()
 	var tray_rect: Rect2 = _booster_tray.get_global_rect()
 	var board_to_booster_gap: float = tray_rect.position.y - board_rect.end.y
+	var hint_rect: Rect2 = hint_label.get_global_rect() if hint_label != null else Rect2()
+	var impact_band_clear := (
+		hint_label != null
+		and hint_rect.position.y >= board_rect.end.y + 6.0
+		and hint_rect.end.y <= tray_rect.position.y - 6.0
+	)
 	var booster_visible := _booster_tray.visible
 	var booster_settled := booster_visible and _booster_tray.modulate.a >= 0.95
 	var booster_inside_viewport := (
@@ -326,6 +344,9 @@ func gameplay_native_layout_contract() -> Dictionary:
 		"booster_settled": booster_settled,
 		"booster_inside_viewport": booster_inside_viewport,
 		"board_to_booster_gap": board_to_booster_gap,
+		"impact_band_clear": impact_band_clear,
+		"impact_top": hint_rect.position.y,
+		"impact_bottom": hint_rect.end.y,
 		"board_bottom": board_rect.end.y,
 		"booster_top": tray_rect.position.y,
 		"booster_bottom": tray_rect.end.y,
@@ -824,17 +845,17 @@ func _style_impact_hint(mode: String) -> void:
 		return
 	hint_label.visible = true
 	var color := Color("#F4E5D3")
-	var size_px := 28
+	var size_px := 23
 	match mode:
 		"blocker":
 			color = Color("#F0CE8A")
-			size_px = 29
+			size_px = 24
 		"special":
 			color = Color("#E8C987")
 			size_px = 29
 		"combo":
 			color = Color("#E7C8FF")
-			size_px = 30
+			size_px = 25
 		"cascade":
 			color = Color("#DDB7F5")
 			size_px = 29
@@ -1025,6 +1046,8 @@ func gameplay_feel_contract() -> Dictionary:
 
 func _show_result_if_terminal(result: String) -> void:
 	if result == "won":
+		if hint_label != null:
+			hint_label.visible = false
 		haptics.request_terminal("won")
 		feedback_requested.emit("win")
 		_pending_win = true
@@ -1053,6 +1076,8 @@ func _show_result_if_terminal(result: String) -> void:
 			_result_reveal_fx.play(_reduced_motion or replay_mode)
 		result_state_changed.emit("won")
 	elif result == "failed":
+		if hint_label != null:
+			hint_label.visible = false
 		haptics.request_terminal("failed")
 		feedback_requested.emit("fail")
 		_pending_win = false
