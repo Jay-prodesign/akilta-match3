@@ -107,7 +107,7 @@ func _capture() -> void:
 	var gameplay_moves := gameplay.get_node_or_null("Layout/HUDPlate/HUD/Moves") as Label
 	var gameplay_pause := gameplay.get_node_or_null("Layout/HUDPlate/HUD/Pause") as Button
 	var gameplay_board := gameplay.get_node_or_null("Layout/BoardView") as Control
-	var gameplay_hint := gameplay.get_node_or_null("Layout/Hint") as Control
+	var gameplay_hint := gameplay.get_node_or_null("Hint") as Control
 	var gameplay_tray := gameplay.get_node_or_null("BoosterTray") as Control
 	var shuffle_label := gameplay.get_node_or_null("BoosterTray/BoosterActions/SealedSlotA/Label") as Control
 	var hand_label := gameplay.get_node_or_null("BoosterTray/BoosterActions/SealedSlotB/Label") as Control
@@ -173,10 +173,11 @@ func _capture() -> void:
 	if hud_rect.end.y > board_rect.position.y + 2.0:
 		return _fail(app, "S05 objective HUD collides with board")
 	if gameplay_hint.visible:
-		if board_rect.end.y > hint_rect.position.y + 2.0:
-			return _fail(app, "S05 board collides with transient hint band")
-		if hint_rect.end.y + 10.0 > tray_rect.position.y:
-			return _fail(app, "S05 transient hint collides with booster tray")
+		var hint_board_overlap := maxf(0.0, board_rect.end.y - hint_rect.position.y)
+		if hint_board_overlap > hint_rect.size.y * 0.85:
+			return _fail(app, "S05 impact toast obscures too much of the playable board")
+		if hint_rect.end.y + 8.0 > tray_rect.position.y:
+			return _fail(app, "S05 impact toast collides with booster tray")
 	else:
 		if tray_rect.position.y < board_rect.end.y - 4.0 or tray_rect.position.y - board_rect.end.y > 120.0:
 			return _fail(app, "S05 board-to-booster gap drifted from locked composition")
