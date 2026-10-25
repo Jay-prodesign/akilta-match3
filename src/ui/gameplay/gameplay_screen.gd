@@ -1051,7 +1051,7 @@ func _show_result_if_terminal(result: String) -> void:
 		haptics.request_terminal("won")
 		feedback_requested.emit("win")
 		_pending_win = true
-		result_title.text = "RITUAL COMPLETE AGAIN" if replay_mode else "LEVEL COMPLETE!"
+		result_title.text = "RITUAL COMPLETE AGAIN" if replay_mode else current_win_title
 		result_detail.text = "This Curio already belongs to the House. Replaying does not grant the persistent reward again." if replay_mode else current_win_detail
 		result_detail.visible = replay_mode
 		_configure_result_reward_copy(true)
