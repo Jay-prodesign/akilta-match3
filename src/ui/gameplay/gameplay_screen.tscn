@@ -532,10 +532,18 @@ grow_vertical = 2
 mouse_filter = 2
 theme_override_styles/panel = SubResource("BoardFrameStyle")
 
-[node name="Hint" type="Label" parent="Layout"]
+[node name="Hint" type="Label" parent="."]
 visible = false
 custom_minimum_size = Vector2(700, 58)
-layout_mode = 2
+layout_mode = 1
+anchor_left = 0.175
+anchor_top = 0.73
+anchor_right = 0.825
+anchor_bottom = 0.73
+offset_bottom = 58.0
+grow_horizontal = 2
+z_index = 21
+mouse_filter = 2
 size_flags_horizontal = 4
 theme_override_colors/font_color = Color(0.965, 0.89, 0.72, 1)
 theme_override_colors/font_outline_color = Color(0.02, 0.015, 0.025, 0.98)
@@ -1065,6 +1073,7 @@ horizontal_alignment = 1
 vertical_alignment = 1
 
 [node name="StarRow" type="HBoxContainer" parent="ResultOverlay/Card/Content"]
+visible = false
 custom_minimum_size = Vector2(0, 118)
 layout_mode = 2
 theme_override_constants/separation = 18
@@ -1115,7 +1124,7 @@ vertical_alignment = 1
 autowrap_mode = 2
 
 [node name="RewardRitual" type="Control" parent="ResultOverlay/Card/Content"]
-custom_minimum_size = Vector2(0, 188)
+custom_minimum_size = Vector2(0, 224)
 layout_mode = 2
 mouse_filter = 2
 script = ExtResource("9_cameo")
