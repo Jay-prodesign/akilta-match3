@@ -30,8 +30,8 @@ func _run() -> void:
 	_expect(float(contract.get("resource_bar_height", 0.0)) == 80.0, "Resource strip height drifted")
 	_expect(float(contract.get("hud_plate_height", 0.0)) >= 184.0 and float(contract.get("hud_plate_height", 0.0)) <= 200.0, "Target/moves HUD depth drifted from North Star composition")
 	_expect(float(contract.get("booster_tray_height", 0.0)) >= 210.0 and float(contract.get("booster_tray_height", 0.0)) <= 230.0, "Booster tray depth drifted")
-	_expect(is_equal_approx(float(screen.booster_tray_target_top_for_board_bottom(1452.0)), 1488.0), "Baseline board-to-booster authored gap drifted")
-	_expect(float(contract.get("board_to_booster_gap", -1.0)) >= 34.0 and float(contract.get("board_to_booster_gap", -1.0)) <= 38.0, "Gameplay boosters must stay attached to the rendered board across viewport expansion")
+	_expect(is_equal_approx(float(screen.booster_tray_target_top_for_board_bottom(1452.0)), 1516.0), "Baseline board-to-booster authored gap drifted")
+	_expect(float(contract.get("board_to_booster_gap", -1.0)) >= 62.0 and float(contract.get("board_to_booster_gap", -1.0)) <= 66.0, "Gameplay boosters must stay attached to the rendered board across viewport expansion")
 
 	var level_plaque := screen.get_node_or_null("Layout/LevelPlaque") as PanelContainer
 	var eyebrow := screen.get_node_or_null("Layout/LevelPlaque/Eyebrow") as Label
@@ -70,7 +70,8 @@ func _run() -> void:
 	var native_layout: Dictionary = screen.gameplay_native_layout_contract()
 	_expect(bool(native_layout.get("booster_visible", false)), "Gameplay booster tray must remain visible after layout")
 	_expect(bool(native_layout.get("booster_inside_viewport", false)), "Gameplay booster tray must stay fully inside the rendered viewport")
-	_expect(float(native_layout.get("board_to_booster_gap", -1.0)) >= 30.0 and float(native_layout.get("board_to_booster_gap", -1.0)) <= 42.0, "Native gameplay board-to-booster gap drifted")
+	_expect(bool(native_layout.get("impact_band_clear", false)), "Transient gameplay impact copy must stay between board and boosters")
+	_expect(float(native_layout.get("board_to_booster_gap", -1.0)) >= 58.0 and float(native_layout.get("board_to_booster_gap", -1.0)) <= 70.0, "Native gameplay board-to-booster gap drifted")
 	_expect(keeper_slot != null and not keeper_slot.visible and settings_slot != null and settings_slot.visible and settings_slot.custom_minimum_size.x < 100.0, "Gameplay utility must remain visually subordinate to the booster family")
 	_expect(shuffle != null and shuffle.disabled and shuffle.icon != null and shuffle.custom_minimum_size.y >= 108.0, "Shuffle booster truth/scale failed")
 	_expect(hand != null and hand.disabled and hand.icon != null and hand.custom_minimum_size.y >= 108.0, "Hand booster truth/scale failed")
@@ -79,7 +80,7 @@ func _run() -> void:
 	_expect(hand_label != null and hand_label.visible and hand_label.text == "HAND" and hand_label.get_theme_font_size("font_size") >= 18, "Hand identity/readability drifted")
 	_expect(magic_label != null and magic_label.visible and magic_label.text == "MAGIC" and magic_label.get_theme_font_size("font_size") >= 18, "Magic identity/readability drifted")
 	_expect(objective != null and objective_name != null and not objective.has_theme_stylebox_override("normal") and objective.text.contains("/") and objective_name.text != "", "Objective must read as a compact authored icon-and-counter slot rather than a detached text panel")
-	_expect(hint_band != null and hint_band.custom_minimum_size.y >= 52.0 and hint_band.get_theme_font_size("font_size") >= 26, "Hint callout must remain readable without competing with the board")
+	_expect(hint_band != null and hint_band.custom_minimum_size.y >= 40.0 and hint_band.get_theme_font_size("font_size") >= 26, "Hint callout must remain readable without competing with the board")
 	_expect(hint_band != null and hint_band.size_flags_horizontal == Control.SIZE_SHRINK_CENTER and hint_band.custom_minimum_size.x >= 660.0 and hint_band.custom_minimum_size.x <= 720.0, "Hint must remain a restrained centered gameplay callout")
 	var hint_style := hint_band.get_theme_stylebox("normal") if hint_band != null else null
 	_expect(hint_style is StyleBoxFlat and (hint_style as StyleBoxFlat).bg_color.a <= 0.10 and (hint_style as StyleBoxFlat).border_color.a <= 0.08 and (hint_style as StyleBoxFlat).shadow_color.a <= 0.08, "Hint must integrate into the world instead of reading as a detached UI strip")
