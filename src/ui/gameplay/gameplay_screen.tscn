@@ -534,7 +534,7 @@ theme_override_styles/panel = SubResource("BoardFrameStyle")
 
 [node name="Hint" type="Label" parent="."]
 visible = false
-custom_minimum_size = Vector2(700, 58)
+custom_minimum_size = Vector2(700, 44)
 layout_mode = 1
 anchor_left = 0.175
 anchor_top = 0.73
