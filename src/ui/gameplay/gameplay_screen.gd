@@ -64,7 +64,6 @@ const BOOSTER_ART_PATHS := {
 }
 const GAMEPLAY_PAUSE_ICON_PATH := "res://assets/ui/gameplay/pause_gothic_v01.svg"
 const SEALED_BADGE_PATH := "res://assets/ui/gameplay/booster_sealed_badge_v01.svg"
-const REWARD_STAR_PATH := "res://assets/ui/gameplay/reward_star_gothic_v01.svg"
 const OBJECTIVE_FOCUS_FRAME_PATH := "res://assets/ui/gameplay/objective_focus_frame_v01.svg"
 const NORTH_STAR_BOOSTER_ART_PATHS := {
 	"shuffle": "res://assets/ui/gameplay/booster_shuffle_gothic_v01.svg",
@@ -130,7 +129,7 @@ const LAST_MOVE_THRESHOLD := 1
 @onready var pause_settings_frame: TextureRect = $PauseOverlay/Card/Content/Settings/FrameArt
 @onready var pause_exit_frame: TextureRect = $PauseOverlay/Card/Content/Exit/FrameArt
 @onready var pause_sigil: TextureRect = $PauseOverlay/Card/Content/PauseSigil
-@onready var hint_label: Label = $Layout/Hint
+@onready var hint_label: Label = $Hint
 @onready var awakening_title: Label = $Layout/Awakening/Content/Label
 @onready var awakening_view: Control = $Layout/Awakening/Content/ProgressView
 @onready var awakening_copy: Label = $Layout/Awakening/Content/ProgressCopy
@@ -249,10 +248,6 @@ func _ready() -> void:
 	_sealed_badge_a.texture = sealed_badge_texture
 	_sealed_badge_b.texture = sealed_badge_texture
 	_sealed_badge_c.texture = sealed_badge_texture
-	var reward_star_texture := PieceAssetLoader.ornament(REWARD_STAR_PATH)
-	_result_star_a.texture = reward_star_texture
-	_result_star_b.texture = reward_star_texture
-	_result_star_c.texture = reward_star_texture
 	_settings_shortcut.icon = PieceAssetLoader.ornament("res://assets/ui/ui_settings.svg")
 	_hint_boost_button.pressed.connect(_use_hint_boost)
 	_settings_shortcut.pressed.connect(func(): settings_requested.emit())
@@ -1038,7 +1033,7 @@ func _show_result_if_terminal(result: String) -> void:
 		result_detail.visible = replay_mode
 		_configure_result_reward_copy(true)
 		if _result_star_row != null:
-			_result_star_row.visible = true
+			_result_star_row.visible = false
 		if result_ritual != null:
 			result_ritual.set("mode", "result")
 			result_ritual.set("relic_id", current_reward_curio)
@@ -1288,12 +1283,6 @@ func _present_result_overlay(kind: String) -> void:
 	if not failure_settle:
 		for index in range(reveal_items.size()):
 			_result_transition_tween.tween_property(reveal_items[index], "modulate", Color.WHITE, 0.17).set_delay(0.07 + float(index) * 0.032)
-		for index in range(3):
-			var star: TextureRect = [_result_star_a, _result_star_b, _result_star_c][index]
-			if star == null:
-				continue
-			_result_transition_tween.tween_property(star, "modulate", Color.WHITE, 0.20).set_delay(0.16 + float(index) * 0.10)
-			_result_transition_tween.tween_property(star, "scale", Vector2.ONE, 0.34).set_delay(0.16 + float(index) * 0.10).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
 	_result_transition_tween.finished.connect(func(): _result_transition_active = false)
 
 func _reset_terminal_transition() -> void:
@@ -1601,7 +1590,8 @@ func gameplay_presentation_contract() -> Dictionary:
 		"north_star_result_hierarchy": result_title != null and result_title.get_theme_font_size("font_size") >= 46 and result_objective_summary != null and result_objective_summary.get_theme_stylebox("normal") != null,
 		"north_star_result_cta": result_action != null and result_action.custom_minimum_size.y >= 82.0 and result_action.get_theme_stylebox("normal") != null,
 		"asset_backed_result_chrome": ($ResultOverlay/Card as PanelContainer).get_theme_stylebox("panel") is StyleBoxTexture,
-		"result_hero_scale": result_ritual != null and result_ritual.custom_minimum_size.y >= 180.0 and _result_star_a != null and _result_star_b != null and _result_star_c != null,
+		"result_hero_scale": result_ritual != null and result_ritual.custom_minimum_size.y >= 220.0,
+		"house_native_completion_treatment": _result_star_row != null and not _result_star_row.visible and result_ritual != null and result_ritual.custom_minimum_size.y >= 220.0,
 		"result_frame_clearance": ($ResultOverlay/Card/Content/ResultTopPad as Control).custom_minimum_size.y >= 12.0,
 		"gameplay_reward_chrome": String(($ResultOverlay/Card as PanelContainer).get_meta("production_chrome_kind", "")) == "gameplay_reward_modal",
 		"win_copy_compact": result_detail != null and result_house_change != null,
