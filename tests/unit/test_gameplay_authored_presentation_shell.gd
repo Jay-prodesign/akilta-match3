@@ -42,7 +42,7 @@ func _run() -> void:
 	var objective_icon := screen.get_node_or_null("Layout/HUDPlate/HUD/ObjectiveSlot/ObjectiveIcon") as TextureRect
 	var pause := screen.get_node_or_null("Layout/HUDPlate/HUD/Pause") as Button
 	var board := screen.get_node_or_null("Layout/BoardView") as Control
-	var hint_band := screen.get_node_or_null("Layout/Hint") as Label
+	var hint_band := screen.get_node_or_null("Hint") as Label
 	var tray := screen.get_node_or_null("BoosterTray") as PanelContainer
 	var keeper_slot := screen.get_node_or_null("BoosterTray/BoosterActions/HintSlot") as VBoxContainer
 	var settings_slot := screen.get_node_or_null("BoosterTray/BoosterActions/SettingsSlot") as VBoxContainer
@@ -95,8 +95,12 @@ func _run() -> void:
 
 	var result_action := screen.get_node_or_null("ResultOverlay/Card/Content/Action") as Button
 	var result_objective := screen.get_node_or_null("ResultOverlay/Card/Content/ObjectiveSummary") as Label
+	var result_stars := screen.get_node_or_null("ResultOverlay/Card/Content/StarRow") as HBoxContainer
+	var result_ritual := screen.get_node_or_null("ResultOverlay/Card/Content/RewardRitual") as Control
 	_expect(result_action != null and result_action.custom_minimum_size.y >= 82.0, "Result CTA scale regressed")
 	_expect(result_objective != null and result_objective.get_theme_stylebox("normal") != null, "Result objective plate regressed")
+	_expect(result_stars != null and not result_stars.visible, "Generic star rating must stay retired from the House-native completion treatment")
+	_expect(result_ritual != null and result_ritual.custom_minimum_size.y >= 220.0, "Recovered Curio must remain the dominant result hero")
 	screen.queue_free()
 	await process_frame
 	_finish()
