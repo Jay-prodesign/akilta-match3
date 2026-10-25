@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - p0/bootstrap
+      - build/phone-web-ef591660
     paths:
       - ".github/workflows/level1-web.yml"
   # Milestone trigger: completed North Star opening-shell internal review build (2026-10-11).
