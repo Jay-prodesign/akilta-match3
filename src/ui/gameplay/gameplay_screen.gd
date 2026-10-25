@@ -1463,8 +1463,8 @@ func gameplay_presentation_contract() -> Dictionary:
 		and moves_label.get_theme_stylebox("normal") != null
 	)
 	var hint_readable: bool = (
-		hint_label.custom_minimum_size.y >= 52.0
-		and hint_label.get_theme_font_size("font_size") >= 26
+		hint_label.custom_minimum_size.y >= 40.0
+		and hint_label.get_theme_font_size("font_size") >= 23
 	)
 	var booster_family_locked: bool = (
 		$BoosterTray/BoosterActions/SealedSlotA.visible
