@@ -53,11 +53,11 @@
   "objective_family": "moon",
   "objective_target": 12,
   "families": [
-    "moon",
     "rose",
     "moth",
     "key",
-    "leaf"
+    "leaf",
+    "moon"
   ],
   "initial_rows": [
     [
