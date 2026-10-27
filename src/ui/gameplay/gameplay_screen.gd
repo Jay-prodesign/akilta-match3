@@ -144,6 +144,7 @@ const LAST_MOVE_THRESHOLD := 1
 @onready var result_ritual: Control = $ResultOverlay/Card/Content/RewardRitual
 @onready var result_recovery_action: Button = $ResultOverlay/Card/Content/RecoveryAction
 @onready var result_action: Button = $ResultOverlay/Card/Content/Action
+@onready var result_exit_action: Button = $ResultOverlay/Card/Content/ExitAction
 @onready var result_recovery_frame: TextureRect = $ResultOverlay/Card/Content/RecoveryAction/FrameArt
 @onready var result_action_frame: TextureRect = $ResultOverlay/Card/Content/Action/FrameArt
 # Compact gameplay resource header keeps level identity inside its authored status plate.
@@ -222,6 +223,7 @@ func _ready() -> void:
 	ProductionChrome.apply_gameplay_action_button(pause_exit, "utility", "pause_exit")
 	ProductionChrome.apply_gameplay_action_button(result_recovery_action, "primary", "fail_recovery_plus_three")
 	ProductionChrome.apply_gameplay_action_button(result_action, "primary", "result_continue_or_retry")
+	ProductionChrome.apply_gameplay_action_button(result_exit_action, "utility", "fail_exit_to_house")
 	pause_frame_art.texture = PieceAssetLoader.ornament(ProductionChrome.GAMEPLAY_PAUSE_FRAME_PATH)
 	_install_direct_action_frame(pause_resume, pause_resume_frame, ProductionChrome.GAMEPLAY_PRIMARY_ACTION_OVERLAY_PATH)
 	_install_direct_action_frame(pause_retry, pause_retry_frame, ProductionChrome.GAMEPLAY_UTILITY_ACTION_OVERLAY_PATH)
@@ -263,6 +265,7 @@ func _ready() -> void:
 		board_view.motion_feedback_requested.connect(_on_board_motion_feedback_requested)
 	result_recovery_action.pressed.connect(_on_result_recovery_pressed)
 	result_action.pressed.connect(_on_result_action_pressed)
+	result_exit_action.pressed.connect(_on_result_exit_pressed)
 	pause_button.pressed.connect(show_pause)
 	pause_resume.pressed.connect(resume_level)
 	pause_retry.pressed.connect(_on_pause_retry)
@@ -275,6 +278,7 @@ func _ready() -> void:
 	_wire_tactile_button(pause_exit, "exit")
 	_wire_tactile_button(result_recovery_action, "recovery")
 	_wire_tactile_button(result_action, "continue")
+	_wire_tactile_button(result_exit_action, "exit")
 	pause_overlay.visible = false
 	result_overlay.visible = false
 	if FileAccess.file_exists(default_level_path):
@@ -1064,6 +1068,7 @@ func _show_result_if_terminal(result: String) -> void:
 			result_ritual.queue_redraw()
 		result_action.text = "RETURN TO HOUSE" if replay_mode else "CONTINUE"
 		result_recovery_action.visible = false
+		result_exit_action.visible = false
 		if _result_reward_values != null:
 			_result_reward_values.visible = not replay_mode
 		if _result_proclamation != null:
@@ -1097,6 +1102,7 @@ func _show_result_if_terminal(result: String) -> void:
 		result_action.text = "TRY AGAIN"
 		result_recovery_action.text = "FREE +3 MOVES"
 		result_recovery_action.visible = not _potion_used_for_attempt
+		result_exit_action.visible = true
 		result_recovery_action.disabled = _potion_used_for_attempt
 		if _result_reward_values != null:
 			_result_reward_values.visible = false
@@ -1163,6 +1169,8 @@ func recover_failed_attempt_with_plus_moves() -> bool:
 		_potion_boost_button.disabled = true
 	if result_recovery_action != null:
 		result_recovery_action.visible = false
+	if result_exit_action != null:
+		result_exit_action.visible = false
 	result_overlay.visible = false
 	_reset_terminal_transition()
 	haptics.reset_for_new_attempt()
@@ -1233,6 +1241,9 @@ func _style_terminal_result(kind: String) -> void:
 	if result_action != null:
 		result_action.custom_minimum_size = Vector2(500, 94 if won else 74)
 		result_action.add_theme_font_size_override("font_size", 27 if won else 24)
+	if result_exit_action != null:
+		result_exit_action.custom_minimum_size = Vector2(480, 0 if won else 58)
+		result_exit_action.add_theme_font_size_override("font_size", 20)
 	var dim := result_overlay.get_node_or_null("Dim") as ColorRect
 	if dim != null:
 		dim.color = Color(0.0314, 0.0235, 0.0353, 0.86 if won else 0.78)
@@ -1250,6 +1261,7 @@ func terminal_result_polish_contract() -> Dictionary:
 		"result_dim_alpha": (result_overlay.get_node_or_null("Dim") as ColorRect).color.a if result_overlay != null and result_overlay.get_node_or_null("Dim") != null else 1.0,
 		"failure_gap": _failure_gap_copy() if result_overlay != null and result_overlay.visible and String(terminal_transition_contract().get("kind", "")) == "failed" else "",
 		"plus_three_recovery_available": result_recovery_action != null and result_recovery_action.visible and not result_recovery_action.disabled,
+		"safe_house_exit_available": result_exit_action != null and result_exit_action.visible and not result_exit_action.disabled,
 		"critical_result_copy_visible": result_title != null and result_title.modulate.a >= 0.90 and result_action != null and result_action.modulate.a >= 0.90,
 		"failure_stars_hidden": _result_transition_kind != "failed" or (_result_star_row != null and not _result_star_row.visible),
 		"failure_card_span": ((result_overlay.get_node_or_null("Card") as Control).offset_bottom - (result_overlay.get_node_or_null("Card") as Control).offset_top) if result_overlay != null and result_overlay.get_node_or_null("Card") != null else 0.0,
@@ -1258,6 +1270,8 @@ func terminal_result_polish_contract() -> Dictionary:
 			and result_detail.custom_minimum_size.y >= 80.0
 			and result_recovery_action.custom_minimum_size.y <= 72.0
 			and result_action.custom_minimum_size.y <= 76.0
+			and result_exit_action.visible
+			and result_exit_action.custom_minimum_size.y >= 56.0
 			and (_result_top_pad == null or not _result_top_pad.visible)
 			and not result_objective_summary.visible
 			and (_result_proclamation_row == null or not _result_proclamation_row.visible)
@@ -1394,6 +1408,11 @@ func _on_result_action_pressed() -> void:
 		continue_after_win()
 	else:
 		retry_current_level()
+
+func _on_result_exit_pressed() -> void:
+	if _pending_win or result_overlay == null or not result_overlay.visible:
+		return
+	level_exit_requested.emit()
 
 
 func _on_board_trace_motion_finished() -> void:
