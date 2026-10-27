@@ -51,7 +51,11 @@ func _run() -> void:
 	_expect(board != null, "GameplayScreen must own logical board_state")
 	if board != null:
 		_expect(int(board.width) == 7 and int(board.height) == 7, "Level 1 board must be 7x7")
-		_expect(board.families.size() == 8, "Level 1 must use the eight North Star piece families")
+		_expect(board.families.size() == 5, "Level 1 onboarding must use a five-family learned match vocabulary")
+		for family in ["moon", "rose", "moth", "key", "leaf"]:
+			_expect(board.families.has(family), "Level 1 active board must include learned family %s" % family)
+		for deferred_family in ["cat", "candle", "skull"]:
+			_expect(not board.families.has(deferred_family), "Level 1 must defer %s until after the opening readability lesson" % deferred_family)
 		_expect(str(board.objective_type) == "collect_family", "Level 1 must teach collect_family")
 		_expect(str(board.objective_family) == "moon", "Level 1 target family must be moon")
 		_expect(int(board.objective_target) == 12, "Level 1 target must require four deliberate Moon matches")
