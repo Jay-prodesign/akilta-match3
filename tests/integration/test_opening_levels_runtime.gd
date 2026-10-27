@@ -132,8 +132,17 @@ func _run_level(entry: Dictionary) -> void:
 			failures.append("Level %d must grant its authored relic" % number)
 		if String(screen.current_win_title) != String(level_data.get("win_title", "")):
 			failures.append("Level %d must retain its authored narrative win title in level state" % number)
-		if screen.result_title.text != "LEVEL COMPLETE!":
-			failures.append("Level %d win overlay must lead with the clear North Star completion title" % number)
+		if screen.result_title.text != String(level_data.get("win_title", "")):
+			failures.append("Level %d win overlay must lead with its authored House-native completion title" % number)
+		var objective_summary: Label = screen.get_node_or_null("ResultOverlay/Card/Content/ObjectiveSummary")
+		if objective_summary == null or not objective_summary.text.begins_with("OBJECTIVE COMPLETE"):
+			failures.append("Level %d win overlay must keep explicit completion clarity beneath the authored ritual title" % number)
+		var terminal_polish: Dictionary = screen.terminal_result_polish_contract()
+		if float(terminal_polish.get("result_dim_alpha", 0.0)) < 0.82:
+			failures.append("Level %d win overlay must visually suppress gameplay chrome behind the reward reveal" % number)
+		var reward_hero := screen.get_node_or_null("ResultOverlay/Card/Content/RewardRitual") as Control
+		if reward_hero == null or reward_hero.custom_minimum_size.y < 240.0:
+			failures.append("Level %d recovered Curio must dominate the win reveal as the hero reward" % number)
 		var reward_art = screen.get_node_or_null("ResultOverlay/Card/Content/RewardRitual")
 		if reward_art == null or str(reward_art.get("relic_id")) != String(entry["reward"]):
 			failures.append("Level %d win ritual must render its authored relic" % number)
