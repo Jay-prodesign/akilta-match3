@@ -601,6 +601,7 @@ func _gui_input(event: InputEvent) -> void:
 		accept_event()
 	elif event is InputEventScreenDrag and _tracking:
 		_update_pointer(event.position)
+		_commit_swipe_if_ready(event.position)
 		accept_event()
 	elif event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_LEFT:
 		if event.pressed:
@@ -610,6 +611,7 @@ func _gui_input(event: InputEvent) -> void:
 		accept_event()
 	elif event is InputEventMouseMotion and _tracking:
 		_update_pointer(event.position)
+		_commit_swipe_if_ready(event.position)
 		accept_event()
 
 func _begin_pointer(position: Vector2) -> void:
@@ -636,6 +638,18 @@ func _update_pointer(position: Vector2) -> void:
 		if board_state.in_bounds(candidate) and not board_state.is_hole(candidate):
 			_intent_target = candidate
 	queue_redraw()
+
+func _commit_swipe_if_ready(position: Vector2) -> bool:
+	if not _tracking or _intent_target.x < 0:
+		return false
+	if (position - _press_position).length() < swipe_threshold:
+		return false
+	var source := _pressed_cell
+	var intent := _intent_target
+	_tap_selected = Vector2i(-1, -1)
+	_clear_pointer_feedback()
+	swap_requested.emit(source, intent)
+	return true
 
 func _finish_pointer(position: Vector2) -> void:
 	if not _tracking:
