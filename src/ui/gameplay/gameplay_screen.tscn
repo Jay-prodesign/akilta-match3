@@ -1026,7 +1026,7 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-color = Color(0.0314, 0.0235, 0.0353, 0.82)
+color = Color(0.0314, 0.0235, 0.0353, 0.86)
 
 [node name="Card" type="PanelContainer" parent="ResultOverlay"]
 layout_mode = 1
@@ -1036,9 +1036,9 @@ anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
 offset_left = -360.0
-offset_top = -395.0
+offset_top = -420.0
 offset_right = 360.0
-offset_bottom = 395.0
+offset_bottom = 420.0
 grow_horizontal = 2
 grow_vertical = 2
 theme_override_styles/panel = SubResource("StylePanel")
@@ -1067,7 +1067,7 @@ layout_mode = 2
 theme_override_colors/font_color = Color(0.975, 0.91, 0.79, 1)
 theme_override_colors/font_outline_color = Color(0.02, 0.015, 0.025, 0.95)
 theme_override_constants/outline_size = 5
-theme_override_font_sizes/font_size = 56
+theme_override_font_sizes/font_size = 52
 text = "THE CABINET STIRS"
 horizontal_alignment = 1
 vertical_alignment = 1
@@ -1116,7 +1116,7 @@ layout_mode = 2
 theme_override_colors/font_color = Color(0.92, 0.78, 0.50, 1)
 theme_override_colors/font_outline_color = Color(0.02, 0.015, 0.025, 0.92)
 theme_override_constants/outline_size = 3
-theme_override_font_sizes/font_size = 18
+theme_override_font_sizes/font_size = 20
 theme_override_styles/normal = SubResource("ResultObjectivePlate")
 text = "OBJECTIVE COMPLETE"
 horizontal_alignment = 1
@@ -1124,19 +1124,19 @@ vertical_alignment = 1
 autowrap_mode = 2
 
 [node name="RewardRitual" type="Control" parent="ResultOverlay/Card/Content"]
-custom_minimum_size = Vector2(0, 224)
+custom_minimum_size = Vector2(0, 252)
 layout_mode = 2
 mouse_filter = 2
 script = ExtResource("9_cameo")
 mode = "result"
-glow_strength = 0.75
+glow_strength = 0.9
 
 [node name="RewardName" type="Label" parent="ResultOverlay/Card/Content"]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.851, 0.71, 0.416, 1)
 theme_override_colors/font_outline_color = Color(0.02, 0.015, 0.025, 0.9)
 theme_override_constants/outline_size = 3
-theme_override_font_sizes/font_size = 29
+theme_override_font_sizes/font_size = 31
 text = "MOON CAMEO · AWAKENED"
 horizontal_alignment = 1
 
@@ -1200,7 +1200,7 @@ horizontal_alignment = 1
 autowrap_mode = 2
 
 [node name="ResultProclamation" type="HBoxContainer" parent="ResultOverlay/Card/Content"]
-custom_minimum_size = Vector2(500, 116)
+custom_minimum_size = Vector2(500, 108)
 size_flags_horizontal = 4
 layout_mode = 2
 theme_override_constants/separation = 10
