@@ -36,8 +36,8 @@
   "id": "ch01_level_001",
   "chapter": "curio_boutique",
   "visual_profile": "curio_boutique_opening",
-  "piece_set": "north_star_eight_symbol_candidate_v5",
-  "visual_status": "north_star_eight_symbol_candidate_v5",
+  "piece_set": "north_star_five_family_candidate_v3",
+  "visual_status": "north_star_five_family_candidate_v3",
   "title": "Moonlit Cabinet",
   "eyebrow": "CURIO BOUTIQUE · FIRST AWAKENING",
   "hint": "Make four clean Moon matches to wake the first relic.",
@@ -57,10 +57,7 @@
     "rose",
     "moth",
     "key",
-    "leaf",
-    "cat",
-    "candle",
-    "skull"
+    "leaf"
   ],
   "initial_rows": [
     [
@@ -70,15 +67,15 @@
       "moon",
       "key",
       "leaf",
-      "cat"
+      "rose"
     ],
     [
       "moth",
       "key",
       "leaf",
-      "cat",
-      "candle",
-      "skull",
+      "rose",
+      "moth",
+      "key",
       "rose"
     ],
     [
@@ -87,15 +84,15 @@
       "moth",
       "moon",
       "leaf",
-      "cat",
-      "candle"
+      "rose",
+      "moth"
     ],
     [
       "key",
       "leaf",
-      "cat",
-      "candle",
-      "skull",
+      "rose",
+      "moth",
+      "key",
       "rose",
       "moth"
     ],
@@ -104,15 +101,15 @@
       "moon",
       "key",
       "moon",
-      "cat",
-      "candle",
-      "skull"
+      "rose",
+      "moth",
+      "key"
     ],
     [
       "leaf",
-      "cat",
-      "candle",
-      "skull",
+      "rose",
+      "moth",
+      "key",
       "rose",
       "moth",
       "key"
@@ -122,8 +119,8 @@
       "moon",
       "leaf",
       "moon",
-      "candle",
-      "skull",
+      "moth",
+      "key",
       "rose"
     ]
   ],
