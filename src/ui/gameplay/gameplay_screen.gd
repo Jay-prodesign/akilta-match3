@@ -1199,8 +1199,8 @@ func _style_terminal_result(kind: String) -> void:
 	var won := kind == "won"
 	ProductionChrome.apply_gameplay_reward_modal(card)
 	card.set_meta("production_result_chrome", "verified_gameplay_reward")
-	card.offset_top = -395.0 if won else -325.0
-	card.offset_bottom = 395.0 if won else 325.0
+	card.offset_top = -420.0 if won else -325.0
+	card.offset_bottom = 420.0 if won else 325.0
 	var content := card.get_node_or_null("Content") as VBoxContainer
 	if content != null:
 		content.add_theme_constant_override("separation", 10 if won else 8)
@@ -1214,7 +1214,7 @@ func _style_terminal_result(kind: String) -> void:
 		result_eyebrow.add_theme_font_size_override("font_size", 24 if won else 20)
 		result_eyebrow.add_theme_color_override("font_color", Color("#D8B56A") if not won else Color("#D9B56A"))
 	if result_title != null:
-		result_title.add_theme_font_size_override("font_size", 56 if won else 48)
+		result_title.add_theme_font_size_override("font_size", 52 if won else 48)
 	if result_detail != null:
 		result_detail.custom_minimum_size = Vector2(0, 0 if won else 84)
 		result_detail.add_theme_font_size_override("font_size", 22 if won else 20)
@@ -1222,9 +1222,10 @@ func _style_terminal_result(kind: String) -> void:
 		result_detail.add_theme_color_override("font_outline_color", Color("#160E1B"))
 		result_detail.add_theme_constant_override("outline_size", 2 if not won else 1)
 	if result_ritual != null:
-		result_ritual.custom_minimum_size = Vector2(0, 188 if won else 118)
+		result_ritual.custom_minimum_size = Vector2(0, 252 if won else 118)
+		result_ritual.set("glow_strength", 0.90 if won else 0.12)
 	if result_reward_name != null:
-		result_reward_name.add_theme_font_size_override("font_size", 29 if won else 25)
+		result_reward_name.add_theme_font_size_override("font_size", 31 if won else 25)
 		result_reward_name.add_theme_color_override("font_color", Color("#E6C37A") if not won else Color("#D8B56A"))
 	if result_recovery_action != null:
 		result_recovery_action.custom_minimum_size = Vector2(500, 70 if not won else 88)
@@ -1234,7 +1235,7 @@ func _style_terminal_result(kind: String) -> void:
 		result_action.add_theme_font_size_override("font_size", 27 if won else 24)
 	var dim := result_overlay.get_node_or_null("Dim") as ColorRect
 	if dim != null:
-		dim.color = Color(0.0314, 0.0235, 0.0353, 0.70 if won else 0.78)
+		dim.color = Color(0.0314, 0.0235, 0.0353, 0.86 if won else 0.78)
 	result_title.add_theme_color_override("font_color", Color("#FFF1B6") if won else Color("#F2D6DE"))
 	result_objective_summary.add_theme_color_override("font_color", Color("#F0CE8A") if won else Color("#E5B2C1"))
 
