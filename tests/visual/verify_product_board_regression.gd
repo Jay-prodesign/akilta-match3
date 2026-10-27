@@ -15,7 +15,7 @@ const BASELINES := {
 	"golden-01-house-dormant.png": {"hash": "08012cd333596a254a769a9aa336da13a72452b554697192b581808592b51480", "max_distance": 8},
 	"golden-02-chapter-route.png": {"hash": "08010000b555455a67356555cb37192a564af1d5a6d76caf8c8f0092ab3504c1", "max_distance": 8},
 	"golden-03-prestart.png": {"hash": "6aab3494569449952d64ad2b6182908565138005d0f9752d2ee78a3ba48a5365", "max_distance": 8},
-	"golden-04-gameplay.png": {"hash": "8c255159c59800012aad2b2b4a956ab36ea10281aa092aad0434248be83565b9", "max_distance": 10},
+	"golden-04-gameplay.png": {"hash": "8c255159c59800012aab2aa34a9966a36ea20281a0092aa54c36210be83565b9", "max_distance": 10},
 	"golden-05-win-reward.png": {"hash": "88255119c0080299400509a7100510c3014502050005600500c4293be8356538", "max_distance": 10},
 	"golden-06-restoration.png": {"hash": "6d561db92b292a156a572c8fd587aad5143942a3565dd12a440aa4d9b959995d", "max_distance": 28},
 	"progression-final-reliquary.png": {"hash": "08014a2d551a4f37ab0d256b154e4141252035155501251141033544270c0681", "max_distance": 16},
