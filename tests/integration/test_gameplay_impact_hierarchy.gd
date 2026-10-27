@@ -31,7 +31,7 @@ func _verify_blocker_feedback() -> void:
 	screen.feedback_requested.connect(func(kind: String): feedback.append(kind))
 	screen.haptics.set_platform_sink(func(ms: int, category: int): haptic_calls.append({"ms": ms, "category": category}))
 	board_view.motion_feedback_requested.connect(func(kind: String, cascade: int, clock: float): motion_feedback.append({"kind": kind, "cascade": cascade, "clock": clock}))
-	var trace = screen.attempt_swap(Vector2i(4, 2), Vector2i(4, 3))
+	var trace = screen.attempt_swap(Vector2i(2, 0), Vector2i(3, 0))
 	_expect(trace != null and bool(trace.accepted), "Level 2 teaching move must be accepted")
 	_expect(trace.event_types().has("blocker_cleared"), "Level 2 teaching move must clear Wax Seals")
 	_expect(not feedback.has("blocker"), "animated blocker feedback must wait for the visible impact instead of firing at swap start")
@@ -39,7 +39,7 @@ func _verify_blocker_feedback() -> void:
 	_expect(String(feel.get("last_impact_feedback", "")) == "blocker_cleared", "gameplay contract must identify blocker clear")
 	_expect(String(feel.get("impact_copy", "")).contains("WAX SEAL"), "blocker clear must have readable non-color copy")
 	var fx: Dictionary = board_view.feedback_vfx_contract()
-	_expect(int(fx.get("last_blocker_clear_fx_count", 0)) >= 2, "Level 2 must render both authored seal clears as clear-impact VFX")
+	_expect(int(fx.get("last_blocker_clear_fx_count", 0)) >= 1, "Level 2 must render the authored seal clear as clear-impact VFX")
 	if board_view.is_motion_active():
 		await board_view.trace_motion_finished
 	_expect(feedback.has("blocker"), "blocker clear must emit distinct audio semantics at its visual impact")
@@ -58,7 +58,7 @@ func _verify_special_feedback() -> void:
 	var motion_feedback: Array[Dictionary] = []
 	screen.feedback_requested.connect(func(kind: String): feedback.append(kind))
 	board_view.motion_feedback_requested.connect(func(kind: String, cascade: int, clock: float): motion_feedback.append({"kind": kind, "cascade": cascade, "clock": clock}))
-	var create_trace = screen.attempt_swap(Vector2i(2, 3), Vector2i(2, 4))
+	var create_trace = screen.attempt_swap(Vector2i(2, 1), Vector2i(2, 0))
 	_expect(create_trace != null and create_trace.event_types().has("special_created"), "Level 3 first move must create a Moon Beam")
 	_expect(not feedback.has("special_create"), "animated special creation feedback must wait for its visual impact")
 	_expect(String(screen.gameplay_feel_contract().get("last_impact_feedback", "")) == "special_created", "special creation must own its impact state")
@@ -68,7 +68,7 @@ func _verify_special_feedback() -> void:
 	_expect(motion_feedback.any(func(item): return String(item["kind"]) == "special_create" and float(item["clock"]) > 0.0), "special creation must be timeline synchronized")
 	feedback.clear()
 	motion_feedback.clear()
-	var trigger_trace = screen.attempt_swap(Vector2i(3, 3), Vector2i(3, 4))
+	var trigger_trace = screen.attempt_swap(Vector2i(2, 0), Vector2i(3, 0))
 	_expect(trigger_trace != null and trigger_trace.event_types().has("special_triggered"), "Level 3 second move must trigger the Moon Beam")
 	_expect(not feedback.has("special"), "animated special activation feedback must wait for its visual impact")
 	_expect(String(screen.gameplay_feel_contract().get("last_impact_feedback", "")) == "special_triggered", "special activation must own its impact state")

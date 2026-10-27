@@ -55,7 +55,7 @@ const KEEPER_ART_PATH := "res://assets/pieces/black_cat.webp"
 const AUTO_HINT_DELAY_SECONDS := 9.0
 const GUIDED_HINT_DELAY_SECONDS := 4.0
 const BOOSTER_TRAY_ANCHOR_TOP := 0.775
-const BOOSTER_TRAY_BOARD_GAP := 36.0
+const BOOSTER_TRAY_BOARD_GAP := 64.0
 const BOOSTER_TRAY_HEIGHT := 220.0
 const BOOSTER_ART_PATHS := {
 	"hint": KEEPER_ART_PATH,
@@ -64,7 +64,6 @@ const BOOSTER_ART_PATHS := {
 }
 const GAMEPLAY_PAUSE_ICON_PATH := "res://assets/ui/gameplay/pause_gothic_v01.svg"
 const SEALED_BADGE_PATH := "res://assets/ui/gameplay/booster_sealed_badge_v01.svg"
-const REWARD_STAR_PATH := "res://assets/ui/gameplay/reward_star_gothic_v01.svg"
 const OBJECTIVE_FOCUS_FRAME_PATH := "res://assets/ui/gameplay/objective_focus_frame_v01.svg"
 const NORTH_STAR_BOOSTER_ART_PATHS := {
 	"shuffle": "res://assets/ui/gameplay/booster_shuffle_gothic_v01.svg",
@@ -130,7 +129,7 @@ const LAST_MOVE_THRESHOLD := 1
 @onready var pause_settings_frame: TextureRect = $PauseOverlay/Card/Content/Settings/FrameArt
 @onready var pause_exit_frame: TextureRect = $PauseOverlay/Card/Content/Exit/FrameArt
 @onready var pause_sigil: TextureRect = $PauseOverlay/Card/Content/PauseSigil
-@onready var hint_label: Label = $Layout/Hint
+@onready var hint_label: Label = $Hint
 @onready var awakening_title: Label = $Layout/Awakening/Content/Label
 @onready var awakening_view: Control = $Layout/Awakening/Content/ProgressView
 @onready var awakening_copy: Label = $Layout/Awakening/Content/ProgressCopy
@@ -145,6 +144,7 @@ const LAST_MOVE_THRESHOLD := 1
 @onready var result_ritual: Control = $ResultOverlay/Card/Content/RewardRitual
 @onready var result_recovery_action: Button = $ResultOverlay/Card/Content/RecoveryAction
 @onready var result_action: Button = $ResultOverlay/Card/Content/Action
+@onready var result_exit_action: Button = $ResultOverlay/Card/Content/ExitAction
 @onready var result_recovery_frame: TextureRect = $ResultOverlay/Card/Content/RecoveryAction/FrameArt
 @onready var result_action_frame: TextureRect = $ResultOverlay/Card/Content/Action/FrameArt
 # Compact gameplay resource header keeps level identity inside its authored status plate.
@@ -223,6 +223,7 @@ func _ready() -> void:
 	ProductionChrome.apply_gameplay_action_button(pause_exit, "utility", "pause_exit")
 	ProductionChrome.apply_gameplay_action_button(result_recovery_action, "primary", "fail_recovery_plus_three")
 	ProductionChrome.apply_gameplay_action_button(result_action, "primary", "result_continue_or_retry")
+	ProductionChrome.apply_gameplay_action_button(result_exit_action, "utility", "fail_exit_to_house")
 	pause_frame_art.texture = PieceAssetLoader.ornament(ProductionChrome.GAMEPLAY_PAUSE_FRAME_PATH)
 	_install_direct_action_frame(pause_resume, pause_resume_frame, ProductionChrome.GAMEPLAY_PRIMARY_ACTION_OVERLAY_PATH)
 	_install_direct_action_frame(pause_retry, pause_retry_frame, ProductionChrome.GAMEPLAY_UTILITY_ACTION_OVERLAY_PATH)
@@ -249,10 +250,6 @@ func _ready() -> void:
 	_sealed_badge_a.texture = sealed_badge_texture
 	_sealed_badge_b.texture = sealed_badge_texture
 	_sealed_badge_c.texture = sealed_badge_texture
-	var reward_star_texture := PieceAssetLoader.ornament(REWARD_STAR_PATH)
-	_result_star_a.texture = reward_star_texture
-	_result_star_b.texture = reward_star_texture
-	_result_star_c.texture = reward_star_texture
 	_settings_shortcut.icon = PieceAssetLoader.ornament("res://assets/ui/ui_settings.svg")
 	_hint_boost_button.pressed.connect(_use_hint_boost)
 	_settings_shortcut.pressed.connect(func(): settings_requested.emit())
@@ -268,6 +265,7 @@ func _ready() -> void:
 		board_view.motion_feedback_requested.connect(_on_board_motion_feedback_requested)
 	result_recovery_action.pressed.connect(_on_result_recovery_pressed)
 	result_action.pressed.connect(_on_result_action_pressed)
+	result_exit_action.pressed.connect(_on_result_exit_pressed)
 	pause_button.pressed.connect(show_pause)
 	pause_resume.pressed.connect(resume_level)
 	pause_retry.pressed.connect(_on_pause_retry)
@@ -280,6 +278,7 @@ func _ready() -> void:
 	_wire_tactile_button(pause_exit, "exit")
 	_wire_tactile_button(result_recovery_action, "recovery")
 	_wire_tactile_button(result_action, "continue")
+	_wire_tactile_button(result_exit_action, "exit")
 	pause_overlay.visible = false
 	result_overlay.visible = false
 	if FileAccess.file_exists(default_level_path):
@@ -305,6 +304,18 @@ func _align_booster_tray_to_board_band() -> void:
 	var delta := desired_top - _booster_tray.global_position.y
 	_booster_tray.offset_top += delta
 	_booster_tray.offset_bottom += delta
+	_align_impact_feedback_band(board_bottom)
+
+func _align_impact_feedback_band(board_bottom: float) -> void:
+	if hint_label == null or _booster_tray == null:
+		return
+	var viewport_height := float(get_viewport().get_visible_rect().size.y)
+	var desired_top := board_bottom + 8.0
+	var available_height := maxf(0.0, float(_booster_tray.global_position.y) - desired_top - 8.0)
+	var desired_height := minf(44.0, available_height)
+	var anchor_origin := hint_label.anchor_top * viewport_height
+	hint_label.offset_top = desired_top - anchor_origin
+	hint_label.offset_bottom = hint_label.offset_top + desired_height
 
 func gameplay_native_layout_contract() -> Dictionary:
 	if _booster_tray == null or board_view == null:
@@ -318,6 +329,12 @@ func gameplay_native_layout_contract() -> Dictionary:
 	var board_rect: Rect2 = (board_view as Control).get_global_rect()
 	var tray_rect: Rect2 = _booster_tray.get_global_rect()
 	var board_to_booster_gap: float = tray_rect.position.y - board_rect.end.y
+	var hint_rect: Rect2 = hint_label.get_global_rect() if hint_label != null else Rect2()
+	var impact_band_clear := (
+		hint_label != null
+		and hint_rect.position.y >= board_rect.end.y + 6.0
+		and hint_rect.end.y <= tray_rect.position.y - 6.0
+	)
 	var booster_visible := _booster_tray.visible
 	var booster_settled := booster_visible and _booster_tray.modulate.a >= 0.95
 	var booster_inside_viewport := (
@@ -331,6 +348,9 @@ func gameplay_native_layout_contract() -> Dictionary:
 		"booster_settled": booster_settled,
 		"booster_inside_viewport": booster_inside_viewport,
 		"board_to_booster_gap": board_to_booster_gap,
+		"impact_band_clear": impact_band_clear,
+		"impact_top": hint_rect.position.y,
+		"impact_bottom": hint_rect.end.y,
 		"board_bottom": board_rect.end.y,
 		"booster_top": tray_rect.position.y,
 		"booster_bottom": tray_rect.end.y,
@@ -829,20 +849,20 @@ func _style_impact_hint(mode: String) -> void:
 		return
 	hint_label.visible = true
 	var color := Color("#F4E5D3")
-	var size_px := 28
+	var size_px := 26
 	match mode:
 		"blocker":
 			color = Color("#F0CE8A")
-			size_px = 29
+			size_px = 26
 		"special":
 			color = Color("#E8C987")
-			size_px = 29
+			size_px = 26
 		"combo":
 			color = Color("#E7C8FF")
-			size_px = 30
+			size_px = 27
 		"cascade":
 			color = Color("#DDB7F5")
-			size_px = 29
+			size_px = 26
 		"invalid":
 			color = Color("#D8C5D2")
 		_:
@@ -1030,15 +1050,17 @@ func gameplay_feel_contract() -> Dictionary:
 
 func _show_result_if_terminal(result: String) -> void:
 	if result == "won":
+		if hint_label != null:
+			hint_label.visible = false
 		haptics.request_terminal("won")
 		feedback_requested.emit("win")
 		_pending_win = true
-		result_title.text = "RITUAL COMPLETE AGAIN" if replay_mode else "LEVEL COMPLETE!"
+		result_title.text = "RITUAL COMPLETE AGAIN" if replay_mode else current_win_title
 		result_detail.text = "This Curio already belongs to the House. Replaying does not grant the persistent reward again." if replay_mode else current_win_detail
 		result_detail.visible = replay_mode
 		_configure_result_reward_copy(true)
 		if _result_star_row != null:
-			_result_star_row.visible = true
+			_result_star_row.visible = false
 		if result_ritual != null:
 			result_ritual.set("mode", "result")
 			result_ritual.set("relic_id", current_reward_curio)
@@ -1046,6 +1068,7 @@ func _show_result_if_terminal(result: String) -> void:
 			result_ritual.queue_redraw()
 		result_action.text = "RETURN TO HOUSE" if replay_mode else "CONTINUE"
 		result_recovery_action.visible = false
+		result_exit_action.visible = false
 		if _result_reward_values != null:
 			_result_reward_values.visible = not replay_mode
 		if _result_proclamation != null:
@@ -1058,6 +1081,8 @@ func _show_result_if_terminal(result: String) -> void:
 			_result_reveal_fx.play(_reduced_motion or replay_mode)
 		result_state_changed.emit("won")
 	elif result == "failed":
+		if hint_label != null:
+			hint_label.visible = false
 		haptics.request_terminal("failed")
 		feedback_requested.emit("fail")
 		_pending_win = false
@@ -1077,6 +1102,7 @@ func _show_result_if_terminal(result: String) -> void:
 		result_action.text = "TRY AGAIN"
 		result_recovery_action.text = "FREE +3 MOVES"
 		result_recovery_action.visible = not _potion_used_for_attempt
+		result_exit_action.visible = true
 		result_recovery_action.disabled = _potion_used_for_attempt
 		if _result_reward_values != null:
 			_result_reward_values.visible = false
@@ -1143,6 +1169,8 @@ func recover_failed_attempt_with_plus_moves() -> bool:
 		_potion_boost_button.disabled = true
 	if result_recovery_action != null:
 		result_recovery_action.visible = false
+	if result_exit_action != null:
+		result_exit_action.visible = false
 	result_overlay.visible = false
 	_reset_terminal_transition()
 	haptics.reset_for_new_attempt()
@@ -1179,8 +1207,8 @@ func _style_terminal_result(kind: String) -> void:
 	var won := kind == "won"
 	ProductionChrome.apply_gameplay_reward_modal(card)
 	card.set_meta("production_result_chrome", "verified_gameplay_reward")
-	card.offset_top = -395.0 if won else -325.0
-	card.offset_bottom = 395.0 if won else 325.0
+	card.offset_top = -420.0 if won else -325.0
+	card.offset_bottom = 420.0 if won else 325.0
 	var content := card.get_node_or_null("Content") as VBoxContainer
 	if content != null:
 		content.add_theme_constant_override("separation", 10 if won else 8)
@@ -1194,7 +1222,7 @@ func _style_terminal_result(kind: String) -> void:
 		result_eyebrow.add_theme_font_size_override("font_size", 24 if won else 20)
 		result_eyebrow.add_theme_color_override("font_color", Color("#D8B56A") if not won else Color("#D9B56A"))
 	if result_title != null:
-		result_title.add_theme_font_size_override("font_size", 56 if won else 48)
+		result_title.add_theme_font_size_override("font_size", 52 if won else 48)
 	if result_detail != null:
 		result_detail.custom_minimum_size = Vector2(0, 0 if won else 84)
 		result_detail.add_theme_font_size_override("font_size", 22 if won else 20)
@@ -1202,9 +1230,10 @@ func _style_terminal_result(kind: String) -> void:
 		result_detail.add_theme_color_override("font_outline_color", Color("#160E1B"))
 		result_detail.add_theme_constant_override("outline_size", 2 if not won else 1)
 	if result_ritual != null:
-		result_ritual.custom_minimum_size = Vector2(0, 188 if won else 118)
+		result_ritual.custom_minimum_size = Vector2(0, 252 if won else 118)
+		result_ritual.set("glow_strength", 0.90 if won else 0.12)
 	if result_reward_name != null:
-		result_reward_name.add_theme_font_size_override("font_size", 29 if won else 25)
+		result_reward_name.add_theme_font_size_override("font_size", 31 if won else 25)
 		result_reward_name.add_theme_color_override("font_color", Color("#E6C37A") if not won else Color("#D8B56A"))
 	if result_recovery_action != null:
 		result_recovery_action.custom_minimum_size = Vector2(500, 70 if not won else 88)
@@ -1212,9 +1241,12 @@ func _style_terminal_result(kind: String) -> void:
 	if result_action != null:
 		result_action.custom_minimum_size = Vector2(500, 94 if won else 74)
 		result_action.add_theme_font_size_override("font_size", 27 if won else 24)
+	if result_exit_action != null:
+		result_exit_action.custom_minimum_size = Vector2(480, 0 if won else 58)
+		result_exit_action.add_theme_font_size_override("font_size", 20)
 	var dim := result_overlay.get_node_or_null("Dim") as ColorRect
 	if dim != null:
-		dim.color = Color(0.0314, 0.0235, 0.0353, 0.70 if won else 0.78)
+		dim.color = Color(0.0314, 0.0235, 0.0353, 0.86 if won else 0.78)
 	result_title.add_theme_color_override("font_color", Color("#FFF1B6") if won else Color("#F2D6DE"))
 	result_objective_summary.add_theme_color_override("font_color", Color("#F0CE8A") if won else Color("#E5B2C1"))
 
@@ -1229,6 +1261,7 @@ func terminal_result_polish_contract() -> Dictionary:
 		"result_dim_alpha": (result_overlay.get_node_or_null("Dim") as ColorRect).color.a if result_overlay != null and result_overlay.get_node_or_null("Dim") != null else 1.0,
 		"failure_gap": _failure_gap_copy() if result_overlay != null and result_overlay.visible and String(terminal_transition_contract().get("kind", "")) == "failed" else "",
 		"plus_three_recovery_available": result_recovery_action != null and result_recovery_action.visible and not result_recovery_action.disabled,
+		"safe_house_exit_available": result_exit_action != null and result_exit_action.visible and not result_exit_action.disabled,
 		"critical_result_copy_visible": result_title != null and result_title.modulate.a >= 0.90 and result_action != null and result_action.modulate.a >= 0.90,
 		"failure_stars_hidden": _result_transition_kind != "failed" or (_result_star_row != null and not _result_star_row.visible),
 		"failure_card_span": ((result_overlay.get_node_or_null("Card") as Control).offset_bottom - (result_overlay.get_node_or_null("Card") as Control).offset_top) if result_overlay != null and result_overlay.get_node_or_null("Card") != null else 0.0,
@@ -1237,6 +1270,8 @@ func terminal_result_polish_contract() -> Dictionary:
 			and result_detail.custom_minimum_size.y >= 80.0
 			and result_recovery_action.custom_minimum_size.y <= 72.0
 			and result_action.custom_minimum_size.y <= 76.0
+			and result_exit_action.visible
+			and result_exit_action.custom_minimum_size.y >= 56.0
 			and (_result_top_pad == null or not _result_top_pad.visible)
 			and not result_objective_summary.visible
 			and (_result_proclamation_row == null or not _result_proclamation_row.visible)
@@ -1288,12 +1323,6 @@ func _present_result_overlay(kind: String) -> void:
 	if not failure_settle:
 		for index in range(reveal_items.size()):
 			_result_transition_tween.tween_property(reveal_items[index], "modulate", Color.WHITE, 0.17).set_delay(0.07 + float(index) * 0.032)
-		for index in range(3):
-			var star: TextureRect = [_result_star_a, _result_star_b, _result_star_c][index]
-			if star == null:
-				continue
-			_result_transition_tween.tween_property(star, "modulate", Color.WHITE, 0.20).set_delay(0.16 + float(index) * 0.10)
-			_result_transition_tween.tween_property(star, "scale", Vector2.ONE, 0.34).set_delay(0.16 + float(index) * 0.10).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
 	_result_transition_tween.finished.connect(func(): _result_transition_active = false)
 
 func _reset_terminal_transition() -> void:
@@ -1380,6 +1409,11 @@ func _on_result_action_pressed() -> void:
 	else:
 		retry_current_level()
 
+func _on_result_exit_pressed() -> void:
+	if _pending_win or result_overlay == null or not result_overlay.visible:
+		return
+	level_exit_requested.emit()
+
 
 func _on_board_trace_motion_finished() -> void:
 	if _pending_hud_refresh:
@@ -1449,7 +1483,7 @@ func gameplay_presentation_contract() -> Dictionary:
 		and moves_label.get_theme_stylebox("normal") != null
 	)
 	var hint_readable: bool = (
-		hint_label.custom_minimum_size.y >= 52.0
+		hint_label.custom_minimum_size.y >= 40.0
 		and hint_label.get_theme_font_size("font_size") >= 26
 	)
 	var booster_family_locked: bool = (
@@ -1601,7 +1635,8 @@ func gameplay_presentation_contract() -> Dictionary:
 		"north_star_result_hierarchy": result_title != null and result_title.get_theme_font_size("font_size") >= 46 and result_objective_summary != null and result_objective_summary.get_theme_stylebox("normal") != null,
 		"north_star_result_cta": result_action != null and result_action.custom_minimum_size.y >= 82.0 and result_action.get_theme_stylebox("normal") != null,
 		"asset_backed_result_chrome": ($ResultOverlay/Card as PanelContainer).get_theme_stylebox("panel") is StyleBoxTexture,
-		"result_hero_scale": result_ritual != null and result_ritual.custom_minimum_size.y >= 180.0 and _result_star_a != null and _result_star_b != null and _result_star_c != null,
+		"result_hero_scale": result_ritual != null and result_ritual.custom_minimum_size.y >= 220.0,
+		"house_native_completion_treatment": _result_star_row != null and not _result_star_row.visible and result_ritual != null and result_ritual.custom_minimum_size.y >= 220.0,
 		"result_frame_clearance": ($ResultOverlay/Card/Content/ResultTopPad as Control).custom_minimum_size.y >= 12.0,
 		"gameplay_reward_chrome": String(($ResultOverlay/Card as PanelContainer).get_meta("production_chrome_kind", "")) == "gameplay_reward_modal",
 		"win_copy_compact": result_detail != null and result_house_change != null,

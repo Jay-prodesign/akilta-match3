@@ -25,7 +25,7 @@ func _verify_nonterminal_progress() -> void:
 	root.add_child(screen)
 	await process_frame
 	_expect(screen.load_level_path("res://content/levels/ch01/level_003.json", 1003), "Level 3 must load")
-	var trace = screen.attempt_swap(Vector2i(2, 3), Vector2i(2, 4))
+	var trace = screen.attempt_swap(Vector2i(2, 1), Vector2i(2, 0))
 	_expect(trace != null and bool(trace.accepted), "Level 3 first move must resolve")
 	var board_view = screen.get_node("Layout/BoardView")
 	if board_view.is_motion_active():
@@ -43,12 +43,22 @@ func _verify_win_transition() -> void:
 	root.add_child(screen)
 	await process_frame
 	screen.apply_presentation_settings({"reduced_motion": false, "high_contrast": false, "haptics_enabled": false})
-	var trace = screen.attempt_swap(Vector2i(1, 4), Vector2i(2, 4))
-	_expect(trace != null and String(trace.result) == "won", "Level 1 authored move must win")
+	var authored_moves: Array = [[2, 0, 3, 0], [2, 2, 3, 2], [2, 4, 3, 4], [2, 6, 3, 6]]
+	var trace
 	var board_view = screen.get_node("Layout/BoardView")
-	if board_view.is_motion_active():
-		await board_view.trace_motion_finished
-	await process_frame
+	for move_index in range(authored_moves.size()):
+		var raw_move: Array = authored_moves[move_index]
+		trace = screen.attempt_swap(
+			Vector2i(int(raw_move[0]), int(raw_move[1])),
+			Vector2i(int(raw_move[2]), int(raw_move[3]))
+		)
+		_expect(trace != null and bool(trace.accepted), "Level 1 authored move %d must resolve" % (move_index + 1))
+		if move_index < authored_moves.size() - 1:
+			_expect(String(trace.result) == "playing", "Level 1 must not enter its terminal state before the fourth authored move")
+		if board_view.is_motion_active():
+			await board_view.trace_motion_finished
+		await process_frame
+	_expect(trace != null and String(trace.result) == "won", "Level 1 fourth authored move must win")
 	var feel: Dictionary = screen.gameplay_feel_contract()
 	var transition: Dictionary = screen.terminal_transition_contract()
 	_expect(int(feel.get("objective_progress", 0)) >= int(feel.get("objective_target", 1)), "winning move must complete objective")
@@ -58,7 +68,8 @@ func _verify_win_transition() -> void:
 	var polish: Dictionary = screen.terminal_result_polish_contract()
 	_expect(bool(polish.get("asset_backed_result_chrome", false)), "win result must retain verified asset-backed production chrome")
 	_expect(not bool(polish.get("runtime_result_style_factory", true)), "terminal result must not create flat StyleBox material at runtime")
-	_expect(float(polish.get("result_dim_alpha", 1.0)) <= 0.72, "win result must keep enough authored board/world context visible behind the reveal")
+	var win_dim_alpha := float(polish.get("result_dim_alpha", 0.0))
+	_expect(win_dim_alpha >= 0.82 and win_dim_alpha <= 0.90, "win result must suppress gameplay chrome while preserving a trace of House context behind the reveal")
 	screen.queue_free()
 	await process_frame
 

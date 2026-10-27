@@ -5,14 +5,33 @@
   "validation_expected_result": "won",
   "teaching_moves": [
     [
-      1,
-      4,
       2,
+      0,
+      3,
+      0
+    ],
+    [
+      2,
+      2,
+      3,
+      2
+    ],
+    [
+      2,
+      4,
+      3,
       4
+    ],
+    [
+      2,
+      6,
+      3,
+      6
     ]
   ],
   "validation_expect": {
-    "special_triggered_min": 1
+    "match_found_min": 4,
+    "objective_progress_min": 4
   },
   "id": "ch01_level_001",
   "chapter": "curio_boutique",
@@ -21,18 +40,18 @@
   "visual_status": "north_star_eight_symbol_candidate_v5",
   "title": "Moonlit Cabinet",
   "eyebrow": "CURIO BOUTIQUE · FIRST AWAKENING",
-  "hint": "Match the moon sigils to wake the first relic.",
-  "retry_hint": "Prioritize Moon sigils and use the moonlit teaching swap when you need a clean opening.",
+  "hint": "Make four clean Moon matches to wake the first relic.",
+  "retry_hint": "Build Moon matches from the marked rows; the Cameo wakes after four deliberate clears.",
   "win_title": "THE CABINET STIRS",
   "win_detail": "The Moon Cameo wakes behind the glass.",
   "reward_curio": "moon_cameo",
   "house_stage_reward": 1,
   "width": 7,
   "height": 7,
-  "moves": 20,
+  "moves": 7,
   "objective": "collect_family",
   "objective_family": "moon",
-  "objective_target": 6,
+  "objective_target": 12,
   "families": [
     "moon",
     "rose",
@@ -46,79 +65,78 @@
   "initial_rows": [
     [
       "moon",
-      "rose",
-      "cat",
-      "key",
-      "candle",
       "moon",
-      "rose"
+      "rose",
+      "moon",
+      "key",
+      "leaf",
+      "cat"
     ],
     [
-      "rose",
       "moth",
       "key",
       "leaf",
+      "cat",
+      "candle",
+      "skull",
+      "rose"
+    ],
+    [
       "moon",
+      "moon",
+      "moth",
+      "moon",
+      "leaf",
+      "cat",
+      "candle"
+    ],
+    [
+      "key",
+      "leaf",
+      "cat",
+      "candle",
+      "skull",
       "rose",
+      "moth"
+    ],
+    [
+      "moon",
+      "moon",
+      "key",
+      "moon",
+      "cat",
+      "candle",
       "skull"
     ],
     [
-      "candle",
-      "key",
       "leaf",
-      "moon",
+      "cat",
+      "candle",
       "skull",
+      "rose",
       "moth",
       "key"
     ],
     [
-      "key",
-      "skull",
-      "cat",
-      "rose",
-      "candle",
-      "cat",
-      "leaf"
-    ],
-    [
-      "cat",
-      "rose",
       "moon",
-      "moth",
-      "key",
-      "leaf",
-      "moon"
-    ],
-    [
-      "key",
+      "moon",
       "leaf",
       "moon",
       "candle",
-      "moth",
-      "cat",
-      "leaf"
-    ],
-    [
-      "leaf",
-      "moon",
-      "rose",
-      "moon",
-      "rose",
       "skull",
-      "moth"
+      "rose"
     ]
   ],
-  "specials": [
-    {
-      "x": 1,
-      "y": 4,
-      "kind": "global"
-    }
-  ],
-  "prestart_note": "Wake the Moon Cameo. The first cabinet will remember this victory every time you return to the House.",
+  "specials": [],
+  "prestart_note": "Collect 12 Moon Sigils across several matches. The first cabinet will remember this victory every time you return to the House.",
   "validation_seeds": [
     1001,
     1018,
     1102
-  ]
+  ],
+  "quality_expect": {
+    "accepted_moves_min": 4,
+    "spare_moves_min": 2,
+    "spare_moves_max": 3
+  }
 }

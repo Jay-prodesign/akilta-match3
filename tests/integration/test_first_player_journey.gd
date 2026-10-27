@@ -82,7 +82,7 @@ func _run() -> void:
 	var prestart_back: Button = prestart.get_node_or_null("Layout/Back") as Button
 	_expect(prestart_back != null, "pre-start must own a focused back affordance")
 	var objective: Label = prestart.get_node("Layout/Card/Content/ObjectiveBand/Row/ObjectiveCluster/Copy/Objective")
-	_expect(objective.text.replace("\n", " ") == "GATHER 6 MOON SIGILS", "prestart must reflect the canonical Level 1 collect-family objective")
+	_expect(objective.text.replace("\n", " ") == "GATHER 12 MOON SIGILS", "prestart must reflect the canonical Level 1 collect-family objective")
 	_expect(prestart.has_method("aid_asset_contract"), "prestart must expose its contract-owned aid artwork")
 	if prestart.has_method("aid_asset_contract"):
 		var prestart_aids: Dictionary = prestart.aid_asset_contract()
@@ -126,19 +126,29 @@ func _run() -> void:
 	hint_booster.emit_signal("pressed")
 	_expect(gameplay.hint_label.text == "KEEPER HINT · FOLLOW THE MARKED PAIR", "Keeper utility must find and highlight a legal move")
 	_expect(String(gameplay.board_state.signature()) == keeper_board_signature, "Keeper utility must not mutate the board")
-	_expect(int(gameplay.board_state.moves_remaining) == 20, "Keeper utility must preserve the authored Level 1 move budget")
+	_expect(int(gameplay.board_state.moves_remaining) == 7, "Keeper utility must preserve the authored Level 1 move budget")
 	_expect(gameplay.has_method("keeper_familiar_contract"), "gameplay must expose the Keeper familiar contract")
 	if gameplay.has_method("keeper_familiar_contract"):
 		var gameplay_keeper: Dictionary = gameplay.keeper_familiar_contract()
 		_expect(bool(gameplay_keeper.get("raster_runtime", false)), "gameplay Keeper must use raster runtime art")
 		_expect(String(gameplay_keeper.get("manual_action", "")) == "ASK KEEPER", "Keeper contract must expose the manual familiar action")
 
-	var trace = gameplay.attempt_swap(Vector2i(1, 4), Vector2i(2, 4))
-	_expect(trace != null and trace.accepted and str(trace.result) == "won", "Level 1 teaching swipe must win")
 	var board_view = gameplay.get_node("Layout/BoardView")
-	if bool(board_view.is_motion_active()):
-		await board_view.trace_motion_finished
-	_expect(gameplay.result_overlay.visible, "result beat must appear after motion")
+	var trace
+	for move_index in range(4):
+		var raw_move: Array = [[2, 0, 3, 0], [2, 2, 3, 2], [2, 4, 3, 4], [2, 6, 3, 6]][move_index]
+		trace = gameplay.attempt_swap(
+			Vector2i(int(raw_move[0]), int(raw_move[1])),
+			Vector2i(int(raw_move[2]), int(raw_move[3]))
+		)
+		_expect(trace != null and trace.accepted, "Level 1 authored move %d must resolve" % (move_index + 1))
+		if move_index < 3:
+			_expect(str(trace.result) == "playing", "Level 1 must remain playable until its fourth authored match")
+		if bool(board_view.is_motion_active()):
+			await board_view.trace_motion_finished
+		await process_frame
+	_expect(trace != null and str(trace.result) == "won", "Level 1 fourth authored match must win")
+	_expect(gameplay.result_overlay.visible, "result beat must appear only after the multi-move session resolves")
 	var win_ritual: Control = gameplay.get_node("ResultOverlay/Card/Content/RewardRitual")
 	_expect(String(win_ritual.get("mode")) == "result", "win must reveal the awakened Moon Cameo reward treatment")
 	_expect(app.audio_director.get_feedback_count("special") + app.audio_director.get_feedback_count("match") >= 1, "accepted teaching move must produce semantic audio feedback")

@@ -14,7 +14,7 @@ func _capture() -> void:
 	root.add_child(screen)
 	await process_frame
 	await process_frame
-	var trace = screen.attempt_swap(Vector2i(1, 4), Vector2i(2, 4))
+	var trace = screen.attempt_swap(Vector2i(2, 0), Vector2i(3, 0))
 	if trace == null or not bool(trace.accepted):
 		printerr("CAPTURE_FAIL: authored Level 1 teaching move was not accepted")
 		quit(1)

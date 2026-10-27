@@ -40,11 +40,20 @@ func _run() -> void:
 	await _frames(3)
 
 	var gameplay = app.current_screen()
-	var trace = gameplay.attempt_swap(Vector2i(1, 4), Vector2i(2, 4))
-	_expect(trace != null and bool(trace.accepted) and String(trace.result) == "won", "analytics journey fixture must win Level 1")
 	var board_view = gameplay.get_node_or_null("Layout/BoardView")
-	if board_view != null and board_view.has_method("is_motion_active") and bool(board_view.is_motion_active()):
-		await board_view.trace_motion_finished
+	var trace
+	for raw_move in [[2, 0, 3, 0], [2, 2, 3, 2], [2, 4, 3, 4], [2, 6, 3, 6]]:
+		trace = gameplay.attempt_swap(
+			Vector2i(int(raw_move[0]), int(raw_move[1])),
+			Vector2i(int(raw_move[2]), int(raw_move[3]))
+		)
+		_expect(trace != null and bool(trace.accepted), "analytics journey authored Level 1 move must resolve")
+		if board_view != null and board_view.has_method("is_motion_active") and bool(board_view.is_motion_active()):
+			await board_view.trace_motion_finished
+		await _frames(1)
+		if gameplay.result_overlay.visible:
+			break
+	_expect(trace != null and String(trace.result) == "won", "analytics journey fixture must win Level 1 after the authored multi-move session")
 	await _frames(2)
 	_expect(gameplay.result_overlay.visible, "analytics journey must expose win result")
 	gameplay.result_action.emit_signal("pressed")

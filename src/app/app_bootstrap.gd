@@ -188,8 +188,11 @@ func _run_native_runtime_review_route(route: String) -> void:
 				push_error("Native gameplay booster tray is not settled inside the rendered viewport: %s" % gameplay_layout)
 				return
 			var native_gap := float(gameplay_layout.get("board_to_booster_gap", -1.0))
-			if native_gap < 30.0 or native_gap > 42.0:
+			if native_gap < 58.0 or native_gap > 70.0:
 				push_error("Native gameplay board-to-booster gap drifted: %s" % gameplay_layout)
+				return
+			if not bool(gameplay_layout.get("impact_band_clear", false)):
+				push_error("Native gameplay impact band is not clear between board and boosters: %s" % gameplay_layout)
 				return
 			_write_native_runtime_review_marker("gameplay")
 			print("NATIVE_RUNTIME_REVIEW_LAYOUT_PASS: %s" % gameplay_layout)

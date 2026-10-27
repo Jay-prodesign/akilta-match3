@@ -54,8 +54,8 @@ func _run() -> void:
 		_expect(board.families.size() == 8, "Level 1 must use the eight North Star piece families")
 		_expect(str(board.objective_type) == "collect_family", "Level 1 must teach collect_family")
 		_expect(str(board.objective_family) == "moon", "Level 1 target family must be moon")
-		_expect(int(board.objective_target) == 6, "Level 1 target must be six moon pieces")
-		_expect(int(board.moves_remaining) == 20, "Level 1 must start with the North Star twenty-move budget")
+		_expect(int(board.objective_target) == 12, "Level 1 target must require four deliberate Moon matches")
+		_expect(int(board.moves_remaining) == 7, "Level 1 must start with a bounded seven-move teaching budget")
 
 	var board_view = screen.get_node_or_null("Layout/BoardView")
 	_expect(board_view != null, "GameplayScreen must contain BoardView")
@@ -82,8 +82,8 @@ func _run() -> void:
 		if board_view.has_method("teaching_contract"):
 			var teaching: Dictionary = board_view.teaching_contract()
 			_expect(bool(teaching.get("active", false)), "Level 1 authored teaching move must activate the board cue")
-			_expect(teaching.get("from", Vector2i(-1, -1)) == Vector2i(1, 4), "teaching cue must start on the authored global special tile")
-			_expect(teaching.get("to", Vector2i(-1, -1)) == Vector2i(2, 4), "teaching cue must end on authored destination")
+			_expect(teaching.get("from", Vector2i(-1, -1)) == Vector2i(2, 0), "teaching cue must start on the first authored Moon setup")
+			_expect(teaching.get("to", Vector2i(-1, -1)) == Vector2i(3, 0), "teaching cue must end on the first authored Moon destination")
 			_expect(str(teaching.get("language", "")) == "ritual_thread", "teaching cue must use House-native ritual-thread language")
 		if board_view.has_method("motion_contract"):
 			var motion: Dictionary = board_view.motion_contract()
@@ -118,20 +118,31 @@ func _run() -> void:
 	if awakening != null and awakening.has_method("contract"):
 		var awakening_contract: Dictionary = awakening.contract()
 		_expect(int(awakening_contract.get("progress", -1)) == 0, "awakening strip starts at zero")
-		_expect(int(awakening_contract.get("target", -1)) == 6, "awakening strip must reflect six-Moon target")
+		_expect(int(awakening_contract.get("target", -1)) == 12, "awakening strip must reflect the multi-match Moon target")
 		_expect(str(awakening_contract.get("language", "")) == "awakening_seals", "awakening strip must use House-native seals")
 
-	var teaching_trace = screen.attempt_swap(Vector2i(1, 4), Vector2i(2, 4))
-	_expect(teaching_trace != null and bool(teaching_trace.accepted), "authored teaching swipe must be accepted")
-	_expect(int(board.objective_progress) >= 6, "winning teaching move must complete the logical Level 1 objective")
-	# HUD intentionally updates after trace-driven animations finish; it must not jump ahead.
-	if board_view != null and board_view.has_method("is_motion_active"):
-		var deadline_ms := Time.get_ticks_msec() + 8000
-		while bool(board_view.is_motion_active()) and Time.get_ticks_msec() < deadline_ms:
-			await process_frame
-		_expect(not bool(board_view.is_motion_active()), "Level 1 motion must settle within eight seconds")
+	var authored_moves: Array = [[2, 0, 3, 0], [2, 2, 3, 2], [2, 4, 3, 4], [2, 6, 3, 6]]
+	for move_index in range(authored_moves.size()):
+		var raw_move: Array = authored_moves[move_index]
+		var teaching_trace = screen.attempt_swap(
+			Vector2i(int(raw_move[0]), int(raw_move[1])),
+			Vector2i(int(raw_move[2]), int(raw_move[3]))
+		)
+		_expect(teaching_trace != null and bool(teaching_trace.accepted), "Level 1 authored teaching move %d must be accepted" % (move_index + 1))
+		if move_index < authored_moves.size() - 1:
+			_expect(String(teaching_trace.result) == "playing", "Level 1 must remain playable before the fourth deliberate Moon match")
+		else:
+			_expect(String(teaching_trace.result) == "won", "Level 1 fourth deliberate Moon match must complete the objective")
+		if board_view != null and board_view.has_method("is_motion_active"):
+			var deadline_ms := Time.get_ticks_msec() + 8000
+			while bool(board_view.is_motion_active()) and Time.get_ticks_msec() < deadline_ms:
+				await process_frame
+			_expect(not bool(board_view.is_motion_active()), "Level 1 motion must settle within eight seconds")
+		await process_frame
+	_expect(int(board.objective_progress) >= 12, "four-match teaching journey must complete the logical Level 1 objective")
+	_expect(int(board.moves_remaining) >= 3, "Level 1 should finish with a small safety margin rather than nineteen unused moves")
 	if awakening != null and awakening.has_method("contract"):
-		_expect(int(awakening.contract().get("progress", 0)) >= 6, "reward meter must fully awaken after the visible move resolves")
+		_expect(int(awakening.contract().get("progress", 0)) >= 12, "reward meter must fully awaken after the multi-move journey resolves")
 	var level1_reward = screen.get_node_or_null("ResultOverlay/Card/Content/RewardRitual")
 	_expect(level1_reward != null and level1_reward.has_method("relic_asset_contract"), "Level 1 reward ritual must expose its production Curio asset contract")
 	if level1_reward != null and level1_reward.has_method("relic_asset_contract"):
@@ -144,7 +155,7 @@ func _run() -> void:
 	_expect(screen.has_method("terminal_result_polish_contract"), "win result must expose terminal polish contract")
 	if screen.has_method("terminal_result_polish_contract"):
 		var terminal_polish: Dictionary = screen.terminal_result_polish_contract()
-		_expect(String(terminal_polish.get("objective_summary", "")).contains("6 / 6 MOON SIGILS"), "win terminal polish must state completed objective")
+		_expect(String(terminal_polish.get("objective_summary", "")).contains("12 / 12 MOON SIGILS"), "win terminal polish must state completed objective")
 		_expect(bool(terminal_polish.get("distinct_result_material", false)), "win result must use distinct terminal material")
 
 	screen.queue_free()

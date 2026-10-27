@@ -27,8 +27,18 @@ func _verify_animated_feedback() -> void:
 	var board_view = screen.get_node_or_null("Layout/BoardView")
 	_expect(board_view != null, "Animated VFX test requires BoardView")
 
-	var trace = screen.attempt_swap(Vector2i(1, 4), Vector2i(2, 4))
-	_expect(trace != null and bool(trace.accepted) and String(trace.result) == "won", "Authored Level 1 move must win for feedback proof")
+	var setup_moves: Array = [[2, 0, 3, 0], [2, 2, 3, 2], [2, 4, 3, 4]]
+	for raw_move in setup_moves:
+		var setup_trace = screen.attempt_swap(
+			Vector2i(int(raw_move[0]), int(raw_move[1])),
+			Vector2i(int(raw_move[2]), int(raw_move[3]))
+		)
+		_expect(setup_trace != null and bool(setup_trace.accepted) and String(setup_trace.result) == "playing", "Level 1 setup moves must remain non-terminal for feedback proof")
+		if board_view != null and board_view.has_method("is_motion_active") and bool(board_view.is_motion_active()):
+			await board_view.trace_motion_finished
+		await _frames(1)
+	var trace = screen.attempt_swap(Vector2i(2, 6), Vector2i(3, 6))
+	_expect(trace != null and bool(trace.accepted) and String(trace.result) == "won", "Fourth authored Level 1 move must win for feedback proof")
 	var early: Dictionary = screen.feedback_vfx_contract()
 	var clear_contract: Dictionary = early.get("match_clear", {})
 	_expect(str(clear_contract.get("slot", "")) == "S05/match_board/board_fx", "Match clear VFX must own canonical S05 board_fx slot")
@@ -52,8 +62,14 @@ func _verify_reduced_motion_feedback() -> void:
 	await _frames(2)
 	screen.apply_presentation_settings({"reduced_motion": true, "high_contrast": false, "haptics_enabled": false})
 	var board_view = screen.get_node_or_null("Layout/BoardView")
-	var trace = screen.attempt_swap(Vector2i(1, 4), Vector2i(2, 4))
-	_expect(trace != null and bool(trace.accepted) and String(trace.result) == "won", "Reduced Motion move must preserve gameplay result")
+	for raw_move in [[2, 0, 3, 0], [2, 2, 3, 2], [2, 4, 3, 4]]:
+		var setup_trace = screen.attempt_swap(
+			Vector2i(int(raw_move[0]), int(raw_move[1])),
+			Vector2i(int(raw_move[2]), int(raw_move[3]))
+		)
+		_expect(setup_trace != null and bool(setup_trace.accepted) and String(setup_trace.result) == "playing", "Reduced Motion setup moves must remain non-terminal")
+	var trace = screen.attempt_swap(Vector2i(2, 6), Vector2i(3, 6))
+	_expect(trace != null and bool(trace.accepted) and String(trace.result) == "won", "Reduced Motion fourth move must preserve gameplay result")
 	var contract: Dictionary = screen.feedback_vfx_contract()
 	var clear_contract: Dictionary = contract.get("match_clear", {})
 	var reward: Dictionary = contract.get("reward_reveal", {})

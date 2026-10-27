@@ -107,7 +107,7 @@ func _capture() -> void:
 	var gameplay_moves := gameplay.get_node_or_null("Layout/HUDPlate/HUD/Moves") as Label
 	var gameplay_pause := gameplay.get_node_or_null("Layout/HUDPlate/HUD/Pause") as Button
 	var gameplay_board := gameplay.get_node_or_null("Layout/BoardView") as Control
-	var gameplay_hint := gameplay.get_node_or_null("Layout/Hint") as Control
+	var gameplay_hint := gameplay.get_node_or_null("Hint") as Control
 	var gameplay_tray := gameplay.get_node_or_null("BoosterTray") as Control
 	var shuffle_label := gameplay.get_node_or_null("BoosterTray/BoosterActions/SealedSlotA/Label") as Control
 	var hand_label := gameplay.get_node_or_null("BoosterTray/BoosterActions/SealedSlotB/Label") as Control
@@ -173,10 +173,10 @@ func _capture() -> void:
 	if hud_rect.end.y > board_rect.position.y + 2.0:
 		return _fail(app, "S05 objective HUD collides with board")
 	if gameplay_hint.visible:
-		if board_rect.end.y > hint_rect.position.y + 2.0:
-			return _fail(app, "S05 board collides with transient hint band")
-		if hint_rect.end.y + 10.0 > tray_rect.position.y:
-			return _fail(app, "S05 transient hint collides with booster tray")
+		if hint_rect.position.y < board_rect.end.y + 6.0:
+			return _fail(app, "S05 impact band overlaps the playable board")
+		if hint_rect.end.y + 6.0 > tray_rect.position.y:
+			return _fail(app, "S05 impact band collides with booster tray")
 	else:
 		if tray_rect.position.y < board_rect.end.y - 4.0 or tray_rect.position.y - board_rect.end.y > 120.0:
 			return _fail(app, "S05 board-to-booster gap drifted from locked composition")
@@ -197,12 +197,23 @@ func _capture() -> void:
 	await _frames(18)
 	await create_timer(0.24).timeout
 
-	var trace = gameplay.attempt_swap(Vector2i(1, 4), Vector2i(2, 4))
-	if trace == null or not bool(trace.accepted) or String(trace.result) != "won":
-		return _fail(app, "authored Level 1 move must reach win")
 	var board_view = gameplay.get_node_or_null("Layout/BoardView")
-	if board_view != null and board_view.has_method("is_motion_active") and bool(board_view.is_motion_active()):
-		await board_view.trace_motion_finished
+	var trace
+	for move_index in range(4):
+		var raw_move: Array = [[2, 0, 3, 0], [2, 2, 3, 2], [2, 4, 3, 4], [2, 6, 3, 6]][move_index]
+		trace = gameplay.attempt_swap(
+			Vector2i(int(raw_move[0]), int(raw_move[1])),
+			Vector2i(int(raw_move[2]), int(raw_move[3]))
+		)
+		if trace == null or not bool(trace.accepted):
+			return _fail(app, "authored Level 1 move %d must resolve" % (move_index + 1))
+		if move_index < 3 and String(trace.result) != "playing":
+			return _fail(app, "Level 1 must remain playable before its fourth authored move")
+		if board_view != null and board_view.has_method("is_motion_active") and bool(board_view.is_motion_active()):
+			await board_view.trace_motion_finished
+		await process_frame
+	if trace == null or String(trace.result) != "won":
+		return _fail(app, "authored Level 1 fourth move must reach win")
 	await _frames(32)
 	if not gameplay.result_overlay.visible:
 		return _fail(app, "S06 reward/result must become visible")

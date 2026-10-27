@@ -11,7 +11,7 @@ func _capture() -> void:
 	await _frames(2)
 	if not level2.load_level_path("res://content/levels/ch01/level_002.json", 1002):
 		return _fail(level2, "Level 2 load failed")
-	var blocker_trace = level2.attempt_swap(Vector2i(4, 2), Vector2i(4, 3))
+	var blocker_trace = level2.attempt_swap(Vector2i(2, 0), Vector2i(3, 0))
 	if blocker_trace == null or not blocker_trace.event_types().has("blocker_cleared"):
 		return _fail(level2, "Level 2 blocker impact missing")
 	await create_timer(0.24).timeout
@@ -25,14 +25,14 @@ func _capture() -> void:
 	await _frames(2)
 	if not level3.load_level_path("res://content/levels/ch01/level_003.json", 1003):
 		return _fail(level3, "Level 3 load failed")
-	var create_trace = level3.attempt_swap(Vector2i(2, 3), Vector2i(2, 4))
+	var create_trace = level3.attempt_swap(Vector2i(2, 1), Vector2i(2, 0))
 	if create_trace == null or not create_trace.event_types().has("special_created"):
 		return _fail(level3, "Level 3 special creation missing")
 	var board_view = level3.get_node("Layout/BoardView")
 	if board_view.is_motion_active():
 		await board_view.trace_motion_finished
 	await _frames(2)
-	var trigger_trace = level3.attempt_swap(Vector2i(3, 3), Vector2i(3, 4))
+	var trigger_trace = level3.attempt_swap(Vector2i(2, 0), Vector2i(3, 0))
 	if trigger_trace == null or not trigger_trace.event_types().has("special_triggered"):
 		return _fail(level3, "Level 3 special trigger missing")
 	await create_timer(0.22).timeout

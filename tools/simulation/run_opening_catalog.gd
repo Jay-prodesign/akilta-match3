@@ -46,6 +46,7 @@ func _run() -> void:
 			if expected_result != "" and String(first.get("result", "")) != expected_result:
 				failures.append("%s seed %d: expected result %s, got %s" % [level_id, seed_value, expected_result, String(first.get("result", ""))])
 			_validate_event_expectations(level_id, seed_value, expectations, first.get("event_counts", {}), failures)
+			_validate_quality_expectations(level_id, seed_value, level.get("quality_expect", {}), first, failures)
 			seed_runs.append(_compact_run(first))
 
 		var primary_seed := int(level.get("validation_seed", 1))
@@ -108,6 +109,19 @@ func _validation_seeds(level: Dictionary) -> Array[int]:
 		if not seeds.has(seed_value):
 			seeds.append(seed_value)
 	return seeds
+
+func _validate_quality_expectations(level_id: String, seed_value: int, expectations: Dictionary, run: Dictionary, failures: Array[String]) -> void:
+	if expectations.is_empty():
+		return
+	var accepted_moves := int(run.get("accepted_moves", 0))
+	var spare_moves := int(run.get("spare_moves", -1))
+	if expectations.has("accepted_moves_min") and accepted_moves < int(expectations["accepted_moves_min"]):
+		failures.append("%s seed %d: opening session is too short (%d accepted moves < %d)" % [level_id, seed_value, accepted_moves, int(expectations["accepted_moves_min"])])
+	if expectations.has("spare_moves_min") and spare_moves < int(expectations["spare_moves_min"]):
+		failures.append("%s seed %d: opening session has too little recovery margin (%d spare moves < %d)" % [level_id, seed_value, spare_moves, int(expectations["spare_moves_min"])])
+	if expectations.has("spare_moves_max") and spare_moves > int(expectations["spare_moves_max"]):
+		failures.append("%s seed %d: opening session is under-tuned (%d spare moves > %d)" % [level_id, seed_value, spare_moves, int(expectations["spare_moves_max"])])
+
 
 func _validate_event_expectations(level_id: String, seed_value: int, expectations: Dictionary, counts: Dictionary, failures: Array[String]) -> void:
 	for raw_key in expectations.keys():

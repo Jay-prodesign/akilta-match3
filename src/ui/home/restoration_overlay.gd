@@ -122,7 +122,7 @@ func _stop_continue_tactile() -> void:
 	_continue_tactile_tween = null
 
 func _play_reveal() -> void:
-	if _presented or restoration_header == null or transformation_stage == null or ceremony_card == null:
+	if _presented or restoration_header == null or ceremony_card == null:
 		return
 	_presented = true
 	set_meta("restoration_reveal_phase", "opening")
@@ -134,13 +134,6 @@ func _play_reveal() -> void:
 	restoration_header.pivot_offset = restoration_header.size * 0.5
 	restoration_header.scale = Vector2(0.985, 0.985)
 	restoration_header.modulate = Color(1, 1, 1, 0)
-	transformation_stage.pivot_offset = transformation_stage.size * 0.5
-	transformation_stage.scale = Vector2(0.965, 0.965)
-	transformation_stage.modulate = Color(1, 1, 1, 0)
-	after_card.pivot_offset = after_card.size * 0.5
-	after_card.scale = Vector2(0.94, 0.94)
-	after_card.modulate = Color(1, 1, 1, 0)
-	stage_arrow.modulate = Color(1, 0.90, 0.72, 0)
 	ceremony_card.pivot_offset = ceremony_card.size * 0.5
 	ceremony_card.scale = Vector2(0.97, 0.97)
 	ceremony_card.modulate = Color(1, 1, 1, 0)
@@ -150,13 +143,8 @@ func _play_reveal() -> void:
 	_reveal_tween.tween_property(veil, "modulate", Color.WHITE, 0.16).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
 	_reveal_tween.tween_property(restoration_header, "modulate", Color.WHITE, 0.18).set_delay(0.02).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
 	_reveal_tween.tween_property(restoration_header, "scale", Vector2.ONE, 0.18).set_delay(0.02).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
-	_reveal_tween.tween_property(transformation_stage, "modulate", Color.WHITE, 0.20).set_delay(0.05).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
-	_reveal_tween.tween_property(transformation_stage, "scale", Vector2.ONE, 0.22).set_delay(0.05).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
-	_reveal_tween.tween_property(stage_arrow, "modulate", Color.WHITE, 0.16).set_delay(0.12).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
-	_reveal_tween.tween_property(after_card, "modulate", Color.WHITE, 0.18).set_delay(0.12).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
-	_reveal_tween.tween_property(after_card, "scale", Vector2.ONE, 0.20).set_delay(0.12).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
-	_reveal_tween.tween_property(ceremony_card, "modulate", Color.WHITE, 0.20).set_delay(0.18).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
-	_reveal_tween.tween_property(ceremony_card, "scale", Vector2.ONE, 0.20).set_delay(0.18).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
+	_reveal_tween.tween_property(ceremony_card, "modulate", Color.WHITE, 0.22).set_delay(0.14).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
+	_reveal_tween.tween_property(ceremony_card, "scale", Vector2.ONE, 0.24).set_delay(0.14).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
 	_reveal_tween.finished.connect(func(): set_meta("restoration_reveal_phase", "idle"))
 
 func _request_continue() -> void:
@@ -174,8 +162,6 @@ func _request_continue() -> void:
 	_exit_tween.set_parallel(true)
 	_exit_tween.tween_property(ceremony_card, "modulate", Color(1, 1, 1, 0), 0.13).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_IN)
 	_exit_tween.tween_property(ceremony_card, "scale", Vector2(0.97, 0.97), 0.15).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_IN)
-	_exit_tween.tween_property(transformation_stage, "scale", Vector2(0.985, 0.985), 0.15).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_IN)
-	_exit_tween.tween_property(transformation_stage, "modulate", Color(1, 1, 1, 0.72), 0.15).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_IN)
 	_exit_tween.tween_property(restoration_header, "modulate", Color(1, 1, 1, 0), 0.14).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_IN)
 	_exit_tween.tween_property(veil, "modulate", Color(1, 1, 1, 0), 0.16).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_IN)
 	_exit_tween.finished.connect(func(): continue_requested.emit())
@@ -186,11 +172,6 @@ func _settle_reveal() -> void:
 	veil.modulate = Color.WHITE
 	restoration_header.modulate = Color.WHITE
 	restoration_header.scale = Vector2.ONE
-	transformation_stage.modulate = Color.WHITE
-	transformation_stage.scale = Vector2.ONE
-	after_card.modulate = Color.WHITE
-	after_card.scale = Vector2.ONE
-	stage_arrow.modulate = Color.WHITE
 	ceremony_card.modulate = Color.WHITE
 	ceremony_card.scale = Vector2.ONE
 	continue_button.scale = Vector2.ONE
@@ -201,22 +182,28 @@ func _settle_reveal() -> void:
 func restoration_contract() -> Dictionary:
 	var before_contract: Dictionary = before_house.living_house_contract() if before_house != null and before_house.has_method("living_house_contract") else {}
 	var after_contract: Dictionary = after_house.living_house_contract() if after_house != null and after_house.has_method("living_house_contract") else {}
+	var adjacent_same_camera_truth := (
+		int(before_contract.get("stage", -1)) >= 0
+		and int(after_contract.get("stage", -1)) == int(before_contract.get("stage", -1)) + 1
+		and bool(before_contract.get("same_camera", false))
+		and bool(after_contract.get("same_camera", false))
+	)
 	return {
 		"authored_scene": true,
 		"motif_loaded": motif != null and motif.texture != null,
 		"curio_art_loaded": curio_art != null and curio_art.texture != null,
-		"house_first_composition": transformation_stage != null and transformation_stage.visible and before_house != null and after_house != null and not motif.visible,
-		"locked_board_compact_stage": transformation_stage != null and transformation_stage.size.y <= size.y * 0.31 and before_card.custom_minimum_size.y >= 224.0 and before_card.custom_minimum_size.y <= 240.0 and after_card.custom_minimum_size.y >= 224.0 and after_card.custom_minimum_size.y <= 240.0 and ceremony_card != null and ceremony_card.size.y <= size.y * 0.18,
-		"before_after_house_previews": int(before_contract.get("stage", -1)) >= 0 and int(after_contract.get("stage", -1)) == int(before_contract.get("stage", -1)) + 1 and bool(before_contract.get("same_camera", false)) and bool(after_contract.get("same_camera", false)),
-		"before_after_state_rail": state_rail != null and not state_rail.visible and state_rail.get_node_or_null("States/Before") != null and state_rail.get_node_or_null("States/After") != null,
-		"before_after_labels": ($TransformationStage/PreviewRow/BeforeCard/BeforeContent/Label as Label).text == "BEFORE · DORMANT" and ($TransformationStage/PreviewRow/AfterCard/AfterContent/Label as Label).text == "AFTER · AWAKENED",
+		"house_first_composition": transformation_stage != null and not transformation_stage.visible and state_rail != null and not state_rail.visible and ceremony_card != null and ceremony_card.anchor_top >= 0.68,
+		"world_first_restoration": transformation_stage != null and not transformation_stage.visible and veil != null and veil.color.a <= 0.10,
+		"comparison_previews_hidden": transformation_stage != null and not transformation_stage.visible and state_rail != null and not state_rail.visible,
+		"hidden_adjacent_state_truth": adjacent_same_camera_truth,
+		"summary_card_low_and_compact": ceremony_card != null and ceremony_card.anchor_top >= 0.68 and ceremony_card.anchor_bottom <= 0.88,
 		"house_first_header": hero_title.text == HOUSE_IDENTITY_TEXT and hero_copy.text.ends_with("· AWAKENED"),
 		"curio_motif_subordinate": motif != null and not motif.visible and curio_art != null and curio_art.visible,
 		"scene_authored_summary_material": ($CeremonyCard as PanelContainer).get_theme_stylebox("panel") is StyleBoxFlat and continue_button.get_theme_stylebox("normal") is StyleBoxFlat and String($CeremonyCard.get_meta("restoration_material", "")) == "scene_authored_flat" and String(continue_button.get_meta("restoration_material", "")) == "scene_authored_flat",
 		"summary_material_kind": String(ceremony_card.get_meta("restoration_material", "")),
 		"reveal_choreography": _presented and has_meta("restoration_reveal_phase"),
 		"reveal_phase": String(get_meta("restoration_reveal_phase", "not_presented")),
-		"staged_house_payoff": transformation_stage != null and before_card != null and after_card != null and ceremony_card != null,
+		"staged_house_payoff": restoration_header != null and ceremony_card != null and transformation_stage != null and not transformation_stage.visible,
 		"continue_tactile": continue_button != null and bool(continue_button.get_meta("restoration_tactile_bound", false)) and float(continue_button.get_meta("restoration_tactile_press_scale", 1.0)) <= 0.96,
 		"reduced_motion_supported": true,
 		"feedback_signal": has_signal("interaction_feedback_requested"),

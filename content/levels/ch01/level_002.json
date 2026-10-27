@@ -5,28 +5,47 @@
   "validation_expected_result": "won",
   "teaching_moves": [
     [
-      4,
+      2,
+      0,
+      3,
+      0
+    ],
+    [
+      5,
+      2,
+      6,
+      2
+    ],
+    [
       2,
       4,
-      3
+      3,
+      4
+    ],
+    [
+      5,
+      6,
+      6,
+      6
     ]
   ],
   "validation_expect": {
-    "blocker_cleared_min": 2
+    "blocker_cleared_min": 4,
+    "match_found_min": 4
   },
   "id": "ch01_level_002",
   "chapter": "curio_boutique",
   "title": "Sealed Display",
   "eyebrow": "CURIO BOUTIQUE · WAX SEALS",
-  "hint": "Match beside a wax seal to crack it. One precise swipe opens both.",
-  "retry_hint": "Match beside each wax seal; one precise Moon match can crack both seals.",
+  "hint": "Crack the four wax seals one ritual match at a time.",
+  "retry_hint": "Work through the wax seals from top to bottom; each marked match opens one part of the display.",
   "win_title": "THE SEALS GIVE WAY",
   "win_detail": "A Moth Reliquary answers from the side cabinet.",
   "reward_curio": "moth_reliquary",
   "house_stage_reward": 2,
-  "width": 5,
-  "height": 5,
-  "moves": 8,
+  "width": 7,
+  "height": 7,
+  "moves": 7,
   "objective": "clear_blockers",
   "families": [
     "moon",
@@ -37,14 +56,26 @@
   ],
   "blockers": [
     {
-      "x": 2,
+      "x": 1,
       "y": 1,
       "type": "wax_seal",
       "hp": 1
     },
     {
       "x": 4,
-      "y": 1,
+      "y": 3,
+      "type": "wax_seal",
+      "hp": 1
+    },
+    {
+      "x": 1,
+      "y": 5,
+      "type": "wax_seal",
+      "hp": 1
+    },
+    {
+      "x": 4,
+      "y": 5,
       "type": "wax_seal",
       "hp": 1
     }
@@ -52,47 +83,80 @@
   "initial_rows": [
     [
       "rose",
+      "rose",
       "moth",
+      "rose",
       "key",
       "leaf",
       "moon"
     ],
     [
+      "moon",
       "moth",
       "key",
       "leaf",
-      "rose",
-      "moth"
-    ],
-    [
       "moon",
-      "rose",
-      "moon",
-      "moon",
+      "moth",
       "key"
     ],
     [
       "key",
       "leaf",
+      "moon",
       "rose",
-      "moth",
-      "moon"
+      "rose",
+      "key",
+      "rose"
     ],
     [
       "leaf",
       "moon",
-      "rose",
+      "moth",
       "key",
+      "leaf",
+      "moon",
       "moth"
+    ],
+    [
+      "rose",
+      "rose",
+      "leaf",
+      "rose",
+      "moon",
+      "moth",
+      "key"
+    ],
+    [
+      "moth",
+      "key",
+      "moon",
+      "leaf",
+      "moth",
+      "key",
+      "moon"
+    ],
+    [
+      "key",
+      "leaf",
+      "moon",
+      "rose",
+      "rose",
+      "moth",
+      "rose"
     ]
   ],
   "visual_status": "north_star_candidate_v3",
   "piece_set": "north_star_five_family_candidate_v3",
   "visual_profile": "sealed_display",
-  "prestart_note": "Break the wax seals. The Moth Reliquary will join the Moon Cameo in the side cabinet.",
+  "prestart_note": "Break four wax seals across the cabinet. The Moth Reliquary will join the Moon Cameo once the whole display is open.",
   "validation_seeds": [
     1002,
     1019,
     1103
-  ]
+  ],
+  "quality_expect": {
+    "accepted_moves_min": 4,
+    "spare_moves_min": 2,
+    "spare_moves_max": 3
+  }
 }

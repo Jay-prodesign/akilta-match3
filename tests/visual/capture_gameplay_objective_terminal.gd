@@ -11,7 +11,7 @@ func _capture() -> void:
 	await _frames(2)
 	if not screen.load_level_path("res://content/levels/ch01/level_003.json", 1003):
 		return _fail(screen, "Level 3 load failed")
-	var trace = screen.attempt_swap(Vector2i(2, 3), Vector2i(2, 4))
+	var trace = screen.attempt_swap(Vector2i(2, 1), Vector2i(2, 0))
 	if trace == null or not bool(trace.accepted):
 		return _fail(screen, "Level 3 first move failed")
 	var board_view = screen.get_node("Layout/BoardView")
@@ -24,9 +24,21 @@ func _capture() -> void:
 	if not await _save(screen, "gameplay-objective-progress.png"):
 		return
 
-	var trigger = screen.attempt_swap(Vector2i(3, 3), Vector2i(3, 4))
-	if trigger == null or String(trigger.result) != "won":
-		return _fail(screen, "Level 3 terminal move failed")
+	var trigger = screen.attempt_swap(Vector2i(2, 0), Vector2i(3, 0))
+	if trigger == null or not bool(trigger.accepted) or String(trigger.result) != "playing":
+		return _fail(screen, "Level 3 Moon Beam trigger must open the follow-up seal phase")
+	if board_view.is_motion_active():
+		await board_view.trace_motion_finished
+	await _frames(1)
+	var lower_a = screen.attempt_swap(Vector2i(2, 4), Vector2i(3, 4))
+	if lower_a == null or not bool(lower_a.accepted) or String(lower_a.result) != "playing":
+		return _fail(screen, "Level 3 first lower seal move failed")
+	if board_view.is_motion_active():
+		await board_view.trace_motion_finished
+	await _frames(1)
+	var terminal = screen.attempt_swap(Vector2i(5, 6), Vector2i(6, 6))
+	if terminal == null or String(terminal.result) != "won":
+		return _fail(screen, "Level 3 fourth authored move failed to complete the ritual")
 	if board_view.is_motion_active():
 		await board_view.trace_motion_finished
 	var settle_deadline := Time.get_ticks_msec() + 1600
