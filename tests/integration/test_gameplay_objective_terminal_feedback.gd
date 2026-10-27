@@ -68,7 +68,8 @@ func _verify_win_transition() -> void:
 	var polish: Dictionary = screen.terminal_result_polish_contract()
 	_expect(bool(polish.get("asset_backed_result_chrome", false)), "win result must retain verified asset-backed production chrome")
 	_expect(not bool(polish.get("runtime_result_style_factory", true)), "terminal result must not create flat StyleBox material at runtime")
-	_expect(float(polish.get("result_dim_alpha", 1.0)) <= 0.72, "win result must keep enough authored board/world context visible behind the reveal")
+	var win_dim_alpha := float(polish.get("result_dim_alpha", 0.0))
+	_expect(win_dim_alpha >= 0.82 and win_dim_alpha <= 0.90, "win result must suppress gameplay chrome while preserving a trace of House context behind the reveal")
 	screen.queue_free()
 	await process_frame
 
