@@ -34,15 +34,17 @@ func _run() -> void:
 
 	var from: Vector2 = board_view._cell_center(Vector2i(2, 0))
 	var to: Vector2 = board_view._cell_center(Vector2i(3, 0))
+	var direction: Vector2 = (to - from).normalized()
 	_send_touch_press(board_view, from)
-	var preview := from.lerp(to, 0.55)
+	var preview: Vector2 = from + direction * board_view.swipe_threshold * 0.60
 	_send_touch_drag(board_view, preview, preview - from)
 	var preview_contract: Dictionary = board_view.pointer_feedback_contract()
 	_expect(bool(preview_contract.get("tracking", false)), "sub-threshold touch drag must remain in preview state")
 	_expect(preview_contract.get("intent_target", Vector2i(-1, -1)) == Vector2i(3, 0), "touch preview must communicate the intended adjacent target before commit")
 	_expect(screen.last_trace != null and not bool(screen.last_trace.accepted), "sub-threshold preview must not resolve a new move")
 
-	_send_touch_drag(board_view, to, to - preview)
+	var commit_position: Vector2 = from + direction * board_view.swipe_threshold * 1.20
+	_send_touch_drag(board_view, commit_position, commit_position - preview)
 	_expect(screen.last_trace != null and bool(screen.last_trace.accepted), "real touch swipe must resolve the authored Level 1 move")
 	_expect(int(screen.board_state.moves_remaining) == initial_moves - 1, "accepted touch swipe must spend exactly one move at threshold crossing")
 	_expect(not bool(board_view.pointer_feedback_contract().get("tracking", true)), "accepted swipe must clear pointer tracking immediately after commit")
