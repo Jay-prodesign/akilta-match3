@@ -50,6 +50,8 @@ func _run() -> void:
 		await board_view.trace_motion_finished
 	_expect(gameplay.result_overlay.visible, "failure must show a result overlay after resolution")
 	_expect(gameplay.result_action.text == "TRY AGAIN", "failure result must offer Try Again")
+	var exit_action: Button = gameplay.get_node_or_null("ResultOverlay/Card/Content/ExitAction") as Button
+	_expect(exit_action != null and exit_action.visible and not exit_action.disabled and exit_action.text == "RETURN TO HOUSE", "failure result must offer an explicit safe House exit")
 	var recovery_action: Button = gameplay.get_node_or_null("ResultOverlay/Card/Content/RecoveryAction") as Button
 	_expect(recovery_action != null and recovery_action.visible and not recovery_action.disabled, "unused +3 Moves recovery must be offered after failure")
 	_expect(recovery_action != null and recovery_action.text.contains("+3 MOVES") and recovery_action.text.contains("FREE"), "failure recovery must truthfully label the free +3 Moves option")
@@ -70,6 +72,7 @@ func _run() -> void:
 		var fail_polish: Dictionary = gameplay.terminal_result_polish_contract()
 		_expect(String(fail_polish.get("failure_gap", "")).contains("remained"), "failure result must explain exact remaining objective gap")
 		_expect(bool(fail_polish.get("plus_three_recovery_available", false)), "failure contract must expose +3 recovery availability")
+		_expect(bool(fail_polish.get("safe_house_exit_available", false)), "failure contract must expose the safe House exit")
 	_expect(gameplay.recover_failed_attempt_with_plus_moves(), "unused +3 Moves must recover the failed board")
 	_expect(not gameplay.result_overlay.visible, "successful +3 recovery must return to gameplay")
 	_expect(int(gameplay.board_state.moves_remaining) == 3, "+3 recovery must restore exactly three moves")
@@ -126,6 +129,14 @@ func _run() -> void:
 	_expect(String(third_contract.get("guidance_tier", "")) == "assisted", "third failure must enter assisted recovery tier")
 	_expect(is_equal_approx(float(third_contract.get("auto_hint_delay_seconds", 0.0)), 4.0), "assisted recovery must shorten hint latency")
 	_expect(not bool(third_contract.get("guided_retry_changes_move_budget", true)), "guided recovery must never silently add moves")
+	var safe_exit := gameplay.get_node_or_null("ResultOverlay/Card/Content/ExitAction") as Button
+	_expect(safe_exit != null and safe_exit.visible, "safe House exit must remain available after repeated failure")
+	if safe_exit != null:
+		safe_exit.emit_signal("pressed")
+		await process_frame
+		await process_frame
+		_expect(String(app.current_route_name()) == "house", "failed ritual safe exit must return to House")
+		_expect(int(app.progress.house_stage) == 0 and not app.progress.curios.has("moon_cameo"), "safe failure exit must never grant progression")
 
 	app.queue_free()
 	await process_frame
