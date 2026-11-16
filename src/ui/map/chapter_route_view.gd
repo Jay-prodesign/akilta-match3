@@ -321,7 +321,7 @@ func _apply_route_item_hierarchy(level_number: int, state: String) -> void:
 			label.modulate = Color(1, 1, 1, 0.52)
 			label.add_theme_font_size_override("font_size", 25)
 			label.add_theme_color_override("font_color", Color("#ADA1B0"))
-			plate.bg_color = Color("#0B0810", 0.88)
+			plate.bg_color = Color("#0B0810", 0.90)
 			plate.border_color = Color("#766A7B", 0.18)
 			plate.set_border_width_all(1)
 			if art != null:
