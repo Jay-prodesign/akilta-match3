@@ -1528,7 +1528,7 @@ func gameplay_presentation_contract() -> Dictionary:
 	var objective_spacing_locked: bool = (
 		objective_slot != null
 		and objective_slot.custom_minimum_size.x >= 160.0
-		and objective_icon.custom_minimum_size.y >= 88.0
+		and objective_icon.custom_minimum_size.y >= 80.0
 		and objective_name_label.horizontal_alignment == HORIZONTAL_ALIGNMENT_CENTER
 		and objective_label.horizontal_alignment == HORIZONTAL_ALIGNMENT_CENTER
 		and objective_name_bottom <= objective_icon.global_position.y - 2.0
@@ -1543,6 +1543,7 @@ func gameplay_presentation_contract() -> Dictionary:
 		and plaque_style != null
 		and plaque_style.texture_margin_top >= 44.0
 		and plaque_style.texture_margin_bottom >= 44.0
+		and String(level_plaque.get_meta("production_chrome_asset", "")).ends_with("level_plaque_v02.svg")
 		and objective_spacing_locked
 		and objective_name_label.get_theme_font_size("font_size") >= 20
 		and objective_label.get_theme_font_size("font_size") >= 28
