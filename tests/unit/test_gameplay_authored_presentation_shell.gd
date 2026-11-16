@@ -21,9 +21,9 @@ func _run() -> void:
 		"level_badge_separated", "hint_booster_clearance", "booster_label_readability", "booster_labels_visible",
 		"north_star_booster_family", "utility_separated_from_boosters", "north_star_board_object",
 		"north_star_header_hierarchy", "booster_frame_family", "quiet_gameplay_shell_family", "clear_pause_control", "integrated_hint_surface", "integrated_hud_surface",
-		"final_hint_readability", "final_booster_readability", "canonical_booster_art", "gothic_board_material", "objective_spacing_locked",
+		"final_hint_readability", "final_booster_readability", "canonical_booster_art", "gothic_board_material", "objective_spacing_locked", "gameplay_hud_readability",
 		"north_star_compact_gameplay_header", "north_star_compact_gameplay_geometry", "north_star_gameplay_hud_frame", "north_star_header_depth",
-		"visual_parity_gate_v2", "visual_parity_gate_v3", "visual_parity_gate_v4", "visual_parity_gate_v5", "visual_parity_gate_v10", "visual_parity_gate_v11", "visual_parity_gate_v12", "visual_parity_gate_v13", "visual_parity_gate_v14", "visual_parity_gate_v15",
+		"visual_parity_gate_v2", "visual_parity_gate_v3", "visual_parity_gate_v4", "visual_parity_gate_v5", "visual_parity_gate_v10", "visual_parity_gate_v11", "visual_parity_gate_v12", "visual_parity_gate_v13", "visual_parity_gate_v14", "visual_parity_gate_v15", "visual_parity_gate_v16",
 	]:
 		_expect(bool(contract.get(key, false)), "Gameplay North Star parity contract failed: %s" % key)
 	_expect(int(contract.get("visible_booster_count", 0)) == 3, "Exactly three gameplay boosters must be visible")
@@ -54,9 +54,13 @@ func _run() -> void:
 	var magic_label := screen.get_node_or_null("BoosterTray/BoosterActions/SealedSlotC/Label") as Label
 
 	_expect(title != null and not title.visible, "Room title must not compete with the compact Level identity")
-	_expect(level_plaque != null and level_plaque.custom_minimum_size.x >= 580.0 and level_plaque.get_theme_stylebox("panel") is StyleBoxTexture and eyebrow != null and eyebrow.text.begins_with("LEVEL ") and not eyebrow.text.contains("·") and eyebrow.get_theme_font_size("font_size") >= 40, "Authored Level plaque must anchor the gameplay header")
+	_expect(level_plaque != null and level_plaque.custom_minimum_size.x >= 580.0 and level_plaque.custom_minimum_size.y >= 108.0 and level_plaque.get_theme_stylebox("panel") is StyleBoxTexture and eyebrow != null and eyebrow.text.begins_with("LEVEL ") and not eyebrow.text.contains("·") and eyebrow.get_theme_font_size("font_size") >= 46 and eyebrow.get_theme_constant("outline_size") >= 5, "Authored Level plaque must keep its identity readable above decorative chrome")
+	var plaque_style := level_plaque.get_theme_stylebox("panel") as StyleBoxTexture if level_plaque != null else null
+	_expect(plaque_style != null and plaque_style.texture_margin_top >= 44.0 and plaque_style.texture_margin_bottom >= 44.0, "Level plaque must preserve its authored top/bottom ornament instead of stretching it through the text")
 	_expect(objective_name != null and objective_name.text.contains("SIGILS") and objective_name.modulate.a > 0.95 and objective != null and objective.text.contains("/"), "Objective identity must remain explicit and visibly persistent")
 	_expect(objective_icon != null and objective_icon.texture != null and objective_icon.custom_minimum_size.x >= 80.0, "Objective art must remain visually legible")
+	_expect(objective_name != null and objective_icon != null and objective_name.global_position.y + objective_name.size.y <= objective_icon.global_position.y - 2.0, "Objective name must occupy its own band above the objective art")
+	_expect(objective != null and objective_icon != null and objective.global_position.y >= objective_icon.global_position.y + objective_icon.size.y + 2.0, "Objective counter must occupy its own band below the objective art")
 	_expect(moves != null and moves.custom_minimum_size.x >= 136.0 and moves.get_theme_font_size("font_size") >= 38 and moves.get_theme_font_size("font_size") <= 42, "Moves must remain a dominant counter")
 	_expect(objective != null and objective.get_theme_font_size("font_size") >= 28 and objective.horizontal_alignment == HORIZONTAL_ALIGNMENT_CENTER, "Objective counter must remain readable and centered under its icon")
 	_expect(objective != null and objective_icon != null and objective.global_position.y >= objective_icon.global_position.y + objective_icon.size.y - 8.0, "Objective counter must remain attached below its icon")
