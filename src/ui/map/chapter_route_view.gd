@@ -303,7 +303,7 @@ func _apply_route_item_hierarchy(level_number: int, state: String) -> void:
 			label.modulate = Color(1, 1, 1, 0.74)
 			label.add_theme_font_size_override("font_size", 25)
 			label.add_theme_color_override("font_color", Color("#D8C9D5"))
-			plate.bg_color = Color("#0E0A12", 0.76)
+			plate.bg_color = Color("#0E0A12", 0.92)
 			plate.border_color = Color(GOLD, 0.30)
 			plate.set_border_width_all(1)
 			if art != null:
@@ -312,7 +312,7 @@ func _apply_route_item_hierarchy(level_number: int, state: String) -> void:
 			label.modulate = Color(1, 1, 1, 0.86)
 			label.add_theme_font_size_override("font_size", 26)
 			label.add_theme_color_override("font_color", BONE)
-			plate.bg_color = Color("#100B15", 0.84)
+			plate.bg_color = Color("#100B15", 0.92)
 			plate.border_color = Color(LILAC, 0.42)
 			plate.set_border_width_all(1)
 			if art != null:
@@ -321,7 +321,7 @@ func _apply_route_item_hierarchy(level_number: int, state: String) -> void:
 			label.modulate = Color(1, 1, 1, 0.58)
 			label.add_theme_font_size_override("font_size", 25)
 			label.add_theme_color_override("font_color", Color("#B7A8B9"))
-			plate.bg_color = Color("#0B0810", 0.62)
+			plate.bg_color = Color("#0B0810", 0.92)
 			plate.border_color = Color("#766A7B", 0.22)
 			plate.set_border_width_all(1)
 			if art != null:
