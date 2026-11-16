@@ -92,6 +92,7 @@ func _capture() -> void:
 		"utility_separated_from_boosters",
 		"hint_booster_clearance",
 		"visual_parity_gate_v15",
+		"visual_parity_gate_v16",
 	]:
 		if not bool(gameplay_contract.get(parity_key, false)):
 			return _fail(app, "S05 North Star render gate failed: %s" % parity_key)
