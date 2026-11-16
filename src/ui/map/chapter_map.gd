@@ -152,7 +152,7 @@ func _refresh() -> void:
 			var frontier := 1
 			if progress != null:
 				frontier = clampi(int(progress.highest_level_unlocked), 1, max(1, canonical_level_cap))
-			intro.text = "CURRENT RITUAL · LEVEL %d · %s" % [frontier, _ritual_short_name(frontier)]
+			intro.text = "NEXT RITUAL · LEVEL %d · %s" % [frontier, _ritual_short_name(frontier)]
 	route_view.set_progress(progress)
 
 func _ritual_short_name(level_number: int) -> String:
