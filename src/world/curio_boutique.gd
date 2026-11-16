@@ -139,15 +139,15 @@ func _draw_authored_atmosphere(room: Rect2) -> void:
 		var stage_strength := 0.92 + float(house_stage) * 0.20
 		for i in range(6, 0, -1):
 			var warm := Color(GOLD)
-			warm.a = (0.010 + float(i) * 0.009) * stage_strength * breath
-			draw_circle(cabinet_center, room.size.x * (0.07 + float(i) * 0.030), warm)
+			warm.a = (0.006 + float(i) * 0.005) * stage_strength * breath
+			draw_circle(cabinet_center, room.size.x * (0.065 + float(i) * 0.025), warm)
 		var spill := PackedVector2Array([
-			cabinet_center + Vector2(-room.size.x * 0.055, room.size.y * 0.025),
-			cabinet_center + Vector2(room.size.x * 0.055, room.size.y * 0.025),
-			Vector2(room.get_center().x + room.size.x * 0.15, room.end.y - room.size.y * 0.05),
-			Vector2(room.get_center().x - room.size.x * 0.01, room.end.y - room.size.y * 0.05),
+			cabinet_center + Vector2(-room.size.x * 0.045, room.size.y * 0.025),
+			cabinet_center + Vector2(room.size.x * 0.045, room.size.y * 0.025),
+			Vector2(room.get_center().x + room.size.x * 0.12, room.end.y - room.size.y * 0.05),
+			Vector2(room.get_center().x + room.size.x * 0.01, room.end.y - room.size.y * 0.05),
 		])
-		draw_colored_polygon(spill, Color(GOLD, 0.018 * stage_strength * breath))
+		draw_colored_polygon(spill, Color(GOLD, 0.006 * stage_strength * breath))
 
 	if house_stage >= 2:
 		var hearth_center := Vector2(room.get_center().x, room.position.y + room.size.y * 0.57)
@@ -195,23 +195,23 @@ func _draw_authored_restoration_curios(room: Rect2) -> void:
 	if house_stage >= 1:
 		var cabinet_center := Vector2(room.position.x + room.size.x * 0.84, room.position.y + room.size.y * 0.35)
 		var stage_strength := clampf(float(house_stage) / 3.0, 0.0, 1.0)
-		for i in range(6, 0, -1):
+		for i in range(5, 0, -1):
 			var cabinet_glow := Color(GOLD)
-			cabinet_glow.a = (0.014 + float(i) * 0.010) * (0.88 + stage_strength * 0.62)
-			draw_circle(cabinet_center, room.size.x * (0.074 + float(i) * 0.029), cabinet_glow)
+			cabinet_glow.a = (0.010 + float(i) * 0.007) * (0.82 + stage_strength * 0.54)
+			draw_circle(cabinet_center, room.size.x * (0.070 + float(i) * 0.026), cabinet_glow)
 		var cabinet_lilac := Color(LILAC)
-		cabinet_lilac.a = 0.028 + stage_strength * 0.012
-		draw_circle(cabinet_center - Vector2(0, room.size.y * 0.035), room.size.x * 0.11, cabinet_lilac)
+		cabinet_lilac.a = 0.020 + stage_strength * 0.010
+		draw_circle(cabinet_center - Vector2(0, room.size.y * 0.035), room.size.x * 0.095, cabinet_lilac)
 	# Moon Cameo occupies the authored right-side cabinet niche; later reliquaries
 	# use the remaining display niches without becoming floating UI tokens.
 	if house_stage >= 1 and curios.has("moon_cameo"):
 		var moon_niche := Vector2(room.position.x + room.size.x * 0.83, room.position.y + room.size.y * 0.255)
-		for i in range(5, 0, -1):
+		_draw_restored_moon_niche(room, moon_niche)
+		for i in range(4, 0, -1):
 			var moon_glow := Color(LILAC)
-			moon_glow.a = 0.018 + float(i) * 0.012
-			draw_circle(moon_niche, room.size.x * (0.058 + float(i) * 0.016), moon_glow)
-		draw_circle(moon_niche, room.size.x * 0.055, Color(GOLD, 0.055))
-		draw_arc(moon_niche, room.size.x * 0.073, 0.0, TAU, 40, Color(GOLD, 0.26), 2.0)
+			moon_glow.a = 0.014 + float(i) * 0.010
+			draw_circle(moon_niche, room.size.x * (0.052 + float(i) * 0.014), moon_glow)
+		draw_circle(moon_niche, room.size.x * 0.052, Color(GOLD, 0.045))
 	if house_stage >= 2 and curios.has("moth_reliquary") and _moth_reliquary != null:
 		_draw_restored_relic(
 			room,
@@ -226,6 +226,20 @@ func _draw_authored_restoration_curios(room: Rect2) -> void:
 			Vector2(room.position.x + room.size.x * 0.84, room.position.y + room.size.y * 0.49),
 			Color(ROSE, 0.34)
 		)
+
+func _draw_restored_moon_niche(room: Rect2, center: Vector2) -> void:
+	# A shallow physical display niche keeps the earned Moon Cameo anchored to
+	# the authored cabinet instead of reading as a floating reward badge.
+	var niche_width := room.size.x * 0.18
+	var niche_height := room.size.x * 0.205
+	var niche := Rect2(center - Vector2(niche_width * 0.5, niche_height * 0.48), Vector2(niche_width, niche_height))
+	draw_rect(niche, Color("#0C0910", 0.26), true)
+	draw_line(Vector2(niche.position.x, niche.end.y), Vector2(niche.end.x, niche.end.y), Color(GOLD, 0.42), 3.0)
+	draw_line(Vector2(niche.position.x + niche_width * 0.10, niche.end.y + 3.0), Vector2(niche.end.x - niche_width * 0.10, niche.end.y + 3.0), Color("#120D15", 0.78), 5.0)
+	draw_arc(Vector2(center.x, niche.position.y + niche_height * 0.36), niche_width * 0.40, PI, TAU, 36, Color(GOLD, 0.28), 2.0)
+	draw_line(Vector2(niche.position.x + 2.0, niche.position.y + niche_height * 0.34), Vector2(niche.position.x + 2.0, niche.end.y), Color(GOLD, 0.16), 1.5)
+	draw_line(Vector2(niche.end.x - 2.0, niche.position.y + niche_height * 0.34), Vector2(niche.end.x - 2.0, niche.end.y), Color(GOLD, 0.16), 1.5)
+
 
 func _draw_restored_relic(room: Rect2, texture: Texture2D, center: Vector2, glow_color: Color) -> void:
 	if texture == null:
