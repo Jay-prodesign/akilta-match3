@@ -21,7 +21,7 @@ func _run() -> void:
 	var focus: TextureRect = route.get_node_or_null("FrontierFocus") as TextureRect
 	var focus_label: Label = route.get_node_or_null("FrontierFocusLabel") as Label
 	_expect(focus != null and focus.texture != null, "S03 frontier_focus must use authored state art")
-	_expect(focus_label != null and focus_label.text == "CURRENT RITUAL", "S03 frontier focus label missing")
+	_expect(focus_label != null and focus_label.text == "BEGIN RITUAL", "S03 frontier action label missing")
 
 	var fresh = ProgressScript.new()
 	screen.set_progress(fresh)
@@ -36,6 +36,10 @@ func _run() -> void:
 	_expect(route.get_frontier_level() == 1, "0/3 frontier must be Level 1")
 	_expect(route.get_level_state(1) == "current", "Level 1 must be current at 0/3")
 	_expect(route.get_level_state(2) == "locked" and route.get_level_state(3) == "locked", "Levels 2–3 must be locked at 0/3")
+	var locked_level2_label := route.get_node_or_null("Label2") as Label
+	var locked_level3_label := route.get_node_or_null("Label3") as Label
+	_expect(locked_level2_label != null and locked_level2_label.text.contains("COMPLETE LEVEL 1"), "Locked Level 2 must explain the actual next action instead of posing as an active objective")
+	_expect(locked_level3_label != null and locked_level3_label.text.contains("COMPLETE LEVEL 2"), "Locked Level 3 must explain the actual next action instead of posing as an active objective")
 	_expect(route.get_level_button(2) != null and not route.get_level_button(2).disabled, "progression-locked Level 2 must remain inspectable")
 	var sealed_button := route.get_level_button(2) as Button
 	sealed_button.emit_signal("button_down")
@@ -64,6 +68,8 @@ func _run() -> void:
 	_expect(route.get_level_state(1) == "completed", "Level 1 must become completed")
 	_expect(route.get_level_state(2) == "current", "Level 2 must become current")
 	_expect(route.get_level_state(3) == "locked", "Level 3 must remain locked at 1/3")
+	var current_level2_label := route.get_node_or_null("Label2") as Label
+	_expect(current_level2_label != null and current_level2_label.text.contains("BREAK THE WAX SEALS") and not current_level2_label.text.contains("COMPLETE LEVEL 1"), "Current Level 2 must switch from lock guidance to its playable ritual objective")
 
 	var p2 = ProgressScript.new()
 	p2.apply_level_win("frontier2-l1", "ch01_level_001", "moon_cameo", 1)
