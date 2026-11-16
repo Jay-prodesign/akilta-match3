@@ -277,7 +277,7 @@ func play_trace(trace) -> bool:
 	elif types.has("special_created") or types.has("special_triggered"):
 		_pulse_feedback("special", 0.66, 0.30)
 	elif bool(trace.accepted):
-		_pulse_feedback("match", 0.38, 0.22)
+		_pulse_feedback("match", 0.44, 0.20)
 	else:
 		_pulse_feedback("reject", 0.30, 0.18)
 
@@ -1174,12 +1174,12 @@ func _draw_motion() -> void:
 					continue
 				var ccenter := _cell_center(item["at"])
 				var cell_size := float(_board_geometry()["cell_size"])
-				var cascade_scale := 1.0 + 0.16 * float(maxi(0, cascade - 1))
+				var cascade_scale := 1.0 + 0.20 * float(maxi(0, cascade - 1))
 				var clear_scale := 1.0
 				if cp < 0.32:
-					clear_scale = lerpf(1.0, 1.24, cp / 0.32)
+					clear_scale = lerpf(1.0, 1.32, cp / 0.32)
 				else:
-					clear_scale = lerpf(1.24, 0.12, (cp - 0.32) / 0.68)
+					clear_scale = lerpf(1.32, 0.10, (cp - 0.32) / 0.68)
 				_draw_motion_piece(ccenter, String(item["family"]), maxf(0.12, clear_scale) * cascade_scale)
 				var pulse := sin(cp * PI)
 				var clear_color := Color(GOLD)
@@ -1187,22 +1187,22 @@ func _draw_motion() -> void:
 				var lilac := Color(LILAC)
 				lilac.a = minf(0.72, (0.42 + 0.09 * float(maxi(0, cascade - 1))) * pulse)
 				var core := Color("#FFF5D6")
-				core.a = minf(0.42, (0.22 + 0.05 * float(maxi(0, cascade - 1))) * pulse)
-				draw_circle(ccenter, cell_size * (0.10 + cp * 0.13) * cascade_scale, core)
-				draw_arc(ccenter, cell_size * (0.14 + cp * 0.46) * cascade_scale, 0.0, TAU, 36, clear_color, 2.8 + 2.0 * pulse)
+				core.a = minf(0.58, (0.34 + 0.06 * float(maxi(0, cascade - 1))) * pulse)
+				draw_circle(ccenter, cell_size * (0.11 + cp * 0.16) * cascade_scale, core)
+				draw_arc(ccenter, cell_size * (0.13 + cp * 0.50) * cascade_scale, 0.0, TAU, 36, clear_color, 3.2 + 2.4 * pulse)
 				for ring in range(1 + mini(2, maxi(0, cascade - 1))):
 					draw_arc(ccenter, cell_size * (0.20 + cp * (0.46 + 0.11 * ring)) * cascade_scale, 0.0, TAU, 40, lilac, 2.0 + 0.5 * pulse)
-				for ray_index in range(8):
-					var angle := TAU * float(ray_index) / 8.0 + float(item.get("cascade", 1)) * 0.19
+				for ray_index in range(10):
+					var angle := TAU * float(ray_index) / 10.0 + float(item.get("cascade", 1)) * 0.19
 					var direction := Vector2(cos(angle), sin(angle))
 					var inner := ccenter + direction * cell_size * (0.09 + cp * 0.07)
-					var outer := ccenter + direction * cell_size * (0.24 + cp * 0.36) * cascade_scale
-					draw_line(inner, outer, clear_color if ray_index % 2 == 0 else lilac, 1.9 + 0.5 * pulse)
-				for mote_index in range(6):
-					var angle := TAU * (float(mote_index) / 6.0 + 0.08)
-					var orbit := cell_size * (0.12 + cp * (0.22 + 0.028 * float(mote_index))) * cascade_scale
+					var outer := ccenter + direction * cell_size * (0.25 + cp * 0.42) * cascade_scale
+					draw_line(inner, outer, clear_color if ray_index % 2 == 0 else lilac, 2.1 + 0.6 * pulse)
+				for mote_index in range(8):
+					var angle := TAU * (float(mote_index) / 8.0 + 0.08)
+					var orbit := cell_size * (0.12 + cp * (0.24 + 0.024 * float(mote_index))) * cascade_scale
 					var mote := ccenter + Vector2(cos(angle), sin(angle)) * orbit
-					draw_circle(mote, maxf(1.5, cell_size * 0.032 * (1.0 - cp)), Color("#FFF0C7", 0.78 * pulse))
+					draw_circle(mote, maxf(1.6, cell_size * 0.034 * (1.0 - cp)), Color("#FFF0C7", 0.84 * pulse))
 			"gravity":
 				var cascade := int(item.get("cascade", 1))
 				var gp := _cascade_phase(cascade, 0.42, 0.84)
