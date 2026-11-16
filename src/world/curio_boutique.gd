@@ -95,13 +95,13 @@ func _draw() -> void:
 func _stage_veil_alpha() -> float:
 	match house_stage:
 		0:
-			return 0.40
+			return 0.43
 		1:
-			return 0.27
+			return 0.20
 		2:
-			return 0.15
+			return 0.12
 		_:
-			return 0.06
+			return 0.05
 
 func _ambient_tier() -> String:
 	match house_stage:
@@ -135,12 +135,19 @@ func _draw_authored_atmosphere(room: Rect2) -> void:
 		draw_circle(moon_center, room.size.x * (0.10 + float(i) * 0.032), glow)
 
 	if house_stage >= 1:
-		var cabinet_center := Vector2(room.position.x + room.size.x * 0.84, room.position.y + room.size.y * 0.37)
-		var stage_strength := 0.72 + float(house_stage) * 0.18
-		for i in range(5, 0, -1):
+		var cabinet_center := Vector2(room.position.x + room.size.x * 0.84, room.position.y + room.size.y * 0.35)
+		var stage_strength := 0.92 + float(house_stage) * 0.20
+		for i in range(6, 0, -1):
 			var warm := Color(GOLD)
-			warm.a = (0.008 + float(i) * 0.008) * stage_strength * breath
-			draw_circle(cabinet_center, room.size.x * (0.07 + float(i) * 0.028), warm)
+			warm.a = (0.010 + float(i) * 0.009) * stage_strength * breath
+			draw_circle(cabinet_center, room.size.x * (0.07 + float(i) * 0.030), warm)
+		var spill := PackedVector2Array([
+			cabinet_center + Vector2(-room.size.x * 0.055, room.size.y * 0.025),
+			cabinet_center + Vector2(room.size.x * 0.055, room.size.y * 0.025),
+			Vector2(room.get_center().x + room.size.x * 0.15, room.end.y - room.size.y * 0.05),
+			Vector2(room.get_center().x - room.size.x * 0.01, room.end.y - room.size.y * 0.05),
+		])
+		draw_colored_polygon(spill, Color(GOLD, 0.018 * stage_strength * breath))
 
 	if house_stage >= 2:
 		var hearth_center := Vector2(room.get_center().x, room.position.y + room.size.y * 0.57)
@@ -186,21 +193,25 @@ func _draw_authored_restoration_curios(room: Rect2) -> void:
 	# as a persistent world change, so the restored cabinet becomes a luminous
 	# display zone and each earned Curio occupies a real, readable niche.
 	if house_stage >= 1:
-		var cabinet_center := Vector2(room.position.x + room.size.x * 0.84, room.position.y + room.size.y * 0.37)
+		var cabinet_center := Vector2(room.position.x + room.size.x * 0.84, room.position.y + room.size.y * 0.35)
 		var stage_strength := clampf(float(house_stage) / 3.0, 0.0, 1.0)
-		for i in range(5, 0, -1):
+		for i in range(6, 0, -1):
 			var cabinet_glow := Color(GOLD)
-			cabinet_glow.a = (0.010 + float(i) * 0.008) * (0.72 + stage_strength * 0.58)
-			draw_circle(cabinet_center, room.size.x * (0.075 + float(i) * 0.026), cabinet_glow)
+			cabinet_glow.a = (0.014 + float(i) * 0.010) * (0.88 + stage_strength * 0.62)
+			draw_circle(cabinet_center, room.size.x * (0.074 + float(i) * 0.029), cabinet_glow)
+		var cabinet_lilac := Color(LILAC)
+		cabinet_lilac.a = 0.028 + stage_strength * 0.012
+		draw_circle(cabinet_center - Vector2(0, room.size.y * 0.035), room.size.x * 0.11, cabinet_lilac)
 	# Moon Cameo occupies the authored right-side cabinet niche; later reliquaries
 	# use the remaining display niches without becoming floating UI tokens.
 	if house_stage >= 1 and curios.has("moon_cameo"):
-		var moon_niche := Vector2(room.position.x + room.size.x * 0.83, room.position.y + room.size.y * 0.27)
-		for i in range(4, 0, -1):
+		var moon_niche := Vector2(room.position.x + room.size.x * 0.83, room.position.y + room.size.y * 0.255)
+		for i in range(5, 0, -1):
 			var moon_glow := Color(LILAC)
-			moon_glow.a = 0.012 + float(i) * 0.010
-			draw_circle(moon_niche, room.size.x * (0.055 + float(i) * 0.014), moon_glow)
-		draw_circle(moon_niche, room.size.x * 0.047, Color(GOLD, 0.035))
+			moon_glow.a = 0.018 + float(i) * 0.012
+			draw_circle(moon_niche, room.size.x * (0.058 + float(i) * 0.016), moon_glow)
+		draw_circle(moon_niche, room.size.x * 0.055, Color(GOLD, 0.055))
+		draw_arc(moon_niche, room.size.x * 0.073, 0.0, TAU, 40, Color(GOLD, 0.26), 2.0)
 	if house_stage >= 2 and curios.has("moth_reliquary") and _moth_reliquary != null:
 		_draw_restored_relic(
 			room,
