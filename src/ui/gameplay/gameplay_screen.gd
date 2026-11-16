@@ -1523,12 +1523,29 @@ func gameplay_presentation_contract() -> Dictionary:
 	)
 	var gothic_board_material: bool = String(board_contract.get("frame_revision", "")) == "gothic_corner_v3" and float(board_contract.get("corner_preservation_margin", 0.0)) >= 72.0
 	var objective_slot := $Layout/HUDPlate/HUD/ObjectiveSlot as VBoxContainer
+	var objective_name_bottom := objective_name_label.global_position.y + objective_name_label.size.y
+	var objective_icon_bottom := objective_icon.global_position.y + objective_icon.size.y
 	var objective_spacing_locked: bool = (
 		objective_slot != null
 		and objective_slot.custom_minimum_size.x >= 160.0
 		and objective_icon.custom_minimum_size.y >= 88.0
+		and objective_name_label.horizontal_alignment == HORIZONTAL_ALIGNMENT_CENTER
 		and objective_label.horizontal_alignment == HORIZONTAL_ALIGNMENT_CENTER
-		and objective_label.global_position.y >= objective_icon.global_position.y + objective_icon.size.y - 8.0
+		and objective_name_bottom <= objective_icon.global_position.y - 2.0
+		and objective_label.global_position.y >= objective_icon_bottom + 2.0
+	)
+	var plaque_style := level_plaque.get_theme_stylebox("panel") as StyleBoxTexture if level_plaque != null else null
+	var gameplay_hud_readability_locked: bool = (
+		level_plaque != null
+		and level_plaque.custom_minimum_size.y >= 108.0
+		and eyebrow_label.get_theme_font_size("font_size") >= 46
+		and eyebrow_label.get_theme_constant("outline_size") >= 5
+		and plaque_style != null
+		and plaque_style.texture_margin_top >= 44.0
+		and plaque_style.texture_margin_bottom >= 44.0
+		and objective_spacing_locked
+		and objective_name_label.get_theme_font_size("font_size") >= 20
+		and objective_label.get_theme_font_size("font_size") >= 28
 	)
 	var compact_header_locked: bool = (
 		not title_label.visible
@@ -1615,6 +1632,7 @@ func gameplay_presentation_contract() -> Dictionary:
 		"canonical_booster_art": canonical_booster_art,
 		"gothic_board_material": gothic_board_material,
 		"objective_spacing_locked": objective_spacing_locked,
+		"gameplay_hud_readability": gameplay_hud_readability_locked,
 		"north_star_compact_gameplay_header": compact_header_locked,
 		"north_star_compact_gameplay_geometry": compact_geometry_locked,
 		"visual_parity_gate_v10": hierarchy_locked and integrated_hud_surface and hint_readable and booster_family_locked and composition_locked and board_locked and utilities_separated and canonical_booster_art and gothic_board_material,
@@ -1623,7 +1641,8 @@ func gameplay_presentation_contract() -> Dictionary:
 		"visual_parity_gate_v13": hierarchy_locked and integrated_hud_surface and integrated_hint_surface and hint_readable and booster_family_locked and composition_locked and board_locked and utilities_separated and canonical_booster_art and gothic_board_material and objective_spacing_locked and compact_header_locked and compact_geometry_locked and north_star_gameplay_hud_frame,
 		"visual_parity_gate_v14": hierarchy_locked and integrated_hud_surface and integrated_hint_surface and hint_readable and booster_family_locked and composition_locked and board_locked and utilities_separated and canonical_booster_art and gothic_board_material and objective_spacing_locked and compact_header_locked and compact_geometry_locked and north_star_gameplay_hud_frame and pause_button.icon != null and pause_button.text == "" and String(pause_button.get_meta("production_chrome_asset", "")) == GAMEPLAY_PAUSE_ICON_PATH and pause_button.get_theme_stylebox("normal") is StyleBoxFlat,
 		"visual_parity_gate_v15": hierarchy_locked and integrated_hud_surface and integrated_hint_surface and hint_readable and booster_family_locked and composition_locked and board_locked and utilities_separated and canonical_booster_art and gothic_board_material and objective_spacing_locked and compact_header_locked and compact_geometry_locked and north_star_gameplay_hud_frame and header_depth_locked and pause_button.icon != null and pause_button.text == "" and String(pause_button.get_meta("production_chrome_asset", "")) == GAMEPLAY_PAUSE_ICON_PATH and pause_button.get_theme_stylebox("normal") is StyleBoxFlat,
-		"visual_parity_version": 15,
+		"visual_parity_gate_v16": hierarchy_locked and integrated_hud_surface and integrated_hint_surface and hint_readable and booster_family_locked and composition_locked and board_locked and utilities_separated and canonical_booster_art and gothic_board_material and gameplay_hud_readability_locked and compact_header_locked and compact_geometry_locked and north_star_gameplay_hud_frame and header_depth_locked and pause_button.icon != null and pause_button.text == "" and String(pause_button.get_meta("production_chrome_asset", "")) == GAMEPLAY_PAUSE_ICON_PATH and pause_button.get_theme_stylebox("normal") is StyleBoxFlat,
+		"visual_parity_version": 16,
 		"resource_bar_height": ($ResourceBar as PanelContainer).offset_bottom - ($ResourceBar as PanelContainer).offset_top,
 		"hud_plate_height": ($Layout/HUDPlate as PanelContainer).custom_minimum_size.y,
 		"booster_tray_height": _booster_tray.offset_bottom - _booster_tray.offset_top,
