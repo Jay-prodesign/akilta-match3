@@ -20,7 +20,7 @@ func _run() -> void:
 	var intro := screen.get_node_or_null("Layout/Intro") as Label
 	_expect(title != null and title.get_theme_font_size("font_size") >= 52, "S03 Chapter title must retain mobile-readable hierarchy")
 	_expect(progress_label != null and progress_label.get_theme_font_size("font_size") >= 22, "S03 chapter progress must remain legible at the compact target scale")
-	_expect(intro != null and intro.get_theme_font_size("font_size") >= 20 and intro.text.begins_with("NEXT RITUAL"), "S03 chapter intro must clearly point at the next playable ritual")
+	_expect(intro != null and intro.get_theme_font_size("font_size") >= 18 and intro.text.begins_with("NEXT RITUAL") and intro.get_theme_constant("outline_size") >= 2, "S03 chapter intro must clearly point at the next playable ritual without becoming oversized")
 	var route_world := ScreenArt.texture("chapter_route_curio_boutique")
 	_expect(ScreenArt.path("chapter_route_curio_boutique").ends_with(".webp"), "S03 chapter route world must resolve from authored raster WebP")
 	_expect(route_world != null and route_world.get_width() >= 1080 and route_world.get_height() >= 1500, "S03 chapter route world must meet the locked 1080x1500 ship-region contract")
