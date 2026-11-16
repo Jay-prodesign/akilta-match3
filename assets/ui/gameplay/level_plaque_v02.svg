@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="600" height="112" viewBox="0 0 600 112">
+<defs>
+  <linearGradient id="bg" x1="0" y1="0" x2="0" y2="1">
+    <stop stop-color="#24152d"/>
+    <stop offset=".58" stop-color="#120c19"/>
+    <stop offset="1" stop-color="#09070d"/>
+  </linearGradient>
+  <linearGradient id="edge" x1="0" y1="0" x2="1" y2="0">
+    <stop stop-color="#ad7a55"/>
+    <stop offset=".5" stop-color="#efd18b"/>
+    <stop offset="1" stop-color="#ad7a55"/>
+  </linearGradient>
+</defs>
+<path d="M44 8H556L590 34V78L556 104H44L10 78V34Z" fill="url(#bg)" stroke="url(#edge)" stroke-width="5"/>
+<path d="M56 20H544L576 40V72L544 92H56L24 72V40Z" fill="none" stroke="#75507f" stroke-width="2.5" opacity=".9"/>
+<path d="M44 28L30 42V70L44 84M556 28L570 42V70L556 84" fill="none" stroke="#d9b56f" stroke-width="2.5" stroke-linecap="round" opacity=".85"/>
+<path d="M72 24H142M458 24H528M72 88H142M458 88H528" fill="none" stroke="#9a6fa4" stroke-width="2" stroke-linecap="round" opacity=".7"/>
+<path d="M29 56l7-7 7 7-7 7zM557 56l7-7 7 7-7 7z" fill="#b78bc2" stroke="#e5c57f" stroke-width="1.5"/>
+</svg>
