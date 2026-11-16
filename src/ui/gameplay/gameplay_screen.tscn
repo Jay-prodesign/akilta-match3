@@ -425,7 +425,7 @@ layout_mode = 2
 size_flags_horizontal = 3
 
 [node name="ObjectiveSlot" type="VBoxContainer" parent="Layout/HUDPlate/HUD"]
-custom_minimum_size = Vector2(250, 158)
+custom_minimum_size = Vector2(250, 166)
 layout_mode = 2
 size_flags_vertical = 4
 theme_override_constants/separation = 5
