@@ -308,7 +308,9 @@ func _refresh_room_hotspots() -> void:
 			continue
 		var awakened := owned.has(String(curio_id))
 		button.disabled = not awakened
-		button.text = "✦" if awakened else "◇"
+		# The visible Curio itself is the affordance; do not stack a badge glyph over
+		# the restored world object. Focus/hover chrome still exposes interaction.
+		button.text = ""
 		button.set_meta("curio_id", String(curio_id))
 		button.set_meta("ownership_state", "owned" if awakened else "locked")
 
