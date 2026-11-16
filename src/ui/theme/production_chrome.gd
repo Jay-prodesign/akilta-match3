@@ -265,7 +265,7 @@ static func apply_gameplay_booster_tray(panel: Control) -> bool:
 
 static func gameplay_level_plaque() -> StyleBoxTexture:
 	if _gameplay_level_plaque == null:
-		_gameplay_level_plaque = _style_xy(10.0, 48.0, 36.0, GAMEPLAY_LEVEL_PLAQUE_PATH)
+		_gameplay_level_plaque = _style_xy(10.0, 48.0, 44.0, GAMEPLAY_LEVEL_PLAQUE_PATH)
 		if _gameplay_level_plaque != null:
 			_gameplay_level_plaque.modulate_color = Color(1.0, 0.98, 0.92, 1.0)
 	return _gameplay_level_plaque
