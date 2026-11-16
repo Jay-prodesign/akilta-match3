@@ -11,7 +11,7 @@ const GAMEPLAY_HUD_FRAME_PATH := "res://assets/ui/gameplay/hud_objective_frame_v
 const GAMEPLAY_PAUSE_FRAME_PATH := "res://assets/ui/gameplay/pause_modal_frame_v01.svg"
 const GAMEPLAY_REWARD_FRAME_PATH := "res://assets/ui/gameplay/reward_modal_frame_v01.svg"
 const GAMEPLAY_BOOSTER_TRAY_PATH := "res://assets/ui/gameplay/booster_tray_frame_v02.svg"
-const GAMEPLAY_LEVEL_PLAQUE_PATH := "res://assets/ui/gameplay/level_plaque_v01.svg"
+const GAMEPLAY_LEVEL_PLAQUE_PATH := "res://assets/ui/gameplay/level_plaque_v02.svg"
 const GAMEPLAY_PRIMARY_ACTION_PATH := "res://assets/ui/gameplay/action_primary_bevel_v01.svg"
 const GAMEPLAY_UTILITY_ACTION_PATH := "res://assets/ui/gameplay/action_utility_bevel_v01.svg"
 const GAMEPLAY_PRIMARY_ACTION_OVERLAY_PATH := "res://assets/ui/gameplay/action_primary_overlay_v01.svg"
@@ -265,9 +265,9 @@ static func apply_gameplay_booster_tray(panel: Control) -> bool:
 
 static func gameplay_level_plaque() -> StyleBoxTexture:
 	if _gameplay_level_plaque == null:
-		_gameplay_level_plaque = _style_xy(10.0, 58.0, 46.0, GAMEPLAY_LEVEL_PLAQUE_PATH)
+		_gameplay_level_plaque = _style_xy(10.0, 48.0, 36.0, GAMEPLAY_LEVEL_PLAQUE_PATH)
 		if _gameplay_level_plaque != null:
-			_gameplay_level_plaque.modulate_color = Color(1.0, 0.97, 0.90, 1.0)
+			_gameplay_level_plaque.modulate_color = Color(1.0, 0.98, 0.92, 1.0)
 	return _gameplay_level_plaque
 
 static func apply_gameplay_level_plaque(panel: Control) -> bool:
