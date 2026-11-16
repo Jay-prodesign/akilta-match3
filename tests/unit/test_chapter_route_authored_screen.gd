@@ -20,7 +20,7 @@ func _run() -> void:
 	var intro := screen.get_node_or_null("Layout/Intro") as Label
 	_expect(title != null and title.get_theme_font_size("font_size") >= 52, "S03 Chapter title must retain mobile-readable hierarchy")
 	_expect(progress_label != null and progress_label.get_theme_font_size("font_size") >= 22, "S03 chapter progress must remain legible at the compact target scale")
-	_expect(intro != null and intro.get_theme_font_size("font_size") >= 18, "S03 chapter intro copy must remain legible while subordinate to the title")
+	_expect(intro != null and intro.get_theme_font_size("font_size") >= 20 and intro.text.begins_with("NEXT RITUAL"), "S03 chapter intro must clearly point at the next playable ritual")
 	var route_world := ScreenArt.texture("chapter_route_curio_boutique")
 	_expect(ScreenArt.path("chapter_route_curio_boutique").ends_with(".webp"), "S03 chapter route world must resolve from authored raster WebP")
 	_expect(route_world != null and route_world.get_width() >= 1080 and route_world.get_height() >= 1500, "S03 chapter route world must meet the locked 1080x1500 ship-region contract")
@@ -71,7 +71,7 @@ func _run() -> void:
 		var future_button := route.get_level_button(level_number) as Button
 		_expect(future_button != null and not future_button.visible, "Future route compatibility node %d must remain visually suppressed" % level_number)
 	var future_seal := route.get_future_seal_button() as Button
-	_expect(future_seal != null and future_seal.visible and future_seal.size.x >= 280.0 and future_seal.size.y >= 120.0, "Future upper-cabinets seal must be a clear mobile interaction")
+	_expect(future_seal != null and future_seal.visible and future_seal.size.x >= 280.0 and future_seal.size.y >= 120.0 and future_seal.modulate.a <= 0.60, "Future upper-cabinets seal must stay inspectable without competing with the current ritual")
 
 	_expect(route.get_frontier_level() == 1, "Fresh route frontier must point to Level 1")
 	var current_button := route.get_level_button(1) as Button
@@ -87,7 +87,7 @@ func _run() -> void:
 	var frontier_focus := route.get_node_or_null("FrontierFocus") as TextureRect
 	var frontier_label := route.get_node_or_null("FrontierFocusLabel") as Label
 	_expect(frontier_focus != null and frontier_focus.visible and frontier_focus.texture != null, "Fresh route must expose authored frontier marker")
-	_expect(frontier_label != null and frontier_label.visible and frontier_label.text == "CURRENT RITUAL", "Fresh route must expose authored frontier label")
+	_expect(frontier_label != null and frontier_label.visible and frontier_label.text == "BEGIN RITUAL", "Fresh route must expose an explicit action label at the playable frontier")
 
 	progress.apply_level_win("route-l1", "ch01_level_001", "moon_cameo", 1)
 	route.set_progress(progress)
