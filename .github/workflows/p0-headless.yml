@@ -72,6 +72,7 @@ on:
       - "tests/integration/test_level1_failure_recovery.gd"
       - "tests/integration/test_golden_feedback_vfx.gd"
       - "tests/integration/test_gameplay_feel.gd"
+      - "tests/integration/test_gameplay_touch_swipe_session.gd"
       - "tests/integration/test_gameplay_impact_hierarchy.gd"
       - "tests/integration/test_gameplay_objective_terminal_feedback.gd"
       - "tests/integration/test_opening_two_level_journey.gd"
@@ -251,6 +252,18 @@ jobs:
           if [ "$status" -ne 0 ]; then exit "$status"; fi
           if grep -Eq "SCRIPT ERROR:|(^| )ERROR:|TEST_FAIL:" <<<"$output"; then exit 1; fi
           grep -Fq "TEST_PASS: invalid-swap tactile return and low-move urgency" <<<"$output"
+
+      - name: Run real touch swipe session contract
+        shell: bash
+        run: |
+          set +e
+          output=$(timeout 35s ./godot --headless --path . -s res://tests/integration/test_gameplay_touch_swipe_session.gd 2>&1)
+          status=$?
+          set -e
+          printf '%s\n' "$output"
+          if [ "$status" -ne 0 ]; then exit "$status"; fi
+          if grep -Eq "SCRIPT ERROR:|(^| )ERROR:|TEST_FAIL:" <<<"$output"; then exit 1; fi
+          grep -Fq "TEST_PASS: real touch drag commits one Match-3 move at threshold" <<<"$output"
 
       - name: Run gameplay impact hierarchy contract
         shell: bash
