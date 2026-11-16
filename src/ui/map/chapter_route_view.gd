@@ -174,6 +174,7 @@ func _bind_authored_route() -> void:
 	if _future_seal_button != null:
 		ProductionChrome.apply_interactive_button(_future_seal_button, false, "chapter_future_seal")
 		_future_seal_button.tooltip_text = "Upper cabinets · future journey · no active unlock"
+		_future_seal_button.modulate = Color(1, 1, 1, 0.54)
 		_bind_route_tactile(_future_seal_button, "future_seal", 0.982)
 		_future_seal_button.pressed.connect(_request_future_cabinets)
 
@@ -269,10 +270,64 @@ func _refresh() -> void:
 		button.disabled = false
 		button.text = "✓" if completed else str(level_number)
 		button.tooltip_text = _tooltip_for(level_number)
-		label.text = _caption(level_number, completed)
+		label.text = _caption(level_number, completed, state)
 		_apply_node_style(button, state)
+		_apply_route_item_hierarchy(level_number, state)
 	_update_frontier_focus()
 	queue_redraw()
+
+func _apply_route_item_hierarchy(level_number: int, state: String) -> void:
+	var label := _level_labels.get(level_number) as Label
+	var art := get_node_or_null("RelicArt%d" % level_number) as TextureRect
+	if label == null:
+		return
+	var plate := StyleBoxFlat.new()
+	plate.set_corner_radius_all(10)
+	plate.content_margin_left = 14.0
+	plate.content_margin_top = 5.0
+	plate.content_margin_right = 14.0
+	plate.content_margin_bottom = 5.0
+	match state:
+		"current":
+			label.modulate = Color.WHITE
+			label.add_theme_font_size_override("font_size", 30)
+			label.add_theme_color_override("font_color", Color("#FFF3D5"))
+			plate.bg_color = Color("#140C19", 0.97)
+			plate.border_color = Color("#F2D48F", 0.92)
+			plate.set_border_width_all(2)
+			plate.shadow_color = Color(0, 0, 0, 0.60)
+			plate.shadow_size = 10
+			if art != null:
+				art.modulate = Color(1, 1, 1, 1.0)
+		"completed":
+			label.modulate = Color(1, 1, 1, 0.70)
+			label.add_theme_font_size_override("font_size", 25)
+			label.add_theme_color_override("font_color", Color("#D8C9D5"))
+			plate.bg_color = Color("#0E0A12", 0.90)
+			plate.border_color = Color(GOLD, 0.26)
+			plate.set_border_width_all(1)
+			if art != null:
+				art.modulate = Color(1, 1, 1, 0.60)
+		"available":
+			label.modulate = Color(1, 1, 1, 0.84)
+			label.add_theme_font_size_override("font_size", 26)
+			label.add_theme_color_override("font_color", BONE)
+			plate.bg_color = Color("#100B15", 0.90)
+			plate.border_color = Color(LILAC, 0.38)
+			plate.set_border_width_all(1)
+			if art != null:
+				art.modulate = Color(1, 1, 1, 0.78)
+		_:
+			label.modulate = Color(1, 1, 1, 0.52)
+			label.add_theme_font_size_override("font_size", 25)
+			label.add_theme_color_override("font_color", Color("#ADA1B0"))
+			plate.bg_color = Color("#0B0810", 0.92)
+			plate.border_color = Color("#766A7B", 0.18)
+			plate.set_border_width_all(1)
+			if art != null:
+				art.modulate = Color(1, 1, 1, 0.30)
+	label.add_theme_stylebox_override("normal", plate)
+
 
 func _resolve_frontier_level() -> int:
 	if canonical_level_cap <= 0:
@@ -308,13 +363,21 @@ func _tooltip_for(level_number: int) -> String:
 		3: return "Thornlight Arrangement · Line Sigil · Thorned Locket"
 		_: return "Upper cabinet %d · sealed for later" % level_number
 
-func _caption(level_number: int, completed: bool) -> String:
+func _caption(level_number: int, completed: bool, state: String) -> String:
 	if level_number == 1:
 		return "MOONLIT CABINET\n%s" % ("MOON CAMEO AWAKENED" if completed else "MOON CAMEO WAITS")
 	if level_number == 2:
-		return "SEALED DISPLAY\n%s" % ("MOTH RELIQUARY RECOVERED" if completed else "BREAK THE WAX SEALS")
+		if completed:
+			return "SEALED DISPLAY\nMOTH RELIQUARY RECOVERED"
+		if state in ["current", "available"]:
+			return "SEALED DISPLAY\nBREAK THE WAX SEALS"
+		return "SEALED DISPLAY\nCOMPLETE LEVEL 1"
 	if level_number == 3:
-		return "THORNLIGHT\n%s" % ("THORNED LOCKET RECOVERED" if completed else "FORM A MOON BEAM")
+		if completed:
+			return "THORNLIGHT\nTHORNED LOCKET RECOVERED"
+		if state in ["current", "available"]:
+			return "THORNLIGHT\nFORM A MOON BEAM"
+		return "THORNLIGHT\nCOMPLETE LEVEL 2"
 	return ""
 
 func _apply_node_style(button: Button, state: String) -> void:

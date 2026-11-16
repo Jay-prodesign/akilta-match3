@@ -148,11 +148,23 @@ func _refresh() -> void:
 	if intro != null:
 		if canonical_level_cap > 0 and awakened >= canonical_level_cap:
 			intro.text = "OPENING CABINET RESTORED · REVISIT ANY AWAKENED RITUAL."
-		elif awakened > 0:
-			intro.text = "DISPLAY %d / %d AWAKENED · THE NEXT RITUAL IS OPEN." % [awakened, canonical_level_cap]
 		else:
-			intro.text = "RESTORE THE OPENING CABINET · FOLLOW THE GOLDEN ROUTE."
+			var frontier := 1
+			if progress != null:
+				frontier = clampi(int(progress.highest_level_unlocked), 1, max(1, canonical_level_cap))
+			intro.text = "NEXT RITUAL · LEVEL %d · %s" % [frontier, _ritual_short_name(frontier)]
 	route_view.set_progress(progress)
+
+func _ritual_short_name(level_number: int) -> String:
+	match level_number:
+		1:
+			return "MOONLIT CABINET"
+		2:
+			return "SEALED DISPLAY"
+		3:
+			return "THORNLIGHT"
+		_:
+			return "CURIO BOUTIQUE"
 
 func north_star_map_contract() -> Dictionary:
 	var title := get_node_or_null("Layout/Title") as Label
